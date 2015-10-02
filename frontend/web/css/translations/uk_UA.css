@@ -1,0 +1,6 @@
+.onoffswitch-inner:before{ content: 'Так'; }
+.onoffswitch-inner:after{ content: 'Ні'; }
+.up:after{ content: 'Вгору'; }
+.loaded:before{ content: 'Показати ще 15 товарів'; }
+.loaded:hover:before{ content: 'Натисни на мене ;-)'; }
+.loading:before{ content: 'Зачекайте'; }

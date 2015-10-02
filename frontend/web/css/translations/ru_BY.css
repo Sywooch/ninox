@@ -1,0 +1,6 @@
+.onoffswitch-inner:before{ content: 'Да'; }
+.onoffswitch-inner:after{ content: 'Нет'; }
+.up:after{ content: 'Вверх'; }
+.loaded:before{ content: 'Показать еще 15 товаров'; }
+.loaded:hover:before{ content: 'Нажми меня ;-)'; }
+.loading:before{ content: 'Подождите'; }

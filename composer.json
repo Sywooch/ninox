@@ -1,0 +1,99 @@
+{
+    "name": "yiisoft/yii2-app-basic",
+    "description": "Yii 2 Basic Application Template",
+    "keywords": ["yii2", "framework", "basic", "application template"],
+    "homepage": "http://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "*",
+        "yiisoft/yii2-bootstrap": "dev-master",
+        "yiisoft/yii2-swiftmailer": "*",
+        "kartik-v/yii2-nav-x": "*",
+        "kartik-v/yii2-sortable": "*",
+        "kartik-v/yii2-widget-typeahead": "*",
+        "kartik-v/yii2-widget-select2": "*",
+        "kartik-v/yii2-widget-fileinput": "*",
+        "kartik-v/yii2-widget-growl": "*",
+        "kartik-v/yii2-tabs-x": "*",
+        "kartik-v/yii2-widget-touchspin": "*",
+        "2amigos/yii2-file-input-widget": "*",
+        "kartik-v/yii2-widget-activeform": "*",
+        "kartik-v/yii2-editable": "*",
+        "kartik-v/yii2-grid": "*",
+        "kartik-v/yii2-mpdf": "dev-master",
+        "kartik-v/yii2-widget-rangeinput": "*",
+        "asofter/yii2-amcharts": "dev-master",
+        "kartik-v/yii2-widget-datetimepicker": "*",
+        "kartik-v/yii2-widget-datepicker": "*",
+        "kartik-v/yii2-widget-switchinput": "*",
+        "cakebake/yii2-bootstrap-select": "*",
+        "2amigos/yii2-switch-widget": "*",
+        "linslin/yii2-curl": "*",
+        "evgeniyrru/yii2-slick": "*",
+        "thiagotalma/yii2-fullcalendar": "*",
+        "kartik-v/yii2-field-range": "*",
+        "2amigos/yii2-date-picker-widget": "*",
+        "kartik-v/yii2-date-range": "*",
+        "kartik-v/yii2-widget-depdrop": "@dev",
+        "bobroid/yamm": "*",
+        "bobroid/yii2-audittrail": "*",
+        "rmrevin/yii2-fontawesome": "*",
+        "bobroid/yii2-sweetalert": "dev-master"
+    },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "^2.0",
+        "yiisoft/yii2-debug": "*",
+        "yiisoft/yii2-gii": "*",
+        "yiisoft/yii2-faker": "*"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "yii\\composer\\Installer::postCreateProject"
+        ]
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/BoBRoID/yamm"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/BoBRoID/yii2-audittrail"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/BoBRoID/yii2-sweetalert"
+        }
+    ],
+    "extra": {
+        "yii\\composer\\Installer::postCreateProject": {
+            "setPermission": [
+                {
+                    "runtime": "0777",
+                    "web/assets": "0777",
+                    "yii": "0755"
+                }
+            ],
+            "generateCookieValidationKey": [
+                "config/web.php"
+            ]
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+    }
+}
