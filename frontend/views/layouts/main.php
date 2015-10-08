@@ -24,6 +24,8 @@ $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
 $menu = \common\models\Category::getMenu();
+
+$cartModal = new \bobroid\remodal\Remodal();
 /*
 
 echo '<pre>';
@@ -98,7 +100,7 @@ echo '</pre>';
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="postalCode">02217</span>, <span itemprop="addressLocality">Украина, г. Киев</span>, <span itemprop="streetAddress">ул. Электротехническая, 2</span>
 					</div>
-					<img itemprop="logo" src="/img/xlogo_ukraine.png.pagespeed.ic.cDhSQmq40P.png" alt="shop logo" pagespeed_url_hash="1385173058">
+					<img itemprop="logo" src="/img/xlogo_ukraine.png.pagespeed.ic.cDhSQmq40P.png" alt="shop logo">
 				</noscript>
 			</div>
 			<ul class="right">
@@ -112,7 +114,7 @@ echo '</pre>';
 				</li>
 
 				<li id="cart">
-					<?=\common\components\CartWidget::widget()?>
+					<?=\common\components\CartWidget::widget(['remodalInstance' => $cartModal])?>
 				</li>
 			</ul>
 		</nav>
@@ -202,6 +204,7 @@ echo '</pre>';
 				</div>
 			</div>
 		</footer>
+	<?=$cartModal->renderModal()?>
 	<?php $this->endBody() ?>
 	</body>
 </html>
