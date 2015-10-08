@@ -25,7 +25,16 @@ $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
 $menu = \common\models\Category::getMenu();
 
-$cartModal = new \bobroid\remodal\Remodal();
+$cartModal = new \bobroid\remodal\Remodal([
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'content'			=>	$this->render('../site/cart'),
+	'id'				=>	'cart',
+	'addRandomToID'		=>	false,
+	'events'			=>	[
+		'opened'	=>	'console.log(e.target);'
+	]
+]);
 /*
 
 echo '<pre>';
