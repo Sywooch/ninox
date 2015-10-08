@@ -15,23 +15,28 @@ use yii\helpers\Html;
 
 class CartWidget extends Widget{
 
-
+    public $remodalInstance;
 
     public function init(){
 
     }
 
     public function run(){
-        echo Html::tag('a', Html::tag('span').Html::tag('span', '150.00 '.\Yii::$app->params['currencyShortName'], [
-            'class' => 'summ'
-        ]), [
+        $return = '';
+
+        $return .= $this->remodalInstance->renderButton([
+            'label' =>  Html::tag('span').Html::tag('span', '150.00 '.\Yii::$app->params['currencyShortName'], [
+                    'class' => 'summ'
+                ]),
             'class' =>  'openCart'
         ]);
-        echo '<ul>', Html::tag('li', 'В вашей корзине '.Html::tag('div', Html::tag('span', '1 товар', [
+        $return .= Html::tag('ul', Html::tag('li', 'В вашей корзине '.Html::tag('div', Html::tag('span', '1 товар', [
                 'class' =>  'inCartItemsCount'
+            ]))).Html::tag('li', $this->remodalInstance->renderButton([
+                'label' =>  'оформить заказ',
+                'class' =>  'openCart'
             ])));
 
-
-        echo '</ul>';
+        return $return;
     }
 }
