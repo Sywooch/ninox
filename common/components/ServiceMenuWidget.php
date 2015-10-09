@@ -14,6 +14,7 @@ use rmrevin\yii\fontawesome\FA;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 class ServiceMenuWidget extends Widget{
 
@@ -132,7 +133,7 @@ class ServiceMenuWidget extends Widget{
                     ],
                     'ajaxSettings'  =>  [
                         'type'      =>  'post',
-                        'url'       =>  '/admin/updatecurrency',
+                        'url'       =>  Url::to('/updatecurrency'),
                     ],
                     'afterInput'    =>  function ($form, $widget) {
                         echo '<input type="hidden" name="Service[key]" value="'.$widget->model->key.'" style="display: none">';
@@ -199,7 +200,7 @@ class ServiceMenuWidget extends Widget{
             $data .= \Yii::$app->user->identity->name;
         }
 
-        $data .= Html::a(FA::icon('power-off')->size(FA::SIZE_LARGE), '/admin/logout', [
+        $data .= Html::a(FA::icon('power-off')->size(FA::SIZE_LARGE), Url::to('/logout'), [
             'data-method'   =>  'post'
         ]);
 

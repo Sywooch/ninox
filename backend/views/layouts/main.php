@@ -9,11 +9,6 @@ use yii\widgets\Breadcrumbs;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-$typeaheadTemplate = '<a class="typeahead-list-item" href="/admin/goods/showgood/{{ID}}"><div class="row">';
-$typeaheadTemplate .= '<div class="col-xs-12 name">{{Name}}</div>';
-$typeaheadTemplate .= '<div class="col-xs-12 category"><span class="pull-right ">{{categoryname}}</span></div>';
-$typeaheadTemplate .= '<div class="col-xs-12 code">Код товара: {{Code}}</div>';
-$typeaheadTemplate .= '</div></a>';
 
 $js = <<<'SCRIPT'
 $(function () {
@@ -140,6 +135,7 @@ $this->beginPage() ?>
 <div class="wrap">
     <?php
     Yamm::begin([
+        'typeaheadSearch'   =>  true,
         'options' => [
             'headerOptions'   =>  [
                 'class'   =>  'gray'
@@ -326,6 +322,10 @@ $this->beginPage() ?>
                                     ],
                                 ]
                             ],
+                            [
+                                'label' =>  'Кабинет телефониста',
+                                'url'   =>  '#'
+                            ],
                         ]
                     ],
                     [
@@ -401,10 +401,6 @@ $this->beginPage() ?>
                                 'url'   =>  '#'
                             ],
                         ]
-                    ],
-                    [
-                        'label' =>  'Кабинет телефониста',
-                        'url'   =>  '#'
                     ],
                     [
                         'label' =>  'Блог',

@@ -223,6 +223,10 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionRating(){
+
+    }
+
     public function actionAddcategory(){
         $c = new Category();
         $cUk = new CategoryUk();
