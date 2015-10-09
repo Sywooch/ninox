@@ -322,7 +322,7 @@ $this->title = 'Заказы';
         </div>
     </div>
 </div>
-<?=\app\components\CollectorsWidget::widget([
+<?=\common\components\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
 ])?>
@@ -342,9 +342,9 @@ $this->title = 'Заказы';
         return [];
     },
     'beforeHeader'  =>  '<div style="margin-bottom: -1px;" class="btn-group">
-<a href="'.\app\components\RequestHelper::createGetLink('ordersSource', '').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'shop' || \Yii::$app->request->get("ordersSource") == '' ? ' disabled' : '').'>Интернет</a>
-<a href="'.\app\components\RequestHelper::createGetLink('ordersSource', 'market').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'market' ? ' disabled' : '').'>Магазин</a>
-<a href="'.\app\components\RequestHelper::createGetLink('ordersSource', 'all').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'all' ? ' disabled' : '').'>Все</a>
+<a href="'.\common\components\RequestHelper::createGetLink('ordersSource', '').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'shop' || \Yii::$app->request->get("ordersSource") == '' ? ' disabled' : '').'>Интернет</a>
+<a href="'.\common\components\RequestHelper::createGetLink('ordersSource', 'market').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'market' ? ' disabled' : '').'>Магазин</a>
+<a href="'.\common\components\RequestHelper::createGetLink('ordersSource', 'all').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'all' ? ' disabled' : '').'>Все</a>
 </div>',
     'hover'         =>  true,
     'columns'       =>  [

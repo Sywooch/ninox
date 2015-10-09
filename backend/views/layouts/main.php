@@ -3,6 +3,7 @@ use common\components\ServiceMenuWidget;
 use bobroid\yamm\Yamm;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
 /* @var $this \yii\web\View */
@@ -148,7 +149,7 @@ $this->beginPage() ?>
         'items' => [
             [
                 'label' => FA::icon('check-circle-o')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Заказы</span>',
-                'url' => '/admin',
+                'url' => Url::home(),
                 'counter'   =>  '25',
                 'options'   =>  [
                     'class' =>  'bordered'
@@ -156,7 +157,7 @@ $this->beginPage() ?>
             ],
             [
                 'label' => FA::icon('list-alt')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Товары</span>',
-                'url' => '/admin/goods',
+                'url' => Url::to('goods'),
                 'options'   =>  [
                     'class' =>  'bordered'
                 ]

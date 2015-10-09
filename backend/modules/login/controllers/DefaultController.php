@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\login\controllers;
+namespace backend\modules\login\controllers;
 
-use app\models\LoginForm;
-use yii\web\Controller;
+use common\models\LoginForm;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {

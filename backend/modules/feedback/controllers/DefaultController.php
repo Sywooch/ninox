@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\feedback\controllers;
+namespace backend\modules\feedback\controllers;
 
-use app\models\Review;
+use common\models\Review;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 use yii\filters\VerbFilter;
 
 class DefaultController extends Controller

@@ -1,15 +1,15 @@
 <?php
 
-namespace app\modules\blog\controllers;
+namespace backend\modules\blog\controllers;
 
 use Yii;
-use app\models\Articles;
-use app\models\ArticlesSearch;
-use yii\web\Controller;
+use common\models\Articles;
+use common\models\ArticlesSearch;
+use backend\controllers\SiteController as Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\components\UploadHelper;
-use app\helpers\TranslitHelper;
+use common\components\UploadHelper;
+use common\helpers\TranslitHelper;
 
 /**
  * DefaultController implements the CRUD actions for Articles model.
@@ -26,26 +26,7 @@ class DefaultController extends Controller
         ];
     }
 
-    /**
-     * Lists all Articles models.
-     * @return mixed
-     */
-    public function actionIndex($p1 = '', $p2 = '')
-    {
-        if($p1 == "" && $p2 == ""){
-            return $this->runAction('actionindex');
-        }else{
-            if($p2 != ""){
-                return $this->runAction($p1, [
-                    'id' =>  $p2
-                ]);
-            }else{
-                return $this->runAction($p1);
-            }
-        }
-    }
-
-    public function actionActionindex(){
+    public function actionIndex(){
         $searchModel = new ArticlesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

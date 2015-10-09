@@ -1,5 +1,5 @@
 <?php
-use app\models\Category;
+use common\models\Category;
 use kartik\file\FileInput;
 use kartik\select2\Select2;
 use yii\bootstrap\ActiveForm;

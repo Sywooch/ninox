@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\banners\controllers;
+namespace backend\modules\banners\controllers;
 
-use app\models\Banner;
-use app\models\BannerType;
+use common\models\Banner;
+use common\models\BannerType;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {

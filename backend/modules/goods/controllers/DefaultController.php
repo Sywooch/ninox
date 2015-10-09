@@ -17,7 +17,7 @@ use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
 use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 use yii\web\Response;
 
 class DefaultController extends Controller

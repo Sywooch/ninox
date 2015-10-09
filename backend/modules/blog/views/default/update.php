@@ -1,10 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use app\modules\blog\controllers\LinkController;
+use backend\modules\blog\controllers\LinkController;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Articles */
+/* @var $model common\models\Articles */
 
 $this->title = 'Редактирование статьи';
 $this->params['breadcrumbs'][] = ['label' => 'Статьи', 'url' => [LinkController::getForAdmin()]];

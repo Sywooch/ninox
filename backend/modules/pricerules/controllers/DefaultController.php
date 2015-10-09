@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\pricerules\controllers;
+namespace backend\modules\pricerules\controllers;
 
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {

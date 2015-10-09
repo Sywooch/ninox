@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\admin;
+namespace backend\modules\admin;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'app\modules\admin\controllers';
+    public $controllerNamespace = 'backend\modules\admin\controllers';
     public $layout = "login";
 
     public function init()

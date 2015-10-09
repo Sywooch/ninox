@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\feedback;
+namespace backend\modules\feedback;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'app\modules\feedback\controllers';
+    public $controllerNamespace = 'backend\modules\feedback\controllers';
     public $layout = "main";
 
     public function init()

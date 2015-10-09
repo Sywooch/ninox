@@ -1,50 +1,40 @@
 <?php
 
-namespace app\modules\customers\controllers;
+namespace backend\modules\customers\controllers;
 
-use app\models\Customer;
-use app\models\CustomerSearch;
-use app\models\History;
+use common\models\Customer;
+use common\models\CustomerSearch;
+use common\models\History;
 use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {
 
-    public function actionIndex($p1 = "", $p2 = "")
+    public function actionIndex()
     {
-        if($p1 != '' || $p2 != ''){
-            if($p2 != ""){
-                return $this->runAction($p1, [
-                    'param' =>  $p2
-                ]);
-            }else{
-                return $this->runAction($p1);
-            }
-        }else{
-            if(\Yii::$app->request->isAjax && !empty(\Yii::$app->request->post("hasEditable"))){
-                $m = Customer::findOne(['ID' => \Yii::$app->request->post("editableKey")]);
+        if(\Yii::$app->request->isAjax && !empty(\Yii::$app->request->post("hasEditable"))){
+            $m = Customer::findOne(['ID' => \Yii::$app->request->post("editableKey")]);
 
-                if($m){
-                    foreach(current(\Yii::$app->request->post("Customer")) as $k => $c){
-                        $m->$k = $c;
-                    }
-                    return $m->save(false);
+            if($m){
+                foreach(current(\Yii::$app->request->post("Customer")) as $k => $c){
+                    $m->$k = $c;
                 }
-                return '1';
+                return $m->save(false);
             }
-
-            $dp = Customer::find();
-            $dp->orderBy('ID DESC');
-
-            $customerSearch = new CustomerSearch();
-
-            return $this->render('index', [
-                'dataProvider'  =>  $customerSearch->search(\Yii::$app->request->get()),
-                'searchModel'   =>  $customerSearch
-            ]);
+            return '1';
         }
+
+        $dp = Customer::find();
+        $dp->orderBy('ID DESC');
+
+        $customerSearch = new CustomerSearch();
+
+        return $this->render('index', [
+            'dataProvider'  =>  $customerSearch->search(\Yii::$app->request->get()),
+            'searchModel'   =>  $customerSearch
+        ]);
     }
 
     public function actionShowcustomer($param){

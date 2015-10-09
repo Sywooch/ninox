@@ -1,36 +1,20 @@
 <?php
 
-namespace app\modules\orders\controllers;
+namespace backend\modules\orders\controllers;
 
-use app\models\Customer;
-use app\models\Good;
-use app\models\History;
-use app\models\Pricerule;
-use app\models\SborkaItem;
-use app\models\Siteuser;
-use yii\base\Exception;
+use common\models\Customer;
+use common\models\Good;
+use common\models\History;
+use common\models\Pricerule;
+use common\models\SborkaItem;
+use common\models\Siteuser;
 use yii\data\ActiveDataProvider;
-use yii\db\Query;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {
-    public function actionIndex($p1 = '', $p2 = '')
-    {
-        if($p1 == "" && $p2 == ""){
-            return $this->runAction('actionindex');
-        }else{
-            if($p2 != ""){
-                return $this->runAction($p1, [
-                    'param' =>  $p2
-                ]);
-            }else{
-                return $this->runAction($p1);
-            }
-        }
-    }
 
-    public function actionActionindex(){
+    public function actionIndex(){
         $queryParts = [];
 
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));

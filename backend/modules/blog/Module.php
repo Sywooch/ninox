@@ -1,15 +1,13 @@
 <?php
 
-namespace app\modules\blog;
+namespace backend\modules\blog;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'app\modules\blog\controllers';
-    public $layout = 'main';
+    public $controllerNamespace = 'backend\modules\blog\controllers';
 
     public function init()
     {
-        $this->layoutPath = \Yii::$app->getModule('admin')->getLayoutPath();
         parent::init();
 
         // custom initialization code goes here

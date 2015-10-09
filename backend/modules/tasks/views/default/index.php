@@ -1,5 +1,5 @@
 <?php
-use app\models\Task;
+use common\models\Task;
 
 $this->title = 'Задачи';
 $this->params['breadcrumbs'][] = $this->title;
@@ -139,7 +139,7 @@ foreach($users as $user) {
         <div class="user-clickable-block" onclick="showUserModal(event, \''.$user->id.'\')" data-userID="'.$user->id.'">
             <img src="'.$user->avatar.'" class="img-thumbnail img-circle">
             &nbsp;
-            <h2>'.$user->name.' <small>'.\app\models\Siteuser::$workStatuses[$user->workStatus].'</small></h2>
+            <h2>'.$user->name.' <small>'.\common\models\Siteuser::$workStatuses[$user->workStatus].'</small></h2>
         </div>'.$nowWork.'
     </div>';
 }
@@ -278,7 +278,7 @@ foreach($events as $event){
         [
             'attribute' =>  'author',
             'value'     =>  function($model){
-                $user = \app\models\Siteuser::getUser($model->author);
+                $user = \common\models\Siteuser::getUser($model->author);
                 return $user->name;
             }
         ],
@@ -315,7 +315,7 @@ foreach($events as $event){
         [
             'attribute' =>  'author',
             'value'     =>  function($model){
-                $user = \app\models\Siteuser::getUser($model->author);
+                $user = \common\models\Siteuser::getUser($model->author);
                 return $user->name;
             }
         ],

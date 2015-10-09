@@ -1,4 +1,4 @@
-<?php use app\models\Siteuser;
+<?php use common\models\Siteuser;
 use kartik\form\ActiveForm;
 use bobroid\switchinput\SwitchInput;
 
@@ -19,7 +19,7 @@ $form = ActiveForm::begin([
                         Способ доставки:
                     </td>
                     <td style="width: 30%;">
-                        <?=$form->field($model, 'deliveryType')->dropDownList(\app\models\DeliveryTypes::getDeliveryTypes())->label(false)?>
+                        <?=$form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes())->label(false)?>
                     </td>
                     <td style="width: 20%;">
                         Менеджер:
@@ -39,7 +39,7 @@ $form = ActiveForm::begin([
                         Способ оплаты:
                     </td>
                     <td>
-                        <?=$form->field($model, 'paymentType')->dropDownList(\app\models\PaymentTypes::getPaymentTypes())->label(false)?>
+                        <?=$form->field($model, 'paymentType')->dropDownList(\common\models\PaymentTypes::getPaymentTypes())->label(false)?>
                     </td>
                 </tr>
                 <tr>

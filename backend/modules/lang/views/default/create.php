@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Lang */
+/* @var $model common\models\Lang */
 
 $this->title = 'Create Lang';
 $this->params['breadcrumbs'][] = ['label' => 'Langs', 'url' => ['index']];
