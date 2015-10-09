@@ -8,7 +8,7 @@
 
 namespace common\components;
 
-use app\models\Siteuser;
+use common\models\Siteuser;
 use kartik\form\ActiveForm;
 use yii\base\Widget;
 use yii\bootstrap\Modal;

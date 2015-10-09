@@ -66,7 +66,7 @@ class Review extends \yii\db\ActiveRecord
         ];
     }
 
-    public function changeState($id, $field = 'published'){
+    public static function changeState($id, $field = 'published'){
         $a = Review::findOne(['id' => $id]);
 
         if ($a) {

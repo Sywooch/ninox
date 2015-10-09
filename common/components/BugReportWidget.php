@@ -8,7 +8,7 @@
 
 namespace common\components;
 
-use app\models\Bug;
+use common\models\Bug;
 use yii\base\Widget;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Modal;

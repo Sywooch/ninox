@@ -10,7 +10,7 @@ namespace common\components;
 
 use Yii;
 use yii\web\Request;
-use app\models\Lang;
+use common\models\Lang;
 
 class LangRequest extends Request
 {

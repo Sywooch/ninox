@@ -6,10 +6,10 @@
  * Time: 4:23 PM
  */
 
-namespace frontend\components;
+namespace common\components;
 
 use yii\web\UrlManager;
-use app\models\Lang;
+use common\models\Lang;
 
 class LangUrlManager extends UrlManager
 {

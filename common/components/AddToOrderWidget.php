@@ -9,7 +9,7 @@
 namespace common\components;
 
 use app\assets\SweetalertAsset;
-use app\models\History;
+use common\models\History;
 use yii\base\Widget;
 use yii\bootstrap\Modal;
 use yii\data\ActiveDataProvider;
