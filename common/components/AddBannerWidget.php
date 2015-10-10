@@ -8,8 +8,8 @@
 
 namespace common\components;
 
-use app\models\Banner;
-use app\models\BannerType;
+use common\models\Banner;
+use common\models\BannerType;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;
 use kartik\switchinput\SwitchInput;

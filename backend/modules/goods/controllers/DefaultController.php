@@ -17,7 +17,7 @@ use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
 use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 use yii\web\Response;
 
 class DefaultController extends Controller
@@ -100,10 +100,7 @@ class DefaultController extends Controller
             $c = Category::findOne(['Code' => $cat]);
 
             if(empty($c)){
-                return $this->render('/../../admin/views/default/error.php', [
-                    'name'  =>  'Категории не существует',
-                    'message'   => 'Такой категории нет на сайте! Вы можете <a onclick="window.history.back();">вернуться обратно</a>, или попробовать ещё раз'
-                ]);
+                return $this->run('site/error');
             }else{
                 $enabled = $disabled = 0;
                 foreach($tGoodsCount->asArray()->each() as $row){
@@ -224,6 +221,10 @@ class DefaultController extends Controller
             'uploadPhoto'  =>  new UploadPhoto(),
             'additionalPhotos'  =>  ''
         ]);
+    }
+
+    public function actionRating(){
+
     }
 
     public function actionAddcategory(){

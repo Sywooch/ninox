@@ -1,30 +1,16 @@
 <?php
 
-namespace app\modules\feedback\controllers;
+namespace backend\modules\feedback\controllers;
 
-use app\models\Review;
+use common\models\Review;
+use Yii;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
-    public function actionIndex($p1 = '', $p2 = '')
-    {
-        if($p1 == "" && $p2 == ""){
-            return $this->runAction('actionindex');
-        }else{
-            if($p2 != ""){
-                return $this->runAction($p1, [
-                    'param' =>  $p2
-                ]);
-            }else{
-                return $this->runAction($p1);
-            }
-        }
-    }
-
-
     public function actionReviews(){
         return $this->render('reviews', [
             'dataProvider'  =>  new ActiveDataProvider([
@@ -66,7 +52,7 @@ class DefaultController extends Controller
      * Lists all Review models.
      * @return mixed
      */
-    public function actionActionindex(){
+    public function actionIndex(){
         $dataProvider = new ActiveDataProvider([
             'query' => Review::find(),
         ]);
@@ -157,10 +143,7 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax){
             return Review::changeState(\Yii::$app->request->post( "colID", "PubOrDel" ));
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 }

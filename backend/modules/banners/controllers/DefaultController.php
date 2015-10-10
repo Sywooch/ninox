@@ -1,15 +1,15 @@
 <?php
 
-namespace app\modules\banners\controllers;
+namespace backend\modules\banners\controllers;
 
-use app\models\Banner;
-use app\models\BannerType;
+use common\models\Banner;
+use common\models\BannerType;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {
-    public function actionIndex($p1 = '', $p2 = '')
+    public function actionIndex()
     {
         if(\Yii::$app->request->isAjax){
             try{
@@ -45,20 +45,6 @@ class DefaultController extends Controller
             }
         }
 
-        if($p1 == "" && $p2 == ""){
-            return $this->runAction('actionindex');
-        }else{
-            if($p2 != ""){
-                return $this->runAction($p1, [
-                    'param' =>  $p2
-                ]);
-            }else{
-                return $this->runAction($p1);
-            }
-        }
-    }
-
-    public function actionActionindex(){
         return $this->render('index', [
             'banners'   =>  new ActiveDataProvider([
                 'query' =>  BannerType::find(),

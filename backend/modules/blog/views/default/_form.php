@@ -1,14 +1,14 @@
 <?php
 
+use bobroid\imperavi\Widget;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\imperavi\Widget;
-use app\modules\blog\controllers\LinkController;
+use backend\modules\blog\controllers\LinkController;
 use kartik\file\FileInput;
 use kartik\datetime\DateTimePicker;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Articles */
+/* @var $model common\models\Articles */
 /* @var $form yii\widgets\ActiveForm */
 
 ?>

@@ -1,14 +1,14 @@
 <?php
 
-namespace app\modules\admin\controllers;
+namespace backend\modules\admin\controllers;
 
 
-use app\models\Customer;
-use app\models\Good;
-use app\models\LoginForm;
-use app\models\Service;
+use common\models\Customer;
+use common\models\Good;
+use common\models\LoginForm;
+use common\models\Service;
 use sammaye\audittrail\AuditTrail;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 use yii\web\User;
 
 class DefaultController extends Controller
@@ -69,10 +69,10 @@ class DefaultController extends Controller
             }
 
             switch($m->model){
-                case 'app\models\Good':
+                case 'common\models\Good':
                     $model = Good::findOne(['id' => $m->model_id]);
                     break;
-                case 'app\models\Customer':
+                case 'common\models\Customer':
                     $model = Customer::findOne(['id' => $m->model_id]);
                     break;
             }
@@ -94,7 +94,7 @@ class DefaultController extends Controller
     }
 
     public function actionRoute($action, $param1 = "", $param2 = ""){
-        $a = 'app\modules\\'.$action.'\Module';
+        $a = 'backend\modules\\'.$action.'\Module';
         $params = ['p1' => $param1, 'p2' => $param2];
 
         \Yii::$app->setModule($action, $a);

@@ -8,7 +8,7 @@
 
 namespace common\components;
 
-use app\models\User;
+use common\models\User;
 use kartik\grid\ActionColumn;
 use sammaye\audittrail\AuditTrail;
 use yii\base\Widget;

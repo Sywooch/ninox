@@ -36,7 +36,7 @@ $this->registerCss($css);
         <div class="img-thumbnail img-circle"><img src="<?=$user->avatar?>"></div>
         &nbsp;
         <div class="user-info">
-            <h3><?=$user->name?> (@<?=$user->username?>) <small><?=\app\models\Siteuser::$workStatuses[$user->workStatus]?></small></h3>
+            <h3><?=$user->name?> (@<?=$user->username?>) <small><?=\common\models\Siteuser::$workStatuses[$user->workStatus]?></small></h3>
             <?php if($user->workStatus >= 1){ ?><small>Текущая задача: </small><?php } ?>
         </div>
     </div>
@@ -68,7 +68,7 @@ $this->registerCss($css);
                         [
                             'attribute' =>  'status',
                             'value'     =>  function($model){
-                                return \app\models\Task::$statuses[$model->status];
+                                return \common\models\Task::$statuses[$model->status];
                             }
                         ],
                     ]

@@ -32,7 +32,7 @@ class AddBannerGroupWidget extends Widget{
         }
 
         if(empty($this->model)){
-            $this->model = new \app\models\BannerType();
+            $this->model = new \common\models\BannerType();
         }
     }
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace app\modules\tasks\controllers;
+namespace backend\modules\tasks\controllers;
 
-use app\models\Siteuser;
-use app\models\Task;
-use app\models\TaskUser;
+use common\models\Siteuser;
+use common\models\Task;
+use common\models\TaskUser;
 use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {

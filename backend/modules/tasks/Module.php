@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\tasks;
+namespace backend\modules\tasks;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'app\modules\tasks\controllers';
+    public $controllerNamespace = 'backend\modules\tasks\controllers';
     public $layout = "main";
 
     public function init()

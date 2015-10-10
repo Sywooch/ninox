@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\charts\controllers;
+namespace backend\modules\charts\controllers;
 
-use app\models\History;
-use app\models\Users;
-use yii\web\Controller;
+use common\models\History;
+use common\models\Users;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {

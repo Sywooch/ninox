@@ -6,10 +6,10 @@
  * Time: 16:03
  */
 
-namespace app\modules\blog\controllers;
+namespace backend\modules\blog\controllers;
 
 
-use yii\web\Controller;
+use backend\controllers\SiteController as Controller;
 
 class LinkController extends Controller{
 

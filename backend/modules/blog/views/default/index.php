@@ -2,10 +2,10 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use app\modules\blog\controllers\LinkController;
+use backend\modules\blog\controllers\LinkController;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ArticlesSearch */
+/* @var $searchModel common\models\ArticlesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Статьи';

@@ -9,8 +9,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1>Баннеры</h1>
 <div class="btn-group">
-    <?=\app\components\AddBannerGroupWidget::widget([])?>
-    <?=\app\components\AddBannerWidget::widget([])?>
+    <?=\common\components\AddBannerGroupWidget::widget([])?>
+    <?=\common\components\AddBannerWidget::widget([])?>
 
     <a href="/admin/banners/stats" class="btn btn-default"><i class="glyphicon glyphicon-stats"></i>&nbsp;Статистика баннеров</a></div>
     <br><br>

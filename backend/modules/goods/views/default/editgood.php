@@ -1,5 +1,5 @@
 <?php
-use app\models\Category;
+use common\models\Category;
 use kartik\file\FileInput;
 use kartik\select2\Select2;
 use kartik\touchspin\TouchSpin;
@@ -275,7 +275,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
                             'items' => [
                                 [
                                     'label' => 'Добавить фото',
-                                    'content' => $form->field(new \app\models\GoodsPhoto, 'ico')->widget(FileInput::className(), [
+                                    'content' => $form->field(new \common\models\GoodsPhoto, 'ico')->widget(FileInput::className(), [
                                         'options'=>[
                                             'multiple' => true,
                                             'accept' => 'image/*'

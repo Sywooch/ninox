@@ -1,6 +1,6 @@
 <?php
-use app\models\Task;
-use app\models\TaskUser;
+use common\models\Task;
+use common\models\TaskUser;
 use kartik\depdrop\DepDrop;
 use kartik\form\ActiveForm;
 use kartik\popover\PopoverX;
@@ -82,7 +82,7 @@ switch($task->status){
             <span class="label label-info">Дедлайн <?=\Yii::$app->formatter->asDate($task->desiredDateTo, 'php:d.m.Y')?></span>
             <?php if($task->desiredDateTo < $task->dateTo || $task->dateTo == '0000-00-00'){ ?><span class="label label-danger">просрочена <?=\Yii::$app->formatter->asDate($task->desiredDateTo, 'php:d.m.Y')?></span><?php } ?>
             <?php if($task->status == '2'){ ?><span class="label label-success">выполнена <?=\Yii::$app->formatter->asDate($task->dateTo, 'php:d.m.Y')?></span><?php } ?>
-            <span class="label label-default">Автор: <span title="@<?php $u = \app\models\Siteuser::getUser($task->author); echo $u->username?>"><?=$u->name?></span></span>
+            <span class="label label-default">Автор: <span title="@<?php $u = \common\models\Siteuser::getUser($task->author); echo $u->username?>"><?=$u->name?></span></span>
             <br style="height: 5px; display: block; margin-top: 5px;">
             <div class="btn-group" style="width: 100%;">
                 <button type="button" id="task-<?=$task->id?>" class="btn <?=$statusBtnClass?> btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -163,7 +163,7 @@ switch($task->status){
                     'attribute' =>  'user_id',
                     'header'    =>  'кто',
                     'value'     =>  function($model){
-                        $user = \app\models\Siteuser::getUser($model->user_id);
+                        $user = \common\models\Siteuser::getUser($model->user_id);
                         return $user->name;
                     }
 

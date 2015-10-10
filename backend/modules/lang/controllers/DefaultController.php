@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\lang\controllers;
+namespace backend\modules\lang\controllers;
 
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
-use app\models\Lang;
+use backend\controllers\SiteController as Controller;
+use common\models\Lang;
 use yii\web\NotFoundHttpException;
 
 class DefaultController extends Controller

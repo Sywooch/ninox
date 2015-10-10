@@ -2,7 +2,7 @@
 use kartik\form\ActiveForm;
 use yii\bootstrap\Modal;
 
-$model = new \app\models\Banner();
+$model = new \common\models\Banner();
 
 Modal::begin([
     'header' => '<h2>Добавить новый баннер</h2>',

@@ -3,16 +3,12 @@ use common\components\ServiceMenuWidget;
 use bobroid\yamm\Yamm;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-$typeaheadTemplate = '<a class="typeahead-list-item" href="/admin/goods/showgood/{{ID}}"><div class="row">';
-$typeaheadTemplate .= '<div class="col-xs-12 name">{{Name}}</div>';
-$typeaheadTemplate .= '<div class="col-xs-12 category"><span class="pull-right ">{{categoryname}}</span></div>';
-$typeaheadTemplate .= '<div class="col-xs-12 code">Код товара: {{Code}}</div>';
-$typeaheadTemplate .= '</div></a>';
 
 $js = <<<'SCRIPT'
 $(function () {
@@ -139,6 +135,7 @@ $this->beginPage() ?>
 <div class="wrap">
     <?php
     Yamm::begin([
+        'typeaheadSearch'   =>  true,
         'options' => [
             'headerOptions'   =>  [
                 'class'   =>  'gray'
@@ -147,23 +144,26 @@ $this->beginPage() ?>
         'theme' =>  'gray',
         'items' => [
             [
-                'label' => FA::icon('check-circle-o')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Заказы</span>',
-                'url' => '/admin',
+                'label'     => FA::icon('check-circle-o')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Заказы</span>',
+                'url'       => Url::home(),
                 'counter'   =>  '25',
                 'options'   =>  [
                     'class' =>  'bordered'
                 ]
             ],
             [
-                'label' => FA::icon('list-alt')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Товары</span>',
-                'url' => '/admin/goods',
+                'label'     => FA::icon('list-alt')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Товары</span>',
+                'url'       => Url::toRoute('/goods/index'),
                 'options'   =>  [
                     'class' =>  'bordered'
                 ]
             ],
             [
-                'label' => FA::icon('arrow-circle-o-up')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Отправка</span>',
-                'url' => '/admin?status=delivery',
+                'label'     => FA::icon('arrow-circle-o-up')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Отправка</span>',
+                'url'       => Url::toRoute([
+                    Url::home(),
+                    'status'    =>  'delivery'
+                ]),
                 'counter'   =>  '0',
                 'options'   =>  [
                     'class' =>  'bordered'
@@ -173,175 +173,193 @@ $this->beginPage() ?>
                 'label' => FA::icon('bars'),
                 'url' => ['#'],
                 'items' =>  [
-                    /*[
-                        'label' =>  'Касса',
-                        'url'  =>  '/admin/kassa'
-                    ],*/
                     [
-                        'label' =>  'Товары',
+                        'label' =>  'Магазин',
                         'items' =>  [
                             [
-                                'label' =>  'Все товары',
-                                'url'   =>  '/admin/goods'
-                            ],
-                            [
-                                'label' =>  'Отключеные товары',
-                                'url'   =>  '/admin/goods?smartfilter=disabled'
-                            ],
-                            [
-                                'label' =>  'Товары без цены',
-                                'url'   =>  '/admin/goods?smartfilter=withoutprice'
-                            ],
-                            [
-                                'label' =>  'Товары без дополнительных фотографий',
-                                'url'   =>  '/admin/goods?smartfilter=withoutalternatephotos'
-                            ],
-                            [
-                                'label' =>  'Дублирующиеся товары',
-                                'url'   =>  '/admin/goods?smartfilter=duplicated'
-                            ],
-                            [
-                                'label' =>  'Рейтинг товаров',
-                                'url'   =>  '/admin/goods/rating'
-                            ],
-                            [
-                                'label' =>  'Лог изменений товаров',
-                                'url'   =>  '/admin/goods/log?act=goodschanges'
-                            ],
-                            [
-                                'label' =>  'Лог загрузок фото',
-                                'url'   =>  '/admin/goods/log?act=photosupload'
-                            ],
-                            [
-                                'label' =>  'Приёмка товаров',
-                                'url'   =>  '/admin/goods/take'
-                            ],
-                            [
-                                'label' =>  'Опции товаров',
-                                'url'   =>  '/admin/goods/options'
-                            ],
-                            [
-                                'label' =>  'Отзывы на товары',
-                                'url'   =>  '/admin/goods/comments'
-                            ],
-                            [
-                                'label' =>  'Запросы на отключение товаров',
+                                'label' =>  'Товары',
                                 'items' =>  [
                                     [
-                                        'label' =>  'В заказе',
-                                        'url'   =>  '/admin/goods/requests?act=order'
+                                        'label' =>  'Все товары',
+                                        'url'   =>  Url::toRoute('/goods/index')
+                                    ],
+                                    [
+                                        'label' =>  'Отключеные товары',
+                                        'url'   =>  Url::toRoute([
+                                            '/goods/index',
+                                            'smartfilter'   =>  'disabled'
+                                        ])
+                                    ],
+                                    [
+                                        'label' =>  'Товары без цены',
+                                        'url'   =>  Url::toRoute([
+                                            '/goods/index',
+                                            'smartfilter'   =>  'withoutprice'
+                                        ])
+                                    ],
+                                    [
+                                        'label' =>  'Товары без дополнительных фотографий',
+                                        'url'   =>  Url::toRoute([
+                                            '/goods/index',
+                                            'smartfilter'   =>  'withoutalternatephotos'
+                                        ])
+                                    ],
+                                    [
+                                        'label' =>  'Дублирующиеся товары',
+                                        'url'   =>  Url::toRoute([
+                                            '/goods/index',
+                                            'smartfilter'   =>  'duplicated'
+                                        ])
+                                    ],
+                                    [
+                                        'label' =>  'Рейтинг товаров',
+                                        'url'   =>  Url::toRoute([
+                                            '/goods/rating'
+                                        ])
+                                    ],
+                                    [
+                                        'label' =>  'Лог изменений товаров',
+                                        'url'   =>  Url::toRoute(['/goods/log', 'act' => 'goodschanges'])
+                                    ],
+                                    [
+                                        'label' =>  'Лог загрузок фото',
+                                        'url'   =>  Url::toRoute(['/goods/log', 'act' => 'photosupload'])
+                                    ],
+                                    [
+                                        'label' =>  'Приёмка товаров',
+                                        'url'   =>  Url::toRoute('/goods/take')
+                                    ],
+                                    [
+                                        'label' =>  'Опции товаров',
+                                        'url'   =>  Url::toRoute('/goods/options')
+                                    ],
+                                    [
+                                        'label' =>  'Отзывы на товары',
+                                        'url'   =>  Url::toRoute('/goods/reviews')
+                                    ],
+                                    [
+                                        'label' =>  'Запросы на отключение товаров',
+                                        'items' =>  [
+                                            [
+                                                'label' =>  'В заказе',
+                                                'url'   =>  Url::toRoute(['/goods/requests', 'act' => 'order'])
+                                            ],[
+                                                'label' =>  'На сайте',
+                                                'url'   =>  Url::toRoute(['/goods/requests', 'act' => 'site'])
+                                            ],
+                                        ]
+                                    ],
+                                ],
+                            ],
+                            [
+                                'label' =>  'Касса',
+                                'url'   =>  Url::to('/kassa/index')
+                            ],
+                            [
+                                'label' =>  'Руколдельницы',
+                                'items' =>  [
+                                    [
+                                        'label' =>  'Рукодельницы',
+                                        'url'   =>  '#'
                                     ],[
-                                        'label' =>  'На сайте',
-                                        'url'   =>  '/admin/goods/requests?act=site'
+                                        'label' =>  'Типы аккаунтов',
+                                        'url'   =>  '#'
                                     ],
                                 ]
                             ],
-                        ]
-                    ],
-                    [
-                        'label' =>  'Руколдельницы',
-                        'items' =>  [
                             [
-                                'label' =>  'Рукодельницы',
+                                'label' =>  'Баннеры',
+                                'url'   =>  Url::toRoute('/banners/index')
+                            ],
+                            [
+                                'label' =>  'Контроль заказа',
+                                'url'   =>  Url::toRoute('/ordercontrol/index')
+                            ],
+                            [
+                                'label' =>  'Возвраты',
                                 'url'   =>  '#'
-                            ],[
-                                'label' =>  'Типы аккаунтов',
+                            ],
+
+                            [
+                                'label' =>  'Промокоды',
                                 'url'   =>  '#'
                             ],
-                        ]
-                    ],
-                    [
-                        'label' =>  'Баннеры',
-                        'url'   =>  '/admin/banners'
-                    ],
-                    [
-                        'label' =>  'Возвраты',
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  'Рассылка',
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  'Контроль заказа',
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  'Перевод',
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  'Подтверждение перевода',
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  'Обратная связь',
-                        'url'   =>  '#',
-                        'items' =>  [
                             [
-                                'label' =>  'Отзывы',
-                                'url'   =>  '/admin/feedback/reviews'
+                                'label' =>  'Ценовые правила',
+                                'url'   =>  '#'
                             ],
                             [
-                                'label' =>  'Вопросы',
-                                'url'   =>  '/admin/feedback/questions'
+                                'label' =>  'Отчёты',
+                                'url'   =>  '#',
+                                'items' =>  [
+                                    [
+                                        'label' =>  'Статистика (графики)',
+                                        'url'   =>  Url::toRoute('/charts/index')
+                                    ],
+                                    [
+                                        'label' =>  'Отключеные товары',
+                                        'url'   =>  '#'
+                                    ],
+                                    [
+                                        'label' =>  'Включеные товары',
+                                        'url'   =>  '#'
+                                    ],
+                                    [
+                                        'label' =>  'Отгруженые товары',
+                                        'url'   =>  '#'
+                                    ],
+                                    [
+                                        'label' =>  'Подтверждённые заказы',
+                                        'url'   =>  '#'
+                                    ],
+                                    [
+                                        'label' =>  'Забраные Global Money',
+                                        'url'   =>  '#'
+                                    ],
+                                    [
+                                        'label' =>  'Продажи из магазина и самовывоз',
+                                        'url'   =>  '#'
+                                    ],
+                                ]
                             ],
                             [
-                                'label' =>  'Запросы на перезвон',
-                                'url'   =>  '/admin/feedback/requestcall'
-                            ],
-                            [
-                                'label' =>  'Жалобы',
-                                'url'   =>  '/admin/feedback/lament'
-                            ],
-                            [
-                                'label' =>  'Голосования',
-                                'url'   =>  '/admin/feedback/vote'
+                                'label' =>  'Кабинет телефониста',
+                                'url'   =>  '#'
                             ],
                         ]
                     ],
                     [
                         'label' =>  'Клиенты',
-                        'url'   =>  '/admin/customers'
-                    ],
-                    [
-                        'label' =>  'Промокоды',
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  'Ценовые правила',
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  'Отчёты',
-                        'url'   =>  '#',
+                        'url'   =>  Url::toRoute('/customers/index'),
                         'items' =>  [
                             [
-                                'label' =>  'Статистика (графики)',
-                                'url'   =>  '/admin/charts'
+                                'label' =>  'Обратная связь',
+                                'url'   =>  '#',
+                                'items' =>  [
+                                    [
+                                        'label' =>  'Отзывы',
+                                        'url'   =>  Url::toRoute('/feedback/reviews')
+                                    ],
+                                    [
+                                        'label' =>  'Вопросы',
+                                        'url'   =>  Url::toRoute('/feedback/questions')
+                                    ],
+                                    [
+                                        'label' =>  'Запросы на перезвон',
+                                        'url'   =>  Url::toRoute('/feedback/requestcall')
+                                    ],
+                                    [
+                                        'label' =>  'Жалобы',
+                                        'url'   =>  Url::toRoute('/feedback/lament')
+                                    ],
+                                    [
+                                        'label' =>  'Голосования',
+                                        'url'   =>  Url::toRoute('/feedback/vote')
+                                    ],
+                                ]
                             ],
                             [
-                                'label' =>  'Отключеные товары',
-                                'url'   =>  '#'
-                            ],
-                            [
-                                'label' =>  'Включеные товары',
-                                'url'   =>  '#'
-                            ],
-                            [
-                                'label' =>  'Отгруженые товары',
-                                'url'   =>  '#'
-                            ],
-                            [
-                                'label' =>  'Подтверждённые заказы',
-                                'url'   =>  '#'
-                            ],
-                            [
-                                'label' =>  'Забраные Global Money',
-                                'url'   =>  '#'
-                            ],
-                            [
-                                'label' =>  'Продажи из магазина и самовывоз',
+                                'label' =>  'Рассылка',
                                 'url'   =>  '#'
                             ],
                         ]
@@ -364,7 +382,7 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Пользователи',
-                                'url'   =>  '/admin/users'
+                                'url'   =>  Url::toRoute('/users/index')
                             ],
                             [
                                 'label' =>  'Способы оплаты',
@@ -374,11 +392,15 @@ $this->beginPage() ?>
                                 'label' =>  'Шаблоны сообщений',
                                 'url'   =>  '#'
                             ],
+                            [
+                                'label' =>  'Перевод',
+                                'url'   =>  '#'
+                            ],
+                            [
+                                'label' =>  'Подтверждение перевода',
+                                'url'   =>  '#'
+                            ],
                         ]
-                    ],
-                    [
-                        'label' =>  'Кабинет телефониста',
-                        'url'   =>  '#'
                     ],
                     [
                         'label' =>  'Блог',
@@ -394,7 +416,7 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Статьи',
-                                'url'   =>  '/admin/blog'
+                                'url'   =>  Url::toRoute('/blog/index')
                             ],
                         ]
                     ],
@@ -406,7 +428,7 @@ $this->beginPage() ?>
             ],
             [
                 'label'     =>  'Задания',
-                'url'       =>  '/admin/tasks'
+                'url'       =>  Url::toRoute('/tasks/index')
             ],
             /*[
                 'label' =>  '<i class="glyphicon glyphicon-usd large" id="currency-icon" data-target="#currencyModal" data-toggle="modal"></i><span class="visible-xs-inline">&nbsp;Курс</span>'
@@ -488,7 +510,7 @@ $this->beginPage() ?>
             'showDateButtons'   =>  isset($this->params['showDateButtons']) ? $this->params['showDateButtons'] : false
         ])?>
         <?= Breadcrumbs::widget([
-            'homeLink'  =>  ['label' => 'Главная', 'url' => '/admin'],
+            'homeLink'  =>  ['label' => 'Главная', 'url' => Url::home()],
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]);
         echo $content ?>

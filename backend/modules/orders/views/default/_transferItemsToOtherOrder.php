@@ -1,5 +1,5 @@
 <?php
-use app\models\History;
+use common\models\History;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
 
