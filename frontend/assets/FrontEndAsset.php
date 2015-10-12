@@ -16,7 +16,6 @@ class FrontEndAsset extends AssetBundle
 	public $baseUrl = '@web';
 	public $css = [
 		'css/normalize.css',
-		'css/all.css',
 		'css/ion.rangeSlider.css',
 		'css/ion.rangeSlider.skinModern.css',
 		'css/counter.css',

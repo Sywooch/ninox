@@ -3,7 +3,6 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use app\assets\FrontEndAsset;
 use app\assets\RuLangAsset;
 use bobroid\yamm\Yamm;
 use common\components\SocialButtonWidget;
@@ -11,7 +10,6 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
 
 RuLangAsset::register($this);
 
@@ -35,15 +33,6 @@ $cartModal = new \bobroid\remodal\Remodal([
 		'opened'	=>	'console.log(e.target);'
 	]
 ]);
-/*
-
-echo '<pre>';
-//print_r(\app\models\Category::getMenu());
-echo '</pre>';
-
-Одному программисту за такой оставленный код оторвали руки -_-
-
-*/
 
 ?>
 <?php $this->beginPage() ?>
@@ -56,18 +45,6 @@ echo '</pre>';
 	</head>
 	<body>
 	<?php $this->beginBody() ?>
-	<?php
-	Yamm::begin([
-		'options' => [
-			'headerOptions'   =>  [
-				'class'   =>  'gray'
-			]
-		],
-		'theme' =>  'gray',
-		'items' =>  $menu
-	]);
-	?>
-	<?php Yamm::end(); ?>
 	<div class="topCaption">
 		<div class="topAction">
 			<div class="top-action-center">
@@ -128,91 +105,98 @@ echo '</pre>';
 			</ul>
 		</nav>
 	</div>
-		<div class="content">
-			<div class="contentContainer">
-				<?=$content?>
-			</div>
-		</div>
-
-		<footer>
-			<div class="footerCenter">
-				<div class="quickReference">
-					<div class="reference1">
-						<?=Html::tag('span', \Yii::t('shop', 'Статус заказа'), [
-							'class'		=>	'link-hide',
-							'data-href'	=>	'/status-zakaza'
-						])?>
-						<?=Html::tag('span', \Yii::t('shop', 'Подтвердить оплату'), [
-							'class'		=>	'link-hide',
-							'data-href'	=>	'/oplata'
-						])?>
-						<?=Html::tag('span', \Yii::t('shop', 'Возврат товара'), [
-							'class'		=>	'link-hide',
-							'data-href'	=>	'/vozvrat-i-obmen'
-						])?>
-						<?=Html::tag('span', \Yii::t('shop', 'Жалобы руководству'), [
-							'class'		=>	'link-hide',
-							'data-href'	=>	'/kontakty'
-						])?>
-						<?=Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
-							'class'		=>	'link-hide',
-							'href'		=>	'/map'
-						])?>
-					</div>
-					<div class="reference2">
-						<?=Html::tag('span', \Yii::t('shop', 'Вакансии'), [
-							'class'		=>	'link-hide',
-							'data-href'	=>	'/vakansii'
-						])?>
-						<?=Html::tag('span', \Yii::t('shop', 'Контакты'), [
-							'class'		=>	'link-hide',
-							'data-href'	=>	'/kontakty'
-						])?>
-						<?=Html::tag('span', \Yii::t('shop', 'О нас'), [
-							'class'		=>	'link-hide',
-							'data-href'	=>	'/o-nas'
-						])?>
-					</div>
-				</div>
-				<div class="socialNetworks">
-					<?=SocialButtonWidget::widget([
-						'items' => [
-							['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
-							['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
-							['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
-							['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
-							['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
-						]
+	<?php
+	Yamm::begin([
+		'options' => [
+			'headerOptions'   =>  [
+				'class'   =>  'blue'
+			]
+		],
+		'theme' =>  'blue',
+		'items' =>  $menu
+	]);
+	?>
+	<?=$content?>
+	<?php Yamm::end(); ?>
+	<footer>
+		<div class="footerCenter">
+			<div class="quickReference">
+				<div class="reference1">
+					<?=Html::tag('span', \Yii::t('shop', 'Статус заказа'), [
+						'class'		=>	'link-hide',
+						'data-href'	=>	'/status-zakaza'
+					])?>
+					<?=Html::tag('span', \Yii::t('shop', 'Подтвердить оплату'), [
+						'class'		=>	'link-hide',
+						'data-href'	=>	'/oplata'
+					])?>
+					<?=Html::tag('span', \Yii::t('shop', 'Возврат товара'), [
+						'class'		=>	'link-hide',
+						'data-href'	=>	'/vozvrat-i-obmen'
+					])?>
+					<?=Html::tag('span', \Yii::t('shop', 'Жалобы руководству'), [
+						'class'		=>	'link-hide',
+						'data-href'	=>	'/kontakty'
+					])?>
+					<?=Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
+						'class'		=>	'link-hide',
+						'href'		=>	'/map'
 					])?>
 				</div>
-				<div class="support">
-					<span class="supportName"><?=\Yii::t('shop', 'Служба клиентской поддержки')?>:</span>
-					<span class="primeNumber"><?=(\Yii::$app->language == 'be' ? '+375 (29) 110 43 43' : '0 800 508 208')?></span>
-					<?php if(\Yii::$app->language == 'be'){ ?>
-						<span class="skype"><a class="call-to-skype" href="skype:krasota-style?call">позвонить на <i class="shop-skype"></i></a></span>
-					<?php } ?>
-					<span class="workTime"><?=\Yii::t('shop', 'Время работы call-центра')?>:</span>
-					<span class="workTime">вт.-вс: с 9.00 до 18.00</span>
-					<span class="workTime">пн: с 11.00 до 15.00</span>
-					<div>
-						<?php if(false){ //Что это за костыль?! Это сказали прибрать, но зная, что часто прибранное приходится возвращать, пришлось воспользоваться инкостыляцией?>
-							<div><span><?=\Yii::t('shop', 'Киев')?></span><span>044 222 8 110</span></div>
-						<?php } ?>
-						<?php if(\Yii::$app->language != 'be'){ ?>
-							<div><span><?=\Yii::t('shop', 'Киев')?></span><span>044 232 82 20</span></div>
-							<div><span><?=\Yii::t('shop', 'Одесса')?></span><span>048 735 10 80</span></div>
-							<div><span>моб. МТС</span><span>050 677 54 56</span></div>
-							<div><span>моб. Киевстар</span><span>067 507 87 73</span></div>
-							<div><span>моб. Life</span><span>063 334 49 15</span></div>
-						<?php } ?>
-					</div>
-				</div>
-				<div class="footerContacts">
-					<div class="phone"></div>
-					<div class="number">063 334 49 15 • 067 507 87 73</div>
+				<div class="reference2">
+					<?=Html::tag('span', \Yii::t('shop', 'Вакансии'), [
+						'class'		=>	'link-hide',
+						'data-href'	=>	'/vakansii'
+					])?>
+					<?=Html::tag('span', \Yii::t('shop', 'Контакты'), [
+						'class'		=>	'link-hide',
+						'data-href'	=>	'/kontakty'
+					])?>
+					<?=Html::tag('span', \Yii::t('shop', 'О нас'), [
+						'class'		=>	'link-hide',
+						'data-href'	=>	'/o-nas'
+					])?>
 				</div>
 			</div>
-		</footer>
+			<div class="socialNetworks">
+				<?=SocialButtonWidget::widget([
+					'items' => [
+						['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
+						['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
+						['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
+						['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
+						['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
+					]
+				])?>
+			</div>
+			<div class="support">
+				<span class="supportName"><?=\Yii::t('shop', 'Служба клиентской поддержки')?>:</span>
+				<span class="primeNumber"><?=(\Yii::$app->language == 'be' ? '+375 (29) 110 43 43' : '0 800 508 208')?></span>
+				<?php if(\Yii::$app->language == 'be'){ ?>
+					<span class="skype"><a class="call-to-skype" href="skype:krasota-style?call">позвонить на <i class="shop-skype"></i></a></span>
+				<?php } ?>
+				<span class="workTime"><?=\Yii::t('shop', 'Время работы call-центра')?>:</span>
+				<span class="workTime">вт.-вс: с 9.00 до 18.00</span>
+				<span class="workTime">пн: с 11.00 до 15.00</span>
+				<div>
+					<?php if(false){ //Что это за костыль?! Это сказали прибрать, но зная, что часто прибранное приходится возвращать, пришлось воспользоваться инкостыляцией?>
+						<div><span><?=\Yii::t('shop', 'Киев')?></span><span>044 222 8 110</span></div>
+					<?php } ?>
+					<?php if(\Yii::$app->language != 'be'){ ?>
+						<div><span><?=\Yii::t('shop', 'Киев')?></span><span>044 232 82 20</span></div>
+						<div><span><?=\Yii::t('shop', 'Одесса')?></span><span>048 735 10 80</span></div>
+						<div><span>моб. МТС</span><span>050 677 54 56</span></div>
+						<div><span>моб. Киевстар</span><span>067 507 87 73</span></div>
+						<div><span>моб. Life</span><span>063 334 49 15</span></div>
+					<?php } ?>
+				</div>
+			</div>
+			<div class="footerContacts">
+				<div class="phone"></div>
+				<div class="number">063 334 49 15 • 067 507 87 73</div>
+			</div>
+		</div>
+	</footer>
 	<?=$cartModal->renderModal()?>
 	<?php $this->endBody() ?>
 	</body>
