@@ -109,7 +109,7 @@ var changeState = function(e){
     var target = e.currentTarget;
     $.ajax({
         type: 'POST',
-        url: '/admin/goods/changestate',
+        url: '/goods/changestate',
         data: {
             'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
         },
@@ -127,7 +127,7 @@ var changeState = function(e){
     var target = e.currentTarget;
     $.ajax({
         type: 'POST',
-        url: '/admin/goods/workwithtrash',
+        url: '/goods/workwithtrash',
         data: {
             'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
         },
@@ -146,7 +146,7 @@ var changeState = function(e){
 
         $.ajax({
             type: 'POST',
-            url: '/admin/goods/removeadditionalphoto',
+            url: '/goods/removeadditionalphoto',
             data: {
                 'additionalPhotoID': id
             },
@@ -190,7 +190,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
             <?php if($good->show_img != 0 && $good->Deleted != 1){ ?>
                 <a href="https://krasota-style.com.ua/tovar/<?=$good->link?>-g<?=$good->ID?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
-            <?=\app\components\ChangesWidget::widget([
+            <?=\common\components\ChangesWidget::widget([
                 'model'         =>  $good,
                 'header'        =>  'Изменения по товару '.$good->Name
             ])?>
@@ -201,7 +201,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
         <div class="btn-group pull-right" role="group" aria-label="...">
             <button type="button" id="changeTrashState" class="btn btn-info" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>data-attribute-goodID="<?=$good->ID?>"><?=$good->Deleted == "0" ? "Удалить" : "Восттановить";?></button>
             <button type="button" id="changeState" class="btn btn-info" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>data-attribute-goodID="<?=$good->ID?>"><?=$good->show_img == "1" ? "Отключить" : "Включить";?></button>
-            <a href="/admin/goods/showgood/<?=$good->ID?>" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>type="button" class="btn btn-info">В режим просмотра</a>
+            <a href="/goods/showgood/<?=$good->ID?>" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>type="button" class="btn btn-info">В режим просмотра</a>
         </div>
         <div class="clearfix"></div>
     </div>
@@ -218,7 +218,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
                             'accept' => 'image/*'
                         ],
                         'pluginOptions' => [
-                            'uploadUrl' =>  '/admin/goods/uploadgoodphoto',
+                            'uploadUrl' =>  '/goods/uploadgoodphoto',
                             'uploadExtraData' => [
                                 'ItemId' => $good->ID
                             ],
@@ -281,7 +281,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
                                             'accept' => 'image/*'
                                         ],
                                         'pluginOptions' => [
-                                            'uploadUrl' => '/admin/goods/uploadadditionalphoto',
+                                            'uploadUrl' => '/goods/uploadadditionalphoto',
                                             'uploadExtraData' => [
                                                 'ItemId' => $good->ID
                                             ],
@@ -371,7 +371,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
                                     Описание:
                                 </td>
                                 <td>
-                                    '.yii\imperavi\Widget::widget([
+                                    '.bobroid\imperavi\Widget::widget([
                                             'model' => $good,
                                             'attribute' => 'Description',
                                             'options' => [
@@ -408,7 +408,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
                                     Опис:
                                 </td>
                                 <td>
-                                    '.yii\imperavi\Widget::widget([
+                                    '.bobroid\imperavi\Widget::widget([
                                             'model' => $goodUk,
                                             'attribute' => 'Description',
                                             'options' => [
@@ -655,7 +655,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
             <center>
                 <button class="btn btn-lg btn-success" style="margin: 0 auto" type="submit">Сохранить</button>
                 или
-                <a href="/admin/goods/showgood/<?=$good->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
+                <a href="/goods/showgood/<?=$good->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
             </center>
         </div>
     </div>

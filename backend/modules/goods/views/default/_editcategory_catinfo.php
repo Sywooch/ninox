@@ -107,7 +107,7 @@ if(isset($category->keyword) && strlen($category->keyword) >= 1){
         <td>Описание</td>
         <td>
             <div>
-                <?=yii\imperavi\Widget::widget([
+                <?=bobroid\imperavi\Widget::widget([
                     'model' => $category,
                     'attribute' => 'descr',
                     'options' => [
@@ -121,7 +121,7 @@ if(isset($category->keyword) && strlen($category->keyword) >= 1){
         <td>Текст</td>
         <td>
             <div>
-                <?=yii\imperavi\Widget::widget([
+                <?=bobroid\imperavi\Widget::widget([
                     'model' => $category,
                     'attribute' => 'text2',
                     'options' => [

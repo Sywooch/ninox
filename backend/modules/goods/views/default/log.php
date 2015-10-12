@@ -1,7 +1,7 @@
 <?php
     $this->title = 'Лог изменений';
     $this->params['breadcrumbs'][] = [
-        'url'   =>  '/admin/goods',
+        'url'   =>  '/goods',
         'label' =>  'Категории',
     ];
     $this->params['breadcrumbs'][] = $this->title;

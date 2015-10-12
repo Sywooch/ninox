@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $this->title = $category->Name == "" ? "Новая категория" : "Категория \"".$category->Name.'"';
 $this->params['breadcrumbs'][] = [
     'label' =>  "Категории",
-    'url'   =>  '/admin/goods'
+    'url'   =>  '/goods'
 ];
 
 if(!empty($breadcrumbs)){
@@ -72,7 +72,7 @@ $form = ActiveForm::begin([
             <?php if($category->menu_show != 0){ ?>
                 <a href="https://krasota-style.com.ua/<?=$category->link?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
-            <?=\app\components\ChangesWidget::widget([
+            <?=\common\components\ChangesWidget::widget([
                 'model'         =>  $category,
                 'header'        =>  'Изменения по категории '.$category->Name
             ])?>
@@ -81,7 +81,7 @@ $form = ActiveForm::begin([
         <div class="btn-group pull-right" role="group" aria-label="...">
             <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->canBuy == "1" ? "Не продавать товары" : "Продавать товары"?></button>
             <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->menu_show == "1" ? "Выключить" : "Включить"?></button>
-            <a href="/admin/goods/showcategory/<?=$category->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
+            <a href="/goods/showcategory/<?=$category->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
         </div>
         <div class="clearfix"></div>
     </div>
@@ -98,7 +98,7 @@ $form = ActiveForm::begin([
                             'accept' => 'image/*'
                         ],
                         'pluginOptions' => [
-                            'uploadUrl' =>  '/admin/goods/uploadcategoryphoto',
+                            'uploadUrl' =>  '/goods/uploadcategoryphoto',
                             'uploadExtraData' => [
                                 'ItemId' => $category->ID
                             ],
@@ -259,7 +259,7 @@ $form = ActiveForm::begin([
         <center>
             <button class="btn btn-lg btn-success" style="margin: 0 auto" type="submit">Сохранить</button>
             или
-            <a href="/admin/goods/showcategory/<?=$category->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
+            <a href="/goods/showcategory/<?=$category->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
         </center>
     </div>
 </div>

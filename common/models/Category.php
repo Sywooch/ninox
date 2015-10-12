@@ -103,7 +103,7 @@ class Category extends \yii\db\ActiveRecord
         return $goods;
     }
 
-    public function getList(){
+    public static function getList(){
         $cats = Category::find()->select(['ID', 'Name', 'Code'])->all();
         $r = [];
         $n = "";

@@ -29,7 +29,7 @@ var changeState = function(e){
     var target = e.currentTarget;
     $.ajax({
         type: 'POST',
-        url: '/admin/goods/changestate',
+        url: '/goods/changestate',
         data: {
             'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
         },
@@ -47,7 +47,7 @@ var changeState = function(e){
     var target = e.currentTarget;
     $.ajax({
         type: 'POST',
-        url: '/admin/goods/workwithtrash',
+        url: '/goods/workwithtrash',
         data: {
             'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
         },
@@ -198,7 +198,7 @@ $this->title = "Товар \"".$good->Name."\"";
                                     Категория:
                                 </td>
                                 <td>
-                                    <a href="/admin/goods/showcategory/<?=$nowCategory->ID?>"><?=$nowCategory->Name?></a>
+                                    <a href="/goods/showcategory/<?=$nowCategory->ID?>"><?=$nowCategory->Name?></a>
                                 </td>
                             </tr>
                             <tr>

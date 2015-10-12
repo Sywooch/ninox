@@ -7,7 +7,7 @@ $this->title = "Товары";
 if(!empty($nowCategory)){
     $this->params['breadcrumbs'][] = [
         'label' =>  'Категории',
-        'url'   =>  '/admin/goods'
+        'url'   =>  '/goods'
     ];
 }else{
     $this->params['breadcrumbs'][] = $this->title;
@@ -52,7 +52,7 @@ var good = {
         var target = e.currentTarget;
         $.ajax({
             type: 'POST',
-            url: '/admin/goods/changestate',
+            url: '/goods/changestate',
             data: {
                 'GoodID': e.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-value-goodID")
             },
@@ -81,7 +81,7 @@ var good = {
         var target = e.currentTarget;
         $.ajax({
             type: 'POST',
-            url: '/admin/goods/workwithtrash',
+            url: '/goods/workwithtrash',
             data: {
                 'GoodID': e.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-value-goodID")
             },
@@ -97,7 +97,7 @@ var good = {
 var changeCategoryState = function(e){
     $.ajax({
 		type: 'POST',
-		url: '/admin/goods/changecategorystate',
+		url: '/goods/changecategorystate',
 		data: {
 		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
 		},
@@ -114,7 +114,7 @@ var changeCategoryState = function(e){
 }, changeCategoryCanBuy = function(e){
     $.ajax({
 		type: 'POST',
-		url: '/admin/goods/changecategorycanbuy',
+		url: '/goods/changecategorycanbuy',
 		data: {
 		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
 		},
@@ -165,7 +165,7 @@ $this->registerCss($s);
     $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$nowCategory->Code]['disabled'] : 0;
         ?>
     <ul class="nav nav-pills" style="margin-left: -15px;">
-        <li role="presentation"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>">Всего товаров: <span class="label label-info"><?=($enabled + $disabled)?></span></a></li>
+        <li role="presentation"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>">Всего товаров: <span class="label label-info"><?=($enabled + $disabled)?></span></a></li>
         <li role="presentation" class="<?=$sf == 'enabled' ? 'active' : ''?>"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=enabled">включено: <span class="label label-success"><?=$enabled?></span></a></li>
         <li role="presentation" class="<?=$sf == 'disabled' ? 'active' : ''?>"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=disabled">выключено: <span class="label label-danger"><?=$disabled?></span></a></li>
     </ul>

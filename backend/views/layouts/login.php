@@ -17,7 +17,7 @@ $this->beginPage() ?>
     var guestRefresh = function(){
         $.ajax({
             type: 'POST',
-            url: '/admin/login',
+            url: '/login',
             success: function(data){
                 if(data == 0){
                     location.reload();

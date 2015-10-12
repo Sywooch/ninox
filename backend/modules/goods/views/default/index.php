@@ -28,7 +28,7 @@ function updSort(){
 
     $.ajax({
 		type: 'POST',
-		url: '/admin/goods/updatecategorysort',
+		url: '/goods/updatecategorysort',
 		data: {
 		    'data': b,
 		    'category': getParameterByName('category')
@@ -55,7 +55,7 @@ for(var i = 0; i < a.length; i++){
 function changeCategoryState(e){
     $.ajax({
 		type: 'POST',
-		url: '/admin/goods/changecategorystate',
+		url: '/goods/changecategorystate',
 		data: {
 		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
 		},
@@ -74,7 +74,7 @@ function changeCategoryState(e){
 function changeCategoryCanBuy(e){
     $.ajax({
 		type: 'POST',
-		url: '/admin/goods/changecategorycanbuy',
+		url: '/goods/changecategorycanbuy',
 		data: {
 		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
 		},
@@ -102,7 +102,7 @@ $this->registerJs($js);
 if(!empty($nowCategory)){
   $this->params['breadcrumbs'][] = [
       'label' =>  'Категории',
-      'url'   =>  '/admin/goods'.(\Yii::$app->request->get("smartfilter") != '' ? '?smartfilter='.\Yii::$app->request->get("smartfilter") : '')
+      'url'   =>  '/goods'.(\Yii::$app->request->get("smartfilter") != '' ? '?smartfilter='.\Yii::$app->request->get("smartfilter") : '')
   ];
 }else{
   $this->params['breadcrumbs'][] = $this->title;
@@ -120,7 +120,7 @@ $items = [];
 ?>
 <h1>Категории<?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small> <?php
         $items[] = [
-        'content' => '<a href="/admin/goods?category='.$nowCategory->Code.'&onlyGoods=true">Товары этой категории</a>',
+        'content' => \yii\helpers\Html::a('Товары этой категории', \yii\helpers\Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'onlyGoods' => 'true'])),
         'options' =>  [
 
         ],

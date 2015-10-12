@@ -70,7 +70,7 @@ changeTaskStatus = function(e){
 
     $.ajax({
         type: 'POST',
-        url: '/admin/tasks/changetaskstatus',
+        url: '/tasks/changetaskstatus',
         data: {
             'taskID': e.getAttribute("data-task"),
             'status': e.getAttribute("data-status")
@@ -100,7 +100,7 @@ changeTaskStatus = function(e){
 
     $.ajax({
         type: 'POST',
-        url: '/admin/tasks/getuserinfo',
+        url: '/tasks/getuserinfo',
         data: {
             'userID': id
         },
@@ -112,7 +112,7 @@ changeTaskStatus = function(e){
 }, showTaskModal = function(taskID){
     $.ajax({
         type: 'POST',
-        url: '/admin/tasks/viewtask',
+        url: '/tasks/viewtask',
         data: {
             'taskID': taskID
         },
@@ -234,12 +234,12 @@ foreach($events as $event){
                 console.log(a + ' ' + b );
             }
         </script>
-        <?=\app\components\AddTaskWidget::widget([
+        <?=\common\components\AddTaskWidget::widget([
         ])?>
     </div>
-    <a class="btn btn-default <?=$smartfilter == null ? 'active' : ''?>" href="/admin/tasks">Все</a>
-    <a class="btn btn-info <?=$smartfilter == 'inWork' ? 'active' : ''?>" href="/admin/tasks?smartfilter=inWork">В работе</a>
-    <a class="btn btn-danger <?=$smartfilter == 'stitched' ? 'active' : ''?>" href="/admin/tasks?smartfilter=stitched">Простроченые</a>
+    <a class="btn btn-default <?=$smartfilter == null ? 'active' : ''?>" href="/tasks">Все</a>
+    <a class="btn btn-info <?=$smartfilter == 'inWork' ? 'active' : ''?>" href="/tasks?smartfilter=inWork">В работе</a>
+    <a class="btn btn-danger <?=$smartfilter == 'stitched' ? 'active' : ''?>" href="/tasks?smartfilter=stitched">Простроченые</a>
 </div>
 &nbsp;
 <?=\talma\widgets\FullCalendar::widget([

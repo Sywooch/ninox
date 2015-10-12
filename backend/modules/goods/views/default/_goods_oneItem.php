@@ -26,7 +26,7 @@ $good = $model;
                         'attribute' =>  'anotherCurrencyValue',
                         'ajaxSettings'  =>  [
                             'type'      =>  'post',
-                            'url'       =>  '/admin/goods/simplegoodedit',
+                            'url'       =>  '/goods/simplegoodedit',
                         ],
                     ]),
                     Editable::widget([
@@ -43,7 +43,7 @@ $good = $model;
                         ],
                         'ajaxSettings'  =>  [
                             'type'      =>  'post',
-                            'url'       =>  '/admin/goods/simplegoodedit',
+                            'url'       =>  '/goods/simplegoodedit',
                         ],
                     ])?></dd>-->
                 <dd><?=$good->anotherCurrencyValue?> <?=$good->anotherCurrencyTag?></dd>
@@ -60,7 +60,7 @@ $good = $model;
                         Действия <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="/admin/goods/showgood/<?=$good->ID?>?act=edit" data-pjax="0">Редактировать</a></li>
+                        <li><a href="/goods/showgood/<?=$good->ID?>?act=edit" data-pjax="0">Редактировать</a></li>
                         <li id="good-state"><a style="cursor: pointer;" class="changeState-btn"><?=$good->show_img == "1" ? "Отключить" : "Включить"?></a></li>
                         <li><a style="cursor: pointer;" class="up-btn">Поднять товар</a></li>
                         <li><a style="cursor: pointer;" class="print-btn">Печать</a></li>
@@ -71,7 +71,7 @@ $good = $model;
                         <li id="deleted-state"><a style="cursor: pointer;" class="delete-btn"><?=$good->Deleted == "1" ? "Восстановить" : "Удалить"?></a></li>
                     </ul>
                 </div>
-                <a href="/admin/goods/showgood/<?=$good->ID?>" type="button" class="btn btn-default" data-pjax="0">Подробнее</a>
+                <a href="/goods/showgood/<?=$good->ID?>" type="button" class="btn btn-default" data-pjax="0">Подробнее</a>
             </div>
         </div>
     </div>

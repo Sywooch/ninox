@@ -4,6 +4,7 @@ use bobroid\yamm\Yamm;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 use yii\widgets\Breadcrumbs;
 
 /* @var $this \yii\web\View */
@@ -79,7 +80,15 @@ i.large{
 }
 
 span.twitter-typeahead div.tt-menu{
-    width: 400px;
+    margin-top: -1px;
+    border-radius: 0px;
+    border-left: 0px none;
+    border-right: 0px none;
+}
+
+.tt-scrollable-menu .tt-menu{
+    max-height: none;
+    overflow-y: none;
 }
 
 .tt-menu .typeahead-list-item{
@@ -136,6 +145,26 @@ $this->beginPage() ?>
     <?php
     Yamm::begin([
         'typeaheadSearch'   =>  true,
+        'typeaheadConfig'   =>  [
+            'name' => 'country_1',
+            'options' => ['placeholder' => 'Начните вводить текст для поиска...'],
+            'scrollable' => true,
+            'pluginOptions' => ['highlight'=>true],
+            'dataset' => [
+                [
+                    'remote' => [
+                        'url' => Url::to(['/goods/searchgoods']) . '?string=%QUERY',
+                        'wildcard' => '%QUERY'
+                    ],
+                    'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+                    'display' => 'value',
+                    'templates' => [
+                        'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
+                        'suggestion' => new JsExpression('Handlebars.compile(\'<a class="typeahead-list-item" href="/goods/showgood/{{ID}}"><div class="row"><div class="col-xs-12 name">{{Name}}</div><div class="col-xs-12 category"><span class="pull-right ">{{categoryname}}</span></div><div class="col-xs-12 code">Код товара: {{Code}}</div></div></a>\')')
+                    ]
+                ]
+            ]
+        ],
         'options' => [
             'headerOptions'   =>  [
                 'class'   =>  'gray'

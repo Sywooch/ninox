@@ -18,6 +18,7 @@ use sammaye\audittrail\AuditTrail;
 use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\helpers\Url;
 use yii\web\Response;
 
 class DefaultController extends Controller
@@ -44,7 +45,7 @@ class DefaultController extends Controller
                     if ($c != '') {
                         $breadcrumbs[] = [
                             'label' => $c->Name,
-                            'url' => '/admin/goods?category=' . $c->Code.(\Yii::$app->request->get("smartfilter") != '' ? '&smartfilter='.\Yii::$app->request->get("smartfilter") : '')
+                            'url'   =>  Url::toRoute(['/goods', 'category' => $c->Code, 'smartfilter' => \Yii::$app->request->get("smartfilter")])
                         ];
                     }
                 }
@@ -190,7 +191,7 @@ class DefaultController extends Controller
 
             $breadcrumbs[] = [
                 'label' =>  'Категории',
-                'url'   =>  '/admin/goods'
+                'url'   =>  Url::toRoute(['/goods'])
             ];
 
             if (sizeof($p) >= 1) {
@@ -200,7 +201,7 @@ class DefaultController extends Controller
                     if ($c != '') {
                         $breadcrumbs[] = [
                             'label' => $c->Name,
-                            'url' => '/admin/goods?category=' . $c->Code
+                            'url' => Url::toRoute(['/goods', 'category' => $c->Code])
                         ];
                     }
                 }
@@ -244,7 +245,7 @@ class DefaultController extends Controller
                     foreach($b as $bb){
                         $breadcrumbs[] = [
                             'label' =>  $bb->Name,
-                            'url'   =>  '/admin/goods?category='.$bb->Code
+                            'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
                         ];
                     }
                 }
@@ -301,10 +302,7 @@ class DefaultController extends Controller
         $c = Category::findOne(['ID' => $param]);
 
         if(empty($c)){
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  'Категории не существует',
-                'message'   => 'Такой категории нет на сайте! Вы можете <a onclick="window.history.back();">вернуться обратно</a>, или попробовать ещё раз'
-            ]);
+            return $this->run('site/error');
         }
 
         $b = Category::getParentCategories($c->Code);
@@ -314,7 +312,7 @@ class DefaultController extends Controller
             foreach($b as $bb){
                 $breadcrumbs[] = [
                     'label' =>  $bb->Name,
-                    'url'   =>  '/admin/goods?category='.$bb->Code
+                    'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
                 ];
             }
         }
@@ -353,20 +351,14 @@ class DefaultController extends Controller
 
     public function actionShowgood($param){
         if(!filter_var($param, FILTER_VALIDATE_INT)){
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  'Такого товара нет',
-                'message'   => 'Такого товара нет на сайте! Вы можете <a onclick="window.history.back();">вернуться обратно</a>, или попробовать ещё раз'
-            ]);
+            return $this->run('site/error');
         }
 
         $good = Good::findOne(['ID' => $param]);
         $goodUK = GoodUk::findOne(['ID' => $param]);
 
         if(empty($good)){
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  'Такого товара нет',
-                'message'   => 'Такого товара нет на сайте! Вы можете <a onclick="window.history.back();">вернуться обратно</a>, или попробовать ещё раз'
-            ]);
+            return $this->run('site/error');
         }
 
         //Начало хлебных крошек
@@ -377,7 +369,7 @@ class DefaultController extends Controller
 
         $breadcrumbs[] = [
             'label' =>  'Категории',
-            'url'   =>  '/admin/goods'
+            'url'   =>  '/goods'
         ];
 
         if (sizeof($p) >= 1) {
@@ -387,7 +379,7 @@ class DefaultController extends Controller
                 if ($c != '') {
                     $breadcrumbs[] = [
                         'label' => $c->Name,
-                        'url' => '/admin/goods?category=' . $c->Code
+                        'url' => Url::toRoute(['/goods', 'category' => $c->Code])
                     ];
                 }
             }
@@ -395,7 +387,7 @@ class DefaultController extends Controller
 
         $breadcrumbs[] = [
             'label' =>  $a->Name,
-            'url' => '/admin/goods?category=' . $a->Code
+            'url' => Url::toRoute(['/goods', 'category' => $a->Code])
         ];
 
         $breadcrumbs[] = $good->Name;
@@ -475,10 +467,7 @@ class DefaultController extends Controller
             }
             return 0;
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -492,10 +481,7 @@ class DefaultController extends Controller
             return $m->delete() ? 1 : 0;
         }
 
-        return $this->render('/../../admin/views/default/error.php', [
-            'name'  =>  '404',
-            'message'   => 'Такой страницы не существует'
-        ]);
+        return $this->run('site/error');
     }
 
     public function actionUploadcategoryphoto(){
@@ -517,10 +503,7 @@ class DefaultController extends Controller
                 'state' =>  0
             ];
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -548,10 +531,7 @@ class DefaultController extends Controller
                 'state' =>  0
             ];
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -594,10 +574,7 @@ class DefaultController extends Controller
                 return $mm;
             }
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -605,10 +582,7 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax){
             return Good::changeState(\Yii::$app->request->post("GoodID"));
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -616,10 +590,7 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax){
             return Category::change(\Yii::$app->request->post("category"), 'menu_show');
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -627,10 +598,7 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax){
             return Category::change(\Yii::$app->request->post("category"), 'canBuy');
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -638,10 +606,7 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax){
             return Good::changeTrashState(\Yii::$app->request->post("GoodID"));
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -650,10 +615,7 @@ class DefaultController extends Controller
         if (\Yii::$app->request->isAjax) {
             return Good::changeTrashState(\Yii::$app->request->post("CategoryID"));
         } else {
-            return $this->render('/../../admin/views/default/error.php', [
-                'name' => '404',
-                'message' => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 
@@ -683,10 +645,7 @@ class DefaultController extends Controller
 
             return $d;
         }else{
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  '404',
-                'message'   => 'Такой страницы не существует'
-            ]);
+            return $this->run('site/error');
         }
     }
 

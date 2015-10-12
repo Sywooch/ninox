@@ -2,7 +2,7 @@
 $this->title = "Категория \"".$category->Name.'"';
 $this->params['breadcrumbs'][] = [
     'label' =>  "Категории",
-    'url'   =>  '/admin/goods'
+    'url'   =>  '/goods'
 ];
 
 if(!empty($breadcrumbs)){
@@ -49,8 +49,8 @@ $this->registerCss($css);
             <?php if($category->menu_show != 0){ ?>
                 <a href="https://krasota-style.com.ua/<?=$category->link?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
-                <a href="/admin/goods?category=<?=$category->Code?>&onlyGoods=true" class="btn btn-default"><i class="glyphicon glyphicon-th-large"></i> Товары категории</a>
-            <?=\app\components\ChangesWidget::widget([
+            <?=\yii\helpers\Html::a('<i class="glyphicon glyphicon-th-large"></i> Товары категории', \yii\helpers\Url::toRoute(['/goods', 'category' => $category->Code, 'onlyGoods' => true]))?>
+            <?=\common\components\ChangesWidget::widget([
                 'model'         =>  $category,
                 'header'        =>  'Изменения по категории '.$category->Name
             ])?>
@@ -83,7 +83,7 @@ $this->registerCss($css);
                         </div>
                         <div class="panel-body">
                             <?php foreach($subCats as $sc){ ?>
-                            <a class="list-group-item <?=$sc->menu_show == "1" ? "list-group-item-success" : "list-group-item-danger"?>" href="/admin/goods/showcategory/<?=$sc->ID?>"><?=$sc->Name?></a>
+                            <a class="list-group-item <?=$sc->menu_show == "1" ? "list-group-item-success" : "list-group-item-danger"?>" href="/goods/showcategory/<?=$sc->ID?>"><?=$sc->Name?></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -119,7 +119,7 @@ $this->registerCss($css);
                             ?>
                             <tr>
                                 <td>Категория-родитель</td>
-                                <td><a href="/admin/goods/showcategory/<?=$parentCategory->ID?>"><?=$parentCategory->Name?></a></td>
+                                <td><a href="/goods/showcategory/<?=$parentCategory->ID?>"><?=$parentCategory->Name?></a></td>
                             </tr>
                             <?php
                             }

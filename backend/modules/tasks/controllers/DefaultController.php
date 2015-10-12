@@ -27,7 +27,7 @@ class DefaultController extends Controller
     }
 
     public function actionActionindex(){
-        return $this->redirect('/admin/tasks/calendar');
+        return $this->redirect('/tasks/calendar');
         //return $this->renderContent('asd');
     }
 
