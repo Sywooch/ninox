@@ -1,6 +1,8 @@
 <?php
 use kartik\sortable\Sortable;
 use kartik\dropdown\DropdownX;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = "Категории";
 
@@ -102,7 +104,7 @@ $this->registerJs($js);
 if(!empty($nowCategory)){
   $this->params['breadcrumbs'][] = [
       'label' =>  'Категории',
-      'url'   =>  '/goods'.(\Yii::$app->request->get("smartfilter") != '' ? '?smartfilter='.\Yii::$app->request->get("smartfilter") : '')
+      'url'   =>  Url::toRoute(['/goods', 'smartfilter' => \Yii::$app->request->get("smartfilter")])
   ];
 }else{
   $this->params['breadcrumbs'][] = $this->title;
@@ -120,7 +122,7 @@ $items = [];
 ?>
 <h1>Категории<?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small> <?php
         $items[] = [
-        'content' => \yii\helpers\Html::a('Товары этой категории', \yii\helpers\Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'onlyGoods' => 'true'])),
+        'content' => Html::a('Товары этой категории', Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'onlyGoods' => 'true'])),
         'options' =>  [
 
         ],
@@ -129,9 +131,24 @@ $items = [];
     $sf = \Yii::$app->request->get("smartfilter");
     ?></h1>
     <ul class="nav nav-pills" style="margin-left: -15px;">
-        <li role="presentation"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>">Всего товаров: <span class="label label-info"><?=($goodsCount['all']['enabled'] + $goodsCount['all']['disabled'])?></span></a></li>
-        <li role="presentation" class="<?=$sf == 'enabled' ? 'active' : ''?>"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=enabled">включено: <span class="label label-success"><?=$goodsCount['all']['enabled']?></span></a></li>
-        <li role="presentation" class="<?=$sf == 'disabled' ? 'active' : ''?>"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=disabled">выключено: <span class="label label-danger"><?=$goodsCount['all']['disabled']?></span></a></li>
+        <?=Html::tag('li',
+            Html::a('Всего товаров: '.Html::tag('span', ($goodsCount['all']['enabled'] + $goodsCount['all']['disabled']), ['class'=>'label label-info']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => ''])),
+            [
+                'role'      =>  'presentation',
+                'class'     =>  $sf == '' ? 'active' : ''
+            ])?>
+        <?=Html::tag('li',
+            Html::a('Выключено: '.Html::tag('span', ($goodsCount['all']['disabled']), ['class'=>'label label-danger']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => 'disabled'])),
+            [
+                'role'      =>  'presentation',
+                'class'     =>  $sf == 'disabled' ? 'active' : ''
+            ])?>
+        <?=Html::tag('li',
+            Html::a('Включено: '.Html::tag('span', ($goodsCount['all']['enabled']), ['class'=>'label label-success']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => 'enabled'])),
+            [
+                'role'      =>  'presentation',
+                'class'     =>  $sf == 'enabled' ? 'active' : ''
+            ])?>
     </ul>
     <br style="margin-bottom: 0;">
     <div class="clearfix"></div>
@@ -144,7 +161,7 @@ $items = [];
                 'items' =>  [
                     [
                         'label'     =>  'Просмотреть',
-                        'url'       =>  '/admin/goods/showcategory/'.$nowCategory->ID
+                        'url'       =>  Url::toRoute('showcategory/'.$nowCategory->ID)
                     ],
                     [
                         'label'     =>  'Просмотреть на сайте',
@@ -152,23 +169,23 @@ $items = [];
                     ],
                     [
                         'label'     =>  'Редактировать',
-                        'url'       =>  '/admin/goods/showcategory/'.$nowCategory->ID.'?act=edit'
+                        'url'       =>  Url::toRoute(['showcategory/'.$nowCategory->ID, 'act' => 'edit'])
                     ],
                     [
                         'label'     =>  'Добавить',
                         'items'     =>  [
                             [
                                 'label'     =>  'Товар',
-                                'url'       =>  '/admin/goods/addgood?category='.$nowCategory->ID
+                                'url'       =>  Url::toRoute(['addgood', 'category' => $nowCategory->ID])
                             ],
                             [
                                 'label'     =>  'Несколько товаров',
-                                'url'       =>  '/admin/goods/addgood?category='.$nowCategory->ID.'?mode=lot'
+                                'url'       =>  Url::toRoute(['addgood', 'category' => $nowCategory->ID, 'mode' => 'lot'])
                             ],
                             '<li class="divider"></li>',
                             [
                                 'label'     =>  'Категорию',
-                                'url'       =>  '/admin/goods/addcategory?category='.$nowCategory->ID
+                                'url'       =>  Url::to(['addcategory', 'category' => $nowCategory->ID])
                             ],
                         ]
                     ],
@@ -201,72 +218,12 @@ $items = [];
     <?php
 }
 foreach($categories as $c){
-    $enabled = isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0;
-    $disabled = isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0;
   $items[] = [
-    'content' =>  '<a href="/admin/goods?category='.$c->Code.(\Yii::$app->request->get("smartfilter") != '' ? '&smartfilter='.\Yii::$app->request->get("smartfilter") : '').'">'.$c->Name.' (включеных: '.$enabled.', выключеных: '.$disabled.')</a>
-    <div class="dropdown pull-right" style="margin-left: 5px; margin-top: -8px; display: inline-block;">
-    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
-        <span class="glyphicon glyphicon-option-horizontal large"></span>
-        <span class="caret"></span>
-    </button>
-    '.DropdownX::widget([
-            'options'   =>  [
-                'class' =>  'categoryActions'
-            ],
-            'items' =>  [
-                [
-                    'label'     =>  'Просмотреть',
-                    'url'       =>  '/admin/goods/showcategory/'.$c->ID
-                ],
-                [
-                    'label'     =>  'Просмотреть на сайте',
-                    'url'       =>  'https://krasota-style.com.ua/'.$c->link
-                ],
-                [
-                    'label'     =>  'Редактировать',
-                    'url'       =>  '/admin/goods/showcategory/'.$c->ID.'?act=edit'
-                ],
-                [
-                    'label'     =>  'Добавить',
-                    'items'     =>  [
-                        [
-                            'label'     =>  'Товар',
-                            'url'       =>  '/admin/goods/addgood?category='.$c->ID
-                        ],
-                        [
-                            'label'     =>  'Несколько товаров',
-                            'url'       =>  '/admin/goods/addgood?category='.$c->ID.'?mode=lot'
-                        ],
-                        '<li class="divider"></li>',
-                        [
-                            'label'     =>  'Категорию',
-                            'url'       =>  '/admin/goods/addcategory?category='.$c->ID
-                        ],
-                    ],
-                ],
-                '<li class="divider"></li>',
-                [
-                    'label' =>  $c->menu_show == "1" ? "Выключить" : "Включить",
-                    'options'   =>  [
-                        'class' =>  'shutdown',
-                        'data-attribute-categoryID' =>  $c->ID
-                    ],
-                    'url'   =>  '#'
-                ],
-                [
-                    'label' =>  $c->canBuy == "1" ? "Не продавать" : "Продавать",
-                    'options'   =>  [
-                        'class' =>  'canBuy',
-                        'data-attribute-categoryID' =>  $c->ID
-                    ],
-                    'url'   =>  '#'
-                ]
-
-            ]
-        ]).'
-    </div>
-    <span class="pull-right"><a class="glyphicon glyphicon-pencil" href="/admin/goods/showcategory/'.$c->ID.'?act=edit"></a></span>',
+    'content' =>  $this->render('_category_list_item', [
+        'category'  =>  $c,
+        'enabled'   =>  isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0,
+        'disabled'  =>  isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0
+    ]),
     'options' =>  [
       'class' =>  "category ".($c->menu_show == "1" ? "bg-success" : "bg-danger"),
       'data-category-id'    =>  $c->ID

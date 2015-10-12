@@ -30,7 +30,7 @@ var a = document.querySelectorAll("#currencyModal i.change"),
     }, guestRefresh = function(){
         $.ajax({
             type: 'POST',
-            url: '/admin/login',
+            url: '/login',
             success: function(data){
                 if(data == 1){
                     location.reload();

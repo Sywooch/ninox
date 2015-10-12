@@ -14,7 +14,7 @@ use yii\data\ActiveDataProvider;
 class CategorySearch extends Category{
 
     public function search($params){
-        if(empty($params) || empty($params['len']) || empty($params['data'])){
+        if(empty($params) || empty($params['len'])){
             return [];
         }
 
@@ -46,7 +46,7 @@ class CategorySearch extends Category{
             $query->groupBy('a.Code');
         }
 
-        if($params['len'] != 3){
+        if($params['len'] != 3 && !empty($params['cat'])){
             $query->andWhere(['like', 'a.Code', $params['cat'].'%', false]);
         }
 

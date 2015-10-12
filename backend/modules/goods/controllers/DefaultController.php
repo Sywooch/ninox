@@ -52,9 +52,9 @@ class DefaultController extends Controller
             }
         }
 
-        $breadcrumbs = array_reverse($breadcrumbs);
-
         $tGoodsCount->groupBy('`b`.`GroupID`');
+
+        $breadcrumbs = array_reverse($breadcrumbs);
 
         $cs = new CategorySearch();
         $cs = $cs->search([
@@ -82,6 +82,7 @@ class DefaultController extends Controller
                         'disabled'  =>  ($row['all'] - $row['enabled'])
                     ];
                 }
+
                 $enabled += $row['enabled'];
                 $disabled += ($row['all'] - $row['enabled']);
             }
@@ -98,8 +99,6 @@ class DefaultController extends Controller
                 'nowCategory' => Category::findOne(['Code' => $cat])
             ]);
         }else{
-            $c = Category::findOne(['Code' => $cat]);
-
             if(empty($c)){
                 return $this->run('site/error');
             }else{

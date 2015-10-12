@@ -3,6 +3,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use common\models\LoginForm;
 use yii\filters\VerbFilter;
@@ -72,11 +73,7 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
-            if(\Yii::$app->request->url == '/admin'){
-                return $this->redirect('/admin'.\Yii::$app->user->identity->default_route);
-            }else{
-                return $this->redirect(\Yii::$app->request->url);
-            }
+            return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
         }else{
             return $this->render('login', [
                 'model' => $model,
