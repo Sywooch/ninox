@@ -49,7 +49,7 @@ $this->registerCss($css);
             <?php if($category->menu_show != 0){ ?>
                 <a href="https://krasota-style.com.ua/<?=$category->link?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
-            <?=\yii\helpers\Html::a('<i class="glyphicon glyphicon-th-large"></i> Товары категории', \yii\helpers\Url::toRoute(['/goods', 'category' => $category->Code, 'onlyGoods' => true]))?>
+            <?=\yii\helpers\Html::a('<i class="glyphicon glyphicon-th-large"></i> Товары категории', \yii\helpers\Url::toRoute(['/goods', 'category' => $category->Code, 'onlyGoods' => true]), ['class' => 'btn btn-default'])?>
             <?=\common\components\ChangesWidget::widget([
                 'model'         =>  $category,
                 'header'        =>  'Изменения по категории '.$category->Name

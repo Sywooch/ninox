@@ -166,8 +166,8 @@ $this->registerCss($s);
         ?>
     <ul class="nav nav-pills" style="margin-left: -15px;">
         <li role="presentation"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>">Всего товаров: <span class="label label-info"><?=($enabled + $disabled)?></span></a></li>
-        <li role="presentation" class="<?=$sf == 'enabled' ? 'active' : ''?>"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=enabled">включено: <span class="label label-success"><?=$enabled?></span></a></li>
-        <li role="presentation" class="<?=$sf == 'disabled' ? 'active' : ''?>"><a href="/admin/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=disabled">выключено: <span class="label label-danger"><?=$disabled?></span></a></li>
+        <li role="presentation" class="<?=$sf == 'enabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=enabled">включено: <span class="label label-success"><?=$enabled?></span></a></li>
+        <li role="presentation" class="<?=$sf == 'disabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=disabled">выключено: <span class="label label-danger"><?=$disabled?></span></a></li>
     </ul>
     <div class="clearfix"></div>
     <br style="margin-bottom: 0;">
@@ -183,7 +183,7 @@ $this->registerCss($s);
                 'items' =>  [
                     [
                         'label'     =>  'Просмотреть',
-                        'url'       =>  '/admin/goods/showcategory/'.$nowCategory->ID
+                        'url'       =>  '/goods/showcategory/'.$nowCategory->ID
                     ],
                     [
                         'label'     =>  'Просмотреть на сайте',
@@ -191,23 +191,23 @@ $this->registerCss($s);
                     ],
                     [
                         'label'     =>  'Редактировать',
-                        'url'       =>  '/admin/goods/showcategory/'.$nowCategory->ID.'?act=edit'
+                        'url'       =>  '/goods/showcategory/'.$nowCategory->ID.'?act=edit'
                     ],
                     [
                         'label'     =>  'Добавить',
                         'items'     =>  [
                             [
                                 'label'     =>  'Товар',
-                                'url'       =>  '/admin/goods/addgood?category='.$nowCategory->ID
+                                'url'       =>  '/goods/addgood?category='.$nowCategory->ID
                             ],
                             [
                                 'label'     =>  'Несколько товаров',
-                                'url'       =>  '/admin/goods/addgood?category='.$nowCategory->ID.'?mode=lot'
+                                'url'       =>  '/goods/addgood?category='.$nowCategory->ID.'?mode=lot'
                             ],
                             '<li class="divider"></li>',
                             [
                                 'label'     =>  'Категорию',
-                                'url'       =>  '/admin/goods/addcategory?category='.$nowCategory->ID
+                                'url'       =>  '/goods/addcategory?category='.$nowCategory->ID
                             ],
                         ]
                     ],
