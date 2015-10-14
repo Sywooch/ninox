@@ -2,8 +2,8 @@
 namespace frontend\controllers;
 
 use common\models\Banner;
-use common\models\Category;
-use common\models\Good;
+use frontend\models\Category;
+use frontend\models\Good;
 use common\models\Question;
 use common\models\Review;
 use Yii;

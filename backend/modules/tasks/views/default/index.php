@@ -1,5 +1,6 @@
 <?php
 use common\models\Task;
+use yii\helpers\Url;
 
 $this->title = 'Задачи';
 $this->params['breadcrumbs'][] = $this->title;
@@ -237,9 +238,9 @@ foreach($events as $event){
         <?=\common\components\AddTaskWidget::widget([
         ])?>
     </div>
-    <a class="btn btn-default <?=$smartfilter == null ? 'active' : ''?>" href="/tasks">Все</a>
-    <a class="btn btn-info <?=$smartfilter == 'inWork' ? 'active' : ''?>" href="/tasks?smartfilter=inWork">В работе</a>
-    <a class="btn btn-danger <?=$smartfilter == 'stitched' ? 'active' : ''?>" href="/tasks?smartfilter=stitched">Простроченые</a>
+    <a class="btn btn-default <?=$smartfilter == null ? 'active' : ''?>" href="<?=Url::toRoute(['/tasks'])?>">Все</a>
+    <a class="btn btn-info <?=$smartfilter == 'inWork' ? 'active' : ''?>" href="<?=Url::toRoute(['/tasks', 'smartfilter' => 'inWork'])?>">В работе</a>
+    <a class="btn btn-danger <?=$smartfilter == 'stitched' ? 'active' : ''?>" href="<?=Url::toRoute(['/tasks', 'smartfilter' => 'stitched'])?>">Простроченые</a>
 </div>
 &nbsp;
 <?=\talma\widgets\FullCalendar::widget([
