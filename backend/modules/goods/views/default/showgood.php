@@ -156,7 +156,7 @@ $this->title = "Товар \"".$good->Name."\"";
                                     Название:
                                 </td>
                                 <td>
-                                    '.\Yii::t('t-goods', 'name-'.$good->ID).'
+                                    '.\Yii::t('shop-info-goods', 'name-'.$good->ID).'
                                 </td>
                             </tr>
                             <tr>
