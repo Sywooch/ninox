@@ -67,7 +67,7 @@ $goodsOst = function($model){
 $button = [
     'value'         =>   \Yii::t('shop', $model->inCart ? 'В корзине!' : 'Купить!'),
     'class'         =>  ($model->inCart ? 'greenButton openCart' : 'yellowButton buy').' middleButton',
-    'data-itemId'   =>  $model->Code,
+    'data-itemId'   =>  $model->ID,
     'data-count'    =>  '1'
 ];
 
@@ -105,7 +105,7 @@ $button = [
             <div class="pricelist">
                 <div>
                     <div class="<?=''//($oneItem['PrOut3'] ? 'new-' : '')?>opt semi-bold <?=''//($oneItem['PrOut3'] ? 'red' : 'blue')?>">
-                        <span><?=''//$oneItem['PrOut1']['0']?></span><?=''//$oneItem['PrOut1']['1']?><span class="uah"> <?=\Yii::$app->params['currencyShortName']?></span>
+                        <span><?=''//$oneItem['PrOut1']['0']?></span><?=''//$oneItem['PrOut1']['1']?><span class="currency"> <?=\Yii::$app->params['currencyShortName']?></span>
                     </div>
                     <?php// if(!$oneItem['onePrice'] || $oneItem['PrOut3']){ ?>
                         <div class="<?=''//($oneItem['PrOut3'] ? 'old-' : 's')?>opt">
@@ -116,9 +116,9 @@ $button = [
                 <?php
                 echo Html::tag(
                     'div',
-                    $model->Code ? Html::input('button', null, $button['value'], $button) : \Yii::t('shop', $model->count <= 0 ? 'Нет в наличии' : 'Ожидается поступление'),
+                    $model->count > 0 ? Html::input('button', null, $button['value'], $button) : \Yii::t('shop', 'Нет в наличии'),
                     [
-                        'class' => $model->Code ? 'canBuy' : 'expectedArrival semi-bold'
+                        'class' => $model->count > 0 ? 'canBuy' : 'expectedArrival semi-bold'
                     ]
                 );
                 ?>

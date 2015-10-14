@@ -7,7 +7,7 @@ class m150512_134729_fucking_bool_values_1 extends Migration
 {
     public function up()
     {
-        $this->db->createCommand("ALTER TABLE `".app\models\Category::tableName()."`
+        $this->db->createCommand("ALTER TABLE `".common\models\Category::tableName()."`
         MODIFY `onePrice` tinyint(1) DEFAULT 0,
         MODIFY `canBuy` tinyint(1) DEFAULT 0,
         MODIFY `hasFilter` tinyint(1) DEFAULT 0")->execute();
