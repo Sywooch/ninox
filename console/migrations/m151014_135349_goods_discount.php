@@ -18,7 +18,7 @@ class m151014_135349_goods_discount extends Migration
 			MODIFY COLUMN `PriceOut9`  double(24,2) UNSIGNED NOT NULL DEFAULT 0 AFTER `PriceOut8`,
 			MODIFY COLUMN `PriceOut10`  double(24,2) UNSIGNED NOT NULL DEFAULT 0 AFTER `PriceOut9`,
 			ADD COLUMN `discountSize`  double(24,2) UNSIGNED NOT NULL DEFAULT 0 AFTER `PriceOut10`,
-			ADD COLUMN `discountType`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `discountSize`;");
+			ADD COLUMN `discountType`  tinyint(3) UNSIGNED NOT NULL DEFAULT 0 AFTER `discountSize`;");
 
 	    $this->execute("UPDATE `goods` SET
 	    	`discountType` = '1',
