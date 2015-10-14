@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m151014_135349_goods_update extends Migration
+class m151014_135349_goods_discount extends Migration
 {
     public function up()
     {
