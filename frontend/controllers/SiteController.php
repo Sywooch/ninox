@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use app\models\Pagetype;
 use common\models\Banner;
 use frontend\models\Category;
 use frontend\models\Good;
@@ -90,20 +91,30 @@ class SiteController extends Controller
             return $this->runAction('error');
         }
 
+        $pageType = Pagetype::findOne(['id' => $category->pageType]);
+
         if($category->pageType == 0 || $category->pageType == -1 || $category->pageType == 13){
             return $this->run('site/rendercategory', [
-                'category'  =>  $category
+                'category'  =>  $category,
+                'view'      =>  $pageType->page
             ]);
         }else{
             //Переделать потом под все типы страниц
             return $this->run('site/rendercategory', [
-                'category'  =>  $category
+                'category'  =>  $category,
+                'view'      =>  $pageType->page
             ]);
         }
 
     }
 
-    public function actionRendercategory($category = null){
+    public function actionRendersomepage($category = null, $view = null){
+
+    }
+
+    public function actionRendercategory($category = null, $view = null){
+        $view != null ? $view : 'category';
+
         if(empty($category)){
             return $this->run('site/error');
         }
@@ -117,7 +128,7 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render('category', [
+        return $this->render($view, [
             'category'  =>  $category,
             'showText'  =>  true,
             'goods'     =>  new ActiveDataProvider([
