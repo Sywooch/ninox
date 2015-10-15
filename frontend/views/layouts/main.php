@@ -46,6 +46,15 @@ $cartModal = new \bobroid\remodal\Remodal([
 	]
 ]);
 
+$loginModal = new \bobroid\remodal\Remodal([
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'closeButton'		=>	false,
+	'addRandomToID'		=>	false,
+	'content'			=>	$this->render('../site/login'),
+	'id'				=>	'loginModal',
+]);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -103,7 +112,10 @@ $cartModal = new \bobroid\remodal\Remodal([
 			</div>
 			<ul class="right">
 				<li id="loginRegistration">
-					<span id="login"><span class="link-hide">Вход</span></span><span id="registration">&nbsp;/&nbsp;<span class="link-hide" data-href="/cabinet/registration">Регистрация</span></span>
+					<span id="login">
+						<span class="link-hide" data-href="#loginModal">Вход</span>
+					</span>
+					<span id="registration">&nbsp;/&nbsp;<span class="link-hide" data-href="/registration">Регистрация</span></span>
 				</li>
 				<li id="lang">РУС<span class="arrow"></span>
 					<ul>
@@ -210,6 +222,7 @@ $cartModal = new \bobroid\remodal\Remodal([
 		</div>
 	</footer>
 	<?=$cartModal->renderModal()?>
+	<?=$loginModal->renderModal()?>
 	<?php $this->endBody() ?>
 	</body>
 </html>

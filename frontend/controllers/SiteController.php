@@ -42,7 +42,7 @@ class SiteController extends Controller
     }
 
     public function actionShowtovar($link){
-        $id = preg_replace('/[^g(\d+)]+/', '', $link);
+        $id = preg_replace('/[^g(.)]+\D+/', '', $link);
         $id = preg_replace('/\D+/', '', $id);
 
         $good = Good::findOne(['ID' => $id]);
