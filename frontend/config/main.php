@@ -12,6 +12,12 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'cache' =>  [
+            'class' =>  'yii\caching\FileCache'
+        ],
+        'cart'  =>  [
+            'class' =>  'common\components\Cart'
+        ],
         'i18n' => [
             'translations' => [
                 '*' => [

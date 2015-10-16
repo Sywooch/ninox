@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use app\models\Domains;
 use app\models\Pagetype;
 use common\models\Banner;
+use common\models\Cart;
 use frontend\models\Category;
 use frontend\models\Good;
 use common\models\Question;
@@ -107,6 +108,25 @@ class SiteController extends Controller
             ]);
         }
 
+    }
+
+    public function actionOrder(){
+        $cartItems = Cart::find([
+            'cartCode'  =>  isset(\Yii::$app->request->cookies['cartCode']) ? \Yii::$app->request->cookies['cartCode'] : 0
+        ]);
+        if(sizeof($cartItems) >= 1){
+
+        }
+    }
+
+    public function actionSuccess($order = []){
+        if(!empty($order)){
+            return $this->render('order_success', [
+                'order' =>  $order
+            ]);
+        }else{
+            return $this->render('emptycart');
+        }
     }
 
     public function actionRendersomepage($category = null, $view = null){
