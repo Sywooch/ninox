@@ -23,18 +23,24 @@ $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
 $menu = \common\models\Category::getMenu();
 
+$userCart = \common\models\Cart::findOne(['cartCode' => \Yii::$app->request->cookies->get('cartCode')]);
+
+print_r(\Yii::$app->cart);
+
+if(empty($userCart)){
+	$userCart = new \common\models\Cart();
+}
+
+$cartItemsDataProvider = new \yii\data\ActiveDataProvider([
+	'query' =>  $userCart->getItemsQuery()
+]);
+
 $cartModal = new \bobroid\remodal\Remodal([
 	'cancelButton'		=>	false,
 	'confirmButton'		=>	false,
 	'closeButton'		=>	false,
 	'content'			=>	$this->render('../site/cart', [
-		'dataProvider' => new \yii\data\ActiveDataProvider([
-			'query' =>  \frontend\models\Good::find()
-				->where(['in', 'id',
-					\common\models\Cart::find()
-						->select('goodId')
-						->where(['id' => isset(\Yii::$app->request->cookies['cartCode']) ? \Yii::$app->request->cookies['cartCode'] : 0])])
-		])
+		'dataProvider'	=>	$cartItemsDataProvider
 	]),
 	'id'				=>	'modalCart',
 	//'modalOptions'			=>	[

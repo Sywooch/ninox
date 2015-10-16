@@ -18,6 +18,8 @@ class Good extends \common\models\Good{
 
     public function afterFind()
     {
+        //на товар работает отлично
+        //на категорию - суммарно очень большой запрос получается :с
         foreach(Message::getGoodTranslate($this->ID) as $key => $value){
             $this->$key = $value;
         }

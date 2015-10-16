@@ -17,6 +17,19 @@ use Yii;
  */
 class Cart extends \yii\db\ActiveRecord
 {
+
+    public function getItemsQuery(){
+        return \frontend\models\Good::find()
+            ->where(['in', 'id',
+                self::find()
+                    ->select('goodId')
+                    ->where(['id' => $this->cartCode])]);
+    }
+
+    public function getItems(){
+        return $this->getItemsQuery()->all();
+    }
+
     /**
      * @inheritdoc
      */
