@@ -680,9 +680,518 @@ h2{
 	background: transparent linear-gradient(rgba(243, 243, 243, 0) 0%, #F3F3F3 90%) repeat scroll 0% 0%;
 }
 
+/*==============* ITEM STYLE *================*/
+
+.hovered{
+	width: 33.33%;
+	width: 300px;
+	height: 365px;
+	padding: 0 15px;
+	position: relative;
+	float: left;
+	box-sizing: border-box;
+}
+
+.item{
+	width: 100%;
+	height: auto;
+	background: #fff;
+	position: relative;
+}
+
+.hovered:hover .item{
+	padding: 2px 15px;
+	box-shadow: 0 3px 10px #516d89;
+	border: 1px solid #bfd1e3;
+	border-radius: 5px;
+	z-index: 2;
+	left: -16px;
+	top: -3px;
+	background: rgba(255,255,255,0.9);
+}
+
+.hovered:hover .item .inner-main{
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.hovered:hover .item .inner-sub{
+	display: block;
+}
+
+.hovered:not(:nth-child(3n)){
+	border-right: 1px dotted #aaafb0;
+}
+
+.item .inner-main{
+	border-bottom: 1px dotted #aaafb0;
+	padding-top: 15px;
+	height: 365px;
+	box-sizing: border-box;
+	position: relative;
+}
+
+.item .inner-main{
+	width: 100%;
+	height: auto;
+	position: relative;
+	display: none;
+}
+
+.item .title{
+	width: 100%;
+	height: 50px;
+	display: table;
+}
+
+.item .title a{
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.item .code{
+	width: 100%;
+	height: 15px;
+	text-align: center;
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+.item .open-item img{
+	width: 90%;
+	margin: 5%;
+	height: 190px;
+	border-radius: 5px;
+	-webkit-transform: scale(1);
+	transform: scale(1);
+	-webkit-transition: all 0.3s ease-in-out 0s;
+	-moz-transition: all 0.3s ease-in-out 0s;
+	-ms-transition: all 0.3s ease-in-out 0s;
+	-o-transition: all 0.3s ease-in-out 0s;
+	transition: all 0.3s ease-in-out 0s;
+}
+
+.item:hover .open-item img{
+	-webkit-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+.item .open-item{
+	display: block;
+	position: relative;
+}
+
+.item .open-item:hover .open-modal-item{
+	height: 28px;
+	width: 28px;
+	position: absolute;
+	cursor: pointer;
+	top: 27px;
+	right: 10px;
+	background: #1c7bd3;
+	border-radius: 3px;
+	opacity: 0.8;
+}
+
+.item .open-item:hover .open-modal-item:hover{
+	opacity: 1;
+}
+
+.item .open-item:hover .open-modal-item:after{
+	content: '\e808';
+	font-family: shop;
+	color: #fff;
+	font-size: 20px;
+	position: absolute;
+	cursor: pointer;
+	top: 4px;
+	right: 8px;
+}
+
+.item .buy-block{
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	display: table;
+	box-sizing: border-box;
+	padding: 0 10px;
+}
+
+.item .pricelist{
+	display: table-cell;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.item .can-buy{
+	display: table-cell;
+	vertical-align: middle;
+	max-width: 100px;
+	text-align: right;
+}
+
+.item .expected-arrival{
+	text-align: center;
+	color: #4f4f4f;
+}
+
+.pricelist .opt{
+	font-size: 24px;
+}
+
+.pricelist .opt .uah{
+	font-size: 20px;
+}
+
+.pricelist .sopt{
+	font-size: 12px;
+	color: #4f4f4f;
+}
+
+.pricelist .new-opt{
+	font-size: 22px;
+}
+
+.pricelist .old-opt{
+	position: relative;
+	font-size: 14px;
+	color: #8c8c8c;
+}
+
+.pricelist .old-opt:after{
+	width: 85%;
+	height: 2px;
+	display: block;
+	background: #ce0f0f;
+	content: "";
+	position: absolute;
+	bottom: 10px;
+	transform: rotate(6deg);
+}
+
+.item .dopInfo > div > span{
+	font-size: 12px;
+	color: #4f4f4f;
+}
+
+.item .dopInfo .counter{
+	width: auto;
+	position: absolute;
+	top: -10px;
+	background: #fff;
+	right: 0;
+	padding: 0 20px 0 10px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.counter a{
+	width: 15px;
+	height: 15px;
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+	color: #03a7d4;
+}
+
+.counter .minus:after, .counter .plus:after{
+	font-family: shop;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.counter .minus:hover, .counter .plus:hover{
+	color: #1c7bd3 !important;
+}
+
+.counter .minus:after{
+	content: '\e824';
+}
+
+.counter .plus:after{
+	content: '\e80a';
+}
+
+.counter .count{
+	border: none;
+	width: 40px;
+	text-align: center;
+	background: transparent;
+}
+
+.item .outerSpan{
+	font-size: 12px;
+	color: #4f4f4f;
+	line-height: 28px;
+	display: block;
+}
+
+.item .description{
+	font-size: 12px;
+	color: #4f4f4f;
+	display: block;
+	line-height: 18px;
+	height: 20px;
+	overflow: hidden;
+	position: relative;
+}
+
+.item .description:not(:hover):before{
+	content: "";
+	position: absolute;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	height: 10px;
+	display: block;
+	background: linear-gradient(rgba(244, 244, 244, 0.5) 0%, rgba(255, 255, 255, 0.1) 100%) repeat scroll 0% 0% transparent;
+}
+
+.item .description:hover{
+	height: 100%;
+	padding-bottom: 15px;
+}
+
+.item .description:hover + .moreInfo{
+	display: none;
+}
+
+.item .description p{
+	font-size: 12px;
+	color: #4f4f4f;
+	display: inline;
+}
+
+.item .innerDescription{
+	padding-left: 5px;
+}
+
+[class^="shop-star"], [class*=" shop-star"]{
+	width: 1.2em;
+	height: 1.25em;
+	float: right;
+	color: transparent;
+	cursor: pointer;
+}
+
+.rating .currentRating, .rating .rateCount{
+	color: transparent;
+	position: absolute;
+	z-index: -10;
+}
 
 
-/*=============* FOOTER STYLE *============== */
+.rating > div:before{
+	color: #ddd;
+}
+
+.rating > .current:before,
+.rating > .current ~ div:before{
+	color: #f9bc2d;
+}
+
+.rating > div:hover:before,
+.rating > div:hover ~ div:before{
+	color: #f9bc2d;
+}
+
+.item .progress{
+	font-size: 12px;
+	display: inline-block;
+	margin: 20px 0 10px;
+	text-align: center;
+	width: 100%;
+}
+
+.progress-green{
+	color: #4fab22;
+}
+
+.progress-red{
+	color: #e65a5a;
+}
+
+.progress-brown{
+	color: brown;
+}
+
+.item .innerSpan{
+	padding-left: 5px;
+}
+
+.item .moreInfo{
+	text-align: center;
+	width: 100%;
+	font-size: 13px;
+	text-shadow: 0 0 2px #fff;
+	text-decoration: none;
+	display: block;
+}
+
+.progressBar{
+	background-color: #f5f5f5;
+	border-radius: 3px;
+	width: 100px;
+	height: 11px;
+	border: 2px solid #fff;
+	margin: 1px 5px;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5) inset;
+	float: left;
+}
+
+.progressLine{
+	background-image: url('/template/img/progress.png');
+	border-radius: 3px;
+	display: block;
+	height: 100%;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5) inset;
+}
+
+.bg-capt-green{
+	background: #3fa858;
+}
+
+.bg-capt-green:after{
+	border: 11px solid #3fa858;
+}
+
+.bg-capt-purple{
+	background: #8f1dd0;
+}
+
+.bg-capt-purple:after{
+	border: 11px solid #8f1dd0;
+}
+
+.bg-capt-red{
+	background: #d11818;
+}
+
+.bg-capt-red:after{
+	border: 11px solid #d11818;
+}
+
+.capt-flags{
+	top: 20px;
+	left: 0;
+	width: auto;
+	position: absolute;
+}
+
+.capt-flags:after{
+	content: '';
+	clear: both;
+	display: table;
+}
+
+.capt-flags .capt-flag{
+	position: relative;
+	width: auto;
+	height: 22px;
+	font-size: 10px;
+	color: #fff;
+	text-align: left;
+	padding: 0 13px 0 10px;
+	margin: 10px 0;
+	line-height: 22px;
+	cursor: pointer;
+	text-transform: uppercase;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;
+}
+
+.capt-flags .capt-flag:after{
+	content: '';
+	display: block;
+	position: absolute;
+	width: 0;
+	height: 0;
+	top: 0;
+	right: -11px;
+	border-right-color: transparent !important;
+}
+
+.capt-flags .capt-flag:before{
+	content: '';
+	position: absolute;
+	display: block;
+	left: 0;
+	bottom: -4px;
+	width: 15px;
+	height: 30px;
+	-webkit-box-shadow: 15px 0 11px -18px #000 inset;
+	-moz-box-shadow:    15px 0 11px -18px #000 inset;
+	box-shadow: 15px 0 11px -18px #000 inset;
+	border-top-right-radius: 30px;
+	border-bottom-right-radius: 30px;
+}
+
+.item .discount{
+	width: 76px;
+	height: 76px;
+	position: absolute;
+	border-radius: 38px;
+	border: 2px solid #a7ef7f;
+	top: 15px;
+	right: 15px;
+	overflow: hidden;
+	text-align: center;
+	line-height: 1px;
+	display: block;
+}
+
+.item .discount span{
+	display: block;
+}
+
+.item .discount .top{
+	width: 100%;
+	height: 25px;
+	background: #87d45d;
+	border-bottom: 1px solid #a7ef7f;
+	padding-top: 5px;
+	color: #338307;
+}
+
+.item .discount .top span:first-of-type{
+	font-size: 10px;
+	line-height: 10px;
+}
+
+.item .discount .top span:last-of-type{
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.item .discount .bottom{
+	width: 100%;
+	height: 45px;
+	background: #5fb430;
+	color: #fff;
+}
+
+.item .discount .bottom span:first-of-type{
+	font-size: 30px;
+	font-family: OpenSans-Semibold;
+	line-height: 30px;
+}
+
+.item .discount .bottom span:last-of-type{
+	font-size: 10px;
+	line-height: 10px;
+}
+
+/*============* AND ITEM STYLE *==============*/
+
+/*=============* FOOTER STYLE *===============*/
 
 footer{
 	width: 100%;

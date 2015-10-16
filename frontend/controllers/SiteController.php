@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use app\models\Domains;
 use common\models\Banner;
 use frontend\models\Category;
 use frontend\models\Good;
@@ -280,4 +281,10 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+	public function beforeAction($action){
+		$domainInfo = Domains::findOne(['name' => \Yii::$app->request->getServerName()]);
+		\Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;
+		return parent::beforeAction($action);
+	}
 }
