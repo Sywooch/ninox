@@ -81,6 +81,9 @@ $this->title = '';
                         'model' =>  $model
                     ]);
                 },
+	            'itemOptions'   =>  [
+		            'class'     =>  'hovered'
+	            ],
                 'pager'         =>  [
                     'class' =>  \common\components\ShopPager::className()
                 ]
