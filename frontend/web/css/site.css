@@ -478,7 +478,6 @@ h2{
 	height: auto;
 	margin-top: 15px;
 	text-align: center;
-	box-sizing: border-box;
 }
 
 .advantages ul{
@@ -602,7 +601,6 @@ h2{
 	float:left;
 	position: relative;
 	padding: 0 20px;
-	box-sizing: border-box;
 	font-size: 12px;
 }
 
@@ -686,10 +684,8 @@ h2{
 	width: 33.33%;
 	width: 300px;
 	height: 365px;
-	padding: 0 15px;
 	position: relative;
 	float: left;
-	box-sizing: border-box;
 }
 
 .item{
@@ -697,17 +693,18 @@ h2{
 	height: auto;
 	background: #fff;
 	position: relative;
+	padding: 0 15px;
 }
 
 .hovered:hover .item{
-	padding: 2px 15px;
 	box-shadow: 0 3px 10px #516d89;
 	border: 1px solid #bfd1e3;
 	border-radius: 5px;
 	z-index: 2;
-	left: -16px;
-	top: -3px;
 	background: rgba(255,255,255,0.9);
+	box-sizing: padding-box;
+	left: -1px;
+	top: -1px;
 }
 
 .hovered:hover .item .inner-main{
@@ -718,15 +715,18 @@ h2{
 	display: block;
 }
 
-.hovered:not(:nth-child(3n)){
+.hovered:not(:nth-child(3n - 2)){
 	border-right: 1px dotted #aaafb0;
+}
+
+.hovered:nth-child(3n - 2){
+	border-right: 1px solid transparent;
 }
 
 .item .inner-main{
 	border-bottom: 1px dotted #aaafb0;
 	padding-top: 15px;
 	height: 365px;
-	box-sizing: border-box;
 	position: relative;
 }
 
@@ -793,6 +793,7 @@ h2{
 	background: #1c7bd3;
 	border-radius: 3px;
 	opacity: 0.8;
+	line-height: normal;
 }
 
 .item .open-item:hover .open-modal-item:hover{
@@ -815,7 +816,6 @@ h2{
 	bottom: 10px;
 	width: 100%;
 	display: table;
-	box-sizing: border-box;
 	padding: 0 10px;
 }
 
@@ -837,30 +837,30 @@ h2{
 	color: #4f4f4f;
 }
 
-.pricelist .opt{
+.buy-block .wholesale-price{
 	font-size: 24px;
 }
 
-.pricelist .opt .uah{
+.buy-block .wholesale-price .currency{
 	font-size: 20px;
 }
 
-.pricelist .sopt{
+.buy-block .retail-price{
 	font-size: 12px;
 	color: #4f4f4f;
 }
 
-.pricelist .new-opt{
+.buy-block .sale-price{
 	font-size: 22px;
 }
 
-.pricelist .old-opt{
+.buy-block .old-wholesale-price{
 	position: relative;
 	font-size: 14px;
 	color: #8c8c8c;
 }
 
-.pricelist .old-opt:after{
+.buy-block .old-wholesale-price:after{
 	width: 85%;
 	height: 2px;
 	display: block;
@@ -1198,10 +1198,6 @@ footer{
 	background: #0298c1;
 	bottom: 0;
 	z-index: 4;
-}
-
-.footerCenter{
-	box-sizing: border-box;
 }
 
 .footerCenter .socialNetworks{

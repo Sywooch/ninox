@@ -39,7 +39,7 @@ if(!empty($_SESSION['userID'])){
 
 $button = [
 	'value'         =>   \Yii::t('shop', $model->inCart ? 'В корзине!' : 'Купить!'),
-	'class'         =>  ($model->inCart ? 'greenButton openCart' : 'yellowButton buy').' middleButton',
+	'class'         =>  ($model->inCart ? 'green-button open-cart' : 'yellow-button buy').' middle-button',
 	'data-itemId'   =>  $model->ID,
 	'data-count'    =>  '1'
 ];
@@ -98,7 +98,7 @@ $buyBlock = function($model, $button){
 				'div',
 				Html::tag(
 					'span',
-					explode('.', number_format(($model->discountType > 0 ? $model->PriceOut1 : $model->retail_price) * \Yii::$app->params['domainInfo']['currencyExchange'], 2, '.', ' '))[0],
+					($model->discountType > 0 ? \Yii::t('shop', 'опт') : \Yii::t('shop', 'розница')).' - '.explode('.', number_format(($model->discountType > 0 ? $model->PriceOut1 : $model->retail_price) * \Yii::$app->params['domainInfo']['currencyExchange'], 2, '.', ' '))[0],
 					[]
 				).
 				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', explode('.', number_format(($model->discountType > 0 ? $model->PriceOut1 : $model->retail_price) * \Yii::$app->params['domainInfo']['currencyExchange'], 2, '.', ' '))[1], []) : '').
