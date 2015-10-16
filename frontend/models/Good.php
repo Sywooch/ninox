@@ -9,6 +9,8 @@
 namespace frontend\models;
 
 
+use app\models\Message;
+
 class Good extends \common\models\Good{
 
     public $wholesale_price = 0;    //Оптовая цена
@@ -16,6 +18,10 @@ class Good extends \common\models\Good{
 
     public function afterFind()
     {
+        foreach(Message::getGoodTranslate($this->ID) as $key => $value){
+            $this->$key = $value;
+        }
+
         if(!\Yii::$app->user->isGuest && isset(\Yii::$app->user->identity['PriceGroup'])){
             switch(\Yii::$app->user->identity['PriceGroup']){
                 case '2':

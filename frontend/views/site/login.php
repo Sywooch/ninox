@@ -1,39 +1,25 @@
-<?php
-
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \common\models\LoginForm */
-
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
-
+<span class="close"></span>
+<div class="block">
+    <span class="label">Вход в личный кабинет:</span>
+    <div class="cap">
+        Пользователь с указанным e-mail или телефоном уже зарегистрирован. </div>
     <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-                <?= $form->field($model, 'username') ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div style="color:#999;margin:1em 0">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+        <div class="phone">
+            <span class="title">Ваш телефон</span>
+            <span class="flag"></span>
+            <input placeholder="+_(___)___-____" class="input_phone" name="phone" onchange="iWannaLogin(this)" onkeyup="iWannaLogin(this)" onkeydown="iWannaLogin(this)" value="" type="text">
         </div>
+    </div>
+    <div class="row">
+        <div class="password">
+            <span class="title">Пароль</span><input onchange="iWannaLogin(this)" onkeyup="iWannaLogin(this)" onkeydown="iWannaLogin(this)" id="input_password" name="passwd" type="password">
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="row">
+        <input class="yellowButton largeButton" disabled="" id="loginMeButton" value="Войти" name="login" onclick="loginMe(this)" type="button">
+    </div>
+    <div class="row center">
+        <span class="recovery link-hide blue" data-href="/cabinet/recovery">Восстановить пароль</span><span> | </span><span class="registration link-hide blue" data-href="/cabinet/registration">Регистрация</span>
     </div>
 </div>

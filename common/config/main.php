@@ -5,10 +5,10 @@ return [
     'components' => [
 		'i18n' => [
 			'translations' => [
-				't-*' => [
+				'shop-info-*' => [
 					'class' => 'yii\i18n\DbMessageSource',
 					//'basePath' => '@common/messages', // if advanced application, set @frontend/messages
-					'sourceLanguage' => 'ru_RU',
+					'sourceLanguage' => 'code',
 					//'fileMap' => [
 						//'main' => 'main.php',
 					//],

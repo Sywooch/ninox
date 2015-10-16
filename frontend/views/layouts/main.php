@@ -26,12 +26,33 @@ $menu = \common\models\Category::getMenu();
 $cartModal = new \bobroid\remodal\Remodal([
 	'cancelButton'		=>	false,
 	'confirmButton'		=>	false,
-	'content'			=>	$this->render('../site/cart'),
-	'id'				=>	'cart',
+	'closeButton'		=>	false,
+	'content'			=>	$this->render('../site/cart', [
+		'dataProvider' => new \yii\data\ActiveDataProvider([
+			'query' =>  \frontend\models\Good::find()
+				->where(['in', 'id',
+					\common\models\Cart::find()
+						->select('goodId')
+						->where(['id' => isset(\Yii::$app->request->cookies['cartCode']) ? \Yii::$app->request->cookies['cartCode'] : 0])])
+		])
+	]),
+	'id'				=>	'modalCart',
+	//'modalOptions'			=>	[
+	//	'class'	=>	'modal'
+	//],
 	'addRandomToID'		=>	false,
 	'events'			=>	[
 		'opened'	=>	'console.log(e.target);'
 	]
+]);
+
+$loginModal = new \bobroid\remodal\Remodal([
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'closeButton'		=>	false,
+	'addRandomToID'		=>	false,
+	'content'			=>	$this->render('../site/login'),
+	'id'				=>	'loginModal',
 ]);
 
 ?>
@@ -91,7 +112,10 @@ $cartModal = new \bobroid\remodal\Remodal([
 			</div>
 			<ul class="right">
 				<li id="loginRegistration">
-					<span id="login"><span class="link-hide">Вход</span></span><span id="registration">&nbsp;/&nbsp;<span class="link-hide" data-href="/cabinet/registration">Регистрация</span></span>
+					<span id="login">
+						<span class="link-hide" data-href="#loginModal">Вход</span>
+					</span>
+					<span id="registration">&nbsp;/&nbsp;<span class="link-hide" data-href="/registration">Регистрация</span></span>
 				</li>
 				<li id="lang">РУС<span class="arrow"></span>
 					<ul>
@@ -198,6 +222,7 @@ $cartModal = new \bobroid\remodal\Remodal([
 		</div>
 	</footer>
 	<?=$cartModal->renderModal()?>
+	<?=$loginModal->renderModal()?>
 	<?php $this->endBody() ?>
 	</body>
 </html>
