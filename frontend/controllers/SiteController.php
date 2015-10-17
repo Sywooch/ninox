@@ -119,6 +119,12 @@ class SiteController extends Controller
         }
     }
 
+    public function actionAddtocart(){
+        $itemID = \Yii::$app->request->post("itemID");
+        \Yii::$app->cart->put($itemID);
+        return true;
+    }
+
     public function actionSuccess($order = []){
         if(!empty($order)){
             return $this->render('order_success', [

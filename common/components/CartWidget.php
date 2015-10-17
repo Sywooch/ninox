@@ -25,7 +25,7 @@ class CartWidget extends Widget{
         $return = '';
 
         $return .= $this->remodalInstance->renderButton([
-            'label' =>  Html::tag('span').Html::tag('span', '150.00 '.\Yii::$app->params['currencyShortName'], [
+            'label' =>  Html::tag('span').Html::tag('span', '150.00 '.\Yii::$app->params['domainInfo']['currencyShortName'], [
                     'class' => 'summ'
                 ]),
             'class' =>  'openCart'

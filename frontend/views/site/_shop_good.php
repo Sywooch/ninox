@@ -38,11 +38,13 @@ if(!empty($_SESSION['userID'])){
 }
 
 $button = [
-	'value'         =>   \Yii::t('shop', $model->inCart ? 'В корзине!' : 'Купить!'),
-	'class'         =>  ($model->inCart ? 'green-button open-cart' : 'yellow-button buy').' middle-button',
+	'value'         =>   \Yii::t('shop', \Yii::$app->cart->has($model->ID) ? 'В корзине!' : 'Купить!'),
+	'class'         =>  (\Yii::$app->cart->has($model->ID) ? 'green-button open-cart' : 'yellow-button buy').' middle-button',
 	'data-itemId'   =>  $model->ID,
-	'data-count'    =>  '1'
+	'data-count'    =>  '1',
+    'onclick'       =>  "addGood(this)"
 ];
+
 
 $countInStore = function($model){
     if($model->isUnlimited || $model->count > 9){

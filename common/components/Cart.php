@@ -14,13 +14,13 @@ use yii\base\Component;
 class Cart extends Component{
 
     public $session;
-    public $cartCode;
-    public $items;
+    public $cartCode = '';
+    public $items = [];
 
     public function init(){
-        $this->load();
+        $this->cartCode = isset($_COOKIE['cartCode']) ? $_COOKIE['cartCode'] : '';
 
-        $this->cartCode = \Yii::$app->request->cookies->get('cartCode');
+        $this->load();
 
         if(!empty($this->cartCode) && !\Yii::$app->cache->exists('cart-'.$this->cartCode.'/items')) {
 
@@ -45,22 +45,32 @@ class Cart extends Component{
         $this->items = \Yii::$app->cache->get('cart-'.$this->cartCode.'/items');
     }
 
+    public function has($itemID){
+        return isset($this->items[$itemID]);
+    }
+
     public function put($itemID, $count = 1){
-        if(empty($this->items)){
+        if(empty($this->items) && empty($this->cartCode)){
+
             $this->cartCode = $this->createCartCode();
+
+            setcookie('cartCode', $this->cartCode, time() + 86400 * 365, '/');
         }
 
         if(isset($this->items[$itemID])){
             $this->items[$itemID]->count += $count;
         }else{
-            $this->items[$itemID] = new Cart([
+            $this->items[$itemID] = new \frontend\models\Cart([
                 'count'     =>  $count,
                 'goodId'    =>  $itemID,
                 'cartCode'  =>  $this->cartCode
             ]);
         }
 
-        $this->items[$itemID]->save();
-    }
+        if($this->items[$itemID]->save(false)){
+            $this->save();
+        }
 
+        return $this->items[$itemID];
+    }
 }

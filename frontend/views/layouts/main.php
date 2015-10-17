@@ -25,8 +25,6 @@ $menu = \common\models\Category::getMenu();
 
 $userCart = \common\models\Cart::findOne(['cartCode' => \Yii::$app->request->cookies->get('cartCode')]);
 
-print_r(\Yii::$app->cart);
-
 if(empty($userCart)){
 	$userCart = new \common\models\Cart();
 }
