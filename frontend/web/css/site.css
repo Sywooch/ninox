@@ -363,8 +363,6 @@ h2{
 
 .all-banners{
 	width: 100%;
-	height: 260px;
-	margin-top: 15px;
 	position: relative;
 	text-align: center;
 }
@@ -372,7 +370,6 @@ h2{
 .all-banners-center{
 	max-width: 1200px;
 	width: 100%;
-	height: 100%;
 	margin: 0px auto;
 	display: inline-block;
 }
@@ -388,13 +385,12 @@ h2{
 .all-banners-center .central-banners{
 	background: #fff;
 	max-width: 600px;
-	height: 264px;
+	height: 274px;
 	display: inline-block;
 	border-radius: 10px;
 	border: 1px dashed #cacaca;
 	padding: 4px;
 	overflow: hidden;
-
 }
 
 .all-banners-center .single-banner{
@@ -891,7 +887,7 @@ h2{
 	user-select: none;
 }
 
-.counter a{
+.counter div{
 	width: 15px;
 	height: 15px;
 	display: inline-block;

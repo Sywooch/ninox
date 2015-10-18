@@ -15,9 +15,10 @@ class RuLangAsset extends AssetBundle
 	public $basePath = '@webroot';
 	public $baseUrl = '@web';
 	public $css = [
-		'css/translations/ru_RU.css'
+		'css/translations/ru_RU.css',
 	];
 	public $js = [
+		'js/translations/ru_RU.js',
 	];
 	public $depends = [
 		'app\assets\FrontEndAsset'

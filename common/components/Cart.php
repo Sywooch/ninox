@@ -46,7 +46,7 @@ class Cart extends Component{
     }
 
     public function has($itemID){
-        return isset($this->items[$itemID]);
+        return isset($this->items[$itemID]) ? $this->items[$itemID]->count : false;
     }
 
     public function put($itemID, $count = 1){

@@ -5,24 +5,6 @@ $this->title = '';
     'label' =>  $category->Name
 ];
 
-
-$js = <<<'SCRIPT'
-addGood = function(item){
-        $.ajax({
-           type: 'POST',
-           url: '/addtocart',
-           data: {
-               itemID: item.getAttribute('data-itemId')
-           },
-           success: function(id){
-               location.reload();
-           }
-       });
-    }
-SCRIPT;
-
-$this->registerJs($js, 1);
-
 ?>
 <div class="content" style="margin-top: 100px;">
     <div class="contentCenter">

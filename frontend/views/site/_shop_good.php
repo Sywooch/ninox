@@ -38,11 +38,10 @@ if(!empty($_SESSION['userID'])){
 }
 
 $button = [
-	'value'         =>   \Yii::t('shop', \Yii::$app->cart->has($model->ID) ? 'В корзине!' : 'Купить!'),
-	'class'         =>  (\Yii::$app->cart->has($model->ID) ? 'green-button open-cart' : 'yellow-button buy').' middle-button',
+	'value'         =>   \Yii::t('shop', $model->inCart ? 'В корзине!' : 'Купить!'),
+	'class'         =>  ($model->inCart ? 'green-button open-cart' : 'yellow-button buy').' middle-button',
 	'data-itemId'   =>  $model->ID,
 	'data-count'    =>  '1',
-    'onclick'       =>  "addGood(this)"
 ];
 
 
@@ -169,15 +168,13 @@ $buyBlock = function($model, $button){
         ?>
     </div>
     <div class="inner-sub">
-        <?php if($model->count > 0){ ?>
-            <div class="counter">
-                <a class="minus" data-itemId="<?=$model->ID?>"></a>
-                <input value="<?=$model->inCart ? $model->inCart : 1?>" readonly="readonly" name="count" class="count" type="text" data-itemId="<?=$model->ID?>">
-                <a class="plus" data-itemId="<?=$model->ID?>" data-countInStore="<?=($model->isUnlimited ? 1000 : $model->count)?>"></a>
-            </div>
-        <?php
-        }
-        ?>
+	    <?php if($model->count > 0){
+		    echo $this->render('_shop_good_counter', [
+			    'itemID'    =>  $model->ID,
+			    'value'     =>  $model->inCart ? $model->inCart : 1,
+			    'count'     =>  $model->isUnlimited ? 1000 : $model->count
+		    ]);
+	    }?>
         <div class="item-info">
             <?php if($model->count < 1 && $model->isUnlimited){ ?>
             <div>

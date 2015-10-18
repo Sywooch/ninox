@@ -58,7 +58,7 @@ if($questions){
 			<li id="label"></li>
 			<li id="opt"><div><span><?=\Yii::t('shop', 'Оптовые цены на все товары')?></span></div></li>
 			<li id="minorder"><div><span><?=\Yii::t('shop', 'Минимальный заказ')?> <?=(100 * \Yii::$app->params['domainInfo']['currencyExchange']).' '.\Yii::$app->params['domainInfo']['currencyShortName']?></span></div></li>
-			<li id="ret"><div><span><?=\Yii::t('shop', 'Беcпроблемный возврат')?></span></div></li>
+			<li id="ret"><div><span><?=\Yii::t('shop', 'Беспроблемный возврат')?></span></div></li>
 			<li id="disc"><div><span><?=\Yii::t('shop', 'Скидки для оптовиков')?></span></div></li>
 		</ul>
 	</div>

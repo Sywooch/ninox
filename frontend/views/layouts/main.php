@@ -59,6 +59,35 @@ $loginModal = new \bobroid\remodal\Remodal([
 	'id'				=>	'loginModal',
 ]);
 
+
+$js = <<<SCRIPT
+	if(hasTouch){
+		$('body').on('touchmove', function(e){
+			e.target.isTouchMoved = true;
+		});
+	}
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		changeItemCount(e.currentTarget);
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .plus', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		changeItemCount(e.currentTarget);
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.yellow-button.buy', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		addToCart(e.currentTarget);
+	});
+SCRIPT;
+
+$this->registerJs($js);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

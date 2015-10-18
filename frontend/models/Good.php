@@ -24,6 +24,8 @@ class Good extends \common\models\Good{
             $this->$key = $value;
         }
 
+	    $this->inCart = \Yii::$app->cart->has($this->ID);
+
         if(!\Yii::$app->user->isGuest && isset(\Yii::$app->user->identity['PriceGroup'])){
             switch(\Yii::$app->user->identity['PriceGroup']){
                 case '2':
