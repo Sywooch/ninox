@@ -2,9 +2,8 @@
 
 namespace common\models;
 
-use app\helpers\TranslitHelper;
+use common\helpers\TranslitHelper;
 use Yii;
-use yii\helpers\Html;
 
 /**
  * This is the model class for table "goods".
