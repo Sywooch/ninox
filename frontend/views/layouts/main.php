@@ -30,7 +30,7 @@ if(empty($userCart)){
 }
 
 $cartItemsDataProvider = new \yii\data\ActiveDataProvider([
-	'query' =>  $userCart->getItemsQuery()
+	'query' =>  \Yii::$app->cart->goodsQuery()
 ]);
 
 $cartModal = new \bobroid\remodal\Remodal([

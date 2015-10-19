@@ -81,7 +81,6 @@ class Good extends \yii\db\ActiveRecord
 
     public $isNew = false;
     public $discount = false;
-    public $inCart = false;
     public $isUnlimited = false;
     public $canBuy = true;
     public $priceForOneItem = false; //Вот тут я уже ахуел - сколько непонятных переменных

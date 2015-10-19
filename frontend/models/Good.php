@@ -24,7 +24,7 @@ class Good extends \common\models\Good{
             $this->$key = $value;
         }
 
-	    $this->inCart = \Yii::$app->cart->has($this->ID);
+	    //$this->inCart = \Yii::$app->cart->has($this->ID); - нельзя это так делать :с
 
         if(!\Yii::$app->user->isGuest && isset(\Yii::$app->user->identity['PriceGroup'])){
             switch(\Yii::$app->user->identity['PriceGroup']){
@@ -59,6 +59,14 @@ class Good extends \common\models\Good{
                 $this->retail_price = $this->$retail_price;
                 break;
         }
+    }
+
+    public function __get($name){
+        if($name == 'inCart'){
+            return \Yii::$app->cart->has($this->ID) > 0;
+        }
+
+        return parent::__get($name);
     }
 
     public function __set($name, $value){
