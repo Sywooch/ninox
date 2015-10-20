@@ -111,12 +111,11 @@ class SiteController extends Controller
     }
 
     public function actionOrder(){
-        $cartItems = Cart::find([
-            'cartCode'  =>  isset(\Yii::$app->request->cookies['cartCode']) ? \Yii::$app->request->cookies['cartCode'] : 0
-        ]);
-        if(sizeof($cartItems) >= 1){
-
+        if(\Yii::$app->cart->itemsCount == 0){
+            return $this->run('site/error');
         }
+
+        return $this->render('order');
     }
 
     public function actionAddtocart(){
@@ -335,6 +334,7 @@ class SiteController extends Controller
 	public function beforeAction($action){
 		$domainInfo = Domains::findOne(['name' => \Yii::$app->request->getServerName()]);
 		\Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;
-		return parent::beforeAction($action);
+
+        return parent::beforeAction($action);
 	}
 }
