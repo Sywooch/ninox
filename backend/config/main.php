@@ -13,6 +13,9 @@ return [
     'bootstrap' => ['log'],
     'modules' => require(__DIR__.'/modules.php'),
     'components' => [
+        'NovaPoshta'    =>  [
+            'class' =>  'common\components\NovaPoshta'
+        ],
         'i18n' => [
             'translations' => [
                 '*' => [

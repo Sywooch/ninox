@@ -94,18 +94,33 @@ class NovaPoshtaOrder extends Model{
     //public $PayerType;
     //public $CargoType;
 
-    public function save(){
-        if(empty($this->BackwardDeliveryData)){
-            unset($this->BackwardDeliveryData);
-        }
+    public function rules(){
+        return [
+            [['DateTime', 'ServiceType', 'Sender', 'CitySender', 'SenderAddress', 'ContactSender',
+                'SendersPhone', 'Recipient', 'CityRecipient', 'RecipientAddress', 'ContactRecipient',
+                'RecipientsPhone', 'PaymentMethod', 'PayerType', 'Cost', 'SeatsAmount', 'Description',
+                'CargoType', 'CargoDetails'], 'required'],
+        ];
+    }
 
-        $order = new Object([
+    public function beforeValidate(){
+        $this->DateTime = empty($this->DateTime) ? date('d.m.Y') : $this->DateTime;
+
+        return parent::beforeValidate();
+    }
+
+    public function save(){
+        //if(!$this->validate()){
+        //    return $this->getErrors();
+        //}
+
+        $order = [
             'modelName'         =>  'InternetDocument',
             'calledMethod'      =>  'save',
             'methodProperties'  =>  $this
-        ]);
+        ];
 
-        \Yii::$app->NovaPoshta->createOrder($order);
+        return \Yii::$app->NovaPoshta->createOrder($order);
     }
 
 }

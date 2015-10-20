@@ -1,4 +1,6 @@
 <?php
+/*
+ * <?php
 use common\models\Task;
 use yii\helpers\Url;
 
@@ -350,3 +352,28 @@ foreach($events as $event){
 ])?>
 
 <?php \yii\bootstrap\Modal::end()?>
+ */
+?>
+<?php print_r(\Yii::$app->NovaPoshta); ?>
+<pre>
+<?php
+
+$order = new \common\models\NovaPoshtaOrder([
+    'ServiceType'   =>  ''
+]);
+
+print_r(\Yii::$app->NovaPoshta->serviceTypes());
+?>
+</pre><pre>
+<?php
+
+
+print_r($order->save());
+
+
+
+
+
+
+?>
+    </pre>
