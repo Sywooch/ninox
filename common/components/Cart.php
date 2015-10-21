@@ -54,8 +54,8 @@ class Cart extends Component{
 
         if(!empty($this->goods)){
             foreach($this->goods as $good){
-                $this->cartWholesaleSumm += $good->wholesale_price;
-                $this->cartRetailSumm += $good->retail_price;
+                $this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
+                $this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
             }
         }
 
