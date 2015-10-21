@@ -242,7 +242,7 @@ function addToCart(item){
 					this.classList.remove('yellow-button');
 					this.classList.add('green-button');
 					this.classList.remove('buy');
-					this.classList.add('openCart');
+					this.classList.add('open-cart');
 				});
 				//updateMinicartInfo();
 				var itemIndex;
@@ -328,9 +328,9 @@ function deleteItem(item){
 			//updateCart(itemId, true);
 			$('.open-cart[data-itemId='+ itemId +']').each(function(){
 				this.value = texts.itemText.buy;
-				this.classList.remove('greenButton');
-				this.classList.add('yellowButton');
-				this.classList.remove('openCart');
+				this.classList.remove('green-button');
+				this.classList.add('yellow-button');
+				this.classList.remove('open-cart');
 				this.classList.add('buy');
 				this.setAttribute('data-itemId', itemId);
 				this.setAttribute('data-count', 1);
@@ -345,4 +345,8 @@ function deleteItem(item){
 			}
 		}
 	});
+}
+
+function openCart(){
+	document.location = document.location.href.replace('#', '') + '#modalCart';
 }

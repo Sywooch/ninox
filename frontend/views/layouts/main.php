@@ -67,13 +67,7 @@ $js = <<<SCRIPT
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus', function(e){
-		if(hasTouch && isTouchMoved(e)){ return false; }
-		e.preventDefault();
-		changeItemCount(e.currentTarget);
-	});
-
-	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .plus', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus, .counter .plus', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		changeItemCount(e.currentTarget);
@@ -83,6 +77,12 @@ $js = <<<SCRIPT
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		addToCart(e.currentTarget);
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.green-button.open-cart', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		openCart();
 	});
 SCRIPT;
 

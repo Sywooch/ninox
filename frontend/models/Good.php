@@ -62,13 +62,14 @@ class Good extends \common\models\Good{
     }
 
     public function __get($name){
-        if($name == 'inCart'){
-            return \Yii::$app->cart->has($this->ID) > 0;
-        }elseif($name == 'inCartCount'){
-            return \Yii::$app->cart->has($this->ID);
-        }
-
-        return parent::__get($name);
+	    switch($name){
+		    case 'inCart':
+			    return \Yii::$app->cart->has($this->ID);
+		        break;
+		    default:
+			    return parent::__get($name);
+			    break;
+	    }
     }
 
     public function __set($name, $value){
