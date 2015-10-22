@@ -21,6 +21,6 @@ class RuLangAsset extends AssetBundle
 		'js/translations/ru_RU.js',
 	];
 	public $depends = [
-		'app\assets\FrontEndAsset'
+		'app\assets\FrontEndAsset',
 	];
 }

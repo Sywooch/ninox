@@ -183,19 +183,18 @@ $buyBlock = function($model, $button){
             <?php }else{
                 if($model->priceForOneItem){
             ?>
-            <span class="outer-span">
+            <div>
             <?=\Yii::t('shop', 'Цена за единицу')?>:
                 <span class="inner-span semi-bold">
                 <?=$model->priceForOneItem.' '.\Yii::$app->params['domainInfo']['currencyShortName'].' ('.$model->num_opt.' '.$model->Measure1.'/'.\Yii::t('shop', 'уп').')'?>
                 </span>
-            </span>
+            </div>
             <?php } ?>
             <div class="count-in-store">
                 <span>Остаток на складе:&nbsp;</span>
                 <?php
                 echo $countInStore($model);
                 ?>
-
             </div>
             <?php } ?>
             <div class="rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">

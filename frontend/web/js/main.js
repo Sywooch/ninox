@@ -261,8 +261,6 @@ function changeItemCount(item){
 	var itemsCount = parseInt(counter.value.replace(/\D+/g, ''));
 	var count = parseInt(item.getAttribute('data-count'));
 	if((maxItemsCount > itemsCount && count > 0) || (1 < itemsCount && count < 0)){
-		console.log(itemsCount);
-
 		$.ajax({
 			type: 'POST',
 			url: '/changeitemcount',
