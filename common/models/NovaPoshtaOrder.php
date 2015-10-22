@@ -100,6 +100,8 @@ class NovaPoshtaOrder extends Model{
     private $senderAddressData = [];
     private $recipientAddressData = [];
     private $recipientData = [];
+    private $recipientContacts = [];
+    private $recipientDelivery = [];
 
     public function rules(){
         return [
@@ -184,6 +186,23 @@ class NovaPoshtaOrder extends Model{
                 $this->recipientData->recipientID = $recipient;
                 $this->recipientData->save();
                 $this->Recipient = $recipient;
+            }
+        }
+
+        if(!$this->isHash($this->ContactRecipient)){
+            $contactRecipient = new NovaPoshtaContactRecipient([
+               'CounterpartyRef'    =>  $this->Recipient,
+               'FirstName'          =>  $this->orderData->customerName,
+               'LastName'           =>  $this->orderData->customerSurname,
+               'Phone'              =>  $this->orderData->customerPhone
+            ]);
+
+            $contactRecipient = $contactRecipient->save();
+
+            if(!$contactRecipient){
+                $this->addError('ContactRecipient', 'Невозможно создать контактное лицо получателя: возможно, данные неверны');
+            }else{
+
             }
         }
 

@@ -113,6 +113,10 @@ class NovaPoshta extends Component{
         return $response['data']['0'];
     }
 
+    public function createRecipientContact($contact){
+
+    }
+
     public function serviceTypes(){
         if(\Yii::$app->cache->exists('novaPoshta/serviceTypes')){
             $this->serviceTypes = \Yii::$app->cache->get('novaPoshta/serviceTypes');
