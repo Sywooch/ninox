@@ -7,6 +7,7 @@ body{
 	height: 100%;
 	min-height: 100%;
 	position: relative;
+	font-family: OpenSans;
 }
 
 p{
@@ -729,6 +730,7 @@ h2{
 .item .inner-sub{
 	width: 100%;
 	height: auto;
+	padding: 20px 0 10px;
 	position: relative;
 	display: none;
 }
@@ -867,12 +869,12 @@ h2{
 	transform: rotate(6deg);
 }
 
-.item .dopInfo > div > span{
+.item .inner-sub > div > span{
 	font-size: 12px;
 	color: #4f4f4f;
 }
 
-.item .dopInfo .counter{
+.item .inner-sub .counter{
 	width: auto;
 	position: absolute;
 	top: -10px;
@@ -926,46 +928,9 @@ h2{
 	font-size: 12px;
 	color: #4f4f4f;
 	line-height: 28px;
-	display: block;
 }
 
-.item .description{
-	font-size: 12px;
-	color: #4f4f4f;
-	display: block;
-	line-height: 18px;
-	height: 20px;
-	overflow: hidden;
-	position: relative;
-}
-
-.item .description:not(:hover):before{
-	content: "";
-	position: absolute;
-	right: 0px;
-	left: 0px;
-	bottom: 0px;
-	height: 10px;
-	display: block;
-	background: linear-gradient(rgba(244, 244, 244, 0.5) 0%, rgba(255, 255, 255, 0.1) 100%) repeat scroll 0% 0% transparent;
-}
-
-.item .description:hover{
-	height: 100%;
-	padding-bottom: 15px;
-}
-
-.item .description:hover + .moreInfo{
-	display: none;
-}
-
-.item .description p{
-	font-size: 12px;
-	color: #4f4f4f;
-	display: inline;
-}
-
-.item .innerDescription{
+.item .innerSpan{
 	padding-left: 5px;
 }
 
@@ -998,56 +963,21 @@ h2{
 	color: #f9bc2d;
 }
 
-.item .progress{
+.item .item-info{
 	font-size: 12px;
-	display: inline-block;
-	margin: 20px 0 10px;
 	text-align: center;
-	width: 100%;
 }
 
-.progress-green{
+.count-in-store-green{
 	color: #4fab22;
 }
 
-.progress-red{
+.count-in-store-red{
 	color: #e65a5a;
 }
 
-.progress-brown{
+.count-in-store-brown{
 	color: brown;
-}
-
-.item .innerSpan{
-	padding-left: 5px;
-}
-
-.item .moreInfo{
-	text-align: center;
-	width: 100%;
-	font-size: 13px;
-	text-shadow: 0 0 2px #fff;
-	text-decoration: none;
-	display: block;
-}
-
-.progressBar{
-	background-color: #f5f5f5;
-	border-radius: 3px;
-	width: 100px;
-	height: 11px;
-	border: 2px solid #fff;
-	margin: 1px 5px;
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5) inset;
-	float: left;
-}
-
-.progressLine{
-	background-image: url('/template/img/progress.png');
-	border-radius: 3px;
-	display: block;
-	height: 100%;
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5) inset;
 }
 
 .bg-capt-green{

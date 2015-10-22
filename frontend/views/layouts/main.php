@@ -11,8 +11,6 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 
-RuLangAsset::register($this);
-
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
 $this->registerMetaTag(['name' => 'description', 'content' => '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => '']);
@@ -256,6 +254,9 @@ $this->registerJs($js);
 	</footer>
 	<?=$cartModal->renderModal()?>
 	<?=$loginModal->renderModal()?>
+	<?php
+	RuLangAsset::register($this);
+	?>
 	<?php $this->endBody() ?>
 	</body>
 </html>
