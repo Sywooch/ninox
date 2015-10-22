@@ -48,17 +48,16 @@ namespace common\models;
 
 
 use yii\base\Model;
-use yii\base\Object;
 
 class NovaPoshtaOrder extends Model{
 
     public $DateTime;
     public $ServiceType;
-    public $Sender;
-    public $CitySender;
-    public $SenderAddress;
-    public $ContactSender;
-    public $SendersPhone;
+    public $Sender  =   "37c282ce-1624-11e4-acce-0050568002cf";
+    public $CitySender = '8d5a980d-391c-11dd-90d9-001a92567626';
+    public $SenderAddress   =   "1692283e-e1c2-11e3-8c4a-0050568002cf";
+    public $ContactSender   =   "6a80255e-045d-11e5-ad08-005056801333";
+    public $SendersPhone    =   "380503171161";
     public $Recipient;
     public $CityRecipient;
     public $RecipientAddress;
@@ -91,8 +90,16 @@ class NovaPoshtaOrder extends Model{
     public $InfoRegClientBarcodes;
 
     public $BackwardDeliveryData = [];
+    public $orderData = [];
     //public $PayerType;
     //public $CargoType;
+
+    private $notDefaultSender = false;
+    private $citySenderData = [];
+    private $cityRecipientData = [];
+    private $senderAddressData = [];
+    private $recipientAddressData = [];
+    private $recipientData = [];
 
     public function rules(){
         return [
@@ -103,24 +110,100 @@ class NovaPoshtaOrder extends Model{
         ];
     }
 
+    public function setRecipientData($recipient){
+        $this->recipientData = $recipient;
+    }
+
+    private function isHash($hash){
+        return preg_match('/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/', $hash) ? true : false;
+    }
+
     public function beforeValidate(){
-        $this->DateTime = empty($this->DateTime) ? date('d.m.Y') : $this->DateTime;
 
         return parent::beforeValidate();
     }
 
+    public function getRecipient(){
+        //if()
+    }
+
+    public function beforeSave(){
+        $this->DateTime = empty($this->DateTime) ? date('d.m.Y') : $this->DateTime;
+
+        if($this->notDefaultSender){
+            $this->citySenderData = \Yii::$app->NovaPoshta->city($this->CitySender);
+
+            if(!($this->citySenderData)){
+                $this->addError('CitySender', 'Не удалось распознать город отправителя!');
+            }
+        }
+
+        $this->cityRecipientData = \Yii::$app->NovaPoshta->city($this->CityRecipient);
+
+        if(!($this->cityRecipientData)){
+            $this->addError('CityRecipient', 'Не удалось распознать город получателя!');
+        }
+
+        if(empty($this->getErrors())){
+            $this->CityRecipient = $this->cityRecipientData['Ref'];
+
+            if($this->notDefaultSender){
+                $this->CitySender = $this->citySenderData['Ref'];
+            }
+        }
+
+        if($this->notDefaultSender){
+            $this->senderAddressData = \Yii::$app->NovaPoshta->department($this->SenderAddress, $this->CitySender);
+
+            if(!($this->senderAddressData)){
+                $this->addError('SenderAddress', 'Не удалось распознать отделение отправителя!');
+            }
+        }
+
+        $this->recipientAddressData = \Yii::$app->NovaPoshta->department($this->RecipientAddress, $this->CityRecipient);
+
+        if(!($this->recipientAddressData)){
+            $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
+        }
+
+        if(!$this->isHash($this->Recipient)){
+            $recipient = new NovaPoshtaRecipient([
+                'CityRef'   =>  $this->CityRecipient,
+                'FirstName' =>  $this->orderData->customerName,
+                'MiddleName'=>  '',
+                'LastName'  =>  $this->orderData->customerSurname,
+                'Phone'     =>  $this->orderData->customerPhone,
+                'Email'     =>  $this->orderData->customerEmail,
+            ]);
+
+            $recipient = $recipient->save();
+
+            if(!$recipient){
+                $this->addError("Recipient", "Невозможно создать получателя: возможно, данные не точные!");
+            }else{
+                $this->recipientData->recipientID = $recipient;
+                $this->recipientData->save();
+                $this->Recipient = $recipient;
+            }
+        }
+
+        if(empty($this->getErrors())){
+            $this->RecipientAddress = $this->recipientAddressData['Ref'];
+
+            if($this->notDefaultSender){
+                $this->SenderAddress = $this->senderAddressData['Ref'];
+            }
+        }
+    }
+
     public function save(){
+        $this->beforeSave();
+
         //if(!$this->validate()){
         //    return $this->getErrors();
         //}
 
-        $order = [
-            'modelName'         =>  'InternetDocument',
-            'calledMethod'      =>  'save',
-            'methodProperties'  =>  $this
-        ];
-
-        return \Yii::$app->NovaPoshta->createOrder($order);
+        return \Yii::$app->NovaPoshta->createOrder($this);
     }
 
 }

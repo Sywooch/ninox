@@ -21,6 +21,10 @@ class NovaPoshta extends Component{
 
     public $serviceTypes;
 
+    public function senders(){
+
+    }
+
     private function sendRequest($request){
         $request['apiKey'] = $this->apiKey;
         $request = Json::encode($request);
@@ -33,14 +37,80 @@ class NovaPoshta extends Component{
 
     }
 
-    public function cityCode($city){
-        if(\Yii::$app->cache->exists('novaPoshta/cities')){
-            $this->cities = \Yii::$app->cache->get('novaPoshta/cities');
+    public function city($city, $area = null){
+        $response = Json::decode($this->sendRequest([
+            'modelName'         =>  'Address',
+            'calledMethod'      =>  'getCities',
+            'methodProperties'  =>  [
+                'FindByString'  =>  $city
+            ]
+        ])->response);
+
+        $response = $response['data'];
+
+        if(empty($response)){
+            return false;
         }
 
+        if(sizeof($response) >= 1 && $area != null){
+            foreach($response as $city){
+                if($city['Area'] == $area){
+                    return $city;
+                }
+            }
+        }
 
+        return $response['0'];
+    }
 
-        return $this->cities;
+    public function departments($city){
+        $response = Json::decode($this->sendRequest([
+            'modelName'     =>  'AddressGeneral',
+            'calledMethod'  =>  'getWarehouses',
+            'methodProperties'  =>  [
+                'CityRef'   =>  $city
+            ]
+        ])->response);
+
+        if(empty($response)){
+            return false;
+        }
+
+        return $response;
+    }
+
+    public function department($number, $city){
+        $response = $this->departments($city);
+
+        if(!$response){
+            return false;
+        }
+
+        foreach($response['data'] as $item){
+            if($item['Number'] == $number){
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
+    public function createOrder($order){
+        return $this->sendRequest([
+            'modelName'         =>  'InternetDocument',
+            'calledMethod'      =>  'save',
+            'methodProperties'  =>  $order
+        ]);
+    }
+
+    public function createRecipient($recipient){
+        $response = Json::decode($this->sendRequest([
+            'modelName'         =>  'Counterparty',
+            'calledMethod'      =>  'save',
+            'methodProperties'  =>  $recipient
+        ])->response);
+
+        return $response['data']['0'];
     }
 
     public function serviceTypes(){
@@ -76,10 +146,5 @@ class NovaPoshta extends Component{
 
         return $types;
     }
-
-    public function createOrder($order){
-        return $this->sendRequest($order);
-    }
-
 
 }

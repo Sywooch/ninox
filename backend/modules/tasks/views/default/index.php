@@ -358,22 +358,38 @@ foreach($events as $event){
 <pre>
 <?php
 
+$testOrder = \common\models\History::findOne(['id' => 22097]);
+
+$customer = \common\models\Customer::findOne(['id' => $testOrder->customerID]);
+
 $order = new \common\models\NovaPoshtaOrder([
-    'ServiceType'   =>  ''
+    'orderData'         =>  $testOrder,
+    'ServiceType'       =>  '',
+    'CityRecipient'     =>  'Васильков',
+    'RecipientAddress'  =>  '1',
+    'Recipient'         =>  $customer->recipientID,
+    'ContactRecipient'  =>  []
 ]);
 
-print_r(\Yii::$app->NovaPoshta->serviceTypes());
-?>
-</pre><pre>
-<?php
-
+$order->setRecipientData($customer);
 
 print_r($order->save());
 
-
-
-
-
-
 ?>
     </pre>
+
+<pre>
+    <?php print_r($testOrder); ?>
+</pre>
+
+<div class="alert alert-danger">
+    <pre>
+        <?php print_r($order->getErrors());?>
+    </pre>
+</div>
+
+<div class="alert alert-success">
+    <pre>
+        <?php print_r($order);?>
+    </pre>
+</div>
