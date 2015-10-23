@@ -20,9 +20,40 @@ class NovaPoshta extends Component{
     private $cities;
 
     public $serviceTypes;
+    public $paymentMethods;
 
-    public function senders(){
+    public function paymentMethods(){
+        if(\Yii::$app->cache->exists('novaPoshta/paymentMethods')){
+            $this->paymentMethods = \Yii::$app->cache->get('novaPoshta/paymentMethods');
+            return $this->paymentMethods;
+        }
 
+        $request = [
+            'modelName'     =>  'Common',
+            'calledMethod'  =>  'getPaymentForms',
+            'language'      =>  'ru'
+        ];
+
+        $request = $this->sendRequest($request)->response;
+
+        if(empty($request)){
+            return [];
+        }
+
+        $request = Json::decode($request);
+
+        $types = [];
+
+        foreach($request['data'] as $part){
+            $types[$part['Ref']] = $part['Description'];
+        }
+
+        \Yii::$app->cache->set('novaPoshta/paymentMethods', $types, 86400);
+        \Yii::trace('added NovaPoshta paymentMethods to cache');
+
+        $this->paymentMethods = $types;
+
+        return $types;
     }
 
     private function sendRequest($request){
@@ -95,12 +126,56 @@ class NovaPoshta extends Component{
         return false;
     }
 
+    public function orderClear($order){
+        $r = $order;
+        $r->orderData = [];
+        $r->recipientDelivery = [];
+        $r->recipientData = [];
+        $r->recipientContacts = [];
+
+        return $r;
+    }
+
     public function createOrder($order){
-        return $this->sendRequest([
+        $request = $this->sendRequest([
             'modelName'         =>  'InternetDocument',
             'calledMethod'      =>  'save',
-            'methodProperties'  =>  $order
+            'methodProperties'  =>  $this->orderClear($order)
         ]);
+
+        $response = Json::decode($request->response);
+
+        if($response['success'] != 1){
+            foreach($response['errors'] as $error){
+                $attribute = '';
+
+                switch($error){
+                    case 'Counterparty for Payment NonCash is invalid':
+                        $attribute = 'PaymentMethod';
+                        break;
+                    case 'SeatsAmount empty':
+                        $attribute = 'SeatsAmount';
+                        break;
+                    case 'Cost is empty':
+                        $attribute = 'Cost';
+                        break;
+                    case 'Description empty':
+                        $attribute = 'Description';
+                        break;
+
+                }
+
+                if(!empty($attribute)){
+                    $order->addError($attribute, \Yii::t('NovaPoshtaErrors', $error));
+                }
+            }
+        }else{
+            $order->orderData->nakladna = $response['data']['0']['IntDocNumber'];
+            $order->orderData->save();
+        }
+
+
+        return $order;
     }
 
     public function createRecipient($recipient){
@@ -110,11 +185,17 @@ class NovaPoshta extends Component{
             'methodProperties'  =>  $recipient
         ])->response);
 
-        return $response['data']['0'];
+        return isset($response['data']) && isset($response['data']['0']) ? $response['data']['0'] : false;
     }
 
     public function createRecipientContact($contact){
+        $response = Json::decode($this->sendRequest([
+            'modelName'         =>  'ContactPerson',
+            'calledMethod'      =>  'save',
+            'methodProperties'  =>  $contact
+        ])->response);
 
+        return isset($response['data']) && isset($response['data']['0']) ? $response['data']['0'] : false;
     }
 
     public function serviceTypes(){
@@ -144,7 +225,7 @@ class NovaPoshta extends Component{
         }
 
         \Yii::$app->cache->set('novaPoshta/serviceTypes', $types, 86400);
-        \Yii::trace('added to cache');
+        \Yii::trace('added NovaPoshta serviceTypes to cache');
 
         $this->serviceTypes = $types;
 

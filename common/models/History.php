@@ -376,7 +376,7 @@ class History extends \yii\db\ActiveRecord
             [['customerComment'], 'string'],
             [['amountDeductedOrder'], 'number'],
             [['nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
-            [['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'sendSmsDate'], 'safe'],
+            [['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate'], 'safe'],
             [['customerEmail', 'deliveryAddress', 'deliveryRegion', 'deliveryCity', 'deliveryInfo', 'coupon', 'paymentInfo'], 'string', 'max' => 255],
             [['customerName', 'customerSurname', 'customerPhone', 'customerFathername'], 'string', 'max' => 64],
             [['nakladna'], 'string', 'max' => 50]
@@ -435,7 +435,7 @@ class History extends \yii\db\ActiveRecord
             'deleteDate'        => 'Delete Date',
             'transactionSended' => 'Transaction Sended',
             'confirmedDate'     => 'Confirmed Date',
-            'sendSmsDate'       => 'Send Sms Date',
+            'smsSendDate'       => 'Send Sms Date',
             'callsCount'        => 'Calls Count',
         ];
     }

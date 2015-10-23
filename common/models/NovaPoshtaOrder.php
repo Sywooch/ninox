@@ -51,6 +51,12 @@ use yii\base\Model;
 
 class NovaPoshtaOrder extends Model{
 
+    static $typesOfPayers = [
+        'Sender'    =>  'Отправитель',
+        'Recipient' =>  'Получатель',
+        'ThirdPerson'=> 'Третее лицо'
+    ];
+
     public $DateTime;
     public $ServiceType;
     public $Sender  =   "37c282ce-1624-11e4-acce-0050568002cf";
@@ -64,11 +70,11 @@ class NovaPoshtaOrder extends Model{
     public $ContactRecipient;
     public $RecipientsPhone;
     public $PaymentMethod;
-    public $PayerType;
+    public $PayerType   = "Recipient";
     public $Cost;
     public $SeatsAmount;
     public $Description;
-    public $CargoType;
+    public $CargoType   =   "Cargo";
     public $CargoDetails;
 
     public $CargoDescription;
@@ -94,26 +100,43 @@ class NovaPoshtaOrder extends Model{
     //public $PayerType;
     //public $CargoType;
 
+    public $recipientData = [];
+    public $recipientContacts = [];
+    public $recipientDelivery = [];
+
     private $notDefaultSender = false;
     private $citySenderData = [];
     private $cityRecipientData = [];
     private $senderAddressData = [];
     private $recipientAddressData = [];
-    private $recipientData = [];
-    private $recipientContacts = [];
-    private $recipientDelivery = [];
 
     public function rules(){
         return [
             [['DateTime', 'ServiceType', 'Sender', 'CitySender', 'SenderAddress', 'ContactSender',
                 'SendersPhone', 'Recipient', 'CityRecipient', 'RecipientAddress', 'ContactRecipient',
                 'RecipientsPhone', 'PaymentMethod', 'PayerType', 'Cost', 'SeatsAmount', 'Description',
-                'CargoType', 'CargoDetails'], 'required'],
+                'CargoType'], 'required'],
         ];
     }
 
-    public function setRecipientData($recipient){
-        $this->recipientData = $recipient;
+    public function init(){
+        $this->DateTime = empty($this->DateTime) ? date('d.m.Y') : $this->DateTime;
+        $this->CityRecipient = isset($this->recipientDelivery->cityRecipient) ? $this->recipientDelivery->cityRecipient : $this->recipientDelivery->city;
+        $this->RecipientAddress = isset($this->recipientDelivery->recipientAddress) ? $this->recipientDelivery->recipientAddress : $this->recipientDelivery->shippingParam;
+        $this->ContactRecipient = isset($this->recipientContacts->contactRecipient) ? $this->recipientContacts->contactRecipient : $this->ContactRecipient;
+        $this->Recipient = isset($this->recipientData->recipientID) ? $this->recipientData->recipientID : '';
+        $this->RecipientsPhone = isset($this->recipientContacts->value) ? $this->recipientContacts->value : '';
+        $this->Cost = isset($this->Cost) ? $this->Cost : $this->orderData->actualAmount;
+
+        if($this->orderData->paymentType == 1){
+            $this->BackwardDeliveryData = [
+                'PayerType'                 =>  'Recipient',
+                'CargoType'                 =>  $this->orderData->globalmoney == 1 ? 'Money' : 'Documents',
+                'RedeliveryString'          =>  $this->orderData->globalmoney == 1 ? '\u0426\u0435\u043d\u043d\u044b\u0435 \u0431\u0443\u043c\u0430\u0433\u0438' : '\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b',
+                'AfterpaymentOnGoodsCost'   =>  $this->Cost
+            ];
+            \Yii::trace('Set BackwardDelivery');
+        }
     }
 
     private function isHash($hash){
@@ -130,42 +153,48 @@ class NovaPoshtaOrder extends Model{
     }
 
     public function beforeSave(){
-        $this->DateTime = empty($this->DateTime) ? date('d.m.Y') : $this->DateTime;
-
         if($this->notDefaultSender){
-            $this->citySenderData = \Yii::$app->NovaPoshta->city($this->CitySender);
+            if(!$this->isHash($this->citySenderData)){
+                $this->citySenderData = \Yii::$app->NovaPoshta->city($this->CitySender);
 
-            if(!($this->citySenderData)){
-                $this->addError('CitySender', 'Не удалось распознать город отправителя!');
+                if(!($this->citySenderData)){
+                    $this->addError('CitySender', 'Не удалось распознать город отправителя!');
+                }else{
+                    $this->CitySender = $this->citySenderData['Ref'];
+                }
+            }
+
+            if(!$this->isHash($this->SenderAddress)){
+                $this->senderAddressData = \Yii::$app->NovaPoshta->department($this->SenderAddress, $this->CitySender);
+
+                if(!($this->senderAddressData)){
+                    $this->addError('SenderAddress', 'Не удалось распознать отделение отправителя!');
+                }else{
+                    $this->SenderAddress = $this->senderAddressData['Ref'];
+                }
             }
         }
 
-        $this->cityRecipientData = \Yii::$app->NovaPoshta->city($this->CityRecipient);
+        if(!$this->isHash($this->CityRecipient)){
+            $this->cityRecipientData = \Yii::$app->NovaPoshta->city($this->CityRecipient);
 
-        if(!($this->cityRecipientData)){
-            $this->addError('CityRecipient', 'Не удалось распознать город получателя!');
-        }
-
-        if(empty($this->getErrors())){
-            $this->CityRecipient = $this->cityRecipientData['Ref'];
-
-            if($this->notDefaultSender){
-                $this->CitySender = $this->citySenderData['Ref'];
+            if(!($this->cityRecipientData)){
+                $this->addError('CityRecipient', 'Не удалось распознать город получателя!');
+            }else{
+                $this->CityRecipient = $this->cityRecipientData['Ref'];
+                $this->recipientDelivery->cityRecipient = $this->CityRecipient;
             }
         }
 
-        if($this->notDefaultSender){
-            $this->senderAddressData = \Yii::$app->NovaPoshta->department($this->SenderAddress, $this->CitySender);
+        if(!$this->isHash($this->RecipientAddress)){
+            $this->recipientAddressData = \Yii::$app->NovaPoshta->department($this->RecipientAddress, $this->CityRecipient);
 
-            if(!($this->senderAddressData)){
-                $this->addError('SenderAddress', 'Не удалось распознать отделение отправителя!');
+            if(!($this->recipientAddressData)){
+                $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
+            }else{
+                $this->RecipientAddress = $this->recipientAddressData['Ref'];
+                $this->recipientDelivery->recipientAddress = $this->RecipientAddress;
             }
-        }
-
-        $this->recipientAddressData = \Yii::$app->NovaPoshta->department($this->RecipientAddress, $this->CityRecipient);
-
-        if(!($this->recipientAddressData)){
-            $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
         }
 
         if(!$this->isHash($this->Recipient)){
@@ -183,9 +212,8 @@ class NovaPoshtaOrder extends Model{
             if(!$recipient){
                 $this->addError("Recipient", "Невозможно создать получателя: возможно, данные не точные!");
             }else{
-                $this->recipientData->recipientID = $recipient;
-                $this->recipientData->save();
                 $this->Recipient = $recipient;
+                $this->recipientData->recipientID = $recipient;
             }
         }
 
@@ -194,7 +222,7 @@ class NovaPoshtaOrder extends Model{
                'CounterpartyRef'    =>  $this->Recipient,
                'FirstName'          =>  $this->orderData->customerName,
                'LastName'           =>  $this->orderData->customerSurname,
-               'Phone'              =>  $this->orderData->customerPhone
+               'Phone'              =>  $this->recipientContacts->value
             ]);
 
             $contactRecipient = $contactRecipient->save();
@@ -202,22 +230,18 @@ class NovaPoshtaOrder extends Model{
             if(!$contactRecipient){
                 $this->addError('ContactRecipient', 'Невозможно создать контактное лицо получателя: возможно, данные неверны');
             }else{
-
+                $this->ContactRecipient = $contactRecipient['Ref'];
+                $this->recipientContacts->contactRecipient = $contactRecipient['Ref'];
             }
         }
 
-        if(empty($this->getErrors())){
-            $this->RecipientAddress = $this->recipientAddressData['Ref'];
-
-            if($this->notDefaultSender){
-                $this->SenderAddress = $this->senderAddressData['Ref'];
-            }
-        }
+        $this->recipientContacts->save();
+        $this->recipientDelivery->save();
+        $this->recipientData->save();
     }
 
     public function save(){
         $this->beforeSave();
-
         //if(!$this->validate()){
         //    return $this->getErrors();
         //}
