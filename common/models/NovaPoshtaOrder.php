@@ -48,6 +48,7 @@ namespace common\models;
 
 
 use yii\base\Model;
+use yii\helpers\Json;
 
 class NovaPoshtaOrder extends Model{
 
@@ -96,13 +97,13 @@ class NovaPoshtaOrder extends Model{
     public $InfoRegClientBarcodes;
 
     public $BackwardDeliveryData = [];
-    public $orderData = [];
+    private $orderData = [];
     //public $PayerType;
     //public $CargoType;
 
-    public $recipientData = [];
-    public $recipientContacts = [];
-    public $recipientDelivery = [];
+    private $recipientData = [];
+    private $recipientContacts = [];
+    private $recipientDelivery = [];
 
     private $notDefaultSender = false;
     private $citySenderData = [];
@@ -112,6 +113,7 @@ class NovaPoshtaOrder extends Model{
 
     public function rules(){
         return [
+            [['cargoDescription'], 'safe'],
             [['DateTime', 'ServiceType', 'Sender', 'CitySender', 'SenderAddress', 'ContactSender',
                 'SendersPhone', 'Recipient', 'CityRecipient', 'RecipientAddress', 'ContactRecipient',
                 'RecipientsPhone', 'PaymentMethod', 'PayerType', 'Cost', 'SeatsAmount', 'Description',
@@ -121,22 +123,25 @@ class NovaPoshtaOrder extends Model{
 
     public function init(){
         $this->DateTime = empty($this->DateTime) ? date('d.m.Y') : $this->DateTime;
-        $this->CityRecipient = isset($this->recipientDelivery->cityRecipient) ? $this->recipientDelivery->cityRecipient : $this->recipientDelivery->city;
-        $this->RecipientAddress = isset($this->recipientDelivery->recipientAddress) ? $this->recipientDelivery->recipientAddress : $this->recipientDelivery->shippingParam;
-        $this->ContactRecipient = isset($this->recipientContacts->contactRecipient) ? $this->recipientContacts->contactRecipient : $this->ContactRecipient;
-        $this->Recipient = isset($this->recipientData->recipientID) ? $this->recipientData->recipientID : '';
-        $this->RecipientsPhone = isset($this->recipientContacts->value) ? $this->recipientContacts->value : '';
-        $this->Cost = isset($this->Cost) ? $this->Cost : $this->orderData->actualAmount;
 
-        if($this->orderData->paymentType == 1){
-            $this->BackwardDeliveryData = [
-                'PayerType'                 =>  'Recipient',
-                'CargoType'                 =>  $this->orderData->globalmoney == 1 ? 'Money' : 'Documents',
-                'RedeliveryString'          =>  $this->orderData->globalmoney == 1 ? '\u0426\u0435\u043d\u043d\u044b\u0435 \u0431\u0443\u043c\u0430\u0433\u0438' : '\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b',
-                'AfterpaymentOnGoodsCost'   =>  $this->Cost
-            ];
-            \Yii::trace('Set BackwardDelivery');
-        }
+        /*
+         * Написать тут такой код, чтобы можно было редактировать эти поля (Recipient, CityRecipient и тд.)
+         * Сейчас логика такова:
+         * init() -> [вставляем данные POST] -> beforeSave() -> save()
+         * то есть данные не попадают
+         * НО
+         * для простоты жизни мы храним некоторые из этих переменных в БД
+         * нужно проверять что строки не отличаются от предыдущих, тогда мы вставляем поля из БД
+         * если отличаются - делаем запросы...
+         * */
+
+        $this->Recipient = empty($this->Recipient) ? $this->recipientData->recipientID : $this->Recipient;
+        $this->CityRecipient = empty($this->CityRecipient) ? $this->recipientDelivery->cityRecipient : $this->CityRecipient;
+        $this->RecipientAddress = empty($this->RecipientAddress) ? $this->recipientDelivery->recipientAddress : $this->RecipientAddress;
+        $this->ContactRecipient = empty($this->ContactRecipient) ? $this->recipientContacts->contactRecipient : $this->ContactRecipient;
+        $this->RecipientsPhone = empty($this->RecipientsPhone) ? $this->recipientContacts->value : $this->RecipientsPhone;
+
+        $this->Cost = empty($this->Cost) ? $this->orderData->actualAmount : $this->Cost;
     }
 
     private function isHash($hash){
@@ -235,9 +240,46 @@ class NovaPoshtaOrder extends Model{
             }
         }
 
+        if($this->orderData->paymentType == 1){
+            $this->BackwardDeliveryData = [
+                'PayerType'                 =>  'Recipient',
+                'CargoType'                 =>  $this->orderData->globalmoney == 1 ? 'Money' : 'Documents',
+                'RedeliveryString'          =>  $this->orderData->globalmoney == 1 ? '\u0426\u0435\u043d\u043d\u044b\u0435 \u0431\u0443\u043c\u0430\u0433\u0438' : '\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b',
+                'AfterpaymentOnGoodsCost'   =>  $this->Cost
+            ];
+        }
+
         $this->recipientContacts->save();
         $this->recipientDelivery->save();
         $this->recipientData->save();
+    }
+
+    public function __set($a, $b){
+        switch($a){
+            case 'orderData':
+            case 'recipientData':
+            case 'recipientContacts':
+            case 'recipientDelivery':
+                $this->$a = $b;
+                break;
+            default:
+                parent::__set($a, $b);
+                break;
+        }
+    }
+
+    public function __get($a){
+        switch($a){
+            case 'orderData':
+            case 'recipientData':
+            case 'recipientContacts':
+            case 'recipientDelivery':
+                return $this->$a;
+                break;
+            default:
+                return parent::__get($a);
+                break;
+        }
     }
 
     public function save(){

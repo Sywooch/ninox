@@ -62,7 +62,13 @@ class NovaPoshta extends Component{
 
         $result = new Curl();
 
+        \Yii::trace('Sending request...');
+        \Yii::trace($request);
+
         $result->setOption(CURLOPT_POSTFIELDS, $request)->post($this->url);
+
+        \Yii::trace('Obtaining result...');
+        \Yii::trace(Json::encode($result));
 
         return $result;
 
@@ -126,21 +132,11 @@ class NovaPoshta extends Component{
         return false;
     }
 
-    public function orderClear($order){
-        $r = $order;
-        $r->orderData = [];
-        $r->recipientDelivery = [];
-        $r->recipientData = [];
-        $r->recipientContacts = [];
-
-        return $r;
-    }
-
     public function createOrder($order){
         $request = $this->sendRequest([
             'modelName'         =>  'InternetDocument',
             'calledMethod'      =>  'save',
-            'methodProperties'  =>  $this->orderClear($order)
+            'methodProperties'  =>  $order
         ]);
 
         $response = Json::decode($request->response);
