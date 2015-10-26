@@ -15,6 +15,8 @@ use Yii;
  */
 class Pricerule extends \yii\db\ActiveRecord
 {
+	public $priceRules = array();
+
     /**
      * @inheritdoc
      */
@@ -48,4 +50,47 @@ class Pricerule extends \yii\db\ActiveRecord
             'Priority' => 'Priority',
         ];
     }
+
+	public function asArray(){
+		$query = $this->Formula;
+		$parts = explode(' THEN ', $query);
+		$terms = $parts['0'];
+		$action = $parts['1'];
+		$terms = preg_replace('/IF/', '', $terms);
+		$terms = explode(' AND ', $terms);
+		foreach($terms as $key => $termt){
+			$termt = explode(' OR ', $termt);
+			foreach($termt as $term){
+				$term = preg_replace(array('/\(/', '/\)/', '/^\s/'), '', $term);
+				$tTerm = explode(' = ', $term);
+				if($tTerm['1'] != ''){
+					$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '=');
+				}else{
+					$tTerm = explode(' >= ', $term);
+					if($tTerm['1'] != ''){
+						$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '>=');
+					}else{
+						$tTerm = explode(' <= ', $term);
+						if($tTerm['1'] != ''){
+							$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '<=');
+						}else{
+							$tTerm = explode(' != ', $term);
+							if($tTerm['1'] != ''){
+								$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '!=');
+							}
+						}
+					}
+				}
+			}
+		}
+		$actions = explode(' AND ', $action);
+		foreach($actions as $action){
+			$action = explode('=', $action);
+			foreach($action as $key => $row){
+				$action[$key] = trim($row);
+			}
+			$rArray['actions'][$action['0']] = $action['1'];
+		}
+		return $rArray;
+	}
 }

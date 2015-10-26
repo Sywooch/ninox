@@ -1,5 +1,6 @@
 <?php
 
+use common\helpers\GoodHelper;
 use yii\helpers\Html;
 
 $link = '/tovar/'.$model->link.'-g'.$model->ID;
@@ -12,13 +13,13 @@ $createFlag = function($name, $background){
 	]);
 };
 
-if($model->isNew){
+if((time() - strtotime($model->photodate)) <= (86400 * 10)){
     $flags[] = $createFlag(\Yii::t('shop', 'Новинка'), 'bg-capt-green');
 }
 if($model->originalGood){
     $flags[] = $createFlag(\Yii::t('shop', 'Оригинал'), 'bg-capt-purple');
 }
-if($model->discountType > 0){
+if($model->discountType > 0 && $model->priceRuleID == 0){
     $flags[] = $createFlag(\Yii::t('shop', 'Распродажа'), 'bg-capt-red');
 }
 
@@ -80,10 +81,10 @@ $buyBlock = function($model, $button){
 				'div',
 				Html::tag(
 					'span',
-					explode('.', number_format($model->wholesale_price * \Yii::$app->params['domainInfo']['currencyExchange'], 2, '.', ' '))[0],
+					GoodHelper::getPriceInteger($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_price : $model->wholesale_real_price),
 					[]
 				).
-				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', explode('.', number_format($model->wholesale_price * \Yii::$app->params['domainInfo']['currencyExchange'], 2, '.', ' '))[1], []) : '').
+				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', GoodHelper::getPriceFraction($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_price : $model->wholesale_real_price), []) : '').
 				Html::tag(
 					'span',
 					' '.\Yii::$app->params['domainInfo']['currencyShortName'],
@@ -92,17 +93,17 @@ $buyBlock = function($model, $button){
 					]
 				),
 				[
-					'class' => 'semi-bold'.($model->discountType > 0 ? ' sale-price red' : ' wholesale-price blue')
+					'class' => 'semi-bold'.($model->discountType > 0 && $model->priceRuleID == 0 ? ' sale-price red' : ' wholesale-price blue')
 				]
 			).
-			(($model->wholesale_price != $model->retail_price || $model->discountType > 0) ? (Html::tag(
+			(($model->wholesale_price != $model->retail_price || ($model->discountType > 0 && $model->priceRuleID == 0)) ? (Html::tag(
 				'div',
 				Html::tag(
 					'span',
-					($model->discountType > 0 ? \Yii::t('shop', 'опт') : \Yii::t('shop', 'розница')).' - '.explode('.', number_format(($model->discountType > 0 ? $model->PriceOut1 : $model->retail_price) * \Yii::$app->params['domainInfo']['currencyExchange'], 2, '.', ' '))[0],
+					($model->discountType > 0 && $model->priceRuleID == 0 ? \Yii::t('shop', 'опт') : \Yii::t('shop', 'розница')).' - '.GoodHelper::getPriceInteger($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_real_price : $model->retail_real_price),
 					[]
 				).
-				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', explode('.', number_format(($model->discountType > 0 ? $model->PriceOut1 : $model->retail_price) * \Yii::$app->params['domainInfo']['currencyExchange'], 2, '.', ' '))[1], []) : '').
+				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', GoodHelper::getPriceFraction($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_real_price : $model->retail_real_price), []) : '').
 				Html::tag(
 					'span',
 					' '.\Yii::$app->params['domainInfo']['currencyShortName'],
@@ -111,7 +112,7 @@ $buyBlock = function($model, $button){
 					]
 				),
 				[
-					'class' => ($model->discountType > 0 ? 'old-wholesale-price' : 'retail-price')
+					'class' => ($model->discountType > 0 && $model->priceRuleID == 0 ? 'old-wholesale-price' : 'retail-price')
 				]
 			)) : ''),
 			[
@@ -131,7 +132,38 @@ $buyBlock = function($model, $button){
 	);
 };
 
+$discountBlock = function($model){
+	switch($model->discountType){
+		case 1:
+			$dimensiom = ' '.\Yii::$app->params['domainInfo']['currencyShortName'];
+			break;
+		case 2:
+			$dimension = '%';
+			break;
+		default:
+			$dimensiom = '';
+			break;
+	}
 
+	return Html::tag('div',
+		Html::tag('div',
+			Html::tag('div', \Yii::t('shop', 'Акция'), []).
+			Html::tag('div', '-'.$model->discountSize.$dimensiom, []),
+			[
+				'class' => 'top'
+			]).
+		Html::tag('div',
+			Html::tag('div', GoodHelper::getPriceFormat($model->wholesale_price), ['class' => 'semi-bold']).
+			Html::tag('div', \Yii::$app->params['domainInfo']['currencyShortName'], []),
+			[
+				'class' =>  'bottom'
+			]),
+		[
+			'class' => 'discount'
+		]);
+
+
+};
 
 ?>
 <div class="item">
@@ -142,18 +174,9 @@ $buyBlock = function($model, $button){
         <div class="code"><?=\Yii::t('shop', 'Код')?>: <?=$model->Code?></div>
         <div class="open-item">
             <img class="link-hide" data-href="<?=$link?>" alt="<?=$model->Name?>" src="<?=$photo?>" title="<?=$model->Name?> - <?=\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')?>" height="190" width="243">
-            <?php if($model->discount){ ?>
-                <div class="discount">
-                    <div class="top">
-                        <div><?=\Yii::t('shop', 'Акция')?></div>
-                        <div>-<?=''//$model['discount']['discountSize']?>%</div>
-                    </div>
-                    <div class="bottom">
-                        <div><?=''//number_format($oneItem['discount']['discountPrice'] * $_SESSION['domainInfo']['exchange'], $_SESSION['domainInfo']['coins'] ? 2 : 0, '.', ' ')?></div>
-                        <div><?=\Yii::$app->params['domainInfo']['currencyShortName']?></div>
-                    </div>
-                </div>
-            <?php }?>
+            <?php if($model->priceRuleID){
+                echo $discountBlock($model);
+            }?>
             <?php
             if(!empty($flags)){
                 echo Html::tag('div', implode('', $flags), [
@@ -172,7 +195,7 @@ $buyBlock = function($model, $button){
 		    echo $this->render('_shop_good_counter', [
 			    'itemID'    =>  $model->ID,
 			    'value'     =>  $model->inCart ? $model->inCart : 1,
-			    'count'     =>  $model->isUnlimited ? 1000 : $model->count
+			    'store'     =>  $model->isUnlimited ? 1000 : $model->count
 		    ]);
 	    }?>
         <div class="item-info">

@@ -78,13 +78,6 @@ use Yii;
 class Good extends \yii\db\ActiveRecord
 {
 
-    public $isNew = false;
-    public $discount = false;
-    public $isUnlimited = false;
-    public $canBuy = true;
-    public $priceForOneItem = false; //Вот тут я уже ахуел - сколько непонятных переменных
-    public $reviewsCount = 0;
-
     public static function searchGoods($string, $params = []){
         if(empty($params) || $string == ''){
             return [];
@@ -142,7 +135,7 @@ class Good extends \yii\db\ActiveRecord
         return [
             [['ico', 'gabarity', 'shyryna', 'vysota', 'dovgyna', 'dyametr', 'listorder', 'otkl_time', 'vkl_time', 'tovdate', 'tovupdate', 'photodate', 'otgruzka', 'otgruzka_time', 'p_photo', 'link', 'rate', 'originalGood', 'video'], 'required'],
             [['listorder', 'otgruzka', 'otgruzka2', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
-            [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2'], 'safe'],
+            [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2', 'num_opt'], 'safe'],
             [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
             [['link'], 'string'],
             [['ico', 'Code', 'BarCode1', 'BarCode2', 'BarCode3', 'Catalog1', 'Catalog2', 'Catalog3', 'Name', 'Name2', 'gabarity', 'Measure1', 'Measure2', 'anotherCurrencyTag', 'video'], 'string', 'max' => 255],
@@ -184,7 +177,6 @@ class Good extends \yii\db\ActiveRecord
     {
         return 'goods';
     }
-
 
     /**
      * @inheritdoc
