@@ -26,11 +26,12 @@ class DefaultController extends Controller
         $model = new LoginForm();
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
-            if(\Yii::$app->request->url == '/admin'){
-                return $this->redirect('/admin'.\Yii::$app->user->identity->default_route);
-            }else{
-                return $this->redirect(\Yii::$app->request->url);
+
+            if($this->goBack()){
+                return $this->goBack();
             }
+
+            return $this->redirect(\Yii::$app->request->url);
         }else{
             return $this->render('index', [
                 'model' => $model,

@@ -40,7 +40,7 @@ var deleteOrder = function(item){
 
     $.ajax({
         type: 'POST',
-        url: '/admin/orders/deleteorder',
+        url: '/orders/deleteorder',
         data: {
             'OrderID': orderID
         },
@@ -57,7 +57,7 @@ var deleteOrder = function(item){
     var orderID = obj.parentNode.parentNode.parentNode.getAttribute('data-key');
     $.ajax({
         type: 'POST',
-        url: '/admin/orders/doneorder',
+        url: '/orders/doneorder',
         data: {
             'OrderID': orderID
         },
@@ -87,7 +87,7 @@ var deleteOrder = function(item){
     function(isConfirm){
         $.ajax({
             type: 'POST',
-            url: '/admin/orders/confirmordercall',
+            url: '/orders/confirmordercall',
             data: {
                 'OrderID': orderID,
                 'confirm': isConfirm
@@ -326,6 +326,17 @@ $this->title = 'Заказы';
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
 ])?>
+
+
+<?=Html::tag('a', 'За всё время', [
+    'href'  =>  \yii\helpers\Url::toRoute([
+        '',
+        'showDates' =>  'alltime'
+    ]),
+    'class' =>  'btn btn-default btn-disabled',
+    \Yii::$app->request->get("showDates") == 'alltime' ? 'disabled' : '' =>  'true'
+]); ?>
+
 <?=\kartik\grid\GridView::widget([
     'dataProvider'  =>  $orders,
     'resizableColumns' =>  false,
@@ -358,8 +369,9 @@ $this->title = 'Заказы';
                 return [];
             },
             'value'     =>  function($model){
+                //TODO: refactor plz
                 return '
-                <a href="/admin/orders/showorder/'.$model->id.'">
+                <a href="/orders/showorder/'.$model->id.'">
                 '.$model->id.'
                 </a>
                 <br>
@@ -433,7 +445,7 @@ $this->title = 'Заказы';
                 }else{
                     $status2 = 'Не выполнено';
                 }
-
+                //TODO: refactor plz
                 return '<div style="width: 100%; display: block; position: inherit; height: 100%;"><div style="width: 100%; height: 60%">'.$status1.'</div><div style="width: 100%; height: 40%"><small>'.$status2.'</small></div></div>';
             }
         ],
@@ -475,10 +487,10 @@ $this->title = 'Заказы';
             'width'     =>  '260px',
             'buttons'   =>  [
                 'contents'  =>  function($url, $model, $key){
-                    return '<a style="margin-top: 1px;" href="/admin/orders/showorder/'.$model->id.'" class="btn btn-default">Содержимое</a>';
+                    return '<a style="margin-top: 1px;" href="/orders/showorder/'.$model->id.'" class="btn btn-default">Содержимое</a>';
                 },
                 'print'  =>  function($url, $model, $key){
-                    return '<a href="/admin/order/printorder?orderID='.$model->id.'" target="_blank" class="btn btn-default glyphicon glyphicon-print"></a>';
+                    return '<a href="/order/printorder?orderID='.$model->id.'" target="_blank" class="btn btn-default glyphicon glyphicon-print"></a>';
                 },
                 'done'  =>  function($url, $model, $key){
                     return '<button class="btn btn-default doneOrder glyphicon glyphicon-ok'.($model->done == 1 ? ' btn-success' : '').'"'.($model->confirmed == 1 ? '' : ' disabled="disabled"').'></button>';
@@ -513,7 +525,7 @@ $this->title = 'Заказы';
                 return GridView::ROW_COLLAPSED;
             },
             'detailRowCssClass' =>  GridView::TYPE_DEFAULT,
-            'detailUrl' =>  '/admin/orders/getorderpreview',
+            'detailUrl' =>  '/orders/getorderpreview',
             'onDetailLoaded'    =>  'function(){
                 //TODO: вешать на кнопки eventListener\'ы
             }'

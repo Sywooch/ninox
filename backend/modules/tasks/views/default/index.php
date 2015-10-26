@@ -1,6 +1,4 @@
 <?php
-/*
- * <?php
 use common\models\Task;
 use yii\helpers\Url;
 
@@ -352,22 +350,3 @@ foreach($events as $event){
 ])?>
 
 <?php \yii\bootstrap\Modal::end()?>
- */
-?>
-<?php
-
-$order = \common\models\History::findOne(['id' => 22097]);
-
-$customer = \common\models\Customer::findOne(['id' => $testOrder->customerID]);
-
-$order = new \common\models\NovaPoshtaOrder([
-    'orderData'         =>  $order,
-    'ServiceType'       =>  '',
-    'recipientData'     =>  $customer,
-    'recipientContacts' =>  \common\models\CustomerContacts::find()->where(['partnerID' => $customer->ID, 'type' => '2'])->orderBy('ID DESC')->one(),
-    'recipientDelivery' =>  \common\models\CustomerAddresses::find()->where(['partnerID' => $customer->ID])->orderBy('ID DESC')->one(),
-]);
-
-print_r($order->save());
-
-?>

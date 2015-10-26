@@ -1,6 +1,6 @@
 <?php use common\models\Siteuser;
 use kartik\form\ActiveForm;
-use bobroid\switchinput\SwitchInput;
+use kartik\switchinput\SwitchInput;
 
 $form = ActiveForm::begin([
     'id' => 'login-form-horizontal',

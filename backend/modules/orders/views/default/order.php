@@ -28,7 +28,7 @@ foreach($customer->getOrders() as $oneOrder){
             $orderClasses[] = 'text-success';
         }
 
-        $s = '<a href="/admin/orders/showorder/'.$oneOrder->id.'"';
+        $s = '<a href="/orders/showorder/'.$oneOrder->id.'"';
 
         if(sizeof($orderClasses) >= 1) {
             $s .= ' class="'.implode(' ', $orderClasses).'"';
@@ -80,15 +80,15 @@ $css = <<<'STYLE'
     }
 
     .icon-chat{
-        background-image: url('/img/admin/messages10.svg');
+        background-image: url('/img/messages10.svg');
     }
 
     .icon-heart{
-        background-image: url('/img/admin/like80.svg');
+        background-image: url('/img/like80.svg');
     }
 
     .icon-percent{
-        background-image: url('/img/admin/percentage1.svg');
+        background-image: url('/img/percentage1.svg');
     }
 
     .background-red{
@@ -117,7 +117,7 @@ $js = <<<'SCRIPT'
             if(result !== null){
                 $.ajax({
                     type: 'POST',
-                    url: '/admin/goods/additemtoorder',
+                    url: '/goods/additemtoorder',
                     data: {
                         'OrderID': order,
                         'itemID':  item,
@@ -144,7 +144,7 @@ $js = <<<'SCRIPT'
             if(result){
                 $.ajax({
                     type: 'POST',
-                    url: '/admin/orders/updateorderprices',
+                    url: '/orders/updateorderprices',
                     data: {
                         'OrderID': id,
                         'type': type
@@ -193,7 +193,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
             if($order->done == 1){ ?><li>Заказ собран: <?=$order->doneDate?></li><?php }
             if($order->smsState == 1){ ?><li>Смс с № карты отправлена: <?=$order->smsSendDate?></li><?php }
             if($order->moneyConfirmed == 1){ ?><li>Заказ оплачен: <?=$order->moneyConfirmedDate?></li><?php }
-            if(!empty($order->nakladna) && $order->nakladna != '' && $order->nakladna != '-' && $order->nakladna != '+'){ ?><li>ТТН <?=$order->nakladna?> отправлена <?=$order->ttn_date?></li><?php }
+            if($order->nakladnaSendState == 1){ ?><li>ТТН <?=$order->nakladna?> отправлена <?=$order->ttn_date?></li><?php }
         ?>
         </ul>
     </div>
@@ -234,10 +234,21 @@ $this->registerJsFile('/js/bootbox.min.js', [
                             'style'     =>  'cursor: pointer',
                             'class'     =>  'btn btn-link'
                         ],
-                        'size'  =>  Modal::SIZE_DEFAULT,
-                    ]); ?>
-
-                    <?php Modal::end(); ?></h4>
+                        'size'  =>  Modal::SIZE_LARGE,
+                    ]);
+                    $form = new \yii\bootstrap\ActiveForm();
+                    echo $form->field($order, 'customerName'),
+                        $form->field($order,'customerSurname'),
+                        $form->field($order, 'customerPhone'),
+                        $form->field($order, 'customerEmail'),
+                        $form->field($order, 'deliveryRegion'),
+                        $form->field($order, 'deliveryCity'),
+                        $form->field($order, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()),
+                        $form->field($order, 'deliveryInfo'),
+                        $form->field($order, 'paymentType')->dropDownList(\common\models\PaymentTypes::getPaymentTypes()),
+                        $form->field($order, 'paymentInfo'),
+                        $form->field($order, 'coupon');
+                    Modal::end(); ?></h4>
             </div>
         </div>
         <div class="col-xs-5">

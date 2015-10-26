@@ -73,7 +73,8 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
+            return $this->redirect(\Yii::$app->user->identity->default_route);
+            //return !$this->redirect($this->goBack() = '/login' ? \Yii::$app->user->identity->default_route : $this->goBack());
         }else{
             return $this->render('login', [
                 'model' => $model,
@@ -83,8 +84,10 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
+        Url::remember(\Yii::$app->request->referrer, 'previous');
+
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->refresh();
     }
 }

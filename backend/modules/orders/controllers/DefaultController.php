@@ -2,6 +2,7 @@
 
 namespace backend\modules\orders\controllers;
 
+use backend\models\HistorySearch;
 use common\models\Customer;
 use common\models\CustomerAddresses;
 use common\models\CustomerContacts;
@@ -18,9 +19,12 @@ class DefaultController extends Controller
 {
 
     public function actionIndex(){
+        //Нихуясебе что я тут за хуйню написал
+        //Нужно переместить в HistorySearch почти всё что здесь
+
         $queryParts = [];
 
-        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
+        /*$date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
         $timeFrom = $timeTo = null;
 
@@ -39,41 +43,39 @@ class DefaultController extends Controller
                 break;
         }
 
+         */
+        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
+
+        $timeFrom = $timeTo = null;
+
         switch(\Yii::$app->request->get("showDates")){
             case 'yesterday':
                 $timeFrom = $date;
                 $timeTo = $date - 86400;
-                $queryParts[] = 'added <= '.$date.' AND added >= '.$timeTo;
                 break;
             case 'thisweek':
                 $timeTo = $date - (date("N") - 1) * 86400;
-                $queryParts[] = 'added >= '.$timeTo;
                 break;
             case 'thismonth':
                 $timeTo = $date - (date("j") - 1) * 86400;
-                $queryParts[] = 'added >= '.$timeTo;
                 break;
             case 'alltime':
                 break;
-            case 'today':
-            default:
-                $queryParts[] = 'added >= '.$date;
-                break;
         }
 
-        if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
+        /*if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
             $queryParts[] = 'deleted = 0';
         }
 
         if(\Yii::$app->request->get("responsibleUser")){
             $queryParts[] = 'responsibleUserID = '.\Yii::$app->request->get("responsibleUser");
-        }
+        }*/
 
         $this->view->params['showDateButtons'] = true;
 
-        $orders = History::ordersQuery([
-            'queryParts'    =>  $queryParts
-        ]);
+        $historySearch = new HistorySearch();
+
+        $orders = $historySearch->search(\Yii::$app->request->get(), true);
 
         $ordersStats = [
             'totalOrders'       =>  0,

@@ -244,8 +244,7 @@ class NovaPoshtaOrder extends Model{
             $this->BackwardDeliveryData = [
                 'PayerType'                 =>  'Recipient',
                 'CargoType'                 =>  $this->orderData->globalmoney == 1 ? 'Money' : 'Documents',
-                'RedeliveryString'          =>  $this->orderData->globalmoney == 1 ? '\u0426\u0435\u043d\u043d\u044b\u0435 \u0431\u0443\u043c\u0430\u0433\u0438' : '\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b',
-                'AfterpaymentOnGoodsCost'   =>  $this->Cost
+                'RedeliveryString'   =>  $this->Cost
             ];
         }
 

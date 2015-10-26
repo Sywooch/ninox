@@ -112,6 +112,7 @@ class SiteController extends Controller
 
     public function actionOrder(){
         if(\Yii::$app->cart->itemsCount == 0){
+            \Yii::trace('Cart items is so...');
             return $this->run('site/error');
         }
 

@@ -1,9 +1,10 @@
 <?php
+//TODO: hide me plz
 $js = <<<'SCRIPT'
 disableItemInOrder = function(button){
     $.ajax({
         type: 'POST',
-        url: '/admin/orders/changeiteminorderstate',
+        url: '/orders/changeiteminorderstate',
         data: {
             'orderID': button.parentNode.getAttribute("data-attribute-orderID"),
             'itemID': button.parentNode.getAttribute("data-attribute-itemID"),
@@ -26,7 +27,7 @@ disableItemInOrder = function(button){
 }, deleteItemInOrder = function(button){
     $.ajax({
         type: 'POST',
-        url: '/admin/orders/changeiteminorderstate',
+        url: '/orders/changeiteminorderstate',
         data: {
             'orderID': button.parentNode.getAttribute("data-attribute-orderID"),
             'itemID': button.parentNode.getAttribute("data-attribute-itemID"),
@@ -52,7 +53,7 @@ disableItemInOrder = function(button){
 
     $.ajax({
         type: 'POST',
-        url: '/admin/orders/restoreitemdata',
+        url: '/orders/restoreitemdata',
         data: {
             'itemID': itemID
         },
