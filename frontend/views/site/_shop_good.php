@@ -135,20 +135,20 @@ $buyBlock = function($model, $button){
 $discountBlock = function($model){
 	switch($model->discountType){
 		case 1:
-			$dimensiom = ' '.\Yii::$app->params['domainInfo']['currencyShortName'];
+			$dimension = ' '.\Yii::$app->params['domainInfo']['currencyShortName'];
 			break;
 		case 2:
 			$dimension = '%';
 			break;
 		default:
-			$dimensiom = '';
+			$dimension = '';
 			break;
 	}
 
 	return Html::tag('div',
 		Html::tag('div',
 			Html::tag('div', \Yii::t('shop', 'Акция'), []).
-			Html::tag('div', '-'.$model->discountSize.$dimensiom, []),
+			Html::tag('div', '-'.$model->discountSize.$dimension, []),
 			[
 				'class' => 'top'
 			]).
