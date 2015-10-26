@@ -354,42 +354,20 @@ foreach($events as $event){
 <?php \yii\bootstrap\Modal::end()?>
  */
 ?>
-<?php print_r(\Yii::$app->NovaPoshta); ?>
-<pre>
 <?php
 
-$testOrder = \common\models\History::findOne(['id' => 22097]);
+$order = \common\models\History::findOne(['id' => 22097]);
 
 $customer = \common\models\Customer::findOne(['id' => $testOrder->customerID]);
 
 $order = new \common\models\NovaPoshtaOrder([
-    'orderData'         =>  $testOrder,
+    'orderData'         =>  $order,
     'ServiceType'       =>  '',
-    'CityRecipient'     =>  'Васильков',
-    'RecipientAddress'  =>  '1',
-    'Recipient'         =>  $customer->recipientID,
-    'ContactRecipient'  =>  []
+    'recipientData'     =>  $customer,
+    'recipientContacts' =>  \common\models\CustomerContacts::find()->where(['partnerID' => $customer->ID, 'type' => '2'])->orderBy('ID DESC')->one(),
+    'recipientDelivery' =>  \common\models\CustomerAddresses::find()->where(['partnerID' => $customer->ID])->orderBy('ID DESC')->one(),
 ]);
-
-$order->setRecipientData($customer);
 
 print_r($order->save());
 
 ?>
-    </pre>
-
-<pre>
-    <?php print_r($testOrder); ?>
-</pre>
-
-<div class="alert alert-danger">
-    <pre>
-        <?php print_r($order->getErrors());?>
-    </pre>
-</div>
-
-<div class="alert alert-success">
-    <pre>
-        <?php print_r($order);?>
-    </pre>
-</div>

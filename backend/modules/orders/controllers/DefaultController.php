@@ -3,8 +3,11 @@
 namespace backend\modules\orders\controllers;
 
 use common\models\Customer;
+use common\models\CustomerAddresses;
+use common\models\CustomerContacts;
 use common\models\Good;
 use common\models\History;
+use common\models\NovaPoshtaOrder;
 use common\models\Pricerule;
 use common\models\SborkaItem;
 use common\models\Siteuser;
@@ -279,5 +282,32 @@ class DefaultController extends Controller
                 $order->recalculatePrices($d['type']);
             }
         }
+    }
+
+    public function actionCreateinvoice($param){
+        $order = $param;
+        if(!is_object($order)){
+            $order = History::findOne(['id' => $order]);
+        }
+
+        $customer = Customer::findOne(['id' => $order->customerID]);
+
+        $invoice = new NovaPoshtaOrder([
+            'orderData'         =>  $order,
+            'ServiceType'       =>  '',
+            'recipientData'     =>  $customer,
+            'recipientContacts' =>  CustomerContacts::find()->where(['partnerID' => $customer->ID, 'type' => '2'])->orderBy('ID DESC')->one(),
+            'recipientDelivery' =>  CustomerAddresses::find()->where(['partnerID' => $customer->ID])->orderBy('ID DESC')->one(),
+        ]);
+
+        if(\Yii::$app->request->post()){
+            $invoice->attributes = \Yii::$app->request->post("NovaPoshtaOrder");
+
+            $invoice->save();
+        }
+
+        return $this->render('invoice', [
+            'invoice'   =>  $invoice
+        ]);
     }
 }
