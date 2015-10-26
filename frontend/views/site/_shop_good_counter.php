@@ -21,7 +21,8 @@ echo Html::tag('div',
 		'class'         =>  'count',
 		'type'          =>  'text',
 		'data-itemId'   =>  $itemID,
-		'data-store'    =>  $store
+		'data-store'    =>  $store,
+		'data-inCart'   =>  $inCart,
 
 	]).
 	Html::tag('div', '', [

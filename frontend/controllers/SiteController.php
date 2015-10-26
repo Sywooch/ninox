@@ -16,6 +16,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -121,21 +122,8 @@ class SiteController extends Controller
     public function actionAddtocart(){
         $itemID = \Yii::$app->request->post("itemID");
         $count = \Yii::$app->request->post("count");
-        \Yii::$app->cart->put($itemID, $count);
-        return true;
+        return \Yii::$app->cart->put($itemID, $count)->count;
     }
-
-	public function actionChangeitemcount(){
-		$itemID = \Yii::$app->request->post("itemID");
-		$count = \Yii::$app->request->post("count");
-		if(\Yii::$app->cart->has($itemID)){
-			$test = \Yii::$app->cart->put($itemID, $count);
-			//$test->count //ретурнит пустой объект. Заретурнил всю корзину после put -- массив с айдишниками в виде ключей и пустыми объектами в виде значений. Надо заретурнить сюда количество после того, как добавилось или отнялось.
-			return json_encode(['inCart' => \Yii::$app->cart->has($itemID)]); //хотфикс пока не разберемся, почему put возвращает пустой объект.
-		}else{
-			return json_encode(['inCart' => 0]);
-		}
-	}
 
     public function actionSuccess($order = []){
         if(!empty($order)){

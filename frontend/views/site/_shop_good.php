@@ -195,7 +195,8 @@ $discountBlock = function($model){
 		    echo $this->render('_shop_good_counter', [
 			    'itemID'    =>  $model->ID,
 			    'value'     =>  $model->inCart ? $model->inCart : 1,
-			    'store'     =>  $model->isUnlimited ? 1000 : $model->count
+			    'store'     =>  $model->isUnlimited ? 1000 : $model->count,
+			    'inCart'    =>  $model->inCart,
 		    ]);
 	    }?>
         <div class="item-info">

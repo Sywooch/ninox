@@ -99,7 +99,7 @@ class Cart extends Component{
     }
 
     public function has($itemID){
-        return isset($this->items[$itemID]) ? $this->items[$itemID]->count : false;
+        return isset($this->items[$itemID]) ? $this->items[$itemID]->count : 0;
     }
 
     public function put($itemID, $count = 1){
