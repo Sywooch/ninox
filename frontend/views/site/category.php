@@ -1,9 +1,13 @@
 <?php
 
+use common\helpers\PriceRuleHelper;
+
 $this->title = '';
 \Yii::$app->params['breadcrumbs'][] = [
     'label' =>  $category->Name
 ];
+
+$helper = new PriceRuleHelper();
 
 ?>
 <div class="content" style="margin-top: 100px;">
@@ -76,9 +80,9 @@ $this->title = '';
             </div>
             <?=\yii\widgets\ListView::widget([
                 'dataProvider'  =>  $goods,
-                'itemView'      =>  function($model, $param2, $param3, $widget){
+                'itemView'      =>  function($model, $param2, $param3, $widget) use (&$helper){
                     return $this->render('_shop_good', [
-                        'model' =>  $model
+                        'model' =>  $helper->recalc($model, true)
                     ]);
                 },
 	            'itemOptions'   =>  [

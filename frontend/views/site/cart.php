@@ -27,9 +27,9 @@
             </div>
             <div class="row second">
                 <span id="optSummDiff">Ваша корзина пуста</span>
-<span class="extended-info">
-<span id="totalSummWithoutDiscount">сумма заказа без скидки 0 грн</span> <span id="totalDiscount" class="orange">скидка 0 грн</span>
-</span>
+				<span class="extended-info">
+					<span id="totalSummWithoutDiscount">сумма заказа без скидки 0 грн</span> <span id="totalDiscount" class="orange">скидка 0 грн</span>
+				</span>
             </div>
             <div class="row third">
                 <div class="phone">

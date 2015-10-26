@@ -9,22 +9,18 @@
 namespace frontend\models;
 
 
+use yii\db\Command;
+use yii\db\Query;
+
 class Category extends \common\models\Category{
-
     public function goods(){
-        $categories = [];
-
-        $tCats = self::find()->where(['like', 'Code', $this->Code.'%', false])->andWhere(['menu_show' => 1]);
-
-        foreach($tCats->each() as $category){
-            $categories[] = $category->ID;
-        }
-
-        $goods = Good::find()->where([
-            'in', 'GroupID', $categories
-        ])->andWhere('show_img = 1 AND ico != \'\' AND deleted = 0 AND (PriceOut1 != 0 AND PriceOut2 != 0)');
-
+	    $goods = Good::find()->
+		    select('`goods`.*, `goodsgroups`.`Code` AS `category`')->
+		    leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`', [])->
+		    where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])->
+		    andWhere(['`goodsgroups`.`menu_show`' => 1])->
+		    andWhere('`goods`.`show_img` = 1 AND `goods`.`ico` != \'\' AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')->
+		    orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
         return $goods;
     }
-
 }

@@ -98,8 +98,6 @@ class NovaPoshtaOrder extends Model{
 
     public $BackwardDeliveryData = [];
     private $orderData = [];
-    //public $PayerType;
-    //public $CargoType;
 
     private $recipientData = [];
     private $recipientContacts = [];

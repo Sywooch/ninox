@@ -1074,25 +1074,21 @@ h2{
 	display: block;
 }
 
-.item .discount span{
-	display: block;
-}
-
 .item .discount .top{
 	width: 100%;
-	height: 25px;
+	height: 35px;
 	background: #87d45d;
 	border-bottom: 1px solid #a7ef7f;
 	padding-top: 5px;
 	color: #338307;
 }
 
-.item .discount .top span:first-of-type{
+.item .discount .top div:first-of-type{
 	font-size: 10px;
-	line-height: 10px;
+	line-height: 14px;
 }
 
-.item .discount .top span:last-of-type{
+.item .discount .top div:last-of-type{
 	font-size: 12px;
 	line-height: 16px;
 }
@@ -1104,13 +1100,12 @@ h2{
 	color: #fff;
 }
 
-.item .discount .bottom span:first-of-type{
-	font-size: 30px;
-	font-family: OpenSans-Semibold;
-	line-height: 30px;
+.item .discount .bottom div:first-of-type{
+	font-size: 18px;
+	line-height: 22px;
 }
 
-.item .discount .bottom span:last-of-type{
+.item .discount .bottom div:last-of-type{
 	font-size: 10px;
 	line-height: 10px;
 }

@@ -1,7 +1,6 @@
 /**
  * Created by alone on 10/18/15.
  */
-var itemsArray = [];
 var hasTouch = 'ontouchstart' in document.documentElement;
 var isMobile = {
 	Android: function() {
@@ -212,17 +211,6 @@ function isTouchMoved(e){
 	return false;
 }
 
-function getIndexInItemArray(item){
-	var code;
-	if(item && (code = item.getAttribute('data-itemId')) && itemsArray){
-		var keys = itemsArray.map(function(elem){
-			return elem.Code;
-		});
-		return keys.indexOf(code);
-	}
-	return -1;
-}
-
 function addToCart(item){
 	var itemId = item.getAttribute('data-itemId');
 	var count = item.getAttribute('data-count');
@@ -235,8 +223,6 @@ function addToCart(item){
 				"count": count
 			},
 			success: function(data){
-				//console.log(data);
-				//console.log('test');
 				$('.buy[data-itemId='+ itemId +']').each(function(){
 					this.value = texts.itemText.inCart;
 					this.classList.remove('yellow-button');
@@ -244,11 +230,10 @@ function addToCart(item){
 					this.classList.remove('buy');
 					this.classList.add('open-cart');
 				});
+				$('.count[data-itemId='+ itemId +']').each(function(){
+					this.setAttribute('data-inCart', data);
+				});
 				//updateMinicartInfo();
-				var itemIndex;
-				if((itemIndex = getIndexInItemArray(item)) >= 0){
-					itemsArray[itemIndex].inCart = count;
-				}
 			}
 		});
 	}
@@ -260,37 +245,29 @@ function changeItemCount(item){
 	var maxItemsCount = parseInt(counter.getAttribute('data-store'));
 	var itemsCount = parseInt(counter.value.replace(/\D+/g, ''));
 	var count = parseInt(item.getAttribute('data-count'));
+	var inCart = parseInt(counter.getAttribute('data-inCart'));
 	if((maxItemsCount > itemsCount && count > 0) || (1 < itemsCount && count < 0)){
-		$.ajax({
-			type: 'POST',
-			url: '/changeitemcount',
-			data: {
-				'itemID': itemId,
-				'count': count
-			},
-			success: function(data){
-				if(!data.isJSON()){
-					return false;
-				}
-				itemsCount += count;
-				data = JSON.parse(data);
-				var inCart = data.inCart;
-				if(inCart){
+		itemsCount += count;
+		if(inCart){
+			$.ajax({
+				type: 'POST',
+				url: '/addtocart',
+				data: {
+					'itemID': itemId,
+					'count': count
+				},
+				success: function(){
 					//updateCart(0, false);
-				}else{
-					$('.buy[data-itemId='+ itemId +']').each(function(){
-						this.setAttribute('data-count', itemsCount);
-					});
 				}
-				$('.count[data-itemId='+ itemId +']').each(function(){
-					this.value = inCart ? inCart : itemsCount;
-				});
-				var itemIndex;
-				if((itemIndex = getIndexInItemArray(item)) >= 0){
-					itemsArray[itemIndex].inCart = inCart;
-					itemsArray[itemIndex].count = itemsCount;
-				}
-			}
+			});
+		}else{
+			$('.buy[data-itemId='+ itemId +']').each(function(){
+				this.setAttribute('data-count', itemsCount);
+			});
+		}
+		$('.count[data-itemId='+ itemId +']').each(function(){
+			this.value = itemsCount;
+			this.setAttribute('data-inCart', inCart ? itemsCount : inCart);
 		});
 	}else if(maxItemsCount < itemsCount){
 		if(!$(item).data('tooltipsy')){
@@ -336,11 +313,6 @@ function deleteItem(item){
 			$('.count[data-itemId='+ itemId +']').each(function(){
 				this.value = 1;
 			});
-			var itemIndex;
-			if((itemIndex = getIndexInItemArray(item)) >= 0){
-				itemsArray[itemIndex].inCart = 0;
-				itemsArray[itemIndex].count = 1;
-			}
 		}
 	});
 }
