@@ -104,6 +104,20 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionSaveorderpreview(){
+        if(!\Yii::$app->request->isAjax){
+            return $this->run('site/error');
+        }
+        \Yii::$app->response->format = 'json';
+
+        $order = History::findOne(['id' => \Yii::$app->request->post('History')['id']]);
+
+        $order->attributes = \Yii::$app->request->post('History');
+        $order->save();
+
+        return $order;
+    }
+
     public function actionConfirmordercall(){
         if(\Yii::$app->request->isAjax){
             $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);

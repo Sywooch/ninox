@@ -3,13 +3,26 @@ use kartik\form\ActiveForm;
 use kartik\switchinput\SwitchInput;
 
 $form = ActiveForm::begin([
-    'id' => 'login-form-horizontal',
+    'id' => 'orderPreview-form-horizontal'.$model->id,
     'type' => ActiveForm::TYPE_INLINE,
     'fieldConfig'   =>  [
         'template'  =>  '{input}'
-    ]
+    ],
 ]);
 ?>
+<script>
+    $(document).on("beforeSubmit", "#orderPreview-form-horizontal<?=$model->id?>", function () {
+        $.ajax({
+            type: "POST",
+            url: '/orders/saveorderpreview',
+            data: $("#orderPreview-form-horizontal<?=$model->id?>").serialize(),
+            success: function( response ) {
+                console.log( response );
+            }
+        });
+        return false;
+    });
+</script>
 <div class="row">
     <div class="col-xs-10">
         <table style="width: 100%; margin-bottom: 0; vertical-align: middle; line-height: 100%;" class="table table-condensed good-preview-table">
@@ -100,6 +113,7 @@ $form = ActiveForm::begin([
         </table>
     </div>
     <div class="col-xs-1">
+        <?=$form->field($model, 'id')->hiddenInput(['display' => 'none'])?>
         <button class="btn btn-default btn-lg">Сохранить</button>
     </div>
 </div>

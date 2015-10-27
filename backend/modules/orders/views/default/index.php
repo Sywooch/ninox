@@ -354,7 +354,6 @@ $this->title = 'Заказы';
 
 <?=\kartik\grid\GridView::widget([
     'dataProvider'  =>  $orders,
-    'filterModel'   =>  $searchModel,
     'resizableColumns' =>  false,
     'summary'   =>  '',
     'options'       =>  [
@@ -364,6 +363,18 @@ $this->title = 'Заказы';
     'rowOptions'    =>  function($model){
         if($model->deleted != 0){
             return ['class' => 'danger'];
+        }
+
+        if($model->done == 1){
+            return ['class' =>  'success'];
+        }
+
+        if($model->confirmed == 1){
+            return ['class' =>  'warning'];
+        }
+
+        if($model->callback == -1 || $model->callback == 0){
+            return ['class' =>  'danger'];
         }
 
         return [];
@@ -431,6 +442,11 @@ $this->title = 'Заказы';
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
+                if(strlen($model->deliveryCity) >= 20){
+                    $a = explode(',', $model->deliveryCity);
+                    $model->deliveryCity = implode(', ', $a);
+                }
+
                 return Html::tag('b', $model->deliveryCity).'<br>'.$model->deliveryRegion;
             }
         ],
@@ -497,7 +513,7 @@ $this->title = 'Заказы';
             'class'     =>  \kartik\grid\ActionColumn::className(),
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '280px',
+            'width'     =>  '180px',
             'buttons'   =>  [
                 'contents'  =>  function($url, $model, $key){
                     return Html::a('Содержимое', Url::toRoute([
@@ -546,10 +562,12 @@ $this->title = 'Заказы';
                     return '<button class="btn btn-default glyphicon glyphicon-list-alt"></button>';
                 },
             ],
-            'template'  =>  Html::tag('div', '{contents}{print}{changes}{call}{done}', [
-                'class' =>  'btn-group btn-group-sm',
-                'style' =>  'min-width: 200px'
-            ])
+            'template'  =>  Html::tag('div', '{contents}', [
+                    'class' =>  'btn-group btn-group-sm',
+                ]).Html::tag('div', '{print}{changes}{call}{done}',[
+                    'class' =>  'btn-group btn-group-sm',
+                    'style' =>  'margin-top: -2px;'
+                ])
         ],
         [
             'class'     =>  \kartik\grid\ExpandRowColumn::className(),
