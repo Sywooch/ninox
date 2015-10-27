@@ -14,8 +14,7 @@ use yii\data\ActiveDataProvider;
 
 class HistorySearch extends \common\models\History{
 
-    public function search($params, $query = false){
-
+    public function search($params, $onlyQuery = false){
         $query = History::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -27,28 +26,19 @@ class HistorySearch extends \common\models\History{
 
         $dataProvider->setSort([
             'defaultOrder' => [
-                'ID'	=>	SORT_DESC
+                'id'	=>	SORT_DESC
             ],
             'attributes' => [
-                'ID' => [
+                'id' => [
                     'default' => SORT_DESC
                 ],
                 'added',
                 'customerPhone',
-                'DeliveryCity',
-                'actualAmount'
+                'deliveryCity',
+                'actualAmount',
+                'responsibleUserID'
             ]
         ]);
-
-        if(empty(\Yii::$app->request->get("ordersSource")) && empty(\Yii::$app->request->get("showDates")) && empty(\Yii::$app->request->get("showDeleted")) && empty(\Yii::$app->request->get("responsibleUser"))){
-            if (!($this->load($params) && $this->validate())) {
-                return $query ? $query : $dataProvider;
-            }
-        }
-
-        $this->addCondition($query, 'ID');
-        $this->addCondition($query, 'customerPhone', true);
-        $this->addCondition($query, 'DeliveryCity', true);
 
         switch(\Yii::$app->request->get("ordersSource")){
             case 'all':
@@ -65,57 +55,48 @@ class HistorySearch extends \common\models\History{
                 break;
         }
 
-        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
+        if(empty($params['HistorySearch'])){
+            $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
-        switch(\Yii::$app->request->get("showDates")){
-            case 'yesterday':
-                $query->andWhere('added <= '.$date.' AND added >= '.($date - 86400));
-                break;
-            case 'thisweek':
-                $query->andWhere('added >= '.($date - (date("N") - 1) * 86400));
-                break;
-            case 'thismonth':
-                $query->andWhere('added >= '.($date - (date("j") - 1) * 86400));
-                break;
-            case 'alltime':
-                break;
-            case 'today':
-            default:
-                $query->andWhere('added >= '.$date);
-                break;
+            switch(\Yii::$app->request->get("showDates")){
+                case 'yesterday':
+                    $query->andWhere('added <= '.$date.' AND added >= '.($date - 86400));
+                    break;
+                case 'thisweek':
+                    $query->andWhere('added >= '.($date - (date("N") - 1) * 86400));
+                    break;
+                case 'thismonth':
+                    $query->andWhere('added >= '.($date - (date("j") - 1) * 86400));
+                    break;
+                case 'alltime':
+                    break;
+                case 'today':
+                default:
+                    $query->andWhere('added >= '.$date);
+                    break;
+            }
         }
 
         if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
             $query->andWhere('deleted = 0');
         }
 
-        if(\Yii::$app->request->get("responsibleUser")){
-            $query->andWhere(['responsibleUserID' => \Yii::$app->request->get("responsibleUser")]);
+        if (!($this->load($params) && $this->validate())) {
+            return $onlyQuery ? $query : $dataProvider;
         }
 
-        //$this->addCondition($query, 'City', true);
-       // $this->addCondition($query, 'CardNumber');
-        //$this->addCondition($query, 'eMail', true);
-        //$this->addCondition($query, 'money');
+        $this->addCondition($query, 'id');
+        $this->addCondition($query, 'customerPhone', true);
+        $this->addCondition($query, 'deliveryCity', true);
+        $this->addCondition($query, 'responsibleUserID', true);
 
-        /*if(\Yii::$app->request->get("smartfilter") != ''){
-            switch(\Yii::$app->request->get("smartfilter")){
-                case 'disabled':
-                    $query->andWhere(['show_img' => 0]);
-                    break;
-                case 'enabled':
-                    $query->andWhere(['show_img' => 1]);
-                    break;
-            }
-        }*/
-
-        return $query ? $query : $dataProvider;
+        return $onlyQuery ? $query : $dataProvider;
     }
 
     public function rules()
     {
         return [
-            [['ID', 'customerPhone', 'DeliveryCity'], 'safe']
+            [['id', 'customerPhone', 'deliveryCity', 'responsibleUserID'], 'safe']
         ];
     }
 
@@ -126,7 +107,7 @@ class HistorySearch extends \common\models\History{
         }
 
         if ($partialMatch) {
-            $query->andWhere(['like', $attribute, $value]);
+            $query->andWhere(['like', $attribute, $value.'%', false]);
         }else{
             $query->andWhere([$attribute => $value]);
         }

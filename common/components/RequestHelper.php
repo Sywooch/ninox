@@ -24,7 +24,16 @@ class RequestHelper {
         }
 
         foreach($tParams as $k => $v){
-            $params[] = $k.'='.$v;
+            if(is_array($v)){
+                $tk = [];
+                foreach($v as $vk => $vv){
+                    $tk[] = $k.'['.$vk.']='.$vv;
+                }
+
+                $params[] = implode('&', $tk);
+            }else{
+                $params[] = $k.'='.$v;
+            }
         }
 
         $link = '?'.implode('&', $params);

@@ -22,9 +22,11 @@ class DefaultController extends Controller
         //Нихуясебе что я тут за хуйню написал
         //Нужно переместить в HistorySearch почти всё что здесь
 
+
+        /*
         $queryParts = [];
 
-        /*$date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
+        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
         $timeFrom = $timeTo = null;
 
@@ -41,6 +43,14 @@ class DefaultController extends Controller
             default:
                 $queryParts[] = 'deliveryType != 5 AND paymentType != 6';
                 break;
+        }
+
+        if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
+            $queryParts[] = 'deleted = 0';
+        }
+
+        if(\Yii::$app->request->get("responsibleUser")){
+            $queryParts[] = 'responsibleUserID = '.\Yii::$app->request->get("responsibleUser");
         }
 
          */
@@ -63,14 +73,6 @@ class DefaultController extends Controller
                 break;
         }
 
-        /*if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
-            $queryParts[] = 'deleted = 0';
-        }
-
-        if(\Yii::$app->request->get("responsibleUser")){
-            $queryParts[] = 'responsibleUserID = '.\Yii::$app->request->get("responsibleUser");
-        }*/
-
         $this->view->params['showDateButtons'] = true;
 
         $historySearch = new HistorySearch();
@@ -81,7 +83,7 @@ class DefaultController extends Controller
             'totalOrders'       =>  0,
             'completedOrders'   =>  0,
             'notCalled'         =>  0,
-            'ordersFaktSumm'        =>  0,
+            'ordersFaktSumm'    =>  0,
             'ordersSumm'        =>  0
         ];
 
@@ -93,15 +95,12 @@ class DefaultController extends Controller
             $ordersStats['ordersSumm']   += $order->originalSum;
         }
 
-
         return $this->render('index', [
             'collectors'        =>  Siteuser::getCollectorsWithData($timeTo, $timeFrom),
             'showUnfinished'    =>  !\Yii::$app->request->get("showDates") || \Yii::$app->request->get("showDates") == 'today',
             'ordersStats'       =>  $ordersStats,
-            'orders'            =>  History::ordersDataProvider([
-                    'queryParts'    =>  $queryParts,
-                    'limit'         =>  '50'
-            ])
+            'searchModel'       =>  $historySearch,
+            'orders'            =>  $historySearch->search(\Yii::$app->request->get())
         ]);
     }
 

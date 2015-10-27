@@ -193,7 +193,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
             if($order->done == 1){ ?><li>Заказ собран: <?=$order->doneDate?></li><?php }
             if($order->smsState == 1){ ?><li>Смс с № карты отправлена: <?=$order->smsSendDate?></li><?php }
             if($order->moneyConfirmed == 1){ ?><li>Заказ оплачен: <?=$order->moneyConfirmedDate?></li><?php }
-            if($order->nakladnaSendState == 1){ ?><li>ТТН <?=$order->nakladna?> отправлена <?=$order->ttn_date?></li><?php }
+            if($order->nakladnaSendState == 1){ ?><li>ТТН <?=$order->nakladna?> отправлена <?=$order->nakladnaSendDate?></li><?php }
         ?>
         </ul>
     </div>
@@ -223,10 +223,11 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
                     <h4><?=$order->customerPhone?></h4>
                 </h3>
-                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?> <?php Modal::begin([
+                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?>
+                    <?php Modal::begin([
                         'header' => 'Редактирование данных заказа',
                         'options'   =>  [
-                            'style' =>  'color: black'
+                            'style' =>  'color: black; max-height: 700px; margin: auto 0px;',
                         ],
                         'toggleButton' => [
                             'tag'       =>  'small',
@@ -248,6 +249,15 @@ $this->registerJsFile('/js/bootbox.min.js', [
                         $form->field($order, 'paymentType')->dropDownList(\common\models\PaymentTypes::getPaymentTypes()),
                         $form->field($order, 'paymentInfo'),
                         $form->field($order, 'coupon');
+                    echo Html::tag('center', Html::button('Сохранить', [
+                            'class' =>  'btn btn-lg btn-success'
+                        ]).' или '.Html::button('отменить', [
+                            'class'         =>  'btn btn-default',
+                            'data-dismiss'  =>  'modal',
+                            'aria-hidden'   =>  'true'
+                        ]), [
+                        'style' =>  'text-align: middle; margin: 0px auto',
+                    ]);
                     Modal::end(); ?></h4>
             </div>
         </div>
@@ -285,37 +295,46 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <li>
                         <div class="row">
                             <div class="col-xs-5" style="color: #777; line-height: 20px; padding-top: 15px; padding-bottom: 15px; vertical-align: middle; margin-right: -25px;">Добавить товар</div>
-                            <div class="col-xs-7" style="margin-top: 8px"><?=Typeahead::widget([
-                                        'name' => 'search',
-                                        'options' => [
-                                            'placeholder'   =>  'Код или название',
-                                        ],
-                                        'container' =>  [
-                                            'style'         =>  'display: inline;  width: 15%; padding: 0; margin: 0; margin-top: 10px;',
-                                        ],
-                                        'dataset' => [
-                                            [
-                                                'remote'    =>  [
-                                                    'url'       =>  '/admin/goods/searchgoods?string=QUERY',
-                                                    'wildcard'  =>  'QUERY'
-                                                ],
-                                                'limit'     => 10,
-                                                'templates' => [
-                                                    'empty' => '<div class="text-error">Ничего не найдено</div>',
-                                                    'suggestion' => new JsExpression("Handlebars.compile('".$typeaheadTemplate."')")
-                                                ]
+                            <div class="col-xs-7" style="margin-top: 8px">
+                                <?=Typeahead::widget([
+                                    'name' => 'search',
+                                    'options' => [
+                                        'placeholder'   =>  'Код или название',
+                                    ],
+                                    'container' =>  [
+                                        'style'         =>  'display: inline;  width: 15%; padding: 0; margin: 0; margin-top: 10px;',
+                                    ],
+                                    'dataset' => [
+                                        [
+                                            'remote'    =>  [
+                                                'url'       =>  '/goods/searchgoods?string=QUERY',
+                                                'wildcard'  =>  'QUERY'
+                                            ],
+                                            'limit'     => 10,
+                                            'templates' => [
+                                                'empty' => '<div class="text-error">Ничего не найдено</div>',
+                                                'suggestion' => new JsExpression("Handlebars.compile('".$typeaheadTemplate."')")
                                             ]
                                         ]
-                                    ])?>
+                                    ]
+                                ])?>
                             </div>
                         </div>
                     </li>
                     <li><?=$this->render('_transferItemsToOtherOrder', [
                             'order' =>  $order
                         ])?></li>
-                    <li><button class="btn btn-default dropdown-toggle" style="margin-top: 8px;" type="button" data-toggle="dropdown" aria-expanded="true">
-                            Пересчитать заказ <span class="caret"></span>
-                        </button><?=DropdownX::widget([
+                    <li>
+                        <?=Html::button('Пересчитать заказ '.Html::tag('span', '', [
+                                'class' =>  'caret'
+                            ]), [
+                            'class'         =>  'btn btn-default dropdown-toggle',
+                            'style'         =>  'margin-top: 8px',
+                            'type'          =>  'button',
+                            'data-toggle'   =>  'dropdown',
+                            'aria-expanded' =>  'true'
+                        ])?>
+                        <?=DropdownX::widget([
                             'items' =>  [
                                 [
                                     'label'     =>  'По оптовым ценам',
@@ -336,7 +355,8 @@ $this->registerJsFile('/js/bootbox.min.js', [
                                     'items'     =>  $priceRulesDropdown
                                 ]
                             ]
-                        ])?></li>
+                        ])?>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li><?=\kartik\editable\Editable::widget([
@@ -354,7 +374,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                                 'style' =>  'margin-top: 10px;',
                             ],
                             'ajaxSettings'   =>  [
-                                'url'   =>  '/admin/orders/setorderitemsdiscount',
+                                'url'   =>  '/orders/setorderitemsdiscount',
                                 'data'  =>  [
                                     'asdd'  =>  'asdf'
                                 ]
@@ -419,7 +439,9 @@ $thiss = $this;
             'format'    =>  'html',
             'value'     =>  function($model) use(&$goodsAdditionalInfo){
                 $ico = isset($goodsAdditionalInfo[$model->itemID]->ico) && !empty($goodsAdditionalInfo[$model->itemID]->ico) ? 'http://krasota-style.com.ua/img/catalog/sm/'.$goodsAdditionalInfo[$model->itemID]->ico : '';
-                return '<div class="row-responsive"><img src="'.$ico.'" class="img-rounded col-xs-4"><div class="col-xs-8"><div>'.$model->name.'</div><div><a href="/admin/goods/showgood/'.$goodsAdditionalInfo[$model->itemID]->ID.'">Код товара: '.$goodsAdditionalInfo[$model->itemID]->Code.'</a></div></div></div>';
+                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a('Код товара: '.$goodsAdditionalInfo[$model->itemID]->Code, \yii\helpers\Url::to([
+                    '/goods/showgood/'.$goodsAdditionalInfo[$model->itemID]->ID
+                ]))), ['class'  =>  'col-xs-8']), ['class' =>   'row-responsive']);
             }
         ],
         [

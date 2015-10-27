@@ -2,15 +2,23 @@
 use kartik\grid\GridView;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $js = <<<'SCRIPT'
 var dOrders = document.querySelectorAll("a.deleteOrder"),
+    rOrders = document.querySelectorAll("a.restoreOrder"),
     dButton = document.querySelectorAll("button.doneOrder"),
     cButton = document.querySelectorAll("button.confirmCall");
 
 for(var i = 0; i < dOrders.length; i++){
     dOrders[i].addEventListener('click', function(e){
         deleteOrder(e.currentTarget);
+    }, false);
+}
+
+for(var i = 0; i < rOrders.length; i++){
+    rOrders[i].addEventListener('click', function(e){
+        restoreOrder(e.currentTarget);
     }, false);
 }
 
@@ -26,7 +34,10 @@ for(var i = 0; i < cButton.length; i++){
     }, false);
 }
 
-var deleteOrder = function(item){
+var restoreOrder = function(item){
+    console.log(item);
+    alert('end me plz! file: index.php');
+}, deleteOrder = function(item){
     var container   = item.parentNode.parentNode.parentNode,
         orderID     = container.getAttribute('data-key');
 
@@ -269,10 +280,14 @@ $this->title = 'Заказы';
                             </tr>
                             <tr style="text-align: center;">
                                 <td>
-                                    <h1><?=$ordersStats['totalOrders']?></h1>
+                                    <?=Html::tag('h1', strlen($ordersStats['totalOrders']) >= 4 ? Html::tag('small', $ordersStats['totalOrders']) : $ordersStats['totalOrders'], [
+                                        'style' =>  'line-height: '.(strlen($ordersStats['totalOrders']) < 4 ? '26px;' : '0px;')
+                                    ])?>
                                 </td>
                                 <td>
-                                    <h1 style="color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; line-height: 26px; border-radius: 3px; display: inline-block;"><?=$ordersStats['completedOrders']?></h1>
+                                    <?=Html::tag('h1', strlen($ordersStats['completedOrders']) >= 4 ? Html::tag('small', $ordersStats['completedOrders'], ['style' => 'color: #fff']) : $ordersStats['completedOrders'], [
+                                        'style' =>  'color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; border-radius: 3px; display: inline-block; line-height: '.(strlen($ordersStats['completedOrders']) < 4 ? '26px;' : '0px;')
+                                    ])?>
                                 </td>
                             </tr>
                         </table>
@@ -339,6 +354,7 @@ $this->title = 'Заказы';
 
 <?=\kartik\grid\GridView::widget([
     'dataProvider'  =>  $orders,
+    'filterModel'   =>  $searchModel,
     'resizableColumns' =>  false,
     'summary'   =>  '',
     'options'       =>  [
@@ -369,17 +385,12 @@ $this->title = 'Заказы';
                 return [];
             },
             'value'     =>  function($model){
-                //TODO: refactor plz
-                return '
-                <a href="/orders/showorder/'.$model->id.'">
-                '.$model->id.'
-                </a>
-                <br>
-                <small>
-                    <a href="#" class="deleteOrder">
-                        удалить
-                    </a>
-                </small>';
+                return Html::a($model->id, Url::to([
+                    '/orders/showorder/'.$model->id
+                ])).Html::tag('br').Html::tag('small',
+                    Html::a($model->deleted != 0 ? Html::tag('small', 'Восст.') : 'Удалить', '#', [
+                        'class' =>  $model->deleted != 0 ? 'restoreOrder' : 'deleteOrder'
+                    ]));
             }
         ],
         [
@@ -394,9 +405,7 @@ $this->title = 'Заказы';
             'value'     =>  function($model){
                 return \Yii::$app->formatter->asDate($model->added, 'php:d.m').'<br>'.
                 \Yii::$app->formatter->asDate($model->added, 'php:H').
-                '<sup><u>'.
-                \Yii::$app->formatter->asDate($model->added, 'php:i').
-                '</u></sup>';
+                Html::tag('sup', Html::tag('u', \Yii::$app->formatter->asDate($model->added, 'php:i')));
             }
         ],
         [
@@ -422,7 +431,7 @@ $this->title = 'Заказы';
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
-                return '<b>'.$model->deliveryCity.'</b><br>'.$model->deliveryRegion.'';
+                return Html::tag('b', $model->deliveryCity).'<br>'.$model->deliveryRegion;
             }
         ],
         [
@@ -445,15 +454,19 @@ $this->title = 'Заказы';
                 }else{
                     $status2 = 'Не выполнено';
                 }
-                //TODO: refactor plz
-                return '<div style="width: 100%; display: block; position: inherit; height: 100%;"><div style="width: 100%; height: 60%">'.$status1.'</div><div style="width: 100%; height: 40%"><small>'.$status2.'</small></div></div>';
+
+                return Html::tag('div', Html::tag('div', $status1, [
+                    'style' =>  'width: 100%; height: 40%'
+                ]).Html::tag('small', $status2), [
+                    'style' =>  'width: 100%; display: block; position: inherit; height: 100%;'
+                ]);
             }
         ],
         [
-            'header'    =>  'Сумма',
             'width'     =>  '70px',
             'format'    =>  'html',
             'attribute' =>  'originalSum',
+            'header'    =>  'Сумма заказа',
             'noWrap'    =>  true,
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
@@ -484,20 +497,32 @@ $this->title = 'Заказы';
             'class'     =>  \kartik\grid\ActionColumn::className(),
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '260px',
+            'width'     =>  '280px',
             'buttons'   =>  [
                 'contents'  =>  function($url, $model, $key){
-                    return '<a style="margin-top: 1px;" href="/orders/showorder/'.$model->id.'" class="btn btn-default">Содержимое</a>';
+                    return Html::a('Содержимое', Url::toRoute([
+                        '/orders/showorder/'.$model->id
+                    ]), [
+                        'class' =>  'btn btn-default',
+                        'style' =>  'margin-top: 1px'
+                    ]);
                 },
                 'print'  =>  function($url, $model, $key){
-                    return '<a href="/order/printorder?orderID='.$model->id.'" target="_blank" class="btn btn-default glyphicon glyphicon-print"></a>';
+                    return Html::a('', Url::toRoute([
+                        '/orders/printorder',
+                        'orderID'   =>  $model->id
+                    ]), [
+                        'target'    =>  '_blank',
+                        'class'     =>  'btn btn-default glyphicon glyphicon-print'
+                    ]);
                 },
                 'done'  =>  function($url, $model, $key){
-                    return '<button class="btn btn-default doneOrder glyphicon glyphicon-ok'.($model->done == 1 ? ' btn-success' : '').'"'.($model->confirmed == 1 ? '' : ' disabled="disabled"').'></button>';
+                    return Html::button('', [
+                        'class' =>  'btn btn-default doneOrder glyphicon glyphicon-ok'.($model->done == 1 ? ' btn-success' : ''),
+                        ($model->confirmed == 1 ? '' : 'disabled')  =>  'disabled'
+                    ]);
                 },
                 'call'  =>  function($url, $model, $key){
-                    $subclass = 'btn-default';
-
                     switch($model->confirmed){
                         case '2':
                             $subclass = 'btn-danger';
@@ -505,19 +530,26 @@ $this->title = 'Заказы';
                         case '1':
                             $subclass = 'btn-success';
                             break;
+                        default:
+                            $subclass = 'btn-default';
                     }
 
                     if($model->callback == '0'){
                         $subclass = 'btn-warning';
                     }
 
-                    return '<button class="btn confirmCall '.$subclass.' glyphicon glyphicon-phone-alt"></button>';
+                    return Html::button('', [
+                        'class' =>  'btn confirmCall glyphicon glyphicon-phone-alt '.$subclass
+                    ]);
                 },
                 'changes'   =>  function($url, $model, $key){
                     return '<button class="btn btn-default glyphicon glyphicon-list-alt"></button>';
                 },
             ],
-            'template'  =>  '<div class="btn-group btn-group-sm">{contents}{print}{changes}{call}{done}</div>'
+            'template'  =>  Html::tag('div', '{contents}{print}{changes}{call}{done}', [
+                'class' =>  'btn-group btn-group-sm',
+                'style' =>  'min-width: 200px'
+            ])
         ],
         [
             'class'     =>  \kartik\grid\ExpandRowColumn::className(),
