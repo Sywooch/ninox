@@ -439,7 +439,7 @@ $thiss = $this;
             'format'    =>  'html',
             'value'     =>  function($model) use(&$goodsAdditionalInfo){
                 $ico = isset($goodsAdditionalInfo[$model->itemID]->ico) && !empty($goodsAdditionalInfo[$model->itemID]->ico) ? 'http://krasota-style.com.ua/img/catalog/sm/'.$goodsAdditionalInfo[$model->itemID]->ico : '';
-                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a('Код товара: '.$goodsAdditionalInfo[$model->itemID]->Code, \yii\helpers\Url::to([
+                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a($goodsAdditionalInfo[$model->itemID]->Name.'<br>Код товара: '.$goodsAdditionalInfo[$model->itemID]->Code, \yii\helpers\Url::to([
                     '/goods/showgood/'.$goodsAdditionalInfo[$model->itemID]->ID
                 ]))), ['class'  =>  'col-xs-8']), ['class' =>   'row-responsive']);
             }
