@@ -126,6 +126,22 @@ class SiteController extends Controller
         return \Yii::$app->cart->put($itemID, $count)->count;
     }
 
+	public function actionGetcart(){
+		return $this->renderAjax('cart', [
+			'dataProvider'	=>	new \yii\data\ActiveDataProvider([
+				'query'         =>  \Yii::$app->cart->goodsQuery(),
+				'pagination'    =>  [
+					'pageSize'  =>  0
+				]
+			])
+		]);
+	}
+
+	public function actionRemovefromcart(){
+		$itemID = \Yii::$app->request->post("itemID");
+		return \Yii::$app->cart->remove($itemID);
+	}
+
     public function actionSuccess($order = []){
         if(!empty($order)){
             return $this->render('order_success', [

@@ -6,7 +6,7 @@ return [
     'rules'             =>  [
         ''                  =>  'site/index',
         'tovar/<link>'      =>  'site/showtovar',
-        '<action:(addtocart|changeitemcount|order)>' =>  'site/<action>',
+        '<action:(addtocart|removefromcart|order|getcart)>' =>  'site/<action>',
         '<url:(.*)>'        =>  'site/renderpage'
     ]
 ];

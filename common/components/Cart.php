@@ -102,6 +102,20 @@ class Cart extends Component{
         return isset($this->items[$itemID]) ? $this->items[$itemID]->count : 0;
     }
 
+	public function remove($itemID){
+		unset($this->items[$itemID]);
+		unset($this->goods[$itemID]);
+		$item = \common\models\Cart::findOne(['cartCode' => $this->cartCode, 'goodId' => $itemID]);
+
+		if($item){
+			return $item->delete();
+		}
+
+		$this->save();
+
+		return true;
+	}
+
     public function put($itemID, $count = 1){
         if(empty($this->items) && empty($this->cartCode)){
 
