@@ -17,7 +17,28 @@ $form = ActiveForm::begin([
             url: '/orders/saveorderpreview',
             data: $("#orderPreview-form-horizontal<?=$model->id?>").serialize(),
             success: function( response ) {
-                console.log( response );
+                if(response.length == 0 || response == false){
+                    return false;
+                }
+
+                var tr = $('div[data-attribute-type="ordersGrid"] tr[data-key="' + response.id + '"]')[0],
+                    responsibleUser = tr.querySelector('small.responsibleUser'),
+                    actualAmount = tr.querySelector('span.actualAmount');
+
+                if(responsibleUser != null){
+                    if(response.responsibleUserID != 0){
+                        responsibleUser.innerHTML = response.responsibleUserID;
+                    }else{
+                        responsibleUser.remove();
+                    }
+                }else if(response.responsibleUserID != 0){
+                    var node = document.createElement('small');
+                    node.innerHTML = response.responsibleUserID;
+                    node.setAttribute('class', 'responsibleUser');
+                    tr.querySelector('td[data-col-seq="7"]').appendChild(node);
+                }
+
+                actualAmount.innerHTML = response.actualAmount + ' грн.';
             }
         });
         return false;

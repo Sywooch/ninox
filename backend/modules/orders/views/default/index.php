@@ -8,11 +8,18 @@ $js = <<<'SCRIPT'
 var dOrders = document.querySelectorAll("a.deleteOrder"),
     rOrders = document.querySelectorAll("a.restoreOrder"),
     dButton = document.querySelectorAll("button.doneOrder"),
-    cButton = document.querySelectorAll("button.confirmCall");
+    cButton = document.querySelectorAll("button.confirmCall"),
+    oButton = document.querySelectorAll("a.ordersChanges");
 
 for(var i = 0; i < dOrders.length; i++){
     dOrders[i].addEventListener('click', function(e){
         deleteOrder(e.currentTarget);
+    }, false);
+}
+
+for(var i = 0; i < oButton.length; i++){
+    oButton[i].addEventListener('click', function(e){
+        ordersChanges(e.currentTarget);
     }, false);
 }
 
@@ -34,7 +41,18 @@ for(var i = 0; i < cButton.length; i++){
     }, false);
 }
 
-var restoreOrder = function(item){
+var ordersChanges = function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/orders/orderchanges',
+        data: {
+            'OrderID': e.getAttribute('data-attribute-orderid')
+        },
+        success: function(data){
+            document.querySelector('div[data-remodal-id="orderChanges"]').innerHTML = data;
+        }
+    });
+}, restoreOrder = function(item){
     console.log(item);
     alert('end me plz! file: index.php');
 }, deleteOrder = function(item){
@@ -501,7 +519,10 @@ $this->title = 'Заказы';
             ],
             'noWrap'    =>  true,
             'value'     =>  function($model){
-                return $model->actualAmount.' грн.';
+                $user = \common\models\Siteuser::getUser($model->responsibleUserID);
+                return  Html::tag('span' , $model->actualAmount.' грн.', ['class' => 'actualAmount']).
+                        Html::tag('br').
+                        ($model->responsibleUserID != 0 && !empty($model->responsibleUserID) ? Html::tag('small', (is_object($user) ? $user->name : $user), ['class' => 'responsibleUser']) : '');
             }
         ],
         [
@@ -559,7 +580,10 @@ $this->title = 'Заказы';
                     ]);
                 },
                 'changes'   =>  function($url, $model, $key){
-                    return '<button class="btn btn-default glyphicon glyphicon-list-alt"></button>';
+                    return Html::a('', '#orderChanges', [
+                        'class'                     =>  'ordersChanges btn btn-default glyphicon glyphicon-list-alt',
+                        'data-attribute-orderID'    =>  $model->id
+                    ]);
                 },
             ],
             'template'  =>  Html::tag('div', '{contents}', [
@@ -582,6 +606,19 @@ $this->title = 'Заказы';
         ],
     ]
 ]);
+
+$modal = new \bobroid\remodal\Remodal([
+    'id'            =>  'orderChanges',
+    'cancelButton'  =>  false,
+    'confirmButton' =>  false,
+    'addRandomToID' =>  false,
+    'events'    =>  [
+        'opening'  =>   new \yii\web\JsExpression("
+            console.log(e);
+        ")
+    ]
+]);
+echo $modal->renderModal();
 
 //\yii\widgets\Pjax::end();
 ?>

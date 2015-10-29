@@ -6,7 +6,7 @@ use yii\data\ActiveDataProvider;
 $this->title = "Клиент ".$customer->Company;
 $this->params['breadcrumbs'][] = [
     'label' =>  'Клиенты',
-    'url'   =>  '/admin/customers'
+    'url'   =>  '/customers'
 ];
 $this->params['breadcrumbs'][] = $customer->Company;
 
@@ -36,15 +36,15 @@ $css = <<<'STYLE'
 }
 
 .admin-orders-background::after{
-  background-image: url('/img/admin/purchase.png');
+  background-image: url('/img/purchase.png');
 }
 
 .admin-orderssumm-background::after{
-  background-image: url('/img/admin/ukraine2.png');
+  background-image: url('/img/ukraine2.png');
 }
 
 .admin-money-background::after{
-  background-image: url('/img/admin/coins24.png');
+  background-image: url('/img/coins24.png');
 }
 
 .admin-background::after {
@@ -100,7 +100,7 @@ $this->registerCss($css);
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="btn-group pull-left" role="group">
-            <?=\app\components\ChangesWidget::widget([
+            <?=\common\components\ChangesWidget::widget([
                 'model'         =>  $customer,
                 'header'        =>  'Изменения по клиенту '.$customer->Company
             ])?>
@@ -109,7 +109,7 @@ $this->registerCss($css);
         <div class="btn-group pull-right" role="group" aria-label="...">
             <button type="button" id="changeTrashState" class="btn btn-info" data-customer-id="<?=$customer->ID?>"><?=$customer->Deleted == 0 ? 'Удалить' : 'Восстановить'?></button>
             <button type="button" id="changeState" class="btn btn-info" data-customer-id="<?=$customer->ID?>"><?=$customer->black == 0 ? 'В чёрный список' : 'Из чёрного списка'?></button>
-            <a type="button" class="btn btn-info" href="/admin/customers/showcustomer/<?=$customer->ID.(!$editMode ? '?act=edit' : '')?>"><?=$editMode ? 'В режим просмотра' : 'Редактировать'?></a>
+            <a type="button" class="btn btn-info" href="/customers/showcustomer/<?=$customer->ID.(!$editMode ? '?act=edit' : '')?>"><?=$editMode ? 'В режим просмотра' : 'Редактировать'?></a>
         </div>
         <div class="clearfix"></div>
     </div>
