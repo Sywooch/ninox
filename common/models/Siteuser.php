@@ -41,7 +41,7 @@ class Siteuser extends \yii\db\ActiveRecord
 
     public static function getUser($id){
         if(!empty(self::$siteusers)){
-            return self::$siteusers[$id];
+            return isset(self::$siteusers[$id]) ? self::$siteusers[$id] : $id;
         }
 
         $m = self::find()->all();

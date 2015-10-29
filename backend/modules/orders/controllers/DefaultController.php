@@ -115,6 +115,10 @@ class DefaultController extends Controller
         $order->attributes = \Yii::$app->request->post('History');
         $order->save();
 
+        if(isset($order->responsibleUserID) && $order->responsibleUserID != 0){
+            $order->responsibleUserID = Siteuser::getUser($order->responsibleUserID)->name;
+        }
+
         return $order;
     }
 
@@ -297,6 +301,18 @@ class DefaultController extends Controller
                 $order->recalculatePrices($d['type']);
             }
         }
+    }
+
+    public function actionOrderchanges(){
+        if(!\Yii::$app->request->isAjax){
+            return $this->run('site/error');
+        }
+
+        $order = \Yii::$app->request->post("orderID");
+
+        return $this->renderAjax('_changes_modal', [
+            'order' =>  $order
+        ]);
     }
 
     public function actionCreateinvoice($param){

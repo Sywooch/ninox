@@ -65,9 +65,6 @@ class ServiceMenuWidget extends Widget{
 
     public $dateGetVariable = "showDates";
 
-
-
-
     public function init(){
         if($this->showDateButtons && empty($this->dateButtons)){
             throw new InvalidConfigException("Невозможно отобразить кнопки, когда их нет!");

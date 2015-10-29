@@ -42,10 +42,7 @@ class DefaultController extends Controller
         $edit = \Yii::$app->request->get("act") == 'edit';
 
         if(!$customer){
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  'Клиента не существует',
-                'message'   => 'Такого клиента нет на сайте! Вы можете <a onclick="window.history.back();">вернуться обратно</a>, или попробовать ещё раз'
-            ]);
+            return $this->run('site/error');
         }
 
         if($edit && !empty(\Yii::$app->request->post("Customer"))){
