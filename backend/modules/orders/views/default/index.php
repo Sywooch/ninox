@@ -49,6 +49,7 @@ var ordersChanges = function(e){
             'OrderID': e.getAttribute('data-attribute-orderid')
         },
         success: function(data){
+            console.log(e.getAttribute('data-attribute-orderid'));
             document.querySelector('div[data-remodal-id="orderChanges"]').innerHTML = data;
         }
     });

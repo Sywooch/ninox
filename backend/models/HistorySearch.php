@@ -12,7 +12,7 @@ namespace backend\models;
 use common\models\History;
 use yii\data\ActiveDataProvider;
 
-class HistorySearch extends \common\models\History{
+class HistorySearch extends History{
 
     public function search($params, $onlyQuery = false){
         $query = History::find();

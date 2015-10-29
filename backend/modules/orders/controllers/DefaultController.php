@@ -7,11 +7,12 @@ use common\models\Customer;
 use common\models\CustomerAddresses;
 use common\models\CustomerContacts;
 use common\models\Good;
-use common\models\History;
+use backend\models\History;
 use common\models\NovaPoshtaOrder;
 use common\models\Pricerule;
 use common\models\SborkaItem;
 use common\models\Siteuser;
+use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 
@@ -146,7 +147,7 @@ class DefaultController extends Controller
 
             if($o){
                 $o->done = $o->done == 1 ? 0 : 1;
-                $o->doneDate = date('Y-m-d H:i:s');
+                $o->doneDate = $o->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
 
                 $o->save(false);
                 return $o->done;
@@ -308,10 +309,16 @@ class DefaultController extends Controller
             return $this->run('site/error');
         }
 
-        $order = \Yii::$app->request->post("orderID");
+        $order = \Yii::$app->request->post("OrderID");
 
         return $this->renderAjax('_changes_modal', [
-            'order' =>  $order
+            'order'         =>  $order,
+            'dataProvider'  =>  new ActiveDataProvider([
+                'query'     =>  AuditTrail::find()->where(['model'  =>  History::className(), 'model_id'    =>  $order])->orderBy('id desc'),
+                'pagination'    =>  [
+                    'pageSize'  =>  '20'
+                ]
+            ])
         ]);
     }
 
