@@ -192,7 +192,7 @@ $discountBlock = function($model){
     </div>
     <div class="inner-sub">
 	    <?php if($model->count > 0){
-		    echo $this->render('_shop_good_counter', [
+		    echo \app\widgets\CartItemsCounterWidget::widget([
 			    'itemID'    =>  $model->ID,
 			    'value'     =>  $model->inCart ? $model->inCart : 1,
 			    'store'     =>  $model->isUnlimited ? 1000 : $model->count,

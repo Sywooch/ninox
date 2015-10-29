@@ -38,13 +38,10 @@ $cartModal = new \bobroid\remodal\Remodal([
 	'content'			=>	$this->render('../site/cart', [
 		'dataProvider'	=>	$cartItemsDataProvider
 	]),
-	'id'				=>	'modalCart',
-	//'modalOptions'			=>	[
-	//	'class'	=>	'modal'
-	//],
+	'id'	=>	'modalCart',
 	'addRandomToID'		=>	false,
 	'events'			=>	[
-		'opened'	=>	'console.log(e.target);'
+		'opening'	=>	new \yii\web\JsExpression("getCart(e)")
 	]
 ]);
 
@@ -69,6 +66,12 @@ $js = <<<SCRIPT
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		changeItemCount(e.currentTarget);
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.remove-item', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		deleteItem(e.currentTarget);
 	});
 
 	$('body').on(hasTouch ? 'touchend' : 'click', '.yellow-button.buy', function(e){

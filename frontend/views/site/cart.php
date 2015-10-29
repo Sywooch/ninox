@@ -1,3 +1,6 @@
+<?php
+	use yii\helpers\Html;
+?>
 <div class="block">
     <div class="caption">
         <div class="description">
@@ -13,9 +16,77 @@
     </div>
     <div class="topShadow"></div>
     <div class="windowContent">
+	    <?php
+	        $w = new \app\widgets\CartItemsCounterWidget();
+	    ?>
         <?=\yii\grid\GridView::widget([
             'dataProvider'  =>  $dataProvider,
-            'emptyText'     =>  \Yii::t('shop', 'Ваша корзина пуста!')
+            'emptyText'     =>  \Yii::t('shop', 'Ваша корзина пуста!'),
+	        'showHeader'    =>  false,
+	        'columns'       =>  [
+		        [
+			        'class'         =>  \yii\grid\SerialColumn::className(),
+		        ],
+		        [
+			        'format'        =>  'html',
+			        'value'         =>  function($model){
+					        return Html::tag('img', '', ['src'  =>  \Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$model->ico, 'alt'  =>  $model->Name.' '.\Yii::t('shop', 'от интернет магазина Krasota-Style.ua')]);
+				        }
+		        ],
+		        [
+			        'format'        =>  'html',
+			        'value'         =>  function($model){
+					        return Html::tag('div', $model->Name, ['class'  =>  'item-name blue']).
+						        Html::tag('div', \Yii::t('shop', 'Код').': '.$model->Code, ['class'   =>  'item-code']).
+						        Html::tag('div', '30uah', ['class'   =>  'item-price']);
+				        }
+		        ],
+		        [
+			        'class'         =>  \yii\grid\ActionColumn::className(),
+			        'buttons'       =>  [
+				        'plus'  =>  function($url, $model, $key) use(&$w){
+							$w->setOptions([
+								'itemID'    =>  $model->ID,
+								'value'     =>  $model->inCart ? $model->inCart : 1,
+								'store'     =>  $model->isUnlimited ? 1000 : $model->count,
+								'inCart'    =>  $model->inCart,
+							]);
+						    return $w->renderPlus();
+					    },
+				        'minus'  =>  function($url, $model, $key) use(&$w){
+					        $w->setOptions([
+						        'itemID'    =>  $model->ID,
+						        'value'     =>  $model->inCart ? $model->inCart : 1,
+						        'store'     =>  $model->isUnlimited ? 1000 : $model->count,
+						        'inCart'    =>  $model->inCart,
+					        ]);
+						    return $w->renderMinus();
+					    },
+				        'counter'  =>  function($url, $model, $key) use(&$w){
+						    $w->setOptions([
+							    'itemID'    =>  $model->ID,
+							    'value'     =>  $model->inCart ? $model->inCart : 1,
+							    'store'     =>  $model->isUnlimited ? 1000 : $model->count,
+							    'inCart'    =>  $model->inCart,
+						    ]);
+
+						    return $w->renderInput();
+					    },
+				        'delete'  =>  function($url, $model, $key) use(&$w){
+						    $w->setOptions([
+							    'itemID'    =>  $model->ID,
+							    'value'     =>  $model->inCart ? $model->inCart : 1,
+							    'store'     =>  $model->isUnlimited ? 1000 : $model->count,
+							    'inCart'    =>  $model->inCart,
+						    ]);
+
+						    return $w->renderDelete();
+					    },
+			        ],
+			        'template'      =>  Html::tag('div', '{minus}{counter}{plus}', ['class' => 'counter']).'{delete}'
+
+		        ],
+	        ],
         ])?>
     </div>
     <div class="miniFooter">
