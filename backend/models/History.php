@@ -15,6 +15,9 @@ class History extends \common\models\History{
         if($this->oldAttributes['confirmed'] != $this->confirmed && $this->confirmed == 1){
             //$this->confirmDate = date('Y-m-d H:i:s');
         }
+
+        $this->hasChanges = 1;
+
         return parent::beforeSave($insert);
     }
 

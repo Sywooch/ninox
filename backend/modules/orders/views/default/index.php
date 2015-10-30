@@ -583,7 +583,9 @@ $this->title = 'Заказы';
                 'changes'   =>  function($url, $model, $key){
                     return Html::a('', '#orderChanges', [
                         'class'                     =>  'ordersChanges btn btn-default glyphicon glyphicon-list-alt',
-                        'data-attribute-orderID'    =>  $model->id
+                        'data-attribute-orderID'    =>  $model->id,
+                        ($model->hasChanges != 1 ? 'disabled' : 'enabled') => 'disabled',
+                        'onclick'   =>  ($model->hasChanges != 1 ? 'return false;' : '')
                     ]);
                 },
             ],
