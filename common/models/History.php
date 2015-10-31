@@ -77,14 +77,9 @@ class History extends \yii\db\ActiveRecord
     public static $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
     public static $status_10    =   'Ожидает отправки';
 
-    public function beforeSave($insert){
-        if($this->oldAttributes['confirmed'] != $this->confirmed && $this->confirmed == 1){
-            //$this->confirmDate = date('Y-m-d H:i:s');
-        }
-        return parent::beforeSave($insert);
-    }
-
     public function afterFind(){
+        parent::afterFind();
+
         if($this->deleted == '4'){
             $this->status = '7';
         }else{
@@ -121,7 +116,7 @@ class History extends \yii\db\ActiveRecord
     }
 
     public static function ordersQuery($options = []){
-        $query = History::find()->orderBy('id DESC');
+        $query = self::find()->orderBy('id DESC');
 
         if(isset($options['thisOrder'])){
             $query->andWhere('id != '.$options['thisOrder']);

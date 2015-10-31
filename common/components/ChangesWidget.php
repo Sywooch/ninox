@@ -48,7 +48,7 @@ class ChangesWidget extends Widget{
         var itemID = obj.parentNode.parentNode.getAttribute('data-key');
         $.ajax({
             type: 'POST',
-            url: '/admin/revertchanges',
+            url: '/revertchanges',
             data: {
                 'itemid': itemID
             },

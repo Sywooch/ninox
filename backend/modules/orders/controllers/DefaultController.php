@@ -7,11 +7,12 @@ use common\models\Customer;
 use common\models\CustomerAddresses;
 use common\models\CustomerContacts;
 use common\models\Good;
-use common\models\History;
+use backend\models\History;
 use common\models\NovaPoshtaOrder;
 use common\models\Pricerule;
-use common\models\SborkaItem;
+use backend\models\SborkaItem;
 use common\models\Siteuser;
+use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 
@@ -112,6 +113,8 @@ class DefaultController extends Controller
 
         $order = History::findOne(['id' => \Yii::$app->request->post('History')['id']]);
 
+        $order->hasChanges = 1;
+
         $order->attributes = \Yii::$app->request->post('History');
         $order->save();
 
@@ -127,14 +130,9 @@ class DefaultController extends Controller
             $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
             //TODO: сделать проверку на колл-во звонков (поле callsCount)
 
-            if(\Yii::$app->request->post("confirm") == "true")
-            {
-                $order->confirmed = 1;
-            }
-            else
-            {
-                $order->confirmed = 2;
-            }
+            $order->confirmed = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
+
+            $order->hasChanges = 1;
             $order->save(false);
             return $order->confirmed;
         }
@@ -146,7 +144,9 @@ class DefaultController extends Controller
 
             if($o){
                 $o->done = $o->done == 1 ? 0 : 1;
-                $o->doneDate = date('Y-m-d H:i:s');
+                $o->doneDate = $o->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
+
+                $o->hasChanges = 1;
 
                 $o->save(false);
                 return $o->done;
@@ -160,10 +160,7 @@ class DefaultController extends Controller
         $order = History::findOne(['id' => $param]);
 
         if(!$order){
-            return $this->render('/../../admin/views/default/error.php', [
-                'name'  =>  'Заказа не существует',
-                'message'   => 'Такого заказа нет на сайте! Вы можете <a onclick="window.history.back();">вернуться обратно</a>, или попробовать ещё раз'
-            ]);
+            return $this->run('site/error');
         }
 
         if(\Yii::$app->request->post("SborkaItem")){
@@ -182,7 +179,16 @@ class DefaultController extends Controller
 
                 $good->save(false);
             }
+            $order->hasChanges = 1;
+            $order->save();
+
             $item->save();
+        }
+
+        if(\Yii::$app->request->post("History")){
+            $order->attributes = \Yii::$app->request->post("History");
+            $order->hasChanges = 1;
+            $order->save();
         }
 
         $goodsAdditionalInfo = $st = [];
@@ -272,6 +278,7 @@ class DefaultController extends Controller
             $order = History::findOne(['id' => $orderID]);
 
             if($order){
+                $order->hasChanges = 1;
                 $orderItems = SborkaItem::findAll(['orderID' => $orderID]);
                 $orderGoodsIDs = $orderItemsArray = [];
 
@@ -308,10 +315,19 @@ class DefaultController extends Controller
             return $this->run('site/error');
         }
 
-        $order = \Yii::$app->request->post("orderID");
+        $order = \Yii::$app->request->post("OrderID");
 
         return $this->renderAjax('_changes_modal', [
-            'order' =>  $order
+            'order'         =>  $order,
+            'dataProvider'  =>  new ActiveDataProvider([
+                'query'     =>  AuditTrail::find()
+                                    ->where(['model'  =>  History::className(), 'model_id'    =>  $order])
+                                    ->orderBy('id desc')
+                                    ->orWhere(['and', ['model' => SborkaItem::className()], ['in', 'model_id', SborkaItem::find()->select('id')->where(['orderID' => $order])]]),
+                'pagination'    =>  [
+                    'pageSize'  =>  '20'
+                ]
+            ])
         ]);
     }
 

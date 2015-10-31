@@ -250,7 +250,8 @@ $this->registerJsFile('/js/bootbox.min.js', [
                         $form->field($order, 'paymentInfo'),
                         $form->field($order, 'coupon');
                     echo Html::tag('center', Html::button('Сохранить', [
-                            'class' =>  'btn btn-lg btn-success'
+                            'class' =>  'btn btn-lg btn-success',
+                            'type'  =>  'submit'
                         ]).' или '.Html::button('отменить', [
                             'class'         =>  'btn btn-default',
                             'data-dismiss'  =>  'modal',
@@ -456,10 +457,14 @@ $thiss = $this;
             'value'     =>  function($model){
                 switch($model->discountType){
                     case '1':
-                        return '<span style="text-align: center; display: block; color: red">'.$model->price.' грн. <br> скидка '.$model->discountSize.' грн.</span><br><s>'.$model->originalPrice.' грн.</s>';
+                        return Html::tag('span', $model->price.' грн. '.Html::tag('br').' скидка '.$model->discountSize.' грн.', [
+                            'style' =>  'text-align: center; display: block; color: red;'
+                        ]).Html::tag('br').Html::tag('s', $model->originalPrice.' грн.');
                         break;
                     case '2':
-                        return '<span style="text-align: center; display: block; color: red">'.$model->price.' грн. <br> скидка '.$model->discountSize.'%</span><br><s>'.$model->originalPrice.' грн.</s>';
+                        return Html::tag('span', $model->price.' грн. '.Html::tag('br').' скидка '.$model->discountSize.' %.', [
+                            'style' =>  'text-align: center; display: block; color: red;'
+                        ]).Html::tag('br').Html::tag('s', $model->originalPrice.' грн.');
                         break;
                     default:
                         return $model->price.' грн.';

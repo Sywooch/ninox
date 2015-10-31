@@ -34,6 +34,8 @@ class SborkaItem extends \yii\db\ActiveRecord
     public $price;
 
     public function afterFind(){
+        parent::afterFind();
+
         switch($this->discountType){
             case '1':
                 //Размер скидки в деньгах
