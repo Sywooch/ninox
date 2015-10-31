@@ -256,7 +256,8 @@ function changeItemCount(item){
 					'itemID': itemId,
 					'count': count
 				},
-				success: function(){
+				success: function(data){
+					console.log(data);
 					//updateCart(0, false);
 				}
 			});
@@ -290,7 +291,7 @@ function changeItemCount(item){
 	}
 }
 
-function deleteItem(item){
+function removeFromCart(item){
 	var itemId = item.getAttribute('data-itemId');
 	item.disabled = true;
 	$.ajax({
@@ -299,7 +300,8 @@ function deleteItem(item){
 		data: {
 			'itemID': itemId
 		},
-		success: function(){
+		success: function(data){
+			console.log(data);
 			//updateCart(itemId, true);
 			$('.open-cart[data-itemId='+ itemId +']').each(function(){
 				this.value = texts.itemText.buy;
@@ -328,6 +330,7 @@ function getCart(e){
 		type: 'POST',
 		url: '/getcart',
 		success: function(data){
+			console.log(data);
 			e.currentTarget.innerHTML = data;
 		}
 	});

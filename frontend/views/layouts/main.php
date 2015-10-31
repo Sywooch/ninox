@@ -71,7 +71,7 @@ $js = <<<SCRIPT
 	$('body').on(hasTouch ? 'touchend' : 'click', '.remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
-		deleteItem(e.currentTarget);
+		removeFromCart(e.currentTarget);
 	});
 
 	$('body').on(hasTouch ? 'touchend' : 'click', '.yellow-button.buy', function(e){

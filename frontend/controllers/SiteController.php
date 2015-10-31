@@ -121,9 +121,25 @@ class SiteController extends Controller
     }
 
     public function actionAddtocart(){
-        $itemID = \Yii::$app->request->post("itemID");
+        \Yii::$app->response->format = 'json';
+	    $itemID = \Yii::$app->request->post("itemID");
         $count = \Yii::$app->request->post("count");
-        return \Yii::$app->cart->put($itemID, $count)->count;
+        \Yii::$app->cart->put($itemID, $count);
+	    $goods = [];
+	    foreach(\Yii::$app->cart->goods as $good){
+			if($good->priceModified){
+				$goods[] = array(
+					'priceRuleID'  =>  $good->priceRuleID,
+					'priceModified'  =>  $good->priceModified,
+					'price'  =>  $good->retail_price,
+				);
+			}
+	    }
+	    return array(
+		    'cartSumm'  =>  \Yii::$app->cart->cartSumm,
+		    'cartRealSumm'  =>  \Yii::$app->cart->cartRealSumm,
+		    'goods'     =>  $goods,
+	    );
     }
 
 	public function actionGetcart(){
@@ -138,8 +154,12 @@ class SiteController extends Controller
 	}
 
 	public function actionRemovefromcart(){
+		\Yii::$app->response->format = 'json';
 		$itemID = \Yii::$app->request->post("itemID");
-		return \Yii::$app->cart->remove($itemID);
+		\Yii::$app->cart->remove($itemID);
+		return array(
+			'cartSumm'  =>  \Yii::$app->cart->cartSumm,
+		);
 	}
 
     public function actionSuccess($order = []){

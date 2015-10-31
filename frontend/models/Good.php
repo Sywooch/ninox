@@ -22,8 +22,7 @@ class Good extends \common\models\Good{
 	public $priceRuleID = 0;                //ID примененного ценового правила
 	public $priceForOneItem = 0;            //Цена за единицу товара
 	public $reviewsCount = 0;               //Количество отзывов
-
-	public $discountBlock = false;          //Блок скидки на товаре
+	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
 
     public function afterFind()
     {
@@ -77,6 +76,12 @@ class Good extends \common\models\Good{
 	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? GoodHelper::getPriceFormat(($this->wholesale_price/$this->num_opt)) : 0;
 
     }
+
+	public static function find(){
+		return parent::find()->
+			select('`goods`.*, `goodsgroups`.`Code` AS `category`')->
+			leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`', []);
+	}
 
     public function __get($name){
 	    switch($name){

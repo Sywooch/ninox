@@ -11,6 +11,7 @@ namespace common\helpers;
 
 use common\models\Pricerule;
 use yii\base\Component;
+use yii\helpers\Json;
 
 class PriceRuleHelper extends Component{
 
@@ -21,14 +22,23 @@ class PriceRuleHelper extends Component{
 	}
 
 	public function recalc($model, $category = false){
-		if($model->discountType == 0){
+		\Yii::trace('Model: '.Json::encode($model));
+		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
 				$tmodel = self::recalcItem($model, $rule, $category);
 				if($tmodel){
 					return $tmodel;
 				}
 			}
+			if($model->priceRuleID != 0){
+				$model->priceModified = true;
+				$model->priceRuleID = 0;
+				$model->discountType = 0;
+				$model->discountSize = 0;
+				return $model;
+			}
 		}
+		$model->priceModified = false;
 		return $model;
 	}
 
@@ -47,16 +57,10 @@ class PriceRuleHelper extends Component{
 			if($category && $discount == $termsCount && !empty($term['WithoutBlyamba'][0]['term'])){
 				$termsCount++;
 			}
-/*			if($discount == $termsCount && !empty($term['DocumentSum'])){
-				$termsCount++;
-				foreach($term['DocumentSum'] as $ds){
-					if(($cartInfo['PriceOut1'] == $ds['term'] && $ds['type'] == '=') || ($cartInfo['PriceOut1'] >= $ds['term'] && $ds['type'] == '>=') || ($cartInfo['PriceOut1'] <= $ds['term'] && $ds['type'] == '<=')){
-						$discount += 1;
-						break;
-					}
-				}
+			if(!$category && $discount == $termsCount && !empty($term['DocumentSum'])){
+				$this->checkDocumentSumm($term['DocumentSum'], $termsCount, $discount);
 			}
-			if($discount == $termsCount && !empty($term['ItemPrice'])){
+			/*if($discount == $termsCount && !empty($term['ItemPrice'])){
 				$termsCount++;
 				foreach($term['ItemPrice'] as $ip){
 					if(($itemInfo['PriceOut1'] == $ip['term'] && $ip['type'] == '=') || ($itemInfo['PriceOut1'] >= $ip['term'] && $ip['type'] == '>=') || ($itemInfo['PriceOut1'] <= $ip['term'] && $ip['type'] == '<=')){
@@ -128,11 +132,12 @@ class PriceRuleHelper extends Component{
 			$cartInfo[$key]['flag'] = true;*/
 		}
 		if($discount == $termsCount && $termsCount != 0){
+			$model->priceModified = ($model->priceRuleID != $ruleID);
 			$model->priceRuleID = $ruleID;
 			$model->discountType = empty($rule['actions']['Type']) ? 2 : $rule['actions']['Type'];
 			$model->discountSize = $rule['actions']['Discount'];
+			return $model;
 		}
-		return $model;
 	}
 
 	private function checkCategory($term, $cat, &$termsCount, &$discount){
@@ -172,6 +177,17 @@ class PriceRuleHelper extends Component{
 		foreach($term as $date){
 			if((date('d.m.Y') == $date['term'] && $date['type'] == '=') || (time() >= strtotime($date['term']) && $date['type'] == '>=') || ($date['type'] == '<=' && time() <= strtotime($date['term']))){
 				$discount++;
+				break;
+			}
+		}
+	}
+
+	private function checkDocumentSumm($term, &$termsCount, &$discount){
+		$termsCount++;
+		$cartSumm = \Yii::$app->cart->cartRealSumm;
+		foreach($term as $ds){
+			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
+				$discount += 1;
 				break;
 			}
 		}

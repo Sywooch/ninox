@@ -1,5 +1,6 @@
 <?php
-	use yii\helpers\Html;
+use common\helpers\PriceRuleHelper;
+use yii\helpers\Html;
 ?>
 <div class="block">
     <div class="caption">
@@ -18,6 +19,7 @@
     <div class="windowContent">
 	    <?php
 	        $w = new \app\widgets\CartItemsCounterWidget();
+	        $helper = new PriceRuleHelper();
 	    ?>
         <?=\yii\grid\GridView::widget([
             'dataProvider'  =>  $dataProvider,
@@ -25,20 +27,26 @@
 	        'showHeader'    =>  false,
 	        'columns'       =>  [
 		        [
-			        'class'         =>  \yii\grid\SerialColumn::className(),
+			        'class'             =>  \yii\grid\SerialColumn::className(),
+			        'contentOptions'    =>  [
+				        'class'         =>  'sequence-number',
+			        ],
 		        ],
 		        [
 			        'format'        =>  'html',
 			        'value'         =>  function($model){
+
 					        return Html::tag('img', '', ['src'  =>  \Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$model->ico, 'alt'  =>  $model->Name.' '.\Yii::t('shop', 'от интернет магазина Krasota-Style.ua')]);
 				        }
 		        ],
 		        [
 			        'format'        =>  'html',
-			        'value'         =>  function($model){
+			        'value'         =>  function($model) use (&$helper){
+					        $model = $helper->recalc($model);
 					        return Html::tag('div', $model->Name, ['class'  =>  'item-name blue']).
 						        Html::tag('div', \Yii::t('shop', 'Код').': '.$model->Code, ['class'   =>  'item-code']).
-						        Html::tag('div', '30uah', ['class'   =>  'item-price']);
+						        Html::tag('div', $model->wholesale_price, ['class'   =>  'item-price']).
+						        Html::tag('div', $model->retail_price, ['class'   =>  'item-price']);
 				        }
 		        ],
 		        [
