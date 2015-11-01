@@ -157,8 +157,20 @@ class SiteController extends Controller
 		\Yii::$app->response->format = 'json';
 		$itemID = \Yii::$app->request->post("itemID");
 		\Yii::$app->cart->remove($itemID);
+		$goods = [];
+		foreach(\Yii::$app->cart->goods as $good){
+			if($good->priceModified){
+				$goods[] = array(
+					'priceRuleID'  =>  $good->priceRuleID,
+					'priceModified'  =>  $good->priceModified,
+					'price'  =>  $good->retail_price,
+				);
+			}
+		}
 		return array(
 			'cartSumm'  =>  \Yii::$app->cart->cartSumm,
+			'cartRealSumm'  =>  \Yii::$app->cart->cartRealSumm,
+			'goods'     =>  $goods,
 		);
 	}
 

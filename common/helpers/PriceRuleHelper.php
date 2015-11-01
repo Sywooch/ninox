@@ -22,7 +22,6 @@ class PriceRuleHelper extends Component{
 	}
 
 	public function recalc($model, $category = false){
-		\Yii::trace('Model: '.Json::encode($model));
 		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
 				$tmodel = self::recalcItem($model, $rule, $category);
