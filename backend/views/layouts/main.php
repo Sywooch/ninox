@@ -538,9 +538,9 @@ $this->beginPage() ?>
 
         .rollback{
             position: fixed;
-            padding-top: 25px;
+            padding-top: 110px;
             width: 80px;
-            margin-top: -25px;
+            margin-top: -85px;
             height: 100vh;
             background: rgb(236,236,236);
             opacity: 0.4;

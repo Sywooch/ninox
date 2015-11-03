@@ -25,121 +25,102 @@ class DefaultController extends Controller
 {
 
     public function actionIndex(){
-        $cat = \Yii::$app->request->get("category");
-        $len = $cat != '' ? (strlen($cat) + 3) : 3;
-        $pageSize = empty(\Yii::$app->request->get("pageSize")) ? 20 : \Yii::$app->request->get("pageSize");
+        $category = \Yii::$app->request->get("category");
+        $categoryLength = $category != '' ? (strlen($category) + 3) : 3;
         $breadcrumbs = $goodsCount = [];
+        $enabledGoods = $disabledGoods = 0;
 
+        //Делаем запрос на колл-во товаров
         $tGoodsCount = Category::find()->
             select(['`a`.`Code` as `Code`', 'SUM(`b`.`show_img`) as `enabled`', 'COUNT(`b`.`ID`) as `all`'])->
             from([Category::tableName().' a', Good::tableName().' b'])->
-            where('`b`.`GroupID` = `a`.`ID`');
+            where('`b`.`GroupID` = `a`.`ID`')
+            ->groupBy('`b`.`GroupID`');
 
-        if ($len != 3) {
-            $tGoodsCount->andWhere(['like', '`a`.`Code`', $cat.'%', false]);
 
-            $p = Category::getParentCategories($cat);
 
-            if (sizeof($p) >= 1) {
-                foreach ($p as $c) {
-                    if ($c != '') {
+        if ($categoryLength != 3) {
+            //Добавляем новое условие для запроса на колл-во товаров
+            $tGoodsCount->andWhere(['like', '`a`.`Code`', $category.'%', false]);
+
+            $parentCategories = Category::getParentCategories($category);
+
+            //делаем хлебные крошки
+            if (sizeof($parentCategories) >= 1) {
+                foreach ($parentCategories as $parentCategory) {
+                    if ($parentCategory != '') {
                         $breadcrumbs[] = [
-                            'label' => $c->Name,
-                            'url'   =>  Url::toRoute(['/goods', 'category' => $c->Code, 'smartfilter' => \Yii::$app->request->get("smartfilter")])
+                            'label' => $parentCategory->Name,
+                            'url'   =>  Url::toRoute(['/goods', 'category' => $parentCategory->Code, 'smartfilter' => \Yii::$app->request->get("smartfilter")])
                         ];
                     }
                 }
             }
         }
 
-        $tGoodsCount->groupBy('`b`.`GroupID`');
+        //Считаем колличество товаров по запросу
+        foreach($tGoodsCount->asArray()->each() as $row){
+            $row['Code'] = substr($row['Code'], 0, $categoryLength);
+
+            if(isset($goodsCount[$row['Code']])){
+                $goodsCount[$row['Code']] = [
+                    'all'   =>  ($row['all'] + $goodsCount[$row['Code']]['all']),
+                    'enabled'   =>  ($row['enabled'] + $goodsCount[$row['Code']]['enabled']),
+                    'disabled'  =>  (($row['all'] - $row['enabled']) + $goodsCount[$row['Code']]['disabled'])
+                ];
+            }else{
+                $goodsCount[$row['Code']] = [
+                    'all'   =>  $row['all'],
+                    'enabled'   =>  $row['enabled'],
+                    'disabled'  =>  ($row['all'] - $row['enabled'])
+                ];
+            }
+
+            $enabledGoods += $row['enabled'];
+            $disabledGoods += ($row['all'] - $row['enabled']);
+        }
+
+        $goodsCount['all'] = [
+            'enabled'   =>  $enabledGoods,
+            'disabled'  =>  $disabledGoods
+        ];
 
         $breadcrumbs = array_reverse($breadcrumbs);
 
-        $cs = new CategorySearch();
-        $cs = $cs->search([
-            'len'   =>  $len,
-            'cat'   =>  $cat,
+        $categorySearch = new CategorySearch();
+        $categorySearch = $categorySearch->search([
+            'len'   =>  $categoryLength,
+            'cat'   =>  $category,
             'data'  =>  \Yii::$app->request->get()
         ]);
 
-        if (\Yii::$app->request->get("onlyGoods") != 'true' && sizeof($cs) >= 1) {
-            $enabled = $disabled = 0;
-
-            foreach($tGoodsCount->asArray()->each() as $row){
-                $row['Code'] = substr($row['Code'], 0, $len);
-
-                if(isset($goodsCount[$row['Code']])){
-                    $goodsCount[$row['Code']] = [
-                        'all'   =>  ($row['all'] + $goodsCount[$row['Code']]['all']),
-                        'enabled'   =>  ($row['enabled'] + $goodsCount[$row['Code']]['enabled']),
-                        'disabled'  =>  (($row['all'] - $row['enabled']) + $goodsCount[$row['Code']]['disabled'])
-                    ];
-                }else{
-                    $goodsCount[$row['Code']] = [
-                        'all'   =>  $row['all'],
-                        'enabled'   =>  $row['enabled'],
-                        'disabled'  =>  ($row['all'] - $row['enabled'])
-                    ];
-                }
-
-                $enabled += $row['enabled'];
-                $disabled += ($row['all'] - $row['enabled']);
-            }
-
-            $goodsCount['all'] = [
-                'enabled'   =>  $enabled,
-                'disabled'  =>  $disabled
-            ];
-
+        if (\Yii::$app->request->get("onlyGoods") != 'true' && sizeof($categorySearch) >= 1) {
             return $this->render('index', [
-                'categories' => $cs,
+                'categories' => $categorySearch,
                 'breadcrumbs' => $breadcrumbs,
                 'goodsCount'    =>  $goodsCount,
-                'nowCategory' => Category::findOne(['Code' => $cat])
+                'nowCategory' => Category::findOne(['Code' => $category])
             ]);
-        }else{
-            if(empty($c)){
-                return $this->run('site/error');
-            }else{
-                $enabled = $disabled = 0;
-                foreach($tGoodsCount->asArray()->each() as $row){
-                    $row['Code'] = substr($row['Code'], 0, $len);
-
-                    if(isset($goodsCount[$row['Code']])){
-                        $goodsCount[$row['Code']] = [
-                            'all'   =>  ($row['all'] + $goodsCount[$row['Code']]['all']),
-                            'enabled'   =>  ($row['enabled'] + $goodsCount[$row['Code']]['enabled']),
-                            'disabled'  =>  (($row['all'] - $row['enabled']) + $goodsCount[$row['Code']]['disabled'])
-                        ];
-                    }else{
-                        $goodsCount[$row['Code']] = [
-                            'all'   =>  $row['all'],
-                            'enabled'   =>  $row['enabled'],
-                            'disabled'  =>  ($row['all'] - $row['enabled'])
-                        ];
-                    }
-                    $enabled += $row['enabled'];
-                    $disabled += ($row['all'] - $row['enabled']);
-                }
-
-                $goodsCount['all'] = [
-                    'enabled'   =>  $enabled,
-                    'disabled'  =>  $disabled
-                ];
-
-                $gs = new GoodSearch();
-
-                return $this->render('goods', [
-                    'breadcrumbs' => $breadcrumbs,
-                    'goods'       => $gs->search([
-                        'catID' =>  $c->ID
-                    ]),
-                    'goodsCount'    =>  $goodsCount,
-                    'nowCategory' => $c,
-                ]);
-            }
         }
+
+        $category = Category::findOne(['Code' => $category]);
+
+        if(empty($category)){
+            return $this->run('site/error');
+        }
+
+        $goodsSearch = new GoodSearch();
+
+        $breadcrumbs = array_reverse($breadcrumbs);
+
+        return $this->render('goods', [
+            'breadcrumbs'   => $breadcrumbs,
+            'goods'         => $goodsSearch->search([
+                'catID'     => $category->ID
+            ]),
+            'goodsCount'    => $goodsCount,
+            'nowCategory'   => $category,
+        ]);
     }
 
     public function actionLog(){

@@ -1,4 +1,5 @@
 <?php
+use backend\widgets\OrdersSearchWidget;
 use kartik\grid\GridView;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
@@ -361,6 +362,9 @@ $this->title = 'Заказы';
     'items'             =>  $collectors
 ])?>
 
+<div class="row" style="margin: 30px 0;">
+    <?=OrdersSearchWidget::widget()?>
+</div>
 
 <?=Html::tag('a', 'За всё время', [
     'href'  =>  \yii\helpers\Url::toRoute([

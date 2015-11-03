@@ -237,18 +237,89 @@ $this->registerJsFile('/js/bootbox.min.js', [
                         ],
                         'size'  =>  Modal::SIZE_LARGE,
                     ]);
-                    $form = new \yii\bootstrap\ActiveForm();
-                    echo $form->field($order, 'customerName'),
-                        $form->field($order,'customerSurname'),
-                        $form->field($order, 'customerPhone'),
-                        $form->field($order, 'customerEmail'),
-                        $form->field($order, 'deliveryRegion'),
-                        $form->field($order, 'deliveryCity'),
-                        $form->field($order, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()),
-                        $form->field($order, 'deliveryInfo'),
-                        $form->field($order, 'paymentType')->dropDownList(\common\models\PaymentTypes::getPaymentTypes()),
-                        $form->field($order, 'paymentInfo'),
-                        $form->field($order, 'coupon');
+                    $form = new \yii\bootstrap\ActiveForm([
+                        'options' =>  [
+                            'class' =>  'form-horizontal'
+                        ]
+                    ]);
+
+                    $form->begin();
+                    ?>
+                    <fieldset>
+                        <div class="row" style="margin: 0;">
+                            <?=$form->field($order, 'customerName', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+
+                            <?=$form->field($order, 'deliveryRegion', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+                        </div>
+                        <div class="row" style="margin: 0;">
+                            <?=$form->field($order, 'customerSurname', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+
+                            <?=$form->field($order, 'deliveryCity', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+                        </div>
+                        <div class="row" style="margin: 0;">
+                            <?=$form->field($order, 'customerPhone', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+
+                            <?=$form->field($order, 'deliveryAddress', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+                        </div>
+                        <div class="row" style="margin: 0;">
+                            <?=$form->field($order, 'customerEmail', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+
+                            <div class="col-xs-6 row">
+                                <?=$form->field($order, 'deliveryType', [
+                                    'options'   =>  [
+                                        'class' =>  'col-xs-8'
+                                    ]
+                                ])->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes())?>
+                                <?=$form->field($order, 'deliveryInfo', [
+                                    'options'   =>  [
+                                        'class' =>  'col-xs-4'
+                                    ]
+                                ])->label('Склад #')?>
+                            </div>
+                        </div>
+                        <div class="row" style="margin: 0;">
+                            <?=$form->field($order, 'coupon', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])?>
+
+                            <?=$form->field($order, 'paymentType', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ]
+                            ])->dropDownList(\common\models\PaymentTypes::getPaymentTypes())?>
+                        </div>
+                        <br>
+                    <?php
                     echo Html::tag('center', Html::button('Сохранить', [
                             'class' =>  'btn btn-lg btn-success',
                             'type'  =>  'submit'
@@ -259,6 +330,10 @@ $this->registerJsFile('/js/bootbox.min.js', [
                         ]), [
                         'style' =>  'text-align: middle; margin: 0px auto',
                     ]);
+                    ?>
+                    </fieldset>
+                    <?php
+                    $form->end();
                     Modal::end(); ?></h4>
             </div>
         </div>
