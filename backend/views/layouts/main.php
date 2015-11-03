@@ -1,5 +1,5 @@
 <?php
-use common\components\ServiceMenuWidget;
+use backend\widgets\ServiceMenuWidget;
 use bobroid\yamm\Yamm;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
@@ -10,6 +10,8 @@ use yii\widgets\Breadcrumbs;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+
+$ordersPage = $this->title == 'Заказы';
 
 $js = <<<'SCRIPT'
 $(function () {
@@ -306,16 +308,16 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Возвраты',
-                                'url'   =>  '#'
+                                'url'   =>  Url::to('/returns/index')
                             ],
 
                             [
                                 'label' =>  'Промокоды',
-                                'url'   =>  '#'
+                                'url'   =>  Url::to('/promocodes/index')
                             ],
                             [
                                 'label' =>  'Ценовые правила',
-                                'url'   =>  '#'
+                                'url'   =>  Url::to('/pricerules/index')
                             ],
                             [
                                 'label' =>  'Отчёты',
@@ -327,27 +329,27 @@ $this->beginPage() ?>
                                     ],
                                     [
                                         'label' =>  'Отключеные товары',
-                                        'url'   =>  '#'
+                                        'url'   =>  Url::toRoute('/charts/goods?mod=disabled')
                                     ],
                                     [
                                         'label' =>  'Включеные товары',
-                                        'url'   =>  '#'
+                                        'url'   =>  Url::toRoute('/charts/goods?mod=enabled')
                                     ],
                                     [
                                         'label' =>  'Отгруженые товары',
-                                        'url'   =>  '#'
+                                        'url'   =>  Url::toRoute('/charts/goods?mod=shipped')
                                     ],
                                     [
                                         'label' =>  'Подтверждённые заказы',
-                                        'url'   =>  '#'
+                                        'url'   =>  Url::toRoute('/charts/orders?mod=confirmed')
                                     ],
                                     [
                                         'label' =>  'Забраные Global Money',
-                                        'url'   =>  '#'
+                                        'url'   =>  Url::toRoute('/charts/takedglobalmoney')
                                     ],
                                     [
                                         'label' =>  'Продажи из магазина и самовывоз',
-                                        'url'   =>  '#'
+                                        'url'   =>  Url::toRoute('/charts/shopsales')
                                     ],
                                 ]
                             ],
@@ -533,8 +535,40 @@ $this->beginPage() ?>
             padding: 0; line-height: 30px;color: black;
             margin: 0 0 0 2px;
         }
+
+        .rollback{
+            position: fixed;
+            padding-top: 25px;
+            width: 80px;
+            margin-top: -25px;
+            height: 100vh;
+            background: rgb(236,236,236);
+            opacity: 0.4;
+            text-align: center;
+        }
+
+        .rollback:hover{
+            background: rgb(191, 191, 191);
+            cursor: pointer;
+        }
+
+        @media only screen
+        and (max-device-width: 1170px){
+            .rollback{
+                display: none;
+            }
+        }
+
+        @media only screen
+        and (max-device-width: 1600px){
+            .rollback.orders{
+                width: 30px !important;
+            }
+        }
     </style>
-    <div class="container"<?=$this->title == 'Заказы' ? ' style="max-width: 1300px; width: auto;"' : ''?>>
+
+    <div class="rollback<?=$ordersPage ? ' orders' : ''?>" onclick="history.back()"><?=FA::icon('arrow-left')?></div>
+    <div class="container"<?=$ordersPage == 'Заказы' ? ' style="max-width: 1300px; width: auto;"' : ''?>>
         <?=ServiceMenuWidget::widget([
             'showDateButtons'   =>  isset($this->params['showDateButtons']) ? $this->params['showDateButtons'] : false
         ])?>

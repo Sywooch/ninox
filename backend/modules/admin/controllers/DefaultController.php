@@ -40,51 +40,6 @@ class DefaultController extends Controller
         return $this->actionRoute('orders');
     }
 
-    public function actionUpdatecurrency(){
-        if(!\Yii::$app->request->isAjax){
-            return;
-        }
-
-        \Yii::$app->response->format = 'json';
-
-        $post = \Yii::$app->request->post("Service");
-
-        $m = Service::findOne(['key' => $post['key']]);
-
-        $m->load(\Yii::$app->request->post("Service"));
-
-        $m->value = \Yii::$app->request->post("Service[value]");
-
-        $m->save();
-
-        return \Yii::$app->request->post();
-    }
-
-    public function actionRevertchanges(){
-        if(\Yii::$app->request->isAjax){
-            $m = AuditTrail::findOne(['id' => \Yii::$app->request->post("itemid")]);
-
-            if(!$m){
-                return $this->runAction('error');
-            }
-
-            switch($m->model){
-                case 'common\models\Good':
-                    $model = Good::findOne(['id' => $m->model_id]);
-                    break;
-                case 'common\models\Customer':
-                    $model = Customer::findOne(['id' => $m->model_id]);
-                    break;
-            }
-
-            $field = $m->field;
-
-            $model->$field = $m->old_value;
-            $model->save(false);
-        }else{
-            return $this->runAction('error');
-        }
-    }
 
     public function actionLogout()
     {

@@ -51,4 +51,13 @@ class DefaultController extends Controller
             ]
         ]);
     }
+
+    public function actionGoods(){
+        $mod = \Yii::$app->request->get("mod");
+        $mod = empty($mod) ? '' : $mod;
+
+        return $this->render('goods', [
+
+        ]);
+    }
 }
