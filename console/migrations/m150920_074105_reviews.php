@@ -17,7 +17,7 @@ class m150920_074105_reviews extends Migration
     {
         echo "m150920_074105_reviews cannot be reverted.\n";
 
-        return false;
+        return true;
     }
 
     /*

@@ -270,7 +270,16 @@ class DefaultController extends Controller
 
             return $return;
         }
+
+        return $this->run('error');
     }
+
+    public function actionGetboxes(){
+        return $this->render('_boxes', [
+            'boxes' =>  Box::findAll()
+        ]);
+    }
+
 
     public function actionDeleteorder(){
         if(\Yii::$app->request->isAjax){
@@ -353,7 +362,7 @@ class DefaultController extends Controller
             $invoice->save();
         }
 
-        return $this->render('invoice', [
+        return $this->renderAjax('invoice', [
             'invoice'   =>  $invoice
         ]);
     }
