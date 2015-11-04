@@ -35,7 +35,6 @@ use yii\helpers\Html;
 		        [
 			        'format'        =>  'html',
 			        'value'         =>  function($model){
-
 					        return Html::tag('img', '', ['src'  =>  \Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$model->ico, 'alt'  =>  $model->Name.' '.\Yii::t('shop', 'от интернет магазина Krasota-Style.ua')]);
 				        }
 		        ],
@@ -94,6 +93,20 @@ use yii\helpers\Html;
 			        'template'      =>  Html::tag('div', '{minus}{counter}{plus}', ['class' => 'counter']).'{delete}'
 
 		        ],
+		        [
+			        'format'        =>  'html',
+			        'contentOptions'    =>  [
+				        'class'         =>  'sums',
+			        ],
+			        'value'         =>  function($model){
+					        return Html::tag('div', '', [
+						        'class' =>  'old-sum semi-bold blue',
+					        ]).
+						    Html::tag('div', '', [
+							    'class' =>  'current-sum blue'
+						    ]);
+				        }
+		        ]
 	        ],
         ])?>
     </div>
