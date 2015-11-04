@@ -143,6 +143,7 @@ class SiteController extends Controller
     }
 
 	public function actionGetcart(){
+		\Yii::$app->cart->recalcCart();
 		return $this->renderAjax('cart', [
 			'dataProvider'	=>	new \yii\data\ActiveDataProvider([
 				'query'         =>  \Yii::$app->cart->goodsQuery(),

@@ -184,6 +184,7 @@ class PriceRuleHelper extends Component{
 	private function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
 		$cartSumm = \Yii::$app->cart->cartRealSumm;
+		\Yii::trace('Model: '.Json::encode($cartSumm));
 		foreach($term as $ds){
 			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
 				$discount += 1;
