@@ -1,6 +1,10 @@
 <?php
 namespace backend\controllers;
 
+use common\models\Service;
+use frontend\models\Customer;
+use frontend\models\Good;
+use sammaye\audittrail\AuditTrail;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -57,6 +61,49 @@ class SiteController extends Controller
     {
         return $this->run('orders/default/index');
     }
+
+    public function actionUpdatecurrency(){
+        if(!\Yii::$app->request->isAjax){
+            return;
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        $post = \Yii::$app->request->post("Service");
+        $m = Service::findOne(['key' => $post['key']]);
+        $m->load(\Yii::$app->request->post("Service"));
+        $m->value = \Yii::$app->request->post("Service[value]");
+        $m->save();
+
+        return \Yii::$app->request->post();
+    }
+
+    public function actionRevertchanges(){
+        if(\Yii::$app->request->isAjax){
+            $m = AuditTrail::findOne(['id' => \Yii::$app->request->post("itemid")]);
+
+            if(!$m){
+                return $this->runAction('error');
+            }
+
+            switch($m->model){
+                case 'common\models\Good':
+                    $model = Good::findOne(['id' => $m->model_id]);
+                    break;
+                case 'common\models\Customer':
+                    $model = Customer::findOne(['id' => $m->model_id]);
+                    break;
+            }
+
+            $field = $m->field;
+
+            $model->$field = $m->old_value;
+            $model->save(false);
+        }else{
+            return $this->runAction('error');
+        }
+    }
+
 
     public function actionLogin()
     {

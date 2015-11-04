@@ -157,6 +157,15 @@ $js = <<<'SCRIPT'
         });
     }, usePriceRule = function(order, rule){
         bootbox.alert("На стадии доработки...");
+    }, runCreateInvoice = function(e, order){
+
+        $.ajax({
+            type: 'POST',
+            url: '/orders/createinvoice/' + order,
+            success: function(data){
+                e.currentTarget.innerHTML = data;
+            }
+        });
     }
 SCRIPT;
 
@@ -168,6 +177,23 @@ $this->registerJsFile('/js/bootbox.min.js', [
     ]
 ]);
 ?>
+<?php if($order->deliveryType == 2){
+
+    $novaPoshtaModal = new \bobroid\remodal\Remodal([
+        'cancelButton'		=>	false,
+        'confirmButton'		=>	false,
+        'closeButton'		=>	false,
+        'addRandomToID'		=>	false,
+        'content'			=>	'',
+        'events'			=>	[
+            'opening'	=>	new \yii\web\JsExpression("runCreateInvoice(e, ".$order->id.")")
+        ],
+        'id'				=>	'novaPoshtaModal',
+    ]);
+
+    echo $novaPoshtaModal->renderModal();
+
+} ?>
 <div class="row">
     <div class="col-xs-4">
         <div>
@@ -223,7 +249,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
                     <h4><?=$order->customerPhone?></h4>
                 </h3>
-                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?>
+                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
                     <?php Modal::begin([
                         'header' => 'Редактирование данных заказа',
                         'options'   =>  [
@@ -237,34 +263,157 @@ $this->registerJsFile('/js/bootbox.min.js', [
                         ],
                         'size'  =>  Modal::SIZE_LARGE,
                     ]);
-                    $form = new \yii\bootstrap\ActiveForm();
-                    echo $form->field($order, 'customerName'),
-                        $form->field($order,'customerSurname'),
-                        $form->field($order, 'customerPhone'),
-                        $form->field($order, 'customerEmail'),
-                        $form->field($order, 'deliveryRegion'),
-                        $form->field($order, 'deliveryCity'),
-                        $form->field($order, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()),
-                        $form->field($order, 'deliveryInfo'),
-                        $form->field($order, 'paymentType')->dropDownList(\common\models\PaymentTypes::getPaymentTypes()),
-                        $form->field($order, 'paymentInfo'),
-                        $form->field($order, 'coupon');
-                    echo Html::tag('center', Html::button('Сохранить', [
-                            'class' =>  'btn btn-lg btn-success',
-                            'type'  =>  'submit'
-                        ]).' или '.Html::button('отменить', [
-                            'class'         =>  'btn btn-default',
-                            'data-dismiss'  =>  'modal',
-                            'aria-hidden'   =>  'true'
-                        ]), [
-                        'style' =>  'text-align: middle; margin: 0px auto',
+                    $form = new \yii\bootstrap\ActiveForm([
+                        'options' =>  [
+                            'class' =>  'form-horizontal'
+                        ]
                     ]);
-                    Modal::end(); ?></h4>
+
+                    $form->begin();
+                    ?>
+                        <?=
+                        Html::tag('fieldset',
+                            Html::tag('div',
+                                Html::tag('div',
+                                    $form->field($order, 'customerName',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ])
+                                    .$form->field($order, 'deliveryRegion',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ]),
+                                    [
+                                        'class' => 'row',
+                                        'style' => 'margin: 0'
+                                    ]),
+                                ['class' => 'row', 'style' => 'margin: 0']).
+                            Html::tag('div',
+                                Html::tag('div',
+                                    $form->field($order, 'customerSurname',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ])
+                                    .$form->field($order, 'deliveryCity',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ]),
+                                    [
+                                        'class' => 'row',
+                                        'style' => 'margin: 0'
+                                    ]),
+                                ['class' => 'row', 'style' => 'margin: 0']).
+                            Html::tag('div',
+                                Html::tag('div',
+                                    $form->field($order, 'customerPhone',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ])
+                                    .$form->field($order, 'deliveryAddress',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ]),
+                                    [
+                                        'class' => 'row',
+                                        'style' => 'margin: 0'
+                                    ]),
+                                ['class' => 'row', 'style' => 'margin: 0']).
+                            Html::tag('div',
+                                Html::tag('div',
+                                    $form->field($order, 'customerEmail',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ])
+                                    .Html::tag('div',
+                                        $form->field($order, 'deliveryType',
+                                            [
+                                                'options'   =>  [
+                                                    'class' =>  'col-xs-8'
+                                                ]
+                                            ])
+                                            ->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()).
+                                        $form->field($order, 'deliveryInfo',
+                                            [
+                                                'options'   =>  [
+                                                    'class' =>  'col-xs-4'
+                                                ]
+                                            ])
+                                            ->label('Склад #'),
+                                        ['class'    =>  'row col-xs-6']
+                                    ),
+                                    [
+                                        'class' => 'row',
+                                        'style' => 'margin: 0'
+                                    ]),
+                                ['class' => 'row', 'style' => 'margin: 0']).
+                            Html::tag('div',
+                                Html::tag('div',
+                                    $form->field($order, 'coupon',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ])
+                                    .$form->field($order, 'paymentType',
+                                        [
+                                            'options'   =>  [
+                                                'class' =>  'col-xs-6'
+                                            ]
+                                        ])
+                                        ->dropDownList(\common\models\PaymentTypes::getPaymentTypes()),
+                                    [
+                                        'class' => 'row',
+                                        'style' => 'margin: 0'
+                                    ]),
+                                ['class' => 'row', 'style' => 'margin: 0']).
+                            Html::tag('br').
+                            Html::tag('center', Html::button('Сохранить', [
+                                    'class' =>  'btn btn-lg btn-success',
+                                    'type'  =>  'submit'
+                                ]).' или '.Html::button('отменить', [
+                                    'class'         =>  'btn btn-default',
+                                    'data-dismiss'  =>  'modal',
+                                    'aria-hidden'   =>  'true'
+                                ]), [
+                                'style' =>  'text-align: middle; margin: 0px auto',
+                            ])
+                        ) ?>
+                    <?php
+                    $form->end();
+                    Modal::end(); ?>
             </div>
         </div>
         <div class="col-xs-5">
             <div class="btn-toolbar pull-right">
-                <button class="btn btn-default">Накладная</button> <button class="btn btn-default">Транспортный лист</button> <button class="btn btn-default">Заказ</button>
+                <?php
+                if($order->deliveryType == 2){
+                    echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#' : '#novaPoshtaModal'), ['class' => 'btn btn-default', (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true']);
+                }
+                echo Html::button('Накладная', [
+                    'class' =>  'btn btn-default'
+                ]),
+                Html::button('Транспортный лист', [
+                    'class' =>  'btn btn-default'
+                ]),
+                Html::button('Заказ', [
+                    'class' =>  'btn btn-default'
+                ]);
+
+                ?>
             </div>
             <div style="margin-top: 10px;" class="btn-toolbar pull-right">
                 <button class="btn btn-link">Выслать накладную</button> <button class="btn btn-link">Скачать накладную</button>
@@ -313,7 +462,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                                             ],
                                             'limit'     => 10,
                                             'templates' => [
-                                                'empty' => '<div class="text-error">Ничего не найдено</div>',
+                                                'empty' => Html::tag('div', 'Ничего не найдено', ['class' => 'text-error']),
                                                 'suggestion' => new JsExpression("Handlebars.compile('".$typeaheadTemplate."')")
                                             ]
                                         ]

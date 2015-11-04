@@ -118,19 +118,12 @@ if(!empty($nowCategory)){
   $this->params['breadcrumbs'][] = $nowCategory->Name;
 }
 
+$sf = \Yii::$app->request->get("smartfilter");
+
 $items = [];
 ?>
-<h1>Категории<?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small> <?php
-        $items[] = [
-        'content' => Html::a('Товары этой категории', Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'onlyGoods' => 'true'])),
-        'options' =>  [
-
-        ],
-        'disabled'  =>  true
-    ];
-    $sf = \Yii::$app->request->get("smartfilter");
-    ?></h1>
-    <ul class="nav nav-pills" style="margin-left: -15px;">
+<h1>Категории<?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small></h1>
+    <ul class="nav nav-pills">
         <?=Html::tag('li',
             Html::a('Всего товаров: '.Html::tag('span', ($goodsCount['all']['enabled'] + $goodsCount['all']['disabled']), ['class'=>'label label-info']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => ''])),
             [
@@ -218,18 +211,37 @@ $items = [];
     <?php
 }
 foreach($categories as $c){
-  $items[] = [
-    'content' =>  $this->render('_category_list_item', [
-        'category'  =>  $c,
-        'enabled'   =>  isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0,
-        'disabled'  =>  isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0
-    ]),
-    'options' =>  [
-      'class' =>  "category ".($c->menu_show == "1" ? "bg-success" : "bg-danger"),
-      'data-category-id'    =>  $c->ID
-    ]
-  ];
+    $goodsCount['all']['enabled'] -= isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0;
+    $goodsCount['all']['disabled'] -= isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0;
+
+    $items[] = [
+        'content' =>  $this->render('_category_list_item', [
+            'category'  =>  $c,
+            'enabled'   =>  isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0,
+            'disabled'  =>  isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0
+        ]),
+        'options' =>  [
+            'class' =>  "category ".($c->menu_show == "1" ? "bg-success" : "bg-danger"),
+            'data-category-id'    =>  $c->ID
+        ]
+    ];
 };
+
+if(!empty($nowCategory)){
+    $nowItemText = 'Товары этой категории';
+    $nowItemText .= ' (включеных: '.$goodsCount['all']['enabled'];
+    $nowItemText .= ' выключеных: '.$goodsCount['all']['disabled'].')';
+
+    $nowItem = [
+        'content' => Html::a($nowItemText, Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'onlyGoods' => 'true'])),
+        'options' =>  [
+
+        ],
+        'disabled'  =>  true
+    ];
+
+    array_unshift($items, $nowItem);
+}
 
 echo Sortable::widget([
   'showHandle'  =>  true,

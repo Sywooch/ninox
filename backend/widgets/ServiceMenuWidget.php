@@ -6,9 +6,11 @@
  * Time: 15:44
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 
+use common\components\RequestHelper;
+use common\models\Service;
 use kartik\dropdown\DropdownX;
 use rmrevin\yii\fontawesome\FA;
 use yii\base\InvalidConfigException;
@@ -112,7 +114,7 @@ class ServiceMenuWidget extends Widget{
 
         foreach($this->currencies as $currency){
             $currencies[] = [
-                'model' =>  \common\models\Service::findOne(['key' => $currency['name']]),
+                'model' =>  Service::findOne(['key' => $currency['name']]),
                 'symbol'=>  $currency['symbol'],
                 'tag'   =>  $currency['name']
             ];
