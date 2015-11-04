@@ -1,4 +1,5 @@
 <?php
+use bobroid\remodal\Remodal;
 use kartik\dropdown\DropdownX;
 use kartik\typeahead\Typeahead;
 use yii\bootstrap\Modal;
@@ -156,7 +157,17 @@ $js = <<<'SCRIPT'
             }
         });
     }, usePriceRule = function(order, rule){
-        bootbox.alert("На стадии доработки...");
+        $.ajax({
+            type: 'POST',
+            url: '/orders/usepricerule',
+            data: {
+                'orderID': order,
+                'priceRule': rule
+            },
+            success: function(){
+                location.reload();
+            }
+        });
     }, runCreateInvoice = function(e, order){
 
         $.ajax({
@@ -166,7 +177,20 @@ $js = <<<'SCRIPT'
                 e.currentTarget.innerHTML = data;
             }
         });
+    }, getSelectedGoods = function(){
+        var items = [],
+            orderItems = document.querySelectorAll(".oneOrderItem.orderItemSelected");
+
+        for(var i = 0; i < orderItems.length; i++){
+            items.push(orderItems[i].getAttribute('data-key'));
+        }
+
+        document.querySelector("#discountSelectedItems").value = JSON.stringify(items);
     }
+
+    $(".oneOrderItem input:checkbox").change(function(){
+        setTimeout(getSelectedGoods, 100);
+    });
 SCRIPT;
 
 $this->registerCss($css);
@@ -179,10 +203,9 @@ $this->registerJsFile('/js/bootbox.min.js', [
 ?>
 <?php if($order->deliveryType == 2){
 
-    $novaPoshtaModal = new \bobroid\remodal\Remodal([
+    $novaPoshtaModal = new Remodal([
         'cancelButton'		=>	false,
         'confirmButton'		=>	false,
-        'closeButton'		=>	false,
         'addRandomToID'		=>	false,
         'content'			=>	'',
         'events'			=>	[
@@ -250,151 +273,18 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <h4><?=$order->customerPhone?></h4>
                 </h3>
                 <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
-                    <?php Modal::begin([
-                        'header' => 'Редактирование данных заказа',
-                        'options'   =>  [
-                            'style' =>  'color: black; max-height: 700px; margin: auto 0px;',
-                        ],
-                        'toggleButton' => [
-                            'tag'       =>  'small',
-                            'label'     =>  'редактировать',
-                            'style'     =>  'cursor: pointer',
-                            'class'     =>  'btn btn-link'
-                        ],
-                        'size'  =>  Modal::SIZE_LARGE,
-                    ]);
-                    $form = new \yii\bootstrap\ActiveForm([
-                        'options' =>  [
-                            'class' =>  'form-horizontal'
-                        ]
-                    ]);
-
-                    $form->begin();
-                    ?>
-                        <?=
-                        Html::tag('fieldset',
-                            Html::tag('div',
-                                Html::tag('div',
-                                    $form->field($order, 'customerName',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ])
-                                    .$form->field($order, 'deliveryRegion',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ]),
-                                    [
-                                        'class' => 'row',
-                                        'style' => 'margin: 0'
-                                    ]),
-                                ['class' => 'row', 'style' => 'margin: 0']).
-                            Html::tag('div',
-                                Html::tag('div',
-                                    $form->field($order, 'customerSurname',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ])
-                                    .$form->field($order, 'deliveryCity',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ]),
-                                    [
-                                        'class' => 'row',
-                                        'style' => 'margin: 0'
-                                    ]),
-                                ['class' => 'row', 'style' => 'margin: 0']).
-                            Html::tag('div',
-                                Html::tag('div',
-                                    $form->field($order, 'customerPhone',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ])
-                                    .$form->field($order, 'deliveryAddress',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ]),
-                                    [
-                                        'class' => 'row',
-                                        'style' => 'margin: 0'
-                                    ]),
-                                ['class' => 'row', 'style' => 'margin: 0']).
-                            Html::tag('div',
-                                Html::tag('div',
-                                    $form->field($order, 'customerEmail',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ])
-                                    .Html::tag('div',
-                                        $form->field($order, 'deliveryType',
-                                            [
-                                                'options'   =>  [
-                                                    'class' =>  'col-xs-8'
-                                                ]
-                                            ])
-                                            ->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()).
-                                        $form->field($order, 'deliveryInfo',
-                                            [
-                                                'options'   =>  [
-                                                    'class' =>  'col-xs-4'
-                                                ]
-                                            ])
-                                            ->label('Склад #'),
-                                        ['class'    =>  'row col-xs-6']
-                                    ),
-                                    [
-                                        'class' => 'row',
-                                        'style' => 'margin: 0'
-                                    ]),
-                                ['class' => 'row', 'style' => 'margin: 0']).
-                            Html::tag('div',
-                                Html::tag('div',
-                                    $form->field($order, 'coupon',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ])
-                                    .$form->field($order, 'paymentType',
-                                        [
-                                            'options'   =>  [
-                                                'class' =>  'col-xs-6'
-                                            ]
-                                        ])
-                                        ->dropDownList(\common\models\PaymentTypes::getPaymentTypes()),
-                                    [
-                                        'class' => 'row',
-                                        'style' => 'margin: 0'
-                                    ]),
-                                ['class' => 'row', 'style' => 'margin: 0']).
-                            Html::tag('br').
-                            Html::tag('center', Html::button('Сохранить', [
-                                    'class' =>  'btn btn-lg btn-success',
-                                    'type'  =>  'submit'
-                                ]).' или '.Html::button('отменить', [
-                                    'class'         =>  'btn btn-default',
-                                    'data-dismiss'  =>  'modal',
-                                    'aria-hidden'   =>  'true'
-                                ]), [
-                                'style' =>  'text-align: middle; margin: 0px auto',
-                            ])
-                        ) ?>
-                    <?php
-                    $form->end();
-                    Modal::end(); ?>
+                <?=Remodal::widget([
+                    'cancelButton'		=>	false,
+                    'confirmButton'		=>	false,
+                    'addRandomToID'		=>	false,
+                    'content'			=>	$this->render('_order_edit', ['order' => $order]),
+                    'buttonOptions'     =>  [
+                        'label' =>  'редактировать',
+                        'tag'   =>  'a',
+                        'style' =>  'margin-bottom: 20px; display: inline-block'
+                    ],
+                    'id'				=>	'orderEdit',
+                ]);?>
             </div>
         </div>
         <div class="col-xs-5">
@@ -510,12 +400,12 @@ $this->registerJsFile('/js/bootbox.min.js', [
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li><?=\kartik\editable\Editable::widget([
-                            'name'  =>  'name',
+                            'name'  =>  'discountSize',
                             'header' => 'скидку на товары в заказе',
                             'valueIfNull'   =>  'нет скидки',
                             'value' =>  '',
-                            'afterInput'=>function($form, $widget) {
-                                return '<div class="form-group"><div>Тип скидки: &nbsp;<div class="btn-group" data-toggle="buttons"><label class="btn btn-default active"><input type="radio" checked="checked" name="priceDiscountType" value="2"> процент</label><label class="btn btn-default"><input type="radio" name="priceDiscountType" value="1">сумма</label></div></div></div><br><div class="form-group"><div><div class="btn-group" data-toggle="buttons"><label class="btn btn-default active"><input type="radio" checked="checked" name="discountRewriteType" value="1">выбраные товары</label><label class="btn btn-default"><input type="radio" name="discountRewriteType" value="2">весь заказ</label></div></div></div>';
+                            'afterInput'=>function($form, $widget) use (&$order) {
+                                return $this->render('_order_setDiscountEditable', ['form' => $form, 'widget' => $widget, 'order' => $order]);
                             },
                             'placement' =>  \kartik\popover\PopoverX::ALIGN_LEFT,
                             'size'=>'md',
@@ -524,18 +414,15 @@ $this->registerJsFile('/js/bootbox.min.js', [
                                 'style' =>  'margin-top: 10px;',
                             ],
                             'ajaxSettings'   =>  [
-                                'url'   =>  '/orders/setorderitemsdiscount',
-                                'data'  =>  [
-                                    'asdd'  =>  'asdf'
-                                ]
+                                'url'   =>  '/orders/setitemsdiscount',
                             ],
                             'pluginOptions'=>[
                                 'allowClear'=>true,
                             ],
                             'pluginEvents'  =>  [
                                 'editableSubmit'    =>  "function(event, val, form){
-                                    console.log(val);
-                                 }"
+                                    location.reload();
+                                }"
                             ],
                             'options'=>[
                                 'options'=>[
@@ -555,7 +442,10 @@ $thiss = $this;
 <?=\kartik\grid\GridView::widget([
     'dataProvider'  =>  $itemsDataProvider,
     'containerOptions'       =>  [
-        'style'     =>  'overflow: hidden'
+        'style'     =>  'overflow: hidden',
+    ],
+    'tableOptions'  =>  [
+        'id'    =>  'orderItems'
     ],
     'summary'   =>  '',
     'rowOptions'    =>  function($model){
@@ -567,6 +457,8 @@ $thiss = $this;
         if($model->nalichie == 0){
             $classes[] = 'warning';
         }
+
+        $classes[] = 'oneOrderItem';
 
         return [
             'class' =>  implode(' ', $classes)

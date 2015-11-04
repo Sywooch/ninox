@@ -15,6 +15,7 @@ use common\models\Siteuser;
 use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\helpers\Json;
 
 class DefaultController extends Controller
 {
@@ -365,5 +366,50 @@ class DefaultController extends Controller
         return $this->renderAjax('invoice', [
             'invoice'   =>  $invoice
         ]);
+    }
+
+    public function actionSetitemsdiscount(){
+        if(!\Yii::$app->request->isAjax){
+            return $this->run('site/error');
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        $request = \Yii::$app->request->post();
+
+        $request['selectedItems'] = Json::decode($request['selectedItems']);
+
+        $items = SborkaItem::find()->where(['orderID' => $request['orderID']]);
+
+        if($request['discountRewriteType'] == 1){
+            if(empty($request['selectedItems'])){
+                return $this->run('site/error');
+            }
+
+            $items->andWhere(['in', 'id', $request['selectedItems']]);
+        }
+
+        foreach($items->each() as $item){
+            $item->discountSize = $request['discountSize'];
+            $item->discountType = $request['discountType'];
+
+            $item->save();
+        }
+
+        return $request;
+    }
+
+    public function actionUsepricerule(){
+        if(!\Yii::$app->request->isAjax){
+            return $this->run('site/error');
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        $request = \Yii::$app->request->post();
+
+        //тут должна быть функция пересчёта
+
+        return true;
     }
 }

@@ -8,6 +8,11 @@
 
 use yii\helpers\Html;
 
+echo Html::button('', [
+    'class'                 =>  'remodal-close',
+    'data-remodal-action'   =>  'close'
+]);
+
 $form = new \yii\widgets\ActiveForm();
 
 echo $form->field($invoice, 'ServiceType', ['inputOptions' => []])->dropDownList(\Yii::$app->NovaPoshta->serviceTypes());
