@@ -119,7 +119,7 @@ class SiteController extends Controller
             }
 
             return $this->redirect(Url::home());
-        }
+        } 
 
         $model = new LoginForm();
 
