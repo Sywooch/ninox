@@ -48,7 +48,7 @@ foreach($priceRules as $rule){
         'label'     =>  $rule->Name,
         'url'       =>  '#',
         'options'   =>  [
-            'onclick'   =>  'usePriceRule(\''.$order->id.'\', \''.$rule->ID.'\')'
+            'onclick'   =>  'usePriceRule(\''.$order->id.'\', \''.$rule->ID.'\'); return false;'
         ]
     ];
 }

@@ -63,7 +63,7 @@ class Pricerule extends \yii\db\ActiveRecord
 			foreach($termt as $term){
 				$term = preg_replace(array('/\(/', '/\)/', '/^\s/'), '', $term);
 				$tTerm = explode(' = ', $term);
-				if($tTerm['1'] != ''){
+				if(isset($tTerm['1']) && $tTerm['1'] != ''){
 					$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '=');
 				}else{
 					$tTerm = explode(' >= ', $term);

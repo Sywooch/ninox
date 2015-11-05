@@ -11,6 +11,8 @@ namespace backend\models;
 
 class SborkaItem extends \common\models\SborkaItem{
 
+    public $priceModified = false;
+
     public function behaviors()
     {
         return [

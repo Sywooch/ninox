@@ -16,6 +16,7 @@ use yii\helpers\Json;
 class PriceRuleHelper extends Component{
 
 	public $pricerules;
+	public $cartSumm;
 
 	public function init(){
 		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority` DESC')->all();
@@ -24,7 +25,7 @@ class PriceRuleHelper extends Component{
 	public function recalc($model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
-				$tmodel = self::recalcItem($model, $rule, $category);
+				$tmodel = $this->recalcItem($model, $rule, $category);
 				if($tmodel){
 					return $tmodel;
 				}
@@ -39,6 +40,10 @@ class PriceRuleHelper extends Component{
 		}
 		$model->priceModified = false;
 		return $model;
+	}
+
+	public function recalcSborkaItem($model, $rule){
+		return $this->recalcItem($model, $rule, false);
 	}
 
 	private function recalcItem($model, $rule, $category){
@@ -130,6 +135,7 @@ class PriceRuleHelper extends Component{
 			}
 			$cartInfo[$key]['flag'] = true;*/
 		}
+		\Yii::trace('termsCount = '.$termsCount.'; $discount = '.$discount);
 		if($discount == $termsCount && $termsCount != 0){
 			$model->priceModified = ($model->priceRuleID != $ruleID);
 			$model->priceRuleID = $ruleID;
@@ -183,7 +189,7 @@ class PriceRuleHelper extends Component{
 
 	private function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
-		$cartSumm = \Yii::$app->cart->cartRealSumm;
+		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartRealSumm;
 		\Yii::trace('Model: '.Json::encode($cartSumm));
 		foreach($term as $ds){
 			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){

@@ -3,6 +3,7 @@
 namespace backend\modules\orders\controllers;
 
 use backend\models\HistorySearch;
+use common\helpers\PriceRuleHelper;
 use common\models\Customer;
 use common\models\CustomerAddresses;
 use common\models\CustomerContacts;
@@ -407,6 +408,24 @@ class DefaultController extends Controller
         \Yii::$app->response->format = 'json';
 
         $request = \Yii::$app->request->post();
+
+        $priceRule = Pricerule::findOne(['id' => $request['priceRule']]);
+
+        $order = History::findOne(['id' => $request['orderID']]);
+
+        if(!$order || !$priceRule){
+            return $this->run('site/error');
+        }
+
+        $items = SborkaItem::findAll(['orderID' => $order->id]);
+
+        $priceRuleHelper = new PriceRuleHelper();
+        $priceRuleHelper->cartSumm = $order->originalSum;
+
+        foreach($items as $item){
+            $priceRuleHelper->recalcSborkaItem($item, $priceRule);
+            $item->save();
+        }
 
         //тут должна быть функция пересчёта
 
