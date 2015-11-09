@@ -16,6 +16,9 @@ return [
         'NovaPoshta'    =>  [
             'class' =>  'common\components\NovaPoshta'
         ],
+        'formatter' =>  [
+            'class' =>  'backend\components\Formatter'
+        ],
         'i18n' => [
             'translations' => [
                 '*' => [

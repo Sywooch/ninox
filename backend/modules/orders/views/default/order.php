@@ -270,7 +270,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <!--<span class="roundedItem icon-heart"></span>-->
                     <span class="roundedItem icon-percent<?=$customer->Discount > 0 ? ' background-green' : ''?>"></span>
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
-                    <h4><?=$order->customerPhone?></h4>
+                    <h4><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></h4>
                 </h3>
                 <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
                 <?=Remodal::widget([
@@ -293,7 +293,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                 if($order->deliveryType == 2){
                     echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#' : '#novaPoshtaModal'), ['class' => 'btn btn-default', (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true']);
                 }
-                echo Html::button('Накладная', [
+                echo Html::a('Накладная', \yii\helpers\Url::to(), [
                     'class' =>  'btn btn-default'
                 ]),
                 Html::button('Транспортный лист', [
