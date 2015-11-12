@@ -3,9 +3,23 @@
 namespace backend\modules\users\controllers;
 
 use common\models\Siteuser;
-use common\models\User;
+use backend\models\User;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+
+/**
+ * This is the model class for table "siteusers".
+ *
+ * @property integer $id
+ * @property string $username
+ * @property string $name
+ * @property string $password
+ * @property integer $active
+ * @property integer $showInStat
+ * @property string $lastLoginIP
+ * @property string $lastActivity
+ * @property string $auth_key
+ */
 
 class DefaultController extends Controller
 {

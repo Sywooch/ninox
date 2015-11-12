@@ -1,11 +1,11 @@
 <?php
-use common\models\LoginForm;
+use backend\models\LoginForm;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model common\models\LoginForm */
+/* @var $model backend\models\LoginForm */
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
@@ -45,6 +45,6 @@ $model = new LoginForm();
 
     <div class="col-lg-offset-1" style="color:#999;">
         You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>common\models\User::$users</code>.
+        To modify the username/password, please check out the code <code>backend\models\User::$users</code>.
     </div>
 </div>

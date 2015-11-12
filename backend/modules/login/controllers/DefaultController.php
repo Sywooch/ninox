@@ -2,7 +2,7 @@
 
 namespace backend\modules\login\controllers;
 
-use common\models\LoginForm;
+use backend\models\LoginForm;
 use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller

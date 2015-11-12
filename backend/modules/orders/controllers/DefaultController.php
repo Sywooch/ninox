@@ -400,6 +400,20 @@ class DefaultController extends Controller
         return $request;
     }
 
+    public function actionPrintinvoice($param){
+        $order = History::findOne(['id' => $param]);
+
+        if(!$order){
+            return $this->run('site/error');
+        }
+
+        return $this->renderPartial('print/invoice', [
+            'order'         =>  $order,
+            'orderItems'    =>  SborkaItem::findAll(['orderID' => $order->id]),
+            'act'           =>  'printOrder'
+        ]);
+    }
+
     public function actionUsepricerule(){
         if(!\Yii::$app->request->isAjax){
             return $this->run('site/error');

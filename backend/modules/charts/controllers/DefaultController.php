@@ -3,7 +3,7 @@
 namespace backend\modules\charts\controllers;
 
 use common\models\History;
-use common\models\Users;
+use backend\models\Users;
 use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller

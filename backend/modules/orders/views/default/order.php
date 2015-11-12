@@ -293,7 +293,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                 if($order->deliveryType == 2){
                     echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#' : '#novaPoshtaModal'), ['class' => 'btn btn-default', (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true']);
                 }
-                echo Html::a('Накладная', \yii\helpers\Url::to(), [
+                echo Html::a('Накладная', \yii\helpers\Url::to(['printinvoice/'.$order->id]), [
                     'class' =>  'btn btn-default'
                 ]),
                 Html::button('Транспортный лист', [

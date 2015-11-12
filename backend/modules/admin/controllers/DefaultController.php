@@ -5,7 +5,7 @@ namespace backend\modules\admin\controllers;
 
 use common\models\Customer;
 use common\models\Good;
-use common\models\LoginForm;
+use backend\models\LoginForm;
 use common\models\Service;
 use sammaye\audittrail\AuditTrail;
 use backend\controllers\SiteController as Controller;

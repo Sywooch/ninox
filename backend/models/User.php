@@ -1,25 +1,21 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: bobroid
+ * Date: 12.11.15
+ * Time: 14:05
+ */
 
-namespace common\models;
+namespace backend\models;
 
-use Yii;
+
+use app\models\SiteusersPrivacy;
 use yii\web\IdentityInterface;
 
-/**
- * This is the model class for table "siteusers".
- *
- * @property integer $id
- * @property string $username
- * @property string $name
- * @property string $password
- * @property integer $active
- * @property integer $showInStat
- * @property string $lastLoginIP
- * @property string $lastActivity
- * @property string $auth_key
- */
-class User extends \yii\db\ActiveRecord implements IdentityInterface
-{
+class User extends \yii\db\ActiveRecord implements IdentityInterface{
+
+    protected $permissions = [];
+
     /**
      * @inheritdoc
      */
@@ -116,4 +112,26 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function setPassword($password){
         $this->password = hash("sha512", $password, false);
     }
+
+    public function can($level){
+        if(empty($this->permissions)){
+            foreach(SiteusersPrivacy::find()->where(['userID' => $this->getId()])->each() as $userPrivacy){
+                $this->permissions[$userPrivacy->controller][$userPrivacy->action] = $userPrivacy->level;
+            }
+        }
+
+        $permissionLevel = 0;
+
+        if(isset($this->permissions[\Yii::$app->controller->className()]) && isset($this->permissions[\Yii::$app->controller->className()][\Yii::$app->controller->action->id])){
+            $permissionLevel = $this->permissions[\Yii::$app->controller->className()][\Yii::$app->controller->action->id];
+        }
+
+        if(is_array($level)){
+            return $level[$permissionLevel];
+        }else{
+            return $permissionLevel >= $level;
+        }
+    }
+
+
 }

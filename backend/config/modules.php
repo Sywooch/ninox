@@ -12,6 +12,9 @@ return [
     'pricerules'    =>  'backend\modules\pricerules\Module',
     'tasks'         =>  'backend\modules\tasks\Module',
     'users'         =>  'backend\modules\users\Module',
+    'test' => [
+        'class' => 'backend\modules\test\Module',
+    ],
     'gridview' =>  [
         'class' => '\kartik\grid\Module'
     ],

@@ -9,7 +9,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
-use common\models\LoginForm;
+use backend\models\LoginForm;
 use yii\filters\VerbFilter;
 
 /**
@@ -43,6 +43,16 @@ class SiteController extends Controller
                 ],
             ],
         ];
+    }
+
+
+    public function beforeAction($action){
+
+        if(isset(\Yii::$app->user->identity)){
+            //echo \Yii::$app->user->identity->can('1') ? 'true' : 'false'; //если false - значит чувака нельзя пускать
+        }
+
+        return parent::beforeAction($action);
     }
 
     /**

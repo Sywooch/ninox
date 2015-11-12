@@ -51,7 +51,8 @@
         "bobroid/yii2-sweetalert": "dev-master",
         "bobroid/yii2-remodal": "dev-master",
         "bobroid/yii2-imperavi-redactor": "dev-master",
-        "liqpay/liqpay": "dev-master"
+        "liqpay/liqpay": "dev-master",
+        "bobroid/yii2-messenger": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",
@@ -87,6 +88,10 @@
         {
             "type": "git",
             "url":  "https://github.com/BoBRoID/yii2-imperavi-redactor"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/BoBRoID/yii2-messenger"
         }
     ],
     "extra": {
