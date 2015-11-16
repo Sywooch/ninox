@@ -30,7 +30,6 @@ $(function () {
 var a = document.querySelectorAll("#currencyModal i.change"),
     b = document.querySelectorAll("#currencyModal i.save"),
     c = document.querySelectorAll("#currencyModal i.cancel"),
-    lastOrder = 0,
     returnView = function(e){
         var n = e.currentTarget.parentNode.parentNode;
         n.parentNode.querySelector(".view").style.display = "block";
@@ -79,7 +78,8 @@ Messenger.options = {
 SCRIPT;
 
 $newOrderAlert = <<<'SCRIPT'
-var newOrder = function(){
+var lastOrder = 0,
+    newOrder = function(){
 
     var date = new Date(),
         date2 = parseInt(new Date().getTime()/1000),
