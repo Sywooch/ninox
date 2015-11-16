@@ -37,7 +37,10 @@ class DefaultController extends Controller
 
         return $this->render('index', [
             'dataProvider'  =>  new ActiveDataProvider([
-                'query' =>  Pricerule::find()->orderBy('id desc'),
+                'query' =>  Pricerule::find(),
+                'sort'  =>  [
+                    'defaultOrder'  =>  'ID DESC'
+                ],
                 'pagination'    =>  [
                     'pageSize'  =>  20
                 ]
