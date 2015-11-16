@@ -414,6 +414,16 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionGetlastid(){
+        if(!\Yii::$app->request->isAjax){
+            return $this->run('site/error');
+        }
+
+        //\Yii::$app->response->format = 'json';
+
+        return History::find()->select("id")->orderBy("id desc")->limit(1)->scalar();
+    }
+
     public function actionUsepricerule(){
         if(!\Yii::$app->request->isAjax){
             return $this->run('site/error');

@@ -48,3 +48,21 @@ echo Yii::$app->user->identity->can([
 ]);
 ?>
     </pre>
+
+
+<?=\bobroid\messenger\Messenger::widget([
+
+])?>
+
+<?php
+
+$js = <<<'SCRIPT'
+Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+    theme: 'air'
+}
+
+Messenger().post("Your request has succeded!");
+SCRIPT;
+
+$this->registerJs($js);

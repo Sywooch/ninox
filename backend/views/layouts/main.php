@@ -14,10 +14,15 @@ use yii\widgets\Breadcrumbs;
 $ordersPage = $this->title == 'Заказы';
 
 $js = <<<'SCRIPT'
+function getCookie(name){
+	var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+	return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
 $(function () {
     $("[data-toggle='tooltip']").tooltip();
 });;
-/* To initialize BS3 popovers set this below */
+
 $(function () {
     $("[data-toggle='popover-x']").popover();
 });
@@ -25,6 +30,7 @@ $(function () {
 var a = document.querySelectorAll("#currencyModal i.change"),
     b = document.querySelectorAll("#currencyModal i.save"),
     c = document.querySelectorAll("#currencyModal i.cancel"),
+    lastOrder = 0,
     returnView = function(e){
         var n = e.currentTarget.parentNode.parentNode;
         n.parentNode.querySelector(".view").style.display = "block";
@@ -64,6 +70,66 @@ for(i = 0; i < c.length; i++){
         returnView(e);
     }, false);
 }
+
+Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+    theme: 'air',
+    hideOnNavigate: false
+}
+SCRIPT;
+
+$newOrderAlert = <<<'SCRIPT'
+var newOrder = function(){
+
+    var date = new Date(),
+        date2 = parseInt(new Date().getTime()/1000),
+        cookie = getCookie("nowOrderLastUpdate") != undefined ? getCookie("nowOrderLastUpdate") : 0;
+
+    cookie = parseInt(cookie);
+    date = date.getHours() + ':' + ('0' + (date.getMinutes())).slice(-2);
+
+    if(cookie + 5 < date2){
+        $.ajax({
+            type: 'POST',
+            url: '/orders/getlastid',
+            success: function(data){
+                if(lastOrder == 0){
+                    lastOrder = data;
+                }
+
+                if(lastOrder != data){
+                    Messenger().post({
+                        message: '<audio src="/audio/icq.wav" autoplay="true" preload="true"></audio><b>Новый заказ!</b><br>В ' + '' + ' к нам поступил заказ номер <b>' + data + '</b>',
+                        type: 'info',
+                        showCloseButton: true,
+                        hideAfter: 300,
+                        actions: {
+                            expand: {
+                                label: 'к заказу',
+                                action: function(){
+                                    location.href = '/orders/showorder/' + data;
+                                }
+                            },
+                            close: {
+                                label: 'Обновить страницу',
+                                action: function(){
+                                    location.reload();
+                                }
+                            }
+                        }
+                    });
+
+                    lastOrder = data;
+                }
+            }
+        });
+    }
+
+};
+
+newOrder();
+
+setInterval(newOrder, 2000);
 SCRIPT;
 
 $css = <<<'STYLE'
@@ -127,7 +193,12 @@ STYLE;
 $this->registerCss($css);
 $this->registerJs($js);
 
+if($ordersPage){
+    $this->registerJs($newOrderAlert);
+}
+
 \backend\assets\AppAsset::register($this);
+\bobroid\messenger\ThemeairAssetBundle::register($this);
 
 rmrevin\yii\fontawesome\AssetBundle::register($this);
 $this->beginPage() ?>
