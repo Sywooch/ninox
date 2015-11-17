@@ -14,9 +14,15 @@ use common\models\Pricerule;
 use backend\models\SborkaItem;
 use common\models\Siteuser;
 use sammaye\audittrail\AuditTrail;
+use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 use yii\helpers\Json;
+use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
+use yii\web\NotAcceptableHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\UnsupportedMediaTypeHttpException;
 
 class DefaultController extends Controller
 {
@@ -109,8 +115,9 @@ class DefaultController extends Controller
 
     public function actionSaveorderpreview(){
         if(!\Yii::$app->request->isAjax){
-            return $this->run('site/error');
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
+
         \Yii::$app->response->format = 'json';
 
         $order = History::findOne(['id' => \Yii::$app->request->post('History')['id']]);
@@ -128,41 +135,45 @@ class DefaultController extends Controller
     }
 
     public function actionConfirmordercall(){
-        if(\Yii::$app->request->isAjax){
-            $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
-            //TODO: сделать проверку на колл-во звонков (поле callsCount)
-
-            $order->confirmed = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
-
-            $order->hasChanges = 1;
-            $order->save(false);
-            return $order->confirmed;
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
+
+        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+        //TODO: сделать проверку на колл-во звонков (поле callsCount)
+
+        $order->confirmed = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
+
+        $order->hasChanges = 1;
+        $order->save(false);
+        return $order->confirmed;
     }
 
     public function actionDoneorder(){
         if(\Yii::$app->request->isAjax){
-            $o = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
-
-            if($o){
-                $o->done = $o->done == 1 ? 0 : 1;
-                $o->doneDate = $o->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
-
-                $o->hasChanges = 1;
-
-                $o->save(false);
-                return $o->done;
-            }
-
-            return 0;
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
+
+        $o = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+
+        if($o){
+            $o->done = $o->done == 1 ? 0 : 1;
+            $o->doneDate = $o->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
+
+            $o->hasChanges = 1;
+
+            $o->save(false);
+            return $o->done;
+        }
+
+        return 0;
     }
 
     public function actionShoworder($param = ''){
         $order = History::findOne(['id' => $param]);
 
         if(!$order){
-            return $this->run('site/error');
+            throw new NotFoundHttpException("Такого заказа не существует!");
         }
 
         if(\Yii::$app->request->post("SborkaItem")){
@@ -217,17 +228,19 @@ class DefaultController extends Controller
     }
 
     public function actionGetorderpreview(){
-        if(\Yii::$app->request->isAjax){
-            $order = History::findOne(['id' => \Yii::$app->request->post("expandRowKey")]);
-            return $this->renderAjax('_orderPreview', [
-                'model' =>  $order
-            ]);
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
+
+        $order = History::findOne(['id' => \Yii::$app->request->post("expandRowKey")]);
+        return $this->renderAjax('_orderPreview', [
+            'model' =>  $order
+        ]);
     }
 
     public function actionRestoreitemdata(){
         if(!\Yii::$app->request->isAjax){
-            return false;
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
         \Yii::$app->response->format = 'json';
@@ -251,29 +264,28 @@ class DefaultController extends Controller
     }
 
     public function actionChangeiteminorderstate(){
-        if(\Yii::$app->request->isAjax){
-            $item = SborkaItem::findOne(['id' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
-            $return = '';
-
-            switch(\Yii::$app->request->post("param")){
-                case 'inorder':
-                    $item->nalichie = $item->nalichie == 1 ? 0 : 1;
-                    $return = $item->nalichie;
-                    break;
-                case 'deleted':
-                    $item->nezakaz = $item->nezakaz == 1 ? 0 : 1;
-                    $return = $item->nezakaz;
-                    break;
-                default:
-                    return false;
-            }
-
-            $item->save();
-
-            return $return;
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        return $this->run('error');
+        $item = SborkaItem::findOne(['id' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+
+        switch(\Yii::$app->request->post("param")){
+            case 'inorder':
+                $item->nalichie = $item->nalichie == 1 ? 0 : 1;
+                $return = $item->nalichie;
+                break;
+            case 'deleted':
+                $item->nezakaz = $item->nezakaz == 1 ? 0 : 1;
+                $return = $item->nezakaz;
+                break;
+            default:
+                return false;
+        }
+
+        $item->save();
+
+        return $return;
     }
 
     public function actionGetboxes(){
@@ -284,46 +296,50 @@ class DefaultController extends Controller
 
 
     public function actionDeleteorder(){
-        if(\Yii::$app->request->isAjax){
-            $orderID = \Yii::$app->request->post('OrderID');
-            $order = History::findOne(['id' => $orderID]);
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+        }
 
-            if($order){
-                $order->hasChanges = 1;
-                $orderItems = SborkaItem::findAll(['orderID' => $orderID]);
-                $orderGoodsIDs = $orderItemsArray = [];
+        $orderID = \Yii::$app->request->post('OrderID');
+        $order = History::findOne(['id' => $orderID]);
 
-                foreach($orderItems as $item){
-                    $orderGoodsIDs[] = $item->itemID;
-                    $orderItemsArray[$item->itemID] = $item;
-                }
+        if($order){
+            $order->hasChanges = 1;
+            $orderItems = SborkaItem::findAll(['orderID' => $orderID]);
+            $orderGoodsIDs = $orderItemsArray = [];
 
-                $orderGoods = Good::find()->where(['in', 'ID', $orderGoodsIDs])->all();
-
-                foreach($orderGoods as $good){
-                    $good->count += $orderItemsArray[$good->ID]->count;
-                    $good->save(false);
-                }
-
-                $order->deleted = 1;
-                $order->save(false);
+            foreach($orderItems as $item){
+                $orderGoodsIDs[] = $item->itemID;
+                $orderItemsArray[$item->itemID] = $item;
             }
+
+            $orderGoods = Good::find()->where(['in', 'ID', $orderGoodsIDs])->all();
+
+            foreach($orderGoods as $good){
+                $good->count += $orderItemsArray[$good->ID]->count;
+                $good->save(false);
+            }
+
+            $order->deleted = 1;
+            $order->save(false);
         }
     }
 
     public function actionUpdateorderprices(){
-        if(\Yii::$app->request->isAjax){
-            $d = \Yii::$app->request->post();
-            if($d['type'] == 'opt' || $d['type'] == 'rozn'){
-                $order = History::findOne(['id' => $d['OrderID']]);
-                $order->recalculatePrices($d['type']);
-            }
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+        }
+
+        $d = \Yii::$app->request->post();
+        if($d['type'] == 'opt' || $d['type'] == 'rozn'){
+            $order = History::findOne(['id' => $d['OrderID']]);
+            $order->recalculatePrices($d['type']);
         }
     }
 
     public function actionOrderchanges(){
         if(!\Yii::$app->request->isAjax){
-            return $this->run('site/error');
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
         $order = \Yii::$app->request->post("OrderID");
@@ -371,7 +387,7 @@ class DefaultController extends Controller
 
     public function actionSetitemsdiscount(){
         if(!\Yii::$app->request->isAjax){
-            return $this->run('site/error');
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
         \Yii::$app->response->format = 'json';
@@ -384,7 +400,7 @@ class DefaultController extends Controller
 
         if($request['discountRewriteType'] == 1){
             if(empty($request['selectedItems'])){
-                return $this->run('site/error');
+                throw new BadRequestHttpException("Переданы не все параметры!");
             }
 
             $items->andWhere(['in', 'id', $request['selectedItems']]);
@@ -400,11 +416,30 @@ class DefaultController extends Controller
         return $request;
     }
 
+    public function actionControl($param = null){
+        if($param == null){
+            return $this->render('control_index');
+        }
+
+        $order = History::findOne(['id' => $param]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Такого заказа не существует!");
+        }
+
+        $items = SborkaItem::findAll(['orderID' => $order->id]);
+
+        return $this->render('control', [
+            'order' =>  $order,
+            'items' =>  $items
+        ]);
+    }
+
     public function actionPrintinvoice($param){
         $order = History::findOne(['id' => $param]);
 
         if(!$order){
-            return $this->run('site/error');
+            throw new NotFoundHttpException("Такого заказа не существует!");
         }
 
         return $this->renderPartial('print/invoice', [
@@ -416,7 +451,7 @@ class DefaultController extends Controller
 
     public function actionGetlastid(){
         if(!\Yii::$app->request->isAjax){
-            return $this->run('site/error');
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
         //\Yii::$app->response->format = 'json';
@@ -426,7 +461,7 @@ class DefaultController extends Controller
 
     public function actionUsepricerule(){
         if(!\Yii::$app->request->isAjax){
-            return $this->run('site/error');
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
         \Yii::$app->response->format = 'json';
@@ -437,8 +472,10 @@ class DefaultController extends Controller
 
         $order = History::findOne(['id' => $request['orderID']]);
 
-        if(!$order || !$priceRule){
-            return $this->run('site/error');
+        if(!$order){
+            throw new NotFoundHttpException("Такого заказа не существует!");
+        }elseif(!$priceRule){
+            throw new NotFoundHttpException("Такого ценового правила не существует!");
         }
 
         $items = SborkaItem::findAll(['orderID' => $order->id]);

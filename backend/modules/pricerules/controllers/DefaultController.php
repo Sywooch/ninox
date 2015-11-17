@@ -48,6 +48,30 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionEdit($id = null){
+        if($id == null && !empty(\Yii::$app->request->post("id"))){
+            $id = \Yii::$app->request->post("id");
+        }elseif($id == null){
+            return $this->run('site/error');
+        }
+
+        $rule = Pricerule::findOne(['ID' => $id]);
+
+        if(!$rule){
+            return $this->run('site/error');
+        }
+
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('_rule_edit', [
+                'rule'  =>  $rule
+            ]);
+        }else{
+            return $this->render('_rule_edit', [
+                'rule'  =>  $rule
+            ]);
+        }
+    }
+
     public function actionChangestate(){
         if(!\Yii::$app->request->isAjax){
             return $this->run('site/error');

@@ -20,4 +20,13 @@ class Pricerule extends \common\models\Pricerule{
 
     }
 
+    public static function terms(){
+        return [
+            ['Сумма заказа' => 'DocumentSum', 'number', ['>=', '<=', '=']],
+            ['Категория товара' => 'GoodGroup', 'string', ['>=', '<=', '=', '!=']],
+            ['Без пометки "распродажа"' => 'WithoutBlyamba', ['Да' => 'true'], ['=']],
+            ['Дата' => 'Date', 'date', ['>=', '<=', '=']],
+        ];
+    }
+
 }

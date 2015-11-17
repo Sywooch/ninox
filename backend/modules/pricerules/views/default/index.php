@@ -27,10 +27,23 @@ var changeState = function(e){
 			}
 		}
 	});
-}, buttons = document.querySelectorAll(".priceRuleState");
+}, updateRuleModal = function(e){
+    $.ajax({
+	    type: 'POST',
+		url: '/pricerules/edit',
+		data: {
+		    'id': e.currentTarget.getAttribute('data-attribute-ruleid')
+		},
+		success: function(data){
+			document.querySelector("div[data-remodal-id='updateRule']").innerHTML = data;
+		}
+	});
+},  buttons1 = document.querySelectorAll(".priceRuleState"),
+    buttons2 = document.querySelectorAll(".priceRuleEdit");
 
-for(var i = 0; i < buttons.length; i++){
-    buttons[i].addEventListener('click', changeState, false);
+for(var i = 0; i < buttons1.length; i++){
+    buttons1[i].addEventListener('click', changeState, false);
+    buttons2[i].addEventListener('click', updateRuleModal, false);
 }
 
 SCRIPT;
@@ -94,8 +107,8 @@ $ruleModal = new Remodal([
             'buttons'   =>  [
                 'update'    =>  function($a, $model){
                     return Html::a(FA::icon('pencil'), '#updateRule', [
-                        'class' =>  'btn btn-default',
-                        'data-attribute-ruleID' =>  $model->ID
+                        'class' =>  'priceRuleEdit btn btn-default',
+                        'data-attribute-ruleID' =>  $model->ID,
                     ]);
                 },
                 'disable'    =>  function($a, $model){

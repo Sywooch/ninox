@@ -15,6 +15,12 @@ return [
     'test' => [
         'class' => 'backend\modules\test\Module',
     ],
+    'promocodes' => [
+        'class' => 'backend\modules\promocodes\Module',
+    ],
+    'cashbox' => [
+        'class' => 'backend\modules\cashbox\Module',
+    ],
     'gridview' =>  [
         'class' => '\kartik\grid\Module'
     ],

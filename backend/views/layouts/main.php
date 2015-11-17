@@ -375,7 +375,7 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Контроль заказа',
-                                'url'   =>  Url::toRoute('/ordercontrol/index')
+                                'url'   =>  Url::toRoute('/orders/control')
                             ],
                             [
                                 'label' =>  'Возвраты',
