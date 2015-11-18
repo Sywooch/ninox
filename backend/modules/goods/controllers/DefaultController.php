@@ -19,6 +19,7 @@ use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class DefaultController extends Controller
@@ -121,6 +122,30 @@ class DefaultController extends Controller
             'goodsCount'    => $goodsCount,
             'nowCategory'   => $category,
         ]);
+    }
+
+    public function actionImport(){
+        $filename = \Yii::$app->request->get("filename");
+
+        if(!empty($filename)){
+            $filename = \Yii::getAlias('@webroot').'/files/importedPrices/'.$filename;
+            if(!file_exists($filename)){
+                throw new NotFoundHttpException("Файл не найден!");
+            }
+
+            $data = [];
+
+            $xls = \PHPExcel_IOFactory::load($filename);
+
+            return $this->render('import_table', [
+                'data'      =>  $data,
+                'filename'  =>  \Yii::$app->request->get("filename"),
+                'columns'   =>  $xls->getActiveSheet()->getHighestColumn(),
+                'xls'       =>  $xls->getActiveSheet()->toArray()
+            ]);
+        }
+
+        return $this->render('import_index');
     }
 
     public function actionLog(){
