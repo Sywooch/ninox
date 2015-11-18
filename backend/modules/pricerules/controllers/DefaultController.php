@@ -39,13 +39,33 @@ class DefaultController extends Controller
             'dataProvider'  =>  new ActiveDataProvider([
                 'query' =>  Pricerule::find(),
                 'sort'  =>  [
-                    'defaultOrder'  =>  'ID DESC'
+                    'defaultOrder'  =>  'Priority ASC'
                 ],
                 'pagination'    =>  [
                     'pageSize'  =>  20
                 ]
-            ])
+            ]),
+            'rules' =>  Pricerule::find()->orderBy('Priority ASC')->all()
         ]);
+    }
+
+    public function actionUpdatesort(){
+        if(!\Yii::$app->request->isAjax){
+            //throw new \HttpRequestException("Данный метод можно вызвать только через Ajax!");
+        }
+
+        $rules = [];
+
+        foreach(Pricerule::find()->orderBy('Priority ASC')->each() as $rule){
+            $rules[$rule->ID] = $rule;
+        }
+
+        $sort = array_flip(\Yii::$app->request->post("data"));
+
+        foreach($sort as $id => $pos){
+            $rules[$id]->Priority = $pos;
+            $rules[$id]->save();
+        }
     }
 
     public function actionEdit($id = null){
