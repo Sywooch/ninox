@@ -137,6 +137,15 @@ class DefaultController extends Controller
 
             $xls = \PHPExcel_IOFactory::load($filename);
 
+            //Прямо на этом месте можно реализовать DataProvider
+            //Это даст все фишки обычного DataProvider'а - пагинацию, сортировку, удобные колонки без костылей
+            //но над этим нужно морочиться, а мне сегодня лень
+            //если кто захочет - вот тут написано как это можно сделать
+            //http://stackoverflow.com/questions/28428492/using-yii2-with-array-of-data-and-a-gridview-with-sorting-and-filter
+            //
+            //по документации можно копать в сторону класса ArrayDataProvider
+            //http://www.yiiframework.com/doc-2.0/yii-data-arraydataprovider.html
+
             return $this->render('import_table', [
                 'data'      =>  $data,
                 'filename'  =>  \Yii::$app->request->get("filename"),

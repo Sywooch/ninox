@@ -70,6 +70,8 @@ for(i = 0; i < c.length; i++){
     }, false);
 }
 
+$('nav a[href=""], nav a[href="#"]').css('opacity', '0.1');
+
 Messenger.options = {
     extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
     theme: 'air',
@@ -480,7 +482,7 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Импорт excel',
-                                'url'   =>  '#'
+                                'url'   =>  Url::toRoute('/goods/import')
                             ],
                             [
                                 'label' =>  'Пользователи',
