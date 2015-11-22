@@ -21,9 +21,11 @@ var changeState = function(e){
 			if(data == 1){
 			    button.setAttribute('class', 'btn btn-default btn-success priceRuleState');
 			    button.innerHTML = '<i class="fa fa-eye"></i>';
+			    button.parentNode.parentNode.setAttribute('class', 'alert alert-success');
 			}else{
 			    button.setAttribute('class', 'btn btn-default btn-danger priceRuleState');
 			    button.innerHTML = '<i class="fa fa-eye-slash"></i>';
+			    button.parentNode.parentNode.setAttribute('class', 'alert alert-danger');
 			}
 		}
 	});
@@ -38,7 +40,26 @@ var changeState = function(e){
 			document.querySelector("div[data-remodal-id='updateRule']").innerHTML = data;
 		}
 	});
-},  buttons1 = document.querySelectorAll(".priceRuleState"),
+}, updSort = function(){
+    var a = document.querySelectorAll("#pricerules li"),
+        b = new Array();
+
+
+    for(var i = 0; i < a.length; i++){
+        b.push(a[i].getAttribute("data-attribute-ruleID"));
+    }
+
+    console.log(b);
+
+    $.ajax({
+		type: 'POST',
+		url: '/pricerules/updatesort',
+		data: {
+		    'data': b
+		}
+	});
+},
+    buttons1 = document.querySelectorAll(".priceRuleState"),
     buttons2 = document.querySelectorAll(".priceRuleEdit");
 
 for(var i = 0; i < buttons1.length; i++){
@@ -82,47 +103,26 @@ $ruleModal = new Remodal([
 ])?>
 <br>
 <br>
-<?=\kartik\grid\GridView::widget([
-    'dataProvider'  =>  $dataProvider,
-    'summary'       =>  '',
-    'condensed'     =>  true,
-    'bordered'      =>  false,
-    'hover'         =>  true,
-    'resizableColumns'=>false,
-    'columns'       =>  [
-        [
-            'attribute' =>  'ID',
-            'options'   =>  [
-                'style' =>  'border-right: 1px solid #ddd'
-            ]
-        ],[
-            'attribute' =>  'Name',
-        ],[
-            'attribute' =>  'Formula',
-        ],[
-            'class'     =>  \kartik\grid\EditableColumn::className(),
-            'attribute' =>  'Priority',
-        ],[
-            'class'     =>  \kartik\grid\ActionColumn::className(),
-            'buttons'   =>  [
-                'update'    =>  function($a, $model){
-                    return Html::a(FA::icon('pencil'), '#updateRule', [
-                        'class' =>  'priceRuleEdit btn btn-default',
-                        'data-attribute-ruleID' =>  $model->ID,
-                    ]);
-                },
-                'disable'    =>  function($a, $model){
-                    return Html::button(FA::icon($model->Enabled == 1 ? 'eye' : 'eye-slash'), [
-                        'class'                 =>  'priceRuleState btn btn-default'.($model->Enabled != 1 ? ' btn-danger' : ' btn-success'),
-                        'data-attribute-ruleID' =>  $model->ID
-                    ]);
-                },
-            ],
-            'template'  =>  Html::tag('div', '{disable}{update}', [
-                'class'  => 'btn-group btn-group-sm'
-            ])
-        ],
+<?php
+$items = [];
+
+foreach($rules as $rule){
+    $items[] = [
+        'content' =>  $this->render('_rule_item', [
+            'rule'  =>  $rule
+        ]),
+        'options' =>  [
+            'data-attribute-ruleID'    =>  $rule->ID,
+            'class' =>  $rule->Enabled != 1 ? 'alert alert-danger' : 'alert alert-success'
+        ]
+    ];
+}?>
+<?=\kartik\sortable\Sortable::widget([
+    'items' =>  $items,
+    'options'   =>  [
+        'id'  =>  'pricerules'
+    ],
+    'pluginEvents' => [
+        'sortupdate' => 'function() { updSort(); }',
     ]
 ])?>
-
-<?=$ruleModal->renderModal()?>

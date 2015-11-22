@@ -47,7 +47,7 @@ class LoginForm extends Model
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    public function validatePassword($attribute, $params = [])
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -66,10 +66,10 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
-        } else {
-            $this->addError('password', 'Неверный пароль!');
-            return false;
         }
+
+        $this->addError('password', 'Неверный пароль!');
+        return false;
     }
 
     /**
