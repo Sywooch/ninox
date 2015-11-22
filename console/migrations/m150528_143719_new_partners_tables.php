@@ -30,15 +30,15 @@ class m150528_143719_new_partners_tables extends Migration
         ]);
 
         $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR;
-CREATE FUNCTION SPLIT_STR(
-  x VARCHAR(255),
-  delim VARCHAR(12),
-  pos INT
-)
-RETURNS VARCHAR(255)
-RETURN REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
-       LENGTH(SUBSTRING_INDEX(x, delim, pos -1)) + 1),
-       delim, '');");
+			CREATE FUNCTION SPLIT_STR(
+			  x VARCHAR(255),
+			  delim VARCHAR(12),
+			  pos INT
+			)
+			RETURNS VARCHAR(255)
+			RETURN TRIM(REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
+			       CHAR_LENGTH(SUBSTRING_INDEX(x, delim, pos - 1)) + 1),
+       delim, ''));");
 
         $this->execute("INSERT INTO `partnersAddresses` SELECT '' AS `ID`,
 `ID` AS `partnerID`,

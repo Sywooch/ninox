@@ -10,8 +10,8 @@ namespace common\helpers;
 
 
 use common\models\Pricerule;
+use DateTime;
 use yii\base\Component;
-use yii\helpers\Json;
 
 class PriceRuleHelper extends Component{
 
@@ -19,11 +19,14 @@ class PriceRuleHelper extends Component{
 	public $cartSumm;
 
 	public function init(){
-		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority` DESC')->all();
+		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
 	}
 
 	public function recalc($model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
+			if(!\Yii::$app->user->isGuest && isset(\Yii::$app->user->identity['priceRules'])){
+				$this->pricerules = array_merge(\Yii::$app->user->identity['priceRules'], $this->pricerules);
+			}
 			foreach($this->pricerules as $rule){
 				$tmodel = $this->recalcItem($model, $rule, $category);
 				if($tmodel){
@@ -135,7 +138,6 @@ class PriceRuleHelper extends Component{
 			}
 			$cartInfo[$key]['flag'] = true;*/
 		}
-		\Yii::trace('termsCount = '.$termsCount.'; $discount = '.$discount);
 		if($discount == $termsCount && $termsCount != 0){
 			$model->priceModified = ($model->priceRuleID != $ruleID);
 			$model->priceRuleID = $ruleID;
@@ -179,8 +181,11 @@ class PriceRuleHelper extends Component{
 
 	private function checkDate($term, &$termsCount, &$discount){
 		$termsCount++;
+		date_default_timezone_set('Europe/Kiev');
+		$now = new DateTime(date('Y-m-d'));
 		foreach($term as $date){
-			if((date('d.m.Y') == $date['term'] && $date['type'] == '=') || (time() >= strtotime($date['term']) && $date['type'] == '>=') || ($date['type'] == '<=' && time() <= strtotime($date['term']))){
+			$dt = new DateTime($date['term']);
+			if(($date['type'] == '=' && $now->diff($dt)->days == 0) || ($date['type'] == '>=' && $dt->diff($now)->days >= 0 && $dt->diff($now)->invert == 0) || ($date['type'] == '<=' && $now->diff($dt)->days >= 0 && $now->diff($dt)->invert == 0)){
 				$discount++;
 				break;
 			}
@@ -190,7 +195,6 @@ class PriceRuleHelper extends Component{
 	private function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
 		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartRealSumm;
-		\Yii::trace('Model: '.Json::encode($cartSumm));
 		foreach($term as $ds){
 			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
 				$discount += 1;

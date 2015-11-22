@@ -13,7 +13,7 @@ $createFlag = function($name, $background){
 	]);
 };
 
-if((time() - strtotime($model->photodate)) <= (86400 * 10)){
+if($model->isNew){
     $flags[] = $createFlag(\Yii::t('shop', 'Новинка'), 'bg-capt-green');
 }
 if($model->originalGood){

@@ -23,6 +23,7 @@ class Good extends \common\models\Good{
 	public $priceForOneItem = 0;            //Цена за единицу товара
 	public $reviewsCount = 0;               //Количество отзывов
 	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
+	public $isNew = false;                  //Флаг-новинка
 
     public function afterFind()
     {
@@ -74,6 +75,7 @@ class Good extends \common\models\Good{
         }
 
 	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? GoodHelper::getPriceFormat(($this->wholesale_price/$this->num_opt)) : 0;
+	    $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
 
     }
 

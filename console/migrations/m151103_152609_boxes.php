@@ -7,13 +7,13 @@ class m151103_152609_boxes extends Migration
     public function up()
     {
         $this->createTable('boxes', [
-            'id'                =>  \yii\db\mysql\Schema::TYPE_INTEGER.' AUTO_INCREMENT NOT NULL',
-            'volumeWeight'      =>  \yii\db\mysql\Schema::TYPE_INTEGER.' DEFAULT NULL',
-            'volumeGeneral'     =>  \yii\db\mysql\Schema::TYPE_FLOAT.' (24, 4) DEFAULT NULL',
-            'volumetricVolume'  =>  \yii\db\mysql\Schema::TYPE_FLOAT.' (24, 4) DEFAULT NULL',
-            'volumetricWidth'   =>  \yii\db\mysql\Schema::TYPE_INTEGER.' DEFAULT NULL',
-            'volumetricLength'  =>  \yii\db\mysql\Schema::TYPE_INTEGER.' DEFAULT NULL',
-            'volumetricHeight'  =>  \yii\db\mysql\Schema::TYPE_INTEGER.' DEFAULT NULL',
+            'id'                =>  Schema::TYPE_INTEGER.' AUTO_INCREMENT NOT NULL',
+            'volumeWeight'      =>  Schema::TYPE_INTEGER.' DEFAULT NULL',
+            'volumeGeneral'     =>  Schema::TYPE_FLOAT.' (24, 4) DEFAULT NULL',
+            'volumetricVolume'  =>  Schema::TYPE_FLOAT.' (24, 4) DEFAULT NULL',
+            'volumetricWidth'   =>  Schema::TYPE_INTEGER.' DEFAULT NULL',
+            'volumetricLength'  =>  Schema::TYPE_INTEGER.' DEFAULT NULL',
+            'volumetricHeight'  =>  Schema::TYPE_INTEGER.' DEFAULT NULL',
             'PRIMARY KEY ( `id` )'
         ]);
     }

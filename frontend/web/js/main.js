@@ -258,7 +258,7 @@ function changeItemCount(item){
 				},
 				success: function(data){
 					console.log(data);
-					//updateCart(0, false);
+					//updateCart(this, data);
 				}
 			});
 		}else{
@@ -316,13 +316,15 @@ function removeFromCart(item){
 				this.value = 1;
 				this.setAttribute('data-inCart', '0');
 			});
-			document.querySelector('[data-remodal-id="modalCart"] [data-key="' + itemId + '"]').remove();
+			$('.cart-content [data-key="' + itemId + '"]').each(function(){
+				this.remove();
+			});
 		}
 	});
 }
 
 function openCart(){
-	document.location = document.location.href.replace('#', '') + '#modalCart';
+	document.location = document.location.href.replace(/#.*/, '') + '#modalCart';
 }
 
 function getCart(e){

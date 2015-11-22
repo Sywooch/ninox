@@ -99,6 +99,7 @@ class m150615_131000_modify_sborka_table extends Migration
             CHANGE `realPrice` `originalPrice` DOUBLE(24, 2) NOT NULL DEFAULT 0");
 
         $this->execute("DROP INDEX `historyid` ON `sborka`; CREATE INDEX `orderID` ON `sborka` (`orderID`, `added`) USING BTREE;");
+	    $this->execute("DELETE FROM `sborka` WHERE `itemID` = 0");
         $this->execute("UPDATE `sborka`,`goods` SET `sborka`.`itemID` = `goods`.`ID` WHERE `sborka`.`itemID` = `goods`.`Code`"); //Выполнился на тестовом сервере за 40к секунд, мб можно как-то оптимизировать запрос?
         $this->execute("UPDATE `sborka` SET `originalPrice` = `price`");
         $this->execute("ALTER TABLE `sborka` DROP COLUMN `price`");

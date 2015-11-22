@@ -1,4 +1,5 @@
 <?php
+use common\helpers\GoodHelper;
 use common\helpers\PriceRuleHelper;
 use yii\helpers\Html;
 ?>
@@ -9,14 +10,14 @@ use yii\helpers\Html;
             <span id="description2">Ваша корзина пуста</span>
         </div>
         <div class="continue">
-            <span class="closeCart" data-remodal-action="close">
+            <span class="close-cart" data-remodal-action="close">
                 <span>Продолжить покупки</span>
                 <span></span>
             </span>
         </div>
     </div>
-    <div class="topShadow"></div>
-    <div class="windowContent">
+    <div class="top-shadow"></div>
+    <div class="cart-content">
 	    <?php
 	        $w = new \app\widgets\CartItemsCounterWidget();
 	        $helper = new PriceRuleHelper();
@@ -99,10 +100,10 @@ use yii\helpers\Html;
 				        'class'         =>  'sums',
 			        ],
 			        'value'         =>  function($model){
-					        return Html::tag('div', '', [
-						        'class' =>  'old-sum semi-bold blue',
+					        return Html::tag('div', GoodHelper::getPriceFormat($model->retail_real_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
+						        'class' =>  'old-sum semi-bold blue'.($model->discountType == 0 ? ' disabled' : ''),
 					        ]).
-						    Html::tag('div', '', [
+						    Html::tag('div', GoodHelper::getPriceFormat($model->retail_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
 							    'class' =>  'current-sum blue'
 						    ]);
 				        }

@@ -48,7 +48,7 @@ class SiteController extends Controller
         $id = preg_replace('/[^g(.)]+\D+/', '', $link);
         $id = preg_replace('/\D+/', '', $id);
 
-        $good = Good::findOne(['ID' => $id]);
+        $good = Good::findOne(['`goods`.`ID`' => $id]);
 
         if(!$good){
             return \Yii::$app->runAction('site/error');
