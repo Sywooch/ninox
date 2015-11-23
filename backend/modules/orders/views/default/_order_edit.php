@@ -7,6 +7,30 @@ $form = new \yii\bootstrap\ActiveForm([
 ]
 ]);
 
+$adminFields = '';
+
+if(\Yii::$app->user->identity->can("99")){
+    $adminFields = Html::tag('div',
+        Html::tag('div',
+            $form->field($order, 'added',
+                [
+                    'options'   =>  [
+                        'class' =>  'col-xs-6'
+                    ]
+                ])
+            .$form->field($order, 'number',
+                [
+                    'options'   =>  [
+                        'class' =>  'col-xs-6'
+                    ]
+                ]),
+            [
+                'class' => 'row',
+                'style' => 'margin: 0'
+            ]),
+        ['class' => 'row', 'style' => 'margin: 0']);
+}
+
 $form->begin();
 ?>
 <?=
@@ -97,7 +121,7 @@ Html::tag('fieldset',
                 'class' => 'row',
                 'style' => 'margin: 0'
             ]),
-        ['class' => 'row', 'style' => 'margin: 0']).
+        ['class' => 'row', 'style' => 'margin: 0']).$adminFields.
     Html::tag('div',
         Html::tag('div',
             $form->field($order, 'coupon',
