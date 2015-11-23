@@ -3,6 +3,32 @@ use kartik\dropdown\DropdownX;
 use yii\helpers\Url;
 
 $dateDiff = time() - strtotime($model->lastActivity);
+
+$dropdownItems = [];
+
+$dropdownItems[] = [
+    'label'     =>  'Просмотреть',
+    'url'       =>  Url::toRoute('showuser/'.$model->id)
+];
+
+if(\Yii::$app->user->identity->can("2")){
+    $dropdownItems[] = [
+        'label'     =>  'Редактировать',
+        'url'       =>  '#editUser',
+        'class'     =>  'editUserButton'
+    ];
+
+
+    $dropdownItems[] =  '<li class="divider"></li>';
+}
+
+if(\Yii::$app->user->identity->can("10")){
+    $dropdownItems[] = [
+        'label'     =>  'Редактировать права',
+        'url'       =>  '#editUserRights',
+        'class'     =>  'editUserRightsButton'
+    ];
+}
 ?>
 <div class="col-xs-4" style="margin: 5px 0">
     <div class="row">
@@ -25,15 +51,15 @@ $dateDiff = time() - strtotime($model->lastActivity);
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
                     Действия <span class="caret"></span>
                 </button>
-                <a class="btn btn-default"><?=\rmrevin\yii\fontawesome\FA::icon('key')?></a>
+                <?php
+                if(\Yii::$app->user->identity->can("2") || \Yii::$app->user->identity->id == $model->id){
+                    echo \yii\helpers\Html::a(\rmrevin\yii\fontawesome\FA::icon('key'), '#changePassword', [
+                        'class' =>  'btn btn-default changePasswordButton',
+                    ]);
+                }
+                ?>
                 <?=DropdownX::widget([
-                    'items' =>  [
-                        [
-                            'label'     =>  'Просмотреть',
-                            'url'       =>  Url::toRoute('showuser/'.$model->id)
-                        ],
-
-                    ]
+                    'items' =>  $dropdownItems
                 ])?>
             </div>
         </div>

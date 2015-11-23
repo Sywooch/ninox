@@ -6,6 +6,7 @@ use common\models\Siteuser;
 use backend\models\User;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "siteusers".
@@ -23,6 +24,12 @@ use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {
+    public function beforeAction($action){
+        \Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration');
+
+        return parent::beforeAction($action);
+    }
+
     public function actionIndex(){
         if(\Yii::$app->request->post()){
             $p = \Yii::$app->request->post();
@@ -51,11 +58,15 @@ class DefaultController extends Controller
         $user = User::findOne($param);
 
         if(!$user){
-            return '';
+            throw new NotFoundHttpException("Пользователь не найден!");
         }
 
         return $this->render('user', [
             'user'  =>  $user
         ]);
+    }
+
+    public function actionPrivacy($param){
+
     }
 }

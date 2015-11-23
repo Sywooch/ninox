@@ -58,12 +58,7 @@ class ServiceMenuWidget extends Widget{
 
     public $currencies = [];
 
-    public $userDropdownItems = [
-        ['label' => 'Action', 'url' => '#'],
-        ['label' => 'Something else here', 'url' => '#'],
-        '<li class="divider"></li>',
-        ['label' => 'Separated link', 'url' => '#'],
-    ];
+    public $userDropdownItems = [];
 
     public $dateGetVariable = "showDates";
 
@@ -84,6 +79,17 @@ class ServiceMenuWidget extends Widget{
                 ],
             ];
         }
+
+        $this->userDropdownItems[] = ['label' => 'Профиль', 'url' => '/users/showuser/'.\Yii::$app->user->identity->id];
+
+        if(\Yii::$app->user->identity->superAdmin == 1){
+            $this->userDropdownItems[] = ['label' => 'Конфигурация модуля', 'url' => '#moduleConfiguration'];
+        }
+
+        /*    ,
+        ['label' => 'Something else here', 'url' => '#'],
+        '<li class="divider"></li>',
+        ['label' => 'Separated link', 'url' => '#'],*/
     }
 
     private function findActive(){

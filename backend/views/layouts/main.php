@@ -181,6 +181,86 @@ span.twitter-typeahead div.tt-menu{
 .tt-suggestions > *:last-child{
     border-bottom: 0px;
 }
+
+.afterMenu{
+    margin-top: -5px;
+    margin-bottom: 20px;
+    height: 30px;
+    font-size: 12px;
+    width: 100%;
+    max-width: 1140px;
+    white-space: nowrap;
+}
+
+.afterMenu > div{
+    display: inline-block;
+    min-width: 29%;
+    max-width: 66%;
+    line-height: 30px;
+    color: #999;
+}
+
+.afterMenu .items-left{
+    margin-right: 20px;
+}
+
+.afterMenu .items-left .btn-group{
+    margin-right: 20px;
+}
+
+.afterMenu span{
+    font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;
+}
+
+.afterMenu .items-left{
+    left: 0;
+}
+
+.afterMenu .items-center{
+    margin: 0px auto;
+}
+
+.afterMenu .items-right{
+    right: 0;
+    text-align: right;
+    margin-left: 20px;
+}
+
+.afterMenu .items-right button, .afterMenu .items-right > a{
+    font-size: 12px;
+    padding: 0; line-height: 30px;color: black;
+    margin: 0 0 0 2px;
+}
+
+.rollback{
+    position: fixed;
+    padding-top: 110px;
+    width: 80px;
+    margin-top: -85px;
+    height: 100vh;
+    background: rgb(236,236,236);
+    opacity: 0.4;
+    text-align: center;
+}
+
+.rollback:hover{
+    background: rgb(191, 191, 191);
+    cursor: pointer;
+}
+
+@media only screen
+and (max-device-width: 1170px){
+    .rollback{
+        display: none;
+    }
+}
+
+@media only screen
+and (max-device-width: 1600px){
+    .rollback.orders{
+        width: 30px !important;
+    }
+}
 STYLE;
 
 \Yii::$app->params['sideTabs'][] = [
@@ -558,88 +638,6 @@ $this->beginPage() ?>
         ],
     ]);
     ?>
-    <style>
-        .afterMenu{
-            margin-top: -5px;
-            margin-bottom: 20px;
-            height: 30px;
-            font-size: 12px;
-            width: 100%;
-            max-width: 1140px;
-            white-space: nowrap;
-        }
-
-        .afterMenu > div{
-            display: inline-block;
-            min-width: 29%;
-            max-width: 66%;
-            line-height: 30px;
-            color: #999;
-        }
-
-        .afterMenu .items-left{
-            margin-right: 20px;
-        }
-
-        .afterMenu .items-left .btn-group{
-            margin-right: 20px;
-        }
-
-        .afterMenu span{
-            font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;
-        }
-
-        .afterMenu .items-left{
-            left: 0;
-        }
-
-        .afterMenu .items-center{
-            margin: 0px auto;
-        }
-
-        .afterMenu .items-right{
-            right: 0;
-            text-align: right;
-            margin-left: 20px;
-        }
-
-        .afterMenu .items-right button, .afterMenu .items-right > a{
-            font-size: 12px;
-            padding: 0; line-height: 30px;color: black;
-            margin: 0 0 0 2px;
-        }
-
-        .rollback{
-            position: fixed;
-            padding-top: 110px;
-            width: 80px;
-            margin-top: -85px;
-            height: 100vh;
-            background: rgb(236,236,236);
-            opacity: 0.4;
-            text-align: center;
-        }
-
-        .rollback:hover{
-            background: rgb(191, 191, 191);
-            cursor: pointer;
-        }
-
-        @media only screen
-        and (max-device-width: 1170px){
-            .rollback{
-                display: none;
-            }
-        }
-
-        @media only screen
-        and (max-device-width: 1600px){
-            .rollback.orders{
-                width: 30px !important;
-            }
-        }
-    </style>
-
     <div class="rollback<?=$ordersPage ? ' orders' : ''?>" onclick="history.back()"><?=FA::icon('arrow-left')?></div>
     <div class="container"<?=$ordersPage == 'Заказы' ? ' style="max-width: 1300px; width: auto;"' : ''?>>
         <?=ServiceMenuWidget::widget([
@@ -648,14 +646,24 @@ $this->beginPage() ?>
         <?= Breadcrumbs::widget([
             'homeLink'  =>  ['label' => 'Главная', 'url' => Url::home()],
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]);
-        echo $content ?>
+        ]),
+        $content ?>
+        <?php
+        if(\Yii::$app->user->identity->superAdmin == 1){
+            $moduleConfig = new \bobroid\remodal\Remodal([
+                'addRandomToID' =>  false,
+                'id'            =>  'moduleConfiguration',
+                'content'       =>  !empty(\Yii::$app->params['moduleConfiguration']) ? \Yii::$app->params['moduleConfiguration'] : ''
+            ]);
+
+            echo $moduleConfig->renderModal();
+        }
+        ?>
     </div>
     <?php Yamm::end(); ?>
 </div>
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">Сборка </p>
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>

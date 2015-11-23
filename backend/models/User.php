@@ -114,6 +114,10 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
     }
 
     public function can($level){
+        if($this->superAdmin == 1){
+            return true;
+        }
+
         if(empty($this->permissions)){
             foreach(SiteusersPrivacy::find()->where(['userID' => $this->getId()])->each() as $userPrivacy){
                 $this->permissions[$userPrivacy->controller][$userPrivacy->action] = $userPrivacy->level;
