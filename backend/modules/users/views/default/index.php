@@ -7,9 +7,24 @@
 <div class="btn-group">
     <?=\backend\widgets\AddUserWidget::widget([])?>
 </div>
-<br>
-<br>
-<?=\kartik\grid\GridView::widget([
+    <br>
+    <br>
+    <br>
+<?=\yii\widgets\ListView::widget([
+    'summary'       =>  '',
+    'dataProvider'  =>  $dataProvider,
+    'itemView'      =>  function($model){
+        return $this->render('_user', [
+            'model' =>  $model
+        ]);
+    }
+])?>
+<div style="clear: both"></div>
+    <br>
+    <br>
+    <br>
+    <br>
+<?=''/*\kartik\grid\GridView::widget([
     'dataProvider'  =>  $dataProvider,
     'hover' =>  true,
     'condensed' =>  true,
@@ -67,11 +82,13 @@
                         return '<button class="btn btn-default"><i class="glyphicon glyphicon-trash" title="Удалить"></i></button>';
                     },
                 'view'        =>  function($url, $model){
-                    return '<a href="/admin/users/showuser/'.$model->id.'" class="btn btn-default" title="Просмотр"><i class="glyphicon glyphicon-user"></i></a>';
+                    return \yii\helpers\Html::a('<i class="glyphicon glyphicon-user"></i>', \yii\helpers\Url::toRoute('/users/showuser/'.$model->id), [
+                        'class' =>  'btn btn-default'
+                    ]);
                 },
             ],
-            'template'  =>  '<div class="btn-group-vertical" role="group">{view}{update}{delete}</div>',
+            'template'  =>  '<div class="btn-group btn-group-sm" role="group">{view}{update}{delete}</div>',
             'width'     =>  '120px'
         ]
     ]
-])?>
+])*/?>

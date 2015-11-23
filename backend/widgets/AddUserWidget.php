@@ -29,6 +29,7 @@ class AddUserWidget extends Widget{
     }
 
     public function run(){
+        //TODO: сделать другой формой (например, remodal, чтобы кнопки были нормальными)
         $form = new ActiveForm([
             'id' => 'login-form-horizontal',
             'type' => ActiveForm::TYPE_HORIZONTAL,

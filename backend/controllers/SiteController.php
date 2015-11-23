@@ -49,6 +49,8 @@ class SiteController extends Controller
     public function beforeAction($action){
 
         if(isset(\Yii::$app->user->identity)){
+            \Yii::$app->user->identity->lastActivity = date('Y-m-d H:i:s');
+            \Yii::$app->user->identity->save();
             //echo \Yii::$app->user->identity->can('1') ? 'true' : 'false'; //если false - значит чувака нельзя пускать
         }
 

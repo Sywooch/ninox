@@ -2,7 +2,7 @@
 $this->title = 'Пользователь "'.$user->username.'"';
 
 $this->params['breadcrumbs'][] = [
-    'url'   =>  '/admin/users',
+    'url'   =>  '/users',
     'label' =>  'Пользователи'
 ];
 
