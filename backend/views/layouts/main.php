@@ -70,7 +70,7 @@ for(i = 0; i < c.length; i++){
     }, false);
 }
 
-$('nav a[href=""], nav a[href="#"]').css('opacity', '0.1');
+$('.cd-main-header nav a[href=""], .cd-main-header nav a[href="#"]').css('opacity', '0.1');
 
 Messenger.options = {
     extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',

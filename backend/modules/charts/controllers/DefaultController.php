@@ -2,7 +2,7 @@
 
 namespace backend\modules\charts\controllers;
 
-use common\models\History;
+use backend\models\History;
 use backend\models\Users;
 use backend\controllers\SiteController as Controller;
 

@@ -1,7 +1,7 @@
 <a href="/admin/banners/showbanners/<?=$model->id?>" style="font-size: 18px;"><?=$model->description?></a>
 <div class="pull-right" style="line-height: 28px">
     <span class="badge"><?=$model->bannersCount()?></span>
-    <?=\common\components\AddBannerGroupWidget::widget([
+    <?=\backend\widgets\AddBannerGroupWidget::widget([
         'model'         =>  $model,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>',
         'buttonClass'   =>  'btn btn-link'

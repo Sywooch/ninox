@@ -8,8 +8,6 @@
 
 namespace backend\models;
 
-
-use common\models\History;
 use yii\data\ActiveDataProvider;
 
 class HistorySearch extends History{

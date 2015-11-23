@@ -4,7 +4,7 @@ namespace backend\modules\customers\controllers;
 
 use common\models\Customer;
 use common\models\CustomerSearch;
-use common\models\History;
+use backend\models\History;
 use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;

@@ -2,7 +2,7 @@
 
 namespace backend\modules\goods\controllers;
 
-use common\components\UploadHelper;
+use common\helpers\UploadHelper;
 use common\helpers\TranslitHelper;
 use common\models\Category;
 use common\models\CategorySearch;
@@ -11,7 +11,7 @@ use common\models\Good;
 use common\models\GoodSearch;
 use common\models\GoodsPhoto;
 use common\models\GoodUk;
-use common\models\History;
+use backend\models\History;
 use common\models\SborkaItem;
 use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;

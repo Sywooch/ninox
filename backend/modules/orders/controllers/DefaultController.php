@@ -178,7 +178,12 @@ class DefaultController extends Controller
 
         if(\Yii::$app->request->post("SborkaItem")){
             $p = \Yii::$app->request->post("SborkaItem");
-            $item = SborkaItem::findOne(['id' => $p['id']]);
+            $item = SborkaItem::findOne(['orderID' => $p['orderID'], 'itemID' => $p['itemID']]);
+
+            if(!$item){
+                throw new NotFoundHttpException("Такой товар не найден!");
+            }
+
             $item->attributes = $p;
             if($item->count != $item->oldAttributes['count']){
                 if($item->count < 0){
@@ -233,6 +238,11 @@ class DefaultController extends Controller
         }
 
         $order = History::findOne(['id' => \Yii::$app->request->post("expandRowKey")]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ ".\Yii::$app->request->post("expandRowKey")." не найден!");
+        }
+
         return $this->renderAjax('_orderPreview', [
             'model' =>  $order
         ]);
@@ -245,21 +255,25 @@ class DefaultController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        $m = \Yii::$app->request->post("itemID");
-        $m = SborkaItem::findOne(['id' => $m]);
+        $item = SborkaItem::findOne(['itemID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
 
-        if(!$m){
-            return false;
+        if(!$item){
+            throw new NotFoundHttpException("Товар ".\Yii::$app->request->post("itemID")." в заказе ".\Yii::$app->request->post("orderID")." не найден!");
         }
 
-        $g = Good::findOne(['id' => $m->itemID]);
-        $o = History::findOne(['id' => $m->orderID]);
+        $order = History::findOne(['id' => $item->orderID]);
 
-        if(!$g){
-            return false;
+        if(!$order){
+            throw new NotFoundHttpException("Заказ ".$item->orderID." не найден!");
         }
 
-        $m->name = $g->Name;
+        $good = Good::findOne(['id' => $item->itemID]);
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар ".$item->itemID." не найден!");
+        }
+
+        $item->name = $good->Name;
         //$m->originalPrice = $g->;
     }
 
@@ -268,7 +282,11 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $item = SborkaItem::findOne(['id' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+        $item = SborkaItem::findOne(['itemID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+
+        if(!$item){
+            throw new NotFoundHttpException("Товар ".\Yii::$app->request->post("itemID")." в заказе ".\Yii::$app->request->post("orderID")." не найден!");
+        }
 
         switch(\Yii::$app->request->post("param")){
             case 'inorder':

@@ -6,7 +6,7 @@ use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\web\JsExpression;
 
-$this->title = 'Заказ #'.$order->id;
+$this->title = 'Заказ #'.$order->number;
 $customerOrdersSummary = $customer->getOrdersSummary();
 $customerOrders = '';
 $typeaheadTemplate = '<a class="typeahead-list-item" onclick="addItemToOrder('.$order->id.', {{ID}})"><div class="row">';
@@ -16,7 +16,7 @@ $typeaheadTemplate .= '<div class="col-xs-12 code">Код товара: {{Code}}
 $typeaheadTemplate .= '</div></a>';
 
 foreach($customer->getOrders() as $oneOrder){
-    $orderText = 'Заказ №'.$oneOrder->id.' от '.\Yii::$app->formatter->asDate($oneOrder->added, 'php:d.m.Y').' на сумму '.$oneOrder->actualAmount.' грн.';
+    $orderText = 'Заказ №'.$oneOrder->number.' от '.\Yii::$app->formatter->asDate($oneOrder->added, 'php:d.m.Y').' на сумму '.$oneOrder->actualAmount.' грн.';
 
     if($oneOrder->id == $order->id){
         $orderText = '<span class="text-muted"> '.$orderText.' (текущий)<span>';
@@ -220,7 +220,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
 <div class="row">
     <div class="col-xs-4">
         <div>
-            <h1>№<?=$order->id?></h1>
+            <h1>№<?=$order->number?></h1>
         </div>
         <div>
             <h4><?=$order->orderSumm()?> грн. > <?=$order->paymentType()?></h4>

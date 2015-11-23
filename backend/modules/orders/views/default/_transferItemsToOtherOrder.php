@@ -1,10 +1,9 @@
 <?php
-use common\models\History;
+use backend\models\History;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
 
 Modal::begin([
-    'header' => 'asdf',
     'options'   =>  [
         'style' =>  'color: black'
     ],
@@ -30,7 +29,10 @@ echo \kartik\grid\GridView::widget([
     'bordered'  =>  false,
     'columns'   =>  [
         [
-            'attribute' =>  'id'
+            'attribute' =>  'id',
+            'value'     =>  function($model){
+                return $model->number;
+            }
         ],
         [
             'attribute' =>  'customerName',

@@ -6,9 +6,10 @@
  * Time: 12:29
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 
+use common\models\BannerType;
 use kartik\form\ActiveForm;
 use kartik\switchinput\SwitchInput;
 use yii\base\Widget;
@@ -32,7 +33,7 @@ class AddBannerGroupWidget extends Widget{
         }
 
         if(empty($this->model)){
-            $this->model = new \common\models\BannerType();
+            $this->model = new BannerType();
         }
     }
 

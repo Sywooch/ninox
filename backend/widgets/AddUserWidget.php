@@ -6,7 +6,7 @@
  * Time: 15:23
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 use common\models\Siteuser;
 use kartik\form\ActiveForm;

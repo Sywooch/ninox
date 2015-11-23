@@ -100,7 +100,7 @@ $this->registerCss($css);
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="btn-group pull-left" role="group">
-            <?=\common\components\ChangesWidget::widget([
+            <?=\backend\widgets\ChangesWidget::widget([
                 'model'         =>  $customer,
                 'header'        =>  'Изменения по клиенту '.$customer->Company
             ])?>

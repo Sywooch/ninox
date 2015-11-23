@@ -235,7 +235,7 @@ foreach($events as $event){
                 console.log(a + ' ' + b );
             }
         </script>
-        <?=\common\components\AddTaskWidget::widget([
+        <?=\backend\widgets\AddTaskWidget::widget([
         ])?>
     </div>
     <a class="btn btn-default <?=$smartfilter == null ? 'active' : ''?>" href="<?=Url::toRoute(['/tasks'])?>">Все</a>

@@ -125,10 +125,10 @@ $this->registerJs($js);
 ?>
 <h1><?=$this->title?> <small>Баннеры</small></h1>
 <div class="btn-group">
-    <?=\common\components\AddBannerWidget::widget([
+    <?=\backend\widgets\AddBannerWidget::widget([
         'defaultCategory'   =>  $bannersCategory->id
     ])?>
-    <?=\common\components\AddBannerGroupWidget::widget([
+    <?=\backend\widgets\AddBannerGroupWidget::widget([
         'model'         =>  $bannersCategory,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>&nbsp;Редактировать эту категорию'
     ])?>

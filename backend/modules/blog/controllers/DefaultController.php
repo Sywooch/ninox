@@ -8,7 +8,7 @@ use common\models\ArticlesSearch;
 use backend\controllers\SiteController as Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\components\UploadHelper;
+use common\helpers\UploadHelper;
 use common\helpers\TranslitHelper;
 
 /**

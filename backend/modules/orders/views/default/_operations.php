@@ -55,7 +55,8 @@ disableItemInOrder = function(button){
         type: 'POST',
         url: '/orders/restoreitemdata',
         data: {
-            'itemID': itemID
+            'itemID': itemID,
+            'orderID': orderID
         },
         success: function(data){
 
@@ -67,7 +68,7 @@ SCRIPT;
 $this->registerJs($js);
 
 ?>
-<div class="btn-group-vertical" data-attribute-orderID="<?=$model->orderID?>" data-attribute-itemID="<?=$model->id?>">
+<div class="btn-group-vertical" data-attribute-orderID="<?=$model->orderID?>" data-attribute-itemID="<?=$model->itemID?>">
 <?php
 use yii\bootstrap\Modal;
 
@@ -93,7 +94,8 @@ $form = \kartik\form\ActiveForm::begin([
     ]
 ]);
 
-echo $form->field($model, 'id')->hiddenInput()->label(false),
+echo $form->field($model, 'itemID')->hiddenInput()->label(false),
+$form->field($model, 'orderID')->hiddenInput()->label(false),
 $form->field($model, 'name'),
 $form->field($model, 'count'),
 $form->field($model, 'originalPrice'),

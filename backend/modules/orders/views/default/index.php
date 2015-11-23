@@ -357,7 +357,7 @@ $this->title = 'Заказы';
         </div>
     </div>
 </div>
-<?=\common\components\CollectorsWidget::widget([
+<?=\backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
 ])?>
@@ -419,7 +419,7 @@ $this->title = 'Заказы';
                 return [];
             },
             'value'     =>  function($model){
-                return Html::a($model->id, Url::to([
+                return Html::a($model->number, Url::to([
                     '/orders/showorder/'.$model->id
                 ])).Html::tag('br').Html::tag('small',
                     Html::a($model->deleted != 0 ? Html::tag('small', 'Восст.') : 'Удалить', '#', [

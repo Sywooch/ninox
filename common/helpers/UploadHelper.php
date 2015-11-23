@@ -6,7 +6,7 @@
  * Time: 12:09
  */
 
-namespace common\components;
+namespace common\helpers;
 
 use Exception;
 use finfo;

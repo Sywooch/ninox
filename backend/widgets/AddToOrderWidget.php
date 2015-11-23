@@ -6,7 +6,7 @@
  * Time: 16:23
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 use app\assets\SweetalertAsset;
 use common\models\History;
@@ -106,7 +106,10 @@ SCRIPT;
             'bordered'  =>  false,
             'columns'   =>  [
                 [
-                    'attribute' =>  'id'
+                    'attribute' =>  'id',
+                    'value'     =>  function($model){
+                        return $model->number;
+                    }
                 ],
                 [
                     'attribute' =>  'name',

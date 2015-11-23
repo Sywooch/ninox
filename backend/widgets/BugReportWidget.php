@@ -6,7 +6,7 @@
  * Time: 18:01
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 use common\models\Bug;
 use yii\base\Widget;

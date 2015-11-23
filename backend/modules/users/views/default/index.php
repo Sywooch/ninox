@@ -5,7 +5,7 @@
 ?>
 <h1>Пользователи</h1>
 <div class="btn-group">
-    <?=\app\components\AddUserWidget::widget([])?>
+    <?=\backend\widgets\AddUserWidget::widget([])?>
 </div>
 <br>
 <br>
@@ -58,7 +58,7 @@
             'class'     =>  \kartik\grid\ActionColumn::className(),
             'buttons'   =>  [
                 'update'        =>  function($url, $model){
-                    return \app\components\AddUserWidget::widget([
+                    return \backend\widgets\AddUserWidget::widget([
                         'model'         =>  $model,
                         'buttonText'    =>  '<i class="glyphicon glyphicon-pencil"></i>'
                     ]);

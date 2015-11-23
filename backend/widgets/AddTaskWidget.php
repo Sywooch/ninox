@@ -6,7 +6,7 @@
  * Time: 15:11
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 
 use common\models\Task;

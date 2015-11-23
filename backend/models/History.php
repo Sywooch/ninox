@@ -8,6 +8,10 @@
 
 namespace backend\models;
 
+use common\models\Category;
+use common\models\DeliveryTypes;
+use common\models\Good;
+use common\models\PaymentTypes;
 use yii\data\ActiveDataProvider;
 
 class History extends \common\models\History{
@@ -103,6 +107,10 @@ class History extends \common\models\History{
 		return $ordersDataProvider;
 	}
 
+	/**
+	 * @param string $priceType
+	 * @return bool
+     */
 	public function recalculatePrices($priceType = 'opt'){
 		switch($priceType){
 			case 'opt':

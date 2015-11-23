@@ -6,7 +6,7 @@
  * Time: 15:38
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 use yii\base\Widget;
 use yii\helpers\Html;

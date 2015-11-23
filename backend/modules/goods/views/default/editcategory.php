@@ -72,7 +72,7 @@ $form = ActiveForm::begin([
             <?php if($category->menu_show != 0){ ?>
                 <a href="https://krasota-style.com.ua/<?=$category->link?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
-            <?=\common\components\ChangesWidget::widget([
+            <?=\backend\widgets\ChangesWidget::widget([
                 'model'         =>  $category,
                 'header'        =>  'Изменения по категории '.$category->Name
             ])?>

@@ -6,7 +6,7 @@
  * Time: 16:23
  */
 
-namespace common\components;
+namespace backend\widgets;
 
 use common\models\Banner;
 use common\models\BannerType;
