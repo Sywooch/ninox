@@ -14,12 +14,12 @@ use Yii;
  * @property integer $type
  * @property string $review
  * @property integer $question1
- * @property integer $question2
  * @property integer $published
- * @property string $client_face
- * @property integer $position
  * @property string $customerType
+ * @property integer $target
  * @property integer $deleted
+ * @property integer $customerID
+ * @property string $customerPhoto
  */
 class Review extends \yii\db\ActiveRecord
 {
@@ -39,8 +39,9 @@ class Review extends \yii\db\ActiveRecord
         return [
             [['date', 'name'], 'required'],
             [['date'], 'safe'],
-            [['name', 'city', 'review', 'client_face', 'customerType'], 'string'],
-            [['type', 'question1', 'question2', 'published', 'position', 'deleted'], 'integer']
+            [['name', 'city', 'review', 'customerType'], 'string'],
+            [['type', 'question1', 'published', 'target', 'deleted', 'customerID'], 'integer'],
+            [['customerPhoto'], 'string', 'max' => 255],
         ];
     }
 
@@ -50,46 +51,20 @@ class Review extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'date' => 'Date',
-            'name' => 'Name',
-            'city' => 'City',
-            'type' => 'Type',
-            'review' => 'Review',
-            'question1' => 'Question1',
-            'question2' => 'Question2',
-            'published' => 'Published',
-            'client_face' => 'Client Face',
-            'position' => 'Position',
-            'customerType' => 'Customer Type',
-            'deleted' => 'Deleted',
+            'id' => Yii::t('backend', 'ID'),
+            'date' => Yii::t('backend', 'Date'),
+            'name' => Yii::t('backend', 'Name'),
+            'city' => Yii::t('backend', 'City'),
+            'type' => Yii::t('backend', 'Type'),
+            'review' => Yii::t('backend', 'Review'),
+            'question1' => Yii::t('backend', 'Question1'),
+            'published' => Yii::t('backend', 'Published'),
+            'customerType' => Yii::t('backend', 'Customer Type'),
+            'target' => Yii::t('backend', 'Target'),
+            'deleted' => Yii::t('backend', 'Deleted'),
+            'customerID' => Yii::t('backend', 'Customer ID'),
+            'customerPhoto' => Yii::t('backend', 'Customer Photo'),
         ];
     }
 
-    public static function changeState($id, $field = 'published'){
-        $a = Review::findOne(['id' => $id]);
-
-        if ($a) {
-            /*
-            if ($field == 'published') {
-                $a->published = $a->published == "1" ? "0" : "1";
-                $a->save(false);
-                return $a->published;
-            } else {
-                $a->deleted = $a->deleted == "1" ? "0" : "1";
-                $a->save(false);
-                return $a->deleted;
-            }*/
-            $a->$field = $a->$field == 1 ? 0 : 1;
-            $a->save(false);
-            return $a->$field;
-        }
-
-        return 0;
-    }
-
-	public static function getReviews(){
-		return self::find()->where(['published' => 1])->
-			orderBy('type ASC, IF (type = 1, - UNIX_TIMESTAMP(`date`) , UNIX_TIMESTAMP(`date`)) ASC')->all();
-	}
 }

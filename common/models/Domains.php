@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 
@@ -45,12 +45,12 @@ class Domains extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('shop', 'ID домена'),
-            'name' => Yii::t('shop', 'Имя домена'),
-            'currencyCode' => Yii::t('shop', 'Код валюты'),
-            'currencyShortName' => Yii::t('shop', 'Сокращенное название валюты'),
-            'currencyExchange' => Yii::t('shop', 'Currency Exchange'),
-            'coins' => Yii::t('shop', 'Coins'),
+            'id' => Yii::t('common', 'ID домена'),
+            'name' => Yii::t('common', 'Имя домена'),
+            'currencyCode' => Yii::t('common', 'Код валюты'),
+            'currencyShortName' => Yii::t('common', 'Сокращенное название валюты'),
+            'currencyExchange' => Yii::t('common', 'Currency Exchange'),
+            'coins' => Yii::t('common', 'Coins'),
         ];
     }
 }

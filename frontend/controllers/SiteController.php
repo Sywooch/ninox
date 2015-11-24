@@ -1,19 +1,20 @@
 <?php
 namespace frontend\controllers;
 
-use app\models\Domains;
-use app\models\Pagetype;
-use common\models\Banner;
-use common\models\Cart;
+use Yii;
+use common\models\Domains;
+use common\models\Pagetype;
+
+use frontend\models\Banner;
 use frontend\models\Category;
 use frontend\models\Good;
-use common\models\Question;
-use common\models\Review;
-use Yii;
-use common\models\LoginForm;
+use frontend\models\Question;
+use frontend\models\Review;
+use frontend\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
+
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;

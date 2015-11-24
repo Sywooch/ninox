@@ -36,15 +36,6 @@ class DefaultController extends Controller
         }
 
         return $this->render('index', [
-            'dataProvider'  =>  new ActiveDataProvider([
-                'query' =>  Pricerule::find(),
-                'sort'  =>  [
-                    'defaultOrder'  =>  'Priority ASC'
-                ],
-                'pagination'    =>  [
-                    'pageSize'  =>  20
-                ]
-            ]),
             'rules' =>  Pricerule::find()->orderBy('Priority ASC')->all()
         ]);
     }

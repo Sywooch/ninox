@@ -17,6 +17,8 @@ use Yii;
  * @property integer $published
  * @property string $email
  * @property string $phone
+ * @property integer $domainId
+ * @property integer $deleted
  */
 class Question extends \yii\db\ActiveRecord
 {
@@ -36,7 +38,7 @@ class Question extends \yii\db\ActiveRecord
         return [
             [['name', 'photo', 'question', 'answer', 'email', 'phone'], 'string'],
             [['date_question', 'date_answer'], 'safe'],
-            [['published'], 'integer'],
+            [['published', 'domainId', 'deleted'], 'integer'],
         ];
     }
 
@@ -46,22 +48,18 @@ class Question extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'photo' => 'Photo',
-            'question' => 'Question',
-            'answer' => 'Answer',
-            'date_question' => 'Date Question',
-            'date_answer' => 'Date Answer',
-            'published' => 'Published',
-            'email' => 'Email',
-            'phone' => 'Phone',
+            'id' => Yii::t('common', 'ID'),
+            'name' => Yii::t('backend', 'Name'),
+            'photo' => Yii::t('backend', 'Photo'),
+            'question' => Yii::t('backend', 'Question'),
+            'answer' => Yii::t('backend', 'Answer'),
+            'date_question' => Yii::t('backend', 'Date Question'),
+            'date_answer' => Yii::t('backend', 'Date Answer'),
+            'published' => Yii::t('backend', 'Published'),
+            'email' => Yii::t('backend', 'Email'),
+            'phone' => Yii::t('backend', 'Phone'),
+            'domainId' => Yii::t('backend', 'Domain ID'),
+            'deleted' => Yii::t('backend', 'Deleted'),
         ];
     }
-
-	public static function getQuestions()
-	{
-		return self::find()->where(['published' => 1])->
-			andWhere(['domainId' => 1])->all(); //TODO: айди домена нужно подставлять динамически.
-	}
 }
