@@ -51,7 +51,7 @@ class SborkaItem extends \yii\db\ActiveRecord
         }
     }
 
-    public function beforeSave(){
+    public function beforeSave($insert){
         if(empty($this->realyCount)){
             $this->realyCount = 0;
         }

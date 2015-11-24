@@ -52,7 +52,7 @@ class GoodUk extends \yii\db\ActiveRecord
         ];
     }
 
-    public function beforeSave(){
+    public function beforeSave($insert){
         $this->link = TranslitHelper::to($this->Name);
 
         return parent::beforeSave(false);
