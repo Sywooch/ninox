@@ -6,11 +6,14 @@ use frontend\models\Customer;
 use frontend\models\Good;
 use sammaye\audittrail\AuditTrail;
 use Yii;
+use yii\base\ErrorException;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use backend\models\LoginForm;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -49,6 +52,10 @@ class SiteController extends Controller
     public function beforeAction($action){
 
         if(isset(\Yii::$app->user->identity)){
+            if(\Yii::$app->user->identity->superAdmin == 1){
+                //\Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration');
+            }
+
             \Yii::$app->user->identity->lastActivity = date('Y-m-d H:i:s');
             \Yii::$app->user->identity->save();
             //echo \Yii::$app->user->identity->can('1') ? 'true' : 'false'; //если false - значит чувака нельзя пускать
@@ -72,6 +79,53 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->run('orders/default/index');
+    }
+
+    public function actionAddcontroller(){
+        if(\Yii::$app->user->identity->superAdmin != 1){
+            throw new NotFoundHttpException();
+        }
+
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Этот метод работает только через ajax!");
+        }
+
+        $controller = \common\models\Controller::findOne(['controller'  =>  \Yii::$app->request->post("controller")]);
+
+        if(!$controller){
+            $controller = new \common\models\Controller();
+            $controller->controller = \Yii::$app->request->post("controller");
+            return $controller->save() ? 1 : 0;
+        }
+
+        return 1;
+    }
+
+    public function actionAddaction(){
+        if(\Yii::$app->user->identity->superAdmin != 1){
+            throw new NotFoundHttpException();
+        }
+
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Этот метод работает только через ajax!");
+        }
+
+        $controller = \common\models\Controller::findOne(['controller'  =>  \Yii::$app->request->post("controller")]);
+
+        if(!$controller){
+            throw new NotFoundHttpException("Такой контроллер не найден!");
+        }
+
+        $action = \common\models\ControllerAction::findOne(['controllerID'  =>  $controller->id, 'action'   =>  \Yii::$app->request->post("action")]);
+
+        if(!$action){
+            $action = new \common\models\ControllerAction();
+            $action->attributes = \Yii::$app->request->post("ControllerAction");
+            $action->controllerID = $controller->id;
+            return $action->save() ? 1 : 0;
+        }
+
+        return 1;
     }
 
     public function actionUpdatecurrency(){

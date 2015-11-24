@@ -2,6 +2,7 @@
 
 namespace backend\modules\users\controllers;
 
+use common\models\ControllerAction;
 use common\models\Siteuser;
 use backend\models\User;
 use yii\data\ActiveDataProvider;
@@ -25,7 +26,22 @@ use yii\web\NotFoundHttpException;
 class DefaultController extends Controller
 {
     public function beforeAction($action){
-        \Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration');
+
+        if(\Yii::$app->user->identity->superAdmin == 1){
+            $controller = \common\models\Controller::findOne(['controller'  =>  \Yii::$app->controller->className()]);
+
+            if(empty($controller)){
+                $controller = new \common\models\Controller;
+            }
+
+            \Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration', [
+                'dataProvider'  =>  new ActiveDataProvider([
+                    'query' =>  ControllerAction::find()->where(['controllerID'  =>  $controller->id])
+                ]),
+                'controller'    =>  $controller,
+                'action'        =>  new ControllerAction()
+            ]);
+        }
 
         return parent::beforeAction($action);
     }
