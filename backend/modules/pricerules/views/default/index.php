@@ -58,8 +58,8 @@ var changeState = function(e){
 		    'data': b
 		}
 	});
-},
-    buttons1 = document.querySelectorAll(".priceRuleState"),
+}
+    buttons1 = document.querySelectorAll(".priceRuleState");
     buttons2 = document.querySelectorAll(".priceRuleEdit");
 
 for(var i = 0; i < buttons1.length; i++){

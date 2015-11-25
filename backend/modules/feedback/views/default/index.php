@@ -1,42 +1,34 @@
 <?php
+use bobroid\remodal\Remodal;
+use rmrevin\yii\fontawesome\FA;
+use yii\bootstrap\Html;
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-
-/* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Reviews';
+$this->title = 'Обратная связь';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="review-index">
+<br>
+<br>
+<?php
+$items = [];
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Review', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'date',
-            'name:ntext',
-            'city:ntext',
-            'type',
-            // 'review:ntext',
-            // 'question1',
-            // 'question2',
-            // 'published',
-            // 'client_face:ntext',
-            // 'position',
-            // 'customerType:ntext',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
-</div>
+$feedbacks =array();
+foreach($feedbacks as $feedback){
+    $items[] = [
+        'content' =>  $this->render('_feedback_item', [
+            'feedback'  =>  $feedback
+        ]),
+        'options' =>  [
+            'class' =>  'alert alert-success'
+        ]
+    ];
+}?>
+<?=\kartik\sortable\Sortable::widget([
+    'items' =>  $items,
+    'options'   =>  [
+        'id'  =>  'feedback'
+    ],
+    'pluginEvents' => [
+        'sortupdate' => 'function() { updSort(); }',
+    ]
+])?>
