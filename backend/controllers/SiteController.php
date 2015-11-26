@@ -51,7 +51,7 @@ class SiteController extends Controller
 
     public function beforeAction($action){
 
-        if(isset(\Yii::$app->user->identity)){
+        if(isset(\Yii::$app->user->identity) && !\Yii::$app->user->isGuest){
             if(\Yii::$app->user->identity->superAdmin == 1){
                 //\Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration');
             }
