@@ -1,0 +1,223 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+.chatbox *, .chatbox *:before, .chatbox *:after {
+  box-sizing: border-box;
+}
+
+.chatbox {
+  font: 14px/20px "Lato", Arial, sans-serif;
+  display: inline-block;
+  color: white;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  margin-right: 20px;
+  z-index: 1000;
+}
+
+.chatbox .container {
+  margin: 0 auto;
+  width: 100%;
+  background: #444753;
+  border-radius: 5px;
+}
+
+.chatbox .people-list {
+  width: 240px;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  float: left;
+}
+.chatbox .people-list .search {
+  padding: 20px;
+}
+.chatbox .people-list input {
+  border-radius: 3px;
+  border: none;
+  padding: 14px;
+  color: white;
+  background: #6A6C75;
+  width: 90%;
+  font-size: 14px;
+}
+.chatbox .people-list .fa-search {
+  position: relative;
+  left: -25px;
+}
+.chatbox .people-list ul {
+  padding: 15px;
+}
+.chatbox .people-list ul li {
+  padding-bottom: 20px;
+}
+.chatbox .people-list img {
+  float: left;
+}
+.chatbox .people-list .about {
+  float: left;
+  margin-top: 8px;
+}
+.chatbox .people-list .about {
+  padding-left: 8px;
+}
+.chatbox .people-list .status {
+  color: #92959E;
+}
+
+.chatbox ul.list{
+  display: block;
+  width: 240px;
+}
+
+.chatbox .chat-rollUp{
+  cursor: pointer;
+  display: inline-block;
+}
+
+.chatbox .chat {
+  width: 300px;
+  float: left;
+  background: #F2F5F8;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  color: #434651;
+}
+.chatbox .chat .chat-header {
+  padding: 5px;
+  border-bottom: 2px solid white;
+}
+.chatbox .chat .chat-header img {
+  float: left;
+}
+.chatbox .chat .chat-header .chat-about {
+  float: left;
+  padding-left: 10px;
+  margin-top: 6px;
+}
+.chatbox .chat .chat-header .chat-with {
+  font-weight: bold;
+  font-size: 16px;
+}
+.chatbox .chat .chat-header .chat-num-messages {
+  color: #92959E;
+}
+.chatbox .chat .chat-header .fa-star {
+  float: right;
+  color: #D8DADF;
+  font-size: 20px;
+  margin-top: 12px;
+}
+.chatbox .chat .chat-history {
+  padding: 30px 30px 20px;
+  border-bottom: 2px solid white;
+  overflow-y: scroll;
+  height: 310px;
+}
+.chatbox .chat .chat-history .message-data {
+  margin-bottom: 15px;
+}
+.chatbox .chat .chat-history .message-data-time {
+  color: #a8aab1;
+  padding-left: 6px;
+}
+.chatbox .chat .chat-history .message {
+  color: white;
+  padding: 13px 15px;
+  line-height: 18px;
+  font-size: 14px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  width: 90%;
+  position: relative;
+}
+.chatbox .chat .chat-history .message:after {
+  bottom: 100%;
+  left: 7%;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border: 10px solid transparent;
+  border-bottom-color: #86BB71;
+  margin-left: -10px;
+}
+.chatbox .chat .chat-history .my-message {
+  background: #86BB71;
+}
+.chatbox .chat .chat-history .other-message {
+  background: #94C2ED;
+}
+.chatbox .chat .chat-history .other-message:after {
+  border-bottom-color: #94C2ED;
+  left: 93%;
+}
+.chatbox .chat .chat-message {
+  padding: 10px;
+}
+.chatbox .chat .chat-message textarea {
+  width: 100%;
+  border: none;
+  padding: 10px 10px;
+  max-height: 70px;
+  font: 14px/16px "Lato", Arial, sans-serif;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  resize: none;
+}
+.chatbox .chat .chat-message .fa-file-o, .chat .chat-message .fa-file-image-o {
+  font-size: 16px;
+  color: gray;
+  cursor: pointer;
+}
+.chatbox .chat .chat-message button {
+  float: right;
+  color: #94C2ED;
+  font-size: 16px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background: #F2F5F8;
+}
+.chatbox .chat .chat-message button:hover {
+  color: #75b1e8;
+}
+
+.chatbox .online, .offline, .me {
+  margin-right: 3px;
+  font-size: 10px;
+}
+
+.chatbox .online {
+  color: #86BB71;
+}
+
+.chatbox .offline {
+  color: #E38968;
+}
+
+.chatbox .me {
+  color: #94C2ED;
+}
+
+.chatbox .align-left {
+  text-align: left;
+}
+
+.chatbox .align-right {
+  text-align: right;
+}
+
+.chatbox .float-right {
+  float: right;
+}
+
+.chatbox .clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}

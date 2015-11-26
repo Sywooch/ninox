@@ -53,7 +53,8 @@
         "bobroid/yii2-imperavi-redactor": "dev-master",
         "liqpay/liqpay": "dev-master",
         "bobroid/yii2-messenger": "*",
-        "phpoffice/phpexcel": "*"
+        "phpoffice/phpexcel": "*",
+        "morozovsk/yii2-websocket": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",

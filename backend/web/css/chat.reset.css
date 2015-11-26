@@ -1,0 +1,34 @@
+.chatbox html, .chatbox body, .chatbox div, .chatbox span, .chatbox applet, .chatbox object, .chatbox iframe, .chatbox h1, .chatbox h2, .chatbox h3, .chatbox h4, .chatbox h5, .chatbox h6, .chatbox p, .chatbox blockquote, .chatbox pre, .chatbox a, .chatbox abbr, .chatbox acronym, .chatbox address, .chatbox big, .chatbox cite, .chatbox code, .chatbox del, .chatbox dfn, .chatbox em, .chatbox img, .chatbox ins, .chatbox kbd, .chatbox q, .chatbox s, .chatbox samp, .chatbox small, .chatbox strike, .chatbox strong, .chatbox sub, .chatbox sup, .chatbox tt, .chatbox var, .chatbox b, .chatbox u, .chatbox i, .chatbox center, .chatbox dl, .chatbox dt, .chatbox dd, .chatbox ol, .chatbox ul, .chatbox li, .chatbox fieldset, .chatbox form, .chatbox label, .chatbox legend, .chatbox table, .chatbox caption, .chatbox tbody, .chatbox tfoot, .chatbox thead, .chatbox tr, .chatbox th, .chatbox td, .chatbox article, .chatbox aside, .chatbox canvas, .chatbox details, .chatbox embed, .chatbox figure, .chatbox figcaption, .chatbox footer, .chatbox header, .chatbox hgroup, .chatbox menu, .chatbox nav, .chatbox output, .chatbox ruby, .chatbox section, .chatbox summary, .chatbox time, .chatbox mark, .chatbox audio, .chatbox video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline
+}
+
+.chatbox article, .chatbox aside, .chatbox details, .chatbox figcaption, .chatbox figure, .chatbox footer, .chatbox header, .chatbox hgroup, .chatbox menu, .chatbox nav, .chatbox section {
+    display: block
+}
+
+.chatbox body {
+    line-height: 1
+}
+
+.chatbox ol, .chatbox ul {
+    list-style: none
+}
+
+.chatbox blockquote, .chatbox q {
+    quotes: none
+}
+
+.chatbox blockquote:before, .chatbox blockquote:after, .chatbox q:before, .chatbox q:after {
+    content: '';
+    content: none
+}
+
+.chatbox table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+

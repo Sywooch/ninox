@@ -1,6 +1,7 @@
 <?php
 use backend\widgets\ServiceMenuWidget;
 use bobroid\yamm\Yamm;
+use kartik\dropdown\DropdownX;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -77,6 +78,10 @@ Messenger.options = {
     theme: 'air',
     hideOnNavigate: false
 }
+
+$(".showChat").on('click', function(e){
+    document.querySelector(".chatbox").style.display = document.querySelector(".chatbox").style.display == 'none' ? 'block' : 'none';
+});
 SCRIPT;
 
 $newOrderAlert = <<<'SCRIPT'
@@ -135,6 +140,17 @@ setInterval(newOrder, 2000);
 SCRIPT;
 
 $css = <<<'STYLE'
+.chatDropDown{
+    display: inline-block;
+    height: 200px;
+    width: 200px;
+    background: red none repeat scroll 0% 0%;
+    z-index: 1000;
+    position: absolute;
+    margin-top: 60px;
+    margin-left: -100%;
+}
+
 .top-nav li{
     font-size: 12px;
 }
@@ -608,6 +624,9 @@ $this->beginPage() ?>
             ],
             [
                 'label'     =>  'Сообщения',
+                'options'   =>  [
+                    'class'   =>  'showChat'
+                ],
                 'counter'   =>  '6'
             ],
             [
@@ -659,6 +678,7 @@ $this->beginPage() ?>
             echo $moduleConfig->renderModal();
         }
         ?>
+        <?=\backend\widgets\ChatWidget::widget()?>
     </div>
     <?php Yamm::end(); ?>
 </div>

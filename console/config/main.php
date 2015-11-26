@@ -11,6 +11,9 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'console\controllers',
+    'controllerMap' => [
+        'websocket' => 'morozovsk\yii2websocket\console\controllers\WebsocketController'
+    ],
     'components' => [
         'log' => [
             'targets' => [
@@ -18,6 +21,19 @@ return [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+            ],
+        ],
+        'websocket' => [
+            'class' => 'morozovsk\yii2websocket\Connection',
+            'servers' => [
+                'chat' => [
+                    'class' => 'bobroid\chat\ChatWebsocketDaemonHandler',
+                    'pid' => '/tmp/websocket_chat.pid',
+                    'websocket' => 'tcp://127.0.0.1:8004',
+                    'localsocket' => 'tcp://127.0.0.1:8010',
+                    //'master' => 'tcp://127.0.0.1:8020',
+                    //'eventDriver' => 'event'
+                ]
             ],
         ],
     ],

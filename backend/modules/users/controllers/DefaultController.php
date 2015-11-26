@@ -27,7 +27,7 @@ class DefaultController extends Controller
 {
     public function beforeAction($action){
 
-        if(\Yii::$app->user->identity->superAdmin == 1){
+        if(!\Yii::$app->user->isGuest && \Yii::$app->user->identity->superAdmin == 1){
             $controller = \common\models\Controller::findOne(['controller'  =>  \Yii::$app->controller->className()]);
 
             if(empty($controller)){
