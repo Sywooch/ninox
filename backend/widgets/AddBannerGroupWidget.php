@@ -72,15 +72,15 @@ class AddBannerGroupWidget extends Widget{
                         'offText' => 'Нет',
                     ]
                 ]),
-                '</td></tr><tr><td>',
+
+               '</td></tr><tr><td>',
                 $form->field($this->model, 'bg')->widget(SwitchInput::classname(), [
                     'type'  =>  SwitchInput::CHECKBOX,
                     'pluginOptions' => [
                         'onText' => 'Да',
                         'offText' => 'Нет',
                     ]
-                ]),
-                '</td><td>',
+                ]),  '</td><td>',
                 $form->field($this->model, 'category')->widget(SwitchInput::classname(), [
                     'type'  =>  SwitchInput::CHECKBOX,
                     'pluginOptions' => [
@@ -96,4 +96,6 @@ class AddBannerGroupWidget extends Widget{
 
     }
 
-}
+
+    }
+
