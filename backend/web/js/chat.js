@@ -18,14 +18,54 @@
     cacheDOM: function() {
       this.$chatHistory = $('.chatbox .chat-history');
       this.$button = $('.chatbox button');
+      this.$chats = $('.chatbox .people-list ul.list div.list-view li');
       this.$rollUp = $('.chatbox .chat-rollUp');
       this.$textarea = $('.chatbox #message-to-send');
       this.$chatHistoryList =  this.$chatHistory.find('ul');
     },
     bindEvents: function() {
+      if(this.$chats['0'] !== undefined){
+        this.$chats['0'].setAttribute('class', this.$chats['0'].getAttribute('class') + ' active');
+        function wsStart() {
+          var ws = new WebSocket("ws://127.0.0.1:8004/userId=" + Math.round(Math.random()*10000));
+          ws.onmessage = function(evt) {
+            $(".chatbox .chat-history ul").append(evt.data);
+          };
+          //ws.send("hello!");
+        }
+        wsStart();
+      }
       this.$button.on('click', this.addMessage.bind(this));
       this.$rollUp.on('click', this.rollUp.bind(this));
+      this.$chats.on('click', this.choseChat.bind(this));
       this.$textarea.on('keyup', this.addMessageEnter.bind(this));
+    },
+    choseChat: function(e){
+      if(e.currentTarget.getAttribute('class').match(/active/)){
+        return false;
+      }
+      $('.chatbox li.active').removeClass('active');
+      e.currentTarget.setAttribute('class', e.currentTarget.getAttribute('class') + ' active');
+      var chatWindow = document.querySelector(".chatbox .container");
+      if(chatWindow.querySelector(".chat") === undefined){
+        var item = document.createElement('div');
+        item.setAttribute('class', 'chat');
+        chatWindow.appendChild(item);
+      }
+      $.ajax({
+        url: '/loadchat',
+        type: 'POST',
+        data: {
+          'chatID': e.currentTarget.querySelector(".chatID").value
+        },
+        success: function(data){
+          if(data != false){
+            $('.chatbox .container .chat').replaceWith(data);
+          }else{
+            e.currentTarget.remove();
+          }
+        }
+      });
     },
     rollUp: function(e){
       e.currentTarget.parentNode.parentNode.style.width = e.currentTarget.parentNode.parentNode.style.width == '86px' ? '240px' : '86px';
@@ -71,7 +111,9 @@
         }
     },
     scrollToBottom: function() {
-       this.$chatHistory.scrollTop(this.$chatHistory[0].scrollHeight);
+        if(this.$chatHistory[0] !== undefined) {
+          this.$chatHistory.scrollTop(this.$chatHistory[0].scrollHeight);
+        }
     },
     getCurrentTime: function() {
       return new Date().toLocaleTimeString().

@@ -1,12 +1,15 @@
 <?php
 namespace backend\controllers;
 
+use common\models\Chat;
+use common\models\ChatMessage;
 use common\models\Service;
 use frontend\models\Customer;
 use frontend\models\Good;
 use sammaye\audittrail\AuditTrail;
 use Yii;
 use yii\base\ErrorException;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -48,6 +51,26 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionLoadchat(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Этот запрос возможен только через AJAX!");
+        }
+
+        $chat = Chat::findOne(['id' =>  \Yii::$app->request->post("chatID")]);
+
+        if(!$chat){
+            return false;
+        }
+
+        //Сделать проверку на то, что пользователь есть в этом чате
+
+        return $this->renderAjax('../../widgets/views/_chat_window', [
+            'chatData'              =>  $chat,
+            'messagesDataProvider'  =>  new ActiveDataProvider([
+                'query' =>  ChatMessage::find()->where(['chat'  =>  $chat->id])->orderBy('timestamp ASC')
+            ])
+        ]);
+    }
 
     public function beforeAction($action){
 

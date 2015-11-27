@@ -28,6 +28,12 @@
   overflow-x: hidden;
   float: left;
 }
+
+.chatbox .people-list .active{
+  background: rgba(40, 42, 49, 0.6);
+  cursor: default !important;
+}
+
 .chatbox .people-list .search {
   padding: 20px;
 }
@@ -45,8 +51,14 @@
   left: -25px;
 }
 .chatbox .people-list ul {
+
+}
+
+.chatbox .people-list ul.list li{
+  cursor: pointer;
   padding: 15px;
 }
+
 .chatbox .people-list ul li {
   padding-bottom: 20px;
 }
@@ -119,6 +131,10 @@
 .chatbox .chat .chat-history .message-data-time {
   color: #a8aab1;
   padding-left: 6px;
+}
+
+.chatbox .chat-createChat{
+  cursor: pointer;
 }
 .chatbox .chat .chat-history .message {
   color: white;
