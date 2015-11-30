@@ -49,4 +49,10 @@ class ChatMessage extends \yii\db\ActiveRecord
             'text' => Yii::t('common', 'Text'),
         ];
     }
+
+    public function beforeSave($i){
+        $this->timestamp = date('Y-m-d H:i:s');
+
+        return parent::beforeSave($i);
+    }
 }
