@@ -7,6 +7,9 @@
  */
 namespace console\controllers;
 
+use common\models\ChatMessage;
+use yii\helpers\Json;
+
 class ChatController extends \morozovsk\websocket\Daemon{
 
     public $userIds = [];
@@ -26,7 +29,7 @@ class ChatController extends \morozovsk\websocket\Daemon{
         unset($this->userIds[$connectionId]);
     }
 
-    protected function onMessage($connectionId, $data, $type) {//вызывается при получении сообщения от клиента
+    protected function onMessage($connectionId, $data, $type, $dirtyData = []) {//вызывается при получении сообщения от клиента
         /*if (!strlen($data)) {
             return;
         }
@@ -35,10 +38,23 @@ class ChatController extends \morozovsk\websocket\Daemon{
         //echo $data . "\n";
         */
 
-        $message = 'пользователь #' . $connectionId . ' : ' . strip_tags($data);
+        $data = Json::decode($data);
+
+        $message = $data['messageOutput'];
+        $author = $data['myName'];
+        $authorID = $data['myID'];
+
+        $chatMessage = new ChatMessage;
+        $chatMessage->text = $message;
+        $chatMessage->author = $authorID;
+        $chatMessage->chat = $data['chatID'];
+
+        $chatMessage->save(false);
 
         foreach ($this->clients as $clientId => $client) {
-            $this->sendToClient($clientId, $message);
+            if($clientId != $connectionId){
+                $this->sendToClient($clientId, Json::encode(['message'  =>  strip_tags($message), 'author'  =>  $author]));
+            }
         }
     }
 

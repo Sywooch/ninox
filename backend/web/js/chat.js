@@ -11,6 +11,7 @@
       'An SEO expert walks into a bar, bars, pub, tavern, public house, Irish pub, drinks, beer, alcohol'
     ],
     init: function() {
+      this.$socket = new WebSocket("ws://127.0.0.1:8004/");
       this.cacheDOM();
       this.bindEvents();
       this.render();
@@ -26,18 +27,25 @@
     bindEvents: function() {
       if(this.$chats['0'] !== undefined){
         this.$chats['0'].setAttribute('class', this.$chats['0'].getAttribute('class') + ' active');
-        function wsStart() {
-          var ws = new WebSocket("ws://127.0.0.1:8004/userId=" + Math.round(Math.random()*10000));
-          ws.onmessage = function(evt) {
-            $(".chatbox .chat-history ul").append(evt.data);
-          };
-          //ws.send("hello!");
-        }
-        wsStart();
       }
-      this.$button.on('click', this.addMessage.bind(this));
       this.$rollUp.on('click', this.rollUp.bind(this));
       this.$chats.on('click', this.choseChat.bind(this));
+      this.bindChatEvents();
+    },
+    bindChatEvents: function(){
+      this.$socket.onmessage = function(evt) {
+        var templateResponse = Handlebars.compile( $(".chatbox #message-response-template").html()),
+            data = JSON.parse(evt.data),
+            contextResponse = {
+              response: data.message,
+              time: chat.getCurrentTime(),
+              author: data.author
+            };
+
+        chat.$chatHistoryList.append(templateResponse(contextResponse));
+        chat.scrollToBottom();
+      };
+      this.$button.on('click', this.addMessage.bind(this));
       this.$textarea.on('keyup', this.addMessageEnter.bind(this));
     },
     choseChat: function(e){
@@ -66,6 +74,7 @@
           }
         }
       });
+      this.bindChatEvents();
     },
     rollUp: function(e){
       e.currentTarget.parentNode.parentNode.style.width = e.currentTarget.parentNode.parentNode.style.width == '86px' ? '240px' : '86px';
@@ -77,29 +86,19 @@
         var template = Handlebars.compile( $(".chatbox #message-template").html());
         var context = { 
           messageOutput: this.messageToSend,
+          myName: document.querySelector(".afterMenu .dropdown .btn").innerHTML,
+          chatID: document.querySelector(".chatbox .people-list .list li.active").getAttribute('data-key'),
+          myID: document.querySelector(".afterMenu .dropdown .btn").getAttribute("data-userid"),
           time: this.getCurrentTime()
         };
+
+        this.$socket.send(JSON.stringify(context));
 
         this.$chatHistoryList.append(template(context));
         this.scrollToBottom();
         this.$textarea.val('');
-        
-        // responses
-        var templateResponse = Handlebars.compile( $(".chatbox #message-response-template").html());
-        var contextResponse = { 
-          response: this.getRandomItem(this.messageResponses),
-          time: this.getCurrentTime()
-        };
-        
-        setTimeout(function() {
-          this.$chatHistoryList.append(templateResponse(contextResponse));
-          this.scrollToBottom();
-        }.bind(this), 1500);
-        
       }
-      
     },
-    
     addMessage: function() {
       this.messageToSend = this.$textarea.val();
       this.render();         
@@ -118,31 +117,8 @@
     getCurrentTime: function() {
       return new Date().toLocaleTimeString().
               replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
-    },
-    getRandomItem: function(arr) {
-      return arr[Math.floor(Math.random()*arr.length)];
     }
-    
   };
   
   chat.init();
-  
-  var searchFilter = {
-    options: { valueNames: ['name'] },
-    init: function() {
-      var userList = new List('people-list', this.options);
-      var noItems = $('<li id="no-items-found">Ничего не найдено</li>');
-      
-      userList.on('updated', function(list) {
-        if (list.matchingItems.length === 0) {
-          $(list.list).append(noItems);
-        } else {
-          noItems.detach();
-        }
-      });
-    }
-  };
-  
-  //searchFilter.init();
-  
 })();

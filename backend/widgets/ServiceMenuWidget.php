@@ -196,7 +196,7 @@ class ServiceMenuWidget extends Widget{
         if($this->showUserDropdown){
             $data .= Html::beginTag('div', ['class'=>'dropdown', 'style'    =>  'display: inline']);
             $data .= Html::button(\Yii::$app->user->identity->name,
-                ['type'=>'button', 'class'=>'btn btn-default btn-link', 'data-toggle'=>'dropdown']);
+                ['type'=>'button', 'class'=>'btn btn-default btn-link', 'data-toggle'=>'dropdown', 'data-userID' =>  \Yii::$app->user->identity->id]);
             $data .= DropdownX::widget([
                 'items' => $this->userDropdownItems,
             ]);

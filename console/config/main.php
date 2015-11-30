@@ -32,7 +32,7 @@ return [
                     'websocket' => 'tcp://127.0.0.1:8004',
                     'localsocket' => 'tcp://127.0.0.1:8010',
                     //'master' => 'tcp://127.0.0.1:8020',
-                    //'eventDriver' => 'event'
+                    'eventDriver' => 'select'
                 ]
             ],
         ],

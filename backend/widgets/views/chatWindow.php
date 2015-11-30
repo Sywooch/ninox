@@ -41,8 +41,8 @@
     <script id="message-template" type="text/x-handlebars-template">
         <li class="clearfix">
             <div class="message-data align-right">
-                <span class="message-data-time" >{{time}}, Today</span> &nbsp; &nbsp;
-                <span class="message-data-name" >Olia</span> <i class="fa fa-circle me"></i>
+                <span class="message-data-time" >{{time}}</span> &nbsp; &nbsp;
+                <span class="message-data-name" >{{myName}}</span>
             </div>
             <div class="message other-message float-right">
                 {{messageOutput}}
@@ -53,8 +53,8 @@
     <script id="message-response-template" type="text/x-handlebars-template">
         <li>
             <div class="message-data">
-                <span class="message-data-name"><i class="fa fa-circle online"></i> Vincent</span>
-                <span class="message-data-time">{{time}}, Today</span>
+                <span class="message-data-name">{{author}}</span>
+                <span class="message-data-time">{{time}}</span>
             </div>
             <div class="message my-message">
                 {{response}}
