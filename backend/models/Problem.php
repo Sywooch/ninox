@@ -9,7 +9,9 @@
 namespace frontend\models;
 
 
-class Problem
+class Problem extends \common\models\Problem
 {
+
+    
 
 }

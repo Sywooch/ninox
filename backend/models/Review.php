@@ -2,31 +2,13 @@
 /**
  * Created by PhpStorm.
  * User: bobroid
- * Date: 16.11.15
- * Time: 18:01
+ * Date: 24.11.15
+ * Time: 14:49
  */
 
 namespace backend\models;
 
 
 class Review extends \common\models\Review{
-
-    /**
-     * Создает (восстанавливает) ценовое правило из массива
-     *
-     * @param $array
-     */
-    public function fromArray($array){
-
-    }
-
-    public static function terms(){
-        return [
-            ['Сумма заказа' => 'DocumentSum', 'number', ['>=', '<=', '=']],
-            ['Категория товара' => 'GoodGroup', 'string', ['>=', '<=', '=', '!=']],
-            ['Без пометки "распродажа"' => 'WithoutBlyamba', ['Да' => 'true'], ['=']],
-            ['Дата' => 'Date', 'date', ['>=', '<=', '=']],
-        ];
-    }
 
 }

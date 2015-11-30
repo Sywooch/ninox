@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = 'Редактирование статьи';
 ?>
 <div class="articles-update">
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    temp
 
 </div>
