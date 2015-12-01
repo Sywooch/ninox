@@ -2,13 +2,9 @@
 
 namespace backend\modules\feedback\controllers;
 use backend\models\Review;
-use backend\models\Term;
-use backend\controllers\SiteController as Controller;
 use backend\models\Question;
 use backend\models\Problem;
-use common\models\ProblemType;
-use common\models\QuestionType;
-use common\models\ReviewType;
+use backend\controllers\SiteController as Controller;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii;
@@ -44,6 +40,22 @@ class DefaultController extends Controller
         return $question->published;
 
     }
+    public function actionChangereviewstate(){
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+        }
+        $review = Review::findOne(['id' => \Yii::$app->request->post("id")]) ;
+
+        if(!$review){
+            return $this->run('site/error');
+        }
+        $review->published = $review->published == 1 ? 0 : 1;
+
+        $review->save();
+
+        return $review->published;
+
+    }
     public function actionChangeproblemstate(){
         if(!\Yii::$app->request->isAjax){
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
@@ -61,7 +73,6 @@ class DefaultController extends Controller
 
     }
 
-
     public function actionReviews()
     {
         if(\Yii::$app->request->isAjax){
@@ -71,17 +82,8 @@ class DefaultController extends Controller
                 return \Yii::$app->request->post();
             }
         }
-        if(!empty(\Yii::$app->request->post())){
+        if(\Yii::$app->request->post()){
             $post = \Yii::$app->request->post();
-            if(isset($post['ReviewType'])){
-                if(!empty($post['ReviewType']['id'])){
-                    $b = ReviewType::findOne(['id' => $post['ReviewType']['id']]);
-                }else{
-                    $b = new ReviewType();
-                }
-                $b->load($post);
-                $b->save();
-            }
             if(isset($post['Review'])){
                 if(!empty($post['Review']['id'])){
                     $b = Review::findOne(['id' => $post['Review']['id']]);
@@ -92,16 +94,16 @@ class DefaultController extends Controller
                 $b->save();
             }
         }
+
         return $this->render('reviews', [
             'reviews'   =>  new ActiveDataProvider([
-                'query' =>  ReviewType::find(),
+                'query' =>  Review::find(),
                 'pagination' => [
                     'pageSize' => 50,
                 ],
             ])
         ]);
     }
-
    /* public function actionUpload()
     {
         $model = new UploadForm();
@@ -133,7 +135,6 @@ class DefaultController extends Controller
                 }
             }
 
-
             return [
                 'state' =>  0
             ];
@@ -141,11 +142,9 @@ class DefaultController extends Controller
             throw new NotFoundHttpException;
     }
 
-
     public function actionUploadnewphoto(){
         if(Yii::$app->request->isAjax){
             Yii::$app->response->format = 'json';
-
             $f = UploadHelper::__upload($_FILES['ArticlesPhoto'], [
                 'filename'  =>  TranslitHelper::to(Yii::$app->request->post('title')).'-'.rand(0, 1000000),
                 'directory' => 'img/blog/articles'
@@ -164,8 +163,6 @@ class DefaultController extends Controller
             throw new NotFoundHttpException;
     }
 
-
-
     public function upload()
     {
         if ($this->validate()) {
@@ -178,45 +175,36 @@ class DefaultController extends Controller
 
     public function actionQuestions()
     {
-        {
-            if (\Yii::$app->request->isAjax) {
-                try {
-                    return $this->run(\Yii::$app->request->post("action"));
-                } catch (\ReflectionException $ex) {
-                    return \Yii::$app->request->post();
-                }
+        if (\Yii::$app->request->isAjax) {
+            try {
+                return $this->run(\Yii::$app->request->post("action"));
+            } catch (\ReflectionException $ex) {
+                return \Yii::$app->request->post();
             }
-            if (!empty(\Yii::$app->request->post())) {
-                $post = \Yii::$app->request->post();
-                if (isset($post['QuestionType'])) {
-                    if (!empty($post['QuestionType']['id'])) {
-                        $b = QuestionType::findOne(['id' => $post['QuestionType']['id']]);
-                    } else {
-                        $b = new QuestionType();
-                    }
-                    $b->load($post);
-                    $b->save();
-                }
-                if (isset($post['Question'])) {
-                    if (!empty($post['Question']['id'])) {
-                        $b = Question::findOne(['id' => $post['Question']['id']]);
-                    } else {
-                        $b = new Question();
-                    }
-                    $b->load($post);
-                    $b->save();
-                }
-            }
-            return $this->render('questions', [
-                'questions' => new ActiveDataProvider([
-                    'query' => QuestionType::find(),
-                    'pagination' => [
-                        'pageSize' => 50,
-                    ],
-                ])
-            ]);
         }
+        if(\Yii::$app->request->post()) {
+            $post = \Yii::$app->request->post();
+            if (isset($post['Question'])) {
+                if (!empty($post['Question']['id'])) {
+                    $b = Question::findOne(['id' => $post['Question']['id']]);
+                } else {
+                    $b = new Question();
+                }
+                $b->load($post);
+                $b->save();
+            }
+        }
+
+        return $this->render('questions', [
+            'questions' => new ActiveDataProvider([
+                'query' => Question::find(),
+                'pagination' => [
+                    'pageSize' => 50,
+                ],
+            ])
+        ]);
     }
+
     public function actionProblems()
     {
         {
@@ -227,17 +215,8 @@ class DefaultController extends Controller
                     return \Yii::$app->request->post();
                 }
             }
-            if (!empty(\Yii::$app->request->post())) {
+            if(\Yii::$app->request->post()) {
                 $post = \Yii::$app->request->post();
-                if (isset($post['ProblemType'])) {
-                    if (!empty($post['ProblemType']['id'])) {
-                        $b = ProblemType::findOne(['id' => $post['ProblemType']['id']]);
-                    } else {
-                        $b = new ProblemType();
-                    }
-                    $b->load($post);
-                    $b->save();
-                }
                 if (isset($post['Problem'])) {
                     if (!empty($post['Problem']['id'])) {
                         $b = Problem::findOne(['id' => $post['Problem']['id']]);
@@ -248,9 +227,10 @@ class DefaultController extends Controller
                     $b->save();
                 }
             }
+
             return $this->render('problems', [
                 'problems' => new ActiveDataProvider([
-                    'query' => ProblemType::find(),
+                    'query' => Problem::find(),
                     'pagination' => [
                         'pageSize' => 50,
                     ],
@@ -317,7 +297,6 @@ class DefaultController extends Controller
             ]);
         }
     }
-
 
     /**
      * Updates an existing Review rule.

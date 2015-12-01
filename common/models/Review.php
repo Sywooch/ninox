@@ -56,14 +56,14 @@ class Review extends \yii\db\ActiveRecord
             'name' => Yii::t('backend', 'Name'),
             'city' => Yii::t('backend', 'City'),
             'type' => Yii::t('backend', 'Type'),
-            'review' => Yii::t('backend', 'Review'),
+            'review' => Yii::t('backend', 'Отзыв'),
             'question1' => Yii::t('backend', 'Question1'),
             'published' => Yii::t('backend', 'Published'),
             'customerType' => Yii::t('backend', 'Customer Type'),
             'target' => Yii::t('backend', 'Target'),
             'deleted' => Yii::t('backend', 'Deleted'),
             'customerID' => Yii::t('backend', 'Customer ID'),
-            'customerPhoto' => Yii::t('backend', 'Customer Photo'),
+            'customerPhoto' => Yii::t('backend', 'Фото пользователя'),
         ];
     }
 

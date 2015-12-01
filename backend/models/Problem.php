@@ -6,12 +6,9 @@
  * Time: 13:10
  */
 
-namespace frontend\models;
+namespace backend\models;
 
 
-class Problem extends \common\models\Problem
-{
-
-    
+class Problem extends \common\models\Problem{
 
 }

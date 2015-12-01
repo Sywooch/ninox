@@ -10,14 +10,14 @@ use yii\helpers\Html;
     ])?>
     <span><?=$model->name?></span>
     <br>
-    <small style="display: block; opacity: 0.4; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 90%;"><?=$model->question?></small>
+    <a style="display: block; opacity: 0.4; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 90%; font-size: "><?=$model->question?>
+    <br></a>
+    <small style="display: block; opacity: 0.4; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 90%;"><?=$model->answer?></small>
 </div>
 <div style="width: 9%; display: inline-block; padding: 5px;" class="btn-group btn-group-sm">
     <?=Html::button(FA::icon($model->published == 1 ? 'eye' : 'eye-slash'), [
         'class'                 =>  'QuestionState btn btn-default'.($model->published != 1 ? ' btn-danger' : ' btn-success'),
         'data-attribute-questionID' =>  $model->id
-
-
     ])
 ?>
 </div>

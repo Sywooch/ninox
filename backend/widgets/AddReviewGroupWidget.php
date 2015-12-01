@@ -7,11 +7,12 @@
  */
 namespace backend\widgets;
 use backend\modules\blog\controllers\LinkController;
-use common\models\ReviewType;
+use backend\models\Review;
 use kartik\form\ActiveForm;
 use yii\base\Widget;
 use yii\bootstrap\Modal;
 use kartik\file\FileInput;
+
 class AddReviewGroupWidget extends Widget{
 
     public $model;
@@ -22,17 +23,12 @@ class AddReviewGroupWidget extends Widget{
 
     public function init(){
         if(empty($this->header)){
-                $this->header = 'Редактировать отзыв';
+            $this->header = 'Редактировать отзыв';
         }
         if(empty($this->model)){
-            $this->model = new ReviewType();
-
+            $this->model = new Review();
         }
     }
-
-    /**
-     *
-     */
     public function run(){
         Modal::begin([
             'header' => '<h2>'.$this->header.'</h2>',
@@ -47,18 +43,17 @@ class AddReviewGroupWidget extends Widget{
         ]);
         $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]);
         if(!$this->model->isNewRecord) {
-           echo LinkController::getForImg().$this->model->customerPhoto;
+            echo LinkController::getForImg().$this->model->customerPhoto;
         }
-
         echo $form->field($this->model, 'customerPhoto')->input('hidden') ,
-   FileInput::widget([
+        FileInput::widget([
             'name'  =>  'ArticlesPhoto[customerPhoto]',
             'options'=>[
-                'accept' => 'image/*',
-                 'imageUpload' => '/admin/blog/uploadbodyphoto'
+                'accept' => 'img/*',
+                'imageUpload' => ''
             ],
             'pluginOptions' => [
-                'uploadUrl' =>  'img/blog/articles',
+                'uploadUrl' =>  '',
                 'uploadExtraData' => [
                     'title' => 'temp'
                 ],
@@ -83,23 +78,12 @@ class AddReviewGroupWidget extends Widget{
                                              }',
             ],
         ]);
-
-
-
-
-
-
-
         echo    $form->field($this->model, 'id')->hiddenInput()->label(false),
                 $form->field($this->model, 'review')->textarea(),
                 '</td></tr></table><button class="btn btn-lg btn-default center-block">Сохранить</button>';
-
-
-                $form->end();
-                Modal::end();
-
+        $form->end();
+        Modal::end();
             }
-
     }
 ?>
 
