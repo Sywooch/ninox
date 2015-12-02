@@ -8,20 +8,24 @@
 
     <div class="chat-history">
         <ul>
-            <?=\yii\widgets\ListView::widget([
+            <?php
+            \yii\widgets\Pjax::begin();
+            echo \yii\widgets\ListView::widget([
                 'dataProvider'  =>  $messagesDataProvider,
                 'emptyText'     =>  'Сообщений пока что нет',
                 'summary'       =>  '',
                 'itemOptions'   =>  [
                     'tag'   =>  'li',
-                    'class' =>  'clearfix'
+                    'class' =>  'item clearfix'
                 ],
                 'itemView'      =>  function($model){
                     return $this->render('_chat_message', [
                         'model'  =>  $model
                     ]);
                 }
-            ])?>
+            ]);
+            \yii\widgets\Pjax::end();
+            ?>
         </ul>
         <ul style="display: none;">
 

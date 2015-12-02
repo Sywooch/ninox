@@ -1,4 +1,5 @@
 <?php
+use backend\models\History;
 use backend\widgets\ServiceMenuWidget;
 use bobroid\yamm\Yamm;
 use kartik\dropdown\DropdownX;
@@ -299,6 +300,15 @@ if($ordersPage){
 \bobroid\messenger\ThemeairAssetBundle::register($this);
 
 rmrevin\yii\fontawesome\AssetBundle::register($this);
+
+$newOrdersCount = History::ordersQuery([
+    'queryParts'    =>  [
+        ''
+    ]
+]);
+
+$newOrdersCount = 0;
+
 $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -346,7 +356,7 @@ $this->beginPage() ?>
             [
                 'label'     => FA::icon('check-circle-o')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Заказы</span>',
                 'url'       => Url::home(),
-                'counter'   =>  '25',
+                'counter'   =>  $newOrdersCount,
                 'options'   =>  [
                     'class' =>  'bordered'
                 ]
@@ -659,15 +669,17 @@ $this->beginPage() ?>
     ?>
     <div class="rollback<?=$ordersPage ? ' orders' : ''?>" onclick="history.back()"><?=FA::icon('arrow-left')?></div>
     <div class="container"<?=$ordersPage == 'Заказы' ? ' style="max-width: 1300px; width: auto;"' : ''?>>
-        <?=ServiceMenuWidget::widget([
+        <?php
+
+        echo ServiceMenuWidget::widget([
             'showDateButtons'   =>  isset($this->params['showDateButtons']) ? $this->params['showDateButtons'] : false
-        ])?>
-        <?= Breadcrumbs::widget([
+        ]),
+        Breadcrumbs::widget([
             'homeLink'  =>  ['label' => 'Главная', 'url' => Url::home()],
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]),
-        $content ?>
-        <?php
+        $content;
+
         if(\Yii::$app->user->identity->superAdmin == 1){
             $moduleConfig = new \bobroid\remodal\Remodal([
                 'addRandomToID' =>  false,
@@ -677,8 +689,10 @@ $this->beginPage() ?>
 
             echo $moduleConfig->renderModal();
         }
+
+        echo \backend\widgets\ChatWidget::widget()
+
         ?>
-        <?=\backend\widgets\ChatWidget::widget()?>
     </div>
     <?php Yamm::end(); ?>
 </div>
