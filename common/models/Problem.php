@@ -49,7 +49,7 @@ class Problem extends \yii\db\ActiveRecord
             'id' => Yii::t('backend', 'ID'),
             'orderNumber' => Yii::t('backend', 'Order Number'),
             'phone' => Yii::t('backend', 'Phone'),
-            'text' => Yii::t('backend', 'Text'),
+            'text' => Yii::t('backend', 'Проблема'),
             'received' => Yii::t('backend', 'Received'),
             'read' => Yii::t('backend', 'Read'),
             'email' => Yii::t('backend', 'Email'),

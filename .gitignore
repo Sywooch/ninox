@@ -1,5 +1,4 @@
 .idea/*
-.idea/workspace.xml
 frontend/runtime/*
 frontend/web/assets/*
 backend/runtime/*

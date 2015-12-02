@@ -3,7 +3,7 @@ return [
     'enablePrettyUrl'   =>  true,
     'showScriptName'    =>  false,
     'rules' =>  [
-        '<action:(log(in|out))>'    =>  'site/<action>',
+        '<action:(log(in|out)|updatecurrency)>'    =>  'site/<action>',
         '<action:(add(controller|action))>'   =>  'site/<action>',
         '<action:(loadchat)>'           =>  'site/<action>',
         '<module>'                  =>  '<module>/default/index',

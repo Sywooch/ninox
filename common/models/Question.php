@@ -50,9 +50,9 @@ class Question extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('common', 'ID'),
             'name' => Yii::t('backend', 'Name'),
-            'photo' => Yii::t('backend', 'Photo'),
-            'question' => Yii::t('backend', 'Question'),
-            'answer' => Yii::t('backend', 'Answer'),
+            'photo' => Yii::t('backend', 'Фото'),
+            'question' => Yii::t('backend', 'Вопрос'),
+            'answer' => Yii::t('backend', 'Ответ'),
             'date_question' => Yii::t('backend', 'Date Question'),
             'date_answer' => Yii::t('backend', 'Date Answer'),
             'published' => Yii::t('backend', 'Published'),

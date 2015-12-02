@@ -15,6 +15,7 @@ use Yii;
 class BannerType extends \yii\db\ActiveRecord
 {
     private static $_bannersCount = [];
+
     public static function getList(){
         $m = self::find()->select('');
         $r = [];
@@ -24,6 +25,7 @@ class BannerType extends \yii\db\ActiveRecord
         }
         return $r;
     }
+
     /**
      * @inheritdoc
      */
@@ -31,6 +33,7 @@ class BannerType extends \yii\db\ActiveRecord
     {
         return 'banners_type';
     }
+
     public static function getBannersCount(){
         if(!empty(self::$_bannersCount)){
             return self::$_bannersCount;
