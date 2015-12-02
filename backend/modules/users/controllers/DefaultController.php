@@ -7,6 +7,8 @@ use common\models\Siteuser;
 use backend\models\User;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -44,6 +46,33 @@ class DefaultController extends Controller
         }
 
         return parent::beforeAction($action);
+    }
+
+    public function actionChangepassword(){
+        if(!\Yii::$app->request->isAjax && !\Yii::$app->request->post("User")){
+            throw new BadRequestHttpException("Этот запрос возможен только через Ajax!");
+        }
+
+        if(!\Yii::$app->request->post("User")){
+            $user = User::findOne(['id' => \Yii::$app->request->post("id")]);
+        }else{
+            $user = User::findOne(['id' => \Yii::$app->request->post("User")['id']]);
+        }
+
+        if(!$user){
+            throw new NotFoundHttpException("Пользователь не найден!");
+        }
+
+        if(\Yii::$app->request->post("User")){
+            if(\Yii::$app->request->post("User")['newPassword'] == \Yii::$app->request->post("User")['newPassword2']){
+                $user->password = \Yii::$app->request->post("User")['newPassword'];
+                $user->save(false);
+            }
+        }
+
+        return $this->renderAjax('_change_password', [
+            'model' =>  $user
+        ]);
     }
 
     public function actionIndex(){

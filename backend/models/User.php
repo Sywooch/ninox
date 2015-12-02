@@ -16,6 +16,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
 
     protected $permissions = [];
 
+    public $newPassword;
+    public $newPassword2;
+
     /**
      * @inheritdoc
      */
@@ -61,6 +64,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
             'workStatus' => 'Статус',
             'tasksUser' => 'Есть в задачах',
             'tasksRole' => 'Роль в задачах',
+            'newPassword' => 'Новый пароль',
+            'newPassword2' => 'Повторите новый пароль',
         ];
     }
 

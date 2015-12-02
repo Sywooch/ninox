@@ -2,8 +2,38 @@
     $this->title = 'Пользователи';
 
     $this->params['breadcrumbs'][] = $this->title;
+
+    $js = <<<'SCRIPT'
+    var changePasswordModalOpen = function(e){
+        var button  = e.currentTarget,
+            userID  = button.getAttribute('data-user-id'),
+            modal   = document.querySelector("div.remodal[data-remodal-id='changePassword']");
+
+        $.ajax({
+            type: 'POST',
+            url: '/users/changepassword',
+            data: {
+                'id': userID
+            },
+            success: function(data){
+                modal.innerHTML = data;
+            }
+        });
+    };
+
+    $(".changePasswordButton").on('click', function(e){
+        changePasswordModalOpen(e);
+    });
+SCRIPT;
+
+    $this->registerJs($js);
+
+    $changePasswordModal = new \bobroid\remodal\Remodal([
+        'id'            =>  'changePassword',
+        'addRandomToID' =>  false,
+    ]);
 ?>
-<h1>Пользователи</h1>
+<h1><?=$this->title?></h1>
 <div class="btn-group">
     <?=\backend\widgets\AddUserWidget::widget([])?>
 </div>
@@ -18,7 +48,9 @@
             'model' =>  $model
         ]);
     }
-])?>
+]),
+$changePasswordModal->renderModal()?>
+
 <div style="clear: both"></div>
     <br>
     <br>
