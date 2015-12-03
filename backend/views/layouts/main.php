@@ -354,6 +354,10 @@ $this->beginPage() ?>
         'theme' =>  'gray',
         'items' => [
             [
+                'label'     =>  FA::icon('home')->size(FA::SIZE_2X),
+                'url'       =>  \Yii::$app->params['frontend'].'?serviceMenu=true&currentUser='.\Yii::$app->user->identity->id.'&secretKey=lazyPenguinsEatsMoreIceCreams'
+            ],
+            [
                 'label'     => FA::icon('check-circle-o')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Заказы</span>',
                 'url'       => Url::home(),
                 'counter'   =>  $newOrdersCount,

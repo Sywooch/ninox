@@ -438,8 +438,9 @@ $this->registerJsFile('/js/bootbox.min.js', [
 $thiss = $this;
 ?>
 <?php
-\yii\widgets\Pjax::begin()?>
+$pjax = \yii\widgets\Pjax::begin(); ?>
 <?=\kartik\grid\GridView::widget([
+    'id'    =>  'orderItems',
     'dataProvider'  =>  $itemsDataProvider,
     'containerOptions'       =>  [
         'style'     =>  'overflow: hidden',
@@ -576,6 +577,6 @@ $thiss = $this;
             ],
         ],
     ]
-])?>
-<?php
-\yii\widgets\Pjax::end()?>
+]);
+\yii\widgets\Pjax::end();
+?>
