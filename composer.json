@@ -47,7 +47,6 @@
         "kartik-v/yii2-widget-depdrop": "@dev",
         "bobroid/yamm": "*",
         "bobroid/yii2-audittrail": "*",
-        "rmrevin/yii2-fontawesome": "*",
         "bobroid/yii2-sweetalert": "dev-master",
         "bobroid/yii2-remodal": "dev-master",
         "bobroid/yii2-imperavi-redactor": "dev-master",
@@ -55,7 +54,8 @@
         "bobroid/yii2-messenger": "*",
         "phpoffice/phpexcel": "*",
         "morozovsk/yii2-websocket": "dev-master",
-        "kop/yii2-scroll-pager": "dev-master"
+        "kop/yii2-scroll-pager": "dev-master",
+        "rmrevin/yii2-fontawesome": "^2.13"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",

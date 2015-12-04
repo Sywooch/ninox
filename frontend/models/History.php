@@ -9,16 +9,6 @@
 namespace frontend\models;
 
 
-use frontend\helpers\OrderHelper;
-
 class History extends \common\models\History{
-
-    public function beforeSave($insert){
-        if(!isset($this->oldAttributes['id'])){
-            OrderHelper::createOrder($this);
-        }
-
-        return parent::beforeSave($insert);
-    }
 
 }
