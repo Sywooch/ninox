@@ -48,5 +48,10 @@ return [
         ],
         'urlManager' => require(__DIR__.'/urlManager.php'),
     ],
+    'modules'   =>  [
+        'account' => [
+            'class' => 'frontend\modules\account\Module',
+        ],
+    ],
     'params' => $params,
 ];
