@@ -15,6 +15,22 @@ use yii\helpers\Html;
 class ListGroupMenu extends Widget{
 
     public $items;
+    public $containerOptions;
+    public $itemOptions;
+    public $id;
+
+    private $defaultContainerOptions = [
+        'class' =>  'list-group'
+    ];
+
+    private $defaultItemOptions = [
+        'class' =>  'list-group-item'
+    ];
+
+    public function init(){
+        $this->containerOptions = array_merge($this->defaultContainerOptions, $this->containerOptions);
+        $this->itemOptions = array_merge($this->defaultItemOptions, $this->itemOptions);
+    }
 
     public function run(){
         $items = [];
@@ -25,9 +41,7 @@ class ListGroupMenu extends Widget{
             ]);
         }
 
-        return Html::tag('div', implode($items), [
-            'class' =>  'list-group'
-        ]);
+        return Html::tag('div', implode($items), $this->containerOptions);
     }
 
 }
