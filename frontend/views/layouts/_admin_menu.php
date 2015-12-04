@@ -38,11 +38,16 @@ $this->registerCss($css);
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav" style="margin: 0 auto;">
-                    <li>Текущий клиент: <?=Editable::widget([
+                    <li>
+                        Текущий клиент: <?=Editable::widget([
                             'name'=>'person_name',
                             'asPopover' => true,
                             'header' => 'Name',
                             'format'    =>  'link',
+                            'inputType' =>  Editable::INPUT_SELECT2,
+                            'options'   =>  [
+                                'data'  =>  \frontend\models\Customer::getList(['asArray' => true, 'columns' => ['ID', 'Company']])
+                            ],
                             'editableValueOptions'  =>  [
                             ],
                             'placement' =>  'bottom',
@@ -50,9 +55,10 @@ $this->registerCss($css);
                             'containerOptions' => [
                                 'style' =>  'margin-top: 13px;'
                             ]
-                        ])?></li>
+                        ])?>
+                    </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <!--<ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Link</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -64,7 +70,7 @@ $this->registerCss($css);
                             <li><a href="#">Separated link</a></li>
                         </ul>
                     </li>
-                </ul>
+                </ul>-->
             </div>
         </div>
     </nav>
