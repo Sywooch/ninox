@@ -5,3 +5,4 @@ backend/runtime/*
 backend/web/assets/*
 vendor/*
 composer.lock
+composer.phar
