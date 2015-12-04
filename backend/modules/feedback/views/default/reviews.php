@@ -29,6 +29,24 @@ var changeState = function(e){
 for(var i = 0; i < buttons1.length; i++){
     buttons1[i].addEventListener('click', changeState, false);
 }
+
+changeTrashState = function(e){
+    var target = e.currentTarget;
+    $.ajax({
+        type: 'POST',
+        url: '/feedback/workwithreviewtrash',
+        data: {
+            'ReviewID': e.currentTarget.getAttribute("data-attribute-reviewID")
+        },
+        success: function(data){
+            if(data.length >= "1"){
+                target.innerHTML = data == "1" ? "Восстановить" : "Удалить";
+            }
+        }
+    });
+}
+
+$(".changeTrashState").on('click', function(e){ changeTrashState(e); });
 SCRIPT;
 $this->registerJs($js);
 ?>

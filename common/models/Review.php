@@ -23,6 +23,17 @@ use Yii;
  */
 class Review extends \yii\db\ActiveRecord
 {
+    public static function changeTrashState($id){
+        $a = Review::findOne(['id' => $id]);
+        if($a){
+            $a->deleted = $a->deleted == "1" ? "0" : "1";
+            $a->save(false);
+
+            return $a->deleted;
+        }
+
+        return false;
+    }
     /**
      * @inheritdoc
      */
@@ -38,7 +49,7 @@ class Review extends \yii\db\ActiveRecord
     {
         return [
             [['date', 'name'], 'required'],
-            [['date'], 'safe'],
+            [['id', 'date'], 'safe'],
             [['name', 'city', 'review', 'customerType'], 'string'],
             [['type', 'question1', 'published', 'target', 'deleted', 'customerID'], 'integer'],
             [['customerPhoto'], 'string', 'max' => 255],

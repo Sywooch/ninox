@@ -546,11 +546,11 @@ $this->beginPage() ?>
                                     ],
                                     [
                                         'label' =>  'Запросы на перезвон',
-                                        'url'   =>  Url::toRoute('/feedback/requestcall')
+                                        'url'   =>  Url::toRoute('/feedback/callback')
                                     ],
                                     [
                                         'label' =>  'Жалобы',
-                                        'url'   =>  Url::toRoute('/feedback/lament')
+                                        'url'   =>  Url::toRoute('/feedback/problems')
                                     ],
                                     [
                                         'label' =>  'Голосования',

@@ -17,6 +17,17 @@ use Yii;
  */
 class Callback extends \yii\db\ActiveRecord
 {
+    public static function changeTrashState($id){
+        $a = Callback::findOne(['id' => $id]);
+        if($a){
+            $a->deleted = $a->deleted == "1" ? "0" : "1";
+            $a->save(false);
+
+            return $a->deleted;
+        }
+
+        return false;
+    }
     /**
      * @inheritdoc
      */
@@ -48,7 +59,7 @@ class Callback extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('backend', 'ID'),
             'phone' => Yii::t('backend', 'Phone'),
-            'question' => Yii::t('backend', 'Question'),
+            'question' => Yii::t('backend', 'Вопрос'),
             'received' => Yii::t('backend', 'Received'),
             'did_callback' => Yii::t('backend', 'Did Callback'),
             'customerName' => Yii::t('backend', 'Customer Name'),

@@ -22,6 +22,17 @@ use Yii;
  */
 class Question extends \yii\db\ActiveRecord
 {
+    public static function changeTrashState($id){
+        $a = Question::findOne(['ID' => $id]);
+        if($a){
+            $a->deleted = $a->deleted == "1" ? "0" : "1";
+            $a->save(false);
+
+            return $a->deleted;
+        }
+
+        return false;
+    }
     /**
      * @inheritdoc
      */
@@ -37,7 +48,7 @@ class Question extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'photo', 'question', 'answer', 'email', 'phone'], 'string'],
-            [['date_question', 'date_answer'], 'safe'],
+            [['id', 'date_question', 'date_answer'], 'safe'],
             [['published', 'domainId', 'deleted'], 'integer'],
         ];
     }

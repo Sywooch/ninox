@@ -33,7 +33,7 @@ class Problem extends \yii\db\ActiveRecord
     {
         return [
             [['orderNumber', 'read', 'type'], 'integer'],
-            [['phone', 'text', 'received'], 'required'],
+            [['text', 'received'], 'required'],
             [['text', 'email'], 'string'],
             [['received'], 'safe'],
             [['phone'], 'string', 'max' => 20],
