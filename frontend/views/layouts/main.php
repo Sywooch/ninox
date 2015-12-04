@@ -6,9 +6,11 @@
 use app\assets\RuLangAsset;
 use bobroid\yamm\Yamm;
 use common\components\SocialButtonWidget;
+use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
@@ -151,10 +153,25 @@ $this->registerJs($js);
 			</div>
 			<ul class="right">
 				<li id="loginRegistration">
+				<?php if(\Yii::$app->user->isGuest){ ?>
 					<span id="login">
-						<span class="link-hide" data-href="#loginModal">Вход</span>
+					<?=\bobroid\remodal\Remodal::widget([
+						'confirmButton'	=>	false,
+						'id'			=>	'login',
+						'cancelButton'	=>	false,
+						'addRandomToID'	=>	false,
+						'content'		=>	$this->render('parts/_login_modal'),
+						'buttonOptions'	=>	[
+							'label'		=>	\Yii::t('shop', 'Войти')
+						],
+					])?>
 					</span>
 					<span id="registration">&nbsp;/&nbsp;<span class="link-hide" data-href="/registration">Регистрация</span></span>
+				<?php }else{ ?>
+					<span>Здравствуйте, <?=\Yii::$app->user->identity->Company?>! <?=Html::a('Выйти', Url::to('/logout'), [
+							'data-method'   =>  'post'
+						])?></span>
+				<?php }	?>
 				</li>
 				<li id="lang">РУС<span class="arrow"></span>
 					<ul>
