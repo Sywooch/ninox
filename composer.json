@@ -54,7 +54,8 @@
         "liqpay/liqpay": "dev-master",
         "bobroid/yii2-messenger": "*",
         "phpoffice/phpexcel": "*",
-        "morozovsk/yii2-websocket": "dev-master"
+        "morozovsk/yii2-websocket": "dev-master",
+        "kop/yii2-scroll-pager": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",

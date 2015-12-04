@@ -52,7 +52,7 @@ STYLE;
             if(result !== null){
                 $.ajax({
                     type: 'POST',
-                    url: '/admin/goods/additemtoorder',
+                    url: '/goods/additemtoorder',
                     data: {
                         'OrderID': item.getAttribute("data-key"),
                         'itemID':  item.getAttribute("data-attribute-itemID"),

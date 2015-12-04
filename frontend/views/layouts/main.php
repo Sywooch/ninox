@@ -100,6 +100,11 @@ $this->registerJs($js);
 	</head>
 	<body>
 	<?php $this->beginBody() ?>
+	<?php
+	if(\Yii::$app->request->get("serviceMenu") == 'true' && \Yii::$app->request->get("secretKey") == \Yii::$app->params['secretAdminPanelKey']){
+		echo $this->render('_admin_menu');
+	}
+	?>
 	<div class="topCaption">
 		<div class="topAction">
 			<div class="top-action-center">

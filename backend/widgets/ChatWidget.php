@@ -29,8 +29,15 @@ class ChatWidget extends Widget{
 
         if($chatsDataProvider->getCount() >= 1){
             $messagesDataProvider = new ActiveDataProvider([
-                'query' =>  ChatMessage::find()->where(['chat'  =>  $chatsDataProvider->getModels()['0']->id])->orderBy('timestamp ASC')
+                'query'         =>  ChatMessage::find()->where(['chat'  =>  '1'/*$chatsDataProvider->getModels()['0']->id*/])->orderBy('timestamp ASC'),
+                'pagination'    =>  [
+                    'pageSize'  =>  '50',
+                ]
             ]);
+
+            //die($messagesDataProvider->pagination->page);
+
+            //$messagesDataProvider->pagination->page = $messagesDataProvider->pagination->pageCount;
         }
 
         return $this->render('chatWindow', [

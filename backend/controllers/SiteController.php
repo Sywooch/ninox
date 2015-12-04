@@ -202,18 +202,18 @@ class SiteController extends Controller
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
-        if(!\Yii::$app->user->isGuest){
+        /*if(!\Yii::$app->user->isGuest){
             if(!empty(\Yii::$app->user->identity->default_route)){
                 return $this->redirect(\Yii::$app->user->identity->default_route);
             }
 
             return $this->redirect(Url::home());
-        }
+        }*/
 
         $model = new LoginForm();
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(\Yii::$app->user->identity->default_route);
+            return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
             //return !$this->redirect($this->goBack() = '/login' ? \Yii::$app->user->identity->default_route : $this->goBack());
         }else{
             return $this->render('login', [

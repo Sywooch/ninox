@@ -205,6 +205,7 @@ class History extends \common\models\History
      * Возвращает колл-во заказов, сделаных из магазина и из сайта
      *
      */
+    //TODO
     public static function getShopSiteOrdersCount($period = null){
         $q = History::find()
             ->select('COUNT(`ID`) as `a`')
@@ -236,6 +237,7 @@ class History extends \common\models\History
         ];
     }
 
+    //TODO
     public static function getPaymentStats($period = null){
         $p = [];
 
@@ -259,6 +261,7 @@ class History extends \common\models\History
         return $p;
     }
 
+    //TODO
     public static function getStatsByCategories($period = null){
         $r = [];
 
@@ -284,6 +287,7 @@ class History extends \common\models\History
         return $r;
     }
 
+    //TODO
     public static function getStatsByCategoriesWithCategoryName($period = null){
         $q = self::getStatsByCategories($period);
 

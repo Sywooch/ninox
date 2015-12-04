@@ -55,10 +55,11 @@ if(\Yii::$app->user->identity->can("10")){
                 if(\Yii::$app->user->identity->can("2") || \Yii::$app->user->identity->id == $model->id){
                     echo \yii\helpers\Html::a(\rmrevin\yii\fontawesome\FA::icon('key'), '#changePassword', [
                         'class' =>  'btn btn-default changePasswordButton',
+                        'data-user-id'  =>  $model->id
                     ]);
                 }
-                ?>
-                <?=DropdownX::widget([
+
+                echo DropdownX::widget([
                     'items' =>  $dropdownItems
                 ])?>
             </div>

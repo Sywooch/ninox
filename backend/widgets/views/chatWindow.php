@@ -1,3 +1,10 @@
+<?php
+$defaultChat = new \common\models\Chat([
+    'name'      =>  'Общий чат',
+    'avatar'    =>  'https://krasota-style.com.ua/template/img/ring_for_home.png',
+    'id'        =>  '1'
+]);
+?>
 <div class="chatbox" style="display: none;">
     <div class="container clearfix">
         <div class="people-list" id="people-list" style="width: 86px;">
@@ -10,7 +17,14 @@
                     <span style="margin-left: 20px;"><?=\rmrevin\yii\fontawesome\FA::icon('arrow-left')?></span>
                 </li>
 
-                <?=\yii\widgets\ListView::widget([
+                <div class="list-view">
+                    <li class="clearfix" data-key="1">
+                        <?=$this->render('_chat_person', [
+                            'chat'  =>  $defaultChat
+                        ])?>
+                    </li>
+                </div>
+                <?=''/*\yii\widgets\ListView::widget([
                     'dataProvider'  =>  $chatsDataProvider,
                     'emptyText'     =>  '',
                     'summary'       =>  '',
@@ -23,16 +37,16 @@
                             'chat'  =>  $model
                         ]);
                     }
-                ])?>
+                ])*/?>
 
-                <li class="clearfix chat-createChat">
+                <li class="clearfix chat-createChat" style="display: none">
                     <span style="margin-left: 20px;"><?=\rmrevin\yii\fontawesome\FA::icon('plus')?></span>
                 </li>
             </ul>
         </div>
         <?php if(!empty($chatsDataProvider->getModels())){
             echo $this->render('_chat_window', [
-                'chatData'  =>  $chatsDataProvider->getModels()['0'],
+                'chatData'  =>  $defaultChat,//$chatsDataProvider->getModels()['0'],
                 'messagesDataProvider'  =>  $messagesDataProvider
             ]);
         } ?>
