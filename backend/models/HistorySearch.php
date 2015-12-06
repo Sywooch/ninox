@@ -38,22 +38,56 @@ class HistorySearch extends History{
             ]
         ]);
 
-        switch(\Yii::$app->request->get("ordersSource")){
-            case 'all':
-                break;
-            case 'market':
-                $query->andWhere(['deliveryType' => 5, 'paymentType' =>  6]);
-                break;
-            case 'deleted':
-                $query->andWhere('deleted != 0');
-                break;
-            case 'shop':
-            default:
-                $query->andWhere('deliveryType != 5 AND paymentType != 6');
-                break;
+        if(\Yii::$app->request->get("ordersSource") != ''){
+	        switch(\Yii::$app->request->get("ordersSource")){
+		        case 'all':
+			        break;
+		        case 'market':
+			        $query->andWhere(['deliveryType' => 5, 'paymentType' =>  6]);
+			        break;
+		        case 'deleted':
+			        $query->andWhere('deleted != 0');
+			        break;
+		        case 'shop':
+		        default:
+			        $query->andWhere('deliveryType != 5 AND paymentType != 6');
+			        break;
+	        }
         }
 
-        if(empty($params['HistorySearch'])){
+	    if(\Yii::$app->request->get("smartFilter")){
+		    switch(\Yii::$app->request->get("smartFilter")){
+			    case 'shipping':
+					$query->andWhere(
+						[
+							'and',
+							'done = 1',
+							['or',
+								'nakladna = \'\'',
+								'nakladna = \'-\''],
+							['or',
+								['and',
+									['in',
+										'paymentType',
+										['2', '3', '4']
+									],
+									['moneyConfirmed' => 1]
+		                        ],
+								['and',
+									['in',
+										'paymentType',
+										['1', '5']
+									],
+									['moneyConfirmed' => 0]
+		                        ]
+							]
+						]);
+					$query->andWhere('deliveryType != 4 AND actualAmount > 0');
+				    break;
+			    default:
+				    break;
+		    }
+	    }elseif(empty($params['HistorySearch'])){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
             switch(\Yii::$app->request->get("showDates")){

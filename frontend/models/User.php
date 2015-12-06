@@ -21,10 +21,6 @@ class User extends Customer implements IdentityInterface {
         return static::findOne(['auth_key' => $token]);
     }
 
-    public static function findByUsername($username){
-        return static::findOne(['username' => $username]);
-    }
-
     public function getId(){
         return $this->getPrimaryKey();
     }
@@ -34,8 +30,7 @@ class User extends Customer implements IdentityInterface {
     }
 
     public function validatePassword($password){
-        //Функция валидации пароля
-        return true;
+        return hash("sha512", $password, false) == $this->password;
     }
 
     public function validateAuthKey($authKey){
