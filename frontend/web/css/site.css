@@ -129,25 +129,67 @@ h2{
 	url('../fonts/OpenSans-LightItalic.svg#OpenSans-LightItalic') format('svg');
 	font-weight: normal;
 	font-style: normal;
-
 }
-
+@font-face {
+    font-family: 'MyriadProRegular';
+    src: url('../fonts/MyriadProRegular.eot');
+    src: url('../fonts/MyriadProRegular.eot?#iefix')format('embedded-opentype'),
+    url('../fonts/MyriadProRegular.woff') format('woff'),
+    url('../fonts/MyriadProRegular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+}
 /* End font loading */
-
-[class^="shop-"]:before, [class*=" shop-"]:before{
-	font-family: shop;
-	font-style: normal;
-	font-weight: normal;
-	speak: none;
-	display: inline-block;
-	text-decoration: inherit;
-	text-align: center;
-	font-variant: normal;
-	text-transform: none;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	cursor: pointer;
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'shop';
+    src: url('../fonts/shop.svg?3153255#shop') format('svg');
+  }
 }
+*/
+[class^="icon-"]:before, [class*=" icon-"]:before {
+    font-family: "shop";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1m;
+
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.icon-note:before { content: '\e800'; }
+.icon-your-discont:before { content: '\e801'; }
+.icon-box:before { content: '\e802'; }
+.icon-delivery-car:before { content: '\e803'; }
+.icon-money-pig:before { content: '\e804'; }
+.icon-print:before { content: '\e805'; }
 
 .shop-circle-empty:before { content: '\e800'; }
 .shop-star:before { content: '\e801'; }
@@ -357,6 +399,10 @@ h2{
 
 .semi-bold{
 	font-family: OpenSans-Semibold;
+}
+
+.myriad{
+    font-family: MyriadProRegular;
 }
 
 .center{
@@ -1548,10 +1594,192 @@ footer{
 @media screen and (max-width: 975px){
 
 }
+
 /*========* END ADAPTIV *=========*/
+
 
 /*========* ACCOUNT *=========*/
 
+.icon
+{
+    font-family: "shop";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+    font-size: 32px;
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+    vertical-align: bottom;
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+    /* You can be more comfortable with increased icons size */
+    /*font-size: 250%;*/
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
 
+.user-account .myriad{
+    font-size: 22px;
+    vertical-align: middle;
+}
+
+.user-account .semi{
+    width: 180px;
+    margin-left: 18px;
+    vertical-align: middle;
+    float: left;
+}
+
+.user-account .address{
+    margin-left: 18px;
+}
+
+.user-account .semi_font{
+    font-size: 16px;
+}
+
+.menu{
+    width: 332px;
+    float: left;
+    height: 1000px;
+}
+
+.page{
+    float: left;
+    width: 565px;
+}
+.personal-data{
+    float: left;
+    padding-bottom: 20px;
+}
+
+.icon-delivery-car{
+    padding-left: 7px;
+    width: initial;
+    font-size: 28px;
+    vertical-align: sub;
+    color: #1998db;
+}
+
+.icon-money-pig{
+    padding-left: 3px;
+    width: 37px;
+    vertical-align: initial;
+}
+
+.icon-your-discont{
+    vertical-align: initial;
+}
+
+.icon-arrow{
+    padding-left: 3px;
+    width: 37px;
+    vertical-align: initial;
+}
+
+.color{
+    color: #1998db;
+}
+
+.hr{
+    color: #dadada;
+    height: 307px;
+    border: solid;
+    border-width: 1px;
+    float: left;
+    margin-top: 45px;
+}
+
+.user-options{
+    font-size: 14px;
+    float: left;
+    padding: 50px;
+}
+
+.user-options a{
+    font-size: 14px;
+    float: left;
+    padding-bottom: 25px;
+}
+.account-money{
+    font-size: 24px;
+    padding-top: 8px;
+}
+
+.reviews{
+    width: 923px;
+    height: 305px;
+    float: left;
+    margin-left: 18px;
+    background-color: #e2f3fc;
+}
+
+.reviews .text{
+    padding-left: 40px;
+    padding-top: 35px;
+}
+
+.my-orders{
+    padding-top: 150px;
+    float: left;
+    width: 923px;
+    margin-left: 18px;
+}
+
+.order-waiting{
+    background: #fdfdfd; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#ffffff, #f8f8f8); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#ffffff, #f8f8f8); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#ffffff, #f8f8f8); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#ffffff, #f8f8f8); /* Standard syntax */
+    height: 60px;
+    width: 923px;
+    margin: auto;
+    border-radius: 7px 7px 7px 7px;
+    -moz-border-radius: 7px 7px 7px 7px;
+    -webkit-border-radius: 7px 7px 7px 7px;
+    border: 3px solid #dddddd;
+    -moz-border-image: -moz-linear-gradient(top, #f9f9f9 0%, #dddddd 100%);
+    -webkit-border-image: -webkit-linear-gradient(top, #f9f9f9 0%, #dddddd 100%);
+    border-image: linear-gradient(to bottom, #f9f9f9 0%, #dddddd 100%);
+    border-image-slice: 1
+}
+
+.order-complete{
+    background: #f1f7f0;
+    height: 60px;
+    width: 923px;
+    border: 3px solid #c5e2c9;
+    border-radius: 7px 7px 7px 7px;
+    -moz-border-radius: 7px 7px 7px 7px;
+    -webkit-border-radius: 7px 7px 7px 7px;
+}
+
+.order-canceled{
+    background: #fcf3f3;
+    height: 60px;
+    width: 923px;
+    border: 3px solid #f9d0d0;
+    border-radius: 7px 7px 7px 7px;
+    -moz-border-radius: 7px 7px 7px 7px;
+    -webkit-border-radius: 7px 7px 7px 7px;
+}
+
+.my-orders .box{
+    margin-left: -12px;
+}
 
 /*========* END ACCOUNT *=========*/
