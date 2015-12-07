@@ -13,3 +13,6 @@ echo $form->field($model, 'phone'),
         'class' =>  'btn btn-default'
     ]);
 $form->end();
+
+echo \yii\helpers\Html::a(\Yii::t('site', 'Восстановить пароль'), \yii\helpers\Url::to('/request-password-reset')), '&nbsp; | &nbsp;',
+    \yii\helpers\Html::a('Регистрация', '#registration');

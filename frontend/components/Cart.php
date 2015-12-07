@@ -6,8 +6,7 @@
  * Time: 14:20
  */
 
-namespace common\components;
-
+namespace frontend\components;
 
 use common\helpers\PriceRuleHelper;
 use frontend\models\Good;
@@ -39,7 +38,7 @@ class Cart extends Component{
 
             if(!$cache->exists('cart-'.$this->cartCode.'/items') || $lastUpdate > (time() + 1200)){
                 foreach($this->itemsQuery()->each() as $item){
-                    $this->items[$item->id] = $item;
+                    $this->items[$item->itemID] = $item;
                 }
             }
 
@@ -56,13 +55,7 @@ class Cart extends Component{
     }
 
     public function createCartCode($length = '11'){
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKMLNOPQRSTUVWXYZ123456789';
-        $numChars = strlen($chars);
-        $string = '';
-        for ($i = 0; $i < $length; $i++) {
-            $string .= substr($chars, rand(1, $numChars) - 1, 1);
-        }
-        return $string;
+        return \Yii::$app->security->generateRandomString($length);
     }
 
     public function itemsQuery(){
@@ -74,11 +67,11 @@ class Cart extends Component{
 
         if(!empty($this->items)){
             foreach($this->items as $item){
-                $items[] = $item->goodId;
+                $items[] = $item->itemID;
             }
         }
 
-        return \frontend\models\Good::find()->
+        return Good::find()->
 	        where(['in', '`goods`.`id`', $items]);
     }
 
@@ -99,7 +92,7 @@ class Cart extends Component{
 	public function remove($itemID){
 		unset($this->items[$itemID]);
 		unset($this->goods[$itemID]);
-		$item = \common\models\Cart::findOne(['cartCode' => $this->cartCode, 'goodId' => $itemID]);
+		$item = \frontend\models\Cart::findOne(['cartCode' => $this->cartCode, 'itemID' => $itemID]);
 
 		if($item){
 			$item->delete();
@@ -122,9 +115,13 @@ class Cart extends Component{
         }else{
             $this->items[$itemID] = new \frontend\models\Cart([
                 'count'     =>  $count,
-                'goodId'    =>  $itemID,
+                'itemID'    =>  $itemID,
                 'cartCode'  =>  $this->cartCode
             ]);
+
+            if(!\Yii::$app->user->isGuest){
+                $this->items[$itemID]->customerID = \Yii::$app->user->identity->ID;
+            }
         }
 
         if($this->items[$itemID]->save(false) && empty($this->goods[$itemID])){

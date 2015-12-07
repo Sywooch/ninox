@@ -1,7 +1,6 @@
 <?php
 namespace frontend\models;
 
-use common\models\User;
 use yii\base\Model;
 use Yii;
 
@@ -10,9 +9,13 @@ use Yii;
  */
 class SignupForm extends Model
 {
-    public $username;
+    public $name;
+    public $surname;
     public $email;
     public $password;
+    public $phone;
+    public $captcha;
+    public $newCustomer = true;
 
     /**
      * @inheritdoc
@@ -20,19 +23,34 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['username', 'filter', 'filter' => 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
+            /*['name', 'filter', 'filter' => 'trim'],
+            ['name', 'required'],
+            ['name', 'string', 'min' => 2, 'max' => 255],*/
+
+            /*['surname', 'filter', 'filter' => 'trim'],
+            ['surname', 'required'],
+            ['surname', 'string', 'min' => 2, 'max' => 255],*/
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\frontend\models\User', 'message' => \Yii::t('shop', 'Пользователь с таким аддресом электронной почты уже зарегистрирован!')],
+
+            ['phone', 'filter', 'filter' => 'trim'],
+            ['phone', 'required'],
+            ['phone', 'udokmeci\yii2PhoneValidator\PhoneValidator','strict'=>false,'format'=>true],
+            ['phone', 'string', 'max' => 255],
+            ['phone', 'unique', 'targetClass' => '\frontend\models\User', 'message' => \Yii::t('shop', 'Пользователь с таким номером телефона уже зарегистрирован!')],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+
+            ['newCustomer', 'required'],
+            ['newCustomer', 'boolean'],
+
+            ['captcha', 'required'],
+            ['captcha', 'captcha'],
         ];
     }
 
@@ -45,11 +63,22 @@ class SignupForm extends Model
     {
         if ($this->validate()) {
             $user = new User();
-            $user->username = $this->username;
-            $user->email = $this->email;
+
+            if($this->newCustomer){
+                $user->Company = $this->name.' '.$this->surname;
+                $user->phone = $this->phone;
+                $user->email = $this->email;
+                /*
+                $user->name = $this->name;
+                $user->surname = $this->surname;
+                 */
+            }else{
+                $user = User::findOne(['email' => $this->email, 'phone' => $this->phone]);
+            }
+
             $user->setPassword($this->password);
             $user->generateAuthKey();
-            if ($user->save()) {
+            if ($user->save(false)) {
                 return $user;
             }
         }

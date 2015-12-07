@@ -7,28 +7,14 @@ use Yii;
 /**
  * This is the model class for table "cart".
  *
- * @property integer $id
- * @property integer $userID
- * @property integer $good
- * @property integer $count
+ * @property string $customerID
  * @property string $cartCode
- * @property integer $goodId
+ * @property integer $itemID
+ * @property integer $count
  * @property string $date
  */
 class Cart extends \yii\db\ActiveRecord
 {
-    public function getItemsQuery(){
-        return \frontend\models\Good::find()
-            ->where(['in', 'id',
-                self::find()
-                    ->select('goodId')
-                    ->where(['cartCode' => \Yii::$app->cart->cartCode])]);
-    }
-
-    public function getItems(){
-        return $this->getItemsQuery()->all();
-    }
-
     /**
      * @inheritdoc
      */
@@ -43,10 +29,10 @@ class Cart extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['userID', 'good', 'count', 'cartCode', 'goodId', 'date'], 'required'],
-            [['userID', 'good', 'count', 'goodId'], 'integer'],
+            [['customerID', 'cartCode', 'itemID', 'count', 'date'], 'required'],
+            [['customerID', 'itemID', 'count'], 'integer'],
             [['date'], 'safe'],
-            [['cartCode'], 'string', 'max' => 15]
+            [['cartCode'], 'string', 'max' => 15],
         ];
     }
 
@@ -56,13 +42,11 @@ class Cart extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'userID' => 'User ID',
-            'good' => 'Good',
-            'count' => 'Count',
-            'cartCode' => 'Cart Code',
-            'goodId' => 'Good ID',
-            'date' => 'Date',
+            'customerID' => Yii::t('common', 'Customer ID'),
+            'cartCode' => Yii::t('common', 'Cart Code'),
+            'itemID' => Yii::t('common', 'Item ID'),
+            'count' => Yii::t('common', 'Count'),
+            'date' => Yii::t('common', 'Date'),
         ];
     }
 }

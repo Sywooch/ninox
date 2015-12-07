@@ -51,6 +51,8 @@ use Yii;
  * @property double $PriceOut8
  * @property double $PriceOut9
  * @property double $PriceOut10
+ * @property double $discountSize
+ * @property integer $discountType
  * @property double $MinQtty
  * @property double $NormalQtty
  * @property string $Description
@@ -83,7 +85,7 @@ class Good extends \yii\db\ActiveRecord
             return [];
         }
 
-        $query = Good::find()->select('a.*, b.Name as categoryname')->from([Good::tableName().' a', Category::tableName().' b']);
+        $query = self::find()->select('a.*, b.Name as categoryname')->from([self::tableName().' a', Category::tableName().' b']);
         $terms = [];
 
         if(sizeof($params) > 1){
@@ -103,50 +105,6 @@ class Good extends \yii\db\ActiveRecord
         return $query->asArray()->all();
     }
 
-    public static function changeState($id){
-        $a = Good::findOne(['ID' => $id]);
-        if($a){
-            $a->show_img = $a->show_img == "1" ? "0" : "1";
-            $a->save(false);
-
-            return $a->show_img;
-        }
-
-        return false;
-    }
-
-    public static function changeTrashState($id){
-        $a = Good::findOne(['ID' => $id]);
-        if($a){
-            $a->Deleted = $a->Deleted == "1" ? "0" : "1";
-            $a->save(false);
-
-            return $a->Deleted;
-        }
-
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['ico', 'gabarity', 'shyryna', 'vysota', 'dovgyna', 'dyametr', 'listorder', 'otkl_time', 'vkl_time', 'tovdate', 'tovupdate', 'photodate', 'otgruzka', 'otgruzka_time', 'p_photo', 'link', 'rate', 'originalGood', 'video'], 'required'],
-            [['listorder', 'otgruzka', 'otgruzka2', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
-            [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2', 'num_opt'], 'safe'],
-            [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
-            [['link'], 'string'],
-            [['ico', 'Code', 'BarCode1', 'BarCode2', 'BarCode3', 'Catalog1', 'Catalog2', 'Catalog3', 'Name', 'Name2', 'gabarity', 'Measure1', 'Measure2', 'anotherCurrencyTag', 'video'], 'string', 'max' => 255],
-            [['shyryna', 'vysota', 'dovgyna', 'dyametr'], 'string', 'max' => 20],
-            [['show_img'], 'string', 'max' => 1],
-            [['num_opt'], 'string', 'max' => 50],
-            [['Description'], 'string', 'max' => 2550],
-            [['p_photo'], 'string', 'max' => 55]
-        ];
-    }
-
     public function behaviors()
     {
         return [
@@ -161,13 +119,11 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function beforeSave($insert){
-        if(parent::beforeSave($insert)){
-            if($this->oldAttributes['Name'] != $this->Name){
-                $this->link = TranslitHelper::to($this->Name);
-            }
-            return true;
+        if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name){
+            $this->link = TranslitHelper::to($this->Name);
         }
-        return false;
+
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -181,76 +137,97 @@ class Good extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function rules()
+    {
+        return [
+            [['ico', 'gabarity', 'shyryna', 'vysota', 'dovgyna', 'dyametr', 'listorder', 'otkl_time', 'vkl_time', 'tovdate', 'tovupdate', 'photodate', 'otgruzka', 'otgruzka_time', 'p_photo', 'link', 'rate', 'originalGood', 'video'], 'required'],
+            [['listorder', 'otgruzka', 'otgruzka2', 'discountType', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
+            [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2'], 'safe'],
+            [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'discountSize', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
+            [['link'], 'string'],
+            [['ico', 'Code', 'BarCode1', 'BarCode2', 'BarCode3', 'Catalog1', 'Catalog2', 'Catalog3', 'Name', 'Name2', 'gabarity', 'Measure1', 'Measure2', 'anotherCurrencyTag', 'video'], 'string', 'max' => 255],
+            [['shyryna', 'vysota', 'dovgyna', 'dyametr'], 'string', 'max' => 20],
+            [['show_img'], 'string', 'max' => 1],
+            [['num_opt'], 'string', 'max' => 50],
+            [['Description'], 'string', 'max' => 2550],
+            [['p_photo'], 'string', 'max' => 55],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
-            'ID' => 'ID',
-            'ico' => 'Фото',
-            'Code' => 'Код',
-            'BarCode1' => 'Штрихкод',
-            'BarCode2' => 'Bar Code2',
-            'BarCode3' => 'Bar Code3',
-            'Catalog1' => 'Catalog1',
-            'Catalog2' => 'Catalog2',
-            'Catalog3' => 'Catalog3',
-            'Name' => 'Название',
-            'Name2' => 'Name2',
-            'gabarity' => 'Габариты',
-            'shyryna' => 'Ширина',
-            'vysota' => 'Высота',
-            'dovgyna' => 'Длина',
-            'dyametr' => 'Диаметр',
-            'listorder' => 'Порядок сортировки',
-            'show_img' => 'Товар включён',
-            'otkl_time' => 'Время отключения',
-            'vkl_time' => 'Время включения',
-            'tovdate' => 'Tovdate',
-            'orderDate' => 'Order Date',
-            'tovupdate' => 'Tovupdate',
-            'photodate' => 'Photodate',
-            'otgruzka' => 'Otgruzka',
-            'otgruzka_time' => 'Otgruzka Time',
-            'otgruzka2' => 'Otgruzka2',
-            'otgruzka_time2' => 'Otgruzka Time2',
-            'Measure1' => 'Measure1',
-            'Measure2' => 'Measure2',
-            'Ratio' => 'Ratio',
-            'num_opt' => 'Num Opt',
-            'PriceIn' => 'Price In',
-            'PriceOut1' => 'Розничная цена',
-            'PriceOut2' => 'Price Out2',
-            'PriceOut3' => 'Price Out3',
-            'PriceOut4' => 'Price Out4',
-            'PriceOut5' => 'Price Out5',
-            'PriceOut6' => 'Price Out6',
-            'PriceOut7' => 'Price Out7',
-            'PriceOut8' => 'Price Out8',
-            'PriceOut9' => 'Price Out9',
-            'PriceOut10' => 'Price Out10',
-            'MinQtty' => 'Min Qtty',
-            'NormalQtty' => 'Normal Qtty',
-            'Description' => 'Description',
-            'Type' => 'Type',
-            'IsRecipe' => 'Is Recipe',
-            'TaxGroup' => 'Tax Group',
-            'IsVeryUsed' => 'Is Very Used',
-            'GroupID' => 'Категория',
-            'p_photo' => 'P Photo',
-            'old_id' => 'Old ID',
-            'Deleted' => 'Удалён',
-            'link' => 'Ссылка',
-            'rate' => 'Rate',
-            'anotherCurrencyPeg' => 'Another Currency Peg',
-            'anotherCurrencyValue' => 'Цена в валюте',
-            'anotherCurrencyTag' => 'Валюта',
-            'supplierId' => 'Supplier ID',
-            'garantyShow' => 'Garanty Show',
-            'yandexExport' => 'Yandex Export',
-            'originalGood' => 'Original Good',
-            'video' => 'Video',
-            'count' => 'Количество',
-            'isUnlimited' => 'Is Unlimited',
-            'additionalPhoto'   =>  'Дополнительное фото'
+            'ID' => Yii::t('common', 'ID'),
+            'ico' => Yii::t('common', 'Ico'),
+            'Code' => Yii::t('common', 'Code'),
+            'BarCode1' => Yii::t('common', 'Bar Code1'),
+            'BarCode2' => Yii::t('common', 'Bar Code2'),
+            'BarCode3' => Yii::t('common', 'Bar Code3'),
+            'Catalog1' => Yii::t('common', 'Catalog1'),
+            'Catalog2' => Yii::t('common', 'Catalog2'),
+            'Catalog3' => Yii::t('common', 'Catalog3'),
+            'Name' => Yii::t('common', 'Name'),
+            'Name2' => Yii::t('common', 'Name2'),
+            'gabarity' => Yii::t('common', 'Gabarity'),
+            'shyryna' => Yii::t('common', 'Shyryna'),
+            'vysota' => Yii::t('common', 'Vysota'),
+            'dovgyna' => Yii::t('common', 'Dovgyna'),
+            'dyametr' => Yii::t('common', 'Dyametr'),
+            'listorder' => Yii::t('common', 'Listorder'),
+            'show_img' => Yii::t('common', 'Show Img'),
+            'otkl_time' => Yii::t('common', 'Otkl Time'),
+            'vkl_time' => Yii::t('common', 'Vkl Time'),
+            'tovdate' => Yii::t('common', 'Tovdate'),
+            'orderDate' => Yii::t('common', 'Order Date'),
+            'tovupdate' => Yii::t('common', 'Tovupdate'),
+            'photodate' => Yii::t('common', 'Photodate'),
+            'otgruzka' => Yii::t('common', 'Otgruzka'),
+            'otgruzka_time' => Yii::t('common', 'Otgruzka Time'),
+            'otgruzka2' => Yii::t('common', 'Otgruzka2'),
+            'otgruzka_time2' => Yii::t('common', 'Otgruzka Time2'),
+            'Measure1' => Yii::t('common', 'Measure1'),
+            'Measure2' => Yii::t('common', 'Measure2'),
+            'Ratio' => Yii::t('common', 'Ratio'),
+            'num_opt' => Yii::t('common', 'Num Opt'),
+            'PriceIn' => Yii::t('common', 'Price In'),
+            'PriceOut1' => Yii::t('common', 'Price Out1'),
+            'PriceOut2' => Yii::t('common', 'Price Out2'),
+            'PriceOut3' => Yii::t('common', 'Price Out3'),
+            'PriceOut4' => Yii::t('common', 'Price Out4'),
+            'PriceOut5' => Yii::t('common', 'Price Out5'),
+            'PriceOut6' => Yii::t('common', 'Price Out6'),
+            'PriceOut7' => Yii::t('common', 'Price Out7'),
+            'PriceOut8' => Yii::t('common', 'Price Out8'),
+            'PriceOut9' => Yii::t('common', 'Price Out9'),
+            'PriceOut10' => Yii::t('common', 'Price Out10'),
+            'discountSize' => Yii::t('common', 'Discount Size'),
+            'discountType' => Yii::t('common', 'Discount Type'),
+            'MinQtty' => Yii::t('common', 'Min Qtty'),
+            'NormalQtty' => Yii::t('common', 'Normal Qtty'),
+            'Description' => Yii::t('common', 'Description'),
+            'Type' => Yii::t('common', 'Type'),
+            'IsRecipe' => Yii::t('common', 'Is Recipe'),
+            'TaxGroup' => Yii::t('common', 'Tax Group'),
+            'IsVeryUsed' => Yii::t('common', 'Is Very Used'),
+            'GroupID' => Yii::t('common', 'Group ID'),
+            'p_photo' => Yii::t('common', 'P Photo'),
+            'old_id' => Yii::t('common', 'Old ID'),
+            'Deleted' => Yii::t('common', 'Deleted'),
+            'link' => Yii::t('common', 'Link'),
+            'rate' => Yii::t('common', 'Rate'),
+            'anotherCurrencyPeg' => Yii::t('common', 'Another Currency Peg'),
+            'anotherCurrencyValue' => Yii::t('common', 'Another Currency Value'),
+            'anotherCurrencyTag' => Yii::t('common', 'Another Currency Tag'),
+            'supplierId' => Yii::t('common', 'Supplier ID'),
+            'garantyShow' => Yii::t('common', 'Garanty Show'),
+            'yandexExport' => Yii::t('common', 'Yandex Export'),
+            'originalGood' => Yii::t('common', 'Original Good'),
+            'video' => Yii::t('common', 'Video'),
+            'count' => Yii::t('common', 'Count'),
+            'isUnlimited' => Yii::t('common', 'Is Unlimited'),
         ];
     }
 }

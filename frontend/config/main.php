@@ -16,7 +16,7 @@ return [
             'class' =>  'yii\caching\FileCache'
         ],
         'cart'  =>  [
-            'class' =>  'common\components\Cart'
+            'class' =>  'frontend\components\Cart'
         ],
         'i18n' => [
             'translations' => [
