@@ -7,51 +7,34 @@ use Yii;
 /**
  * This is the model class for table "partners".
  *
- * @property integer $ID
+ * @property string $ID
  * @property string $Code
  * @property string $Company
- * @property string $Company2
- * @property string $MOL
- * @property string $MOL2
  * @property string $City
  * @property string $City2
- * @property integer $VerifiedCity
  * @property string $Address
- * @property string $Address2
- * @property string $Phone
+ * @property string $phone
  * @property string $Phone2
- * @property string $Fax
- * @property string $eMail
- * @property string $TaxNo
- * @property string $Bulstat
- * @property string $BankName
- * @property string $BankCode
- * @property string $BankAcct
- * @property string $BankVATName
- * @property string $BankVATCode
- * @property string $BankVATAcct
- * @property integer $PriceGroup
- * @property double $Discount
- * @property integer $Type
- * @property integer $IsVeryUsed
- * @property integer $UserID
- * @property integer $GroupID
- * @property string $UserRealTime
- * @property integer $Deleted
- * @property string $CardNumber
- * @property string $Note1
+ * @property string $email
+ * @property integer $priceGroup
+ * @property double $discount
+ * @property integer $type
+ * @property integer $groupID
+ * @property string $registrationTime
+ * @property integer $deleted
+ * @property string $cardNumber
  * @property string $Note2
- * @property integer $PaymentDays
- * @property string $ShippingType
+ * @property string $shippingType
  * @property string $PaymentType
- * @property integer $black
- * @property string $blackDate
- * @property string $utma
+ * @property integer $blackList
+ * @property string $blackListAddedTime
  * @property integer $money
  * @property string $birthday
- * @property string $cityID
  * @property string $password
  * @property string $lang
+ * @property string $recipientID
+ * @property string $auth_key
+ * @property string $password_reset_token
  */
 class Customer extends \yii\db\ActiveRecord
 {
@@ -110,6 +93,15 @@ class Customer extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeSave($insert){
+        if($this->isNewRecord){
+            $this->ID = hexdec(uniqid());
+            $this->registrationTime = date('Y-m-d H:i:s');
+        }
+
+        return parent::beforeSave($insert);
+    }
+
     /**
      * @inheritdoc
      */
@@ -124,12 +116,12 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['VerifiedCity', 'PriceGroup', 'Type', 'IsVeryUsed', 'UserID', 'GroupID', 'Deleted', 'PaymentDays', 'black', 'money'], 'integer'],
-            [['Discount'], 'number'],
-            [['UserRealTime', 'blackDate', 'birthday'], 'safe'],
-            [['ShippingType', 'PaymentType', 'black'], 'required'],
-            [['ShippingType', 'PaymentType', 'utma', 'cityID', 'password', 'lang'], 'string'],
-            [['Code', 'Company', 'Company2', 'MOL', 'MOL2', 'City', 'City2', 'Address', 'Address2', 'Phone', 'Phone2', 'Fax', 'eMail', 'TaxNo', 'Bulstat', 'BankName', 'BankCode', 'BankAcct', 'BankVATName', 'BankVATCode', 'BankVATAcct', 'CardNumber', 'Note1', 'Note2'], 'string', 'max' => 255]
+            [['ID', 'shippingType', 'PaymentType', 'blackList'], 'required'],
+            [['ID', 'priceGroup', 'type', 'groupID', 'deleted', 'blackList', 'money'], 'integer'],
+            [['discount'], 'number'],
+            [['registrationTime', 'blackListAddedTime', 'birthday'], 'safe'],
+            [['shippingType', 'PaymentType', 'password', 'lang'], 'string'],
+            [['Code', 'Company', 'City', 'City2', 'Address', 'phone', 'Phone2', 'email', 'cardNumber', 'Note2', 'recipientID', 'auth_key', 'password_reset_token'], 'string', 'max' => 255],
         ];
     }
 
@@ -139,51 +131,34 @@ class Customer extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ID' => 'ID',
-            'Code' => 'Код',
-            'Company' => 'ФИО',
-            'Company2' => 'ФИО',
-            'MOL' => 'Mol',
-            'MOL2' => 'Mol2',
-            'City' => 'Город',
-            'City2' => 'Город2',
-            'VerifiedCity' => 'Город подтверждён',
-            'Address' => 'Адрес',
-            'Address2' => 'Адрес2',
-            'Phone' => 'Телефон',
-            'Phone2' => 'Телефон2',
-            'Fax' => 'Факс',
-            'eMail' => 'email',
-            'TaxNo' => 'Tax No',
-            'Bulstat' => 'Bulstat',
-            'BankName' => 'Bank Name',
-            'BankCode' => 'Bank Code',
-            'BankAcct' => 'Bank Acct',
-            'BankVATName' => 'Bank Vatname',
-            'BankVATCode' => 'Bank Vatcode',
-            'BankVATAcct' => 'Bank Vatacct',
-            'PriceGroup' => 'Price Group',
-            'Discount' => 'Скидка',
-            'Type' => 'Type',
-            'IsVeryUsed' => 'Is Very Used',
-            'UserID' => 'User ID',
-            'GroupID' => 'Group ID',
-            'UserRealTime' => 'User Real Time',
-            'Deleted' => 'Удалён',
-            'CardNumber' => 'Номер карты',
-            'Note1' => 'Note1',
-            'Note2' => 'Note2',
-            'PaymentDays' => 'Payment Days',
-            'ShippingType' => 'Тип доставки',
-            'PaymentType' => 'Тип оплаты',
-            'black' => 'Чёрный список',
-            'blackDate' => 'Black Date',
-            'utma' => 'Utma',
-            'money' => 'Money',
-            'birthday' => 'Birthday',
-            'cityID' => 'City ID',
-            'password' => 'Password',
-            'lang' => 'Lang',
+            'ID' => Yii::t('common', 'ID'),
+            'Code' => Yii::t('common', 'Code'),
+            'Company' => Yii::t('common', 'Company'),
+            'City' => Yii::t('common', 'City'),
+            'City2' => Yii::t('common', 'City2'),
+            'Address' => Yii::t('common', 'Address'),
+            'phone' => Yii::t('common', 'Phone'),
+            'Phone2' => Yii::t('common', 'Phone2'),
+            'email' => Yii::t('common', 'Email'),
+            'priceGroup' => Yii::t('common', 'Price Group'),
+            'discount' => Yii::t('common', 'Discount'),
+            'type' => Yii::t('common', 'Type'),
+            'groupID' => Yii::t('common', 'Group ID'),
+            'registrationTime' => Yii::t('common', 'Registration Time'),
+            'deleted' => Yii::t('common', 'Deleted'),
+            'cardNumber' => Yii::t('common', 'Card Number'),
+            'Note2' => Yii::t('common', 'Note2'),
+            'shippingType' => Yii::t('common', 'Тип доставки'),
+            'PaymentType' => Yii::t('common', 'Тип оплаты'),
+            'blackList' => Yii::t('common', 'Чёрный список'),
+            'blackListAddedTime' => Yii::t('common', 'Black List Added Time'),
+            'money' => Yii::t('common', 'Money'),
+            'birthday' => Yii::t('common', 'Birthday'),
+            'password' => Yii::t('common', 'Password'),
+            'lang' => Yii::t('common', 'Lang'),
+            'recipientID' => Yii::t('common', 'Recipient ID'),
+            'auth_key' => Yii::t('common', 'Auth Key'),
+            'password_reset_token' => Yii::t('common', 'Password Reset Token'),
         ];
     }
 }

@@ -166,7 +166,19 @@ $this->registerJs($js);
 						],
 					])?>
 					</span>
-					<span id="registration">&nbsp;/&nbsp;<span class="link-hide" data-href="/registration">Регистрация</span></span>
+					&nbsp;/&nbsp;
+					<span id="registration">
+						<?=\bobroid\remodal\Remodal::widget([
+							'confirmButton'	=>	false,
+							'id'			=>	'registration',
+							'cancelButton'	=>	false,
+							'addRandomToID'	=>	false,
+							'content'		=>	$this->render('parts/_registration_modal'),
+							'buttonOptions'	=>	[
+								'label'		=>	\Yii::t('shop', 'Регистрация')
+							],
+						])?>
+					</span>
 				<?php }else{ ?>
 					<span>Здравствуйте, <?=\Yii::$app->user->identity->Company?>! <?=Html::a('Выйти', Url::to('/logout'), [
 							'data-method'   =>  'post'

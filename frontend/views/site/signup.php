@@ -19,11 +19,17 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
-                <?= $form->field($model, 'username') ?>
+                <?= $form->field($model, 'name') ?>
+                <?= $form->field($model, 'surname') ?>
 
                 <?= $form->field($model, 'email') ?>
+                <?= $form->field($model, 'phone') ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
+                <?=$form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className(), [
+                    'template'      =>  '{image} {input}',
+                    'captchaAction' =>  '/captcha'
+                ])?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>

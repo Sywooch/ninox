@@ -55,7 +55,8 @@
         "phpoffice/phpexcel": "*",
         "morozovsk/yii2-websocket": "dev-master",
         "kop/yii2-scroll-pager": "dev-master",
-        "rmrevin/yii2-fontawesome": "^2.13"
+        "rmrevin/yii2-fontawesome": "^2.13",
+        "udokmeci/yii2-phone-validator": "^1.0@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",
