@@ -48,16 +48,26 @@ class m151127_091749_GUID_using_in_users extends Migration
 		    $customer->Code = $customer->ID;
 		    $customer->ID = hexdec(uniqid());
 		    if($customer->save(false)){
+				echo 'update history table...';
 			    \common\models\History::updateAll(['customerID' => $customer->ID, 'customerEmail' => $customer->eMail], ['customerID' => $customer->Code]);
+				echo 'update cart table...';
 			    \common\models\Cart::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'update GoodsComment table...';
 			    \common\models\GoodsComment::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'update HandmadeCustomer table...';
 			    \common\models\HandmadeCustomer::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'updateHandmadeItem table...';
 			    \common\models\HandmadeItem::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'update HandmadeService table...';
 			    \common\models\HandmadeService::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'update HandmadeTransaction table...';
 			    \common\models\HandmadeTransaction::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-			    \common\models\ItemRate::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-			    \common\models\PasswordRecovery::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-			    \common\models\SocialProfile::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'update ItemRate table...';
+				\common\models\ItemRate::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'update PasswordRecovery table...';
+				\common\models\PasswordRecovery::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
+				echo 'update SocialProfile table...';
+				\common\models\SocialProfile::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
 		    }
 	    }
     }

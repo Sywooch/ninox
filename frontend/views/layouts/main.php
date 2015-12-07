@@ -251,7 +251,7 @@ $this->registerJs($js);
 			</div>
 			<div class="support">
 				<span class="supportName"><?=\Yii::t('shop', 'Служба клиентской поддержки')?>:</span>
-				<span class="primeNumber"><?=(\Yii::$app->language == 'be' ? '+375 (29) 110 43 43' : '0 800 508 208')?></span>
+				<span class="primeNumber" ><?=(\Yii::$app->language == 'be' ? '+375 (29) 110 43 43' : '0 800 508 208')?></span>
 				<?php if(\Yii::$app->language == 'be'){ ?>
 					<span class="skype"><a class="call-to-skype" href="skype:krasota-style?call">позвонить на <i class="shop-skype"></i></a></span>
 				<?php } ?>
