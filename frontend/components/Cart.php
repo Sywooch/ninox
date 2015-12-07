@@ -38,7 +38,7 @@ class Cart extends Component{
 
             if(!$cache->exists('cart-'.$this->cartCode.'/items') || $lastUpdate > (time() + 1200)){
                 foreach($this->itemsQuery()->each() as $item){
-                    $this->items[$item->id] = $item;
+                    $this->items[$item->itemID] = $item;
                 }
             }
 
