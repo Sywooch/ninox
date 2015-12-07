@@ -180,7 +180,7 @@ $this->registerJs($js);
 						])?>
 					</span>
 				<?php }else{ ?>
-					<span>Здравствуйте, <?=\Yii::$app->user->identity->Company?>! <?=Html::a('Выйти', Url::to('/logout'), [
+					<span>Здравствуйте, <?=Html::a(\Yii::$app->user->identity->Company, '/account')?>! <?=Html::a('Выйти', Url::to('/logout'), [
 							'data-method'   =>  'post'
 						])?></span>
 				<?php }	?>
