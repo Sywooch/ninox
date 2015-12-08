@@ -14,10 +14,10 @@ use yii\helpers\Html;
 
 class ListGroupMenu extends Widget{
 
-    public $items;
-    public $containerOptions;
-    public $itemOptions;
-    public $id;
+    public $items = [];
+    public $containerOptions = [];
+    public $itemOptions = [];
+    //public $id = 'list-group-menu';
 
     private $defaultContainerOptions = [
         'class' =>  'list-group'

@@ -1,8 +1,21 @@
-<meta charset="UTF-8">
+<?php
+
+use bobroid\remodal\Remodal;
+
+?>
 <div class="content">
     <div class="menu">
         <?=\frontend\widgets\ListGroupMenu::widget([
-            'item'    => $items
+            'items'    => [
+                [
+                    'label' =>  'Мой аккаунт',
+                    'href'  =>  '/account'
+                ],
+                [
+                    'label' =>  'Мои заказы',
+                    'href'  =>  '/account/orders'
+                ],
+            ]
         ])?>
         Менюшка
     </div>
@@ -20,7 +33,7 @@
                                     Имя
                                 </div>
                                 <div class="personal-data">
-                                    Nikola Zotov
+                                    <?=\Yii::$app->user->identity->Company?>
                                 </div>
                             </div>
                             <div>
@@ -29,7 +42,7 @@
                                 </div>
                                 <div  class="personal-data">
                                     <div class="personal-data">
-                                        +380932623049
+                                        <?=\Yii::$app->user->identity->phone?>
                                     </div>
                                     <div>
                                         +380932521574
@@ -41,7 +54,7 @@
                                     Эл. почта
                                 </div>
                                 <div class="personal-data">
-                                    info@gmail.com
+                                    <?=\Yii::$app->user->identity->email?>
                                 </div>
                             </div>
                         </div>
@@ -68,8 +81,26 @@
             </div>
             <div class="user-options">
                 <div class="border">
-                    <a>Редактировать</a>
-                    <a>Изменить Пароль</a>
+                    <?=Remodal::widget([
+                        'confirmButton'	=>	false,
+                        'id'			=>	'editAccount',
+                        'cancelButton'	=>	false,
+                        'addRandomToID'	=>	false,
+                        'content'		=>	$this->render('_account_edit_modal'),
+                        'buttonOptions'	=>	[
+                            'label'		=>	\Yii::t('shop', 'Редактировать')
+                        ],
+                    ]),
+                    Remodal::widget([
+                            'confirmButton'	=>	false,
+                            'id'			=>	'changePassword',
+                            'cancelButton'	=>	false,
+                            'addRandomToID'	=>	false,
+                            'content'		=>	$this->render('_change_password_modal'),
+                            'buttonOptions'	=>	[
+                                'label'		=>	\Yii::t('shop', 'Изменить пароль')
+                            ],
+                        ])?>
                     <a>Выход</a>
                 </div>
             </div>
@@ -85,7 +116,7 @@
                             На вашем счету:
                         </div>
                             <div class="  account-money">
-                            255
+                            <?=\Yii::$app->user->identity->money?>
                         </div>
                     </div>
                 </div>
