@@ -101,8 +101,7 @@ $this->registerJs($js);
 	    <?php $this->head() ?>
 	</head>
 	<body>
-	<?php $this->beginBody() ?>
-	<?php
+	<?php $this->beginBody();
 	if(\Yii::$app->request->get("serviceMenu") == 'true' && \Yii::$app->request->get("secretKey") == \Yii::$app->params['secretAdminPanelKey']){
 		echo $this->render('_admin_menu');
 	}
@@ -140,7 +139,7 @@ $this->registerJs($js);
 				<li id="allGoods">На сайте 9599 товаров</li>
 			</ul>
 			<div class="logo mobileLogo" itemscope="" itemtype="http://schema.org/Organization">
-				<img alt="Мобильный логотип интернет магазина Krasota-Style" pagespeed_url_hash="564228562" src="/img/logo/xnew_mobile_logo_ru.png,q1.pagespeed.ic.DFWm4U7hmZ.png">
+				<img alt="Мобильный логотип интернет магазина Krasota-Style" src="/img/logo/xnew_mobile_logo_ru.png">
 				<noscript>
 					<div class="contact_phone" itemprop="telephone">(044) 232 82 20</div>
 					<div class="contact_phone" itemprop="email"><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="e28b8c848da2899083918d9683cf91969b8e87cc9783">[email&#160;protected]</a></div>
@@ -148,7 +147,7 @@ $this->registerJs($js);
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="postalCode">02217</span>, <span itemprop="addressLocality">Украина, г. Киев</span>, <span itemprop="streetAddress">ул. Электротехническая, 2</span>
 					</div>
-					<img itemprop="logo" src="/img/xlogo_ukraine.png.pagespeed.ic.cDhSQmq40P.png" alt="shop logo">
+					<img itemprop="logo" src="/img/xlogo_ukraine.png" alt="shop logo">
 				</noscript>
 			</div>
 			<ul class="right">
@@ -217,20 +216,20 @@ $this->registerJs($js);
 					<?=Html::tag('span', \Yii::t('shop', 'Статус заказа'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/status-zakaza'
-					])?>
-					<?=Html::tag('span', \Yii::t('shop', 'Подтвердить оплату'), [
+					]),
+					Html::tag('span', \Yii::t('shop', 'Подтвердить оплату'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/oplata'
-					])?>
-					<?=Html::tag('span', \Yii::t('shop', 'Возврат товара'), [
+					]),
+					Html::tag('span', \Yii::t('shop', 'Возврат товара'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/vozvrat-i-obmen'
-					])?>
-					<?=Html::tag('span', \Yii::t('shop', 'Жалобы руководству'), [
+					]),
+					Html::tag('span', \Yii::t('shop', 'Жалобы руководству'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/kontakty'
-					])?>
-					<?=Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
+					]),
+					Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
 						'class'		=>	'link-hide',
 						'href'		=>	'/map'
 					])?>
@@ -239,12 +238,12 @@ $this->registerJs($js);
 					<?=Html::tag('span', \Yii::t('shop', 'Вакансии'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/vakansii'
-					])?>
-					<?=Html::tag('span', \Yii::t('shop', 'Контакты'), [
+					]),
+					Html::tag('span', \Yii::t('shop', 'Контакты'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/kontakty'
-					])?>
-					<?=Html::tag('span', \Yii::t('shop', 'О нас'), [
+					]),
+					Html::tag('span', \Yii::t('shop', 'О нас'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/o-nas'
 					])?>

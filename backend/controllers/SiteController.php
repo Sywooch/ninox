@@ -8,7 +8,6 @@ use frontend\models\Customer;
 use frontend\models\Good;
 use sammaye\audittrail\AuditTrail;
 use Yii;
-use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
