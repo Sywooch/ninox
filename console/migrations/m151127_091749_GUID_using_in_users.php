@@ -35,6 +35,10 @@ class m151127_091749_GUID_using_in_users extends Migration
 	    $this->alterColumn('handmade_services', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->renameColumn('handmade_transactions', 'partner_id', 'customerID');
 	    $this->alterColumn('handmade_transactions', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
+	    echo 'drop trigger `InsertRate`...';
+	    $this->execute("DROP TRIGGER `InsertRate`");
+	    echo 'drop trigger `UpdateRate`...';
+	    $this->execute("DROP TRIGGER `UpdateRate`");
 	    $this->renameColumn('items_rate', 'userID', 'customerID');
 	    $this->alterColumn('items_rate', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->renameColumn('passwordrecovery', 'userID', 'customerID');
