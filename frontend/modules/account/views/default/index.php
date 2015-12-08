@@ -1,6 +1,9 @@
 <meta charset="UTF-8">
 <div class="content">
     <div class="menu">
+        <?=\frontend\widgets\ListGroupMenu::widget([
+            'item'    => $items
+        ])?>
         Менюшка
     </div>
     <div class="user-data-content">
@@ -110,6 +113,50 @@
                 </div>
                 <div class="semi-font">
                     Оставьте отзывы о купленных вами товарах
+                </div>
+                <div class="review">
+                    <div class="items">
+                        <div class="image">
+                        </div>
+                        <div class="write-review">
+                            Написать отзыв
+                        </div>
+                    </div>
+                    <div class="items">
+                        <div class="image">
+                        </div>
+                        <div class="write-review">
+                            Написать отзыв
+                        </div>
+                    </div>
+                    <div class="items">
+                        <div class="image">
+                        </div>
+                        <div class="write-review">
+                            Написать отзыв
+                        </div>
+                    </div>
+                    <div class="items">
+                        <div class="image">
+                        </div>
+                        <div class="write-review">
+                            Написать отзыв
+                        </div>
+                    </div>
+                    <div class="items">
+                        <div class="image">
+                        </div>
+                        <div class="write-review">
+                            Написать отзыв
+                        </div>
+                    </div>
+                    <div class="items">
+                        <div class="image">
+                        </div>
+                        <div class="write-review">
+                            Написать отзыв
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

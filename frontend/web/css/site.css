@@ -1782,11 +1782,14 @@ footer{
 }
 
 .reviews{
-    width: 923px;
+    width: 100%;
     height: 305px;
     float: left;
     margin-left: 18px;
     background-color: #e2f3fc;
+    border-radius: 7px 7px 7px 7px;
+    -moz-border-radius: 7px 7px 7px 7px;
+    -webkit-border-radius: 7px 7px 7px 7px;
 }
 
 .reviews .text{
@@ -1797,7 +1800,7 @@ footer{
 .my-orders{
     padding-top: 150px;
     float: left;
-    width: 923px;
+    width: 100%;
     margin-left: 18px;
 }
 
@@ -1894,4 +1897,33 @@ footer{
     font-size: 22px;
 }
 
+.review{
+    width: 100%;
+    height: 150px;
+    margin-top: 30px;
+}
+
+.review .items{
+    background-color: #ffffff;
+    width: 125px;
+    height: 150px;
+    float: left;
+    margin-right: 15px;
+}
+
+.review .image{
+    background-color: #cb93dd;
+    width: 125px;
+    height: 90px;
+    float: left;
+
+}
+
+.review .write-review{
+    font-size: 14px;
+    text-align: center;
+    margin-top: 100px;
+    width: 100px;
+    padding-left: 25px;
+}
 /*========* END ACCOUNT *=========*/
