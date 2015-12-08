@@ -9,7 +9,7 @@
 namespace common\helpers;
 
 
-use common\models\Pricerule;
+use frontend\models\Pricerule;
 use DateTime;
 use yii\base\Component;
 
@@ -20,13 +20,56 @@ class PriceRuleHelper extends Component{
 
 	public function init(){
 		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
+		if(!\Yii::$app->user->isGuest){
+			$this->pricerules = array_merge(\Yii::$app->user->identity->getPriceRules(), $this->pricerules);
+		}
+	}
+
+	public function asArray($rule){
+		$query = $rule->Formula;
+		$parts = explode(' THEN ', $query);
+		$terms = $parts['0'];
+		$action = $parts['1'];
+		$terms = preg_replace('/IF/', '', $terms);
+		$terms = explode(' AND ', $terms);
+		foreach($terms as $key => $termt){
+			$termt = explode(' OR ', $termt);
+			foreach($termt as $term){
+				$term = preg_replace(array('/\(/', '/\)/', '/^\s/'), '', $term);
+				$tTerm = explode(' = ', $term);
+				if(isset($tTerm['1']) && $tTerm['1'] != ''){
+					$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '=');
+				}else{
+					$tTerm = explode(' >= ', $term);
+					if($tTerm['1'] != ''){
+						$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '>=');
+					}else{
+						$tTerm = explode(' <= ', $term);
+						if($tTerm['1'] != ''){
+							$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '<=');
+						}else{
+							$tTerm = explode(' != ', $term);
+							if($tTerm['1'] != ''){
+								$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '!=');
+							}
+						}
+					}
+				}
+			}
+		}
+		$actions = explode(' AND ', $action);
+		foreach($actions as $action){
+			$action = explode('=', $action);
+			foreach($action as $key => $row){
+				$action[$key] = trim($row);
+			}
+			$rArray['actions'][$action['0']] = $action['1'];
+		}
+		return $rArray;
 	}
 
 	public function recalc($model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
-			if(!\Yii::$app->user->isGuest && isset(\Yii::$app->user->identity['priceRules'])){
-				$this->pricerules = array_merge(\Yii::$app->user->identity['priceRules'], $this->pricerules);
-			}
 			foreach($this->pricerules as $rule){
 				$tmodel = $this->recalcItem($model, $rule, $category);
 				if($tmodel){
@@ -38,6 +81,7 @@ class PriceRuleHelper extends Component{
 				$model->priceRuleID = 0;
 				$model->discountType = 0;
 				$model->discountSize = 0;
+				$model->personalRule = 0;
 				return $model;
 			}
 		}
@@ -51,7 +95,8 @@ class PriceRuleHelper extends Component{
 
 	private function recalcItem($model, $rule, $category){
 		$ruleID = $rule->ID;
-		$rule = $rule->asArray();
+		$personalRule = $rule->personalRule;
+		$rule = self::asArray($rule);
 		$termsCount = 0;
 		$discount = 0;
 		foreach($rule['terms'] as $term){
@@ -143,6 +188,7 @@ class PriceRuleHelper extends Component{
 			$model->priceRuleID = $ruleID;
 			$model->discountType = empty($rule['actions']['Type']) ? 2 : $rule['actions']['Type'];
 			$model->discountSize = $rule['actions']['Discount'];
+			$model->personalRule = $personalRule;
 			return $model;
 		}
 	}

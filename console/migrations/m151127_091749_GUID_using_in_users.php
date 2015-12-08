@@ -41,8 +41,6 @@ class m151127_091749_GUID_using_in_users extends Migration
 	    $this->execute("DROP TRIGGER `UpdateRate`");
 	    $this->renameColumn('items_rate', 'userID', 'customerID');
 	    $this->alterColumn('items_rate', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
-	    $this->renameColumn('passwordrecovery', 'userID', 'customerID');
-	    $this->alterColumn('passwordrecovery', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->renameColumn('social_profiles', 'partner_id', 'customerID');
 	    $this->alterColumn('social_profiles', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->renameTable('users_pricerules', 'partnersPricerules');
@@ -68,8 +66,6 @@ class m151127_091749_GUID_using_in_users extends Migration
 			    \common\models\HandmadeTransaction::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
 				echo 'update ItemRate table...';
 				\common\models\ItemRate::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'update PasswordRecovery table...';
-				\common\models\PasswordRecovery::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
 				echo 'update SocialProfile table...';
 				\common\models\SocialProfile::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
 		    }

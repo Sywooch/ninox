@@ -25,6 +25,7 @@ class Good extends \common\models\Good{
 	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
 	public $isNew = false;                  //Флаг-новинка
     public $canBuy = true;
+	public $personalRule = 0;               //Персональное правило
 
     public function afterFind()
     {
