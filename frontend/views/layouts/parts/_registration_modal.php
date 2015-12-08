@@ -14,7 +14,8 @@ echo $form->field($model, 'name'),
     $form->field($model, 'password'),
     $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className(), [
         'template'      =>  '{image} {input}',
-        'captchaAction' =>  '/captcha'
+        'captchaAction' =>  '/captcharegistermodal',
+        'id'            =>  'captcha-modal'
     ]);
 echo \yii\helpers\Html::button('Регистрация', [
     'type'  =>  'submit'
