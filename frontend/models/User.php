@@ -13,6 +13,8 @@ use yii\web\IdentityInterface;
 
 class User extends Customer implements IdentityInterface {
 
+	private $_pricerules = [];
+
     public static function findIdentity($id){
         return static::findOne($id);
     }
@@ -64,5 +66,12 @@ class User extends Customer implements IdentityInterface {
     public static function findByPhone($phone){
         return static::findOne(['phone' => $phone]);
     }
+
+	public function getPricerules(){
+		if(empty($this->_pricerules)){
+			$this->_pricerules = CustomerPricerule::find()->where(['customerID' => $this->ID, 'Enabled' => 1])->orderBy('`Priority`')->all();
+		}
+		return $this->_pricerules;
+	}
 
 }
