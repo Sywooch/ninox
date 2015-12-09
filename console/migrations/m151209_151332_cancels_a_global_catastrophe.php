@@ -29,6 +29,11 @@ class m151209_151332_cancels_a_global_catastrophe extends Migration
             $contact->ID = hexdec(uniqid());
             $contact->save(false);
         }
+        echo "i'm doing it everyday... \r \n";
+        foreach(\common\models\CustomerAddresses::find()->each(200) as $address){
+            $address->ID = hexdec(uniqid());
+            $address->save(false);
+        }
         echo "please, wait some more, i'm working... \r \n";
         $this->execute("UPDATE `partnersContacts` `a`, `partnersAddresses` `b` SET `a`.`partnerContactID` = `b`.`ID` WHERE `a`.`partnerID` = `b`.`partnerID`");
         echo "thanks! \r \n";
