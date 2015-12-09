@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\Customer;
+use frontend\models\OrderForm;
 use Yii;
 use common\models\Domains;
 use common\models\Pagetype;
@@ -15,13 +17,15 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 
+use yii\base\ErrorException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
-use yii\helpers\Json;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
+use yii\web\Cookie;
 
 /**
  * Site controller
@@ -113,12 +117,61 @@ class SiteController extends Controller
     }
 
     public function actionOrder(){
-        if(\Yii::$app->cart->itemsCount == 0){
-            \Yii::trace('Cart items is so...');
-            return $this->run('site/error');
+        $customerPhone = '';
+
+        if(\Yii::$app->user->isGuest){
+            if(!empty(\Yii::$app->request->post("phone"))){
+                $customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
+
+                if(\Yii::$app->request->cookies->getValue("customerPhone") != $customerPhone){
+                    \Yii::trace('phone was changed: from '.\Yii::$app->request->cookies->get("customerPhone").' to '.$customerPhone);
+                    \Yii::$app->response->cookies->add(new Cookie([
+                        'name'      =>  'customerPhone',
+                        'value'     =>  $customerPhone
+                    ]));
+                }
+            }elseif(!empty(\Yii::$app->request->cookies->getValue("customerPhone"))){
+                $customerPhone = \Yii::$app->request->cookies->getValue("customerPhone");
+            }
+        }else{
+            $customerPhone = \Yii::$app->user->identity->phone;
         }
 
-        return $this->render('order');
+        if(\Yii::$app->cart->itemsCount == 0){
+            \Yii::trace('Cart items is so...');
+            //return $this->run('site/error');
+        }
+
+        if(empty($customerPhone)){
+            return \Yii::$app->response->redirect('/#modalCart');
+        }
+
+        $order = new OrderForm();
+
+        //Вытягиваем пользователя для оформления заказа
+        \Yii::trace('Customer phone: '.$customerPhone);
+
+        if(\Yii::$app->user->isGuest){
+            $customer = Customer::findOne(['phone' => $customerPhone]);
+        }else{
+            $customer = \Yii::$app->user->identity;
+        }
+
+        if(!$customer){
+            throw new ErrorException("Клиент не найден!");
+        }
+
+        $order->loadCustomer($customer);
+
+        if($order->load(\Yii::$app->request->post()) && $order->validate() && $order->create()){
+            return $this->render('order_success', [
+                'model' =>  $order
+            ]);
+        }
+
+        return $this->render('order', [
+            'model' =>  $order
+        ]);
     }
 
     public function actionAddtocart(){
@@ -146,7 +199,7 @@ class SiteController extends Controller
 	public function actionGetcart(){
 		\Yii::$app->cart->recalcCart();
 		return $this->renderAjax('cart', [
-			'dataProvider'	=>	new \yii\data\ActiveDataProvider([
+			'dataProvider'	=>	new ActiveDataProvider([
 				'query'         =>  \Yii::$app->cart->goodsQuery(),
 				'pagination'    =>  [
 					'pageSize'  =>  0
@@ -281,6 +334,10 @@ class SiteController extends Controller
      */
     public function actionRegister()
     {
+        if(!\Yii::$app->user->isGuest){
+            return $this->goBack(Url::previous());
+        }
+
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
