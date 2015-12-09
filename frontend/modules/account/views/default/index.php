@@ -3,32 +3,60 @@
 use bobroid\remodal\Remodal;
 
 ?>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.spoiler-title').click(function(){
+            $(this).parent().children('.spoiler-body').slideToggle();
+            return false;
+        });
+    });
+</script>
 <div class="content">
     <div class="menu">
         <?=\frontend\widgets\ListGroupMenu::widget([
             'items'    => [
                 [
-                    'label' =>  'Мой аккаунт',
+                    'label' =>  'Личные данные',
                     'href'  =>  '/account'
                 ],
                 [
                     'label' =>  'Мои заказы',
                     'href'  =>  '/account/orders'
                 ],
+                [
+                    'label' =>  'Моя скидка',
+                    'href'  =>  '/account/discount'
+                ],
+                [
+                    'label' =>  'Список желаний',
+                    'href'  =>  '/account/wish-list'
+                ],
+                [
+                    'label' =>  'Мои отзывы',
+                    'href'  =>  '/account/reviews'
+                ],
+                [
+                    'label' =>  'Возвраты',
+                    'href'  =>  '/account/123'
+                ],
+                [
+                    'label' =>  'Ярмарка мастеров',
+                    'href'  =>  '/account/mas'
+                ],
             ]
         ])?>
-        Менюшка
     </div>
     <div class="user-data-content">
         <div class="user-account-data">
             <div class="pages">
                 <div class="page">
-                    <div class="user-account personal-data">
+                    <div class="user-account personal-data data">
                         <div class="myriad">
                             <i class="icon icon-note"></i> Личные данные
                         </div>
                         <div class="semi-font data">
-                            <div>
+                            <div class="name">
                                 <div class="semi">
                                     Имя
                                 </div>
@@ -36,20 +64,20 @@ use bobroid\remodal\Remodal;
                                     <?=\Yii::$app->user->identity->Company?>
                                 </div>
                             </div>
-                            <div>
+                            <div class="phone">
                                 <div class="semi">
                                     Телефон
                                 </div>
-                                <div  class="personal-data">
-                                    <div class="personal-data">
+                                <div class="">
+                                    <div class="">
                                         <?=\Yii::$app->user->identity->phone?>
                                     </div>
-                                    <div>
-                                        +380932521574
+                                    <div class="personal-data">
+                                        <?=\Yii::$app->user->identity->Phone2?>
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="email">
                                 <div class="semi">
                                     Эл. почта
                                 </div>
@@ -61,7 +89,7 @@ use bobroid\remodal\Remodal;
                     </div>
                 </div>
                 <div class="page">
-                    <div class="user-account">
+                    <div class="user-account ">
                         <div class="semi-font">
                             <div class="color">
                                  <i class="icon icon-delivery-car"></i> Адрес для доставки:
@@ -137,13 +165,19 @@ use bobroid\remodal\Remodal;
                 </div>
             </div>
         </div>
-        <div class="reviews user-account">
+
+        <div id="reviews" class="reviews user-account">
+            <div class="pull-right">
+                      <i onclick="getElementById('reviews').style.display='none';" class="icon icon-exit"></i>
+            </div>
             <div class="text">
-                <div class="myriad">
-                   Сделайте наш сервис еще лучше
-                </div>
-                <div class="semi-font">
-                    Оставьте отзывы о купленных вами товарах
+                <div class="review-tittle">
+                    <div class="myriad">
+                       Сделайте наш сервис еще лучше
+                    </div>
+                    <div class="semi-font">
+                        Оставьте отзывы о купленных вами товарах
+                    </div>
                 </div>
                 <div class="review">
                     <div class="items">
@@ -191,86 +225,5 @@ use bobroid\remodal\Remodal;
                 </div>
             </div>
         </div>
-        <div class="my-orders">
-            <div class="user-account box myriad">
-                <i class="icon icon-box"></i> Мои заказы
-            </div>
-            <div class="orders">
-                <div class="order order-waiting">
-                    <i class="icon icon-arrow"></i>
-                    <div class="myriad">
-                        27227
-                    </div>
-                    <div class="data semi">
-                        01.09.2015
-                    </div>
-                    <div class="payment semi">
-                        Ожидается оплата
-                    </div>
-                    <div class="money semi">
-                        254 798 грн.
-                    </div>
-                    <div class="print semi">
-                        <i class="icon icon-print"></i>
-                    </div>
-                    <div class="history semi">
-                        <a>История</a>
-                    </div>
-                    <div class="reorder semi">
-                        <a>Повторить заказ</a>
-                    </div>
-                </div>
-                <div class="order order-complete">
-                    <i class="icon icon-arrow"></i>
-                    <div class="myriad">
-                        26587
-                    </div>
-                    <div class="data semi">
-                        15.08.2015
-                    </div>
-                    <div class="payment semi">
-                        Выполнен
-                    </div>
-                    <div class="money semi">
-                        1300 грн.
-                    </div>
-                    <div class="print semi">
-                        <i class="icon icon-print"></i>
-                    </div>
-                    <div class="history semi">
-                        <a>История</a>
-                    </div>
-                    <div class="reorder semi">
-                        <a>Повторить заказ</a>
-                    </div>
-                </div>
-                <div class="order order-canceled">
-                    <i class="icon icon-arrow"></i>
-                    <div class="myriad">
-                        26213
-                    </div>
-                    <div class="data semi">
-                        03.08.2015
-                    </div>
-                    <div class="payment semi">
-                        Отменен
-                    </div>
-                    <div class="money semi">
-                        254 586 798 грн.
-                    </div>
-                    <div class="print semi">
-                        <i class="icon icon-print"></i>
-                    </div>
-                    <div class="history semi">
-                        <a>История</a>
-                    </div>
-                    <div class="reorder semi">
-                        <a>Повторить заказ</a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
-
-
