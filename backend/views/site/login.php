@@ -246,6 +246,6 @@ $this->registerCss($css);
             ])?>
         </div>
         <?= Html::submitButton('Войти', ['class' => 'float', 'name' => 'login-button']) ?>
-        <?php ActiveForm::end(); ?>
+        <?php $form->end(); ?>
     </div>
 </div>
