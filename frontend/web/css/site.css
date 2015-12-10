@@ -1687,7 +1687,6 @@ footer{
 
 .user-account .address-data{
     margin-left: 18px;
-
 }
 .user-account .address{
     padding-top: 20px;
@@ -1696,7 +1695,6 @@ footer{
 .address a{
     cursor: pointer;
     color: #1998db;
-
 }
 
 .user-account .semi-font{
@@ -1705,7 +1703,6 @@ footer{
 
 .user-account .data{
     padding-top: 30px;
-
     max-height: 180px;
     margin-bottom: ;
     min-height: 150px;
@@ -1749,10 +1746,8 @@ footer{
     text-shadow: 0px 1px #fbfbfb;
 }
 
-
 .menu a.list-group-item, button.list-group-item{
     color: #444444;
-
 }
 
 .menu .list-group-item:hover{
@@ -1766,7 +1761,6 @@ footer{
     border-bottom: 1px solid #dedede;
     margin-bottom: 1px;
     font-family: OpenSans-Semibold;
-
 }
 
 .pages{
@@ -1780,7 +1774,6 @@ footer{
     padding-bottom: 20px;
 }
 .personal-data{
-    float: ;
     padding-bottom: 20px;
 }
 .personal-discount{
@@ -1867,7 +1860,6 @@ footer{
 .border a{
     color: #1998db;
     cursor: pointer;
-
 }
 
 .user-options a{
@@ -1920,21 +1912,25 @@ footer{
     border-left: 10px solid #b1cf83;
     display: table;
 }
-.order-waiting .icon-arrow{
+
+.icon-arrow{
     margin: 10px;
     margin-right: 18px;
     margin-top: 18px;
     margin-bottom: 0px;
 }
+
 .waiting{
     float: left;
-    width: 70%;
-    padding-bottom: 15px;
+    width: 65%;
+    padding-bottom: ;
 }
+
 .pr{
-    padding-bottom: 0px;
-    float: left;
-    width: 30%;
+    padding-bottom: ;
+    float: right;
+    width: 35%;
+    margin-left: -30px;
 }
 
 .orders .myriad{
@@ -1942,6 +1938,7 @@ footer{
     color:#4d7aa1;
     float: left;
     margin-top: 16px;
+    width: 100px;
 }
 
 .orders .semi{
@@ -1953,6 +1950,7 @@ footer{
 }
 
 .orders .data{
+    margin-left: 0px;
 }
 
 .orders .payment{
@@ -1961,9 +1959,9 @@ footer{
 }
 
 .orders .money{
-    width: 185px;
+    width: 130px;
     margin-left: 0;
-    padding-left: 60px;
+    text-align: right;
 }
 
 .orders .print{
@@ -1988,6 +1986,8 @@ footer{
     border-radius: 7px 7px 7px 7px;
     -moz-border-radius: 7px 7px 7px 7px;
     -webkit-border-radius: 7px 7px 7px 7px;
+    display: table;
+    padding-left: 10px;
 }
 
 .order-canceled{
@@ -1996,6 +1996,8 @@ footer{
     border-radius: 7px 7px 7px 7px;
     -moz-border-radius: 7px 7px 7px 7px;
     -webkit-border-radius: 7px 7px 7px 7px;
+    display: table;
+    padding-left: 10px;
 }
 
 .box{
@@ -2036,7 +2038,6 @@ footer{
 .data .name{
      width: 100%;
      height: 46px;
-
 }
 
 .data .phone{
@@ -2050,7 +2051,6 @@ footer{
 .data .email{
     width: 100%;
     height: 46px;
-
 }
 
 .phone .personal-data{
@@ -2058,21 +2058,126 @@ footer{
 }
 
 .page .data{
-
-    height: ;
 }
-
-
 
 .spoiler-title{
     cursor:pointer;
 }
+
 .spoiler-body{
     display:none;
     background:;
     width: 100%;
+    margin-top: ;
+}
 
+.spoiler-body .body{
+    width: 100%;
+}
 
+.seller{
+    width: 100%;
 
 }
+
+.sold-items{
+    width: 100%;
+}
+
+.sold-items .items{
+    padding-top: 10px;
+    padding: 20px;
+    height: 130px;
+    width: 100%;
+}
+
+.items .image{
+    width: 120px;
+    height: 90px;
+    background-color: #cb93dd;
+    float: left;
+}
+
+.image{
+    width: 120px;
+    height: 90px;
+    background-color: #cb93dd;
+}
+
+.items .data{
+    display: block;
+    float: left;
+    height: 100%;
+    padding: 25px;
+    width: 744px;
+    padding-right: 0px;
+    padding-top: 0px
+}
+
+.data .order-profile{
+}
+
+.order-number{
+    color: #a2abb1;
+    font-size: 0.92308em;
+    padding-left: 0.41667em;
+}
+
+.data .price{
+    padding-top: 20px;
+}
+
+.data .one-price{
+    float: left;
+}
+
+.data .sum{
+    float: right;
+    padding-right: 100px;
+}
+
+.data .sum-price{
+    float: right;
+}
+
+.data a{
+    cursor: pointer;
+    color: #1998db;
+}
+
+.delivery{
+    width: 100%;
+    padding: 10px;
+    height: 50px;
+    padding-right: 20px;
+}
+
+.delivery-type{
+    width: 55%;
+    float: left;
+}
+
+.delivery-coast{
+    float: right;
+}
+
+.closed .spoiler-body {
+    display:none;
+}
+
+.total-price{
+    float: right;
+    padding: 20px;
+}
+
+.total-price .title{
+    float: left;
+    padding-right: 50px;
+}
+
+.total-price .sum{
+    float: right;
+}
+
+
 /*========* END ACCOUNT *=========*/

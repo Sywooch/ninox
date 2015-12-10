@@ -5,17 +5,7 @@
  * Date: 12/9/2015
  * Time: 2:06 PM
  */
-
 ?>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('.spoiler-title').click(function(){
-            $(this).parent().children('.spoiler-body').slideToggle(500);
-            return false;
-        });
-    });
-</script>
 <div class="content">
     <div class="menu">
         <?=\frontend\widgets\ListGroupMenu::widget([
@@ -56,129 +46,57 @@
             <i class="icon icon-box"></i> Мои заказы
         </div>
         <div class="orders">
-
-
-
-           <div class="order order-waiting">
-                error
-                <b class="spoiler-title">показать / скрыть</b>
-                <div class="spoiler-body" style="display: none;">
-                    Нельзя добавлять комментарии, которые:
-                    <ul>
-                        <li>Не относятся к тематике сайта и самой записи</li>
-                        <li>Содержат в тексте исключительно заглавные буквы</li>
-                        <li>Содержат нецензурные слова, идиоматические выражения, призывы к межнациональной и межконфессиональной розни</li>
-                        <li>Содержат обсуждения наркотических веществ и способов их применения</li>
-                        <li>Содержат не нормированное количество знаков препинания и смайликов</li>
-                        <li>Содержат постоянные обращения к конкретным участникам по личным вопросам</li>
-                        <li>Содержат ссылки на сторонние ресурсы</li>
-                        <li>Содержат призывы к нарушению действующего законодательства (Уголовного и Административного кодекса)</li>
-                        <li>Содержат реплики оскорбляющие других участников проекта</li>
-                        <li>Содержат нецензурные слова, идиоматические выражения, призывы к межнациональной и межконфессиональной розни</li>
-                        <li>Содержат обсуждения наркотических веществ и способов их применения</li>
-                        <li>Содержат не нормированное количество знаков препинания и смайликов</li>
-                        <li>Содержат постоянные обращения к конкретным участникам по личным вопросам</li>
-                        <li>Содержат ссылки на сторонние ресурсы</li>
-                        <li>Содержат призывы к нарушению действующего законодательства (Уголовного и Административного кодекса)</li>
-                    </ul>
-                </div>
-
-           </div>
-
-
-
-
-
-
-
-            <div class="order order-waiting">
-
-                <div class="waiting spoiler-title">
-                        <i class="icon icon-arrow"></i>
-                        <div class="myriad">
-                            27227
-                        </div>
-                        <div class="data semi">
-                            01.09.2015
-                        </div>
-                        <div class="payment semi">
-                            Ожидается оплата
-                        </div>
-                        <div class="money semi">
-                            254 798 грн.
-                        </div>
-               </div>
-                <div class="pr">
-                    <div class="print semi">
-                        <i class="icon icon-print"></i>
-                    </div>
-                    <div class="history semi">
-                        <a>История</a>
-                    </div>
-                    <div class="reorder semi">
-                        <a>Повторить заказ</a>
-                    </div>
-                </div>
-
-                <div class="spoiler-body" style="display: none;">
-                    <div class="">
-
-
-
-
-                    </div>
-                </div>
-
-            </div>
-            <div class="order order-complete">
-                <i class="icon icon-arrow"></i>
-                <div class="myriad">
-                    26587
-                </div>
-                <div class="data semi">
-                    15.08.2015
-                </div>
-                <div class="payment semi">
-                    Выполнен
-                </div>
-                <div class="money semi">
-                    1300 грн.
-                </div>
-                <div class="print semi">
-                    <i class="icon icon-print"></i>
-                </div>
-                <div class="history semi">
-                    <a>История</a>
-                </div>
-                <div class="reorder semi">
-                    <a>Повторить заказ</a>
-                </div>
-            </div>
-            <div class="order order-canceled">
-                <i class="icon icon-arrow"></i>
-                <div class="myriad">
-                    26213
-                </div>
-                <div class="data semi">
-                    03.08.2015
-                </div>
-                <div class="payment semi">
-                    Отменен
-                </div>
-                <div class="money semi">
-                    254 586 798 грн.
-                </div>
-                <div class="print semi">
-                    <i class="icon icon-print"></i>
-                </div>
-                <div class="history semi">
-                    <a>История</a>
-                </div>
-                <div class="reorder semi">
-                    <a>Повторить заказ</a>
-                </div>
-            </div>
-
+            <?php
+            /*
+            ListView::widget([
+                'dataProvider'  =>  $ordersDataProvider,
+                'view'          =>  function($model){
+                    return $this->render('_order', [
+                        'order'     =>  $model
+                }
+            ]);
+            */
+            ?>
+            <?=$this->render('_order', [
+                'windowClass'   =>  'order-waiting',
+                'order' =>  [
+                    'number'    =>  123,
+                    'date'      =>  '01.02.03',
+                    'status'    =>  'Ожидается оплата',
+                    'summ'      =>  '100500',
+                ]
+            ])?>
+            <?=$this->render('_order', [
+                'windowClass'   =>  'order-canceled',
+                'order' =>  [
+                    'number'    =>  123,
+                    'date'      =>  '01.02.03',
+                    'status'    =>  'canceled',
+                    'summ'      =>  '100500',
+                ]
+            ])?>
+            <?=$this->render('_order', [
+                'windowClass'   =>  'order-complete',
+                'order' =>  [
+                    'number'    =>  123,
+                    'date'      =>  '01.02.03',
+                    'status'    =>  'Complete',
+                    'summ'      =>  '100500',
+                ]
+            ])?>
+        </div>
     </div>
 </div>
-</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js">
+</script>
+    <script type="text/javascript">
+        $(".spoiler-title").click(function(){
+            if ($(this).parent().hasClass("")) {
+                $('.order').addClass("").children(".spoiler-body").hide("medium");
+                $(this).parent().toggleClass("").children(".spoiler-body").slideToggle("medium");
+            }
+            else {
+                $(this).parent().toggleClass("").children(".spoiler-body").slideToggle("medium");
+            }
+        });
+    </script>
