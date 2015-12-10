@@ -27,6 +27,7 @@
     </div>
     <div class="spoiler-body" style="display: none;">
         <div class="body">
+            <hr>
             <div class="seller">
                 Продавец : Krasota-style
             </div>
@@ -57,7 +58,7 @@
                 <div class="delivery-type">
                     Доставка
                 </div>
-                <div class="delivery-coast" ">
+                <div class="delivery-coast">
                     50грн
                 </div>
             </div>
@@ -68,7 +69,6 @@
                 <div class="sum">
                     2554411 Грн.
                 </div>
-
             </div>
         </div>
     </div>

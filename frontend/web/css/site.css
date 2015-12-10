@@ -2068,15 +2068,20 @@ footer{
     display:none;
     background:;
     width: 100%;
-    margin-top: ;
+    margin-top: 60px;
+}
+.spoiler-body hr{
+  margin: 0px;
 }
 
 .spoiler-body .body{
     width: 100%;
+
 }
 
 .seller{
     width: 100%;
+
 
 }
 
@@ -2163,10 +2168,11 @@ footer{
 
 .closed .spoiler-body {
     display:none;
+
 }
 
 .total-price{
-    float: right;
+    float: ;
     padding: 20px;
 }
 
@@ -2180,4 +2186,8 @@ footer{
 }
 
 
+.open_close {
+    display: block;
+    cursor: pointer;
+}
 /*========* END ACCOUNT *=========*/

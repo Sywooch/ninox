@@ -6,6 +6,7 @@
  * Time: 2:06 PM
  */
 ?>
+
 <div class="content">
     <div class="menu">
         <?=\frontend\widgets\ListGroupMenu::widget([
@@ -87,16 +88,15 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js">
-</script>
-    <script type="text/javascript">
-        $(".spoiler-title").click(function(){
-            if ($(this).parent().hasClass("")) {
-                $('.order').addClass("").children(".spoiler-body").hide("medium");
-                $(this).parent().toggleClass("").children(".spoiler-body").slideToggle("medium");
-            }
-            else {
-                $(this).parent().toggleClass("").children(".spoiler-body").slideToggle("medium");
-            }
-        });
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js">
     </script>
+        <script type="text/javascript">
+            $(".spoiler-title").click(function(){
+                if ($(this).parent().hasClass("showw")) {
+                    $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");
+                }
+                else {
+                    $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");
+                }
+            });
+        </script>
