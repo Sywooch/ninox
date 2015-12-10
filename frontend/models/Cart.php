@@ -11,7 +11,7 @@ class Cart extends \common\models\Cart
         return Good::find()
             ->where(['in', 'id',
                 self::find()
-                    ->select('goodId')
+                    ->select('itemID')
                     ->where(['cartCode' => \Yii::$app->cart->cartCode])]);
     }
 
