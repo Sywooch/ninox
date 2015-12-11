@@ -169,7 +169,7 @@ class SiteController extends Controller
             ]);
         }
 
-        return $this->render('order', [
+        return $this->render('order2', [
             'model' =>  $order
         ]);
     }
