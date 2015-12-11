@@ -173,7 +173,7 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render('order', [
+        return $this->render('order2', [
             'model' =>  $order
         ]);
     }
@@ -182,22 +182,23 @@ class SiteController extends Controller
         \Yii::$app->response->format = 'json';
 	    $itemID = \Yii::$app->request->post("itemID");
         $count = \Yii::$app->request->post("count");
-        \Yii::$app->cart->put($itemID, $count);
+        $item = \Yii::$app->cart->put($itemID, $count);
 	    $goods = [];
 	    foreach(\Yii::$app->cart->goods as $good){
 			if($good->priceModified){
-				$goods[] = array(
+				$goods[] = [
 					'priceRuleID'  =>  $good->priceRuleID,
 					'priceModified'  =>  $good->priceModified,
 					'price'  =>  $good->retail_price,
-				);
+				];
 			}
 	    }
-	    return array(
-		    'cartSumm'  =>  \Yii::$app->cart->cartSumm,
+	    return [
+		    'cartSumm'      =>  \Yii::$app->cart->cartSumm,
 		    'cartRealSumm'  =>  \Yii::$app->cart->cartRealSumm,
-		    'goods'     =>  $goods,
-	    );
+		    'inCart'        =>  $item->count,
+		    'goods'         =>  $goods,
+	    ];
     }
 
 	public function actionGetcart(){
@@ -219,18 +220,18 @@ class SiteController extends Controller
 		$goods = [];
 		foreach(\Yii::$app->cart->goods as $good){
 			if($good->priceModified){
-				$goods[] = array(
-					'priceRuleID'  =>  $good->priceRuleID,
-					'priceModified'  =>  $good->priceModified,
-					'price'  =>  $good->retail_price,
-				);
+				$goods[] = [
+					'priceRuleID'       =>  $good->priceRuleID,
+					'priceModified'     =>  $good->priceModified,
+					'price'             =>  $good->retail_price
+				];
 			}
 		}
-		return array(
-			'cartSumm'  =>  \Yii::$app->cart->cartSumm,
+		return [
+			'cartSumm'      =>  \Yii::$app->cart->cartSumm,
 			'cartRealSumm'  =>  \Yii::$app->cart->cartRealSumm,
-			'goods'     =>  $goods,
-		);
+			'goods'         =>  $goods,
+		];
 	}
 
     public function actionSuccess($order = []){

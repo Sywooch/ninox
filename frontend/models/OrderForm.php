@@ -75,6 +75,14 @@ class OrderForm extends Model{
         ];
     }
 
+    public function attributeLabels(){
+        return [
+            'customerName'      =>  \Yii::t('shop', 'Имя'),
+            'customerSurname'   =>  \Yii::t('shop', 'Фамилия'),
+            'customerPhone'     =>  \Yii::t('shop', 'Телефон'),
+        ];
+    }
+
     public function loadCustomer($customer){
         if($customer instanceof Customer == false){
             throw new ErrorException("Может быть передан только Customer!");

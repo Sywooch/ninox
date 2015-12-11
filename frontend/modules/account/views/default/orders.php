@@ -58,7 +58,6 @@
             */
             ?>
             <?=$this->render('_order', [
-
                 'windowClass'   =>  'order-waiting',
                 'order' =>  [
                     'number'    =>  123,
@@ -72,7 +71,7 @@
                 'order' =>  [
                     'number'    =>  123,
                     'date'      =>  '01.02.03',
-                    'status'    =>  'canceled',
+                    'status'    =>  'Отменен',
                     'summ'      =>  '100500',
                 ]
             ])?>
@@ -81,7 +80,7 @@
                 'order' =>  [
                     'number'    =>  123,
                     'date'      =>  '01.02.03',
-                    'status'    =>  'Complete',
+                    'status'    =>  'Выполнен',
                     'summ'      =>  '100500',
                 ]
             ])?>
