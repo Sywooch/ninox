@@ -6,7 +6,6 @@
  * Time: 2:06 PM
  */
 ?>
-
 <div class="content">
     <div class="menu">
         <?=\frontend\widgets\ListGroupMenu::widget([
@@ -59,6 +58,7 @@
             */
             ?>
             <?=$this->render('_order', [
+
                 'windowClass'   =>  'order-waiting',
                 'order' =>  [
                     'number'    =>  123,
@@ -88,9 +88,9 @@
         </div>
     </div>
 </div>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js">
-    </script>
-        <script type="text/javascript">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js">
+</script>
+<script type="text/javascript">
             $(".spoiler-title").click(function(){
                 if ($(this).parent().hasClass("showw")) {
                     $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");
@@ -99,4 +99,4 @@
                     $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");
                 }
             });
-        </script>
+</script>
