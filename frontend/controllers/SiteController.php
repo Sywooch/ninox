@@ -22,6 +22,7 @@ use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -148,9 +149,6 @@ class SiteController extends Controller
 
         $order = new OrderForm();
 
-        //Вытягиваем пользователя для оформления заказа
-        \Yii::trace('Customer phone: '.$customerPhone);
-
         if(\Yii::$app->user->isGuest){
             $customer = Customer::findOne(['phone' => $customerPhone]);
         }else{
@@ -161,12 +159,18 @@ class SiteController extends Controller
             throw new ErrorException("Клиент не найден!");
         }
 
+        if(\Yii::$app->request->post("OrderForm")){
+            $order->load(\Yii::$app->request->post());
+        }
+
         $order->loadCustomer($customer);
 
-        if($order->load(\Yii::$app->request->post()) && $order->validate() && $order->create()){
-            return $this->render('order_success', [
-                'model' =>  $order
-            ]);
+        if(\Yii::$app->request->post("OrderForm")){
+            if($order->validate() && $order->create()){
+                return $this->render('order_success', [
+                    'model' =>  $order
+                ]);
+            }
         }
 
         return $this->render('order', [

@@ -20,7 +20,7 @@ use Yii;
  * @property integer $deliveryType
  * @property string $deliveryCity
  * @property string $customerComment
- * @property integer $customerID
+ * @property string $customerID
  * @property string $deliveryInfo
  * @property string $coupon
  * @property integer $paymentType
@@ -59,9 +59,21 @@ use Yii;
  * @property double $originalSum
  * @property string $nakladnaSendDate
  * @property integer $hasChanges
+ * @property string $receiverID
  */
 class History extends \yii\db\ActiveRecord
 {
+
+    public function beforeSave($insert){
+        if($this->isNewRecord){
+            $this->id = hexdec(uniqid());
+            $this->number = $this->find()->max('number') + 1;
+            $this->added = time();
+        }
+
+        return parent::beforeSave($insert);
+    }
+
     /**
      * @inheritdoc
      */
@@ -77,7 +89,7 @@ class History extends \yii\db\ActiveRecord
     {
         return [
             [['id', 'nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
-            [['id', 'number', 'added', 'deliveryType', 'customerID', 'paymentType', 'callback', 'canChangeItems', 'actualAmount', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'callsCount', 'hasChanges'], 'integer'],
+            [['id', 'number', 'added', 'deliveryType', 'customerID', 'paymentType', 'callback', 'canChangeItems', 'actualAmount', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'callsCount', 'hasChanges', 'receiverID'], 'integer'],
             [['customerComment'], 'string'],
             [['amountDeductedOrder', 'originalSum'], 'number'],
             [['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
@@ -93,58 +105,59 @@ class History extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('backend', 'ID'),
-            'number' => Yii::t('backend', 'Number'),
-            'customerEmail' => Yii::t('backend', 'Customer Email'),
-            'customerName' => Yii::t('backend', 'Customer Name'),
-            'customerSurname' => Yii::t('backend', 'Customer Surname'),
-            'customerPhone' => Yii::t('backend', 'Customer Phone'),
-            'deliveryAddress' => Yii::t('backend', 'Delivery Address'),
-            'deliveryRegion' => Yii::t('backend', 'Delivery Region'),
-            'added' => Yii::t('backend', 'Added'),
-            'customerFathername' => Yii::t('backend', 'Customer Fathername'),
-            'deliveryType' => Yii::t('backend', 'Delivery Type'),
-            'deliveryCity' => Yii::t('backend', 'Delivery City'),
-            'customerComment' => Yii::t('backend', 'Customer Comment'),
-            'customerID' => Yii::t('backend', 'Customer ID'),
-            'deliveryInfo' => Yii::t('backend', 'Delivery Info'),
-            'coupon' => Yii::t('backend', 'Coupon'),
-            'paymentType' => Yii::t('backend', 'Payment Type'),
-            'paymentInfo' => Yii::t('backend', 'Payment Info'),
-            'callback' => Yii::t('backend', 'Callback'),
-            'canChangeItems' => Yii::t('backend', 'Can Change Items'),
-            'actualAmount' => Yii::t('backend', 'Actual Amount'),
-            'amountDeductedOrder' => Yii::t('backend', 'Amount Deducted Order'),
-            'moneyCollectorUserId' => Yii::t('backend', 'Money Collector User ID'),
-            'nakladna' => Yii::t('backend', 'Nakladna'),
-            'globalmoney' => Yii::t('backend', 'Globalmoney'),
-            'nakladnaSendState' => Yii::t('backend', 'Nakladna Send State'),
-            'done' => Yii::t('backend', 'Done'),
-            'responsibleUserID' => Yii::t('backend', 'Responsible User ID'),
-            'confirmed' => Yii::t('backend', 'Confirmed'),
-            'moneyConfirmed' => Yii::t('backend', 'Money Confirmed'),
-            'confirm_otd' => Yii::t('backend', 'Confirm Otd'),
-            'moneyConfirmedDate' => Yii::t('backend', 'Money Confirmed Date'),
-            'processed' => Yii::t('backend', 'Processed'),
-            'doneDate' => Yii::t('backend', 'Done Date'),
-            'sendDate' => Yii::t('backend', 'Send Date'),
-            'receivedDate' => Yii::t('backend', 'Received Date'),
-            'smsState' => Yii::t('backend', 'Sms State'),
-            'deleted' => Yii::t('backend', 'Deleted'),
-            'takeOrder' => Yii::t('backend', 'Take Order'),
-            'takeOrderDate' => Yii::t('backend', 'Take Order Date'),
-            'takeTTNMoney' => Yii::t('backend', 'Take Ttnmoney'),
-            'takeTTNMoneyDate' => Yii::t('backend', 'Take Ttnmoney Date'),
-            'boxesCount' => Yii::t('backend', 'Boxes Count'),
-            'isNew' => Yii::t('backend', 'Is New'),
-            'deleteDate' => Yii::t('backend', 'Delete Date'),
-            'transactionSended' => Yii::t('backend', 'Transaction Sended'),
-            'confirmedDate' => Yii::t('backend', 'Confirmed Date'),
-            'smsSendDate' => Yii::t('backend', 'Sms Send Date'),
-            'callsCount' => Yii::t('backend', 'Calls Count'),
-            'originalSum' => Yii::t('backend', 'Original Sum'),
-            'nakladnaSendDate' => Yii::t('backend', 'Nakladna Send Date'),
-            'hasChanges' => Yii::t('backend', 'Has Changes'),
+            'id' => Yii::t('common', 'ID'),
+            'number' => Yii::t('common', 'Number'),
+            'customerEmail' => Yii::t('common', 'Customer Email'),
+            'customerName' => Yii::t('common', 'Customer Name'),
+            'customerSurname' => Yii::t('common', 'Customer Surname'),
+            'customerPhone' => Yii::t('common', 'Customer Phone'),
+            'deliveryAddress' => Yii::t('common', 'Delivery Address'),
+            'deliveryRegion' => Yii::t('common', 'Delivery Region'),
+            'added' => Yii::t('common', 'Added'),
+            'customerFathername' => Yii::t('common', 'Customer Fathername'),
+            'deliveryType' => Yii::t('common', 'Delivery Type'),
+            'deliveryCity' => Yii::t('common', 'Delivery City'),
+            'customerComment' => Yii::t('common', 'Customer Comment'),
+            'customerID' => Yii::t('common', 'Customer ID'),
+            'deliveryInfo' => Yii::t('common', 'Delivery Info'),
+            'coupon' => Yii::t('common', 'Coupon'),
+            'paymentType' => Yii::t('common', 'Payment Type'),
+            'paymentInfo' => Yii::t('common', 'Payment Info'),
+            'callback' => Yii::t('common', 'Callback'),
+            'canChangeItems' => Yii::t('common', 'Can Change Items'),
+            'actualAmount' => Yii::t('common', 'Actual Amount'),
+            'amountDeductedOrder' => Yii::t('common', 'Amount Deducted Order'),
+            'moneyCollectorUserId' => Yii::t('common', 'Money Collector User ID'),
+            'nakladna' => Yii::t('common', 'Nakladna'),
+            'globalmoney' => Yii::t('common', 'Globalmoney'),
+            'nakladnaSendState' => Yii::t('common', 'Nakladna Send State'),
+            'done' => Yii::t('common', 'Done'),
+            'responsibleUserID' => Yii::t('common', 'Responsible User ID'),
+            'confirmed' => Yii::t('common', 'Confirmed'),
+            'moneyConfirmed' => Yii::t('common', 'Money Confirmed'),
+            'confirm_otd' => Yii::t('common', 'Confirm Otd'),
+            'moneyConfirmedDate' => Yii::t('common', 'Money Confirmed Date'),
+            'processed' => Yii::t('common', 'Processed'),
+            'doneDate' => Yii::t('common', 'Done Date'),
+            'sendDate' => Yii::t('common', 'Send Date'),
+            'receivedDate' => Yii::t('common', 'Received Date'),
+            'smsState' => Yii::t('common', 'Sms State'),
+            'deleted' => Yii::t('common', 'Deleted'),
+            'takeOrder' => Yii::t('common', 'Take Order'),
+            'takeOrderDate' => Yii::t('common', 'Take Order Date'),
+            'takeTTNMoney' => Yii::t('common', 'Take Ttnmoney'),
+            'takeTTNMoneyDate' => Yii::t('common', 'Take Ttnmoney Date'),
+            'boxesCount' => Yii::t('common', 'Boxes Count'),
+            'isNew' => Yii::t('common', 'Is New'),
+            'deleteDate' => Yii::t('common', 'Delete Date'),
+            'transactionSended' => Yii::t('common', 'Transaction Sended'),
+            'confirmedDate' => Yii::t('common', 'Confirmed Date'),
+            'smsSendDate' => Yii::t('common', 'Sms Send Date'),
+            'callsCount' => Yii::t('common', 'Calls Count'),
+            'originalSum' => Yii::t('common', 'Original Sum'),
+            'nakladnaSendDate' => Yii::t('common', 'Nakladna Send Date'),
+            'hasChanges' => Yii::t('common', 'Has Changes'),
+            'receiverID' => Yii::t('common', 'Receiver ID'),
         ];
     }
 }

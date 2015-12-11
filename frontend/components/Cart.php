@@ -135,6 +135,10 @@ class Cart extends Component{
         return $this->items[$itemID];
     }
 
+    public function isWholesale($barrier = 800){
+        return $this->cartWholesaleSumm >= $barrier;
+    }
+
 	public function recalcCart(){
 		$this->itemsCount = !empty($this->goods) ? sizeof($this->goods) : 0;
 		$this->cartWholesaleSumm = 0;
