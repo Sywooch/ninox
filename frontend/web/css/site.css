@@ -1882,6 +1882,7 @@ footer{
     border-radius: 7px 7px 7px 7px;
     -moz-border-radius: 7px 7px 7px 7px;
     -webkit-border-radius: 7px 7px 7px 7px;
+
 }
 
 .reviews .text{
@@ -2020,7 +2021,6 @@ footer{
 }
 
 .review .image{
-    background-color: #cb93dd;
     width: 125px;
     height: 90px;
     float: left;
@@ -2035,6 +2035,10 @@ footer{
     padding-left: 25px;
 }
 
+.write-review a{
+    cursor: pointer;
+    color: #1998db;
+}
 .data .name{
      width: 100%;
      height: 46px;
@@ -2081,7 +2085,7 @@ footer{
 
 .seller{
     width: 100%;
-
+    border-bottom: 1px dashed #e5e5e5;
 
 }
 
@@ -2094,29 +2098,42 @@ footer{
     padding: 20px;
     height: 130px;
     width: 100%;
+
+    border-bottom: 1px dashed #e5e5e5;
 }
 
-.items .image{
-    width: 120px;
+.sold-items .items .image{
+    width: 12%;
     height: 90px;
-    background-color: #cb93dd;
     float: left;
+    text-align: center;
+}
+.items .image{
+    width: 100%;
+    height: 90px;
+    float: left;
+    text-align: center;
 }
 
 .image{
     width: 120px;
     height: 90px;
-    background-color: #cb93dd;
+}
+
+.image img{
+
+    width: 100%;
 }
 
 .items .data{
     display: block;
     float: left;
-    height: 100%;
+    height: ;
     padding: 25px;
-    width: 744px;
+    width: 88%;
     padding-right: 0px;
     padding-top: 0px
+
 }
 
 .data .order-profile{
@@ -2134,15 +2151,20 @@ footer{
 
 .data .one-price{
     float: left;
+    width: 40%;
 }
 
 .data .sum{
     float: right;
-    padding-right: 100px;
+
+    width: 40%;
+    text-align: end;
 }
 
 .data .sum-price{
     float: right;
+    text-align: end;
+    width: 20%;
 }
 
 .data a{
@@ -2152,9 +2174,12 @@ footer{
 
 .delivery{
     width: 100%;
-    padding: 10px;
-    height: 50px;
+    margin: 20px;
+    height: 40px;
+    padding-left: 20px;
+    margin-left: 0px;
     padding-right: 20px;
+    border-bottom: 1px dashed #e5e5e5;
 }
 
 .delivery-type{
@@ -2172,8 +2197,9 @@ footer{
 }
 
 .total-price{
-    float: ;
-    padding: 20px;
+    margin: 20px;
+    height: 40px;
+    margin-bottom: 0px;
 }
 
 .total-price .title{

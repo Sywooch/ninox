@@ -5,12 +5,16 @@ use bobroid\remodal\Remodal;
 ?>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $('.spoiler-title').click(function(){
-            $(this).parent().children('.spoiler-body').slideToggle();
-            return false;
-        });
-    });
+function diplay_hide (reviews)
+{
+    if ($(reviews).css('display') == 'none')
+    {
+        $(reviews).animate({height: 'show'}, 500);
+    }
+    else
+    {
+        $(reviews).animate({height: 'hide'}, 500);
+    }}
 </script>
 <div class="content">
     <div class="menu">
@@ -94,7 +98,6 @@ use bobroid\remodal\Remodal;
                             <div class="color">
                                  <i class="icon icon-delivery-car"></i> Адрес для доставки:
                             </div>
-
                             <div class="address-data">
                                 <div class="address">
                                     г. Киев, ул. Гетьмана Вадима, 1А/11
@@ -165,10 +168,9 @@ use bobroid\remodal\Remodal;
                 </div>
             </div>
         </div>
-
         <div id="reviews" class="reviews user-account">
             <div class="pull-right">
-                      <i onclick="getElementById('reviews').style.display='none';" class="icon icon-exit"></i>
+                <i onclick="diplay_hide('.reviews');return false;" class="icon icon-exit"></i>
             </div>
             <div class="text">
                 <div class="review-tittle">
@@ -180,48 +182,36 @@ use bobroid\remodal\Remodal;
                     </div>
                 </div>
                 <div class="review">
-                    <div class="items">
-                        <div class="image">
-                        </div>
-                        <div class="write-review">
-                            Написать отзыв
-                        </div>
-                    </div>
-                    <div class="items">
-                        <div class="image">
-                        </div>
-                        <div class="write-review">
-                            Написать отзыв
-                        </div>
-                    </div>
-                    <div class="items">
-                        <div class="image">
-                        </div>
-                        <div class="write-review">
-                            Написать отзыв
-                        </div>
-                    </div>
-                    <div class="items">
-                        <div class="image">
-                        </div>
-                        <div class="write-review">
-                            Написать отзыв
-                        </div>
-                    </div>
-                    <div class="items">
-                        <div class="image">
-                        </div>
-                        <div class="write-review">
-                            Написать отзыв
-                        </div>
-                    </div>
-                    <div class="items">
-                        <div class="image">
-                        </div>
-                        <div class="write-review">
-                            Написать отзыв
-                        </div>
-                    </div>
+                    <?=$this->render('_review_items', [
+                        'review_item_image' =>  [
+                            'image'   =>  'img/catalog/265efa88d5d8547c1b9d65f57ca003bdac2ffa911433839838.png',
+                        ]
+                    ])?>
+                    <?=$this->render('_review_items', [
+                        'review_item_image' =>  [
+                            'image'   =>  'img/catalog/zont-avtomat-mo-007-1-sht-629084.jpg',
+                        ]
+                    ])?>
+                    <?=$this->render('_review_items', [
+                        'review_item_image' =>  [
+                            'image'   =>  'img/site/sven.jpg',
+                        ]
+                    ])?>
+                    <?=$this->render('_review_items', [
+                        'review_item_image' =>  [
+                            'image'   =>  'img/catalog/892fb5764422cfbeeb1da96bb02e9465b91bc7551431090634.png',
+                        ]
+                    ])?>
+                    <?=$this->render('_review_items', [
+                        'review_item_image' =>  [
+                            'image'   =>  'img/blog/articles/gde-kupit-zakolku-297982.jpg',
+                        ]
+                    ])?>
+                    <?=$this->render('_review_items', [
+                        'review_item_image' =>  [
+                            'image'   =>  'img/catalog/f107ffd8dd260383c57c457b17bef6a9d8493b6a1433513755.png',
+                        ]
+                    ])?>
                 </div>
             </div>
         </div>
