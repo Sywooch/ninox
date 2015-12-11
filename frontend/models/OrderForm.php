@@ -11,6 +11,7 @@ namespace frontend\models;
 
 use yii\base\ErrorException;
 use yii\base\Model;
+use yii\web\NotFoundHttpException;
 
 class OrderForm extends Model{
 
@@ -21,9 +22,13 @@ class OrderForm extends Model{
     public $customerEmail;
     public $customerPhone;
     public $customerComment;
+    public $customerReceiverID = 0;
+    public $customerReceiverIsDefault = 0;
 
+    public $deliveryCountry = 'Украина';
     public $deliveryCity;
     public $deliveryRegion;
+    public $deliveryAddress;
     public $deliveryType;
     public $deliveryInfo;
 
@@ -57,6 +62,61 @@ class OrderForm extends Model{
     public function create(){
         //Сначала проверяем, гость-ли пользователь
         //если гость - создаём нового партнёра
+        if(\Yii::$app->user->isGuest){
+            $customer = Customer::findOne(['phone' => $this->customerPhone]);
+
+            if(!$customer){
+                $customer = new User();
+                //$customer->name
+                //$customer->surname
+                $customer->Company = $this->customerName.' '.$this->customerSurname;
+                $customer->phone = $this->customerPhone;
+                $customer->email = $this->customerEmail;
+
+                $customer->save();
+
+                \Yii::$app->user->login($customer, 3600*24*30);
+            }
+        }else{
+            $customer = \Yii::$app->user->identity;
+        }
+
+        if(\Yii::$app->user->isGuest || $this->customerReceiverID == 0){
+            $customerReceiver = new CustomerReceiver([
+                'surname' => $this->customerSurname,
+                'fathername' => $this->customerFathername,
+                'partnerID' => $customer->ID,
+                'country' => $this->deliveryCountry,
+                'city' => $this->deliveryCity,
+                'address' => $this->deliveryAddress,
+                'shippingType' => $this->deliveryType,
+                'shippingParam' => $this->deliveryInfo,
+                'paymentType' => $this->paymentType,
+                'paymentParam' => $this->paymentInfo,
+            ]);
+
+            if(\Yii::$app->user->isGuest || $this->customerReceiverIsDefault != 0){
+                $customerReceiver->default = 1;
+            }
+        }else{
+            $customerReceiver = CustomerReceiver::findOne(['partnerID' => $customer->ID, 'ID' => $this->customerReceiverID]);
+
+            if(!$customerReceiver){
+                throw new NotFoundHttpException("Не смогли найти получателя");
+            }
+
+            $customerReceiver->surname = $this->customerSurname;
+            $customerReceiver->fathername = $this->customerFathername;
+            $customerReceiver->country = $this->deliveryCountry;
+            $customerReceiver->city = $this->deliveryCity;
+            $customerReceiver->address = $this->deliveryAddress;
+            $customerReceiver->shippingType = $this->deliveryType;
+            $customerReceiver->shippingParam = $this->deliveryInfo;
+            $customerReceiver->paymentType = $this->paymentType;
+            $customerReceiver->paymentParam = $this->paymentInfo;
+        }
+
+        $customerReceiver->save();
         //затем подхватываем контакт партнёра
         //если у партнёра нет контактов - создаём новый
         //если есть - выбираем один,

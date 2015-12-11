@@ -209,7 +209,7 @@ $this->registerJs($js);
 	?>
 	<?=$content?>
 	<?php Yamm::end(); ?>
-	<footer>
+	<!--<footer>
 		<div class="footerCenter">
 			<div class="quickReference">
 				<div class="reference1">
@@ -287,7 +287,7 @@ $this->registerJs($js);
 				<div class="number">063 334 49 15 • 067 507 87 73</div>
 			</div>
 		</div>
-	</footer>
+	</footer>-->
 	<?=$cartModal->renderModal()?>
 	<?=$loginModal->renderModal()?>
 	<?php
