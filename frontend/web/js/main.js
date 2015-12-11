@@ -1,7 +1,7 @@
 /**
  * Created by alone on 10/18/15.
  */
-var hasTouch = 'ontouchstart' in document.documentElement;
+var hasTouch = window.DocumentTouch && document instanceof DocumentTouch;
 var isMobile = {
 	Android: function() {
 		return navigator.userAgent.match(/Android/i);
@@ -231,7 +231,7 @@ function addToCart(item){
 					this.classList.add('open-cart');
 				});
 				$('.count[data-itemId='+ itemId +']').each(function(){
-					this.setAttribute('data-inCart', data);
+					this.setAttribute('data-inCart', data.inCart);
 				});
 				//updateMinicartInfo();
 			}
@@ -246,6 +246,7 @@ function changeItemCount(item){
 	var itemsCount = parseInt(counter.value.replace(/\D+/g, ''));
 	var count = parseInt(item.getAttribute('data-count'));
 	var inCart = parseInt(counter.getAttribute('data-inCart'));
+
 	if((maxItemsCount > itemsCount && count > 0) || (1 < itemsCount && count < 0)){
 		itemsCount += count;
 		if(inCart){
@@ -257,7 +258,6 @@ function changeItemCount(item){
 					'count': count
 				},
 				success: function(data){
-					console.log(data);
 					//updateCart(this, data);
 				}
 			});
@@ -301,7 +301,6 @@ function removeFromCart(item){
 			'itemID': itemId
 		},
 		success: function(data){
-			console.log(data);
 			//updateCart(itemId, true);
 			$('.open-cart[data-itemId='+ itemId +']').each(function(){
 				this.value = texts.itemText.buy;
