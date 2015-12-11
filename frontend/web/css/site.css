@@ -148,7 +148,6 @@ h2{
     font-style: normal;
     font-weight: normal;
 }
-}
 @font-face {
     font-family: 'MyriadProSemiBold';
     src: url('../fonts/MyriadProSemiBold.eot');
@@ -1877,7 +1876,7 @@ footer{
     width: 100%;
     height: 305px;
     float: left;
-    margin-left: 18px;
+    margin-left: ;
     background-color: #e2f3fc;
     border-radius: 7px 7px 7px 7px;
     -moz-border-radius: 7px 7px 7px 7px;
