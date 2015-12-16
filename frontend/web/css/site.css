@@ -111,6 +111,16 @@ h2{
 	font-style: normal;
 }
 
+@font-face {
+    font-family: "OpenSansBold";
+    src: url("../fonts/OpenSansBold.eot");
+    src: url("../fonts/OpenSansBold.eot?#iefix")format("embedded-opentype"),
+    url("../fonts/OpenSansBold.woff") format("woff"),
+    url("../fonts/OpenSansBold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
 @font-face{
 	font-family: 'SolomonSans-Semibold';
 	src: url('../fonts/SolomonSans-semibold.eot?#iefix') format('embedded-opentype'),
@@ -421,6 +431,10 @@ h2{
 .semi-bold{
 	font-family: OpenSans-Semibold;
 }
+
+.bold{
+    font-family: OpenSansBold;
+    }
 
 .myriad{
     font-family: MyriadProRegular;

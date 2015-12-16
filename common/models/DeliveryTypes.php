@@ -31,7 +31,7 @@ class DeliveryTypes extends \yii\db\ActiveRecord
             return self::$deliveryTypesArray;
         }
 
-        self::$deliveryTypesArray = self::find()->select('id, name')->asArray()->all();
+        self::$deliveryTypesArray = self::find()->select('id, name')->where(['enable' => 1])->asArray()->all();
 
         $t = [];
 
