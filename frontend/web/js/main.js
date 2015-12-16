@@ -258,6 +258,7 @@ function changeItemCount(item){
 					'count': count
 				},
 				success: function(data){
+					console.log(data);
 					//updateCart(this, data);
 				}
 			});
@@ -331,6 +332,7 @@ function getCart(e){
 		type: 'POST',
 		url: '/getcart',
 		success: function(data){
+			console.log(data);
 			e.currentTarget.innerHTML = data;
 		}
 	});
