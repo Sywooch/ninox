@@ -53,8 +53,6 @@ class Cart extends Component{
                 $cache->set('cart-'.$this->cartCode.'/lastUpdate', time());
             }
         }
-
-        $this->recalcCart();
     }
 
     public function createCartCode($length = '11'){

@@ -18,7 +18,7 @@ class CartWidget extends Widget{
     public $remodalInstance;
 
     public function init(){
-
+	    \Yii::$app->cart->recalcCart();
     }
 
     public function run(){

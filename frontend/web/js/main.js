@@ -258,6 +258,7 @@ function changeItemCount(item){
 					'count': count
 				},
 				success: function(data){
+					console.log(data);
 					//updateCart(this, data);
 				}
 			});
