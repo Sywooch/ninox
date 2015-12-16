@@ -331,7 +331,6 @@ function getCart(e){
 		type: 'POST',
 		url: '/getcart',
 		success: function(data){
-			console.log(data);
 			e.currentTarget.innerHTML = data;
 		}
 	});
