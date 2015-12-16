@@ -37,7 +37,7 @@ class OrderForm extends Model{
     public $deliveryRegion;
     public $deliveryAddress;
 
-    public $deliveryType;
+    public $deliveryType = 1;
     public $deliveryInfo;
 
     public $paymentType;
@@ -51,6 +51,8 @@ class OrderForm extends Model{
     public $customerComment;
     public $promoCode;
     public $canChangeItems = 0;
+    public $anotherReceiver = 0;
+    public $payment = 0;
 
     public function init(){
         /*if(\Yii::$app->user->isGuest){
