@@ -6,7 +6,7 @@
  * Time: 5:10 PM
  */
 
-namespace app\assets;
+namespace frontend\assets;
 
 use yii\web\AssetBundle;
 
@@ -21,6 +21,6 @@ class RuLangAsset extends AssetBundle
 		'js/translations/ru_RU.js',
 	];
 	public $depends = [
-		'app\assets\FrontEndAsset',
+		'frontend\assets\FrontEndAsset',
 	];
 }

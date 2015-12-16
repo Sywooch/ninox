@@ -118,6 +118,8 @@ class SiteController extends Controller
     }
 
     public function actionOrder(){
+        $this->layout = 'order';
+
         $customerPhone = '';
 
         if(\Yii::$app->user->isGuest){
@@ -138,7 +140,7 @@ class SiteController extends Controller
             $customerPhone = \Yii::$app->user->identity->phone;
         }
 
-        if(\Yii::$app->cart->itemsCount == 0){
+        if(\Yii::$app->cart->itemsCount < 1){
             \Yii::trace('Cart items is so...');
             //return $this->run('site/error');
         }

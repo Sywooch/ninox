@@ -3,15 +3,11 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use app\assets\RuLangAsset;
+use frontend\assets\RuLangAsset;
 use bobroid\yamm\Yamm;
 use common\components\SocialButtonWidget;
-use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
 use yii\helpers\Url;
-use yii\widgets\Breadcrumbs;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
 $this->registerMetaTag(['name' => 'description', 'content' => '']);
