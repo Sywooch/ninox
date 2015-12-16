@@ -118,14 +118,6 @@ class SiteController extends Controller
     }
 
     public function actionOrder(){
-        if(\Yii::$app->cart->itemsCount < 1){
-            return $this->render('emptyCart');
-        }else if(\Yii::$app->cart->cartSumm < \Yii::$app->params['domainInfo']['minimalOrderSum']){
-            return $this->render('buyMore');
-        }
-
-        $this->layout = 'order';
-
         $customerPhone = '';
 
         if(\Yii::$app->user->isGuest){
@@ -149,6 +141,15 @@ class SiteController extends Controller
         if(empty($customerPhone)){
             return \Yii::$app->response->redirect('/#modalCart');
         }
+
+        if(\Yii::$app->cart->itemsCount < 1){
+            return $this->render('emptyCart');
+        }else if(\Yii::$app->cart->cartSumm < \Yii::$app->params['domainInfo']['minimalOrderSum']){
+            return $this->render('buyMore');
+        }
+
+        $this->layout = 'order';
+
 
         $order = new OrderForm();
 
