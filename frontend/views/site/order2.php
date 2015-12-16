@@ -76,9 +76,9 @@ $css = <<<'STYLE'
 
 .content{
 width: 100%;
-    max-width: 1250px;
+    max-width: 1000px;
     margin: 0 auto;
-    min-width: 820px;
+    min-width: 880px;
 }
 
 .content-data-body label{
@@ -116,7 +116,7 @@ width: 100%;
 
 .content-data{
     float: left;
-    width: 60%;
+    width: 55%;
     min-width: 470px;
     padding-left: 10px;
 }
@@ -324,8 +324,9 @@ width: 100%;
 }
 
 .content-ordering{
-    width: 40%;
+    width: 45%;
     float: left;
+    min-width: 380px;
 }
 
 .ordering{
