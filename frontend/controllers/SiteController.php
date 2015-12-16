@@ -120,7 +120,7 @@ class SiteController extends Controller
     public function actionOrder(){
         if(\Yii::$app->cart->itemsCount < 1){
             return $this->render('emptyCart');
-        }else if(\Yii::$app->cart->cartSumm < \Yii::$app->domains->minimalBuySumm){
+        }else if(\Yii::$app->cart->cartSumm < \Yii::$app->params['domainInfo']['minimalOrderSum']){
             return $this->render('buyMore');
         }
 
