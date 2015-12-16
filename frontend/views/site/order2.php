@@ -76,9 +76,9 @@ $css = <<<'STYLE'
 
 .content{
 width: 100%;
-    max-width: 1250px;
+    max-width: 1000px;
     margin: 0 auto;
-    min-width: 820px;
+    min-width: 880px;
 }
 
 .content-data-body label{
@@ -116,7 +116,7 @@ width: 100%;
 
 .content-data{
     float: left;
-    width: 60%;
+    width: 55%;
     min-width: 470px;
     padding-left: 10px;
 }
@@ -241,16 +241,25 @@ width: 100%;
 }
 .content-data-body-first{
     padding-bottom: 30px;
-
-        margin-left: 40px;
-
-            text-shadow: 0px 0px 1px #bdbdbd;
+    margin-left: 40px;
+    text-shadow: 0px 0px 1px #bdbdbd;
 }
 
 .content-data-body-second{
     padding-bottom: 30px;
-        margin-left: 40px;
-text-shadow: 0px 0px 1px #9db5cf;
+    margin-left: 40px;
+    text-shadow: 0px 0px 1px #9db5cf;
+}
+
+.content-data-body-third{
+    padding-bottom: 30px;
+    margin-left: 40px;
+    text-shadow: 0px 0px 1px #9db5cf;
+    margin-bottom: 50px;
+}
+
+.content-data-body-third .form-group{
+    height: 100%;
 }
 
 .content-data-second .content-data-body-second{
@@ -315,15 +324,16 @@ text-shadow: 0px 0px 1px #9db5cf;
 }
 
 .content-ordering{
-    width: 40%;
+    width: 45%;
     float: left;
+    min-width: 380px;
 }
 
 .ordering{
     width: 100%;
     float: left;
 min-width: 380px;
-    height: 545px;
+
     border: 1px solid #f1e9d3;
     background-image: url(img/site/ordering-background.png);
 }
@@ -438,13 +448,24 @@ width: 15px;
 text-align: center;
     width: 220px;
     font-size: 11px;
-    padding-bottom: 30px;
+    padding-bottom: 25px;
 }
 
 .br{
     padding-left: 20px;
     padding-right: 5px;
     padding-bottom: 3px;
+}
+
+.text-align-center{
+    text-align: center;
+    text-align: -webkit-center;
+    padding-bottom: 10px;
+}
+
+
+.text-align-center a{
+    cursor: pointer;
 }
 
 STYLE;
@@ -597,6 +618,16 @@ $this->registerCss($css);
                         </div>
                     </div>
                 </div>
+                <div class="content-data-body">
+                    <div class="content-data-body-third">
+                        <?=$form->field($model, 'payment')->radioList([
+                            '0' =>  'Наличными при получении (25 от сумы + 20 грн.)',
+                            '1' =>  'Оплата на карту ПриватБанк (1% от сумы)',
+                            '2' =>  'Visa / MasterCard (1% от сумы)'
+                        ])->label(false)?>
+                        <a>Добавить коментарий к заказу</a>
+                    </div>
+                  </div>
             </div>
         </div>
         <div class="content-ordering">
@@ -662,10 +693,10 @@ $this->registerCss($css);
                             <a>пользовательского соглашение</a>
                         </div>
                     </div>
-                        <div class="" style="text-align: center;"><a>Редактировать заказ</a>
+                        <div class="text-align-center"><a>Редактировать заказ</a>
 
                         </div>
-                        <div style="text-align: -webkit-center;">
+                        <div class="text-align-center">
                             <div class="" style="width: 140px;height: 20px;"><a style="float: left; padding-right: 5px;">Ввести промокод</a>
                                 <div class="question">
                                     <div class="round-button">
