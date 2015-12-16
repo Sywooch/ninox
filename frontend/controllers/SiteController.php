@@ -118,6 +118,12 @@ class SiteController extends Controller
     }
 
     public function actionOrder(){
+        if(\Yii::$app->cart->itemsCount < 1){
+            return $this->render('emptyCart');
+        }else if(\Yii::$app->cart->cartSumm < \Yii::$app->domains->minimalBuySumm){
+            return $this->render('buyMore');
+        }
+
         $this->layout = 'order';
 
         $customerPhone = '';
@@ -138,11 +144,6 @@ class SiteController extends Controller
             }
         }else{
             $customerPhone = \Yii::$app->user->identity->phone;
-        }
-
-        if(\Yii::$app->cart->itemsCount < 1){
-            \Yii::trace('Cart items is so...');
-            //return $this->run('site/error');
         }
 
         if(empty($customerPhone)){
