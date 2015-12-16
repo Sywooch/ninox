@@ -7,6 +7,7 @@ return [
 		'currencyCode'          =>  'UAH',
 		'currencyShortName'     =>  'грн.',
 		'coins'                 =>  '1',
+		'wholesaleThreshold'	=>	'800'
 	],
     'cdn-link'              =>  'https://krasota-style.com.ua',
 ];

@@ -25,6 +25,7 @@ class Cart extends Component{
     public $cartRetailRealSumm = 0;
     public $cartSumm = 0;
     public $cartRealSumm = 0;
+    public $wholesale = false;
 
     public function init(){
         $cache = \Yii::$app->cache;
@@ -52,6 +53,8 @@ class Cart extends Component{
                 $cache->set('cart-'.$this->cartCode.'/lastUpdate', time());
             }
         }
+
+        $this->recalcCart();
     }
 
     public function createCartCode($length = '11'){
@@ -168,7 +171,9 @@ class Cart extends Component{
 			}
 		}
 
-		$this->cartSumm = $this->cartRetailSumm;
-		$this->cartRealSumm = $this->cartRetailRealSumm;
+        $this->wholesale = $this->cartWholesaleSumm >= \Yii::$app->params['domainInfo']['wholesaleThreshold'];
+
+		$this->cartSumm = $this->wholesale ? $this->cartWholesaleSumm : $this->cartRetailSumm;
+		$this->cartRealSumm = $this->wholesale ? $this->cartWholesaleRealSumm : $this->cartRetailRealSumm;
 	}
 }

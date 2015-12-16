@@ -119,8 +119,8 @@ use yii\helpers\Html;
 		$form->begin(); ?>
         <!--<form method="POST" action="/order" onkeypress="if(event.keyCode == 13) return false;" onsubmit="submitForm(this); return false;">-->
             <div class="row first">
-                <span id="optSumm" class="semi-bold">Сумма заказа по оптовым ценам: 0 грн</span>
-                <span>Сумма заказа <span id="totalSumm" class="blue">0 грн</span></span>
+                <span id="optSumm" class="semi-bold">Сумма заказа по оптовым ценам: <?=\Yii::$app->cart->cartWholesaleSumm?> грн</span>
+                <span>Сумма заказа <span id="totalSumm" class="blue"><?=\Yii::$app->cart->cartSumm?> грн</span></span>
             </div>
             <div class="row second">
                 <span id="optSummDiff">Ваша корзина пуста</span>
