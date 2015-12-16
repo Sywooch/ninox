@@ -12,6 +12,7 @@ namespace common\helpers;
 use frontend\models\Pricerule;
 use DateTime;
 use yii\base\Component;
+use yii\helpers\Json;
 
 class PriceRuleHelper extends Component{
 
@@ -94,12 +95,10 @@ class PriceRuleHelper extends Component{
 	}
 
 	private function recalcItem($model, $rule, $category){
-		$ruleID = $rule->ID;
-		$personalRule = $rule->personalRule;
-		$rule = self::asArray($rule);
+		$ruleArray = self::asArray($rule);
 		$termsCount = 0;
 		$discount = 0;
-		foreach($rule['terms'] as $term){
+		foreach($ruleArray['terms'] as $term){
 			if(!empty($term['GoodGroup'])){
 				$this->checkCategory($term['GoodGroup'], $model->category, $termsCount, $discount);
 			}
@@ -184,11 +183,12 @@ class PriceRuleHelper extends Component{
 			$cartInfo[$key]['flag'] = true;*/
 		}
 		if($discount == $termsCount && $termsCount != 0){
-			$model->priceModified = ($model->priceRuleID != $ruleID);
-			$model->priceRuleID = $ruleID;
-			$model->discountType = empty($rule['actions']['Type']) ? 2 : $rule['actions']['Type'];
-			$model->discountSize = $rule['actions']['Discount'];
-			$model->personalRule = $personalRule;
+			\Yii::trace('Model: '.$model->priceRuleID.'; ID: '.$rule->ID);
+			$model->priceModified = ($model->priceRuleID != $rule->ID);
+			$model->priceRuleID = $rule->ID;
+			$model->discountType = empty($ruleArray['actions']['Type']) ? 2 : $ruleArray['actions']['Type'];
+			$model->discountSize = $ruleArray['actions']['Discount'];
+			$model->personalRule = $rule->personalRule;
 			return $model;
 		}
 	}

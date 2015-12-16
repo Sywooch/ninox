@@ -53,6 +53,8 @@ class Cart extends Component{
                 $cache->set('cart-'.$this->cartCode.'/lastUpdate', time());
             }
         }
+
+	    $this->calcCart();
     }
 
     public function createCartCode($length = '11'){
@@ -139,6 +141,29 @@ class Cart extends Component{
     public function isWholesale($barrier = 800){
         return $this->cartWholesaleSumm >= $barrier;
     }
+
+	public function calcCart(){
+		$this->itemsCount = !empty($this->goods) ? sizeof($this->goods) : 0;
+		$this->cartWholesaleSumm = 0;
+		$this->cartWholesaleRealSumm = 0;
+		$this->cartRetailSumm = 0;
+		$this->cartRetailRealSumm = 0;
+		if(!empty($this->goods)){
+			foreach($this->goods as $good){
+				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
+				$this->cartWholesaleRealSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
+				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
+				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;
+			}
+			$this->cartSumm = $this->cartRetailSumm;
+			$this->cartRealSumm = $this->cartRetailRealSumm;
+		}
+
+		$this->wholesale = $this->cartWholesaleSumm >= \Yii::$app->params['domainInfo']['wholesaleThreshold'];
+
+		$this->cartSumm = $this->wholesale ? $this->cartWholesaleSumm : $this->cartRetailSumm;
+		$this->cartRealSumm = $this->wholesale ? $this->cartWholesaleRealSumm : $this->cartRetailRealSumm;
+	}
 
 	public function recalcCart(){
 		$this->itemsCount = !empty($this->goods) ? sizeof($this->goods) : 0;
