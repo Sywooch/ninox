@@ -11,8 +11,7 @@ class m151211_114835_receiverID_in_history extends Migration
 
     public function down()
     {
-        echo "m151211_114835_receiverID_in_history cannot be reverted.\n";
-
+        $this->dropColumn('history', 'receiverID');
         return true;
     }
 
