@@ -565,7 +565,7 @@ $this->title = 'Заказы';
                     ]);
                 },
                 'call'  =>  function($url, $model, $key){
-                    switch($model->confirmed){
+                    switch($model->callback){
                         case '2':
                             $subclass = 'btn-danger';
                             break;
