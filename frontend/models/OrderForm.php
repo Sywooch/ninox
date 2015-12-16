@@ -52,6 +52,7 @@ class OrderForm extends Model{
     public $promoCode;
     public $canChangeItems = 0;
     public $anotherReceiver = 0;
+    public $payment = 0;
 
     public function init(){
         /*if(\Yii::$app->user->isGuest){
