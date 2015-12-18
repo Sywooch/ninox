@@ -583,10 +583,9 @@ $form = \yii\bootstrap\ActiveForm::begin([
         echo Accordion::widget([
             'items' => [
                 [
-                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', [
+                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', '#collapse1', [
                             'data-toggle'   =>  'collapse',
                             'data-parent'   =>  '#accordion',
-                            'href'          =>  '#collapse1'
                         ]),
                         ['class' =>  'content-data-first_1']
                     ),
@@ -634,6 +633,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         <?=$form->field($model, 'customerName'),
                             $form->field($model, 'customerSurname'),
                             $form->field($model, 'deliveryCity'),
+                            $form->field($model, 'deliveryRegion'),
                             $form->field($model, 'customerEmail')?>
                         <div class="next-button">
                         <?php
@@ -813,9 +813,9 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         </div>
                         <div class="text-align-center">
                             <div class="promotional-code">
-                                <a>
-                                    Ввести промокод
-                                </a>
+                                <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
+                                    'valueIfNull'   =>  'Ввести промокод'
+                                ])->label(false)?>
                                 <div class="question">
                                     <div class="round-button">
                                         <div class="content-data-title-img">
