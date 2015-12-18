@@ -124,7 +124,6 @@ $css = <<<'STYLE'
     float: left;
     width: 55%;
     min-width: 470px;
-    padding-left: 10px;
 }
 
 .content-data-title{
@@ -492,10 +491,71 @@ $css = <<<'STYLE'
     border: none;
 }
 
-.ui-accordion-header-icon {
+.content-data-first_1{
+    margin-left: 40px;
+    font-size: 22px;
+    color: #40403e;
+    border-bottom: 1px solid #d8d8d8;
+}
 
+.content-data-first_1 span{
+    font-family: OpenSans-SemiBold;
+}
+
+.ui-accordion-header:before{
+    background: #d4d4d4;
+    color: #fff
+}
+
+.ui-accordion-header:before{
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+    float: left;
+    text-align: center;
+    font-family: OpenSans;
+    font-size: 18px;
+    text-decoration: none;
+    cursor: pointer;
+    clear: both
+}
+
+.ui-accordion-header#ui-id-1:before{
+    content: '1';
+}
+
+.ui-accordion-header#ui-id-3:before{
+    content: '2';
+}
+
+
+.ui-accordion-header-active:before{
+    background: #29a1e0;
+    color: #e2eaf3;
+    box-shadow: 0px 2px 1px #098fd5, #4CCCF3 0px 0px 6px 2px inset;
+}
+
+
+.ui-state-default .content-data-first_1 a{
+    cursor: pointer;
+    color: #3e77aa;
+    font-size: 14px;
+    float: right;
+    margin-right: 10px;
+    line-height: 30px;
+}
+
+.ui-state-default.ui-state-active .content-data-first_1 a{
     display: none;
 }
+
+.ui-state-default .content-data-first_1 a:hover{
+    text-decoration: underline;
+}
+
 STYLE;
 
 $this->registerCss($css);
@@ -523,26 +583,34 @@ $form = \yii\bootstrap\ActiveForm::begin([
         echo Accordion::widget([
             'items' => [
                 [
-                    'header'  => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', [
+                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', [
                             'data-toggle'   =>  'collapse',
                             'data-parent'   =>  '#accordion',
                             'href'          =>  '#collapse1'
-                        ]), [
-                        'class' =>  'content-data-first'
-                    ]),
-                    'content' => '1'//$this->render('_order_item_content', []),
+                        ]),
+                        ['class' =>  'content-data-first_1']
+                    ),
+                    'content' => '1',//$this->render('_order_item_content', []),
+                    'headerOptions' => [
+                        'tag'   =>  'div'
+                    ],
                 ],
                 [
-                    'header' => $this->render('_order_item_title_second', []),
-                    'headerOptions' => ['tag' => 'h3'],
+                    'header' => Html::tag('div', Html::tag('span', 'Доставка и Оплата'), [
+                        'class' =>  'content-data-first_1'
+                    ]),
+
+                    'headerOptions' => ['tag' => 'div'],
                     'content' => 'Sed non urna. Phasellus eu ligula. Vestibulum sit amet purus...',
                     'options' => ['tag' => 'div'],
                 ],
             ],
-            'options' => ['tag' => 'div'],
+            'options' => [
+                'tag'   =>  'div'
+            ],
             'itemOptions' => ['tag' => 'div'],
-            'headerOptions' => ['tag' => 'h3'],
-            'clientOptions' => ['collapsible' => false],
+            'headerOptions' => ['tag' => 'div'],
+            'clientOptions' => ['collapsible' => false, 'icons' => false],
         ]);?>
 
             <div class="content-data-first">
