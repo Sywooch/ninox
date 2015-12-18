@@ -500,7 +500,11 @@ STYLE;
 
 $this->registerCss($css);
 
-$form = \yii\widgets\ActiveForm::begin();
+$form = \yii\bootstrap\ActiveForm::begin([
+    'fieldConfig' => [
+        'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>"
+    ],
+]);
 ?>
 <div class="content">
     <div class="order-head">
@@ -519,8 +523,14 @@ $form = \yii\widgets\ActiveForm::begin();
         echo Accordion::widget([
             'items' => [
                 [
-                    'header'  => $this->render('_order_item_title', []),
-                    'content' => 'asfas',
+                    'header'  => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', [
+                            'data-toggle'   =>  'collapse',
+                            'data-parent'   =>  '#accordion',
+                            'href'          =>  '#collapse1'
+                        ]), [
+                        'class' =>  'content-data-first'
+                    ]),
+                    'content' => '1'//$this->render('_order_item_content', []),
                 ],
                 [
                     'header' => $this->render('_order_item_title_second', []),
@@ -535,7 +545,7 @@ $form = \yii\widgets\ActiveForm::begin();
             'clientOptions' => ['collapsible' => false],
         ]);?>
 
-            <!-- <div class="content-data-first">
+            <div class="content-data-first">
                 <div class="content-data-title">
                     <div class="round-button">
                         <div class="content-data-title-img">
@@ -553,7 +563,7 @@ $form = \yii\widgets\ActiveForm::begin();
                 </div>
                 <div id="collapse1" class="content-data-body panel-collapse collapse in">
                     <div class="content-data-body-first">
-                        <?=/* $form->field($model, 'customerName'),
+                        <?=$form->field($model, 'customerName'),
                             $form->field($model, 'customerSurname'),
                             $form->field($model, 'deliveryCity'),
                             $form->field($model, 'customerEmail')?>
@@ -633,7 +643,7 @@ $form = \yii\widgets\ActiveForm::begin();
                             '0' =>  'Отправлять на меня',
                             '1' =>  'Будет получать другой человек'
                         ])->label(false)?>
-                      <!--  <div class="shipping">
+                      <div class="shipping">
                             <input type="radio" name="odin" checked="checked" id="vkl1"/>
                             <label for="vkl1">
                                 Отправлять на меня
@@ -644,11 +654,11 @@ $form = \yii\widgets\ActiveForm::begin();
                             </label>
                             <div></div>
                             <div class="">
-                            <?= /*$form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()),*/
-                                /*$form->field($model, 'customerName'),
+                            <?= $form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()),
+                                $form->field($model, 'customerName'),
                                 $form->field($model, 'customerSurname'),
-                                $form->field($model, 'customerPhone')
-                                //$form->field($model, 'deliveryInfo')?>
+                                $form->field($model, 'customerPhone')->hint("Если вы хотите чтобы здесь был ваш номер телефона, оставьте пустым"),
+                                $form->field($model, 'deliveryInfo')?>
                             </div>
                         </div>-->
 
@@ -656,12 +666,12 @@ $form = \yii\widgets\ActiveForm::begin();
                             '0' =>  'Наличными при получении (25 от сумы + 20 грн.)',
                             '1' =>  'Оплата на карту ПриватБанк (1% от сумы)',
                             '2' =>  'Visa / MasterCard (1% от сумы)'
-                        ])->label(false)*/5
+                        ])->label(false)
             ?>
                         <a>Добавить коментарий к заказу</a>
                     </div>
                   </div>
-            </div>-->
+            </div>
         </div>
         <div class="content-ordering">
             <div class="ordering">
