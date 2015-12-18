@@ -3,7 +3,6 @@
 use bobroid\remodal\Remodal;
 
 ?>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">
 function diplay_hide (reviews)
 {
@@ -168,52 +167,69 @@ function diplay_hide (reviews)
                 </div>
             </div>
         </div>
-        <div id="reviews" class="reviews user-account">
-            <div class="pull-right">
-                <i onclick="diplay_hide('.reviews');return false;" class="icon icon-exit"></i>
-            </div>
-            <div class="text">
-                <div class="review-tittle">
-                    <div class="myriad">
-                       Сделайте наш сервис еще лучше
+        <?php if((time() - strtotime(\Yii::$app->user->identity->giveFeedbackClosed)) > 3600){ ?>
+            <?php
+            $js = <<<'SCRIPT'
+$("#reviews .icon.icon-exit").on('click', function(e){
+    $.ajax({
+        type: 'POST',
+		url: '/account/betterlistclosed',
+		success: function(data){
+            e.currentTarget.parentNode.parentNode.remove();
+        }
+    });
+});
+SCRIPT;
+
+$this->registerJs($js);
+            ?>
+            <div id="reviews" class="reviews user-account">
+                <div class="pull-right">
+                    <i class="icon icon-exit"></i>
+                </div>
+                <div class="text">
+                    <div class="review-tittle">
+                        <div class="myriad">
+                            Сделайте наш сервис еще лучше
+                        </div>
+                        <div class="semi-font">
+                            Оставьте отзывы о купленных вами товарах
+                        </div>
                     </div>
-                    <div class="semi-font">
-                        Оставьте отзывы о купленных вами товарах
+                    <div class="review">
+                        <?=$this->render('_review_items', [
+                            'review_item_image' =>  [
+                                'image'   =>  'img/catalog/265efa88d5d8547c1b9d65f57ca003bdac2ffa911433839838.png',
+                            ]
+                        ])?>
+                        <?=$this->render('_review_items', [
+                            'review_item_image' =>  [
+                                'image'   =>  'img/catalog/zont-avtomat-mo-007-1-sht-629084.jpg',
+                            ]
+                        ])?>
+                        <?=$this->render('_review_items', [
+                            'review_item_image' =>  [
+                                'image'   =>  'img/site/sven.jpg',
+                            ]
+                        ])?>
+                        <?=$this->render('_review_items', [
+                            'review_item_image' =>  [
+                                'image'   =>  'img/catalog/892fb5764422cfbeeb1da96bb02e9465b91bc7551431090634.png',
+                            ]
+                        ])?>
+                        <?=$this->render('_review_items', [
+                            'review_item_image' =>  [
+                                'image'   =>  'img/blog/articles/gde-kupit-zakolku-297982.jpg',
+                            ]
+                        ])?>
+                        <?=$this->render('_review_items', [
+                            'review_item_image' =>  [
+                                'image'   =>  'img/catalog/f107ffd8dd260383c57c457b17bef6a9d8493b6a1433513755.png',
+                            ]
+                        ])?>
                     </div>
                 </div>
-                <div class="review">
-                    <?=$this->render('_review_items', [
-                        'review_item_image' =>  [
-                            'image'   =>  'img/catalog/265efa88d5d8547c1b9d65f57ca003bdac2ffa911433839838.png',
-                        ]
-                    ])?>
-                    <?=$this->render('_review_items', [
-                        'review_item_image' =>  [
-                            'image'   =>  'img/catalog/zont-avtomat-mo-007-1-sht-629084.jpg',
-                        ]
-                    ])?>
-                    <?=$this->render('_review_items', [
-                        'review_item_image' =>  [
-                            'image'   =>  'img/site/sven.jpg',
-                        ]
-                    ])?>
-                    <?=$this->render('_review_items', [
-                        'review_item_image' =>  [
-                            'image'   =>  'img/catalog/892fb5764422cfbeeb1da96bb02e9465b91bc7551431090634.png',
-                        ]
-                    ])?>
-                    <?=$this->render('_review_items', [
-                        'review_item_image' =>  [
-                            'image'   =>  'img/blog/articles/gde-kupit-zakolku-297982.jpg',
-                        ]
-                    ])?>
-                    <?=$this->render('_review_items', [
-                        'review_item_image' =>  [
-                            'image'   =>  'img/catalog/f107ffd8dd260383c57c457b17bef6a9d8493b6a1433513755.png',
-                        ]
-                    ])?>
-                </div>
             </div>
-        </div>
+        <?php } ?>
     </div>
 </div>

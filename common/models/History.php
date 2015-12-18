@@ -64,6 +64,10 @@ use Yii;
 class History extends \yii\db\ActiveRecord
 {
 
+    const CALLBACK_NEW = 0;
+    const CALLBACK_COMPLETED = 1;
+    const CALLBACK_UNANSWERED = 2;
+
     public function beforeSave($insert){
         if($this->isNewRecord){
             $this->id = hexdec(uniqid());
