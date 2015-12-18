@@ -1,7 +1,4 @@
 <?php
-
-$form = new \yii\widgets\ActiveForm();
-
 $css = <<<'STYLE'
 
 #tab2, #tab3 {position: fixed;  }
@@ -471,8 +468,9 @@ text-align: center;
 STYLE;
 
 $this->registerCss($css);
-?>
 
+$form = \yii\widgets\ActiveForm::begin();
+?>
 <div class="content">
     <div class="order-head">
         <div class="order-logo">
@@ -715,3 +713,4 @@ $this->registerCss($css);
         </div>
     </div>
 </div>
+<?php $form->end(); ?>
