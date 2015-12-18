@@ -1,9 +1,8 @@
 <?php
 
-use yii\helpers\Html;
 use yii\jui\Accordion;
 use yii\widgets\ListView;
-$form = new \yii\widgets\ActiveForm();
+use yii\bootstrap\Html;
 
 $css = <<<'STYLE'
 
@@ -500,8 +499,9 @@ $css = <<<'STYLE'
 STYLE;
 
 $this->registerCss($css);
-?>
 
+$form = \yii\widgets\ActiveForm::begin();
+?>
 <div class="content">
     <div class="order-head">
         <div class="order-logo">
@@ -670,10 +670,10 @@ $this->registerCss($css);
                     <div class="ordering-body-items">
                     <div class="ordering-body-items-discount">
                         <div class="all-price">
-                            253 товара на сумму
+                            <?=\Yii::t('shop', '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}}', ['n' => \Yii::$app->cart->itemsCount])?> на сумму
                             <div class="bold">
                                 <div class="br">
-                                    25 800 грн.
+                                    <?=\Yii::$app->cart->cartRealSumm?> <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
                                 </div>
                             </div>
                         </div>
@@ -701,7 +701,11 @@ $this->registerCss($css);
                         <div class="question">
                             <div class="round-button">
                                 <div class="content-data-title-img">
-                                    <a href="" class="round-button">?</a>
+                                    <?=Html::tag('a', '?', [
+                                        'data-toggle'   =>  'tooltip',
+                                        'data-title'    =>  'Эта сумма может измениться, в случае если вдруг не будет товаров на складе',
+                                        'class'         =>  'round-button',
+                                    ])?>
                                 </div>
                             </div>
                         </div>
@@ -737,7 +741,12 @@ $this->registerCss($css);
                                 <div class="question">
                                     <div class="round-button">
                                         <div class="content-data-title-img">
-                                            <a href="" class="round-button">?</a>
+                                            <?=Html::tag('a', '?', [
+                                                'data-toggle'   =>  'popover',
+                                                'data-content'  =>  'Если у вас есть промокод от нас (обычно его можно получить в спаме на почту), вы можете ввести его здесь, и получить скидку. Скидка не суммируется с другими скидками.',
+                                                'data-title'    =>  'Промокод',
+                                                'class'         =>  'round-button',
+                                            ])?>
                                         </div>
                                     </div>
                                 </div>
@@ -751,15 +760,4 @@ $this->registerCss($css);
         </div>
     </div>
 </div>
-<script>
-    /*$(document).ready(function(){
-        $("#collapse2").on("hide.bs.collapse", function(){
-            $(".btn").html('<div class="first"> Open');
-        });
-        $("#collapse2").on("show.bs.collapse", function(){
-            $(".btn").html('<div class="second"> Close');
-        });
-    });
-</script>
-ui-accordion-header ui-state-default ui-accordion-icons ui-accordion-header-active ui-state-active ui-corner-top
-ui-accordion-header ui-state-default ui-accordion-icons ui-corner-all
+<?php $form->end(); ?>
