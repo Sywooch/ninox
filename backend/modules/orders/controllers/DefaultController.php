@@ -4,23 +4,20 @@ namespace backend\modules\orders\controllers;
 
 use backend\models\HistorySearch;
 use common\helpers\PriceRuleHelper;
-use common\models\Customer;
-use common\models\CustomerAddresses;
-use common\models\CustomerContacts;
-use common\models\Good;
+use backend\models\Customer;
+use backend\models\CustomerAddresses;
+use backend\models\CustomerContacts;
+use backend\models\Good;
 use backend\models\History;
 use common\models\NovaPoshtaOrder;
 use common\models\Pricerule;
 use backend\models\SborkaItem;
 use common\models\Siteuser;
 use sammaye\audittrail\AuditTrail;
-use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
-use yii\web\HttpException;
-use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UnsupportedMediaTypeHttpException;
 
@@ -123,8 +120,6 @@ class DefaultController extends Controller
 
         $order = History::findOne(['id' => \Yii::$app->request->post('History')['id']]);
 
-        $order->hasChanges = 1;
-
         $order->attributes = \Yii::$app->request->post('History');
         $order->save();
 
@@ -143,9 +138,8 @@ class DefaultController extends Controller
         $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
         //TODO: сделать проверку на колл-во звонков (поле callsCount)
 
-        $order->confirmed = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
+        $order->callback = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
 
-        $order->hasChanges = 1;
         $order->save(false);
         return $order->confirmed;
     }
@@ -160,8 +154,6 @@ class DefaultController extends Controller
         if($o){
             $o->done = $o->done == 1 ? 0 : 1;
             $o->doneDate = $o->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
-
-            $o->hasChanges = 1;
 
             $o->save(false);
             return $o->done;
@@ -198,7 +190,7 @@ class DefaultController extends Controller
 
                 $good->save(false);
             }
-            $order->hasChanges = 1;
+            ;
             $order->save();
 
             $item->save();
@@ -206,7 +198,6 @@ class DefaultController extends Controller
 
         if(\Yii::$app->request->post("History")){
             $order->attributes = \Yii::$app->request->post("History");
-            $order->hasChanges = 1;
             $order->save();
         }
 

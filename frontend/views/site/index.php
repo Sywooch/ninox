@@ -47,8 +47,8 @@ if($questions){
 		</div>
 		<div class="single-banner right-banner">
 			<?=$this->render('_banner_item', [
-				'model' =>  $rightBanner
-			])?>
+                'model' =>  $rightBanner
+            ])?>
 		</div>
 	</div>
 </div>

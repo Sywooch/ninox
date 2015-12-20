@@ -142,14 +142,11 @@ class SiteController extends Controller
             return \Yii::$app->response->redirect('/#modalCart');
         }
 
-       /* if(\Yii::$app->cart->itemsCount < 1){
+        if(\Yii::$app->cart->itemsCount < 1){
             return $this->render('emptyCart');
         }else if(\Yii::$app->cart->cartSumm < \Yii::$app->params['domainInfo']['minimalOrderSum']){
             return $this->render('buyMore');
-        }*/
-
-        $this->layout = 'order';
-
+        }
 
         $order = new OrderForm();
 
@@ -177,8 +174,11 @@ class SiteController extends Controller
             }
         }
 
+        $this->layout = 'order';
+
         return $this->render('order2', [
-            'model' =>  $order
+            'model'             =>  $order,
+
         ]);
     }
 

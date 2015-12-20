@@ -36,8 +36,8 @@ class History extends \common\models\History
         if($this->deleted == '4'){
             $this->status = '7';
         }else{
-            if($this->confirmed != '0'){
-                if($this->confirmed == '2'){
+            if($this->callback != '0'){
+                if($this->callback == '2'){
                     $this->status = '3';
                 }else{
                     if($this->done == '1'){

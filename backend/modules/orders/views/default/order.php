@@ -232,7 +232,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
         </div>
         <br style="margin-top: 13px; padding: 0; height: 10px; display: block;">
         <div>
-            <h4>Дисконт - <?=$customer->Discount?>%</h4>
+            <h4>Дисконт - <?=$customer->discount?>%</h4>
         </div>
     </div>
     <div class="col-xs-4">
@@ -268,7 +268,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
 
                     <?php Modal::end(); ?>
                     <!--<span class="roundedItem icon-heart"></span>-->
-                    <span class="roundedItem icon-percent<?=$customer->Discount > 0 ? ' background-green' : ''?>"></span>
+                    <span class="roundedItem icon-percent<?=$customer->discount > 0 ? ' background-green' : ''?>"></span>
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
                     <h4><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></h4>
                 </h3>
