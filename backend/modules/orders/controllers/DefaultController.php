@@ -96,10 +96,11 @@ class DefaultController extends Controller
             'ordersSumm'        =>  0
         ];
 
+	    //TODO: очень много памяти и процессорного времени жрет этот форич, особенно когда записей много. Надо как-то по другому придумать как собрать данную статистику.
         foreach($orders->each() as $order){
             $ordersStats['totalOrders']++;
             $ordersStats['completedOrders'] += $order->done;
-            $ordersStats['notCalled']   += $order->callback != 1 ? 1 : 0;
+            $ordersStats['notCalled']   += $order->callback != 1;
             $ordersStats['ordersFaktSumm']   += $order->actualAmount;
             $ordersStats['ordersSumm']   += $order->originalSum;
         }
