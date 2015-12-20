@@ -94,12 +94,14 @@ class DefaultController extends Controller
         ];
 
 	    //TODO: очень много памяти и процессорного времени жрет этот форич, особенно когда записей много. Надо как-то по другому придумать как собрать данную статистику.
-        foreach($orders->each() as $order){
+        //TODO: наче получилось уменьшить объем памяти и сократить время выполнения скрипта примерно в 5 раз. Теперь рашбери не должен лагать.
+	    //Подсмотренно вот тут https://github.com/yiisoft/yii2/blob/master/docs/guide/tutorial-performance-tuning.md
+	    foreach($orders->asArray()->each() as $order){
             $ordersStats['totalOrders']++;
-            $ordersStats['completedOrders'] += $order->done;
-            $ordersStats['notCalled']   += $order->callback != 1;
-            $ordersStats['ordersFaktSumm']   += $order->actualAmount;
-            $ordersStats['ordersSumm']   += $order->originalSum;
+            $ordersStats['completedOrders'] += $order['done'];
+            $ordersStats['notCalled']   += $order['callback'] != 1;
+            $ordersStats['ordersFaktSumm']   += $order['actualAmount'];
+            $ordersStats['ordersSumm']   += $order['originalSum'];
         }
 
         return $this->render('index', [
