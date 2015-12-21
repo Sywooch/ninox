@@ -1,7 +1,7 @@
 <?php
 $this->title = 'Статистика баннеров';
 $this->params['breadcrumbs'][] = [
-    'url'       =>  '/admin/banners',
+    'url'       =>  '/banners',
     'label'     =>  'Баннеры'
 ];
 $this->params['breadcrumbs'][] = $this->title;

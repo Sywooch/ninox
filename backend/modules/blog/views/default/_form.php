@@ -30,7 +30,7 @@ use kartik\datetime\DateTimePicker;
                 'accept' => 'image/*'
             ],
             'pluginOptions' => [
-                'uploadUrl' =>  '/admin/blog/uploadnewphoto',
+                'uploadUrl' =>  '/blog/uploadnewphoto',
                 'uploadExtraData' => [
                     'title' => 'temp'
                 ],
@@ -65,7 +65,7 @@ use kartik\datetime\DateTimePicker;
         'attribute' => 'content',
         'options' => [
             'toolbar' => true,
-            'imageUpload' => '/admin/blog/uploadbodyphoto'
+            'imageUpload' => '/blog/uploadbodyphoto'
         ],
     ]);?>
 

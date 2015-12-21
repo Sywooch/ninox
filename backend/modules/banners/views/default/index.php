@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?=\backend\widgets\AddBannerGroupWidget::widget([])?>
     <?=\backend\widgets\AddBannerWidget::widget([])?>
 
-    <a href="/admin/banners/stats" class="btn btn-default"><i class="glyphicon glyphicon-stats"></i>&nbsp;Статистика баннеров</a></div>
+    <a href="/banners/stats" class="btn btn-default"><i class="glyphicon glyphicon-stats"></i>&nbsp;Статистика баннеров</a></div>
     <br><br>
 <?=ListView::widget([
     'dataProvider'  => $banners,

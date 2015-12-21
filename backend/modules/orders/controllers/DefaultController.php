@@ -214,12 +214,25 @@ class DefaultController extends Controller
             $goodsAdditionalInfo[$sItem->ID] = $sItem;
         }
 
+        $itemsDataProvider = new ActiveDataProvider([
+            'query' =>  $order->getItems(false),
+        ]);
+
+        $itemsDataProvider->setSort([
+            'defaultOrder' => [
+                'added'	=>	SORT_ASC
+            ],
+            'attributes' => [
+                'added' => [
+                    'default' => SORT_ASC
+                ],
+            ]
+        ]);
+
         return $this->render('order', [
             'order'     =>  $order,
             'items'     =>  $sborkaItems,
-            'itemsDataProvider'  =>  new ActiveDataProvider([
-                'query' =>  $order->getItems(false)
-            ]),
+            'itemsDataProvider'  =>  $itemsDataProvider,
             'priceRules'=>  Pricerule::find()->orderBy('priority')->all(),
             'goodsAdditionalInfo'   =>  $goodsAdditionalInfo,
             'customer'  =>  Customer::findOne(['id' => $order->customerID])
@@ -268,7 +281,16 @@ class DefaultController extends Controller
         }
 
         $item->name = $good->Name;
-        //$m->originalPrice = $g->;
+        //$item->count = $item->originalCount;
+        $item->originalPrice = $order->isOpt() ? $good->PriceOut1 : $good->PriceOut2;
+
+        if($item->save(false)){
+            //$good->count = $good->count - $item->addedCount;
+
+            return $good->save(false);
+        }
+
+        return false;
     }
 
     public function actionChangeiteminorderstate(){

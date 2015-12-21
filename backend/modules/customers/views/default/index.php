@@ -35,13 +35,13 @@ $this->registerCss($css);
             'template'  =>  '<div class="center-block" style="display: block; width: 50px;">{view}&nbsp;{update}&nbsp;{delete}</div><div style="display: block">{labels}</div>',
             'buttons'   =>  [
                 'update'    =>  function($url, $model, $key){
-                    return '<a href="/admin/customers/showcustomer/'.$model->ID.'?act=edit" title="Редактировать" aria-label="Редактировать" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>';
+                    return '<a href="/customers/showcustomer/'.$model->ID.'?act=edit" title="Редактировать" aria-label="Редактировать" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>';
                 },
                 'delete'    =>  function($url, $model, $key){
                     return '<a href="#" title="Удалить" aria-label="Удалить" data-pjax="0" class="customer-remove" data-customer-id="'.$model->ID.'"><span class="glyphicon glyphicon-trash"></span></a>';
                 },
                 'view'    =>  function($url, $model, $key){
-                    return '<a href="/admin/customers/showcustomer/'.$model->ID.'" title="Просмотреть" aria-label="Просмотреть" data-pjax="0""><span class="glyphicon glyphicon-eye-open"></span></a>';
+                    return '<a href="/customers/showcustomer/'.$model->ID.'" title="Просмотреть" aria-label="Просмотреть" data-pjax="0""><span class="glyphicon glyphicon-eye-open"></span></a>';
                 },
                 'labels'    =>  function($url, $model, $key){
                     $return = '';

@@ -13,4 +13,4 @@ echo $form->field($customer, 'Deleted')->checkbox();
 echo $form->field($customer, 'ShippingType');
 echo $form->field($customer, 'PaymentType');
 ?>
-<center><button class="btn btn-success btn-lg" type="submit" style="margin-left: 10px;">Сохранить</button> или <a href="/admin/customers/showcustomer/<?=$customer->ID?>" class="btn btn-info">в режим просмотра</a></center>
+<center><button class="btn btn-success btn-lg" type="submit" style="margin-left: 10px;">Сохранить</button> или <a href="/customers/showcustomer/<?=$customer->ID?>" class="btn btn-info">в режим просмотра</a></center>

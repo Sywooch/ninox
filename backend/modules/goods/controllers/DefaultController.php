@@ -7,18 +7,20 @@ use common\helpers\TranslitHelper;
 use common\models\Category;
 use common\models\CategorySearch;
 use common\models\CategoryUk;
-use common\models\Good;
+use backend\models\Good;
 use common\models\GoodSearch;
 use common\models\GoodsPhoto;
 use common\models\GoodUk;
 use backend\models\History;
-use common\models\SborkaItem;
+use backend\models\SborkaItem;
 use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
 use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -179,6 +181,11 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     * Метод добавляет товары на сайт
+     * @deprecated метод actionGood должен позволять редактировать и создавать товар
+     */
     public function actionAddgood(){
         $good = new Good();
         $goodUk = new GoodUk();
@@ -242,6 +249,11 @@ class DefaultController extends Controller
 
     }
 
+    /**
+     * @return string
+     * метод добавляет категорию на сайт
+     * @deprecated метод actionCategory должен добавлять и редактировать категорию
+     */
     public function actionAddcategory(){
         $c = new Category();
         $cUk = new CategoryUk();
@@ -372,7 +384,7 @@ class DefaultController extends Controller
         $goodUK = GoodUk::findOne(['ID' => $param]);
 
         if(empty($good)){
-            return $this->run('site/error');
+            throw new NotFoundHttpException("Такой товар не найден!");
         }
 
         //Начало хлебных крошек
@@ -549,88 +561,169 @@ class DefaultController extends Controller
         }
     }
 
+    /**
+     * @author Nikolai Gilko <n.gilko@gmail.com>
+     * @return SborkaItem                       -   модель товара в заказе
+     * @throws MethodNotAllowedHttpException    -   если запрос не через ajax
+     * @throws NotFoundHttpException            -   если не найден заказ, или товар
+     *
+     * Метод позволяет добавить товар в заказ
+     */
     public function actionAdditemtoorder(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = 'json';
-            // Сначала ищем такой заказ
-            $h = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
-
-            if($h){
-                // Потом ищем чтобы в этом заказе не было такого товара
-                $good = Good::findOne(['ID' => \Yii::$app->request->post("itemID")]);
-                $m = SborkaItem::findOne(['itemID' => $good->ID, 'orderID' => \Yii::$app->request->post("OrderID")]);
-
-                if($m){
-                    // Если такой товар есть в заказе, то:
-                    // Если есть на складе в полном объёме - просто суммируем колличество желаемое и максимальное
-                    // Если есть на складе но частично - возвращаем окно типа "на складе всего 5 штук, добавить 5 или указаное вами колл-во?"
-                    // Если нету - возвращаем окно типа "на складе это кончилось - всё равно добавить?"
-                    $m->count += \Yii::$app->request->post("ItemsCount");
-                }else{
-                    // Если такой товар есть в полном объёме, и в заказе его ещё нет - добавляем
-                    $m = new SborkaItem();
-                    $m->itemID = $good->ID;
-                    $m->name = $good->Name;
-                    $m->count = \Yii::$app->request->post("ItemsCount");
-                    $m->realyCount = 0;
-                    $m->originalPrice = $h->isOpt() ? $good->PriceOut2 : $good->PriceOut1;
-                    $m->orderID = \Yii::$app->request->post("OrderID");
-                }
-
-                $good->count = $good->count - \Yii::$app->request->post("ItemsCount");
-
-                $mm = $m->save(false);
-
-                if($mm){
-                    $good->save(false);
-                }
-
-                return $mm;
-            }
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        \Yii::$app->response->format = 'json';
+
+        $wantedCount = \Yii::$app->request->post("ItemsCount");
+
+        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Такой заказ не найден!");
+        }
+
+        $good = Good::findOne(['ID' => \Yii::$app->request->post("itemID")]);
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        $item = SborkaItem::findOne(['itemID' => $good->ID, 'orderID' => \Yii::$app->request->post("OrderID")]);
+
+        if(!$item){
+            $item = new SborkaItem();
+            $item->itemID = $good->ID;
+            $item->name = $good->Name;
+            $item->realyCount = 0;
+            $item->originalPrice = $order->isOpt() ? $good->PriceOut2 : $good->PriceOut1;
+            $item->orderID = $order->id;
+        }
+
+        if(($good->count >= $wantedCount) || ($good->count < $wantedCount && \Yii::$app->request->post("IgnoreMaxCount") == "true")){
+            $item->count += $wantedCount;
+        }elseif($good->count > 0 && \Yii::$app->request->post("IgnoreMaxCount") == "false"){
+            $item->count += $good->count;
+        }else{
+            return $good->count;
+        }
+
+        //TODO: логику пересчёта товара (заказа?) по ценовым правилам можно впилить здесь
+
+        $good->count = $good->count - $item->addedCount;
+
+        if($item->save(false)){ //TODO: сделать без false
+            //TODO: Дима, когда напишешь триггер для автоматического отнимания из `goods`?
+            $good->save(false);
+        }
+
+        return -1;
     }
 
+    /**
+     * @return mixed
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionChangestate(){
-        if(\Yii::$app->request->isAjax){
-            return Good::changeState(\Yii::$app->request->post("GoodID"));
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Good::changeState(\Yii::$app->request->post("GoodID"));
     }
 
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionChangecategorystate(){
-        if(\Yii::$app->request->isAjax){
-            return Category::change(\Yii::$app->request->post("category"), 'menu_show');
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Category::change(\Yii::$app->request->post("category"), 'menu_show');
     }
 
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionChangecategorycanbuy(){
-        if(\Yii::$app->request->isAjax){
-            return Category::change(\Yii::$app->request->post("category"), 'canBuy');
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Category::change(\Yii::$app->request->post("category"), 'canBuy');
     }
 
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionWorkwithtrash(){
-        if(\Yii::$app->request->isAjax){
-            return Good::changeTrashState(\Yii::$app->request->post("GoodID"));
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        return Good::changeTrashState(\Yii::$app->request->post("GoodID"));
     }
 
-    public function actionWorkwithcategorytrash()
-    {
-        if (\Yii::$app->request->isAjax) {
-            return Good::changeTrashState(\Yii::$app->request->post("CategoryID"));
-        } else {
-            return $this->run('site/error');
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
+    public function actionWorkwithcategorytrash(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Good::changeTrashState(\Yii::$app->request->post("CategoryID"));
+    }
+
+    public function actionChangecategoryvalue(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        $category = Category::findOne(['id' => \Yii::$app->request->post("categoryID")]);
+
+        if(!$category){
+            throw new NotFoundHttpException("Категория не найден!");
+        }
+
+        $category->$attribute = \Yii::$app->request->post("value");
+
+        $category->save(false);
+    }
+
+    public function actionChangegoodvalue(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        $good = Good::findOne(['id' => \Yii::$app->request->post("goodID")]);
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар не найден!");
+        }
+
+        $good->$attribute = \Yii::$app->request->post("value");
+
+        $good->save(false);
     }
 
     public function actionUpdatecategorysort(){
@@ -661,11 +754,6 @@ class DefaultController extends Controller
         }else{
             return $this->run('site/error');
         }
-    }
-
-    public function actionSimplegoodedit(){
-        \Yii::$app->response->format = 'json';
-        return \Yii::$app->request->post();
     }
 
 }

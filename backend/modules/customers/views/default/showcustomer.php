@@ -82,7 +82,7 @@ $this->registerCss($css);
                     <tbody>
                     <tr>
                         <td style="width: 40%;">Номер заказа</td>
-                        <td><a href="/admin/orders/showorder/<?=$lastOrder->id?>"><?=$lastOrder->id?></a></td>
+                        <td><a href="/orders/showorder/<?=$lastOrder->id?>"><?=$lastOrder->id?></a></td>
                     </tr>
                     <tr>
                         <td>Фактическая сумма заказа</td>
@@ -149,7 +149,7 @@ $this->registerCss($css);
                     'attribute' =>  'id',
                     'format'    =>  'html',
                     'value'     =>  function($model){
-                        return '<a href="/admin/orders/showorder/'.$model->id.'">'.$model->id.'</a>';
+                        return '<a href="/orders/showorder/'.$model->id.'">'.$model->id.'</a>';
                     }
                 ],
                 [

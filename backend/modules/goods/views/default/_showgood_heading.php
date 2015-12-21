@@ -15,6 +15,6 @@
 <div class="btn-group pull-right" role="group" aria-label="...">
     <button type="button" id="changeTrashState" class="btn btn-info" data-attribute-goodID="<?=$good->ID?>"><?=$good->Deleted == "0" ? "Удалить" : "Восстановить";?></button>
     <button type="button" id="changeState" class="btn btn-info" data-attribute-goodID="<?=$good->ID?>"><?=$good->show_img == "1" ? "Отключить" : "Включить";?></button>
-    <a href="/admin/goods/showgood/<?=$good->ID?>?act=edit" type="button" class="btn btn-info">Редактировать</a>
+    <a href="/goods/showgood/<?=$good->ID?>?act=edit" type="button" class="btn btn-info">Редактировать</a>
 </div>
 <div class="clearfix"></div>

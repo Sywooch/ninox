@@ -131,7 +131,7 @@ switch($task->status){
             $model = new TaskUser;
             $model->task_id = $task->id;
             $form = new ActiveForm([
-                'action'    =>  '/admin/tasks'
+                'action'    =>  '/tasks'
             ]);
             echo $form->field($model, 'task_id')->hiddenInput()->label(false),
                 '<div class="col-xs-3">',

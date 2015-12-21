@@ -138,7 +138,7 @@ $form = ActiveForm::begin([
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li<?=$a?>><a href="/admin/charts">За всё время <span class="sr-only">(current)</span></a></li>
+                <li<?=$a?>><a href="/charts">За всё время <span class="sr-only">(current)</span></a></li>
                 <li<?=$c?>><a href="?minPeriod=<?=date('d.m.Y')?>">За сегодня</a></li>
                 <li<?=$d?>><a href="?minPeriod=<?=date('d.m.Y', (time() - 86400))?>&maxPeriod=<?=date('d.m.Y')?>">За вчера</a></li>
                 <li<?=$b?>><a href="#" style="padding-top: 13px; padding-bottom: 12px;">За период с <?=\kartik\editable\Editable::widget([
@@ -161,7 +161,7 @@ $form = ActiveForm::begin([
                                         params += '&maxPeriod=' + getParameterByName('maxPeriod') + '&';
                                     }
 
-                                    location.href = '/admin/charts?' + params;
+                                    location.href = '/charts?' + params;
                                 }"
                             ],
                             'size'  =>  'md',
@@ -181,7 +181,7 @@ $form = ActiveForm::begin([
 
                                     params += 'maxPeriod=' + form;
 
-                                    location.href = '/admin/charts?' + params;
+                                    location.href = '/charts?' + params;
                                 }"
                             ],
                             'options'   =>  [
