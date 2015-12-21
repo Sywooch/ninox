@@ -4,7 +4,7 @@ use kartik\sortable\Sortable;
 $this->title = $bannersCategory->description;
 
 $this->params['breadcrumbs'][] = [
-    'url'   =>  '/admin/banners',
+    'url'   =>  '/banners',
     'label' =>  'Баннеры'
 ];
 $this->params['breadcrumbs'][] = $this->title;
@@ -39,7 +39,7 @@ var updateBannersOrder = function(e){
 
     $.ajax({
 		type: 'POST',
-		url: '/admin/banners',
+		url: '/banners',
 		data: {
 		    'data': b,
 		    'action': 'updatebannerssort',
@@ -52,7 +52,7 @@ var updateBannersOrder = function(e){
 
     $.ajax({
         type: 'POST',
-        url: '/admin/banners',
+        url: '/banners',
         data: {
             'action': 'changebannerstate',
             'banner': row.getAttribute('data-banner-id'),
@@ -84,7 +84,7 @@ var updateBannersOrder = function(e){
 
     $.ajax({
         type: 'POST',
-        url: '/admin/banners',
+        url: '/banners',
         data: {
             'action': 'changebannerstate',
             'banner': row.getAttribute('data-banner-id'),

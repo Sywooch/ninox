@@ -174,22 +174,11 @@ $js = <<<'SCRIPT'
                                         location.reload();
                                 }
                             });
-
-                            //swal("Deleted!", "Your imaginary file has been deleted.", "success");
                         });
                     }
                 }
           });
-
-          //swal("Nice!", "You wrote: " + inputValue, "success");
         });
-
-
-        /*bootbox.prompt("Сколько добавить товара?", function(result) {
-            if(result !== null){
-
-            }
-        });*/
     }, changePrices = function(id, type){
         var oType = '';
         switch(type){

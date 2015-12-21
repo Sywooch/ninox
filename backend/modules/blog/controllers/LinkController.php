@@ -13,7 +13,7 @@ use backend\controllers\SiteController as Controller;
 
 class LinkController extends Controller{
 
-    private static $forAdmin = '/admin/blog/';
+    private static $forAdmin = '/blog/';
     private static $forImg = '//krasota-style.com.ua/img/blog/';
     private static $arrForImgResolution = [
         'big' => 'articles',
