@@ -1,4 +1,5 @@
 <?php
+use backend\widgets\AddReviewWidget;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 ?>
@@ -10,7 +11,7 @@ use yii\helpers\Html;
         ])
         ?>
     </div>
-    <?=\backend\widgets\AddReviewWidget::widget([
+    <?= AddReviewWidget::widget([
         'model'         =>  $model,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>',
         'buttonClass'   =>  'btn btn-link'

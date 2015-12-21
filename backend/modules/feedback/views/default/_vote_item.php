@@ -5,9 +5,11 @@
  * Date: 12/3/2015
  * Time: 12:16 PM
  */
+use backend\widgets\AddVoteWidget;
+
 ?>
 <div class="pull-right">
-    <?=\backend\widgets\AddVoteWidget::widget([
+    <?= AddVoteWidget::widget([
         'model'         =>  $model,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>',
         'buttonClass'   =>  'btn btn-link'
