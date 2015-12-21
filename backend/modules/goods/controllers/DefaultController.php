@@ -7,18 +7,20 @@ use common\helpers\TranslitHelper;
 use common\models\Category;
 use common\models\CategorySearch;
 use common\models\CategoryUk;
-use common\models\Good;
+use backend\models\Good;
 use common\models\GoodSearch;
 use common\models\GoodsPhoto;
 use common\models\GoodUk;
 use backend\models\History;
-use common\models\SborkaItem;
+use backend\models\SborkaItem;
 use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
 use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -550,46 +552,53 @@ class DefaultController extends Controller
     }
 
     public function actionAdditemtoorder(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = 'json';
-            // Сначала ищем такой заказ
-            $h = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
-
-            if($h){
-                // Потом ищем чтобы в этом заказе не было такого товара
-                $good = Good::findOne(['ID' => \Yii::$app->request->post("itemID")]);
-                $m = SborkaItem::findOne(['itemID' => $good->ID, 'orderID' => \Yii::$app->request->post("OrderID")]);
-
-                if($m){
-                    // Если такой товар есть в заказе, то:
-                    // Если есть на складе в полном объёме - просто суммируем колличество желаемое и максимальное
-                    // Если есть на складе но частично - возвращаем окно типа "на складе всего 5 штук, добавить 5 или указаное вами колл-во?"
-                    // Если нету - возвращаем окно типа "на складе это кончилось - всё равно добавить?"
-                    $m->count += \Yii::$app->request->post("ItemsCount");
-                }else{
-                    // Если такой товар есть в полном объёме, и в заказе его ещё нет - добавляем
-                    $m = new SborkaItem();
-                    $m->itemID = $good->ID;
-                    $m->name = $good->Name;
-                    $m->count = \Yii::$app->request->post("ItemsCount");
-                    $m->realyCount = 0;
-                    $m->originalPrice = $h->isOpt() ? $good->PriceOut2 : $good->PriceOut1;
-                    $m->orderID = \Yii::$app->request->post("OrderID");
-                }
-
-                $good->count = $good->count - \Yii::$app->request->post("ItemsCount");
-
-                $mm = $m->save(false);
-
-                if($mm){
-                    $good->save(false);
-                }
-
-                return $mm;
-            }
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        \Yii::$app->response->format = 'json';
+
+        $wantedCount = \Yii::$app->request->post("ItemsCount");
+
+        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Такой заказ не найден!");
+        }
+
+        $good = Good::findOne(['ID' => \Yii::$app->request->post("itemID")]);
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        $item = SborkaItem::findOne(['itemID' => $good->ID, 'orderID' => \Yii::$app->request->post("OrderID")]);
+
+        if(!$item){
+            $item = new SborkaItem();
+            $item->itemID = $good->ID;
+            $item->name = $good->Name;
+            $item->realyCount = 0;
+            $item->originalPrice = $order->isOpt() ? $good->PriceOut2 : $good->PriceOut1;
+            $item->orderID = $order->id;
+        }
+
+        if(($good->count >= $wantedCount) || ($good->count < $wantedCount && \Yii::$app->request->post("IgnoreMaxCount") == "true")){
+            $item->count += $wantedCount;
+        }elseif($good->count > 0){
+            $item->count += $good->count;
+        }
+
+        //TODO: логику пересчёта товара (заказа?) по ценовым правилам можно впилить здесь
+
+        $good->count = $good->count - $item->addedCount;
+
+        if($item->save(false)){ //TODO: сделать без false
+            //TODO: Дима, когда напишешь триггер для автоматического отнимания из `goods`?
+            $good->save(false);
+        }
+
+        return $item;
     }
 
     public function actionChangestate(){
