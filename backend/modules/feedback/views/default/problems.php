@@ -44,7 +44,7 @@ $this->registerJs($js);
     <?=ListView::widget([
         'dataProvider'  => $problems,
         'itemOptions'   => [
-            'class'     => $problem->read != 1 ? 'alert alert-danger' : 'alert alert-success',
+            'class'     => $problems->read != 1 ? 'alert alert-danger' : 'alert alert-success',
             'tag'       =>  'div'
 
         ],

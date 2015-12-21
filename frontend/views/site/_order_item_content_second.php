@@ -48,7 +48,7 @@
     '1' =>  'Оплата на карту ПриватБанк (1% от сумы)',
     '2' =>  'Visa / MasterCard (1% от сумы)'
 ])->label(false);
-
+/*
 echo $form->field($model, 'list')->widget(
     'stylekrasota\yii2\widgets\bootstrap\RadioList',
     [
