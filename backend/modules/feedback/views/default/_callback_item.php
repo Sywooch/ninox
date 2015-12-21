@@ -5,11 +5,12 @@
  * Date: 12/2/2015
  * Time: 1:44 PM
  */
+use backend\widgets\AddCallbackWidget;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 ?>
 <div style="width: 50%; display: inline-block; float: left;">
-    <?=\backend\widgets\AddCallbackWidget::widget([
+    <?= AddCallbackWidget::widget([
         'model'         =>  $model,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>',
         'buttonClass'   =>  'btn btn-link'

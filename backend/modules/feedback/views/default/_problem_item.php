@@ -1,4 +1,5 @@
 <?php
+use backend\widgets\AddProblemWidget;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 ?>
@@ -18,7 +19,7 @@ use yii\helpers\Html;
         'class' =>  'problemEdit btn btn-default',
         'data-attribute-problemID' =>  $model->id,
     ])*/?>
-    <?=\backend\widgets\AddProblemWidget::widget([
+    <?= AddProblemWidget::widget([
         'model'         =>  $model,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>',
         'buttonClass'   =>  'btn btn-link'

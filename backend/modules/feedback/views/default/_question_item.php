@@ -1,4 +1,5 @@
 <?php
+use backend\widgets\AddQuestionWidget;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 ?><div>
@@ -11,7 +12,7 @@ use yii\helpers\Html;
         'data-attribute-questionID' =>  $model->id
     ])
     ?>
-    <?=\backend\widgets\AddQuestionWidget::widget([
+    <?= AddQuestionWidget::widget([
         'model'         =>  $model,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>',
         'buttonClass'   =>  'btn btn-link'
