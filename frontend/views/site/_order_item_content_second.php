@@ -35,8 +35,8 @@
             ],
         ]
     ])?>
-
 </div>
+
 <?=$form->field($model, 'anotherReceiver')->radioList([
     '0' =>  'Отправлять на меня',
     '1' =>  'Будет получать другой человек'
@@ -49,7 +49,7 @@
     '2' =>  'Visa / MasterCard (1% от сумы)'
 ])->label(false);
 
-echo $form->field($model, 'list')->radioList([
+echo $form->field($model, 'paymentType')->radioList([
     'value-1' => 'label-1',
     'value-2' => 'label-2',
     'value-3' => 'label-3'

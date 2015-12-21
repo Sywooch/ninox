@@ -2,8 +2,8 @@
 
 namespace backend\modules\customers\controllers;
 
-use common\models\Customer;
-use common\models\CustomerSearch;
+use backend\models\Customer;
+use backend\models\CustomerSearch;
 use backend\models\History;
 use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
@@ -15,19 +15,18 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         if(\Yii::$app->request->isAjax && !empty(\Yii::$app->request->post("hasEditable"))){
-            $m = Customer::findOne(['ID' => \Yii::$app->request->post("editableKey")]);
+            $customer = Customer::findOne(['ID' => \Yii::$app->request->post("editableKey")]);
 
-            if($m){
-                foreach(current(\Yii::$app->request->post("Customer")) as $k => $c){
-                    $m->$k = $c;
+            if($customer){
+                foreach(current(\Yii::$app->request->post("Customer")) as $key => $value){
+                    $customer->$key = $value;
                 }
-                return $m->save(false);
+
+                return $customer->save(false);
             }
+
             return '1';
         }
-
-        $dp = Customer::find();
-        $dp->orderBy('ID DESC');
 
         $customerSearch = new CustomerSearch();
 

@@ -6,7 +6,7 @@
  * Time: 16:20
  */
 
-namespace common\models;
+namespace backend\models;
 
 
 use yii\data\ActiveDataProvider;
@@ -26,10 +26,10 @@ class CustomerSearch extends Customer{
 
         $dataProvider->setSort([
             'defaultOrder' => [
-                'ID'	=>	SORT_DESC
+                'registrationTime'	=>	SORT_DESC
             ],
             'attributes' => [
-                'ID' => [
+                'registrationTime' => [
                     'default' => SORT_DESC
                 ],
                 'UserRealTime'
@@ -42,10 +42,10 @@ class CustomerSearch extends Customer{
 
         $this->addCondition($query, 'ID');
         $this->addCondition($query, 'Company', true);
-        $this->addCondition($query, 'Phone');
+        $this->addCondition($query, 'phone');
         $this->addCondition($query, 'City', true);
         $this->addCondition($query, 'CardNumber');
-        $this->addCondition($query, 'eMail', true);
+        $this->addCondition($query, 'email', true);
         $this->addCondition($query, 'money');
 
         if(\Yii::$app->request->get("smartfilter") != ''){
@@ -65,7 +65,7 @@ class CustomerSearch extends Customer{
     public function rules()
     {
         return [
-            [['Company', 'Phone', 'City', 'CardNumber', 'eMail', 'money', 'ID'], 'safe']
+            [['Company', 'phone', 'City', 'cardNumber', 'email', 'money', 'ID'], 'safe']
         ];
     }
 

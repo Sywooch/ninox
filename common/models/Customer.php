@@ -96,6 +96,7 @@ class Customer extends \yii\db\ActiveRecord
     public function beforeSave($insert){
         if($this->isNewRecord){
             $this->ID = hexdec(uniqid());
+            $this->Code = $this->find()->max('Code') + 1;
             $this->registrationTime = date('Y-m-d H:i:s');
         }
 
