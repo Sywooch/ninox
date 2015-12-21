@@ -181,6 +181,11 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     * Метод добавляет товары на сайт
+     * @deprecated метод actionGood должен позволять редактировать и создавать товар
+     */
     public function actionAddgood(){
         $good = new Good();
         $goodUk = new GoodUk();
@@ -244,6 +249,11 @@ class DefaultController extends Controller
 
     }
 
+    /**
+     * @return string
+     * метод добавляет категорию на сайт
+     * @deprecated метод actionCategory должен добавлять и редактировать категорию
+     */
     public function actionAddcategory(){
         $c = new Category();
         $cUk = new CategoryUk();
@@ -374,7 +384,7 @@ class DefaultController extends Controller
         $goodUK = GoodUk::findOne(['ID' => $param]);
 
         if(empty($good)){
-            return $this->run('site/error');
+            throw new NotFoundHttpException("Такой товар не найден!");
         }
 
         //Начало хлебных крошек
@@ -551,6 +561,14 @@ class DefaultController extends Controller
         }
     }
 
+    /**
+     * @author Nikolai Gilko <n.gilko@gmail.com>
+     * @return SborkaItem                       -   модель товара в заказе
+     * @throws MethodNotAllowedHttpException    -   если запрос не через ajax
+     * @throws NotFoundHttpException            -   если не найден заказ, или товар
+     *
+     * Метод позволяет добавить товар в заказ
+     */
     public function actionAdditemtoorder(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
@@ -601,45 +619,109 @@ class DefaultController extends Controller
         return $item;
     }
 
+    /**
+     * @return mixed
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionChangestate(){
-        if(\Yii::$app->request->isAjax){
-            return Good::changeState(\Yii::$app->request->post("GoodID"));
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Good::changeState(\Yii::$app->request->post("GoodID"));
     }
 
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionChangecategorystate(){
-        if(\Yii::$app->request->isAjax){
-            return Category::change(\Yii::$app->request->post("category"), 'menu_show');
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Category::change(\Yii::$app->request->post("category"), 'menu_show');
     }
 
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionChangecategorycanbuy(){
-        if(\Yii::$app->request->isAjax){
-            return Category::change(\Yii::$app->request->post("category"), 'canBuy');
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Category::change(\Yii::$app->request->post("category"), 'canBuy');
     }
 
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
     public function actionWorkwithtrash(){
-        if(\Yii::$app->request->isAjax){
-            return Good::changeTrashState(\Yii::$app->request->post("GoodID"));
-        }else{
-            return $this->run('site/error');
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        return Good::changeTrashState(\Yii::$app->request->post("GoodID"));
     }
 
-    public function actionWorkwithcategorytrash()
-    {
-        if (\Yii::$app->request->isAjax) {
-            return Good::changeTrashState(\Yii::$app->request->post("CategoryID"));
-        } else {
-            return $this->run('site/error');
+    /**
+     * @return bool|string
+     * @throws MethodNotAllowedHttpException
+     * @deprecated
+     */
+    public function actionWorkwithcategorytrash(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
         }
+
+        return Good::changeTrashState(\Yii::$app->request->post("CategoryID"));
+    }
+
+    public function actionChangecategoryvalue(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        $category = Category::findOne(['id' => \Yii::$app->request->post("categoryID")]);
+
+        if(!$category){
+            throw new NotFoundHttpException("Категория не найден!");
+        }
+
+        $category->$attribute = \Yii::$app->request->post("value");
+
+        $category->save(false);
+    }
+
+    public function actionChangegoodvalue(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        $good = Good::findOne(['id' => \Yii::$app->request->post("goodID")]);
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар не найден!");
+        }
+
+        $good->$attribute = \Yii::$app->request->post("value");
+
+        $good->save(false);
     }
 
     public function actionUpdatecategorysort(){
@@ -670,11 +752,6 @@ class DefaultController extends Controller
         }else{
             return $this->run('site/error');
         }
-    }
-
-    public function actionSimplegoodedit(){
-        \Yii::$app->response->format = 'json';
-        return \Yii::$app->request->post();
     }
 
 }
