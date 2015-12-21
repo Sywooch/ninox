@@ -114,23 +114,80 @@ STYLE;
 
 $js = <<<'SCRIPT'
     addItemToOrder = function(order, item){
-        bootbox.prompt("Сколько добавить товара?", function(result) {
-            if(result !== null){
-                $.ajax({
-                    type: 'POST',
-                    url: '/goods/additemtoorder',
-                    data: {
-                        'OrderID': order,
-                        'itemID':  item,
-                        'ItemsCount': result
-                    },
-                    success: function(data){
+        swal({
+          title: "Добавить товар в заказ",
+          text: "сколько добавить товара в заказ?:",
+          type: "input",
+          showCancelButton: true,
+          closeOnConfirm: false,
+          animation: "slide-from-top",
+          inputPlaceholder: "1"
+        },
+        function(inputValue){
+            if (inputValue === false) return false;
+
+            if (inputValue === "") {
+                swal.showInputError("Нужно ввести колличество!");
+                return false
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/goods/additemtoorder',
+                data: {
+                    'OrderID': order,
+                    'itemID':  item,
+                    'ItemsCount': inputValue
+                },
+                success: function(data){
+                    if(data == -1){
                         console.log(data);
                         location.reload();
+                    }else{
+                        swal({
+                            title: "Столько нету",
+                            text: "На складе нет такого колличества товара. Добавить сколько есть, или игнорировать?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Игнорировать!",
+                            closeOnConfirm: false
+                        },
+                        function(isConfirm){
+                            var ignoreCount = "false";
+                            if(isConfirm){
+                                ignoreCount = "true";
+                            }
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/goods/additemtoorder',
+                                data: {
+                                    'OrderID': order,
+                                    'itemID':  item,
+                                    'ItemsCount': inputValue,
+                                    'IgnoreMaxCount': ignoreCount
+                                },
+                                success: function(data){
+                                        location.reload();
+                                }
+                            });
+
+                            //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                        });
                     }
-                });
-            }
+                }
+          });
+
+          //swal("Nice!", "You wrote: " + inputValue, "success");
         });
+
+
+        /*bootbox.prompt("Сколько добавить товара?", function(result) {
+            if(result !== null){
+
+            }
+        });*/
     }, changePrices = function(id, type){
         var oType = '';
         switch(type){
@@ -200,6 +257,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
         'yii\web\JqueryAsset'
     ]
 ]);
+\bobroid\sweetalert\SweetalertAsset::register($this);
 ?>
 <?php if($order->deliveryType == 2){
 

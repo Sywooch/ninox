@@ -603,8 +603,10 @@ class DefaultController extends Controller
 
         if(($good->count >= $wantedCount) || ($good->count < $wantedCount && \Yii::$app->request->post("IgnoreMaxCount") == "true")){
             $item->count += $wantedCount;
-        }elseif($good->count > 0){
+        }elseif($good->count > 0 && \Yii::$app->request->post("IgnoreMaxCount") == "false"){
             $item->count += $good->count;
+        }else{
+            return $good->count;
         }
 
         //TODO: логику пересчёта товара (заказа?) по ценовым правилам можно впилить здесь
@@ -616,7 +618,7 @@ class DefaultController extends Controller
             $good->save(false);
         }
 
-        return $item;
+        return -1;
     }
 
     /**
