@@ -85,6 +85,7 @@ class OrderForm extends Model{
             'customerPhone'     =>  \Yii::t('shop', 'Телефон'),
             'customerEmail'     =>  \Yii::t('shop', 'Эл. почта'),
             'deliveryCity'      =>  \Yii::t('shop', 'Город'),
+            'deliveryRegion'      =>  \Yii::t('shop', 'Регион'),
         ];
     }
 

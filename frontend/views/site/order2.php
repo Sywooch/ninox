@@ -333,6 +333,7 @@ $css = <<<'STYLE'
     width: 45%;
     float: left;
     min-width: 380px;
+    padding-top: 25px;
 }
 
 .ordering{
@@ -341,6 +342,9 @@ $css = <<<'STYLE'
     min-width: 380px;
     border: 1px solid #f1e9d3;
     background-image: url(img/site/ordering-background.png);
+     -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
 }
 
 .ordering-body{
@@ -494,7 +498,7 @@ $css = <<<'STYLE'
 .content-data-first_1{
     margin-left: 40px;
     font-size: 22px;
-    color: #40403e;
+    color: #d4d4d4;
     border-bottom: 1px solid #d8d8d8;
 }
 
@@ -506,6 +510,12 @@ $css = <<<'STYLE'
     background: #d4d4d4;
     color: #fff
 }
+.ui-accordion-header .content-data-first_1:before{
+
+    color: #fff
+}
+
+
 
 .ui-accordion-header:before{
     height: 30px;
@@ -536,6 +546,7 @@ $css = <<<'STYLE'
     background: #29a1e0;
     color: #e2eaf3;
     box-shadow: 0px 2px 1px #098fd5, #4CCCF3 0px 0px 6px 2px inset;
+
 }
 
 
@@ -551,9 +562,21 @@ $css = <<<'STYLE'
 .ui-state-default.ui-state-active .content-data-first_1 a{
     display: none;
 }
+.ui-state-default.ui-state-active .content-data-first_1{
+    color: #000;
+}
+
+ui-accordion-header ui-state-default ui-corner-all
+ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active ui-corner-top
+
 
 .ui-state-default .content-data-first_1 a:hover{
     text-decoration: underline;
+}
+
+.control-label{
+    font-family: OpenSans;
+    font-weight: normal;
 }
 
 STYLE;
@@ -589,7 +612,10 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         ]),
                         ['class' =>  'content-data-first_1']
                     ),
-                    'content' => '1',//$this->render('_order_item_content', []),
+                    'content' => $this->render('_order_item_content', [
+                        'form'  =>  $form,
+                        'model' =>  $model
+                    ]),
                     'headerOptions' => [
                         'tag'   =>  'div'
                     ],
@@ -600,7 +626,10 @@ $form = \yii\bootstrap\ActiveForm::begin([
                     ]),
 
                     'headerOptions' => ['tag' => 'div'],
-                    'content' => 'Sed non urna. Phasellus eu ligula. Vestibulum sit amet purus...',
+                    'content' => $this->render('_order_item_content_second', [
+                        'form'  =>  $form,
+                        'model' =>  $model
+                    ]),
                     'options' => ['tag' => 'div'],
                 ],
             ],
@@ -612,133 +641,6 @@ $form = \yii\bootstrap\ActiveForm::begin([
             'clientOptions' => ['collapsible' => false, 'icons' => false],
         ]);?>
 
-            <div class="content-data-first">
-                <div class="content-data-title">
-                    <div class="round-button">
-                        <div class="content-data-title-img">
-                            <a class="round-button">1</a>
-                        </div>
-                    </div>
-                    <div class="contacy-data-title-buttom-border">
-                        <div class="content-data-title-text">
-                            Контактные данные
-                        </div>
-                        <div class="content-data-title-edit">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">редактировать</a>
-                        </div>
-                    </div>
-                </div>
-                <div id="collapse1" class="content-data-body panel-collapse collapse in">
-                    <div class="content-data-body-first">
-                        <?=$form->field($model, 'customerName'),
-                            $form->field($model, 'customerSurname'),
-                            $form->field($model, 'deliveryCity'),
-                            $form->field($model, 'deliveryRegion'),
-                            $form->field($model, 'customerEmail')?>
-                        <div class="next-button">
-                        <?php
-                        echo \yii\helpers\Html::button('Далее', [
-                                'class' =>  'button',
-                                'type'  =>  'button',
-                             'data-toggle' => "collapse",
-                        'data-target' =>  "#collapse2",
-                            'data-parent'   =>  '#accordion'
-                            ]);
-                        ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="content-data-first">
-                <div class="content-data-title">
-                    <div class="round-button">
-                        <div class="content-data-title-img">
-                            <a class="round-button">2</a>
-                        </div>
-                    </div>
-                    <div class="contacy-data-title-buttom-border">
-                        <div class="content-data-title-text">
-                            Доставка и Оплата
-                        </div>
-                    </div>
-                </div>
-                <div id="collapse2" class="content-data-body panel-collapse collapse">
-                    <div class="content-data-body-second">
-                        <div class="content-data-body-delivery-type">
-                            <?=$form->field($model, 'deliveryType')->radioList(\common\models\DeliveryTypes::getDeliveryTypes())->label(false)?>
-                            <?=\yii\bootstrap\Tabs::widget([
-                                'headerOptions' =>  [
-                                    'style' =>  'display: '
-                                ],
-                                'items' =>  [
-                                    [
-                                        'content'   =>  '<div class="content-data-body-department">Отделение:</div>',
-                                        'label'     =>  'Новая почта',
-                                        'id'        =>  'newPost'
-                                    ],
-                                    [
-                                        'content'   =>  '<div class="content-data-body-address">Мои адреса:</div>',
-                                        'label'     =>  'Адресная доставка',
-                                        'id'        =>  'delivery'
-                                    ],
-                                    [
-                                        'content'   =>  '<div>
-                                <div class="content-data-body-stock">
-
-
-                                    <div class="semi-bold">Наш склад находится по адресу:</div>
-                                    г. Киев, ул. Электротехническая, 2
-                                    <div class="work-time">
-                                        Время работы с 9:00 до 17:00
-                                    </div>
-                                    <div class="work-time">
-                                    все дни кроме понедельника
-                                    </div>
-                                </div>
-                                </div>',
-                                        'label'     =>  'Самовывоз',
-                                        'id'        =>  'post2'
-                                    ],
-                                ]
-                            ])?>
-                          <!--  <div class="menu1">
-                                <br id="tab2"/><br id="tab3"/>
-                                <a href="#tab1">Новая почта</a><a href="#tab2">Адресная доставка</a><a href="#tab3">Самовывоз</a>
-
-                            </div>-->
-                        </div>
-                        <?=$form->field($model, 'anotherReceiver')->radioList([
-                            '0' =>  'Отправлять на меня',
-                            '1' =>  'Будет получать другой человек'
-                        ])->label(false)?>
-                      <div class="shipping">
-                            <input type="radio" name="odin" checked="checked" id="vkl1"/>
-                            <label for="vkl1">
-                                Отправлять на меня
-                            </label>
-                            <input type="radio" name="odin" id="vkl2"/>
-                            <label for="vkl2">
-                                Будет получать другой человек
-                            </label>
-                            <div></div>
-                            <div class="">
-                            <?= $form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()),
-                                $form->field($model, 'customerName'),
-                                $form->field($model, 'customerSurname'),
-                                $form->field($model, 'customerPhone')->hint("Если вы хотите чтобы здесь был ваш номер телефона, оставьте пустым"),
-                                $form->field($model, 'deliveryInfo')?>
-                            </div>
-                        </div>-->
-
-                        <?=$form->field($model, 'payment')->radioList([
-                            '0' =>  'Наличными при получении (25 от сумы + 20 грн.)',
-                            '1' =>  'Оплата на карту ПриватБанк (1% от сумы)',
-                            '2' =>  'Visa / MasterCard (1% от сумы)'
-                        ])->label(false)
-            ?>
-                        <a>Добавить коментарий к заказу</a>
-                    </div>
-                  </div>
             </div>
         </div>
         <div class="content-ordering">
@@ -808,7 +710,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
                             <a>пользовательского соглашение</a>
                         </div>
                     </div>
-                        <div class="text-align-center"><a>Редактировать заказ</a>
+                        <div class="text-align-center"><a href="#modalCart">Редактировать заказ</a>
 
                         </div>
                         <div class="text-align-center">

@@ -26,7 +26,7 @@ class DefaultController extends Controller
         }
 
         \Yii::$app->user->identity->giveFeedbackClosed = date('Y-m-d H:i:s');
-        \Yii::$app->user->identity->save();
+        \Yii::$app->user->identity->save(false);
     }
 
     public function actionOrders()

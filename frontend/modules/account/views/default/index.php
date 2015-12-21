@@ -175,7 +175,7 @@ $("#reviews .icon.icon-exit").on('click', function(e){
         type: 'POST',
 		url: '/account/betterlistclosed',
 		success: function(data){
-            e.currentTarget.parentNode.parentNode.remove();
+            diplay_hide('.reviews')
         }
     });
 });

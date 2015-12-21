@@ -1,17 +1,18 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 12/18/2015
- * Time: 11:39 AM
- */
-?>
-<div id="collapse1" class="content-data-body panel-collapse collapse in">
-    <div class="content-data-body-first">
-
-        <div class="next-button">
-
-        </div>
+<div class="content-data-body-first">
+    <?=$form->field($model, 'customerName'),
+    $form->field($model, 'customerSurname'),
+    $form->field($model, 'deliveryCity'),
+    $form->field($model, 'deliveryRegion'),
+    $form->field($model, 'customerEmail')?>
+    <div class="next-button">
+        <?php
+        echo \yii\helpers\Html::button('Далее', [
+            'class' =>  'button',
+            'type'  =>  'button',
+            'data-toggle' => "collapse",
+            'data-target' =>  "#collapse2",
+            'data-parent'   =>  '#accordion'
+        ]);
+        ?>
     </div>
-</div>
 </div>

@@ -26,6 +26,27 @@ $(function () {
 SCRIPT;
 // Register tooltip/popover initialization javascript
 $this->registerJs($js);
+
+
+$cartItemsDataProvider = new \yii\data\ActiveDataProvider([
+    'query' =>  \Yii::$app->cart->goodsQuery()
+]);
+
+$cartModal = new \bobroid\remodal\Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	false,
+    'content'			=>	$this->render('../site/cart', [
+        'dataProvider'	=>	$cartItemsDataProvider
+    ]),
+    'id'	=>	'modalCart',
+    'addRandomToID'		=>	false,
+    'events'			=>	[
+        'opening'	=>	new \yii\web\JsExpression("getCart(e)")
+    ]
+]);
+
+
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -41,6 +62,7 @@ $this->registerJs($js);
     <?php
     RuLangAsset::register($this);
     ?>
+    <?=$cartModal->renderModal()?>
     <?php $this->endBody() ?>
     </body>
 </html>
