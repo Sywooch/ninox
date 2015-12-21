@@ -49,19 +49,13 @@
     '2' =>  'Visa / MasterCard (1% от сумы)'
 ])->label(false);
 
-echo $form->field($model, 'list')->widget(
-    'stylekrasota\yii2\widgets\bootstrap\RadioList',
-    [
-        'items' =>
-            [
-                'value-1' => 'label-1',
-                'value-2' => 'label-2',
-                'value-3' => 'label-3'
-            ],
-        'type' => 'primary',
-        'size' => 'default'
-    ]
-);
-
+echo $form->field($model, 'list')->radioList([
+    'value-1' => 'label-1',
+    'value-2' => 'label-2',
+    'value-3' => 'label-3'
+], [
+    'type'  =>  'primary',
+    'size'  =>  'default'
+]);
 ?>
 <a>Добавить коментарий к заказу</a>

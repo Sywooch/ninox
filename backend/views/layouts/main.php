@@ -467,7 +467,7 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Касса',
-                                'url'   =>  Url::to('/kassa/index')
+                                'url'   =>  Url::to('/cashbox')
                             ],
                             [
                                 'label' =>  'Руколдельницы',
