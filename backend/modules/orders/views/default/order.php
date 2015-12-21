@@ -150,7 +150,9 @@ $js = <<<'SCRIPT'
                             type: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#DD6B55",
+                            cancelButtonColor: "#449D44",
                             confirmButtonText: "Игнорировать!",
+                            cancelButtonText: "Добавить сколько есть",
                             closeOnConfirm: false
                         },
                         function(isConfirm){
