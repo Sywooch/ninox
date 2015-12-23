@@ -82,7 +82,7 @@ $css = <<<'STYLE'
 
 .content{
     width: 100%;
-    max-width: 1000px;
+    max-width: 1050px;
     margin: 0 auto;
     min-width: 880px;
 }
@@ -109,6 +109,7 @@ $css = <<<'STYLE'
 
 .order-call-phone{
     float: right;
+    font-size: 20px;
 }
 
 .ordering-title{
@@ -232,9 +233,12 @@ $css = <<<'STYLE'
     box-shadow: inset 0px 0px 3px 2px #f4f4f4;
 }
 
-.content-data .form-group{
+.content-data-body-first .form-group{
     height: 40px;
-    width: 375px;
+}
+
+.content-data .form-group{
+    /*width: 375px;*/
     margin-bottom: 10px;
 }
 
@@ -334,11 +338,14 @@ $css = <<<'STYLE'
     float: left;
     min-width: 380px;
     padding-top: 25px;
+    padding-right: 10px;
+    padding-left: 35px;
 }
 
 .ordering{
     width: 100%;
-    float: left;
+    float: right;
+        max-width: 410px;
     min-width: 380px;
     border: 1px solid #f1e9d3;
     background-image: url(img/site/ordering-background.png);
@@ -399,6 +406,7 @@ $css = <<<'STYLE'
     padding-top: 25px;
     padding-bottom: 25px;
     text-align: center;
+    font-size: 13px;
 }
 
 .ordering .question{
@@ -471,9 +479,13 @@ $css = <<<'STYLE'
 }
 
 .promotional-code{
-    width: 140px;
+    width: 150px;
     height: 20px;
     margin-left: 6%;
+}
+
+.promotional-code .form-group{
+    float: left;
 }
 
 .promotional-code a{
@@ -482,6 +494,7 @@ $css = <<<'STYLE'
 }
 
 .promotional-code .question{
+    padding-top: 5px;
     padding-left: 5px;
 }
 
@@ -579,13 +592,65 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
     font-weight: normal;
 }
 
+.phone{
+    background-image: url(img/site/phone.png);
+    background-repeat: no-repeat;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-right: 13px;
+}
+
+.content-data-body-delivery-type{
+    height: ;
+}
+
+.content-data-body-delivery-type input[type="radio"] {
+    display: none;
+    float: left;
+}
+
+.content-data-body-delivery-type input[type="radio"]:checked + label{
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    background: #d3e8f9;
+    border: 1px solid #bdddf7;
+}
+
+.content-data-body-delivery-type label {
+    display:inline-block;
+    padding:4px 11px;
+    float: left;
+    cursor: pointer;
+    margin-right: 10px;
+    color: #3e77aa;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.field-orderform-payment input:checked  {
+    //background-image: url(img/site/radio-on.png);
+    width: 15px;
+    height: 15px;
+}
+
+#ui-id-2{
+    height:350px;
+}
+
+#ui-id-4{
+    height: 500px%;
+}
+
+
 STYLE;
 
 $this->registerCss($css);
 
 $form = \yii\bootstrap\ActiveForm::begin([
     'fieldConfig' => [
-        'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>"
+        'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
     ],
 ]);
 ?>
@@ -594,6 +659,9 @@ $form = \yii\bootstrap\ActiveForm::begin([
         <div class="order-logo">
         </div>
         <div class="order-call-phone">
+            <div class="phone">
+
+            </div>
             (044) 232 82 20
         </div>
         <div class="ordering-title">
