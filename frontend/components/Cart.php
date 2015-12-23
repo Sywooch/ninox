@@ -11,6 +11,7 @@ namespace frontend\components;
 use common\helpers\PriceRuleHelper;
 use frontend\models\Good;
 use yii\base\Component;
+use yii\web\Cookie;
 
 class Cart extends Component{
 
@@ -30,7 +31,9 @@ class Cart extends Component{
     public function init(){
         $cache = \Yii::$app->cache;
 
-        $this->cartCode = isset($_COOKIE['cartCode']) ? $_COOKIE['cartCode'] : '';
+        if(\Yii::$app->request->cookies->get("cartCode")){
+            $this->cartCode = \Yii::$app->request->cookies->get("cartCode");
+        }
 
         $this->load();
 
@@ -108,9 +111,13 @@ class Cart extends Component{
     public function put($itemID, $count = 1){
         if(empty($this->items) && empty($this->cartCode)){
 
-            $this->cartCode = $this->createCartCode();
+            $this->cartCode = $this->createCartCode(11);
 
-            setcookie('cartCode', $this->cartCode, time() + 86400 * 365, '/');
+            \Yii::$app->response->cookies->add(new Cookie([
+                'name'      =>  'cartCode',
+                'value'     =>  $this->cartCode,
+                'expire'    =>  (time() + 86400 * 365)
+            ]));
         }
 
         if(isset($this->items[$itemID])){

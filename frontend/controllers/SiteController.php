@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\OrderForm;
 use Yii;
@@ -160,6 +161,8 @@ class SiteController extends Controller
             throw new ErrorException("Клиент не найден!");
         }
 
+        Cart::updateAll(['customerID' => $customer->ID], ['cartCode' => \Yii::$app->cart->cartCode]);
+
         if(\Yii::$app->request->post("OrderForm")){
             $order->load(\Yii::$app->request->post());
         }
@@ -314,6 +317,10 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            if(\Yii::$app->cart->itemsCount > 0){
+                Cart::updateAll(['customerID'   =>  \Yii::$app->user->identity->ID], ['cartCode' => \Yii::$app->cart->cartCode]);
+            }
+
             return $this->goBack();
         } else {
             return $this->render('login', [

@@ -702,11 +702,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
                 ],
             ],
             'options' => [
-                'tag'   =>  'div'
+                'tag'   =>  'div',
             ],
             'itemOptions' => ['tag' => 'div'],
             'headerOptions' => ['tag' => 'div'],
-            'clientOptions' => ['collapsible' => false, 'icons' => false],
+            'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => "content"],
         ]);?>
 
             </div>

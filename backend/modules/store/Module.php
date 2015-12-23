@@ -1,15 +1,13 @@
 <?php
 
-namespace backend\modules\cashbox;
+namespace backend\modules\store;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'backend\modules\cashbox\controllers';
+    public $controllerNamespace = 'backend\modules\store\controllers';
 
     public function init()
     {
-        $this->layout = 'cashbox';
-
         parent::init();
 
         // custom initialization code goes here

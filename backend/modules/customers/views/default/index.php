@@ -45,10 +45,10 @@ $this->registerCss($css);
                 },
                 'labels'    =>  function($url, $model, $key){
                     $return = '';
-                    if($model->black == 1){
+                    if($model->blackList == 1){
                         $return .= '<span class="label label-danger">в чёрном списке</span>&nbsp;';
                     }
-                    if($model->Deleted != 0){
+                    if($model->deleted != 0){
                         $return .= '<span class="label label-info">удалён</span>&nbsp;';
                     }
                     return '<center>'.$return.'</center>';
@@ -56,7 +56,7 @@ $this->registerCss($css);
             ]
         ],
         [
-            'attribute' =>  'ID',
+            'attribute' =>  'Code',
             'label'     =>  'ID'
         ],
         [
@@ -64,7 +64,7 @@ $this->registerCss($css);
             'label'     =>  'Ф.И.О.'
         ],
         [
-            'attribute' =>  'Phone',
+            'attribute' =>  'phone',
             'label'     =>  'Телефон'
         ],
         [
@@ -85,7 +85,7 @@ $this->registerCss($css);
             }
         ],
         [
-            'attribute' =>  'CardNumber',
+            'attribute' =>  'cardNumber',
             'label'     =>  'Номер карты',
             'class'     =>  \kartik\grid\EditableColumn::className(),
             'editableOptions'   =>  [
@@ -104,12 +104,17 @@ $this->registerCss($css);
             ],
         ],
         [
-            'attribute' =>  'eMail',
-            'label'     =>  'Электронная почта'
+            'attribute' =>  'email',
         ],
         [
-            'attribute' =>  'UserRealTime',
-            'label'     =>  'Дата добавления'
+            'attribute' =>  'registrationTime',
+            'value'     =>  function($model){
+                if((time() - strtotime($model->registrationTime)) < 86400*7){
+                    return \Yii::$app->formatter->asRelativeTime($model->registrationTime);
+                }
+
+                return \Yii::$app->formatter->asDatetime($model->registrationTime, 'php:d.m.Y H:i');
+            }
         ],
         [
             'attribute' =>  'money',
