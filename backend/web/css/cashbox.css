@@ -1,414 +1,75 @@
-body {
-    margin: 0px;
-    padding: 0px;
-    background: url("//krasota-style.com.ua/images/bg.gif") repeat-x;
-    font-family: Verdana;
-    font-size: 14px;
-}
-
-hr {
-    color: white;
-    background-color: white;
-    border-color: white;
-}
-
-.complect_tb TD, .complect_tb TH {
-    font-size: 100%;
-    line-height: 138%;
-    padding: .1em .5em .5em .5em;
-    width: 2%;
-    border-top: 1px dotted #bbb
-}
-
-.complect_tb TH {
-    background-color: #e7e7e7;
-    line-height: 116%;
-    padding-top: .3em;
-}
-
-.complect_tb {
-    width: 100%;
-    border: 1px solid #bbb;
-    margin-top: 0;
-}
-
-.complect_tb TH {
-    vertical-align: bottom;
-    font-weight: bold;
-    border: 0;
-    background-color: #e7e7e7;
-    border-bottom: 2px solid #d50e26;
-    padding-top: .5em;
-}
-
-.complect_tb TH.name {
-    width: 30%;
-}
-
-.complect_tb TD.price {
-    color: #FF0000;
-    font-weight: bold;
-    text-align: center;
-}
-
-.complect_tb TD {
-    padding-top: .3em;
-    vertical-align: top;
-}
-
-.complect_tb TD, .complect_tb TH {
-    width: auto;
-    padding-left: .7em;
-    padding-right: .7em;
-}
-
-table.list {
-    border-collapse: collapse;
-    border: 1px solid #cccccc;
-}
-
-table.list th {
-    text-align: left;
-    background-color: #eeeeee;
-}
-
-table.list td {
-    border: 1px solid #cccccc;
-}
-
-table.list tr.nact td {
-    background: #F5D5CF;
-}
-
-table.list tr:hover {
-    background: #999;
-}
-
-.menu_admin {
-    font-size: 14px;
-    color: #FFFFFF;
-}
-
-a.menu_admin:link, a.menu_admin:active, a.menu_admin:visited {
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-a.menu_admin:hover {
-    text-decoration: underline;
-    color: #FFFFFF;
-}
-
-.td_top {
-    background: URL('http://krasota-style.com.ua/img/bg_top_admin.jpg') repeat-x;
-    background-position: top;
-    background-color: #8DB6D9;
-}
-
-select {
-    width: 300px;
-    border: 1px solid #C0C0C0;
-}
-
-table {
-    font-size: 12px;
-}
-
-#r_name {
-    border-bottom: 1px solid #D0D0D0;
-    border-top: 1px solid #D0D0D0;
-    background: #E0E0E0;
-    clear: both;
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.odd {
-    background: #F0F0F0;
-}
-
-#catalog_cont ul {
-    padding: 0px;
-    margin: 0px;
-}
-
-#catalog_cont ul li {
-    list-style: none;
-    margin: 7px 0px;
-}
-
-#catalog_cont ul li ul {
-    margin: 7px 0px 7px 10px;
-    display: none;
-}
-
-li.st1 span {
-    font-size: 14px;
-    font-family: Verdana;
-    color: #003767;
-    height: 14px;
-    display: inline-block;
-    cursor: pointer;
-}
-
-#catalog_cont ul li a {
-    color: #003767;
-    text-decoration: none;
-}
-
-#catalog_cont ul li a:hover {
-    color: #005baa;
-    text-decoration: none;
-}
-
-li.st2 span {
-    font-size: 14px;
-    font-family: Verdana;
-    color: #005baa;
-    height: auto;
-    background: none;
-    padding: 0px;
-    cursor: pointer;
-}
-
-tr.done {
-    background-color: #6C0;
-}
-
-tr.undone {
-    background-color: #F96;
-}
-
-.headerbutton a.smalltext {
-    font-size: 13px;
-}
-.wrappercontroller.top {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 5;
-}
-.changeqtty {
-    border: 0;
-    width: 60px;
-    background: #FFFFFF;
-}
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-.page-buffer {
-    height: 80px;
-}
-* html .vrbody {
-    height: 100%;
-}
-.tenpx {
-    height: 10px;
-    width: 100%;
-}
-#vrfooter {
-    height: 58px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-.productmodal {
-    border: 1px solid #cccccc;
-    padding: 5px;
-    margin-bottom: 5px;
-    text-align: center;
-}
-.productmodal a {
-    display: block;
-}
-.productmodal span {
-    font-weight: bold;
-}
-.productmodaltitle {
-    font-weight: bold;
-    display: block;
-}
-
-hr {
-    margin: 10px 0;
-}
-.content {
+div.content{
     width: 1000px;
     margin: 0 auto;
-    font-family: OpenSans, sans-serif;
 }
-.content.information {
-    min-height: 400px;
-    position: absolute;
-    left: 50%;
-    margin-left: -500px;
-    top: 120px;
+
+div.header{
+    width: 100%;
+    background: #ECECEC;
+    position: fixed;
+    top: 0;
+    z-index: 5;
+    padding: 20px;
 }
-h3 {
-    margin-top: 30px;
-    margin-bottom: 20px;
+
+.content .right{
+    position: relative;
+    float: right;
+    right: 0;
 }
-#listProductsBarCode {
-    margin-top: 10px;
-    color: #282828;
-    font-size: 14px;
-    margin-bottom: 30px;
+
+.content .left{
+    position: relative;
+    float: left;
+    left: 0;
 }
-#listProductsBarCode #BarCodeSearch {
-    border: 0;
-    width: 500px;
+
+div.title{
+    display: inline-block;
+    float: left;
+    margin-left: 200px;
 }
-#listProductsBarCode td {
+
+div.title > *{
+    margin: 0 auto;
+    font-size: 42px;
+}
+
+div.footer{
+    bottom: 0;
+    background: #ECECEC;
+    position: fixed;
+    width: 100%;
+    height: 65px;
     padding: 10px;
 }
-#listProductsBarCode td.tdborder {
-    border: 1px solid #a9a9a9;
-    border-bottom: 0;
-    border-right: 0;
-}
-#listProductsBarCode tr td.tdborder:last-child {
-    border-right: 1px solid #a9a9a9;
-}
-#listProductsBarCode tr:last-child td.tdborder {
-    border-bottom: 1px solid #a9a9a9;
-}
-.tdbordertop {
-    border-top: 1px solid #a9a9a9;
-}
-#listProductsBarCode a {
-    text-decoration: none;
+
+.btn-big{
+    height: 69px;
 }
 
-.wrappercontroller {
-    background: #ececec;
-}
-.wrappercontroller a {
-    text-decoration: none;
+.manyButtons button{
+    margin-left: 10px;
 }
 
-.headerleftcontroll {
-    float: left;
-    width: 500px;
-}
-.headerrightcontroll {
-    float: right;
-}
-.headerrightcontroll .controlblock {
-    width: 140px;
-    float: left;
+.no-padding{
+    padding: 0 !important;
 }
 
-.headerbutton {
-    background: #dfdfdf;
-    border: 1px solid #aaaaab;
-    height: 38px;
-    width: 116px;
-    display: inline-block;
-    line-height: 38px;
-    text-align: center;
-    margin-bottom: 8px;
-    margin-right: 4px;
+.no-padding .content > *{
+    padding: 20px 0;
 }
-.headerbutton.buttonbig {
-    height: 86px;
-    line-height: 86px;
-    float: left;
-}
-.headerbutton.green {
-    background: #6eba5f;
-    border: 1px solid #549a46;
-}
-.headerbutton.green a, .headerbutton.red a {
-    font-weight: bold;
-    color: #FFFFFF;
-    font-size: 18px;
-}
-.headerbutton.red {
-    background: #e14b4b;
-    border: 1px solid red;
-}
-.headerbutton a {
-    color: #595959;
-    display: block;
+
+.summary{
+    /*background: #ff0000;*/
+    top: 0;
     font-size: 14px;
-}
-.headerbutton a.clientlink {
-    font-size: 12px;
-    line-height: 20px;
-}
-.cartpreviewsumm {
-    background: #6eba5f;
-    height: 108px;
-    padding: 0 20px;
     text-align: right;
-    float: right;
-}
-.cartpreviewsumm.red {
-    background: #e14b4b;
-}
-.cartpreviewsumm .cartupdate {
-    padding-top: 30px;
-}
-.cartpreviewsumm .previewsumm {
-    color: #282828;
-    font-size: 14px;
-}
-.cartpreviewsumm .fullsumm {
-    color: #FFFFFF;
-    font-size: 26px;
-}
-.cartpreviewsumm .fullsumm span {
-    font-weight: bold;
-}
-#ManagerWindow .headerbutton {
-    cursor: pointer;
+    font-family: OpenSans, sans-serif;
+    height: 100%;
 }
 
-#enable:hover, #disable:hover, #delete:hover, #edit:hover{
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-p{
-    text-indent: 0;
-}
-
-#terms{
-    margin-top: 20px;
-}
-
-.oneTerm{
-    padding-bottom: 20px;
-}
-
-.oneTerm select, .oneTerm input{
-    height: 30px;
-    border-radius: 0;
-    border: 1px solid #999;
-    padding: 1px 0;
-    margin-left: 10px;
-    background: none;
-    text-align: center;
-}
-
-.oneTerm input{
-    text-align: left;
-    padding-left: 10px;
-}
-
-.oneTerm img{
-    max-height: 30px;
-    position: absolute;
-    margin-left: 10px;
-}
-
-#items td{
-    padding: 10px 0;
-}
-
-#edit{
-    display: none;
+.summary p, .summary h2{
+    margin: 0;
+    padding: 0 15px 0 0;
 }

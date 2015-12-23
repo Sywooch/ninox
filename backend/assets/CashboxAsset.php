@@ -22,6 +22,7 @@ class CashboxAsset extends AssetBundle{
     ];
 
     public $depends = [
+        'yii\bootstrap\BootstrapAsset',
         'yii\web\YiiAsset',
         'yii\web\JqueryAsset',
     ];
