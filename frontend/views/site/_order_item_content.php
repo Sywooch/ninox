@@ -4,7 +4,6 @@
     $form->field($model, 'deliveryCity'),
     $form->field($model, 'deliveryRegion'),
     $form->field($model, 'customerEmail')?>
-    <div class="clearfix"></div>
     <div class="next-button">
         <?php
         echo \yii\helpers\Html::button('Далее', [

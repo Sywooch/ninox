@@ -651,6 +651,16 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
     border: none;
 }
 
+.collapse{
+    display: none;
+}
+
+.collapse in{
+
+        display: block !important;
+}
+
+class="panel-collapse collapse"
 STYLE;
 
 $this->registerCss($css);
@@ -681,9 +691,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
         echo Accordion::widget([
             'items' => [
                 [
-                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', '#collapse1', [
+                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', '#ui-id-4', [
                             'data-toggle'   =>  'collapse',
                             'data-parent'   =>  '#accordion',
+                            'href'          =>  '#afs'
+
                         ]),
                         ['class' =>  'content-data-first_1']
                     ),
@@ -697,14 +709,17 @@ $form = \yii\bootstrap\ActiveForm::begin([
                 ],
                 [
                     'header' => Html::tag('div', Html::tag('span', 'Доставка и Оплата'), [
-                        'class' =>  'content-data-first_1'
+                        'class' =>  'content-data-first_1',
+
                     ]),
 
-                    'headerOptions' => ['tag' => 'div'],
+                    'headerOptions' => ['tag' => 'div',
+
+                    ],
                     'content' => $this->render('_order_item_content_second', [
                         'form'  =>  $form,
                         'model' =>  $model,
-                        'id'    =>  "collapse2"
+                        'class'    =>  "collapse"
                     ]),
                     'options' => ['tag' => 'div'],
                 ],
@@ -714,7 +729,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
             ],
             'itemOptions' => ['tag' => 'div'],
             'headerOptions' => ['tag' => 'div'],
-            'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => "content"],
+            'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => "content", 'active' => 0],
         ]);?>
 
             </div>
