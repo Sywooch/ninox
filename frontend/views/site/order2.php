@@ -6,79 +6,7 @@ use yii\bootstrap\Html;
 
 $css = <<<'STYLE'
 
-#tab2, #tab3 {
-    position: fixed;
-}
 
-.menu1 > a,
-.menu1 #tab2:target ~ a:nth-of-type(1),
-.menu1 #tab3:target ~ a:nth-of-type(1),
-.menu1 > div {
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
-    border: none;
-    margin-right: 10px;
-    background: none;
-}
-
-.menu1 > a {
-    background: none;
-    color: #3e77aa;
-    border: none;
-    text-decoration: none;
-}
-
-#tab2,
-#tab3,
-.menu1 > div,
-.menu1 #tab2:target ~ div:nth-of-type(1),
-.menu1 #tab3:target ~ div:nth-of-type(1) {
-    display: none;
-    color: ;
-}
-
-.menu1 > div:nth-of-type(1),
-.menu1 #tab2:target ~ div:nth-of-type(2),
-.menu1 #tab3:target ~ div:nth-of-type(3) {
-    display: block;
-}
-
-.menu1 > a:nth-of-type(1),
-.menu1 #tab2:target ~ a:nth-of-type(2),
-.menu1 #tab3:target ~ a:nth-of-type(3) {
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
-    border-radius:5px;
-    background: #d3e8f9;
-    border: 1px solid #bdddf7;
-}
-
-.shipping > div, .shipping > input {
-    display: none;
-}
-
-.shipping label {
-    padding: 5px;
-    color: #3e77aa;
-    cursor: pointer;
-    position: relative;
-}
-
-.shipping input[type="radio"]:checked + label {
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
-    border-radius:5px;
-    background: #d3e8f9;
-    border: 1px solid #bdddf7;
-}
-
-.shipping > input:nth-of-type(1):checked ~ div:nth-of-type(1),
-.shipping > input:nth-of-type(2):checked ~ div:nth-of-type(2),
-.shipping > input:nth-of-type(3):checked ~ div:nth-of-type(3) {
-    display: block;
-    padding: 5px;
-}
 
 .content{
     width: 100%;
@@ -233,14 +161,12 @@ $css = <<<'STYLE'
 .content-data .form-control{
     float: left;
     width: 280px;
-
     -webkit-box-shadow: inset 0px 0px 3px 2px #f4f4f4;
     box-shadow: inset 0px 0px 3px 2px #f4f4f4;
-
 }
 
 .form-control{
-        border: 1px solid #e4e4e4;
+    border: 1px solid #e4e4e4;
 }
 
 .content-data-body-first .form-group{
@@ -248,7 +174,6 @@ $css = <<<'STYLE'
 }
 
 .content-data .form-group{
-    /*width: 375px;*/
     margin-bottom: 10px;
 }
 
@@ -289,7 +214,6 @@ $css = <<<'STYLE'
 }
 
 .next-button button{
-
     float: left !important;
 }
 
@@ -362,11 +286,11 @@ $css = <<<'STYLE'
 .ordering{
     width: 100%;
     float: right;
-        max-width: 410px;
+    max-width: 410px;
     min-width: 380px;
     border: 1px solid #f1e9d3;
     background-image: url(img/site/ordering-background.png);
-     -moz-border-radius: 5px;
+    -moz-border-radius: 5px;
     -webkit-border-radius:5px;
     border-radius:5px;
 }
@@ -541,11 +465,8 @@ $css = <<<'STYLE'
     color: #fff
 }
 .ui-accordion-header .content-data-first_1:before{
-
     color: #fff
 }
-
-
 
 .ui-accordion-header:before{
     height: 30px;
@@ -571,14 +492,12 @@ $css = <<<'STYLE'
     content: '2';
 }
 
-
 .ui-accordion-header-active:before{
     background: #29a1e0;
     color: #e2eaf3;
     box-shadow: 0px 2px 1px #098fd5, #4CCCF3 0px 0px 6px 2px inset;
 
 }
-
 
 .ui-state-default .content-data-first_1 a{
     cursor: pointer;
@@ -592,13 +511,10 @@ $css = <<<'STYLE'
 .ui-state-default.ui-state-active .content-data-first_1 a{
     display: none;
 }
+
 .ui-state-default.ui-state-active .content-data-first_1{
     color: #000;
 }
-
-ui-accordion-header ui-state-default ui-corner-all
-ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active ui-corner-top
-
 
 .ui-state-default .content-data-first_1 a:hover{
     text-decoration: underline;
@@ -662,8 +578,6 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
 .nav-tabs{
     border: none;
 }
-
-
 
 #w2-tab1 label{
     color: #282828;
