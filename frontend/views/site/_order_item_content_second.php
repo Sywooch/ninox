@@ -73,14 +73,43 @@ $this->registerJs($js);
     ])?>
 </div>
 
-
-
+<div class="content-data-body-delivery-type">
 <?=$form->field($model, 'anotherReceiver')->radioList([
     '0' =>  'Отправлять на меня',
     '1' =>  'Будет получать другой человек',
+    ],
+    [
+        'item'  =>  function ($index, $label, $name, $checked, $value) {
+                echo Html::radio($name, $checked, [
+                        'value' => $value,
+                        'id' => $value
+                    ])
+                    . '<label class="tabsLabels" data-target="#w2-tab'.$value.'" for="'.$value.'">'.$label.'</label>';
+        }
+    ]
+)->label(false)?>
+<?=\yii\bootstrap\Tabs::widget([
+    'headerOptions' =>  [
+        'style' =>  'display: none'
+    ],
+    'items' =>  [
+        [
+            'content'   =>  '',
+            'label'     =>  '',
+            'id'        =>  '1',
+            'active' => true
+        ],
+        [
+            'content'   =>  '<div class="content-data-body-first">'.
+                            $form->field($model, 'anotherReceiverName').$form->field($model, 'anotherReceiverSurname').$form->field($model, 'anotherReceiverPhone').
+                            '</div>',
+            'label'     =>  'Адресная доставка',
+            'id'        =>  '2'
 
-])->label(false)?>
-
+        ]
+    ]
+])?>
+</div>
 
 <?php
 /*$form->field($model, 'payment')->radioList([

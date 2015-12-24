@@ -87,12 +87,15 @@ class OrderForm extends Model{
 
     public function attributeLabels(){
         return [
-            'customerName'      =>  \Yii::t('shop', 'Имя'),
-            'customerSurname'   =>  \Yii::t('shop', 'Фамилия'),
-            'customerPhone'     =>  \Yii::t('shop', 'Телефон'),
-            'customerEmail'     =>  \Yii::t('shop', 'Эл. почта'),
-            'deliveryCity'      =>  \Yii::t('shop', 'Город'),
-            'deliveryRegion'      =>  \Yii::t('shop', 'Регион'),
+            'customerName'           =>  \Yii::t('shop', 'Имя'),
+            'customerSurname'        =>  \Yii::t('shop', 'Фамилия'),
+            'customerPhone'          =>  \Yii::t('shop', 'Телефон'),
+            'customerEmail'          =>  \Yii::t('shop', 'Эл. почта'),
+            'deliveryCity'           =>  \Yii::t('shop', 'Город'),
+            'deliveryRegion'         =>  \Yii::t('shop', 'Регион'),
+            'anotherReceiverName'    =>  \Yii::t('shop', 'Имя'),
+            'anotherReceiverSurname' =>  \Yii::t('shop', 'Фамилия'),
+            'anotherReceiverPhone'   =>  \Yii::t('shop', 'Телефон*'),
         ];
     }
 

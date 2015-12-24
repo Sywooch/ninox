@@ -92,24 +92,28 @@ $css = <<<'STYLE'
 }
 
 .order-head{
+    height: 200px;
     width: 100%;
     font-family: OpenSans-Semibold;
     font-size: 32px;
     color: #40403e;
     padding-bottom: 25px;
     border-bottom: 4px solid #d3e8f9;
-
+    padding-top: 35px;
 }
 
 .order-logo{
     width: 50%;
     background-repeat: no-repeat;
-    background-image: url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSCZwIQ2i-Bz3NyE7NBDEVxzwTu5bpbr4YBaQ1gvaFmnHly-U0W);
+    height: 60px;
+    background-image: url(img/site/logo.png);
+    margin-bottom: 30px;
 }
 
 .order-call-phone{
     float: right;
     font-size: 20px;
+    margin-top: -70px;
 }
 
 .ordering-title{
@@ -223,14 +227,20 @@ $css = <<<'STYLE'
     /* padding-left: 40px; */
     padding-top: 6px;
     margin-left: 0px;
+    width: 100px;
 }
 
 .content-data .form-control{
-    float: right;
+    float: left;
     width: 280px;
-    border: 1px solid #e4e4e4;
+
     -webkit-box-shadow: inset 0px 0px 3px 2px #f4f4f4;
     box-shadow: inset 0px 0px 3px 2px #f4f4f4;
+
+}
+
+.form-control{
+        border: 1px solid #e4e4e4;
 }
 
 .content-data-body-first .form-group{
@@ -248,7 +258,7 @@ $css = <<<'STYLE'
 }
 .content-data-body-first{
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: ;
     text-shadow: 0px 0px 1px #bdbdbd;
 }
 
@@ -279,8 +289,8 @@ $css = <<<'STYLE'
 }
 
 .next-button button{
-    margin-right: 125px;
-    float: right;
+
+    float: left !important;
 }
 
 .button{
@@ -313,10 +323,12 @@ $css = <<<'STYLE'
 
 .content-data-body-department{
     height:40px;
+    padding: 10px;
 }
 
 .content-data-body-address{
     height: 40px;
+    padding: 10px;
 }
 
 .content-data-body-stock{
@@ -651,6 +663,28 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
     border: none;
 }
 
+
+
+#w2-tab1 label{
+    color: #282828;
+}
+
+.content-data-first_1 .ui-widget button{
+    font-size: 20px;
+}
+.btn{
+    font-size: 14px !important;
+    font-weight: normal !important;
+}
+
+.ui-widget button{
+    float: right;
+}
+
+.ui-accordion .ui-accordion-content{
+    padding-left: 50px;
+}
+
 STYLE;
 
 $this->registerCss($css);
@@ -706,14 +740,17 @@ $form = \yii\bootstrap\ActiveForm::begin([
                 ],
                 [
                     'header' => Html::tag('div', Html::tag('span', 'Доставка и Оплата'), [
-                        'class' =>  'content-data-first_1'
+                        'class' =>  'content-data-first_1',
+
                     ]),
 
-                    'headerOptions' => ['tag' => 'div'],
+                    'headerOptions' => ['tag' => 'div',
+
+                    ],
                     'content' => $this->render('_order_item_content_second', [
                         'form'  =>  $form,
                         'model' =>  $model,
-                        'id'    =>  "collapse2"
+                        'class'    =>  "collapse"
                     ]),
                     'options' => ['tag' => 'div'],
                 ],
