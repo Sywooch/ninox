@@ -112,11 +112,10 @@ h2{
 }
 
 @font-face {
-    font-family: "OpenSansBold";
-    src: url("../fonts/OpenSansBold.eot");
-    src: url("../fonts/OpenSansBold.eot?#iefix")format("embedded-opentype"),
-    url("../fonts/OpenSansBold.woff") format("woff"),
-    url("../fonts/OpenSansBold.ttf") format("truetype");
+    font-family: 'OpenSansBold';
+    src: url('../fonts/OpenSansBold.eot?#iefix')format('embedded-opentype'),
+    url('../fonts/OpenSansBold.woff') format('woff'),
+    url('../fonts/OpenSansBold.ttf') format('truetype');
     font-style: normal;
     font-weight: normal;
 }
@@ -195,7 +194,7 @@ h2{
     text-transform: none;
 
     /* fix buttons height, for twitter bootstrap */
-    line-height: 1m;
+    line-height: 1em;
 
     /* Animation center compensation - margins should be symmetric */
     /* remove if not needed */
@@ -444,7 +443,7 @@ h2{
 	text-align: center;
 }
 
-.invisible{
+.disabled{
 	display: none;
 }
 
@@ -791,7 +790,7 @@ h2{
 	border-radius: 5px;
 	z-index: 2;
 	background: rgba(255,255,255,0.9);
-	box-sizing: padding-box;
+	box-sizing: border-box;
 	left: -1px;
 	top: -1px;
 }
@@ -1717,7 +1716,6 @@ footer{
 .user-account .data{
     padding-top: 30px;
     max-height: 180px;
-    margin-bottom: ;
     min-height: 150px;
 }
 
@@ -1797,7 +1795,7 @@ footer{
 
 .icon-delivery-car{
     padding-left: 7px;
-    width: initial;
+    width: inherit;
     font-size: 28px;
     vertical-align: sub;
     color: #1998db;
@@ -1806,11 +1804,11 @@ footer{
 .icon-money-pig{
     padding-left: 3px;
     width: 37px;
-    vertical-align: initial;
+    vertical-align: inherit;
 }
 
 .icon-your-discont{
-    vertical-align: initial;
+    vertical-align: inherit;
 }
 
 .icon-arrow{
@@ -1890,7 +1888,6 @@ footer{
     width: 100%;
     height: 305px;
     float: left;
-    margin-left: ;
     background-color: #e2f3fc;
     border-radius: 7px 7px 7px 7px;
     -moz-border-radius: 7px 7px 7px 7px;
@@ -1938,11 +1935,9 @@ footer{
 .waiting{
     float: left;
     width: 65%;
-    padding-bottom: ;
 }
 
 .pr{
-    padding-bottom: ;
     float: left;
     width: 35%;
     margin-left: -30px;
@@ -2084,7 +2079,6 @@ footer{
 
 .spoiler-body{
     display:none;
-    background:;
     width: 100%;
     margin-top: 60px;
 }
@@ -2142,7 +2136,6 @@ footer{
 .items .data{
     display: block;
     float: left;
-    height: ;
     padding: 25px;
     width: 88%;
     padding-right: 0px;

@@ -655,6 +655,14 @@ STYLE;
 
 $this->registerCss($css);
 
+$js = <<<'SCRIPT'
+$(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
+	$('#accordion').accordion('option', 'active', parseInt(e.currentTarget.getAttribute('data-page')));
+});
+SCRIPT;
+
+$this->registerJs($js);
+
 $form = \yii\bootstrap\ActiveForm::begin([
     'fieldConfig' => [
         'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
@@ -676,14 +684,14 @@ $form = \yii\bootstrap\ActiveForm::begin([
         </div>
     </div>
     <div class="order-body">
-        <div class="content-data" id="accordion">
+        <div class="content-data">
         <?php
         echo Accordion::widget([
             'items' => [
                 [
-                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', '#collapse1', [
-                            'data-toggle'   =>  'collapse',
-                            'data-parent'   =>  '#accordion',
+                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::button('редактировать', [
+			                'class' =>  'btn btn-link goToPage',
+			                'data-page'    =>  0,
                         ]),
                         ['class' =>  'content-data-first_1']
                     ),
@@ -692,7 +700,8 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         'model' =>  $model
                     ]),
                     'headerOptions' => [
-                        'tag'   =>  'div'
+                        'tag'   =>  'div',
+	                    'onclick' => 'return false;'
                     ],
                 ],
                 [
@@ -711,10 +720,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
             ],
             'options' => [
                 'tag'   =>  'div',
+	            'id'    =>  'accordion'
             ],
             'itemOptions' => ['tag' => 'div'],
             'headerOptions' => ['tag' => 'div'],
-            'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => "content"],
+            'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => 'content', 'event' => false],
         ]);?>
 
             </div>

@@ -58,6 +58,7 @@ class CartItemsCounterWidget extends Widget{
 		return Html::button(\Yii::t('shop', 'Удалить'), [
 			'class'         =>  'remove-item',
 			'data-itemId'   =>  $this->itemID,
+			'data-count'    =>  0,
 		]);
 	}
 
