@@ -278,6 +278,11 @@ $css = <<<'STYLE'
     height:40px;
 }
 
+.next-button button{
+    margin-right: 125px;
+    float: right;
+}
+
 .button{
     margin-left: 100px;
     height: 40px;
@@ -598,7 +603,7 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
     height: 20px;
     width: 20px;
     float: left;
-    margin-right: 13px;
+    margin: 5px;
 }
 
 .content-data-body-delivery-type{
@@ -636,13 +641,15 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
 }
 
 #ui-id-2{
-    height:350px;
+    height:370px;
 }
 
 #ui-id-4{
     height: 500px%;
 }
-
+.nav-tabs{
+    border: none;
+}
 
 STYLE;
 
@@ -696,7 +703,8 @@ $form = \yii\bootstrap\ActiveForm::begin([
                     'headerOptions' => ['tag' => 'div'],
                     'content' => $this->render('_order_item_content_second', [
                         'form'  =>  $form,
-                        'model' =>  $model
+                        'model' =>  $model,
+                        'id'    =>  "collapse2"
                     ]),
                     'options' => ['tag' => 'div'],
                 ],

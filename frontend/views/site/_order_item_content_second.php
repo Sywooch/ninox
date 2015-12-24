@@ -72,36 +72,25 @@ $this->registerJs($js);
         ]
     ])?>
 </div>
-<<<<<<< HEAD
-<?=
-$form->field($model, 'anotherReceiver')->radioList([
-    '0' => 'Отправлять на меня',
-    '1' => 'Будет получать другой человек'
-=======
+
+
 
 <?=$form->field($model, 'anotherReceiver')->radioList([
     '0' =>  'Отправлять на меня',
-    '1' =>  'Будет получать другой человек'
+    '1' =>  'Будет получать другой человек',
+
 ])->label(false)?>
 
 
-<?=$form->field($model, 'payment')->radioList([
+<?php
+/*$form->field($model, 'payment')->radioList([
     '0' =>  'Наличными при получении (25 от сумы + 20 грн.)',
     '1' =>  'Оплата на карту ПриватБанк (1% от сумы)',
     '2' =>  'Visa / MasterCard (1% от сумы)'
-])->label(false);
+])->label(false);*/
 
-echo $form->field($model, 'paymentType')->radioList([
-    'value-1' => 'label-1',
-    'value-2' => 'label-2',
-    'value-3' => 'label-3'
->>>>>>> f2791e0a00519c55ff24d24cd749d14ce706a3e8
-], [
-    'type'  =>  'primary',
-    'size'  =>  'default'
-])->label(false)?>
+?>
 
-<?=$form->field($model, 'payment', [
-])->radioList(\common\models\PaymentTypes::getPaymentTypes())->label(false);
+<?=$form->field($model, 'payment', [])->radioList(\common\models\PaymentTypes::getPaymentTypes())->label(false);
 ?>
 <a>Добавить коментарий к заказу</a>
