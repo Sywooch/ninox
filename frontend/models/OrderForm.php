@@ -28,6 +28,13 @@ class OrderForm extends Model{
     public $customerPhone;
 
     /**
+     * поля для другого получателя (пока что есть, но не вставляются)
+     */
+    public $anotherReceiverName;
+    public $anotherReceiverSurname;
+    public $anotherReceiverPhone;
+
+    /**
      * поля модели CustomerReceiver
      */
     public $customerReceiverID = 0;

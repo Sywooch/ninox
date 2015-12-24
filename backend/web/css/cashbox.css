@@ -45,11 +45,11 @@ div.footer{
 }
 
 .btn-big{
-    height: 69px;
+    height: 74px;
 }
 
 .manyButtons button{
-    margin-left: 10px;
+    /*margin-right: 5px;*/
 }
 
 .no-padding{
@@ -70,6 +70,24 @@ div.footer{
 }
 
 .summary p, .summary h2{
-    margin: 0;
+    margin: 2px 0;
     padding: 0 15px 0 0;
+}
+
+.buttonsRow{
+    margin-bottom: 5px;
+    display: block;
+    height: 35px;
+}
+
+.content.main{
+    margin-top: 150px;
+}
+
+.content.main-small{
+    margin-top: 100px;
+}
+
+div.empty{
+    display: none;
 }
