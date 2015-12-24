@@ -3,20 +3,45 @@
 use yii\bootstrap\Html;
 $this->title = 'Касса';
 
+$js = <<<'SCRIPT'
+    var addItem = function(item){
+        console.log(item);
+    }
+
+    $("#itemInput").on('keypress', function(e){
+        if(e.keyCode == 13 && e.currentTarget.value.replace(/\D+/, '') != ''){
+            addItem(e.currentTarget.value.replace(/\D+/, ''));
+        }
+    });
+SCRIPT;
+
+$this->registerJs($js);
+
+
 ?>
 
 <div class="no-padding header">
     <div class="content row">
         <div class="buttonsContainer col-xs-8">
-            <div class="col-xs-3">
-                <button class="btn btn-default btn-big">Продажа (F9)</button>
+            <div class="col-xs-2" style="padding: 0; margin-right: 12px;">
+                <button class="btn btn-default btn-big" id="sellButton">Продажа (F9)</button>
             </div>
-            <div class="manyButtons col-xs-9 row">
-                <button class="btn btn-default col-xs-3">Списание </button>
-                <button class="btn btn-default col-xs-4">Очистить заказ</button>
-                <button class="btn btn-default col-xs-3">Возврат</button>
-                <button class="btn btn-default col-xs-3">Брак</button>
-                <button class="btn btn-default col-xs-4">Брак</button>
+            <div class="manyButtons col-xs-10 row" style="margin-left: 0; padding: 0">
+                <div class="col-xs-8" style="margin-left: 0; padding: 0">
+                    <div class="buttonsRow row" style="margin-left: 0; padding: 0">
+                        <a class="btn btn-default col-xs-4" href="#writeOffModal">Списание </a>
+                        <button class="btn btn-default col-xs-4" id="clearOrder">Очистить заказ</button>
+                        <a class="btn btn-default col-xs-4" href="#returnModal">Возврат</a>
+                    </div>
+                    <div class="buttonsRow row" style="margin-left: 0; padding: 0">
+                        <a class="btn btn-default col-xs-4" href="#defectModal">Брак </a>
+                        <a class="btn btn-default col-xs-4" href="#changeManagerModal">Михайло</a>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-xs-offset-1">
+                    <a class="btn btn-default btn-sm" style="margin-bottom: 5px;">Отложить чек</a>
+                    <a class="btn btn-default btn-sm" href="#customerModal">+ клиент</a>
+                </div>
             </div>
         </div>
         <div class="col-xs-4 summary bg-danger">
@@ -27,8 +52,15 @@ $this->title = 'Касса';
         </div>
     </div>
 </div>
-<div class="content">
-
+<div class="content main">
+    <?=\kartik\grid\GridView::widget([
+        'dataProvider'  =>  $orderItems,
+        'summary'       =>  false,
+        'emptyText'     =>  false,
+    ])?>
+    <div style="margin-top: -20px;">
+        <input type="text" id="itemInput">
+    </div>
 </div>
 <div class="footer">
     <div class="content">

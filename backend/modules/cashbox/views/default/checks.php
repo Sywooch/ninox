@@ -15,7 +15,7 @@ $this->title = 'Отложенные чеки';
         </div>
     </div>
 </div>
-<div class="content">
+<div class="content main-small">
     <?=''/*\yii\grid\GridView::widget([
         'dataProvider'  =>  $checksDataProvider
     ])*/?>

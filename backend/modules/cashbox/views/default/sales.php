@@ -13,10 +13,10 @@ $this->title = 'Продажи';
         </div>
     </div>
 </div>
-<div class="content">
-    <?=''/*\yii\grid\GridView::widget([
-        'dataProvider'  =>  $checksDataProvider
-    ])*/?>
+<div class="content main-small">
+    <?=\yii\grid\GridView::widget([
+        'dataProvider'  =>  $salesProvider,
+    ])?>
 </div>
 <div class="footer">
     <div class="content">
