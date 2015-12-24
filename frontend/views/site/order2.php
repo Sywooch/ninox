@@ -223,10 +223,11 @@ $css = <<<'STYLE'
     /* padding-left: 40px; */
     padding-top: 6px;
     margin-left: 0px;
+    width: 100px;
 }
 
 .content-data .form-control{
-    float: right;
+    float: left;
     width: 280px;
     border: 1px solid #e4e4e4;
     -webkit-box-shadow: inset 0px 0px 3px 2px #f4f4f4;
@@ -248,7 +249,7 @@ $css = <<<'STYLE'
 }
 .content-data-body-first{
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: ;
     text-shadow: 0px 0px 1px #bdbdbd;
 }
 
@@ -279,8 +280,8 @@ $css = <<<'STYLE'
 }
 
 .next-button button{
-    margin-right: 125px;
-    float: right;
+
+    float: left !important;
 }
 
 .button{
@@ -651,19 +652,37 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
     border: none;
 }
 
-.collapse{
-    display: none;
+#w2-tab1 .form-group{
+    height: 50px;
 }
 
-.collapse in{
-
-        display: block !important;
+.content-data-first_1 .ui-widget button{
+    font-size: 20px;
+}
+.btn{
+    font-size: 14px !important;
+    font-weight: normal !important;
 }
 
-class="panel-collapse collapse"
+.ui-widget button{
+    float: right;
+}
+
+.ui-accordion .ui-accordion-content{
+    padding-left: 50px;
+}
+
 STYLE;
 
 $this->registerCss($css);
+
+$js = <<<'SCRIPT'
+$(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
+	$('#accordion').accordion('option', 'active', parseInt(e.currentTarget.getAttribute('data-page')));
+});
+SCRIPT;
+
+$this->registerJs($js);
 
 $form = \yii\bootstrap\ActiveForm::begin([
     'fieldConfig' => [
@@ -686,16 +705,14 @@ $form = \yii\bootstrap\ActiveForm::begin([
         </div>
     </div>
     <div class="order-body">
-        <div class="content-data" id="accordion">
+        <div class="content-data">
         <?php
         echo Accordion::widget([
             'items' => [
                 [
-                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::a('редактировать', '#ui-id-4', [
-                            'data-toggle'   =>  'collapse',
-                            'data-parent'   =>  '#accordion',
-                            'href'          =>  '#afs'
-
+                    'header'    => Html::tag('div', Html::tag('span', 'Контактные данные').Html::button('редактировать', [
+			                'class' =>  'btn btn-link goToPage',
+			                'data-page'    =>  0,
                         ]),
                         ['class' =>  'content-data-first_1']
                     ),
@@ -704,7 +721,8 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         'model' =>  $model
                     ]),
                     'headerOptions' => [
-                        'tag'   =>  'div'
+                        'tag'   =>  'div',
+	                    'onclick' => 'return false;'
                     ],
                 ],
                 [
@@ -726,10 +744,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
             ],
             'options' => [
                 'tag'   =>  'div',
+	            'id'    =>  'accordion'
             ],
             'itemOptions' => ['tag' => 'div'],
             'headerOptions' => ['tag' => 'div'],
-            'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => "content", 'active' => 0],
+            'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => 'content', 'event' => false],
         ]);?>
 
             </div>

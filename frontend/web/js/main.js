@@ -217,7 +217,7 @@ function addToCart(item){
 	if(itemId && count){
 		$.ajax({
 			type: 'POST',
-			url: '/addtocart',
+			url: '/modifycart',
 			data: {
 				"itemID": itemId,
 				"count": count
@@ -252,7 +252,7 @@ function changeItemCount(item){
 		if(inCart){
 			$.ajax({
 				type: 'POST',
-				url: '/addtocart',
+				url: '/modifycart',
 				data: {
 					'itemID': itemId,
 					'count': count
@@ -289,38 +289,37 @@ function changeItemCount(item){
 			});
 		}
 		$(item).data('tooltipsy').show();
+	}else if(count == 0){
+		item.disabled = true;
+		$.ajax({
+			type: 'POST',
+			url: '/modifycart',
+			data: {
+				'itemID': itemId,
+				'count': count
+			},
+			success: function(data){
+				console.log(data);
+				//updateCart(itemId, true);
+				$('.open-cart[data-itemId='+ itemId +']').each(function(){
+					this.value = texts.itemText.buy;
+					this.classList.remove('green-button');
+					this.classList.add('yellow-button');
+					this.classList.remove('open-cart');
+					this.classList.add('buy');
+					this.setAttribute('data-itemId', itemId);
+					this.setAttribute('data-count', '1');
+				});
+				$('.count[data-itemId='+ itemId +']').each(function(){
+					this.value = 1;
+					this.setAttribute('data-inCart', '0');
+				});
+				$('.cart-content [data-key="' + itemId + '"]').each(function(){
+					this.remove();
+				});
+			}
+		});
 	}
-}
-
-function removeFromCart(item){
-	var itemId = item.getAttribute('data-itemId');
-	item.disabled = true;
-	$.ajax({
-		type: 'POST',
-		url: '/removefromcart',
-		data: {
-			'itemID': itemId
-		},
-		success: function(data){
-			//updateCart(itemId, true);
-			$('.open-cart[data-itemId='+ itemId +']').each(function(){
-				this.value = texts.itemText.buy;
-				this.classList.remove('green-button');
-				this.classList.add('yellow-button');
-				this.classList.remove('open-cart');
-				this.classList.add('buy');
-				this.setAttribute('data-itemId', itemId);
-				this.setAttribute('data-count', '1');
-			});
-			$('.count[data-itemId='+ itemId +']').each(function(){
-				this.value = 1;
-				this.setAttribute('data-inCart', '0');
-			});
-			$('.cart-content [data-key="' + itemId + '"]').each(function(){
-				this.remove();
-			});
-		}
-	});
 }
 
 function openCart(){

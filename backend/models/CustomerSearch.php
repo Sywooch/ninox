@@ -42,9 +42,9 @@ class CustomerSearch extends Customer{
 
         $this->addCondition($query, 'ID');
         $this->addCondition($query, 'Company', true);
-        $this->addCondition($query, 'phone');
+        $this->addCondition($query, 'phone', true);
         $this->addCondition($query, 'City', true);
-        $this->addCondition($query, 'CardNumber');
+        $this->addCondition($query, 'cardNumber');
         $this->addCondition($query, 'email', true);
         $this->addCondition($query, 'money');
 
