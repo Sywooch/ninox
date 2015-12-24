@@ -100,7 +100,9 @@ $this->registerJs($js);
             'active' => true
         ],
         [
-            'content'   =>  $form->field($model, 'customerName').$form->field($model, 'customerSurname').$form->field($model, 'customerPhone'),
+            'content'   =>  '<div class="content-data-body-first">'.
+                            $form->field($model, 'anotherReceiverName').$form->field($model, 'anotherReceiverSurname').$form->field($model, 'anotherReceiverPhone').
+                            '</div>',
             'label'     =>  'Адресная доставка',
             'id'        =>  '2'
 
