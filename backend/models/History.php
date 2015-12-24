@@ -17,7 +17,6 @@ class History extends \common\models\History
     private $real_summ;
     private $items;
     public $summ;
-    public $status;
 
     public static $status_1     =   'Не звонили';
     public static $status_2     =   'Подготовка заказа';
@@ -33,39 +32,7 @@ class History extends \common\models\History
     public function afterFind(){
         parent::afterFind();
 
-        if($this->deleted == '4'){
-            $this->status = '7';
-        }else{
-            if($this->callback != '0'){
-                if($this->callback == '2'){
-                    $this->status = '3';
-                }else{
-                    if($this->done == '1'){
-                        if(strlen($this->nakladna) > '1' && $this->nakladnaSendState == '1' && $this->actualAmount != '0'){
-                            if($this->moneyConfirmed == '1'){
-                                if($this->paymentType == '2' || $this->paymentType == '3' || $this->paymentType == '4'){
-                                    $this->status = '8';
-                                }elseif($this->paymentType == '1'){
-                                    $this->status = '6';
-                                }
-                            }elseif($this->paymentType == '1'){
-                                $this->status = '9';
-                            }
-                        }elseif($this->paymentType == '2' || $this->paymentType == '3' || $this->paymentType == '4' || $this->paymentType == '5'){
-                            $this->status = $this->moneyConfirmed == '1' ? '6' : '4';
-                        }elseif($this->paymentType == '1'){
-                            $this->status = '10';
-                        }
-                    }elseif($this->paymentType == '1' && strlen($this->nakladna) > '1' && $this->nakladnaSendState != '0'){
-                        $this->status = '4';
-                    }else{
-                        $this->status = '2';
-                    }
-                }
-            }else{
-                $this->status = '1';
-            }
-        }
+        $this->getStatus();
     }
 
     public static function ordersQuery($options = []){
