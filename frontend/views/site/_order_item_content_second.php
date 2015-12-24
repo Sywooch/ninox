@@ -1,19 +1,55 @@
+<?php
+use yii\helpers\Html;
+
+$js = <<<'SCRIPT'
+$('label.tabsLabels').click(function () {
+    $(this).tab('show');
+});
+SCRIPT;
+
+$this->registerJs($js);
+?>
 <div class="content-data-body-delivery-type">
-    <?=$form->field($model, 'deliveryType')->radioList(\common\models\DeliveryTypes::getDeliveryTypes())->label(false)?>
+    <?=$form->field($model, 'deliveryType', [
+        //'inputTemplate' =>  '<div class="radio asd">{beginLabel}{input}{labelTitle}{endLabel}{error}{hint}</div>',
+    ])->radioList(\common\models\DeliveryTypes::getDeliveryTypes(), [
+        'item' => function ($index, $label, $name, $checked, $value) {
+            return '<div class="tab">'. Html::radio($name, $checked, [
+                'value'     =>      $value,
+                'id'        =>      "tab-".$value
+            ])
+            .'<label class="tabsLabels" data-target="#w1-tab'.$value.'" for="tab-'.$value.'">'. $label .'</label>'.'</div>';
+        },
+
+          'itemOptions'   =>  [
+            'class' =>  'asdf'
+        ]
+    ])->label(false)?>
     <?=\yii\bootstrap\Tabs::widget([
         'headerOptions' =>  [
-            'style' =>  'display: '
+            'style' =>  'display: none'
         ],
         'items' =>  [
             [
-                'content'   =>  '<div class="content-data-body-department">Отделение:</div>',
-                'label'     =>  'Новая почта',
-                'id'        =>  'newPost'
+                'content'   =>  '',
+                'label'     =>  '',
+                'id'        =>  ''
             ],
             [
                 'content'   =>  '<div class="content-data-body-address">Мои адреса:</div>',
                 'label'     =>  'Адресная доставка',
-                'id'        =>  'delivery'
+                'id'        =>  '',
+                'active' => true
+            ],
+            [
+                'content'   =>  '<div class="content-data-body-department">Отделение:</div>',
+                'label'     =>  'Новая Почта',
+                'id'        =>  ''
+            ],
+            [
+                'content'   =>  '',
+                'label'     =>  '',
+                'id'        =>  ''
             ],
             [
                 'content'   =>  '<div>
@@ -31,31 +67,30 @@
                                 </div>
                                 </div>',
                 'label'     =>  'Самовывоз',
-                'id'        =>  'post2'
+                'id'        =>  ''
             ],
         ]
     ])?>
 </div>
 
+
+
 <?=$form->field($model, 'anotherReceiver')->radioList([
     '0' =>  'Отправлять на меня',
-    '1' =>  'Будет получать другой человек'
+    '1' =>  'Будет получать другой человек',
+
 ])->label(false)?>
 
 
-<?=$form->field($model, 'payment')->radioList([
+<?php
+/*$form->field($model, 'payment')->radioList([
     '0' =>  'Наличными при получении (25 от сумы + 20 грн.)',
     '1' =>  'Оплата на карту ПриватБанк (1% от сумы)',
     '2' =>  'Visa / MasterCard (1% от сумы)'
-])->label(false);
+])->label(false);*/
 
-echo $form->field($model, 'paymentType')->radioList([
-    'value-1' => 'label-1',
-    'value-2' => 'label-2',
-    'value-3' => 'label-3'
-], [
-    'type'  =>  'primary',
-    'size'  =>  'default'
-]);
+?>
+
+<?=$form->field($model, 'payment', [])->radioList(\common\models\PaymentTypes::getPaymentTypes())->label(false);
 ?>
 <a>Добавить коментарий к заказу</a>

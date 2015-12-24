@@ -60,16 +60,10 @@ $js = <<<SCRIPT
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus, .counter .plus', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus, .counter .plus, .remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		changeItemCount(e.currentTarget);
-	});
-
-	$('body').on(hasTouch ? 'touchend' : 'click', '.remove-item', function(e){
-		if(hasTouch && isTouchMoved(e)){ return false; }
-		e.preventDefault();
-		removeFromCart(e.currentTarget);
 	});
 
 	$('body').on(hasTouch ? 'touchend' : 'click', '.yellow-button.buy', function(e){

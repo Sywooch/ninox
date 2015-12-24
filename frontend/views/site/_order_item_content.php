@@ -8,13 +8,10 @@
     <div class="next-button">
         <?php
         echo \yii\helpers\Html::button('Далее', [
-            'class' =>  'button',
+            'class' =>  'button goToPage',
             'type'  =>  'button',
-            'data-toggle' => "collapse",
-            'data-target' =>  "#collapse2",
-            'data-parent'   =>  '#accordion'
+	        'data-page' =>  1
         ]);
         ?>
     </div>
 </div>
-<div class="clearfix"></div>
