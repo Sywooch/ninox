@@ -5,13 +5,31 @@ $this->title = 'Касса';
 
 $js = <<<'SCRIPT'
     var addItem = function(item){
-        console.log(item);
+        $.ajax({
+            type: 'POST',
+            url: '/cashbox/additem',
+            data: {
+                'itemID': item
+            },
+            success: function(data){
+
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
     }
 
     $("#itemInput").on('keypress', function(e){
-        if(e.keyCode == 13 && e.currentTarget.value.replace(/\D+/, '') != ''){
-            addItem(e.currentTarget.value.replace(/\D+/, ''));
+        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
+
+        if(e.keyCode == 13 && e.currentTarget.value != ''){
+            addItem(e.currentTarget.value);
         }
+    });
+
+    $("#itemInput").on('keyup', function(e){
+        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
     });
 SCRIPT;
 
@@ -55,6 +73,7 @@ $this->registerJs($js);
 <div class="content main">
     <?=\kartik\grid\GridView::widget([
         'dataProvider'  =>  $orderItems,
+        'id'            =>  'cashboxGrid',
         'summary'       =>  false,
         'emptyText'     =>  false,
     ])?>
