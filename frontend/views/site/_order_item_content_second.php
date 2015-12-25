@@ -106,11 +106,20 @@ $this->registerJs($js);
             'label'     =>  'Адресная доставка',
             'id'        =>  '2'
 
+
         ]
     ]
 ])?>
 </div>
 
-<?=$form->field($model, 'payment', [])->radioList(\common\models\PaymentTypes::getPaymentTypes())->label(false);
+<?=$form->field($model, 'payment', [])->radioList(\common\models\PaymentTypes::getPaymentTypes(), [
+    'item' => function ($index, $label, $name, $checked, $value) {
+        return '<div class="tab">'. Html::radio($name, $checked, [
+            'value'     =>      $value,
+            'id'        =>      "radio-".$value
+        ])
+        .'<i>'.'</i>'.'<label for="radio-'.$value.'">'. $label .'</label>'.'</div>';
+    }
+])->label(false);
 ?>
 <a>Добавить коментарий к заказу</a>

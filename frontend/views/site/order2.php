@@ -536,6 +536,7 @@ $css = <<<'STYLE'
 
 .content-data-body-delivery-type{
     height: ;
+    padding-bottom: 15px;
 }
 
 .content-data-body-delivery-type input[type="radio"] {
@@ -560,12 +561,6 @@ $css = <<<'STYLE'
     color: #3e77aa;
     font-size: 14px;
     font-weight: normal;
-}
-
-.field-orderform-payment input:checked  {
-    //background-image: url(img/site/radio-on.png);
-    width: 15px;
-    height: 15px;
 }
 
 #ui-id-2{
@@ -597,6 +592,42 @@ $css = <<<'STYLE'
 
 .ui-accordion .ui-accordion-content{
     padding-left: 50px;
+}
+
+#orderform-payment input[type="radio"]{
+    display:none;
+}
+
+
+#orderform-payment i{
+   /* background-image: url(img/site/radio-on.png);*/
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    border: ;
+    background-color: #ffffff;
+    -moz-box-shadow:    inset 0px 0px 1px 3px #e4e4e4;
+    -webkit-box-shadow: inset 0px 0px 1px 3px #e4e4e4;
+    box-shadow: inset 0px 0px 1px 3px #e4e4e4;
+}
+
+#orderform-payment input[type="radio"]:checked + i{
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    background-color: #3e77aa;
+}
+
+#orderform-payment .tab{
+    padding-bottom: 25px;
+}
+
+#orderform-payment label{
+    font-size: 14px;
+    margin-bottom: 0px;
+    font-weight: normal;
+    padding-left: 15px;
 }
 
 STYLE;
