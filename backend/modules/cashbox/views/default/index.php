@@ -1,5 +1,6 @@
 <?php
 
+use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
 $this->title = 'Касса';
 
@@ -12,7 +13,22 @@ $js = <<<'SCRIPT'
                 'itemID': item
             },
             success: function(data){
-
+                $('#cashboxGrid table tbody').append(data.data);
+                $('#cashboxGrid table tbody tr[data-key=' + item + '] .counter')[0].innerHTML = $('#cashboxGrid table tbody tr').length;
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
+    }, removeItem = function(item){
+        $.ajax({
+            type: 'POST',
+            url: '/cashbox/removeitem',
+            data: {
+                'itemID': item
+            },
+            success: function(data){
+                $('#cashboxGrid table tbody tr[data-key=' +  item + ']').remove();
             },
             error: function (request, status, error) {
                 console.log(request.responseText);
@@ -31,10 +47,15 @@ $js = <<<'SCRIPT'
     $("#itemInput").on('keyup', function(e){
         e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
     });
+
+    $(".removeGood > *").on('click', function(e){
+        removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-key'));
+    });
 SCRIPT;
 
 $this->registerJs($js);
 
+rmrevin\yii\fontawesome\AssetBundle::register($this);
 
 ?>
 
@@ -73,12 +94,54 @@ $this->registerJs($js);
 <div class="content main">
     <?=\kartik\grid\GridView::widget([
         'dataProvider'  =>  $orderItems,
+        'columns'       =>  [
+            [
+                'contentOptions'   =>  [
+                    'class' =>  'removeGood'
+                ],
+                'format'    =>  'html',
+                'value'     =>  function($model){
+                    return FA::icon('times')->size(FA::SIZE_LARGE);
+                }
+            ],
+            [
+                'class' =>  \yii\grid\SerialColumn::className()
+            ],
+            [
+                'attribute' =>  'Code'
+            ],
+            [
+                'attribute' =>  'Name'
+            ],
+            [
+                'value'     =>  function($model){
+                    return '';
+                }
+            ],
+            [
+                'attribute' =>  'PriceOut1',
+                'value'     =>  function($model){
+                    return $model->PriceOut1.' грн.';
+                }
+            ],
+            [
+                'attribute' =>  'PriceOut1'
+            ],
+            [
+                'value'     =>  function($model){
+                    return '';
+                }
+            ]
+        ],
         'id'            =>  'cashboxGrid',
         'summary'       =>  false,
         'emptyText'     =>  false,
     ])?>
-    <div style="margin-top: -20px;">
-        <input type="text" id="itemInput">
+    <div class="form-group" style="margin-top: -20px;">
+        <div class="inputField">
+            <input id="itemInput" class="form-control" value="" type="text">
+            <p class="help-block help-block-error"></p>
+        </div>
     </div>
 </div>
 <div class="footer">

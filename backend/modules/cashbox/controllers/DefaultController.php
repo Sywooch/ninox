@@ -6,6 +6,7 @@ use backend\models\CashboxItem;
 use backend\models\CashboxOrder;
 use backend\models\Good;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Cookie;
@@ -58,14 +59,39 @@ class DefaultController extends Controller
         return $priceType;
     }
 
+    public function actionRemoveitem(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
+
+        $itemID = \Yii::$app->request->post("itemID");
+
+        $orderItem = CashboxItem::findOne(['orderID' =>  \Yii::$app->request->cookies->getValue("cashboxOrderID"), 'itemID' => $itemID]);
+
+        if(!$orderItem){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        return $orderItem->delete();
+    }
+
     public function actionIndex(){
         if(\Yii::$app->request->post("")){
 
         }
 
+        $orderItems = [];
+
+        foreach(CashboxItem::find()->select("itemID")->where(['orderID' =>\Yii::$app->request->cookies->getValue('cashboxOrderID')])->asArray()->all() as $item){
+            $orderItems[] = $item['itemID'];
+        }
+
         return $this->render('index', [
             'orderItems'    =>  new ActiveDataProvider([
-                'query'     => CashboxItem::find()->where(['orderID' =>  \Yii::$app->request->cookies->getValue('cashboxOrderID')])
+                'query'     =>  Good::find()->where(['in', 'ID', $orderItems]),
+                'pagination'    =>  [
+                    'pageSize'  =>  0
+                ]
             ])
         ]);
     }
@@ -135,8 +161,15 @@ class DefaultController extends Controller
             $orderItem->count += 1;
         }
 
+        $return = [
+            'type'  =>  $orderItem->isNewRecord ? 'add' : 'update',
+            'data'  =>  $this->renderAjax('_orderItem', [
+                'model' =>  $good
+            ])
+        ];
+
         if($orderItem->save(false)){
-            return $good;
+            return $return;
         }
     }
 }
