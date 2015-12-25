@@ -18,7 +18,7 @@ $this->registerJs($js);
                 'value'     =>      $value,
                 'id'        =>      "tab-".$value
             ])
-            .'<label class="tabsLabels" data-target="#w1-tab'.$value.'" for="tab-'.$value.'">'. $label .'</label>'.'</div>';
+            .'<label class="tabsLabels" data-target="#w0-tab'.$value.'" for="tab-'.$value.'">'. $label .'</label>'.'</div>';
         },
 
           'itemOptions'   =>  [
@@ -84,7 +84,7 @@ $this->registerJs($js);
                         'value' => $value,
                         'id' => $value
                     ])
-                    . '<label class="tabsLabels" data-target="#w2-tab'.$value.'" for="'.$value.'">'.$label.'</label>';
+                    . '<label class="tabsLabels" data-target="#w1-tab'.$value.'" for="'.$value.'">'.$label.'</label>';
         }
     ]
 )->label(false)?>
@@ -111,15 +111,19 @@ $this->registerJs($js);
     ]
 ])?>
 </div>
-
-<?=$form->field($model, 'payment', [])->radioList(\common\models\PaymentTypes::getPaymentTypes(), [
+<div class="payment-type">
+    Способ оплаты
+</div>
+<?=$form->field($model, 'paymentType', [])->radioList(\common\models\PaymentTypes::getPaymentTypes(), [
     'item' => function ($index, $label, $name, $checked, $value) {
         return '<div class="tab">'. Html::radio($name, $checked, [
             'value'     =>      $value,
-            'id'        =>      "radio-".$value
+            'id'        =>      "radio-".$value,
         ])
-        .'<i>'.'</i>'.'<label for="radio-'.$value.'">'. $label .'</label>'.'</div>';
+        .'<label for="radio-'.$value.'"><i></i><div class="payment-type-text">'. $label .'</div></label></div>';
     }
 ])->label(false);
 ?>
+<div class="add-comment">
 <a>Добавить коментарий к заказу</a>
+</div>

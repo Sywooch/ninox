@@ -2,9 +2,7 @@
         use yii\bootstrap\ActiveForm;
 ?>
 <div class="content-data-body-first">
-    <?=
-
-    $form->field($model, 'customerName'),
+    <?=$form->field($model, 'customerName'),
     $form->field($model, 'customerSurname'),
     $form->field($model, 'deliveryCity'),
     $form->field($model, 'deliveryRegion'),
