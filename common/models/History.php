@@ -65,8 +65,10 @@ class History extends \yii\db\ActiveRecord
 {
 
     const CALLBACK_NEW = 0;
-    const CALLBACK_COMPLETED = 1;
-    const CALLBACK_UNANSWERED = 2;
+    const CALLBACK_UNANSWERED = 1;
+    const CALLBACK_COMPLETED = 2;
+
+    public $status;
 
     public function beforeSave($insert){
         if($this->isNewRecord){
@@ -76,6 +78,46 @@ class History extends \yii\db\ActiveRecord
         }
 
         return parent::beforeSave($insert);
+    }
+
+    public function getStatus(){
+        if($this->deleted == '4'){
+            return $this->status = '7';
+        }
+
+        if($this->callback == 0){
+            return $this->status = 1;
+        }
+
+        if($this->callback == 2){
+            return $this->status = 3;
+        }
+
+        if($this->callback == '2'){
+            return $this->status = '3';
+        }
+
+        if($this->done == '1'){
+            if(strlen($this->nakladna) > 1 && $this->nakladnaSendState == 1 && $this->actualAmount != 0){
+                if($this->moneyConfirmed == '1'){
+                    if($this->paymentType == 2 || $this->paymentType == '3' || $this->paymentType == '4'){
+                        return $this->status = '8';
+                    }
+
+                    return $this->status = '6';
+                }
+
+                return $this->status = '9';
+            }elseif($this->paymentType == '2' || $this->paymentType == '3' || $this->paymentType == '4' || $this->paymentType == '5'){
+                $this->status = $this->moneyConfirmed == '1' ? '6' : '4';
+            }elseif($this->paymentType == '1'){
+                $this->status = '10';
+            }
+        }elseif($this->paymentType == '1' && strlen($this->nakladna) > '1' && $this->nakladnaSendState != '0'){
+            $this->status = '4';
+        }else{
+            $this->status = '2';
+        }
     }
 
     /**
