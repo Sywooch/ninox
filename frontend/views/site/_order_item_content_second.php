@@ -111,15 +111,6 @@ $this->registerJs($js);
 ])?>
 </div>
 
-<?php
-/*$form->field($model, 'payment')->radioList([
-    '0' =>  'Наличными при получении (25 от сумы + 20 грн.)',
-    '1' =>  'Оплата на карту ПриватБанк (1% от сумы)',
-    '2' =>  'Visa / MasterCard (1% от сумы)'
-])->label(false);*/
-
-?>
-
 <?=$form->field($model, 'payment', [])->radioList(\common\models\PaymentTypes::getPaymentTypes())->label(false);
 ?>
 <a>Добавить коментарий к заказу</a>
