@@ -187,6 +187,10 @@ $css = <<<'STYLE'
     text-shadow: 0px 0px 1px #bdbdbd;
 }
 
+.content-data-body-first label{
+    color: #282828;
+}
+
 .content-data-body-second{
     padding-bottom: 30px;
     margin-left: 40px;
@@ -536,6 +540,7 @@ $css = <<<'STYLE'
 
 .content-data-body-delivery-type{
     height: ;
+    padding-bottom: 15px;
 }
 
 .content-data-body-delivery-type input[type="radio"] {
@@ -560,12 +565,6 @@ $css = <<<'STYLE'
     color: #3e77aa;
     font-size: 14px;
     font-weight: normal;
-}
-
-.field-orderform-payment input:checked  {
-    //background-image: url(img/site/radio-on.png);
-    width: 15px;
-    height: 15px;
 }
 
 #ui-id-2{
@@ -597,6 +596,59 @@ $css = <<<'STYLE'
 
 .ui-accordion .ui-accordion-content{
     padding-left: 50px;
+}
+
+#orderform-paymenttype input[type="radio"]{
+    display: none;
+}
+
+
+#orderform-paymenttype i{
+    margin-right: 15px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    float: left;
+    background-color: #ffffff;
+    -moz-box-shadow:    inset 0px 0px 1px 3px #e4e4e4;
+    -webkit-box-shadow: inset 0px 0px 1px 3px #e4e4e4;
+    box-shadow: inset 0px 0px 1px 3px #e4e4e4;
+}
+
+#orderform-paymenttype input[type="radio"]:checked + label i{
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    background-color: #3e77aa;
+}
+
+#orderform-paymenttype .tab{
+    padding-bottom: 25px;
+}
+
+#orderform-paymenttype label{
+    font-size: 14px;
+    margin-bottom: 0px;
+    font-weight: normal;
+    padding-left: 15px;
+}
+
+.add-comment a{
+    color: #337ab7;
+}
+
+.payment-type{
+    border-bottom: 1px solid #d8d8d8;
+    font-family: OpenSans-SemiBold;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.payment-type-text{
+        float: left;
+    margin-top: -3px;
+}
 }
 
 STYLE;
