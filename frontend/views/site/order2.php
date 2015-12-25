@@ -605,13 +605,39 @@ $this->registerCss($css);
 
 $js = <<<'SCRIPT'
 $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
+
+    var page = e.currentTarget.getAttribute('data-page');
+
+    if(page == 1 && goToPage1() == 'not validated'){
+        return false;
+    }
+
 	$('#accordion').accordion('option', 'active', parseInt(e.currentTarget.getAttribute('data-page')));
 });
+
+var goToPage1 = function(){
+    //TODO: насчёт валидации формы
+
+    $('#orderForm').data('yiiActiveForm').submitting = true;
+
+    $('#orderForm').yiiActiveForm('validate')
+
+    $('#orderForm').data('yiiActiveForm').submitting = false;
+
+    setTimeout(200);
+
+    if($('#orderForm .content-data-body-first').find('.has-error').length > 0) {
+        return 'validated';
+    }
+
+    return 'not validated';
+}
 SCRIPT;
 
 $this->registerJs($js);
 
 $form = \yii\bootstrap\ActiveForm::begin([
+    'id'            =>  'orderForm',
     'fieldConfig' => [
         'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
     ],
