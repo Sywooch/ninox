@@ -8,8 +8,8 @@ class m151223_125956_cashboxItems extends Migration
     public function up()
     {
         $this->createTable('cashboxItems', [
+	        'orderID'       =>  Schema::TYPE_BIGINT.' UNSIGNED NOT NULL',
             'itemID'        =>  Schema::TYPE_BIGINT.' UNSIGNED NOT NULL',
-            'orderID'       =>  Schema::TYPE_BIGINT.' UNSIGNED NOT NULL',
             'name'          =>  Schema::TYPE_STRING,
             'count'         =>  Schema::TYPE_INTEGER.' UNSIGNED DEFAULT 0',
             'originalPrice' =>  Schema::TYPE_DOUBLE.'(7,2) UNSIGNED DEFAULT 0',

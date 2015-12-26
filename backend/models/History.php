@@ -6,7 +6,6 @@ use common\models\SborkaItem;
 use Yii;
 use common\models\Category;
 use common\models\DeliveryTypes;
-use common\models\Good;
 use common\models\PaymentTypes;
 use yii\data\ActiveDataProvider;
 
