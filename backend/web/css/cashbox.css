@@ -82,6 +82,7 @@ div.footer{
 
 .content.main{
     margin-top: 150px;
+    margin-bottom: 120px;
 }
 
 .content.main-small{
@@ -90,4 +91,30 @@ div.footer{
 
 div.empty{
     display: none;
+}
+
+#cashboxGrid table{
+    border-left: none;
+}
+
+#cashboxGrid table thead tr th:first-child{
+    border: none;
+    background: #fff !important;
+}
+
+#cashboxGrid table tbody tr td:first-child{
+    border: none;
+    background: #fff !important;
+}
+
+#cashboxGrid .cashbox-table-column{
+    width: 20px;
+}
+
+#cashboxGrid .cashbox-table-column2x{
+    width: 40px;
+}
+
+#cashboxGrid .removeGood > *:hover{
+    cursor: pointer;
 }

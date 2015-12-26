@@ -84,11 +84,12 @@ class m150910_115316_banners extends Migration
 			PREPARE stmt FROM @sql;
 			EXECUTE stmt;
 			DEALLOCATE PREPARE stmt;");
-	    $this->execute("ALTER TABLE `banners`
+
+	    /*$this->execute("ALTER TABLE `banners`
             CHANGE `banner` `banner_ru` VARCHAR(255) COMMENT 'Баннер для русской версии',
             CHANGE `link` `link_ru` VARCHAR(255) COMMENT 'Ссылка для русской версии',
             CHANGE `dateFrom` `dateStart` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-            CHANGE `dateTo` `dateEnd` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'");
+            CHANGE `dateTo` `dateEnd` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'");*/
 
 	    $this->execute("UPDATE `banners` SET `banner_uk` = `banner_ru`, `link_uk` = `link_ru`");
     }

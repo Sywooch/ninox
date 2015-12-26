@@ -6,79 +6,7 @@ use yii\bootstrap\Html;
 
 $css = <<<'STYLE'
 
-#tab2, #tab3 {
-    position: fixed;
-}
 
-.menu1 > a,
-.menu1 #tab2:target ~ a:nth-of-type(1),
-.menu1 #tab3:target ~ a:nth-of-type(1),
-.menu1 > div {
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
-    border: none;
-    margin-right: 10px;
-    background: none;
-}
-
-.menu1 > a {
-    background: none;
-    color: #3e77aa;
-    border: none;
-    text-decoration: none;
-}
-
-#tab2,
-#tab3,
-.menu1 > div,
-.menu1 #tab2:target ~ div:nth-of-type(1),
-.menu1 #tab3:target ~ div:nth-of-type(1) {
-    display: none;
-    color: ;
-}
-
-.menu1 > div:nth-of-type(1),
-.menu1 #tab2:target ~ div:nth-of-type(2),
-.menu1 #tab3:target ~ div:nth-of-type(3) {
-    display: block;
-}
-
-.menu1 > a:nth-of-type(1),
-.menu1 #tab2:target ~ a:nth-of-type(2),
-.menu1 #tab3:target ~ a:nth-of-type(3) {
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
-    border-radius:5px;
-    background: #d3e8f9;
-    border: 1px solid #bdddf7;
-}
-
-.shipping > div, .shipping > input {
-    display: none;
-}
-
-.shipping label {
-    padding: 5px;
-    color: #3e77aa;
-    cursor: pointer;
-    position: relative;
-}
-
-.shipping input[type="radio"]:checked + label {
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
-    border-radius:5px;
-    background: #d3e8f9;
-    border: 1px solid #bdddf7;
-}
-
-.shipping > input:nth-of-type(1):checked ~ div:nth-of-type(1),
-.shipping > input:nth-of-type(2):checked ~ div:nth-of-type(2),
-.shipping > input:nth-of-type(3):checked ~ div:nth-of-type(3) {
-    display: block;
-    padding: 5px;
-}
 
 .content{
     width: 100%;
@@ -92,24 +20,28 @@ $css = <<<'STYLE'
 }
 
 .order-head{
+    height: 200px;
     width: 100%;
     font-family: OpenSans-Semibold;
     font-size: 32px;
     color: #40403e;
     padding-bottom: 25px;
     border-bottom: 4px solid #d3e8f9;
-
+    padding-top: 35px;
 }
 
 .order-logo{
     width: 50%;
     background-repeat: no-repeat;
-    background-image: url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSCZwIQ2i-Bz3NyE7NBDEVxzwTu5bpbr4YBaQ1gvaFmnHly-U0W);
+    height: 60px;
+    background-image: url(img/site/logo.png);
+    margin-bottom: 30px;
 }
 
 .order-call-phone{
     float: right;
     font-size: 20px;
+    margin-top: -70px;
 }
 
 .ordering-title{
@@ -223,14 +155,18 @@ $css = <<<'STYLE'
     /* padding-left: 40px; */
     padding-top: 6px;
     margin-left: 0px;
+    width: 100px;
 }
 
 .content-data .form-control{
-    float: right;
+    float: left;
     width: 280px;
-    border: 1px solid #e4e4e4;
     -webkit-box-shadow: inset 0px 0px 3px 2px #f4f4f4;
     box-shadow: inset 0px 0px 3px 2px #f4f4f4;
+}
+
+.form-control{
+    border: 1px solid #e4e4e4;
 }
 
 .content-data-body-first .form-group{
@@ -238,7 +174,6 @@ $css = <<<'STYLE'
 }
 
 .content-data .form-group{
-    /*width: 375px;*/
     margin-bottom: 10px;
 }
 
@@ -248,8 +183,12 @@ $css = <<<'STYLE'
 }
 .content-data-body-first{
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: ;
     text-shadow: 0px 0px 1px #bdbdbd;
+}
+
+.content-data-body-first label{
+    color: #282828;
 }
 
 .content-data-body-second{
@@ -279,8 +218,7 @@ $css = <<<'STYLE'
 }
 
 .next-button button{
-    margin-right: 125px;
-    float: right;
+    float: left !important;
 }
 
 .button{
@@ -313,10 +251,12 @@ $css = <<<'STYLE'
 
 .content-data-body-department{
     height:40px;
+    padding: 10px;
 }
 
 .content-data-body-address{
     height: 40px;
+    padding: 10px;
 }
 
 .content-data-body-stock{
@@ -350,11 +290,11 @@ $css = <<<'STYLE'
 .ordering{
     width: 100%;
     float: right;
-        max-width: 410px;
+    max-width: 410px;
     min-width: 380px;
     border: 1px solid #f1e9d3;
     background-image: url(img/site/ordering-background.png);
-     -moz-border-radius: 5px;
+    -moz-border-radius: 5px;
     -webkit-border-radius:5px;
     border-radius:5px;
 }
@@ -529,11 +469,8 @@ $css = <<<'STYLE'
     color: #fff
 }
 .ui-accordion-header .content-data-first_1:before{
-
     color: #fff
 }
-
-
 
 .ui-accordion-header:before{
     height: 30px;
@@ -559,14 +496,12 @@ $css = <<<'STYLE'
     content: '2';
 }
 
-
 .ui-accordion-header-active:before{
     background: #29a1e0;
     color: #e2eaf3;
     box-shadow: 0px 2px 1px #098fd5, #4CCCF3 0px 0px 6px 2px inset;
 
 }
-
 
 .ui-state-default .content-data-first_1 a{
     cursor: pointer;
@@ -580,13 +515,10 @@ $css = <<<'STYLE'
 .ui-state-default.ui-state-active .content-data-first_1 a{
     display: none;
 }
+
 .ui-state-default.ui-state-active .content-data-first_1{
     color: #000;
 }
-
-ui-accordion-header ui-state-default ui-corner-all
-ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active ui-corner-top
-
 
 .ui-state-default .content-data-first_1 a:hover{
     text-decoration: underline;
@@ -608,6 +540,7 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
 
 .content-data-body-delivery-type{
     height: ;
+    padding-bottom: 15px;
 }
 
 .content-data-body-delivery-type input[type="radio"] {
@@ -634,12 +567,6 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
     font-weight: normal;
 }
 
-.field-orderform-payment input:checked  {
-    //background-image: url(img/site/radio-on.png);
-    width: 15px;
-    height: 15px;
-}
-
 #ui-id-2{
     height:370px;
 }
@@ -651,19 +578,118 @@ ui-accordion-header ui-state-default ui-accordion-header-active ui-state-active 
     border: none;
 }
 
+#w2-tab1 label{
+    color: #282828;
+}
+
+.content-data-first_1 .ui-widget button{
+    font-size: 20px;
+}
+.btn{
+    font-size: 14px !important;
+    font-weight: normal !important;
+}
+
+.ui-widget button{
+    float: right;
+}
+
+.ui-accordion .ui-accordion-content{
+    padding-left: 50px;
+}
+
+#orderform-paymenttype input[type="radio"]{
+    display: none;
+}
+
+
+#orderform-paymenttype i{
+    margin-right: 15px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    float: left;
+    background-color: #ffffff;
+    -moz-box-shadow:    inset 0px 0px 1px 3px #e4e4e4;
+    -webkit-box-shadow: inset 0px 0px 1px 3px #e4e4e4;
+    box-shadow: inset 0px 0px 1px 3px #e4e4e4;
+}
+
+#orderform-paymenttype input[type="radio"]:checked + label i{
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    background-color: #3e77aa;
+}
+
+#orderform-paymenttype .tab{
+    padding-bottom: 25px;
+}
+
+#orderform-paymenttype label{
+    font-size: 14px;
+    margin-bottom: 0px;
+    font-weight: normal;
+    padding-left: 15px;
+}
+
+.add-comment a{
+    color: #337ab7;
+}
+
+.payment-type{
+    border-bottom: 1px solid #d8d8d8;
+    font-family: OpenSans-SemiBold;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.payment-type-text{
+        float: left;
+    margin-top: -3px;
+}
+}
+
 STYLE;
 
 $this->registerCss($css);
 
 $js = <<<'SCRIPT'
 $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
+
+    var page = e.currentTarget.getAttribute('data-page');
+
+    if(page == 1 && goToPage1() == 'not validated'){
+        return false;
+    }
+
 	$('#accordion').accordion('option', 'active', parseInt(e.currentTarget.getAttribute('data-page')));
 });
+
+var goToPage1 = function(){
+    //TODO: насчёт валидации формы
+
+    $('#orderForm').data('yiiActiveForm').submitting = true;
+
+    $('#orderForm').yiiActiveForm('validate')
+
+    $('#orderForm').data('yiiActiveForm').submitting = false;
+
+    setTimeout(200);
+
+    if($('#orderForm .content-data-body-first').find('.has-error').length > 0) {
+        return 'validated';
+    }
+
+    return 'not validated';
+}
 SCRIPT;
 
 $this->registerJs($js);
 
 $form = \yii\bootstrap\ActiveForm::begin([
+    'id'            =>  'orderForm',
     'fieldConfig' => [
         'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
     ],
@@ -706,14 +732,17 @@ $form = \yii\bootstrap\ActiveForm::begin([
                 ],
                 [
                     'header' => Html::tag('div', Html::tag('span', 'Доставка и Оплата'), [
-                        'class' =>  'content-data-first_1'
+                        'class' =>  'content-data-first_1',
+
                     ]),
 
-                    'headerOptions' => ['tag' => 'div'],
+                    'headerOptions' => ['tag' => 'div',
+
+                    ],
                     'content' => $this->render('_order_item_content_second', [
                         'form'  =>  $form,
                         'model' =>  $model,
-                        'id'    =>  "collapse2"
+                        'class'    =>  "collapse"
                     ]),
                     'options' => ['tag' => 'div'],
                 ],

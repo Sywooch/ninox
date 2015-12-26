@@ -75,7 +75,7 @@ class OrderForm extends Model{
             //[['id', 'nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
             [['customerID', 'customerName', 'customerSurname', 'customerFathername', 'customerEmail', 'customerPhone', 'deliveryCountry', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryType', 'deliveryInfo', 'paymentType', 'paymentInfo', 'customerComment', 'promoCode', 'canChangeItems'], 'safe'],
             [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
-            //[['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType', 'deliveryInfo'], 'required']
+            [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType', 'deliveryInfo'], 'required']
             //[['customerComment'], 'string'],
             //[['amountDeductedOrder', 'originalSum'], 'number'],
             //[['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
@@ -87,12 +87,15 @@ class OrderForm extends Model{
 
     public function attributeLabels(){
         return [
-            'customerName'      =>  \Yii::t('shop', 'Имя'),
-            'customerSurname'   =>  \Yii::t('shop', 'Фамилия'),
-            'customerPhone'     =>  \Yii::t('shop', 'Телефон'),
-            'customerEmail'     =>  \Yii::t('shop', 'Эл. почта'),
-            'deliveryCity'      =>  \Yii::t('shop', 'Город'),
-            'deliveryRegion'      =>  \Yii::t('shop', 'Регион'),
+            'customerName'           =>  \Yii::t('shop', 'Имя'),
+            'customerSurname'        =>  \Yii::t('shop', 'Фамилия'),
+            'customerPhone'          =>  \Yii::t('shop', 'Телефон'),
+            'customerEmail'          =>  \Yii::t('shop', 'Эл. почта'),
+            'deliveryCity'           =>  \Yii::t('shop', 'Город'),
+            'deliveryRegion'         =>  \Yii::t('shop', 'Регион'),
+            'anotherReceiverName'    =>  \Yii::t('shop', 'Имя'),
+            'anotherReceiverSurname' =>  \Yii::t('shop', 'Фамилия'),
+            'anotherReceiverPhone'   =>  \Yii::t('shop', 'Телефон*'),
         ];
     }
 

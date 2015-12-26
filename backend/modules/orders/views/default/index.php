@@ -6,41 +6,25 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $js = <<<'SCRIPT'
-var dOrders = document.querySelectorAll("a.deleteOrder"),
-    rOrders = document.querySelectorAll("a.restoreOrder"),
-    dButton = document.querySelectorAll("button.doneOrder"),
-    cButton = document.querySelectorAll("button.confirmCall"),
-    oButton = document.querySelectorAll("a.ordersChanges");
+$("a.deleteOrder").on('click', function(e){
+    deleteOrder(e.currentTarget);
+});
 
-for(var i = 0; i < dOrders.length; i++){
-    dOrders[i].addEventListener('click', function(e){
-        deleteOrder(e.currentTarget);
-    }, false);
-}
+$("a.ordersChanges").on('click', function(e){
+    ordersChanges(e.currentTarget);
+});
 
-for(var i = 0; i < oButton.length; i++){
-    oButton[i].addEventListener('click', function(e){
-        ordersChanges(e.currentTarget);
-    }, false);
-}
+$("a.restoreOrder").on('click', function(e){
+    restoreOrder(e.currentTarget);
+});
 
-for(var i = 0; i < rOrders.length; i++){
-    rOrders[i].addEventListener('click', function(e){
-        restoreOrder(e.currentTarget);
-    }, false);
-}
+$("button.doneOrder").on('click', function(e){
+    doneOrder(e.currentTarget);
+});
 
-for(var i = 0; i < dButton.length; i++){
-    dButton[i].addEventListener('click', function(e){
-        doneOrder(e.currentTarget);
-    }, false);
-}
-
-for(var i = 0; i < cButton.length; i++){
-    cButton[i].addEventListener('click', function(e){
-        confirmCall(e.currentTarget);
-    }, false);
-}
+$("button.confirmCall").on('click', function(e){
+    confirmCall(e.currentTarget);
+});
 
 var ordersChanges = function(e){
     $.ajax({
@@ -143,6 +127,7 @@ var ordersChanges = function(e){
         swal.close();
     });
 }
+
 SCRIPT;
 
 $css = <<<'STYLE'

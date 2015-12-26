@@ -31,7 +31,6 @@ class CashboxOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'customerID', 'responsibleUser'], 'required'],
             [['id', 'customerID', 'responsibleUser', 'priceType', 'deleted'], 'integer'],
             [['createdTime', 'doneTime'], 'safe'],
         ];
@@ -51,5 +50,13 @@ class CashboxOrder extends \yii\db\ActiveRecord
             'priceType' => Yii::t('common', 'Price Type'),
             'deleted' => Yii::t('common', 'Deleted'),
         ];
+    }
+
+    public function beforeSave($insert){
+        if($this->isNewRecord){
+            $this->id = hexdec(uniqid());
+        }
+
+        return parent::beforeSave($insert);
     }
 }

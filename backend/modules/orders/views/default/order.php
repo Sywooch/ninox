@@ -602,10 +602,17 @@ $pjax = \yii\widgets\Pjax::begin(); ?>
             'header'    =>  'Остаток',
             'vAlign'    =>  \kartik\grid\GridView::ALIGN_MIDDLE,
             'hAlign'    =>  \kartik\grid\GridView::ALIGN_CENTER,
+            'format'    =>  'html',
             'options'   =>  [
                 'style' =>  'width: 50px; text-align: center'
             ],
             'value'     =>  function($model) use(&$goodsAdditionalInfo){
+                if($goodsAdditionalInfo[$model->itemID]->count < 0){
+                    return Html::tag('span', $goodsAdditionalInfo[$model->itemID]->count.' шт.', [
+                        'style' =>  'color: red'
+                    ]);
+                }
+
                 return $goodsAdditionalInfo[$model->itemID]->count.' шт.';
             }
 
