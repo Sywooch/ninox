@@ -21,6 +21,8 @@ class m151223_125956_cashboxItems extends Migration
             'deleted'       =>  Schema::TYPE_SMALLINT.' UNSIGNED DEFAULT 0',
         ]);
 
+	    $this->addPrimaryKey('orderID', 'cashboxItems', ['orderID', 'itemID']);
+
         $this->createTable('cashboxOrders', [
             'id'                =>  Schema::TYPE_BIGINT.' UNSIGNED NOT NULL PRIMARY KEY',
             'customerID'        =>  Schema::TYPE_BIGINT.' UNSIGNED NOT NULL',
