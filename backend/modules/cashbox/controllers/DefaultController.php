@@ -84,6 +84,8 @@ class DefaultController extends Controller
 
             $cashboxOrder->doneTime = date('Y-m-d H:i:s');
             $cashboxOrder->save(false);
+
+            \Yii::$app->response->cookies->remove('cashboxOrderID');
         }
     }
 

@@ -85,6 +85,10 @@ class CashboxOrder extends \yii\db\ActiveRecord
     public function beforeSave($insert){
         if($this->isNewRecord){
             $this->id = hexdec(uniqid());
+
+            if(empty($this->responsibleUser)){
+                $this->responsibleUser = \Yii::$app->request->cookies->getValue("cashboxManager", 0);
+            }
         }elseif($this->isAttributeChanged('priceType')){
             $itemsIDs = $goods = [];
 
