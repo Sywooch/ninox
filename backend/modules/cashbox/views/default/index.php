@@ -109,6 +109,7 @@ $js = <<<'SCRIPT'
                 },
                 success: function(data){
                     swal("Успех!", "Заказ на сумму " + inputValue + " грн. успешно оформлен!", "success");
+                    location.reload();
                 },
                 error: function (request, status, error) {
                     console.log(request.responseText);
