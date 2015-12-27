@@ -4,7 +4,12 @@ namespace backend\modules\cashbox\controllers;
 
 use backend\models\CashboxItem;
 use backend\models\CashboxOrder;
+use backend\models\Customer;
 use backend\models\Good;
+use backend\models\History;
+use backend\models\SborkaItem;
+use common\models\Category;
+use common\models\Siteuser;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
@@ -26,9 +31,65 @@ class DefaultController extends Controller
         return parent::beforeAction($action);
     }
 
+    public function actionCompletesell(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод доступен только через ajax!");
+        }
+
+        $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
+
+        if(!$cashboxOrder){
+            throw new NotFoundHttpException("Такой заказ не найден!");
+        }
+
+        $order = new History([
+            'responsibleUserID' =>  $cashboxOrder->responsibleUser,
+            'customerID'        =>  $cashboxOrder->customerID,
+            'originalSum'       =>  $cashboxOrder->sum
+        ]);
+
+        if($cashboxOrder->customerID != 0){
+            $customer = Customer::findOne(['ID' => $cashboxOrder->customerID]);
+
+            $order->customerEmail = $customer->email;
+
+            $nameParts = explode(' ', $customer->Company);
+
+            $order->customerName = $nameParts[0];
+            $order->customerSurname = $nameParts[1];
+        }
+
+        $order->actualAmount = \Yii::$app->request->post("actualAmount");
+
+        if($order->save(false)){
+            foreach($cashboxOrder->items as $item){
+                $sborkaItem = new SborkaItem([
+                    'orderID'       =>  $order->id,
+                    'itemID'        =>  $item->itemID,
+                    'name'          =>  $item->name,
+                    'count'         =>  $item->count,
+                    'originalCount' =>  $item->count,
+                    'originalPrice' =>  $item->originalPrice,
+                    'discountSize'  =>  $item->discountSize,
+                    'discountType'  =>  $item->discountType,
+                    'priceRuleID'   =>  $item->priceRuleID,
+                    'category'      =>  $item->category,
+                    'customerRule'  =>  $item->customerRule
+                ]);
+
+                if($sborkaItem->save()){
+                    $item->delete();
+                }
+            }
+
+            $cashboxOrder->doneTime = date('Y-m-d H:i:s');
+            $cashboxOrder->save(false);
+        }
+    }
+
     public function actionChangecashboxtype(){
         if(!\Yii::$app->request->isAjax){
-            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+            throw new MethodNotAllowedHttpException("Этот метод доступен только через ajax!");
         }
 
         \Yii::$app->response->format = 'json';
@@ -51,12 +112,61 @@ class DefaultController extends Controller
                 $cashboxOrder->priceType = $priceType;
 
                 $cashboxOrder->save();
+
+                return [
+                    'priceType' =>  $cashboxOrder->priceType,
+                    'orderSum'  =>  $cashboxOrder->sum,
+                    'orderToPay'=>  $cashboxOrder->toPay
+                ];
             }
         }
 
         //Тут также можно будет добавить логику изменения цены в заказе
 
-        return $priceType;
+        return [
+            'priceType' =>  $priceType
+        ];
+    }
+
+    public function actionChangemanager(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
+
+        if(\Yii::$app->request->post("action") == 'showList'){
+            return $this->renderAjax('_changeManager', [
+                'managers'  =>  Siteuser::getActiveUsers()
+            ]);
+        }
+
+        \Yii::$app->response->cookies->add(new Cookie([
+            'name'      =>  'cashboxManager',
+            'value'     =>  \Yii::$app->request->post("manager")
+        ]));
+
+        $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
+
+        if($cashboxOrder){
+            $cashboxOrder->responsibleUser = \Yii::$app->request->post("manager");
+
+            $cashboxOrder->save(false);
+        }
+
+        return \Yii::$app->request->post("manager");
+    }
+
+    public function actionChangeitemcount(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
+
+        $item = CashboxItem::findOne(['orderID' => \Yii::$app->request->cookies->getValue('cashboxOrderID'), 'itemID' => \Yii::$app->request->post("itemID")]);
+
+        $item->count = \Yii::$app->request->post("count");
+
+        $item->save(false);
+
+        return 1;
     }
 
     public function actionRemoveitem(){
@@ -76,23 +186,42 @@ class DefaultController extends Controller
     }
 
     public function actionIndex(){
-        if(\Yii::$app->request->post("")){
-
+        if(\Yii::$app->request->cookies->has('cashboxOrderID')){
+            \Yii::trace("finding existing order...");
+            $order = CashboxOrder::findOne(['id'    =>  \Yii::$app->request->cookies->getValue('cashboxOrderID')]);
+            \Yii::trace("orderID ".$order->id);
+        }else{
+            \Yii::trace("new order...");
+            $order = new CashboxOrder();
         }
 
-        $orderItems = [];
+        $orderItems = new ActiveDataProvider([
+            'query'     =>  CashboxItem::find()->where(['orderID' =>    \Yii::$app->request->cookies->getValue('cashboxOrderID')]),
+            'pagination'    =>  [
+                'pageSize'  =>  0
+            ]
+        ]);
 
-        foreach(CashboxItem::find()->select("itemID")->where(['orderID' =>\Yii::$app->request->cookies->getValue('cashboxOrderID')])->asArray()->all() as $item){
-            $orderItems[] = $item['itemID'];
+        $orderToPay = $orderDiscountSize = $orderDiscountPercent = $orderSum = 0;
+
+        $orderItemsIDs = [];
+
+        foreach($orderItems->getModels() as $item){
+            $orderItemsIDs[] = $item->itemID;
+            $orderToPay += $item->price;
+        }
+
+        $goodsModels = [];
+
+        foreach(Good::find()->where(['in', 'ID', $orderItemsIDs])->each() as $item){
+            $goodsModels[$item->ID] = $item;
         }
 
         return $this->render('index', [
-            'orderItems'    =>  new ActiveDataProvider([
-                'query'     =>  Good::find()->where(['in', 'ID', $orderItems]),
-                'pagination'    =>  [
-                    'pageSize'  =>  0
-                ]
-            ])
+            'goodsModels'       =>  $goodsModels,
+            'orderItems'        =>  $orderItems,
+            'order'             =>  $order,
+            'manager'           =>  Siteuser::getActiveUsers()[\Yii::$app->request->cookies->getValue("cashboxManager", 0)]
         ]);
     }
 
@@ -155,6 +284,7 @@ class DefaultController extends Controller
             $orderItem->orderID = $cashboxOrder->id;
             $orderItem->itemID = $good->ID;
             $orderItem->count = 1;
+            $orderItem->category = Category::find()->select("Code")->where(['ID' => $good->GroupID])->scalar();
             $orderItem->name = $good->Name;
             $orderItem->originalPrice = $cashboxOrder->priceType == 1 ? $good->PriceOut1 : $good->PriceOut2;
         }else{
@@ -162,13 +292,16 @@ class DefaultController extends Controller
         }
 
         $return = [
-            'type'  =>  $orderItem->isNewRecord ? 'add' : 'update',
-            'data'  =>  $this->renderAjax('_orderItem', [
-                'model' =>  $good
-            ])
+            'type'          =>  $orderItem->isNewRecord ? 'add' : 'update',
         ];
 
         if($orderItem->save(false)){
+            $return = array_merge($return, [
+                'orderToPay'    =>  $cashboxOrder->toPay,
+                'orderSum'      =>  $cashboxOrder->sum,
+                'itemsCount'    =>  count($cashboxOrder->items)
+            ]);
+
             return $return;
         }
     }

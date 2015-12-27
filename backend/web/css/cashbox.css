@@ -118,3 +118,12 @@ div.empty{
 #cashboxGrid .removeGood > *:hover{
     cursor: pointer;
 }
+
+.changeItemCount{
+    width: 40px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    border: none;
+    background: none;
+}

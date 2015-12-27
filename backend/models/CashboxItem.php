@@ -21,6 +21,16 @@ use Yii;
  */
 class CashboxItem extends \yii\db\ActiveRecord
 {
+
+    public $price = 0;
+
+    public function afterFind(){
+        $this->price = $this->originalPrice;
+
+        return parent::afterFind();
+    }
+
+
     /**
      * @inheritdoc
      */
@@ -66,6 +76,8 @@ class CashboxItem extends \yii\db\ActiveRecord
         if($this->isNewRecord && empty($this->orderID)){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
         }
+
+        $this->price = $this->originalPrice;
 
         return parent::beforeSave($insert);
     }

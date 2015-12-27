@@ -2,6 +2,8 @@
 
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
+use kartik\grid\GridView;
+
 $this->title = 'Касса';
 
 $js = <<<'SCRIPT'
@@ -13,8 +15,16 @@ $js = <<<'SCRIPT'
                 'itemID': item
             },
             success: function(data){
-                $('#cashboxGrid table tbody').append(data.data);
-                $('#cashboxGrid table tbody tr[data-key=' + item + '] .counter')[0].innerHTML = $('#cashboxGrid table tbody tr').length;
+
+                $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                $(".toPay")[0].innerHTML = data.orderToPay;
+                $(".summ")[0].innerHTML = data.orderSum;
+                $('.itemsCount')[0].innerHTML = data.itemsCount;
+
+                $(".removeGood > *").on('click', function(e){
+                    removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
+                });
             },
             error: function (request, status, error) {
                 console.log(request.responseText);
@@ -28,18 +38,89 @@ $js = <<<'SCRIPT'
                 'itemID': item
             },
             success: function(data){
-                $('#cashboxGrid table tbody tr[data-key=' +  item + ']').remove();
+                $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                $(".toPay")[0].innerHTML = data.orderToPay;
+                $(".summ")[0].innerHTML = data.orderSum;
+                $('.itemsCount')[0].innerHTML = data.itemsCount;
+
+                $(".removeGood > *").on('click', function(e){
+                    removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
+                });
             },
             error: function (request, status, error) {
                 console.log(request.responseText);
             }
+        });
+    }, changeItemCount = function(e){
+        $.ajax({
+            type: 'POST',
+            url: '/cashbox/changeitemcount',
+            data: {
+                'itemID': e.currentTarget.getAttribute('data-key'),
+                'count': e.currentTarget.value
+            },
+            success: function(data){
+                $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                $(".toPay")[0].innerHTML = data.orderToPay;
+                $(".summ")[0].innerHTML = data.orderSum;
+                $('.itemsCount')[0].innerHTML = data.itemsCount;
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
+    }, completeSell = function(){
+        var paymentSum = $(".summ")[0].innerHTML;
+
+        var s = swal({
+            title: "Введите сумму к оплате",
+            text: "Текущая сумма: " + paymentSum,
+            html: true,
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "Сумма к оплате",
+            inputValue: paymentSum,
+            cancelButtonText: 'Отмена',
+            confirmButtonText: 'Оформить заказ'
+        },
+        function(inputValue){
+            if (inputValue === false) return false;
+
+            if (inputValue === "") {
+                swal.showInputError("Поле нельзя оставлять пустым!");
+                return false
+            }
+
+            swal({
+                title: "Оформляем заказ...",
+                allowEscapeKey: false,
+                showConfirmButton: false
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '/cashbox/completesell',
+                data: {
+                    'actualAmount': inputValue
+                },
+                success: function(data){
+                    swal("Успех!", "Заказ на сумму " + inputValue + " грн. успешно оформлен!", "success");
+                },
+                error: function (request, status, error) {
+                    console.log(request.responseText);
+                }
+            });
         });
     }
 
     $("#itemInput").on('keypress', function(e){
         e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
 
-        if(e.keyCode == 13 && e.currentTarget.value != ''){
+        if((e.keyCode == 13) && e.currentTarget.value != ''){
             addItem(e.currentTarget.value);
         }
     });
@@ -49,7 +130,71 @@ $js = <<<'SCRIPT'
     });
 
     $(".removeGood > *").on('click', function(e){
-        removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-key'));
+        removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
+    });
+
+    $(".changeItemCount").on('change', function(e){
+        changeItemCount(e);
+    });
+
+    $("#changeManager").on('click', function(e){
+        $.ajax({
+            type: 'POST',
+            url: '/cashbox/changemanager',
+            data: {
+                'action': 'showList'
+            },
+            success: function(data){
+                swal({
+                    title:  "Сменить продавца?",
+                    text:   data,
+                    html:   true,
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    cancelButtonText: 'Отмена'
+                });
+
+                $(".managersButtons > *").on('click', function(e){
+                    $.ajax({
+                        type: 'POST',
+                        url: '/cashbox/changemanager',
+                        data: {
+                            'action': 'change',
+                            'manager': e.currentTarget.getAttribute('manager-key')
+                        },
+                        success: function(){
+                            $("#changeManager")[0].innerHTML = e.currentTarget.innerHTML;
+                        },
+                        error: function (request, status, error) {
+                            console.log(request.responseText);
+                        }
+                    });
+                });
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
+    });
+
+    $(document).on('pjax:complete', function() {
+        $(".removeGood > *").on('click', function(e){
+            removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
+        });
+
+        $(".changeItemCount").on('change', function(e){
+            changeItemCount(e);
+        });
+    });
+
+    $("#sellButton").on('click', function(e){
+        completeSell();
+    });
+
+    $(document).on('keypress', function(e){
+        if(e.keyCode == 120){
+            completeSell();
+        }
     });
 SCRIPT;
 
@@ -68,13 +213,13 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
             <div class="manyButtons col-xs-10 row" style="margin-left: 0; padding: 0">
                 <div class="col-xs-8" style="margin-left: 0; padding: 0">
                     <div class="buttonsRow row" style="margin-left: 0; padding: 0">
-                        <a class="btn btn-default col-xs-4" href="#writeOffModal">Списание </a>
+                        <a class="btn btn-default col-xs-4" href="#writeOffModal">Списание <?=FA::icon('lock')?></a>
                         <button class="btn btn-default col-xs-4" id="clearOrder">Очистить заказ</button>
                         <a class="btn btn-default col-xs-4" href="#returnModal">Возврат</a>
                     </div>
                     <div class="buttonsRow row" style="margin-left: 0; padding: 0">
-                        <a class="btn btn-default col-xs-4" href="#defectModal">Брак </a>
-                        <a class="btn btn-default col-xs-4" href="#changeManagerModal">Михайло</a>
+                        <a class="btn btn-default col-xs-4" href="#defectModal">Брак <?=FA::icon('lock')?></a>
+                        <button class="btn btn-default col-xs-4" id="changeManager"><?=$manager?></button>
                     </div>
                 </div>
                 <div class="col-xs-3 col-xs-offset-1">
@@ -83,17 +228,26 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 </div>
             </div>
         </div>
-        <div class="col-xs-4 summary bg-danger">
-            <p style="font-size: 14px;">Сумма: <span class="summ">0.00</span> грн. Скидка: <span class="discountPercent">0</span>% (<span class="discountSize">0</span> грн.)</p>
-            <h2>К оплате: <span class="toPay">0.00</span> грн.</h2>
+        <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
+            <p style="font-size: 14px;">Сумма: <span class="summ"><?=$order->sum?></span> грн. Скидка: <span class="discountPercent"><?=$order->discountPercent?></span>% (<span class="discountSize"><?=$order->discountSize?></span> грн.)</p>
+            <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=$order->toPay?></span> грн.</h2>
 
-            <p>Количество товаров: <span class="itemsCount">0</span></p>
+            <p>Количество товаров: <span class="itemsCount"><?=count($order->items)?></span></p>
         </div>
     </div>
 </div>
 <div class="content main">
-    <?=\kartik\grid\GridView::widget([
+    <?=GridView::widget([
+        'pjax'          =>  true,
         'dataProvider'  =>  $orderItems,
+        'rowOptions'    =>  function($model) use(&$goodsModels){
+            return [
+                'data-attribute-key'  =>  $goodsModels[$model->itemID]->ID
+            ];
+        },
+        'emptyTextOptions'  =>  [
+            'class' =>  'emptyText'
+        ],
         'columns'       =>  [
             [
                 'contentOptions'   =>  [
@@ -105,31 +259,46 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 }
             ],
             [
-                'class' =>  \yii\grid\SerialColumn::className()
+                'class' =>  \yii\grid\SerialColumn::className(),
+                'contentOptions'   =>  [
+                    'class' =>  'counter'
+                ],
             ],
             [
-                'attribute' =>  'Code'
-            ],
-            [
-                'attribute' =>  'Name'
-            ],
-            [
-                'value'     =>  function($model){
-                    return '';
+                'value' =>  function($model) use(&$goodsModels){
+                    return $goodsModels[$model->itemID]->Code;
                 }
             ],
             [
-                'attribute' =>  'PriceOut1',
+                'attribute' =>  'name'
+            ],
+            [
+                'format'    =>  'raw',
                 'value'     =>  function($model){
-                    return $model->PriceOut1.' грн.';
+                    return Html::input('text', 'changeCount', $model->count, [
+                        'class'     =>  'changeItemCount',
+                        'data-key'  =>  $model->itemID
+                    ]);
+                },
+                'contentOptions'    =>  [
+                    'style' =>  'width: 40px;'
+                ]
+            ],
+            [
+                'attribute' =>  'price',
+                'value'     =>  function($model){
+                    //$priceType = \Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 1 ? 'PriceOut1' : 'PriceOut2';
+                    return $model->price.' грн.';
                 }
             ],
             [
-                'attribute' =>  'PriceOut1'
+                'value'     =>  function($model){
+                    return ($model->originalPrice * $model->count).' грн.';
+                }
             ],
             [
                 'value'     =>  function($model){
-                    return '';
+                    return '-'.$model->discountSize.($model->discountType == '2' ? ' грн.' : '%');
                 }
             ]
         ],
@@ -159,145 +328,6 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
     </div>
 </div>
 
-<!--<div class="vrbody">
-    <div class="wrappercontroller top">
-        <div class="content">
-            <div class="headerleftcontroll">
-                <div class="tenpx"></div>
-                <button class="headerbutton buttonbig" id="saleF9">Продажа (F9)</button>
-                <button class="headerbutton" id="spisanie">Списание <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAPCAYAAADQ4S5JAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADgSURBVHjalNG9SgRBEATgb5cz0UAxNzPoSfwJFMQ3MBAD30HwBUQwEwNTUXwODUxMVRQ5DA+Mz9hETMdkV5b1llsLGqa6uqaLmSLnrImU0iK2K/owGo0+m3rZGj7EGLdVjVNKBxMNKaV9XOAIC5jHMa5SSnu/jpyznLOIeIuIy5o3+tcRMax5M9IKHv3FE1ZrUkTEDE6rKM/4aBmWsIlznBQRsYsb/bBTYlZ/zJUdwgteJwmDjuGt6jzEeufHtXpFVVM3bFQ3F1jrY9CO0V7//Y9X+hrgDmdYnjL8jvufAQAPYD+FCJYpAAAAAABJRU5ErkJggg=="></button>
-                <button class="headerbutton" id="dropOrder">Очистить заказ</button>
-                <button class="headerbutton" id="rollback">Возврат</button>
-                <button class="headerbutton" id="defect">Брак <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAPCAYAAADQ4S5JAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADgSURBVHjalNG9SgRBEATgb5cz0UAxNzPoSfwJFMQ3MBAD30HwBUQwEwNTUXwODUxMVRQ5DA+Mz9hETMdkV5b1llsLGqa6uqaLmSLnrImU0iK2K/owGo0+m3rZGj7EGLdVjVNKBxMNKaV9XOAIC5jHMa5SSnu/jpyznLOIeIuIy5o3+tcRMax5M9IKHv3FE1ZrUkTEDE6rKM/4aBmWsIlznBQRsYsb/bBTYlZ/zJUdwgteJwmDjuGt6jzEeufHtXpFVVM3bFQ3F1jrY9CO0V7//Y9X+hrgDmdYnjL8jvufAQAPYD+FCJYpAAAAAABJRU5ErkJggg=="></button>
-
-
-                <!--<div class="headerbutton buttonbig">
-                    <a onclick="checkRealSumm()" href="javascript:void(null)">Продажа (F9)</a>
-                </div>
-                <div class="headerbutton">
-                    <a onclick="processBarCodeWriteOff()" href="javascript:void(null)">Списание</a>
-                </div>
-                <div class="headerbutton">
-                    <a onclick="clearCart()" href="javascript:void(null)">Очистить заказ</a>
-                </div>
-                <div class="headerbutton">
-                    <a onclick="RollBackBarCode()" href="javascript:void(null)">Возврат</a>
-                </div>
-                <div class="headerbutton">
-                    <a onclick="processBarCodeDefect()" href="javascript:void(null)">Брак <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAPCAYAAADQ4S5JAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADgSURBVHjalNG9SgRBEATgb5cz0UAxNzPoSfwJFMQ3MBAD30HwBUQwEwNTUXwODUxMVRQ5DA+Mz9hETMdkV5b1llsLGqa6uqaLmSLnrImU0iK2K/owGo0+m3rZGj7EGLdVjVNKBxMNKaV9XOAIC5jHMa5SSnu/jpyznLOIeIuIy5o3+tcRMax5M9IKHv3FE1ZrUkTEDE6rKM/4aBmWsIlznBQRsYsb/bBTYlZ/zJUdwgteJwmDjuGt6jzEeufHtXpFVVM3bFQ3F1jrY9CO0V7//Y9X+hrgDmdYnjL8jvufAQAPYD+FCJYpAAAAAABJRU5ErkJggg=="></a>
-                </div>-->
-                <!--<div class="headerbutton">
-                    <a id="managertext" onclick="openManagerWindow()" href="javascript:void(null)">Михайло</a>
-                </div>
-            </div>
-            <div class="headerrightcontroll">
-                <div class="controlblock">
-                    <div class="tenpx"></div>
-                    <div class="headerbutton">
-                        <a onclick="setAsideCart()" href="javascript:void(null)">Отложить чек</a>
-                    </div>
-                    <div class="headerbutton">
-                        <a class="clientlink" onclick="openClientWindow()" href="javascript:void(null)">+ клиент </a>
-                    </div>
-                </div>
-                <div class="cartpreviewsumm red">
-                    <div class="cartupdate">
-                        <div class="previewsumm">
-                            Сумма: <span id="BarCodeCartSummWithoutDiscount">0.00</span> грн.
-                            Скидка: <span>0</span>% (<span id="DiscountSumm">0</span> грн.)
-                        </div>
-                        <div class="fullsumm">К оплате: <span id="BarCodeCartSumm">0.00</span> грн.</div>
-                        <div>Количество товаров:</div>
-                    </div>
-                </div>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
-    </div>
-    <div class="content information">
-        <table id="listProductsBarCode" width="100%" cellspacing="0">
-            <tbody>
-                <tr id="2003728">
-                    <td width="20px">
-                        <a onclick="removegood(2003728)" href="javascript:void(null)">
-                            <img src="/img/delete-icon.png">
-                        </a>
-                    </td>
-                    <td class="tdborder" width="40px" align="center">1</td>
-                    <td class="tdborder" width="40px" align="center">2003728</td>
-                    <td class="tdborder">
-                        <div>Серьги женские *Восход*, 1 шт.</div>
-                    </td>
-                    <td class="tdborder" width="60px" align="center">
-                        <div>
-                            <input class="changeqtty" data-id="2003728" value="0">
-                        </div>
-                    </td>
-                    <td class="tdborder" width="90px" align="center"><span>0</span> грн.</td>
-                    <td class="tdborder" width="130px" align="center"><span>0</span> грн.</td>
-                    <td class="tdborder">-0%</td>
-                </tr>
-                <tr class="tradd">
-                    <td width="20px"></td>
-                    <td class="tdborder" id="lastinsertindex" width="40px" align="center">1</td>
-                    <td class="tdborder" colspan="2">
-                        <div>
-                            <input id="BarCodeSearch" name="barcode" value="" type="text" placeholder="">
-                        </div>
-                    </td>
-                    <td class="tdborder" width="60px" align="center"></td>
-                    <td class="tdborder" width="90px" align="center"></td>
-                    <td class="tdborder" width="130px" align="center"></td>
-                    <td class="tdborder"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="page-buffer"></div>
-    </div>
-</div>
-<div id="vrfooter">
-    <div class="wrappercontroller">
-        <div class="content">
-            <div class="headerleftcontroll">
-                <div class="tenpx"></div>
-                <div class="headerbutton"><a href="/cashbox/checks">Чеки</a></div>
-                <div class="headerbutton"><a href="/cashbox/sales">Продажи</a></div>
-            </div>
-            <div class="headerrightcontroll">
-                <div class="tenpx"></div>
-                <div class="controlblock">
-                    <div class="headerbutton red">
-                        <a onclick="changeOptRozniza()" href="javascript:void(null)">Розница</a></div>
-                </div>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
-    </div>
-</div>
-<div style="display: none">
-
-
-    <!--<div id="ErrorQttyWindow" class="modal" style="width: 600px;"></div>-->
-
-
-    <!--<div id="ManagerWindow" class="modal" style="width: 420px;">
-        <h2>Выберите менеджера</h2>
-        <div class="headerbutton" data-id="11">Леся</div>
-        <div class="headerbutton" data-id="14">Оля</div>
-        <div class="headerbutton green" data-id="25">Михайло</div>
-        <div class="headerbutton" data-id="31">пані Оля</div>
-        <div class="headerbutton" data-id="33">Виктория</div>
-        <div class="headerbutton" data-id="42">kasir</div>
-        <div class="headerbutton" data-id="39">Анна</div>
-        <div class="headerbutton" data-id="57">Женя</div>
-    </div>-->
-
-<!--</div>
 <?php
 $customerInfoModal = new \bobroid\remodal\Remodal();
 ?>
-<form id="clearCart" method="post"></form>
-<form id="setAsideCart" method="post"></form>
-<form id="processBarCodeOrder" method="post"></form>
-<form id="addBarCodeOrder" method="post"></form>
-<div id="breaksound"></div>-->

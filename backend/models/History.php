@@ -281,7 +281,7 @@ class History extends \common\models\History
     }
 
     public function beforeSave($insert){
-        if($this->oldAttributes['confirmed'] != $this->confirmed && $this->confirmed == 1){
+        if($this->isAttributeChanged('confirmed') && $this->confirmed == 1){
             //$this->confirmDate = date('Y-m-d H:i:s');
         }
 
