@@ -411,5 +411,12 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
 </div>
 
 <?php
-$customerInfoModal = new \bobroid\remodal\Remodal();
+$customerInfoModal = new \bobroid\remodal\Remodal([
+    'id'            =>  'customerModal',
+    'addRandomToID' =>  false,
+    'confirmButton' =>  false,
+    'cancelButton'  =>  false
+]);
+
+echo $customerInfoModal->renderModal($this->render('_customer_modal'));
 ?>
