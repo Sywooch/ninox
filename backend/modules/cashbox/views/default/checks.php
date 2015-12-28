@@ -16,9 +16,28 @@ $this->title = 'Отложенные чеки';
     </div>
 </div>
 <div class="content main-small">
-    <?=''/*\yii\grid\GridView::widget([
-        'dataProvider'  =>  $checksDataProvider
-    ])*/?>
+    <?=\kartik\grid\GridView::widget([
+        'dataProvider'  =>  $checksItems,
+        'columns'       =>  [
+            [
+                'class' =>  \kartik\grid\SerialColumn::className()
+            ],
+            [
+                'attribute' =>  'customerID'
+            ],
+            [
+                'attribute' =>  'createdTime'
+            ],
+            [
+                'attribute' =>  'responsibleUser'
+            ],
+            [
+                'value'     =>  function($model){
+                    return '';
+                }
+            ]
+        ]
+    ])?>
 </div>
 <div class="footer">
     <div class="content">

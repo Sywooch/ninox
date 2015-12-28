@@ -127,3 +127,7 @@ div.empty{
     border: none;
     background: none;
 }
+
+.header.no-padding .content > div{
+    height: 120px;
+}

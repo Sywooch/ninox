@@ -14,6 +14,10 @@ use Yii;
  * @property string $doneTime
  * @property integer $priceType
  * @property integer $deleted
+ * @property double $sum
+ * @property double $toPay
+ * @property array $items
+ * @property integer $postpone
  */
 class CashboxOrder extends \yii\db\ActiveRecord
 {
@@ -125,7 +129,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'customerID', 'responsibleUser', 'priceType', 'deleted'], 'integer'],
+            [['id', 'customerID', 'responsibleUser', 'priceType', 'deleted', 'postpone'], 'integer'],
             [['createdTime', 'doneTime'], 'safe'],
         ];
     }

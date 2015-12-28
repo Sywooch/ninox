@@ -7,6 +7,12 @@ use kartik\grid\GridView;
 $this->title = 'Касса';
 
 $js = <<<'SCRIPT'
+    Messenger.options = {
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+        theme: 'air',
+        hideOnNavigate: false
+    }
+
     var addItem = function(item){
         $.ajax({
             type: 'POST',
@@ -18,9 +24,7 @@ $js = <<<'SCRIPT'
 
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                $(".toPay")[0].innerHTML = data.orderToPay;
-                $(".summ")[0].innerHTML = data.orderSum;
-                $('.itemsCount')[0].innerHTML = data.itemsCount;
+                updateSummary(data);
 
                 $(".removeGood > *").on('click', function(e){
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
@@ -40,9 +44,7 @@ $js = <<<'SCRIPT'
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                $(".toPay")[0].innerHTML = data.orderToPay;
-                $(".summ")[0].innerHTML = data.orderSum;
-                $('.itemsCount')[0].innerHTML = data.itemsCount;
+                updateSummary(data);
 
                 $(".removeGood > *").on('click', function(e){
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
@@ -63,9 +65,7 @@ $js = <<<'SCRIPT'
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                $(".toPay")[0].innerHTML = data.orderToPay;
-                $(".summ")[0].innerHTML = data.orderSum;
-                $('.itemsCount')[0].innerHTML = data.itemsCount;
+                updateSummary(data);
             },
             error: function (request, status, error) {
                 console.log(request.responseText);
@@ -116,29 +116,46 @@ $js = <<<'SCRIPT'
                 }
             });
         });
-    }
+    }, clearOrder = function(){
+        $.ajax({
+            type: 'POST',
+            url: '/cashbox/removeitem',
+            data: {
+                'itemID': 'all'
+            },
+            success: function(data){
+                $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-    $("#itemInput").on('keypress', function(e){
-        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
+                updateSummary({
+                    'sum': 0.00,
+                    'toPay': 0.00,
+                    'itemsCount': 0
+                });
 
-        if((e.keyCode == 13) && e.currentTarget.value != ''){
-            addItem(e.currentTarget.value);
+                Messenger().post({
+                    message: 'Текущий заказ очищен',
+                    type: 'info',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
+    }, updateSummary = function(data){
+        if(data.sum !== undefined){
+            $(".summ")[0].innerHTML = data.sum;
         }
-    });
 
-    $("#itemInput").on('keyup', function(e){
-        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
-    });
+        if(data.toPay !== undefined){
+            $(".toPay")[0].innerHTML = data.toPay;
+        }
 
-    $(".removeGood > *").on('click', function(e){
-        removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
-    });
-
-    $(".changeItemCount").on('change', function(e){
-        changeItemCount(e);
-    });
-
-    $("#changeManager").on('click', function(e){
+        if(data.toPay !== undefined){
+            $(".itemsCount")[0].innerHTML = data.itemsCount;
+        }
+    }, changeManager = function(e){
         $.ajax({
             type: 'POST',
             url: '/cashbox/changemanager',
@@ -165,6 +182,13 @@ $js = <<<'SCRIPT'
                         },
                         success: function(){
                             $("#changeManager")[0].innerHTML = e.currentTarget.innerHTML;
+
+                            Messenger().post({
+                                message: 'Менеджер изменён на <b>' + e.currentTarget.innerHTML + '</b>',
+                                type: 'info',
+                                showCloseButton: true,
+                                hideAfter: 5
+                            });
                         },
                         error: function (request, status, error) {
                             console.log(request.responseText);
@@ -176,6 +200,58 @@ $js = <<<'SCRIPT'
                 console.log(request.responseText);
             }
         });
+    }, postponeCheck = function(){
+        $.ajax({
+            type: 'POST',
+            url: '/cashbox/postponecheck',
+            success: function(data){
+                $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                updateSummary({
+                    'sum': 0.00,
+                    'toPay': 0.00,
+                    'itemsCount': 0
+                });
+
+                Messenger().post({
+                    message: 'Чек #' + data + ' отложен',
+                    type: 'info',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
+    }
+
+    $("#itemInput").on('keypress', function(e){
+        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
+
+        if((e.keyCode == 13) && e.currentTarget.value != ''){
+            addItem(e.currentTarget.value);
+        }
+    });
+
+    $("#itemInput").on('keyup', function(e){
+        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
+    });
+
+    $(".removeGood > *").on('click', function(e){
+        removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
+    });
+
+    $(".changeItemCount").on('change', function(e){
+        changeItemCount(e);
+    });
+
+    $("#changeManager").on('click', function(e){
+        changeManager(e);
+    });
+
+    $("#postponeCheck").on('click', function(e){
+        postponeCheck();
     });
 
     $(document).on('pjax:complete', function() {
@@ -192,6 +268,11 @@ $js = <<<'SCRIPT'
         completeSell();
     });
 
+
+    $("#clearOrder").on('click', function(e){
+        clearOrder();
+    });
+
     $(document).on('keypress', function(e){
         if(e.keyCode == 120){
             completeSell();
@@ -201,6 +282,7 @@ SCRIPT;
 
 $this->registerJs($js);
 
+\bobroid\messenger\ThemeairAssetBundle::register($this);
 rmrevin\yii\fontawesome\AssetBundle::register($this);
 
 ?>
@@ -214,18 +296,18 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
             <div class="manyButtons col-xs-10 row" style="margin-left: 0; padding: 0">
                 <div class="col-xs-8" style="margin-left: 0; padding: 0">
                     <div class="buttonsRow row" style="margin-left: 0; padding: 0">
-                        <a class="btn btn-default col-xs-4" href="#writeOffModal">Списание <?=FA::icon('lock')?></a>
+                        <a class="btn btn-default col-xs-4" href="#writeOffModal" disabled="disabled">Списание <?=FA::icon('lock')?></a>
                         <button class="btn btn-default col-xs-4" id="clearOrder">Очистить заказ</button>
-                        <a class="btn btn-default col-xs-4" href="#returnModal">Возврат</a>
+                        <a class="btn btn-default col-xs-4" href="#returnModal" disabled="disabled">Возврат</a>
                     </div>
                     <div class="buttonsRow row" style="margin-left: 0; padding: 0">
-                        <a class="btn btn-default col-xs-4" href="#defectModal">Брак <?=FA::icon('lock')?></a>
+                        <a class="btn btn-default col-xs-4" href="#defectModal" disabled="disabled">Брак <?=FA::icon('lock')?></a>
                         <button class="btn btn-default col-xs-4" id="changeManager"><?=$manager?></button>
                     </div>
                 </div>
                 <div class="col-xs-3 col-xs-offset-1">
-                    <a class="btn btn-default btn-sm" style="margin-bottom: 5px;">Отложить чек</a>
-                    <a class="btn btn-default btn-sm" href="#customerModal">+ клиент</a>
+                    <button class="btn btn-default btn-sm" id="postponeCheck" style="margin-bottom: 5px;">Отложить чек</button>
+                    <a class="btn btn-default btn-sm" href="#customerModal" disabled="disabled">+ клиент</a>
                 </div>
             </div>
         </div>
@@ -288,7 +370,6 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
             [
                 'attribute' =>  'price',
                 'value'     =>  function($model){
-                    //$priceType = \Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 1 ? 'PriceOut1' : 'PriceOut2';
                     return $model->price.' грн.';
                 }
             ],
