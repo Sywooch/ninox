@@ -23,11 +23,22 @@ class CashboxItem extends \yii\db\ActiveRecord
 {
 
     public $price = 0;
+    public $changedValue = 0;
 
     public function afterFind(){
         $this->price = $this->originalPrice;
 
         return parent::afterFind();
+    }
+
+    public function __set($name, $value){
+        switch($name){
+            case 'count':
+                $this->changedValue = $value - $this->getOldAttribute('count');
+                break;
+        }
+
+        return parent::__set($name, $value);
     }
 
 
@@ -75,6 +86,13 @@ class CashboxItem extends \yii\db\ActiveRecord
     public function beforeSave($insert){
         if($this->isNewRecord && empty($this->orderID)){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
+        }
+
+        if($this->changedValue != 0){
+            $good = Good::findOne(['ID' => $this->itemID]);
+            $good->count -= $this->changedValue;
+
+            $good->save(false);
         }
 
         $this->price = $this->originalPrice;
