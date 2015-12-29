@@ -83,11 +83,24 @@ class CashboxItem extends \yii\db\ActiveRecord
         ];
     }
 
+    public function afterDelete(){
+        $good = Good::findOne(['ID' => $this->itemID]);
+        $good->count += $this->count;
+
+        $good->save(false);
+    }
+
     public function beforeSave($insert){
         if($this->isNewRecord && empty($this->orderID)){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
         }
 
+        $this->price = $this->originalPrice;
+
+        return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes){
         if($this->changedValue != 0){
             $good = Good::findOne(['ID' => $this->itemID]);
             $good->count -= $this->changedValue;
@@ -95,8 +108,6 @@ class CashboxItem extends \yii\db\ActiveRecord
             $good->save(false);
         }
 
-        $this->price = $this->originalPrice;
-
-        return parent::beforeSave($insert);
+        return parent::afterSave($insert, $changedAttributes);
     }
 }
