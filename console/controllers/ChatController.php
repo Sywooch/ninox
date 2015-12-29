@@ -10,7 +10,7 @@ namespace console\controllers;
 use common\models\ChatMessage;
 use yii\helpers\Json;
 
-class ChatController extends \morozovsk\websocket\Daemon{
+class ChatController{//} extends \morozovsk\websocket\Daemon{
 
     public $userIds = [];
 
