@@ -262,6 +262,8 @@ $js = <<<'SCRIPT'
         $(".changeItemCount").on('change', function(e){
             changeItemCount(e);
         });
+
+        $("#itemInput").focus();
     });
 
     $("#sellButton").on('click', function(e){
@@ -277,6 +279,12 @@ $js = <<<'SCRIPT'
         if(e.keyCode == 120){
             completeSell();
         }
+    });
+
+    $("#itemInput").focus();
+
+    $(document).on('click', function(){
+        $("#itemInput").focus();
     });
 SCRIPT;
 
