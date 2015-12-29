@@ -224,6 +224,30 @@ $js = <<<'SCRIPT'
                 console.log(request.responseText);
             }
         });
+    }, returnOrder = function(){
+        $.ajax({
+            type: 'POST',
+            url: '/cashbox/returnorder',
+            success: function(data){
+                $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                updateSummary({
+                    'sum': 0.00,
+                    'toPay': 0.00,
+                    'itemsCount': 0
+                });
+
+                Messenger().post({
+                    message: 'Возврат #' + data + ' совершён',
+                    type: 'info',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
     }
 
     $("#itemInput").on('keypress', function(e){
@@ -275,6 +299,10 @@ $js = <<<'SCRIPT'
         clearOrder();
     });
 
+    $("#returnOrder").on('click', function(e){
+        returnOrder();
+    });
+
     $(document).on('keypress', function(e){
         if(e.keyCode == 120){
             completeSell();
@@ -306,7 +334,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     <div class="buttonsRow row" style="margin-left: 0; padding: 0">
                         <a class="btn btn-default col-xs-4" href="#writeOffModal" disabled="disabled">Списание <?=FA::icon('lock')?></a>
                         <button class="btn btn-default col-xs-4" id="clearOrder">Очистить заказ</button>
-                        <a class="btn btn-default col-xs-4" href="#returnModal" disabled="disabled">Возврат</a>
+                        <button class="btn btn-default col-xs-4" id="returnOrder">Возврат</button>
                     </div>
                     <div class="buttonsRow row" style="margin-left: 0; padding: 0">
                         <a class="btn btn-default col-xs-4" href="#defectModal" disabled="disabled">Брак <?=FA::icon('lock')?></a>

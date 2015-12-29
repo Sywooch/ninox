@@ -281,6 +281,41 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionReturnorder(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
+
+        $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
+
+        if(!$cashboxOrder){
+            throw new NotFoundHttpException("Такой заказ не найден!");
+        }
+
+        $items = CashboxItem::find()->where(['orderID' => $cashboxOrder->id]);
+
+        if($items->count() < 0){
+            throw new NotFoundHttpException("В заказе не найдено ни одного товара!");
+        }
+
+        foreach($items->each() as $item){
+            $good = Good::findOne(['ID' => $item->itemID]);
+            $good->count += $item->count;
+
+            if($good->save(false)){
+                $item->delete();
+            }else{
+                return false;
+            }
+        }
+
+        $cashboxOrder->delete();
+
+        \Yii::$app->response->cookies->remove('cashboxOrderID');
+
+        return $cashboxOrder->id;
+    }
+
     public function actionPostponecheck(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
