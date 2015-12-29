@@ -23,6 +23,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
 {
 
     public $_items = [];
+    public $_createdItems = [];
     private $sum = 0.00;
     public $discountPercent = 0;
     public $discountSize = 0.00;
@@ -38,6 +39,19 @@ class CashboxOrder extends \yii\db\ActiveRecord
                 }
 
                 return $this->_items;
+                break;
+            case 'createdItems':
+                if(empty($this->_createdItems)){
+                    return $this->getCreatedOrderItems();
+                }
+
+                return $this->_createdItems;
+                break;
+            case 'createdOrderSum':
+                return $this->calcCreatedOrderSum();
+                break;
+            case 'createdOrderItemsCount':
+                return $this->calcCreatedOrderItems();
                 break;
             case 'itemsCount':
                 \Yii::trace('itemsCount');
@@ -64,6 +78,32 @@ class CashboxOrder extends \yii\db\ActiveRecord
         $this->_items = CashboxItem::findAll(['orderID' =>  $this->id]);
 
         return $this->_items;
+    }
+
+    public function getCreatedOrderItems(){
+        if(empty($this->createdOrder)){
+            return [];
+        }
+
+        if(!empty($this->_createdItems)){
+            return $this->_createdItems;
+        }
+
+        return $this->_createdItems = SborkaItem::findAll(['orderID' => $this->createdOrder]);
+    }
+
+    public function calcCreatedOrderSum(){
+        $sum = 0;
+
+        foreach($this->createdItems as $item){
+            $sum += $item->originalPrice * $item->count;
+        }
+
+        return $sum;
+    }
+
+    public function calcCreatedOrderItems(){
+        return count($this->createdItems);
     }
 
     public function calcSum(){

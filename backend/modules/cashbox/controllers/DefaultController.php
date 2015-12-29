@@ -80,6 +80,8 @@ class DefaultController extends Controller
                 if($sborkaItem->save()){
                     $item->delete();
                 }
+
+                $cashboxOrder->createdOrder = $order->id;
             }
 
             $cashboxOrder->doneTime = date('Y-m-d H:i:s');
@@ -273,11 +275,30 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionGetsaledetails(){
+
+
+    }
+
     public function actionSales(){
+        $dataProvider = new ActiveDataProvider([
+            'query'     =>  CashboxOrder::find()->where('doneTime > 0')->orderBy('doneTime desc')
+        ]);
+
+        $customersIDs = [];
+        $customers = [];
+
+        foreach($dataProvider->getModels() as $sell){
+            $customersIDs[] = $sell->customerID;
+        }
+
+        foreach(Customer::find()->where(['in', 'id', $customersIDs])->each() as $customer){
+            $customers[$customer->ID] = $customer;
+        }
+
         return $this->render('sales', [
-            'salesProvider' =>  new ActiveDataProvider([
-                'query'     =>  CashboxOrder::find()->where('doneTime > 0')->orderBy('doneTime desc')
-            ])
+            'customers'     =>  $customers,
+            'salesProvider' =>  $dataProvider
         ]);
     }
 
