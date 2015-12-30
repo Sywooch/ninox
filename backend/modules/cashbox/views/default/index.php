@@ -311,8 +311,28 @@ $js = <<<'SCRIPT'
 
     $("#itemInput").focus();
 
-    $(document).on('click', function(){
-        $("#itemInput").focus();
+    $(document).on('click', '*', function(){
+        if($('input:focus').length <= 0){
+            $("#itemInput").focus();
+        }
+    });
+
+    $(document).on('opened', '.remodal', function(){
+        $(document).off('click', '*');
+    });
+
+    $(document).on('closed', '.remodal', function(){
+        $(document).on('click', '*', function(){
+            if($('input:focus').length <= 0){
+                $("#itemInput").focus();
+            }
+        });
+    });
+
+    $(document).on('click', '*', function(){
+        if($('input:focus').length <= 0){
+            $("#itemInput").focus();
+        }
     });
 SCRIPT;
 
@@ -322,129 +342,141 @@ $this->registerJs($js);
 rmrevin\yii\fontawesome\AssetBundle::register($this);
 
 ?>
-
-<div class="no-padding header">
-    <div class="content row">
-        <div class="buttonsContainer col-xs-8">
-            <div class="col-xs-2" style="padding: 0; margin-right: 12px;">
-                <button class="btn btn-default btn-big" id="sellButton">Продажа (F9)</button>
-            </div>
-            <div class="manyButtons col-xs-10 row" style="margin-left: 0; padding: 0">
-                <div class="col-xs-8" style="margin-left: 0; padding: 0">
-                    <div class="buttonsRow row" style="margin-left: 0; padding: 0">
-                        <a class="btn btn-default col-xs-4" href="#writeOffModal" disabled="disabled">Списание <?=FA::icon('lock')?></a>
-                        <button class="btn btn-default col-xs-4" id="clearOrder">Очистить заказ</button>
-                        <button class="btn btn-default col-xs-4" id="returnOrder">Возврат</button>
+<div id="mainContent">
+    <div class="no-padding header">
+        <div class="content row">
+            <div class="buttonsContainer col-xs-8">
+                <div class="col-xs-2" style="padding: 0; margin-right: 12px;">
+                    <button class="btn btn-default btn-big" id="sellButton">Продажа (F9)</button>
+                </div>
+                <div class="manyButtons col-xs-10 row" style="margin-left: 0; padding: 0">
+                    <div class="col-xs-8" style="margin-left: 0; padding: 0">
+                        <div class="buttonsRow row" style="margin-left: 0; padding: 0">
+                            <a class="btn btn-default col-xs-4" href="#writeOffModal" disabled="disabled">Списание <?=FA::icon('lock')?></a>
+                            <button class="btn btn-default col-xs-4" id="clearOrder">Очистить заказ</button>
+                            <button class="btn btn-default col-xs-4" id="returnOrder">Возврат</button>
+                        </div>
+                        <div class="buttonsRow row" style="margin-left: 0; padding: 0">
+                            <a class="btn btn-default col-xs-4" href="#defectModal" disabled="disabled">Брак <?=FA::icon('lock')?></a>
+                            <button class="btn btn-default col-xs-4" id="changeManager"><?=$manager?></button>
+                        </div>
                     </div>
-                    <div class="buttonsRow row" style="margin-left: 0; padding: 0">
-                        <a class="btn btn-default col-xs-4" href="#defectModal" disabled="disabled">Брак <?=FA::icon('lock')?></a>
-                        <button class="btn btn-default col-xs-4" id="changeManager"><?=$manager?></button>
+                    <div class="col-xs-3 col-xs-offset-1">
+                        <button class="btn btn-default btn-sm" id="postponeCheck" style="margin-bottom: 5px;">Отложить чек</button>
+                        <a class="btn btn-default btn-sm" href="#customerModal" disabled="disabled">+ клиент</a>
                     </div>
                 </div>
-                <div class="col-xs-3 col-xs-offset-1">
-                    <button class="btn btn-default btn-sm" id="postponeCheck" style="margin-bottom: 5px;">Отложить чек</button>
-                    <a class="btn btn-default btn-sm" href="#customerModal" disabled="disabled">+ клиент</a>
-                </div>
             </div>
-        </div>
-        <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
-            <p style="font-size: 14px;">Сумма: <span class="summ"><?=$order->sum?></span> грн. Скидка: <span class="discountPercent"><?=$order->discountPercent?></span>% (<span class="discountSize"><?=$order->discountSize?></span> грн.)</p>
-            <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=$order->toPay?></span> грн.</h2>
+            <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
+                <p style="font-size: 14px;">Сумма: <span class="summ"><?=$order->sum?></span> грн. Скидка: <span class="discountSize"><?=$order->discountSize?></span> грн.</p>
+                <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=$order->toPay?></span> грн.</h2>
 
-            <p>Количество товаров: <span class="itemsCount"><?=count($order->items)?></span></p>
+                <p>Количество товаров: <span class="itemsCount"><?=count($order->items)?></span></p>
+            </div>
         </div>
     </div>
-</div>
-<div class="content main">
-    <?=GridView::widget([
-        'pjax'          =>  true,
-        'dataProvider'  =>  $orderItems,
-        'rowOptions'    =>  function($model) use(&$goodsModels){
-            return [
-                'data-attribute-key'  =>  $goodsModels[$model->itemID]->ID
-            ];
-        },
-        'emptyTextOptions'  =>  [
-            'class' =>  'emptyText'
-        ],
-        'columns'       =>  [
-            [
-                'contentOptions'   =>  [
-                    'class' =>  'removeGood'
+    <div class="content main">
+        <?=GridView::widget([
+            'pjax'          =>  true,
+            'dataProvider'  =>  $orderItems,
+            'rowOptions'    =>  function($model) use(&$goodsModels){
+                return [
+                    'data-attribute-key'  =>  $goodsModels[$model->itemID]->ID
+                ];
+            },
+            'emptyTextOptions'  =>  [
+                'class' =>  'emptyText'
+            ],
+            'columns'       =>  [
+                [
+                    'contentOptions'   =>  [
+                        'class' =>  'removeGood'
+                    ],
+                    'format'    =>  'html',
+                    'value'     =>  function($model){
+                        return FA::icon('times')->size(FA::SIZE_LARGE);
+                    },
+                    'width' =>  '40px;'
                 ],
-                'format'    =>  'html',
-                'value'     =>  function($model){
-                    return FA::icon('times')->size(FA::SIZE_LARGE);
-                }
-            ],
-            [
-                'class' =>  \yii\grid\SerialColumn::className(),
-                'contentOptions'   =>  [
-                    'class' =>  'counter'
+                [
+                    'class' =>  \yii\grid\SerialColumn::className(),
+                    'contentOptions'   =>  [
+                        'class' =>  'counter',
+                        'width' =>  '40px;'
+                    ],
                 ],
-            ],
-            [
-                'value' =>  function($model) use(&$goodsModels){
-                    return $goodsModels[$model->itemID]->Code;
-                }
-            ],
-            [
-                'attribute' =>  'name'
-            ],
-            [
-                'format'    =>  'raw',
-                'value'     =>  function($model){
-                    return Html::input('text', 'changeCount', $model->count, [
-                        'class'     =>  'changeItemCount',
-                        'data-key'  =>  $model->itemID
-                    ]);
-                },
-                'contentOptions'    =>  [
-                    'style' =>  'width: 40px;'
+                [
+                    'header'    =>  'Код товара',
+                    'value' =>  function($model) use(&$goodsModels){
+                        return $goodsModels[$model->itemID]->Code;
+                    },
+                    'width' =>  '120px'
+                ],
+                [
+                    'attribute' =>  'name'
+                ],
+                [
+                    'header'    =>  'Кол-во',
+                    'format'    =>  'raw',
+                    'value'     =>  function($model){
+                        return Html::input('text', 'changeCount', $model->count, [
+                            'class'     =>  'changeItemCount',
+                            'data-key'  =>  $model->itemID
+                        ]);
+                    },
+                    'width'     =>  '50px',
+                ],
+                [
+                    'attribute' =>  'price',
+                    'header'    =>  'Цена',
+                    'width'     =>  '130px',
+                    'value'     =>  function($model){
+                        return $model->price.' грн.';
+                    }
+                ],
+                [
+                    'header'    =>  'Сумма',
+                    'width'     =>  '130px',
+                    'value'     =>  function($model){
+                        return ($model->originalPrice * $model->count).' грн.';
+                    }
+                ],
+                [
+                    'header'    =>  'Дисконт',
+                    'width'     =>  '100px',
+                    'value'     =>  function($model){
+                        return '-'.$model->discountSize.($model->discountType == '2' ? ' грн.' : '%');
+                    }
                 ]
             ],
-            [
-                'attribute' =>  'price',
-                'value'     =>  function($model){
-                    return $model->price.' грн.';
-                }
-            ],
-            [
-                'value'     =>  function($model){
-                    return ($model->originalPrice * $model->count).' грн.';
-                }
-            ],
-            [
-                'value'     =>  function($model){
-                    return '-'.$model->discountSize.($model->discountType == '2' ? ' грн.' : '%');
-                }
-            ]
-        ],
-        'id'            =>  'cashboxGrid',
-        'summary'       =>  false,
-        'emptyText'     =>  false,
-    ])?>
-    <div class="form-group" style="margin-top: -20px;">
-        <div class="inputField">
-            <input id="itemInput" class="form-control" value="" type="text">
-            <p class="help-block help-block-error"></p>
+            'id'            =>  'cashboxGrid',
+            'summary'       =>  false,
+            'emptyText'     =>  false,
+        ])?>
+        <div class="form-group" style="margin-top: -20px;">
+            <div class="inputField">
+                <input id="itemInput" class="form-control" value="" type="text">
+                <p class="help-block help-block-error"></p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="content">
+            <div class="left">
+                <a class="btn btn-default btn-lg" href="/cashbox/checks">Чеки</a>
+                <a class="btn btn-default btn-lg" href="/cashbox/sales">Продажи</a>
+                <a class="btn btn-default btn-lg" href="/cashbox/returns">Возвраты</a>
+            </div>
+            <div class="right">
+                <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [
+                    'class' =>  'btn btn-lg btn-'.(\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 0 ? 'danger' : 'success'),
+                    'id'    =>  'changeCashboxType',
+                ])?>
+            </div>
         </div>
     </div>
 </div>
-<div class="footer">
-    <div class="content">
-        <div class="left">
-            <a class="btn btn-default btn-lg" href="/cashbox/checks">Чеки</a>
-            <a class="btn btn-default btn-lg" href="/cashbox/sales">Продажи</a>
-        </div>
-        <div class="right">
-            <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [
-                'class' =>  'btn btn-lg btn-'.(\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 0 ? 'danger' : 'success'),
-                'id'    =>  'changeCashboxType',
-            ])?>
-        </div>
-    </div>
-</div>
+
 
 <?php
 $customerInfoModal = new \bobroid\remodal\Remodal([

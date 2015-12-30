@@ -2,6 +2,7 @@
 
 namespace backend\modules\cashbox\controllers;
 
+use backend\models\CashboxCustomerForm;
 use backend\models\CashboxItem;
 use backend\models\CashboxOrder;
 use backend\models\Customer;
@@ -237,6 +238,24 @@ class DefaultController extends Controller
             $order = new CashboxOrder();
         }
 
+        if(\Yii::$app->request->post("CashboxCustomerForm")){
+            $cashboxCustomerForm = new CashboxCustomerForm();
+            $cashboxCustomerForm->load(\Yii::$app->request->post("CashboxCustomerForm"));
+
+            if($cashboxCustomerForm->save()){
+                if(!$order->isNewRecord){
+                    $order->customerID = $cashboxCustomerForm->id;
+
+                    $order->save(false);
+                }
+
+                \Yii::$app->response->cookies->add(new Cookie([
+                    'name'  =>  'cashboxCurrentCustomer',
+                    'value' =>  $cashboxCustomerForm->id
+                ]));
+            }
+        }
+
         $orderItems = new ActiveDataProvider([
             'query'     =>  CashboxItem::find()->where(['orderID' =>    \Yii::$app->request->cookies->getValue('cashboxOrderID')]),
             'pagination'    =>  [
@@ -275,14 +294,38 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionReturns(){
+        return $this->render('returns', [
+            'returns'   =>  new ActiveDataProvider([
+                'query'     =>  CashboxOrder::find()->where(['return' => 1])
+            ])
+        ]);
+    }
+
     public function actionGetsaledetails(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
 
+        $cashboxOrder = CashboxOrder::findOne(['ID'    =>  \Yii::$app->request->post("orderID")]);
 
+        if(!$cashboxOrder){
+            throw new NotFoundHttpException("Такого заказа не существует!");
+        }
+
+        return $this->renderAjax('_orderPreview', [
+            'goods' =>  new ActiveDataProvider([
+                'query' =>  SborkaItem::find()->where(['orderID'   =>  $cashboxOrder->createdOrder]),
+            ])
+        ]);
     }
 
     public function actionSales(){
         $dataProvider = new ActiveDataProvider([
-            'query'     =>  CashboxOrder::find()->where('doneTime > 0')->orderBy('doneTime desc')
+            'query'     =>  CashboxOrder::find()->where('doneTime > 0'),
+            'sort'      =>  [
+                'defaultOrder'  =>  ['doneTime' =>  SORT_DESC]
+            ]
         ]);
 
         $customersIDs = [];
@@ -330,7 +373,9 @@ class DefaultController extends Controller
             }
         }
 
-        $cashboxOrder->delete();
+        $cashboxOrder->doneTime = date('Y-m-d H:i:s');
+        $cashboxOrder->return = 1;
+        $cashboxOrder->save(false);
 
         \Yii::$app->response->cookies->remove('cashboxOrderID');
 

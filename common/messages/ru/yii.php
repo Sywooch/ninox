@@ -130,12 +130,4 @@ return [
     '{nFormatted} {n, plural, =1{tebibyte} other{tebibytes}}' => '',
     '{nFormatted} {n, plural, =1{terabyte} other{terabytes}}' => '',
     '{percent}% Complete' => '',
-    'The file "{file}" is too big. Its size cannot exceed {limit, number} {limit, plural, one{byte} other{bytes}}.' => '@@@@',
-    'The file "{file}" is too small. Its size cannot be smaller than {limit, number} {limit, plural, one{byte} other{bytes}}.' => '@@@@',
-    '{attribute} must be greater than "{compareValue}".' => '@@@@',
-    '{attribute} must be greater than or equal to "{compareValue}".' => '@@@@',
-    '{attribute} must be less than "{compareValue}".' => '@@@@',
-    '{attribute} must be less than or equal to "{compareValue}".' => '@@@@',
-    '{attribute} must be repeated exactly.' => '@@@@',
-    '{attribute} must not be equal to "{compareValue}".' => '@@@@',
 ];

@@ -8,7 +8,11 @@ var showSaleDetails = function(e){
     $.ajax({
         type: 'POST',
         url: '/cashbox/getsaledetails',
+        data: {
+            'orderID':  e.currentTarget.getAttribute('data-key')
+        },
         success: function(data){
+            $("[data-remodal-id=saleDetails] > div").replaceWith(data);
             $("[data-remodal-id=saleDetails]").remodal().open();
         },
         error: function (request, status, error) {
@@ -39,11 +43,21 @@ $this->registerJs($js);
         'dataProvider'  =>  $salesProvider,
         'id'            =>  'salesTable',
         'summary'       =>  false,
+        //'perfectScrollbar'  =>  true,
+        'hover'         =>  true,
+        'striped'       =>  false,
+        'rowOptions'    =>  [
+            'style'     =>  'cursor: pointer'
+        ],
+        'showPageSummary'=>  true,
+        'resizableColumns'  =>  false,
         'columns'       =>  [
             [
-                'class' =>  \yii\grid\SerialColumn::className()
+                'class' =>  \kartik\grid\SerialColumn::className(),
+                'width'     =>  '40px',
             ],
             [
+                'hAlign'    =>  'center',
                 'attribute' =>  'customerID',
                 'value'     =>  function($model) use(&$customers){
                     if($model->customerID != 0){
@@ -52,6 +66,8 @@ $this->registerJs($js);
                 }
             ],
             [
+                'hAlign'    =>  'center',
+                'width'     =>  '140px',
                 'attribute' =>  'responsibleUser',
                 'value'     =>  function($model){
                     if($model->responsibleUser != 0){
@@ -62,24 +78,34 @@ $this->registerJs($js);
                 }
             ],
             [
+                'hAlign'    =>  'center',
                 'attribute' =>  'doneTime',
+                'width'     =>  '120px',
                 'value'     =>  function($model){
                     return \Yii::$app->formatter->asDatetime($model->doneTime, 'php:d.m H:i');
                 }
             ],
             [
-                'header'    =>  'Сумма',
-                'value'     =>  function($model){
-                    return $model->createdOrderSum;
-                }
-            ],
-            [
+                'hAlign'    =>  'center',
                 'header'    =>  'Колл-во товаров',
+                'width'     =>  '100px',
+                'pageSummary'=> true,
                 'value'     =>  function($model){
                     return $model->createdOrderItemsCount;
                 }
             ],
             [
+                'hAlign'    =>  'center',
+                'header'    =>  'Сумма',
+                'width'     =>  '120px',
+                'pageSummary'=> true,
+                'value'     =>  function($model){
+                    return $model->createdOrderSum.' грн.';
+                }
+            ],
+            [
+                'hAlign'    =>  'center',
+                'width'     =>  '100px',
                 'format'    =>  'html',
                 'value'     =>  function($model){
                     return Html::a('Накладная', \yii\helpers\Url::toRoute('/orders/printinvoice/'.$model->createdOrder));
@@ -93,6 +119,7 @@ $this->registerJs($js);
     <div class="content">
         <div class="left">
             <a class="btn btn-default btn-lg" href="/cashbox/checks">Чеки</a>
+            <a class="btn btn-default btn-lg" href="/cashbox/returns">Возвраты</a>
         </div>
         <div class="right">
             <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [
@@ -111,5 +138,5 @@ $saleDetailsModal = new \bobroid\remodal\Remodal([
     'cancelButton'      =>  false
 ]);
 
-echo $saleDetailsModal->renderModal('Under development...');
+echo $saleDetailsModal->renderModal('<div class="load"></div>');
 ?>

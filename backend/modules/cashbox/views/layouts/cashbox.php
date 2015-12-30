@@ -66,6 +66,7 @@ $this->registerJs($js);
 <div class="wrap">
     <?=$content?>
 </div>
+
 <footer class="footer">
     <div class="container">
     </div>

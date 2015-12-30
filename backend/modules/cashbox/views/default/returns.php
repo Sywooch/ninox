@@ -1,7 +1,7 @@
 <?php
 
 use yii\bootstrap\Html;
-$this->title = 'Отложенные чеки';
+$this->title = 'Возвраты';
 
 ?>
 
@@ -17,33 +17,14 @@ $this->title = 'Отложенные чеки';
 </div>
 <div class="content main-small">
     <?=\kartik\grid\GridView::widget([
-        'dataProvider'  =>  $checksItems,
-        'columns'       =>  [
-            [
-                'class' =>  \kartik\grid\SerialColumn::className()
-            ],
-            [
-                'attribute' =>  'customerID'
-            ],
-            [
-                'attribute' =>  'createdTime'
-            ],
-            [
-                'attribute' =>  'responsibleUser'
-            ],
-            [
-                'value'     =>  function($model){
-                    return '';
-                }
-            ]
-        ]
+        'dataProvider'  =>  $returns,
     ])?>
 </div>
 <div class="footer">
     <div class="content">
         <div class="left">
             <a class="btn btn-default btn-lg" href="/cashbox/sales">Продажи</a>
-            <a class="btn btn-default btn-lg" href="/cashbox/returns">Возвраты</a>
+            <a class="btn btn-default btn-lg" href="/cashbox/checks">Возвраты</a>
         </div>
         <div class="right">
             <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [

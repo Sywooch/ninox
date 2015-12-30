@@ -17,9 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'For phone validation country required' => '',
-    'Phone number does not seem to be a valid phone number' => '',
-    'Unexpected Phone Number Format' => '',
-    'Unexpected Phone Number Format or Country Code' => '',
-    'It is recommended you use an upgraded browser to display the {type} control properly.' => '@@@@',
+    'Action' => '',
+    'Field' => '',
+    'ID' => '',
+    'New Value' => '',
+    'Old Value' => '',
+    'Stamp' => '',
+    'Type' => '',
+    'User' => '',
 ];

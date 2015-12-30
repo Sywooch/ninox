@@ -131,3 +131,7 @@ div.empty{
 .header.no-padding .content > div{
     height: 120px;
 }
+
+div.orderPreview thead th{
+    text-align: center;
+}

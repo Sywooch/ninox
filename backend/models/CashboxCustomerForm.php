@@ -21,8 +21,22 @@ class CashboxCustomerForm extends Model{
     public $email;
     public $cardNumber;
 
-    public function add(){
+    public $id;
 
+    public function save(){
+        //Функция сохранения формы
+    }
+
+    public function attributeLabels(){
+        return [
+            'name'      =>  'Имя',
+            'surname'   =>  'Фамилия',
+            'city'      =>  'Город',
+            'region'    =>  'Область',
+            'phone'     =>  'Телефон',
+            'email'     =>  'email',
+            'cardNumber'=>  'Номер карты'
+        ];
     }
 
 }
