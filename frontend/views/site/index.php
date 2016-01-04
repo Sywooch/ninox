@@ -2,12 +2,6 @@
 use evgeniyrru\yii2slick\Slick;
 use yii\helpers\Html;
 
-$centralBannersHtml = [];
-foreach($centralBanners as $banner){
-	$centralBannersHtml[] = $this->render('_banner_item', [
-		'model' =>  $banner
-	]);
-}
 
 $mainGalleryHtml = [];
 

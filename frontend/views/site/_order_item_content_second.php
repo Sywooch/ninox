@@ -11,7 +11,6 @@ $this->registerJs($js);
 ?>
 <div class="content-data-body-delivery-type">
     <?=$form->field($model, 'deliveryType', [
-        //'inputTemplate' =>  '<div class="radio asd">{beginLabel}{input}{labelTitle}{endLabel}{error}{hint}</div>',
     ])->radioList(\common\models\DeliveryTypes::getDeliveryTypes(), [
         'item' => function ($index, $label, $name, $checked, $value) {
             return '<div class="tab">'. Html::radio($name, $checked, [
