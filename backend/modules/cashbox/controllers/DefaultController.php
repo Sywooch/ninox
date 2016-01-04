@@ -12,12 +12,10 @@ use backend\models\SborkaItem;
 use common\models\Category;
 use common\models\Siteuser;
 use yii\data\ActiveDataProvider;
-use yii\helpers\Json;
-use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\web\Cookie;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
+use backend\controllers\SiteController as Controller;
 
 class DefaultController extends Controller
 {
@@ -89,6 +87,7 @@ class DefaultController extends Controller
             $cashboxOrder->save(false);
 
             \Yii::$app->response->cookies->remove('cashboxOrderID');
+            \Yii::$app->response->cookies->remove('cashboxCurrentCustomer');
         }
     }
 
@@ -230,17 +229,20 @@ class DefaultController extends Controller
 
     public function actionIndex(){
         if(\Yii::$app->request->cookies->has('cashboxOrderID')){
-            \Yii::trace("finding existing order...");
             $order = CashboxOrder::findOne(['id'    =>  \Yii::$app->request->cookies->getValue('cashboxOrderID')]);
-            \Yii::trace("orderID ".$order->id);
         }else{
-            \Yii::trace("new order...");
             $order = new CashboxOrder();
+        }
+
+        $customer = false;
+
+        if(\Yii::$app->request->cookies->has('cashboxCurrentCustomer')){
+            $customer = \Yii::$app->request->cookies->getValue('cashboxCurrentCustomer');
         }
 
         if(\Yii::$app->request->post("CashboxCustomerForm")){
             $cashboxCustomerForm = new CashboxCustomerForm();
-            $cashboxCustomerForm->load(\Yii::$app->request->post("CashboxCustomerForm"));
+            $cashboxCustomerForm->load(\Yii::$app->request->post());
 
             if($cashboxCustomerForm->save()){
                 if(!$order->isNewRecord){
@@ -253,7 +255,17 @@ class DefaultController extends Controller
                     'name'  =>  'cashboxCurrentCustomer',
                     'value' =>  $cashboxCustomerForm->id
                 ]));
+
+                $customer = $cashboxCustomerForm->id;
             }
+        }
+
+        if(!empty($order->customerID)){
+            $customer = $order->customerID;
+        }
+
+        if($customer){
+            $customer = Customer::findOne($customer);
         }
 
         $orderItems = new ActiveDataProvider([
@@ -282,8 +294,47 @@ class DefaultController extends Controller
             'goodsModels'       =>  $goodsModels,
             'orderItems'        =>  $orderItems,
             'order'             =>  $order,
+            'customer'          =>  $customer,
             'manager'           =>  Siteuser::getActiveUsers()[\Yii::$app->request->cookies->getValue("cashboxManager", 0)]
         ]);
+    }
+
+    public function actionChangecustomer(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        if(\Yii::$app->request->cookies->has("cashboxOrderID")){
+            $order = CashboxOrder::findOne(\Yii::$app->request->cookies->getValue("cashboxOrderID"));
+
+            $order->customerID = \Yii::$app->request->post("customerID");
+
+            $order->save(false);
+        }
+
+        \Yii::$app->response->cookies->add(new Cookie([
+            'name'  =>  'cashboxCurrentCustomer',
+            'value' =>  \Yii::$app->request->post("customerID")
+        ]));
+
+        return true;
+    }
+
+    public function actionFindcustomer(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        $attribute  = \Yii::$app->request->get("attribute");
+        $query      = \Yii::$app->request->get("query");
+
+        $customer   = Customer::find()->select(['ID', 'Company', 'phone', 'cardNumber'])->where(['like', $attribute, $query]);
+
+        return $customer->all();
     }
 
     public function actionChecks(){
@@ -424,7 +475,9 @@ class DefaultController extends Controller
         }
 
         if($cashboxOrder->isNewRecord){
-            //$cashboxOrder->customerID =
+            if(\Yii::$app->request->cookies->has("cashboxCurrentCustomer")){
+                $cashboxOrder->customerID = \Yii::$app->request->cookies->getValue("cashboxCurrentCustomer");
+            }
             $cashboxOrder->createdTime = date('Y-m-d H:i:s');
             $cashboxOrder->priceType = \Yii::$app->request->cookies->getValue('cashboxPriceType', 0);
 

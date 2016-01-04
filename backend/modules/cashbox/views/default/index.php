@@ -365,7 +365,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     </div>
                     <div class="col-xs-3 col-xs-offset-1">
                         <button class="btn btn-default btn-sm" id="postponeCheck" style="margin-bottom: 5px;">Отложить чек</button>
-                        <a class="btn btn-default btn-sm" href="#customerModal" disabled="disabled">+ клиент</a>
+                        <a id="changeCustomer" class="btn btn-default btn-sm" href="#customerModal"><?=$customer ? $customer->Company : '+ клиент'?><?=!empty($customer->phone) ? Html::tag('br').Html::tag('small', $customer->phone) : ''?></a>
                     </div>
                 </div>
             </div>

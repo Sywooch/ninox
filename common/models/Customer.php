@@ -38,6 +38,8 @@ use Yii;
  */
 class Customer extends \yii\db\ActiveRecord
 {
+    public $name;
+    public $surname;
 
     private $orders;
 
@@ -96,11 +98,24 @@ class Customer extends \yii\db\ActiveRecord
     public function beforeSave($insert){
         if($this->isNewRecord){
             $this->ID = hexdec(uniqid());
-            $this->Code = $this->find()->max('Code') + 1;
+            $this->Code = ($this->find()->count() + 1);;
             $this->registrationTime = date('Y-m-d H:i:s');
         }
 
+        if((!empty($this->name) && !empty($this->surname)) && $this->name.' '.$this->surname != $this->Company){
+            $this->Company = $this->name.' '.$this->surname;
+        }
+
         return parent::beforeSave($insert);
+    }
+
+    public function afterFind(){
+        $t = explode(' ', $this->Company);
+
+        $this->name = isset($t[0]) ? $t[0] : '';
+        $this->surname = isset($t[1]) ? $t[1] : '';
+
+        return parent::afterFind();
     }
 
     /**
@@ -117,7 +132,7 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ID', 'shippingType', 'PaymentType', 'blackList'], 'required'],
+            [['shippingType', 'PaymentType', 'blackList'], 'safe'],
             [['ID', 'priceGroup', 'type', 'groupID', 'deleted', 'blackList', 'money'], 'integer'],
             [['discount'], 'number'],
             [['registrationTime', 'blackListAddedTime', 'birthday'], 'safe'],

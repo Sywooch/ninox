@@ -4,7 +4,9 @@ use kartik\form\ActiveForm;
 $model = new \backend\models\CashboxCustomerForm();
 
 $form = new ActiveForm([
-    'formConfig' => ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_SMALL]
+    'formConfig'    =>  ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_SMALL],
+    'id'            =>  'newCustomerForm',
+    'validateOnType'=>  true
 ]);
 
 $form->begin();
@@ -21,7 +23,8 @@ $form->begin();
 <?=$form->field($model, 'email')?>
 <?=$form->field($model, 'cardNumber')?>
 <?=\yii\bootstrap\Html::button('Добавить', [
-    'class' =>  'btn btn-default'
+    'class' =>  'btn btn-default',
+    'type'  =>  'submit'
 ])?>
 </div>
 <?php $form->end()?>

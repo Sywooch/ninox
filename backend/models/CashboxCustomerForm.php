@@ -23,8 +23,37 @@ class CashboxCustomerForm extends Model{
 
     public $id;
 
+    public function rules(){
+        return [
+            [['name', 'surname', 'city', 'region'], 'string'],
+            [['phone', 'cardNumber'], 'integer'],
+            [['cardNumber'], 'required'],
+            ['email', 'email'],
+            ['email', 'unique', 'targetClass' => '\backend\models\Customer', 'message' => 'Пользователь с таким аддресом электронной почты уже существует!'],
+            ['phone', 'unique', 'targetClass' => '\backend\models\Customer', 'message' => 'Пользователь с таким номером телефона уже существует!'],
+        ];
+    }
+
     public function save(){
-        //Функция сохранения формы
+        if(!$this->validate()){
+            return false;
+        }
+
+        $customer = new Customer();
+        $customer->name = $this->name;
+        $customer->surname = $this->surname;
+        $customer->City = $this->city.', '.$this->region;
+        $customer->phone = $this->phone;
+        $customer->email = $this->email;
+        $customer->cardNumber = $this->cardNumber;
+
+        if($customer->save()){
+            $this->id = $customer->ID;
+
+            return true;
+        }
+
+        return false;
     }
 
     public function attributeLabels(){

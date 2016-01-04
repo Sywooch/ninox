@@ -1,24 +1,142 @@
+<?php
+use kartik\typeahead\Typeahead;
+use yii\helpers\Url;
+use yii\web\JsExpression;
+
+$itemTemplate = 'Handlebars.compile(\'<div class="findedCustomer" data-attribute-id="{{ID}}"><p>{{Company}}</p><small>тел. {{phone}}{{#if cardNumber}}, карта {{cardNumber}}{{/if}}</small></div>\')';
+
+$js = <<<'JS'
+var typeaheadSelectFunc = function(suggestion){
+    $.ajax({
+        type: 'POST',
+        url: '/cashbox/changecustomer',
+        data: {
+          customerID: suggestion.ID
+        },
+        success: function(){
+          data = suggestion.Company;
+
+          if(suggestion.phone.length > 0){
+              data += '<br><small>';
+              data += suggestion.phone;
+              data += '</small>';
+          }
+
+          $('#changeCustomer')[0].innerHTML = data;
+
+          $("[data-remodal-id=customerModal]").remodal().close();
+
+          Messenger().post({
+              message: 'Текущий клиент: ' + suggestion.Company,
+              type: 'info',
+              showCloseButton: true,
+              hideAfter: 5
+          });
+        }
+    });
+};
+
+$('#cardNumberSearch').bind('typeahead:select', function(ev, suggestion) {
+    typeaheadSelectFunc(suggestion);
+});
+
+$('#phoneSearch').bind('typeahead:select', function(ev, suggestion) {
+    typeaheadSelectFunc(suggestion);
+});
+
+$('#companySearch').bind('typeahead:select', function(ev, suggestion) {
+    typeaheadSelectFunc(suggestion);
+});
+JS;
+
+$js = $this->registerJs($js);
+?>
+
 <h3>Выбор существующего клиента:</h3>
 <br>
 
-<div>
-    <div style="display: block;" class="oneInput">
-        <input id="clientcardnumber" type="text"><label for="clientcardnumber">Номер
-            карты</label>
+<div class="col-xs-12">
+    <div class="col-xs-4">
+        Номер карты
     </div>
-    или
-    <br>
-
-    <div style="display: block;" class="oneInput">
-        <input id="oldPhone" type="text"><label for="oldPhone">Телефон клиента</label>
+    <div class="col-xs-8">
+        <?=Typeahead::widget([
+            'name' => 'Customer[cardNumber]',
+            'options' => ['id' => 'cardNumberSearch', 'placeholder' => '900000xxx'],
+            'pluginOptions' => [
+                'highlight'=>true,
+            ],
+            'scrollable'    =>  true,
+            'dataset' => [
+                [
+                    'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+                    'display' => 'value',
+                    'templates' => [
+                        'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
+                        'suggestion' => new JsExpression($itemTemplate)
+                    ],
+                    'remote' => [
+                        'url' => Url::to(['findcustomer']) . '?attribute=cardNumber&query=%QUERY',
+                        'wildcard' => '%QUERY'
+                    ]
+                ]
+            ]
+        ]);?>
     </div>
-    или
-    <br>
-
-    <div style="display: block;" class="oneInput">
-        <input id="SearchSurname" type="text"><label for="SearchSurname">Фамилия</label>
+    <div class="col-xs-12">
+        или
     </div>
-    <center>
-        <button onclick="findSomeUser(this)" class="coolButton green">Искать</button>
-    </center>
+    <div class="col-xs-4">
+        Телефон клиента
+    </div>
+    <div class="col-xs-8">
+        <?=Typeahead::widget([
+            'name' => 'Customer[phone]',
+            'options' => ['id' => 'phoneSearch', 'placeholder' => '0xx1234567'],
+            'scrollable'    =>  true,
+            'pluginOptions' => ['highlight'=>true],
+            'dataset' => [
+                [
+                    'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+                    'display' => 'value',
+                    'templates' => [
+                        'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
+                        'suggestion' => new JsExpression($itemTemplate)
+                    ],
+                    'remote' => [
+                        'url' => Url::to(['findcustomer']) . '?attribute=phone&query=%QUERY',
+                        'wildcard' => '%QUERY'
+                    ]
+                ]
+            ]
+        ]);?>
+    </div>
+    <div class="col-xs-12">
+        или
+    </div>
+    <div class="col-xs-4">
+        Имя или фамилия
+    </div>
+    <div class="col-xs-8">
+        <?=Typeahead::widget([
+            'name' => 'Customer[Company]',
+            'options' => ['id' => 'companySearch', 'placeholder' => 'Василий Пупкин'],
+            'pluginOptions' => ['highlight'=>true],
+            'scrollable'    =>  true,
+            'dataset' => [
+                [
+                    'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+                    'display' => 'value',
+                    'templates' => [
+                        'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
+                        'suggestion' => new JsExpression($itemTemplate)
+                    ],
+                    'remote' => [
+                        'url' => Url::to(['findcustomer']) . '?attribute=Company&query=%QUERY',
+                        'wildcard' => '%QUERY'
+                    ]
+                ]
+            ]
+        ]);?>
+    </div>
 </div>
