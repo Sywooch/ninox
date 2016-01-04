@@ -29,6 +29,8 @@ $js = <<<'SCRIPT'
                 $(".removeGood > *").on('click', function(e){
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
                 });
+
+                $("#itemInput")['0'].value = '';
             },
             error: function (request, status, error) {
                 console.log(request.responseText);
