@@ -18,7 +18,7 @@ class Banner extends \common\models\Banner{
             throw new InvalidConfigException('Тип баннера не может быть пустым!');
         }
         $date = date('Y-m-d H:i:s');
-        $q = self::find()->where(['banners_type.alias' => $alias, 'banners.state' => '1'])->
+            $q = self::find()->where(['banners_type.alias' => $alias, 'banners.state' => '1'])->
         andWhere(['or', 'banners.dateStart <= :date', 'banners.dateStart = \'0000-00-00 00:00:00\''], [
             ':date'  =>  $date
         ])->
@@ -28,7 +28,6 @@ class Banner extends \common\models\Banner{
         andWhere('banners.banner_ru != \'\'')->
         leftJoin('banners_type', 'banners_type.id = banners.bannerTypeId')->
         orderBy('banners.bannerOrder');
-
         return $all ? $q->all() : $q->one();
     }
 

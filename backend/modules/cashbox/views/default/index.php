@@ -1,4 +1,4 @@
-<?php
+removeItem<?php
 
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;

@@ -105,7 +105,9 @@ $css = <<<'STYLE'
     padding-bottom:50%;
     line-height: 1;
 	margin-top:-0.5em;
-    text-align:center;
+    text-align: -webkit-center;
+    text-align: -moz-center;
+    text-align: -o-center;
 	color:#e2eaf3;
     font-family:OpenSans;
     font-size: 18px;
@@ -392,6 +394,8 @@ $css = <<<'STYLE'
 .Terms-of-use{
     color: #a5976c;
     text-align: -webkit-center;
+    text-align: -moz-center;
+    text-align: -o-center;
 }
 
 .Terms-of-use a{
@@ -413,8 +417,9 @@ $css = <<<'STYLE'
 }
 
 .text-align-center{
-    text-align: center;
     text-align: -webkit-center;
+    text-align: -moz-center;
+    text-align: -o-center;
     padding-bottom: 10px;
 }
 
@@ -443,7 +448,6 @@ $css = <<<'STYLE'
     padding-left: 5px;
 }
 
-
 .ui-state-default{
     border: none;
     background: none;
@@ -468,6 +472,7 @@ $css = <<<'STYLE'
     background: #d4d4d4;
     color: #fff
 }
+
 .ui-accordion-header .content-data-first_1:before{
     color: #fff
 }
@@ -516,6 +521,10 @@ $css = <<<'STYLE'
     display: none;
 }
 
+.ui-accordion-header-active .btn {
+    display: none;
+
+}
 .ui-state-default.ui-state-active .content-data-first_1{
     color: #000;
 }
@@ -649,6 +658,9 @@ $css = <<<'STYLE'
         float: left;
     margin-top: -3px;
 }
+p{
+    padding-left: 100px;
+    padding-top: 34px;
 }
 
 STYLE;
