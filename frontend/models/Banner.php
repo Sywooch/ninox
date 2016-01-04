@@ -25,7 +25,7 @@ class Banner extends \common\models\Banner{
         andWhere(['or', 'banners.dateEnd >= \':date\'', 'banners.dateEnd = \'0000-00-00 00:00:00\''], [
             ':date' => $date
         ])->
-        andWhere('banners.banner != \'\'')->
+        andWhere('banners.banner_ru != \'\'')->
         leftJoin('banners_type', 'banners_type.id = banners.bannerTypeId')->
         orderBy('banners.bannerOrder');
 
