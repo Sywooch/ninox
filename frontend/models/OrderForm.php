@@ -229,7 +229,7 @@ class OrderForm extends Model{
                     'discountType'  =>  $good->discountType,
                     'priceRuleID'   =>  $good->priceRuleID,
                     'category'      =>  $good->category,
-                    'customerRule'  =>  $good->personalRule,
+                    'customerRule'  =>  $good->customerRule,
                 ]);
                 if($orderItem->save()){
                     \Yii::$app->cart->remove($good->ID);

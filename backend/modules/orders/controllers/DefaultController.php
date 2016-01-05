@@ -14,6 +14,7 @@ use common\models\Pricerule;
 use backend\models\SborkaItem;
 use common\models\Siteuser;
 use sammaye\audittrail\AuditTrail;
+use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 use yii\helpers\Json;
@@ -477,7 +478,10 @@ class DefaultController extends Controller
         }
 
         $sborkaItems = new ActiveDataProvider([
-            'query' =>  SborkaItem::find()->where(['orderID' => $order->id]),
+            'query'         =>  SborkaItem::find()->where(['orderID' => $order->id]),
+            'pagination'    =>  [
+                'pageSize'  =>  0
+            ]
 
         ]);
 
@@ -491,11 +495,17 @@ class DefaultController extends Controller
             $goods[$good->ID] = $good;
         }
 
+        $customer = Customer::findOne($order->customerID);
+
+        if(!$customer){
+            $customer = new Customer();
+        }
 
         return $this->renderAjax('print/invoice', [
             'order'         =>  $order,
             'goods'         =>  $goods,
             'orderItems'    =>  $sborkaItems,
+            'customer'      =>  $customer,
             'act'           =>  'printOrder'
         ]);
     }
@@ -515,7 +525,7 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        \Yii::$app->response->format = 'json';
+        //\Yii::$app->response->format = 'json';
 
         $request = \Yii::$app->request->post();
 
@@ -536,7 +546,9 @@ class DefaultController extends Controller
 
         foreach($items as $item){
             $priceRuleHelper->recalcSborkaItem($item, $priceRule);
-            $item->save();
+            if(!$item->save()){
+                throw new ErrorException("Не удалось сохранить итем при пересчёте. ID: ".$item->id);
+            }
         }
 
         //тут должна быть функция пересчёта

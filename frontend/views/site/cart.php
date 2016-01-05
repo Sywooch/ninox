@@ -1,6 +1,6 @@
 <?php
 use common\helpers\GoodHelper;
-use common\helpers\PriceRuleHelper;
+use frontend\helpers\PriceRuleHelper;
 use yii\helpers\Html;
 ?>
 <div class="block">

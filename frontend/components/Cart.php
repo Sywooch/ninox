@@ -8,7 +8,7 @@
 
 namespace frontend\components;
 
-use common\helpers\PriceRuleHelper;
+use frontend\helpers\PriceRuleHelper;
 use frontend\models\Good;
 use yii\base\Component;
 use yii\web\Cookie;

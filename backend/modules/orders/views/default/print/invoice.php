@@ -1,5 +1,7 @@
 <?php
 
+use yii\helpers\Html;
+
 $css = <<<'STYLE'
 	body { background: none; color: #000;}
 	table.printOrder { width: 90%; margin: 80px; color: #616161; }
@@ -257,7 +259,6 @@ STYLE;
 $js = <<<'SCRIPT'
     function PrintWindow(){
         window.print();
-        //CheckWindowState();
     }
 
     function CheckWindowState(){
@@ -307,7 +308,11 @@ echo \yii\grid\GridView::widget([
         ],
         [
             'header'    =>  'Цена (грн.)',
-            'attribute' =>  'price'
+            'format'    =>  'html',
+            'attribute' =>  'price',
+            'value'     =>  function($model){
+                return ($model->discountType != 0 ? Html::tag('s', $model->originalPrice).' ' : '').$model->price;
+            }
         ],
         [
             'header'    =>  'Сумма',
@@ -319,7 +324,7 @@ echo \yii\grid\GridView::widget([
             'header'    =>  'Скидка',
             'attribute' =>  'discountSize',
             'value'     =>  function($model){
-                return $model->discountSize.($model->discountType != 0 ? $model->discountType == 2 ? '%' : ' грн.' : '');
+                return $model->discountType != 0 ? $model->discountType == 2 ? $model->discountSize.'%' : ($model->discountSize * $model->count).' грн.' : '';
             }
         ]
     ]

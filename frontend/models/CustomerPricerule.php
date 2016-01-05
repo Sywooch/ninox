@@ -11,6 +11,6 @@ namespace frontend\models;
 
 class CustomerPricerule extends \common\models\CustomerPricerule{
 
-	public $personalRule = 1;
+	public $customerRule = 1;
 
 } 

@@ -141,8 +141,7 @@ $js = <<<'SCRIPT'
                 },
                 success: function(data){
                     if(data == -1){
-                        console.log(data);
-                        location.reload();
+                        $.pjax.reload({container: '#orderItems-pjax'});
                     }else{
                         swal({
                             title: "Столько нету",
@@ -171,7 +170,7 @@ $js = <<<'SCRIPT'
                                     'IgnoreMaxCount': ignoreCount
                                 },
                                 success: function(data){
-                                        location.reload();
+                                    $.pjax.reload({container: '#orderItems-pjax'});
                                 }
                             });
                         });
@@ -199,7 +198,7 @@ $js = <<<'SCRIPT'
                         'type': type
                     },
                     success: function(data){
-                        location.reload();
+                        $.pjax.reload({container: '#orderItems-pjax'});
                     }
                 });
             }
@@ -213,7 +212,7 @@ $js = <<<'SCRIPT'
                 'priceRule': rule
             },
             success: function(){
-                location.reload();
+                $.pjax.reload({container: '#orderItems-pjax'});
             }
         });
     }, runCreateInvoice = function(e, order){
@@ -497,6 +496,7 @@ $pjax = \yii\widgets\Pjax::begin(); ?>
     'tableOptions'  =>  [
         'id'    =>  'orderItems'
     ],
+    'pjax'      =>  true,
     'summary'   =>  '',
     'rowOptions'    =>  function($model){
         $classes = [];
