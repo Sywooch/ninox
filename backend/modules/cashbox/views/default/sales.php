@@ -19,10 +19,19 @@ var showSaleDetails = function(e){
             console.log(request.responseText);
         }
     });
+}, updateTable = function(date){
+    $.pjax({url: '/cashbox/sales?smartfilter=' + date, container: '#salesTable-pjax'});
+    //$(document).pjax("#salesTable";
 }
 
 $("#salesTable table tbody tr").on('click', function(e){
     showSaleDetails(e);
+});
+
+$(".date-buttons button").on('click', function(e){
+    updateTable(e.currentTarget.getAttribute('data-attribute'));
+    $(".date-buttons button:disabled")[0].removeAttribute('disabled');
+    e.currentTarget.setAttribute('disabled', 'disabled');
 });
 SCRIPT;
 
@@ -39,6 +48,14 @@ $this->registerJs($js);
     </div>
 </div>
 <div class="content main-small">
+    <div class="btn-group date-buttons">
+        <button disabled data-attribute="today" class="btn btn-default">Сегодня</button>
+        <button data-attribute="yesterday" class="btn btn-default">Вчера</button>
+        <button data-attribute="week" class="btn btn-default">Неделя</button>
+        <button data-attribute="month" class="btn btn-default">Месяц</button>
+    </div>
+    <br>
+    <br>
     <?=\kartik\grid\GridView::widget([
         'dataProvider'  =>  $salesProvider,
         'id'            =>  'salesTable',
@@ -46,6 +63,7 @@ $this->registerJs($js);
         //'perfectScrollbar'  =>  true,
         'hover'         =>  true,
         'striped'       =>  false,
+        'pjax'          =>  true,
         'rowOptions'    =>  [
             'style'     =>  'cursor: pointer'
         ],

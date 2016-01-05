@@ -372,8 +372,31 @@ class DefaultController extends Controller
     }
 
     public function actionSales(){
+        $orders = CashboxOrder::find();
+
+        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
+
+        \Yii::trace($date);
+
+        switch(\Yii::$app->request->get('smartfilter')){
+            case 'yesterday':
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($date - 86400, 'php:Y-m-d H:i:s')."'");
+                $orders->andWhere('doneTime < \''.\Yii::$app->formatter->asDatetime($date, 'php:Y-m-d H:i:s')."'");
+                break;
+            case 'week':
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime(($date - (date("N") - 1) * 86400), 'php:Y-m-d H:i:s')."'");
+                break;
+            case 'month':
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime(($date - (date("j") - 1) * 86400), 'php:Y-m-d H:i:s')."'");
+                break;
+            case 'today':
+            default:
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($date, 'php:Y-m-d H:i:s')."'");
+                break;
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query'     =>  CashboxOrder::find()->where('doneTime > 0'),
+            'query'     =>  $orders,
             'sort'      =>  [
                 'defaultOrder'  =>  ['doneTime' =>  SORT_DESC]
             ]
