@@ -1,7 +1,6 @@
 <?php
 
 use yii\jui\Accordion;
-use yii\widgets\ListView;
 use yii\bootstrap\Html;
 
 $css = <<<'STYLE'
@@ -105,6 +104,7 @@ $css = <<<'STYLE'
     padding-bottom:50%;
     line-height: 1;
 	margin-top:-0.5em;
+    text-align: center;
     text-align: -webkit-center;
     text-align: -moz-center;
     text-align: -o-center;
@@ -658,8 +658,14 @@ $css = <<<'STYLE'
         float: left;
     margin-top: -3px;
 }
-p{
+
+#ui-id-2 p{
     padding-left: 100px;
+    padding-top: 34px;
+}
+
+#ui-id-4 p{
+    padding-left: 110px;
     padding-top: 34px;
 }
 
@@ -754,7 +760,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
                     'content' => $this->render('_order_item_content_second', [
                         'form'  =>  $form,
                         'model' =>  $model,
-                        'class'    =>  "collapse"
+                        'class'    =>  'collapse'
                     ]),
                     'options' => ['tag' => 'div'],
                 ],
@@ -866,5 +872,4 @@ $form = \yii\bootstrap\ActiveForm::begin([
             </div>
         </div>
     </div>
-</div>
 <?php $form->end(); ?>
