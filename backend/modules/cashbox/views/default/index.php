@@ -111,6 +111,7 @@ $js = <<<'SCRIPT'
                 },
                 success: function(data){
                     swal("Успех!", "Заказ на сумму " + inputValue + " грн. успешно оформлен!", "success");
+                    window.open('/orders/printinvoice/' + data, '', 'scrollbars=1');
                     location.reload();
                 },
                 error: function (request, status, error) {

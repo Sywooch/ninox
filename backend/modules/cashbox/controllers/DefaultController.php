@@ -88,6 +88,8 @@ class DefaultController extends Controller
 
             \Yii::$app->response->cookies->remove('cashboxOrderID');
             \Yii::$app->response->cookies->remove('cashboxCurrentCustomer');
+
+            return $cashboxOrder->createdOrder;
         }
     }
 
@@ -346,9 +348,30 @@ class DefaultController extends Controller
     }
 
     public function actionReturns(){
+        $orders = CashboxOrder::find()->where(['return' => 1]);
+
+        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
+
+        switch(\Yii::$app->request->get('smartfilter')){
+            case 'yesterday':
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($date - 86400, 'php:Y-m-d H:i:s')."'");
+                $orders->andWhere('doneTime < \''.\Yii::$app->formatter->asDatetime($date, 'php:Y-m-d H:i:s')."'");
+                break;
+            case 'week':
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime(($date - (date("N") - 1) * 86400), 'php:Y-m-d H:i:s')."'");
+                break;
+            case 'month':
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime(($date - (date("j") - 1) * 86400), 'php:Y-m-d H:i:s')."'");
+                break;
+            case 'today':
+            default:
+                $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($date, 'php:Y-m-d H:i:s')."'");
+                break;
+        }
+
         return $this->render('returns', [
             'returns'   =>  new ActiveDataProvider([
-                'query'     =>  CashboxOrder::find()->where(['return' => 1])
+                'query'     =>  $orders
             ])
         ]);
     }

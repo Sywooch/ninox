@@ -21,17 +21,32 @@ var showSaleDetails = function(e){
     });
 }, updateTable = function(date){
     $.pjax({url: '/cashbox/sales?smartfilter=' + date, container: '#salesTable-pjax'});
-    //$(document).pjax("#salesTable";
 }
-
-$("#salesTable table tbody tr").on('click', function(e){
-    showSaleDetails(e);
-});
 
 $(".date-buttons button").on('click', function(e){
     updateTable(e.currentTarget.getAttribute('data-attribute'));
     $(".date-buttons button:disabled")[0].removeAttribute('disabled');
     e.currentTarget.setAttribute('disabled', 'disabled');
+});
+
+$("#salesTable table tbody tr").on('click', function(e){
+    showSaleDetails(e);
+});
+
+$("a.invoiceOrder").on('click', function(e){
+    e.preventDefault();
+    window.open('/orders/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
+});
+
+$(document).on('pjax:complete', function() {
+    $("#salesTable table tbody tr").on('click', function(e){
+        showSaleDetails(e);
+    });
+
+    $("a.invoiceOrder").on('click', function(e){
+        e.preventDefault();
+        window.open('/orders/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
+    });
 });
 SCRIPT;
 
@@ -124,9 +139,9 @@ $this->registerJs($js);
             [
                 'hAlign'    =>  'center',
                 'width'     =>  '100px',
-                'format'    =>  'html',
+                'format'    =>  'raw',
                 'value'     =>  function($model){
-                    return Html::a('Накладная', \yii\helpers\Url::toRoute('/orders/printinvoice/'.$model->createdOrder));
+                    return Html::a('Накладная', \yii\helpers\Url::toRoute('/orders/printinvoice/'.$model->createdOrder), ['style' => 'z-index: 1000', 'data-pjax' => 0, 'class' => 'invoiceOrder', 'data-attribute-id' => $model->createdOrder]);
                 }
             ]
         ],

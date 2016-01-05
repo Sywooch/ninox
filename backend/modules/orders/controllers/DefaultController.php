@@ -199,8 +199,8 @@ class DefaultController extends Controller
         }
 
         if(\Yii::$app->request->post("History")){
-            $order->attributes = \Yii::$app->request->post("History");
-            $order->save();
+            $order->load(\Yii::$app->request->post());
+            $order->save(false);
         }
 
         $goodsAdditionalInfo = $st = [];
@@ -476,9 +476,26 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Такого заказа не существует!");
         }
 
-        return $this->renderPartial('print/invoice', [
+        $sborkaItems = new ActiveDataProvider([
+            'query' =>  SborkaItem::find()->where(['orderID' => $order->id]),
+
+        ]);
+
+        $itemIDs = $goods = [];
+
+        foreach($sborkaItems->getModels() as $item){
+            $itemIDs[] = $item->itemID;
+        }
+
+        foreach(Good::find()->where(['in', 'ID', $itemIDs])->each() as $good){
+            $goods[$good->ID] = $good;
+        }
+
+
+        return $this->renderAjax('print/invoice', [
             'order'         =>  $order,
-            'orderItems'    =>  SborkaItem::findAll(['orderID' => $order->id]),
+            'goods'         =>  $goods,
+            'orderItems'    =>  $sborkaItems,
             'act'           =>  'printOrder'
         ]);
     }

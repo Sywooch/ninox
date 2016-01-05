@@ -1,43 +1,66 @@
 <?php
 
 $css = <<<'STYLE'
-body{ background: none; color: #000;}
-    table.printOrder { width: 90%; margin: 80px; color: #616161; }
-    td.print_head { border-bottom: 1px solid #9a9a9a; }
-    .leader { font-size: 26px; padding-top: 10px; height: 30px; }
-    .tovars2 { border: none;}
-    .tovars_img2 {
-        display: block;
-        border:1px solid #555555;
-        width: 165px;
-        height: 123px;}
-    .tovars_img2 img{
-        width: 165px;
-        height: 123px;}
-    .shopping table td {text-align:center;}
-    .shopping table td.city { font-size:30px; text-decoration:underline; font-weight: bold; }
-    .shopping table td.oblast { font-size:12px;}
-    .shopping table td.nova_poshta { font-size:18px; }
-    .shopping table td.name { font-size:18px; font-weight:bold;}
-    .shopping table td.telefon { font-size:14px; }
-    .shopping table td.plateg, .shopping table td.manager, .shopping table td.delivery { font-size:14px; font-weight:bold;white-space: nowrap; text-align: right; }
-    .shopping table td.plateg > span > span, .shopping table td.manager > span > span, .shopping table td.delivery > span > span { padding-right: 5px; }
-    .shopping table td.plateg > span, .shopping table td.manager > span, .shopping table td.delivery > span { margin-right: 33%; }
-    .shopping table td.manager { border-bottom: 1px solid #9a9a9a; padding-bottom: 5px; }
-    .shopping table td.plateg { border-top: 1px solid #9a9a9a; padding-top: 5px; }
-    .shopping table td.zakaznumber { font-size: 60px; }
-    .shopping table td.plateg img, .shopping table td.manager img, .shopping table td.delivery img{ vertical-align:middle; }
-    .shopping input, .shopping textarea, .shopping select { border:none; }
-    @media print {
-        .shopping table td.plateg > span, .shopping table td.manager > span, .shopping table td.delivery > span { margin-right: 0% !important; }
-        .pageend { page-break-after: always; }
-        .block, x:-moz-any-link { page-break-before: always; }
+	body { background: none; color: #000;}
+	table.printOrder { width: 90%; margin: 80px; color: #616161; }
+	td.print_head { border-bottom: 1px solid #9a9a9a; }
+	.leader { font-size: 26px; padding-top: 10px; height: 30px; }
+	.tovars2 { border: none;}
+	.tovars_img2 {
+		display: block;
+		border:1px solid #555555;
+		width: 165px;
+		height: 123px;}
+	.tovars_img2 img{
+		width: 165px;
+		height: 123px;}
+	.shopping table td {text-align:center;}
+	.shopping table td.city { font-size:30px; text-decoration:underline; font-weight: bold; }
+	.shopping table td.oblast { font-size:12px;}
+	.shopping table td.nova_poshta { font-size:18px; }
+	.shopping table td.name { font-size:18px; font-weight:bold;}
+	.shopping table td.telefon { font-size:14px; }
+	.shopping table td.plateg, .shopping table td.manager, .shopping table td.delivery { font-size:14px; font-weight:bold;white-space: nowrap; text-align: right; }
+	.shopping table td.plateg > span > span, .shopping table td.manager > span > span, .shopping table td.delivery > span > span { padding-right: 5px; }
+	.shopping table td.plateg > span, .shopping table td.manager > span, .shopping table td.delivery > span { margin-right: 33%; }
+	.shopping table td.manager { border-bottom: 1px solid #9a9a9a; padding-bottom: 5px; }
+	.shopping table td.plateg { border-top: 1px solid #9a9a9a; padding-top: 5px; }
+	.shopping table td.zakaznumber { font-size: 60px; }
+	.shopping table td.plateg img, .shopping table td.manager img, .shopping table td.delivery img{ vertical-align:middle; }
+	.shopping input, .shopping textarea, .shopping select { border:none; }
+	hr{
+		margin: 5px 0;
+	}
+	.print_excel{
+		font-size: 10px;
+		width: 100%;
+	}
+	.print_excel td{
+		padding: 1px;
+	}
+
+    .print_excel {
+        border-collapse:collapse;
+        font-size:12px;
+        font-family:Arial,Helvetica,sans-serif;
+    }
+    .print_excel td,.print_excel th {
+        border:1px solid #000;
+        padding:3px;
+    }
+
+	@media print {
+		.shopping table td.plateg > span, .shopping table td.manager > span, .shopping table td.delivery > span { margin-right: 0% !important; }
+		.pageend { page-break-after: always; }
+		.block, x:-moz-any-link { page-break-before: always; }
         .barcode {
             float: right;
+	        margin-top: 2px;
         }
-    }
+	}
     .barcode {
         float: right;
+	    margin-top: 2px;
     }
 STYLE;
 
@@ -248,9 +271,65 @@ SCRIPT;
 
 $this->registerJs($js);
 $this->registerCss($css);
-$this->registerCssFile('css/main');
+$this->registerCss($css2);
+$this->registerCssFile('/css/normalize.css');
 
-if($act == 'printWithImages' || $act == 'printOrder'){
+echo $this->render('_invoice_header');
+
+echo $this->render('_invoice_order_info', [
+    'order' =>  $order
+]);
+
+echo \yii\grid\GridView::widget([
+    'dataProvider'  =>  $orderItems,
+    'summary'       =>  false,
+    'tableOptions'       =>  [
+        'class'     =>  'print_excel'
+    ],
+    'columns'       =>  [
+        [
+            'header'    =>  '№',
+            'class'     =>  \yii\grid\SerialColumn::className()
+        ],
+        [
+            'header'    =>  'Код товара',
+            'value'     =>  function($model) use(&$goods){
+                return $goods[$model->itemID]->Code;
+            },
+        ],
+        [
+            'header'    =>  'Наименование',
+            'attribute' =>  'name'
+        ],
+        [
+            'header'    =>  'Кол.',
+            'attribute' =>  'count'
+        ],
+        [
+            'header'    =>  'Цена (грн.)',
+            'attribute' =>  'price'
+        ],
+        [
+            'header'    =>  'Сумма',
+            'value'     =>  function($model){
+                return $model->count * $model->price;
+            }
+        ],
+        [
+            'header'    =>  'Скидка',
+            'attribute' =>  'discountSize',
+            'value'     =>  function($model){
+                return $model->discountSize.($model->discountType != 0 ? $model->discountType == 2 ? '%' : ' грн.' : '');
+            }
+        ]
+    ]
+]);
+
+echo $this->render('_invoice_footer', [
+    'items' =>  $orderItems->getModels()
+]);
+
+/*if($act == 'printWithImages' || $act == 'printOrder'){
     echo $this->render('_invoice_head', [
         'order' =>  $order
     ]);
@@ -392,4 +471,6 @@ if($act == 'printLastPage' || $act == 'printWithImages' || $act == 'printOrder')
         <div class="gorizontalseparator">&nbsp;</div>
     <?php
     }
+*/
+
 

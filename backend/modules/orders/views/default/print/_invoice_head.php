@@ -27,13 +27,14 @@ use yii\helpers\Html;
     <tr>
         <td colspan=2>
             <?php
-            $count = count($goods);
+            $count = count($orderItems);
             $first = true;
-            foreach($goods as $good){
-                $good['ico'] = strtolower($good['ico']);
+            foreach($orderItems as $item){
+                $ico = strtolower($goods[$item->itemID]->ico);
                 $i++;
                 $n++;
-                if($order['zamena'] == '1' || $order['nalichie'] == '1'){
+                /*
+                if($item->zamena == '1' || $order['nalichie'] == '1'){
                     if($order['zamena'] == '1' && $order['nalichie'] == '0'){
                         $img = 'zamena.png';
                     }elseif($order['zamena'] == '0' && $order['nalichie'] == '1'){
@@ -44,6 +45,8 @@ use yii\helpers\Html;
                 }else{
                     $img = 'zamena.png';
                 }
+                TODO: этот код вывел меня из равновесия
+                */
                 ?>
                 <?php if($i == '1'){ ?>
                     <table class='pageend'>

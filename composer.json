@@ -56,7 +56,8 @@
         "morozovsk/yii2-websocket": "dev-master",
         "kop/yii2-scroll-pager": "dev-master",
         "rmrevin/yii2-fontawesome": "*",
-        "udokmeci/yii2-phone-validator": "^1.0@dev"
+        "udokmeci/yii2-phone-validator": "^1.0@dev",
+        "vilochane/yii2-barcode-generator": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",
