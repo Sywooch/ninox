@@ -62,6 +62,8 @@ class DefaultController extends Controller
 
         if($order->save(false)){
             foreach($cashboxOrder->items as $item){
+                
+
                 $sborkaItem = new SborkaItem([
                     'orderID'       =>  $order->id,
                     'itemID'        =>  $item->itemID,

@@ -73,9 +73,16 @@ class OrderForm extends Model{
     {
         return [
             //[['id', 'nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
+            [['anotherReceiver', 'anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'safe'],
             [['customerID', 'customerName', 'customerSurname', 'customerFathername', 'customerEmail', 'customerPhone', 'deliveryCountry', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryType', 'deliveryInfo', 'paymentType', 'paymentInfo', 'customerComment', 'promoCode', 'canChangeItems'], 'safe'],
             [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
-            [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType', 'deliveryInfo', 'anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required']
+            [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
+            ['deliveryInfo', 'required', 'when' => function(){
+                return in_array($this->deliveryType, [1, 2]);
+            }],
+            [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required', 'when' => function(){
+                return $this->anotherReceiver != 0;
+            }]
             //[['customerComment'], 'string'],
             //[['amountDeductedOrder', 'originalSum'], 'number'],
             //[['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
@@ -219,6 +226,11 @@ class OrderForm extends Model{
 
         if($order->save()){
             foreach(\Yii::$app->cart->goods as $good){
+                if($customer->cardNumber > 0 && $good->discountSize == 0){
+                    $good->discountSize = 2;
+                    $good->discountType = 2;
+                }
+
                 $orderItem = new SborkaItem([
                     'orderID'       =>  $order->id,
                     'itemID'        =>  $good->ID,

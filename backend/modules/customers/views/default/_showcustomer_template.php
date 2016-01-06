@@ -84,11 +84,11 @@ if($editMode){
         'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL]
     ]);
 }else{
-    if($customer->black == 1){
+    if($customer->blackList == 1){
         $lables[] = '<span class="label label-danger">в чёрном списке</span>';
     }
 
-    if($customer->Deleted != 0){
+    if($customer->deleted != 0){
         $lables[] = '<span class="label label-info">удалён</span>';
     }
 }
@@ -107,8 +107,8 @@ $this->registerCss($css);
         </div>
         <?=$editMode ? '<button class="btn btn-success pull-right" type="submit" style="margin-left: 10px;">Сохранить</button>' : ''?>
         <div class="btn-group pull-right" role="group" aria-label="...">
-            <button type="button" id="changeTrashState" class="btn btn-info" data-customer-id="<?=$customer->ID?>"><?=$customer->Deleted == 0 ? 'Удалить' : 'Восстановить'?></button>
-            <button type="button" id="changeState" class="btn btn-info" data-customer-id="<?=$customer->ID?>"><?=$customer->black == 0 ? 'В чёрный список' : 'Из чёрного списка'?></button>
+            <button type="button" id="changeTrashState" class="btn btn-info" data-customer-id="<?=$customer->ID?>"><?=$customer->deleted == 0 ? 'Удалить' : 'Восстановить'?></button>
+            <button type="button" id="changeState" class="btn btn-info" data-customer-id="<?=$customer->ID?>"><?=$customer->blackList == 0 ? 'В чёрный список' : 'Из чёрного списка'?></button>
             <a type="button" class="btn btn-info" href="/customers/showcustomer/<?=$customer->ID.(!$editMode ? '?act=edit' : '')?>"><?=$editMode ? 'В режим просмотра' : 'Редактировать'?></a>
         </div>
         <div class="clearfix"></div>
