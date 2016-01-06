@@ -51,7 +51,7 @@ $css = <<<'STYLE'
         padding:3px;
     }
 
-	@media print {
+	/*@media print {
 		.shopping table td.plateg > span, .shopping table td.manager > span, .shopping table td.delivery > span { margin-right: 0% !important; }
 		.pageend { page-break-after: always; }
 		.block, x:-moz-any-link { page-break-before: always; }
@@ -59,7 +59,7 @@ $css = <<<'STYLE'
             float: right;
 	        margin-top: 2px;
         }
-	}
+	}*/
     .barcode {
         float: right;
 	    margin-top: 2px;
@@ -272,7 +272,7 @@ SCRIPT;
 
 $this->registerJs($js);
 $this->registerCss($css);
-$this->registerCss($css2);
+//$this->registerCss($css2);
 $this->registerCssFile('/css/normalize.css');
 
 echo $this->render('_invoice_header');

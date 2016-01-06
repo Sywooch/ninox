@@ -10,7 +10,7 @@ $dayofweek = [
 ];
 ?>
 <span style="font-size:20px;">Заказ №<?=$order->number?> от <?=\Yii::$app->formatter->asDatetime($order->added, 'php:d.m.Y - H:i')?> <span style="font-size:18px;"><?=$dayofweek[date("w", $order->added)]?></span></span>
-<div id="barcodeTarget" class="barcode" style="float: right; margin-top: 7px; height: 50px;"></div>
+<div id="barcodeTarget" class="barcode" style="float: right; margin-top: 0px; height: 50px;"></div>
 <?=\barcode\barcode\BarcodeGenerator::widget([
     'elementId' =>  'barcodeTarget',
     'type'      =>  'code39',
