@@ -65,6 +65,11 @@ $this->registerJs($js);
                                 <div class="content-data-body-stock">
                                     <div class="semi-bold">Наш склад находится по адресу:</div>
                                     г. Киев, ул. Электротехническая, 2
+                                     <a id="go" href="#">
+                                            <div class="map-icon">
+                                            </div>
+                                            Cм. на карте
+                                     </a>
                                     <div class="work-time">
                                         Время работы с 9:00 до 17:00
                                     </div>
