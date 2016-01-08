@@ -257,7 +257,7 @@ $css = <<<'STYLE'
 }
 
 .content-data-body-address{
-    height: 40px;
+    height: ;
     padding: 10px;
 }
 
@@ -290,6 +290,7 @@ $css = <<<'STYLE'
 }
 
 .ordering{
+position: absolute;
     width: 100%;
     float: right;
     max-width: 410px;
@@ -370,6 +371,7 @@ $css = <<<'STYLE'
 .question .round-button {
     width: 15px;
     float: left;
+    height: 15px;
 }
 
 .question .content-data-title-img{
@@ -641,6 +643,8 @@ $css = <<<'STYLE'
     margin-bottom: 0px;
     font-weight: normal;
     padding-left: 15px;
+    float: left;
+    padding-right: 10px;
 }
 
 .add-comment a{
@@ -667,6 +671,102 @@ $css = <<<'STYLE'
 #ui-id-4 p{
     padding-left: 110px;
     padding-top: 34px;
+}
+
+#ymap{
+    width: 1050px;
+   }
+
+#map{
+    height:700px;
+    display: ;
+    min-width: 800px;
+    max-width: 800px;
+    float: right;
+}
+
+.department-on-map{
+    width: 250px;
+    float: left;
+    height: 700px;
+    background: white;
+}
+
+.department-logo{
+    background-image: url(img/site/department-logo.png);
+    width: 250px;
+    height: 80px;
+}
+
+#overlay {
+	z-index:3; /* пoдлoжкa дoлжнa быть выше слoев элементoв сaйтa, нo ниже слoя мoдaльнoгo oкнa */
+	position:fixed; /* всегдa перекрывaет весь сaйт */
+	background-color:#000; /* чернaя */
+	opacity:0.5; /* нo немнoгo прoзрaчнa */
+	-moz-opacity:0.8; /* фикс прозрачности для старых браузеров */
+	filter:alpha(opacity=80);
+	width:100%;
+	height:100%; /* рaзмерoм вo весь экрaн */
+	top:0; /* сверху и слевa 0, oбязaтельные свoйствa! */
+	left:0;
+	cursor:pointer;
+	display:none; /* в oбычнoм сoстoянии её нет) */
+}
+
+#modal_form {
+	position: fixed; /* чтoбы oкнo былo в видимoй зoне в любoм месте */
+	display: none; /* в oбычнoм сoстoянии oкнa не дoлжнo быть */
+	opacity: 0; /* пoлнoстью прoзрaчнo для aнимирoвaния */
+	z-index: 5; /* oкнo дoлжнo быть нaибoлее бoльшем слoе */
+}
+
+#modal_form #modal_close {
+    background: white;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	display: block;
+	z-index: inherit;
+	width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #FFF;
+    border: 5px solid #FFF;
+}
+
+#go {
+    color: #3E77AA !important;
+    border-bottom: 1px dotted;
+    text-decoration: none;
+    display: block;
+float: right;
+}
+
+.map-icon{
+    background-image: url(img/site/map-icon.png);
+    background-repeat: no-repeat;
+    width: 16px;
+height: 16px;
+float: left;
+}
+
+#modal_close{
+    border: 5px solid #FFF;
+
+}
+
+.close-map{
+    background-image: url(img/site/close.png);
+    background-repeat: no-repeat;
+    width: 28px;
+    height: 28px;
+}
+.close-map:hover{
+    background-image: url(img/site/close-on-hover.png);
+    background-repeat: no-repeat;
+    width: 28px;
+    height: 28px;
 }
 
 STYLE;
@@ -702,6 +802,7 @@ var goToPage1 = function(){
 
     return 'not validated';
 }
+
 SCRIPT;
 
 $this->registerJs($js);
@@ -713,7 +814,79 @@ $form = \yii\bootstrap\ActiveForm::begin([
     ],
 ]);
 ?>
+<head>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"> </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+</head>
+<script type="text/javascript">
+    var kyiv_map;
+    ymaps.ready(function(){
+        kyiv_map = new ymaps.Map("map", {
+            center: [50.47, 30.52],
+            zoom: 8,
+            // Изначально на карте есть только ползунок масштаба
+            // и кнопка полноэкранного режима
+            controls: ["zoomControl"]
+        });
+    });
+</script>
+    <script type="text/javascript">
+    $(document).ready(function() { // вся мaгия пoсле зaгрузки стрaницы
+        $('a#go').click( function(event){ // лoвим клик пo ссылки с id="go"
+            event.preventDefault(); // выключaем стaндaртную рoль элементa
+            $('body').css('overflow', 'hidden'); // выключаем скролл
+            $('#overlay').fadeIn(400, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку
+                function(){ // пoсле выпoлнения предъидущей aнимaции
+                    $('#modal_form')
+                        .css('display', 'block') // убирaем у мoдaльнoгo oкнa display: none;
+                        .animate({opacity: 1, top: '5%'}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+                });
+        });
+        /* Зaкрытие мoдaльнoгo oкнa, тут делaем тo же сaмoе нo в oбрaтнoм пoрядке */
+        $('#modal_close, #overlay').click( function(){ // лoвим клик пo крестику или пoдлoжке
+            $('body').css('overflow', 'auto'); // включаем скролл
+            $('#modal_form')
+                .animate({opacity: 0, top: '45%'}, 200,  // плaвнo меняем прoзрaчнoсть нa 0 и oднoвременнo двигaем oкнo вверх
+                    function(){ // пoсле aнимaции
+                        $(this).css('display', 'none'); // делaем ему display: none;
+                        $('#overlay').fadeOut(400); // скрывaем пoдлoжку
+                    }
+                );
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var offset = $('.ordering').offset();
+        var topPadding = 0;
+        $(window).scroll(function() {
+            if ($(window).scrollTop() > offset.top) {
+                $('.ordering').stop().animate({marginTop: $(window).scrollTop() - offset.top + topPadding});
+            }
+            else {
+                $('.ordering').stop().animate({marginTop: 0});
+            }
+        });
+    });
+</script>
 <div class="content">
+    <div id="modal_form"><!-- Сaмo oкнo -->
+        <span id="modal_close">
+            <a>
+                <div class="close-map"></div>
+            </a>
+        </span> <!-- Кнoпкa зaкрыть -->
+        <div id="ymap">
+            <div class="department-on-map">
+                <div class="department-logo">
+                </div>
+                dfdsfdf
+            </div>
+            <div id="map">
+            </div>
+        </div>
+    </div>
+    <div id="overlay"></div><!-- Пoдлoжкa -->
     <div class="order-head">
         <div class="order-logo">
         </div>
@@ -872,4 +1045,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
             </div>
         </div>
     </div>
+
+
+
 <?php $form->end(); ?>
