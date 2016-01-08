@@ -8,8 +8,6 @@
 
 namespace frontend\models;
 
-
-use app\models\Message;
 use common\helpers\GoodHelper;
 
 class Good extends \common\models\Good{
@@ -25,7 +23,7 @@ class Good extends \common\models\Good{
 	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
 	public $isNew = false;                  //Флаг-новинка
     public $canBuy = true;
-	public $personalRule = 0;               //Персональное правило
+	public $customerRule = 0;               //Персональное правило
 
     public function afterFind()
     {

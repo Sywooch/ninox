@@ -147,7 +147,7 @@ $discountBlock = function($model){
 
 	return Html::tag('div',
 		Html::tag('div',
-			Html::tag('div', $model->personalRule ? \Yii::t('shop', 'Опт') : \Yii::t('shop', 'Акция'), []).
+			Html::tag('div', $model->customerRule ? \Yii::t('shop', 'Опт') : \Yii::t('shop', 'Акция'), []).
 			Html::tag('div', '-'.$model->discountSize.$dimension, []),
 			[
 				'class' => 'top'

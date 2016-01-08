@@ -35,13 +35,23 @@ $this->registerJs($js);
                 'id'        =>  ''
             ],
             [
-                'content'   =>  '<div class="content-data-body-address">Мои адреса:</div>',
+                'content'   =>  '<div class="content-data-body-address">
+                                        Мои адреса:
+                                 </div>',
                 'label'     =>  'Адресная доставка',
                 'id'        =>  '',
                 'active' => true
+
             ],
             [
-                'content'   =>  '<div class="content-data-body-department">Отделение:</div>',
+                'content'   =>  '<div class="content-data-body-department">
+                                        Отделение:
+                                        <a id="go" href="#">
+                                            <div class="map-icon">
+                                            </div>
+                                            Cм. на карте
+                                        </a>
+                                 </div>',
                 'label'     =>  'Новая Почта',
                 'id'        =>  ''
             ],
@@ -53,8 +63,6 @@ $this->registerJs($js);
             [
                 'content'   =>  '<div>
                                 <div class="content-data-body-stock">
-
-
                                     <div class="semi-bold">Наш склад находится по адресу:</div>
                                     г. Киев, ул. Электротехническая, 2
                                     <div class="work-time">
@@ -119,7 +127,17 @@ $this->registerJs($js);
             'value'     =>      $value,
             'id'        =>      "radio-".$value,
         ])
-        .'<label for="radio-'.$value.'"><i></i><div class="payment-type-text">'. $label .'</div></label></div>';
+        .'<label for="radio-'.$value.'"><i></i><div class="payment-type-text">'. $label .'</div></label>
+
+        <div class="question">
+                            <div class="round-button">
+                                <div class="content-data-title-img">
+                                    <a class="round-button" data-toggle="tooltip" data-title="Эта сумма может измениться, в случае если вдруг не будет товаров на складе">?</a>                                </div>
+                            </div>
+                        </div>
+
+
+        </div>';
     }
 ])->label(false);
 ?>

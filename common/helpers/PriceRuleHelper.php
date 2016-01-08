@@ -16,15 +16,7 @@ use yii\helpers\Json;
 
 class PriceRuleHelper extends Component{
 
-	public $pricerules;
 	public $cartSumm;
-
-	public function init(){
-		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
-		if(!\Yii::$app->user->isGuest){
-			$this->pricerules = array_merge(\Yii::$app->user->identity->getPriceRules(), $this->pricerules);
-		}
-	}
 
 	public function asArray($rule){
 		$query = $rule->Formula;
@@ -82,7 +74,7 @@ class PriceRuleHelper extends Component{
 				$model->priceRuleID = 0;
 				$model->discountType = 0;
 				$model->discountSize = 0;
-				$model->personalRule = 0;
+				$model->customerRule = 0;
 				return $model;
 			}
 		}
@@ -188,7 +180,7 @@ class PriceRuleHelper extends Component{
 			$model->priceRuleID = $rule->ID;
 			$model->discountType = empty($ruleArray['actions']['Type']) ? 2 : $ruleArray['actions']['Type'];
 			$model->discountSize = $ruleArray['actions']['Discount'];
-			$model->personalRule = $rule->personalRule;
+			$model->customerRule = $rule->customerRule;
 			return $model;
 		}
 	}

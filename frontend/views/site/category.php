@@ -1,6 +1,6 @@
 <?php
 
-use common\helpers\PriceRuleHelper;
+use frontend\helpers\PriceRuleHelper;
 
 $this->title = '';
 \Yii::$app->params['breadcrumbs'][] = [

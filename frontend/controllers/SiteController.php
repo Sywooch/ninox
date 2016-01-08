@@ -161,7 +161,7 @@ class SiteController extends Controller
             throw new ErrorException("Клиент не найден!");
         }
 
-        Cart::updateAll(['customerID' => $customer->ID], ['cartCode' => \Yii::$app->cart->cartCode]);
+        Cart::updateAll(['customerID' => $customer->ID], '`cartCode` = \''.\Yii::$app->cart->cartCode.'\'');
 
         if(\Yii::$app->request->post("OrderForm")){
             $order->load(\Yii::$app->request->post());
