@@ -11,7 +11,7 @@ namespace backend\components;
 
 use backend\models\CashboxItem;
 use backend\models\CashboxOrder;
-use backend\models\Good;
+use common\models\Good;
 use common\models\Category;
 use yii\base\Component;
 use yii\base\ErrorException;
@@ -36,7 +36,7 @@ class Cashbox extends Component{
     public $priceType = 0;
     public $discountSize = 0;
 
-    private $order;
+    public $order;
 
     public function init(){
         $cache = \Yii::$app->cache;
@@ -97,7 +97,27 @@ class Cashbox extends Component{
     }
 
     public function changePriceType(){
+        $this->priceType = $this->priceType == 1 ? 0 : 1;
 
+        if(!empty($this->order)){
+            $this->order->priceType = $this->priceType;
+
+            if($this->order->save(false)){
+                foreach($this->items as $item){
+                    $price = ($this->priceType == 1 ? $this->goods[$item->itemID]->PriceOut1 : $this->goods[$item->itemID]->PriceOut2);
+                    \Yii::trace("item: ".$item->itemID.'; price: '.$price.'; oldPrice: '.$item->originalPrice);
+                    $item->originalPrice = $price;
+                    $item->save(false);
+                }
+            }
+        }
+
+        \Yii::$app->response->cookies->add(new Cookie([
+            'name'      =>  'cashboxPriceType',
+            'value'     =>  $this->priceType
+        ]));
+
+        $this->save();
     }
 
     public function itemsQuery(){
@@ -141,6 +161,20 @@ class Cashbox extends Component{
         return true;
     }
 
+    public function changeCount($itemID, $count){
+        $this->items[$itemID]->count = $count;
+
+        if($this->items[$itemID]->save(false)){
+            $this->save();
+
+            $this->recalculate();
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function put($itemID, $count = 1){
         if(empty($this->order) && !empty($this->orderID)){
            $this->order = CashboxOrder::findOne($this->orderID);
@@ -179,7 +213,7 @@ class Cashbox extends Component{
                 'count'         =>  $count,
                 'category'      =>  Category::find()->select("Code")->where(['ID' => $good->GroupID])->scalar(),
                 'name'          =>  $good->Name,
-                'originalPrice' =>  $this->priceType == 1 ? $good->PriceOut1 : $good->PriceOut2,
+                'originalPrice' =>  $this->priceType == 1 ? $good->PriceOut2 : $good->PriceOut1,
             ]);
         }
 
@@ -212,8 +246,8 @@ class Cashbox extends Component{
         foreach($this->items as $item){
             $this->retailSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
             $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
-            $this->sum += ($item->price * $item->count);
-            $this->toPay = $this->sum;
+            $this->sum += ($item->originalPrice * $item->count);
+            $this->toPay += ($item->price * $item->count);
         }
 
         $this->itemsCount = count($this->items);

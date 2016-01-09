@@ -70,6 +70,10 @@ $js = <<<'SCRIPT'
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
+                if(data.wholesaleSum >= 500 && data.priceType != 1){
+                    changeCashboxType();
+                }
+
                 updateSummary(data);
             },
             error: function (request, status, error) {

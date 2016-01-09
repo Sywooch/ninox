@@ -102,37 +102,20 @@ class DefaultController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        $priceType = \Yii::$app->request->cookies->getValue("cashboxPriceType", 0);
+        \Yii::$app->cashbox->changePriceType();
 
-        $priceType = $priceType == 1 ? '0' : '1';
+        \Yii::$app->cashbox->recalculate();
 
-        \Yii::$app->response->cookies->remove('cashboxPriceType');
-
-        \Yii::$app->response->cookies->add(new Cookie([
-            'name'      =>  'cashboxPriceType',
-            'value'     =>  $priceType
-        ]));
-
-        if(\Yii::$app->request->cookies->has("cashboxOrderID")){
-            $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
-
-            if($cashboxOrder){
-                $cashboxOrder->priceType = $priceType;
-
-                $cashboxOrder->save();
-
-                return [
-                    'priceType' =>  $cashboxOrder->priceType,
-                    'orderSum'  =>  $cashboxOrder->sum,
-                    'orderToPay'=>  $cashboxOrder->toPay
-                ];
-            }
+        if(!empty(\Yii::$app->cashbox->order)){
+            return [
+                'priceType' =>  \Yii::$app->cashbox->order->priceType,
+                'orderSum'  =>  \Yii::$app->cashbox->sum,
+                'orderToPay'=>  \Yii::$app->cashbox->toPay
+            ];
         }
 
-        //Тут также можно будет добавить логику изменения цены в заказе
-
         return [
-            'priceType' =>  $priceType
+            'priceType' =>  \Yii::$app->cashbox->priceType
         ];
     }
 
@@ -170,22 +153,14 @@ class DefaultController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        $item = CashboxItem::findOne(['orderID' => \Yii::$app->request->cookies->getValue('cashboxOrderID'), 'itemID' => \Yii::$app->request->post("itemID")]);
-
-        $item->count = \Yii::$app->request->post("count");
-
-        if($item->save(false)){
-            $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
-
-            if($cashboxOrder){
-                return [
-                    'itemsCount'    =>  count($cashboxOrder->items),
-                    'sum'           =>  $cashboxOrder->sum,
-                    'toPay'         =>  $cashboxOrder->toPay,
-                ];
-            }
-
-            return false;
+        if(\Yii::$app->cashbox->changeCount(\Yii::$app->request->post("itemID"), \Yii::$app->request->post("count"))){
+            return [
+                'itemsCount'    =>  \Yii::$app->cashbox->itemsCount,
+                'sum'           =>  \Yii::$app->cashbox->sum,
+                'toPay'         =>  \Yii::$app->cashbox->toPay,
+                'wholesaleSum'  =>  \Yii::$app->cashbox->wholesaleSum,
+                'priceType'     =>  \Yii::$app->cashbox->priceType,
+            ];
         }
 
         return false;
