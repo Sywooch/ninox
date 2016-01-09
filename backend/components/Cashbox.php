@@ -210,8 +210,8 @@ class Cashbox extends Component{
         $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = 0;
 
         foreach($this->items as $item){
-            $this->retailSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
-            $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
+            $this->retailSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
+            $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
             $this->sum += ($item->price * $item->count);
             $this->toPay = $this->sum;
         }
