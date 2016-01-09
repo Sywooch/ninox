@@ -19,6 +19,9 @@ return [
         'formatter' =>  [
             'class' =>  'backend\components\Formatter'
         ],
+        'cashbox'   =>  [
+            'class' =>  'backend\components\Cashbox'
+        ],
         'i18n' => [
             'translations' => [
                 '*' => [

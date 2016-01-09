@@ -191,58 +191,14 @@ class DefaultController extends Controller
         return false;
     }
 
-    public function actionRemoveitem(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
-        }
-
-        \Yii::$app->response->format = 'json';
-
-        $itemID = \Yii::$app->request->post("itemID");
-
-        $orderItem = CashboxItem::find()->where(['orderID' =>  \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
-
-        if($itemID != 'all'){
-            $orderItem->andWhere(['itemID' => $itemID]);
-        }
-
-        if($orderItem->count() < 0){
-            throw new NotFoundHttpException("Такой товар не найден!");
-        }
-
-        foreach($orderItem->each() as $item){
-            if(!$item->delete()){
-                return false;
-            }
-        }
-
-        if($itemID != 'all'){
-            $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
-
-            if($cashboxOrder){
-                return [
-                    'itemsCount'    =>  count($cashboxOrder->items),
-                    'sum'           =>  $cashboxOrder->sum,
-                    'toPay'         =>  $cashboxOrder->toPay,
-                ];
-            }
-        }
-
-        return true;
-    }
-
     public function actionIndex(){
-        if(\Yii::$app->request->cookies->has('cashboxOrderID')){
-            $order = CashboxOrder::findOne(['id'    =>  \Yii::$app->request->cookies->getValue('cashboxOrderID')]);
+        if(!empty(\Yii::$app->cashbox->order)){
+            $order = \Yii::$app->cashbox->order;
         }else{
             $order = new CashboxOrder();
         }
 
-        $customer = false;
-
-        if(\Yii::$app->request->cookies->has('cashboxCurrentCustomer')){
-            $customer = \Yii::$app->request->cookies->getValue('cashboxCurrentCustomer');
-        }
+        $customer = \Yii::$app->cashbox->customer;
 
         if(\Yii::$app->request->post("CashboxCustomerForm")){
             $cashboxCustomerForm = new CashboxCustomerForm();
@@ -273,7 +229,7 @@ class DefaultController extends Controller
         }
 
         $orderItems = new ActiveDataProvider([
-            'query'     =>  CashboxItem::find()->where(['orderID' =>    \Yii::$app->request->cookies->getValue('cashboxOrderID')]),
+            'query'     =>  \Yii::$app->cashbox->itemsQuery(),
             'pagination'    =>  [
                 'pageSize'  =>  0
             ]
@@ -299,7 +255,7 @@ class DefaultController extends Controller
             'orderItems'        =>  $orderItems,
             'order'             =>  $order,
             'customer'          =>  $customer,
-            'manager'           =>  Siteuser::getActiveUsers()[\Yii::$app->request->cookies->getValue("cashboxManager", 0)]
+            'manager'           =>  Siteuser::getActiveUsers()[\Yii::$app->cashbox->responsibleUser]
         ]);
     }
 
@@ -516,56 +472,48 @@ class DefaultController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        if(\Yii::$app->request->cookies->has("cashboxOrderID")){
-            $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
-        }else{
-            $cashboxOrder = new CashboxOrder();
-        }
+        \Yii::$app->cashbox->put($good->ID);
 
-        if($cashboxOrder->isNewRecord){
-            if(\Yii::$app->request->cookies->has("cashboxCurrentCustomer")){
-                $cashboxOrder->customerID = \Yii::$app->request->cookies->getValue("cashboxCurrentCustomer");
-            }
-            $cashboxOrder->createdTime = date('Y-m-d H:i:s');
-            $cashboxOrder->priceType = \Yii::$app->request->cookies->getValue('cashboxPriceType', 0);
-
-            if($cashboxOrder->save(false)){
-                \Yii::$app->response->cookies->add(new Cookie([
-                    'name'      =>  'cashboxOrderID',
-                    'value'     =>  $cashboxOrder->id
-                ]));
-            }
-        }
-
-        $orderItem = CashboxItem::findOne(['orderID' => $cashboxOrder->id, 'itemID' => $good->ID]);
-
-        if(!$orderItem){
-            $orderItem = new CashboxItem();
-
-            $orderItem->orderID = $cashboxOrder->id;
-            $orderItem->itemID = $good->ID;
-            $orderItem->count = 1;
-            $orderItem->category = Category::find()->select("Code")->where(['ID' => $good->GroupID])->scalar();
-            $orderItem->name = $good->Name;
-            $orderItem->originalPrice = $cashboxOrder->priceType == 1 ? $good->PriceOut1 : $good->PriceOut2;
-        }else{
-            $orderItem->count += 1;
-        }
-
-        $return = [
-            'type'          =>  $orderItem->isNewRecord ? 'add' : 'update',
+        return [
+            'toPay'         =>  \Yii::$app->cashbox->toPay,
+            'sum'           =>  \Yii::$app->cashbox->sum,
+            'itemsCount'    =>  \Yii::$app->cashbox->itemsCount,
+            'wholesaleSum'  =>  \Yii::$app->cashbox->wholesaleSum,
+            'priceType'     =>  \Yii::$app->cashbox->priceType
         ];
+    }
 
-        if($orderItem->save(false)){
-            $return = array_merge($return, [
-                'toPay'     =>  $cashboxOrder->toPay,
-                'sum'       =>  $cashboxOrder->sum,
-                'itemsCount'=>  count($cashboxOrder->items)
-            ]);
 
-            return $return;
+    public function actionRemoveitem(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
-        return $return;
+        \Yii::$app->response->format = 'json';
+
+        $itemID = \Yii::$app->request->post("itemID");
+
+        if($itemID != 'all' && !isset(\Yii::$app->cashbox->items[$itemID])){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+
+        if(\Yii::$app->cashbox->itemsCount > 0){
+            if($itemID == 'all'){
+                foreach(\Yii::$app->cashbox->items as $item){
+                    \Yii::$app->cashbox->remove($item->itemID);
+                }
+            }else{
+                \Yii::$app->cashbox->remove($itemID);
+
+                return [
+                    'itemsCount'    =>  \Yii::$app->cashbox->itemsCount,
+                    'sum'           =>  \Yii::$app->cashbox->sum,
+                    'toPay'         =>  \Yii::$app->cashbox->toPay,
+                ];
+            }
+        }
+
+        return true;
     }
 }

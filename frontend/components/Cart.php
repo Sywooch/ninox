@@ -31,8 +31,8 @@ class Cart extends Component{
     public function init(){
         $cache = \Yii::$app->cache;
 
-        if(\Yii::$app->request->cookies->get("cartCode")){
-            $this->cartCode = \Yii::$app->request->cookies->get("cartCode");
+        if(\Yii::$app->request->cookies->has("cartCode")){
+            $this->cartCode = \Yii::$app->request->cookies->getValue("cartCode");
         }
 
         $this->load();

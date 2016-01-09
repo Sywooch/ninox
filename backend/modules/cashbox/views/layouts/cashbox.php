@@ -3,8 +3,8 @@ use yii\helpers\Html;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
-$js = <<<'SCRIPT'
-    $("#changeCashboxType").on('click', function(e){
+$js = <<<'JS'
+    changeCashboxType = function(){
         swal({
             title: "Пересчитываем заказ...",
             allowEscapeKey: false,
@@ -14,21 +14,26 @@ $js = <<<'SCRIPT'
             url:    '/cashbox/changecashboxtype',
             type:   'post',
             success: function(data){
-                if(data.priceType == 1){
-                    e.currentTarget.innerHTML = 'Опт';
-                    e.currentTarget.setAttribute('class', 'btn btn-lg btn-success');
+                var summary = $('.header .summary'),
+                    button = $('#changeCashboxType');
 
-                    if($('.header .summary').length > 0){
-                        $('.header .summary').toggleClass('bg-danger');
-                        $('.header .summary').addClass('bg-success');
+                if(data.priceType == 1){
+                    button[0].innerHTML = 'Опт';
+                    button.removeClass('btn-danger');
+                    button.addClass('btn-success');
+
+                    if(summary.length > 0){
+                        summary.removeClass('bg-danger');
+                        summary.addClass('bg-success');
                     }
                 }else{
-                    e.currentTarget.innerHTML = 'Розница';
-                    e.currentTarget.setAttribute('class', 'btn btn-lg btn-danger');
+                    button[0].innerHTML = 'Розница';
+                    button.removeClass('btn-success');
+                    button.addClass('btn-danger');
 
-                    if($('.header .summary').length > 0){
-                        $('.header .summary').toggleClass('bg-success');
-                        $('.header .summary').addClass('bg-danger');
+                    if(summary.length > 0){
+                        summary.removeClass('bg-success');
+                        summary.addClass('bg-danger');
                     }
                 }
 
@@ -42,8 +47,12 @@ $js = <<<'SCRIPT'
                 swal.close();
             }
         });
+    };
+
+    $("#changeCashboxType").on('click', function(){
+        changeCashboxType();
     });
-SCRIPT;
+JS;
 
 $this->beginPage();
 \backend\assets\CashboxAsset::register($this);
