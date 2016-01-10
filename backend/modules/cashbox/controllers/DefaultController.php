@@ -9,7 +9,6 @@ use backend\models\Customer;
 use backend\models\Good;
 use backend\models\History;
 use backend\models\SborkaItem;
-use common\models\Category;
 use common\models\Siteuser;
 use yii\data\ActiveDataProvider;
 use yii\web\Cookie;
@@ -35,64 +34,7 @@ class DefaultController extends Controller
             throw new MethodNotAllowedHttpException("Этот метод доступен только через ajax!");
         }
 
-        $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
-
-        if(!$cashboxOrder){
-            throw new NotFoundHttpException("Такой заказ не найден!");
-        }
-
-        $order = new History([
-            'responsibleUserID' =>  $cashboxOrder->responsibleUser,
-            'customerID'        =>  $cashboxOrder->customerID,
-            'originalSum'       =>  $cashboxOrder->sum
-        ]);
-
-        if($cashboxOrder->customerID != 0){
-            $customer = Customer::findOne(['ID' => $cashboxOrder->customerID]);
-
-            $order->customerEmail = $customer->email;
-
-            $nameParts = explode(' ', $customer->Company);
-
-            $order->customerName = $nameParts[0];
-            $order->customerSurname = $nameParts[1];
-        }
-
-        $order->actualAmount = \Yii::$app->request->post("actualAmount");
-
-        if($order->save(false)){
-            foreach($cashboxOrder->items as $item){
-
-
-                $sborkaItem = new SborkaItem([
-                    'orderID'       =>  $order->id,
-                    'itemID'        =>  $item->itemID,
-                    'name'          =>  $item->name,
-                    'count'         =>  $item->count,
-                    'originalCount' =>  $item->count,
-                    'originalPrice' =>  $item->originalPrice,
-                    'discountSize'  =>  $item->discountSize,
-                    'discountType'  =>  $item->discountType,
-                    'priceRuleID'   =>  $item->priceRuleID,
-                    'category'      =>  $item->category,
-                    'customerRule'  =>  $item->customerRule
-                ]);
-
-                if($sborkaItem->save()){
-                    $item->delete();
-                }
-
-                $cashboxOrder->createdOrder = $order->id;
-            }
-
-            $cashboxOrder->doneTime = date('Y-m-d H:i:s');
-            $cashboxOrder->save(false);
-
-            \Yii::$app->response->cookies->remove('cashboxOrderID');
-            \Yii::$app->response->cookies->remove('cashboxCurrentCustomer');
-
-            return $cashboxOrder->createdOrder;
-        }
+        return \Yii::$app->cashbox->sell();
     }
 
     public function actionChangecashboxtype(){
@@ -332,8 +274,6 @@ class DefaultController extends Controller
 
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
-        \Yii::trace($date);
-
         switch(\Yii::$app->request->get('smartfilter')){
             case 'yesterday':
                 $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($date - 86400, 'php:Y-m-d H:i:s')."'");
@@ -471,7 +411,6 @@ class DefaultController extends Controller
         if($itemID != 'all' && !isset(\Yii::$app->cashbox->items[$itemID])){
             throw new NotFoundHttpException("Такой товар не найден!");
         }
-
 
         if(\Yii::$app->cashbox->itemsCount > 0){
             if($itemID == 'all'){

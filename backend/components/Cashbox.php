@@ -11,6 +11,9 @@ namespace backend\components;
 
 use backend\models\CashboxItem;
 use backend\models\CashboxOrder;
+use backend\models\Customer;
+use backend\models\History;
+use common\models\SborkaItem;
 use common\models\Good;
 use common\models\Category;
 use yii\base\Component;
@@ -84,6 +87,8 @@ class Cashbox extends Component{
         }
 
         $this->recalculate();
+
+        $this->save();
     }
 
     public function loadInfo($model){
@@ -94,6 +99,10 @@ class Cashbox extends Component{
         $this->customer = $model->customerID;
         $this->responsibleUser = $model->responsibleUser;
         $this->priceType = $model->priceType;
+
+        $this->order = $model;
+
+        $this->save();
     }
 
     public function changePriceType(){
@@ -107,6 +116,7 @@ class Cashbox extends Component{
                     $price = ($this->priceType == 1 ? $this->goods[$item->itemID]->PriceOut1 : $this->goods[$item->itemID]->PriceOut2);
                     \Yii::trace("item: ".$item->itemID.'; price: '.$price.'; oldPrice: '.$item->originalPrice);
                     $item->originalPrice = $price;
+                    $item->changedValue = 0;
                     $item->save(false);
                 }
             }
@@ -141,17 +151,23 @@ class Cashbox extends Component{
     }
 
     public function save(){
+        foreach($this->items as $item){
+            $item->changedValue = 0;
+            $this->items[$item->itemID] = $item;
+        }
+
         \Yii::$app->cache->set('cashbox-'.$this->orderID.'/items', $this->items);
         \Yii::$app->cache->set('cashbox-'.$this->orderID.'/goods', $this->goods);
         \Yii::$app->cache->set('cashbox-'.$this->orderID.'/info', $this->order);
     }
 
-    public function remove($itemID){
+    public function remove($itemID, $return = true){
         unset($this->items[$itemID], $this->goods[$itemID]);
 
         $item = CashboxItem::findOne(['orderID' => $this->orderID, 'itemID' => $itemID]);
 
         if($item){
+            $item->return = $return;
             $item->delete();
         }
 
@@ -175,20 +191,92 @@ class Cashbox extends Component{
         return false;
     }
 
+    public function sell(){
+        if(empty($this->order)){
+            throw new NotFoundHttpException("Невозможно оформить несуществующий заказ!");
+        }
+
+        $order = new History([
+            'responsibleUserID' =>  $this->order->responsibleUser,
+            'customerID'        =>  $this->order->customerID,
+            'originalSum'       =>  $this->order->sum
+        ]);
+
+        if($this->order->customerID != 0){
+            $customer = Customer::findOne(['ID' => $this->order->customerID]);
+
+            $order->customerEmail = $customer->email;
+
+            $nameParts = explode(' ', $customer->Company);
+
+            $order->customerName = $nameParts[0];
+            $order->customerSurname = $nameParts[1];
+        }
+
+        $order->actualAmount = \Yii::$app->request->post("actualAmount");
+
+        if($order->save(false)){
+            foreach($this->order->items as $item){
+                $sborkaItem = new SborkaItem([
+                    'orderID'       =>  $order->id,
+                    'itemID'        =>  $item->itemID,
+                    'name'          =>  $item->name,
+                    'count'         =>  $item->count,
+                    'originalCount' =>  $item->count,
+                    'originalPrice' =>  $item->originalPrice,
+                    'discountSize'  =>  $item->discountSize,
+                    'discountType'  =>  $item->discountType,
+                    'priceRuleID'   =>  $item->priceRuleID,
+                    'category'      =>  $item->category,
+                    'customerRule'  =>  $item->customerRule
+                ]);
+
+                if($sborkaItem->save()){
+                    $item->changedValue = 0;
+                    $item->delete();
+                }
+
+                $this->order->createdOrder = $order->id;
+            }
+
+            $this->order->doneTime = date('Y-m-d H:i:s');
+            $this->order->save(false);
+
+            $this->clear();
+
+            return $this->order->createdOrder;
+        }
+
+        return false;
+    }
+
+    public function clear(){
+        $this->priceType = 1;
+
+        $this->changePriceType();
+
+        foreach($this->items as $item){
+            $this->remove($item->itemID, false);
+        }
+
+        \Yii::$app->response->cookies->remove('cashboxOrderID');
+        \Yii::$app->response->cookies->remove('cashboxCurrentCustomer');
+    }
+
     public function put($itemID, $count = 1){
-        if(empty($this->order) && !empty($this->orderID)){
+        if(!$this->order && !empty($this->orderID)){
            $this->order = CashboxOrder::findOne($this->orderID);
-        }elseif(empty($this->order)){
+        }elseif(!$this->order){
             $this->order = new CashboxOrder();
         }
 
         if($this->order->isNewRecord){
+            $this->order->createdTime = date('Y-m-d H:i:s');
+            $this->order->priceType = $this->priceType;
+
             if(!empty($this->customer)){
                 $this->order->customerID = $this->customer;
             }
-
-            $this->order->createdTime = date('Y-m-d H:i:s');
-            $this->order->priceType = $this->priceType;
 
             if($this->order->save(false)){
                 \Yii::$app->response->cookies->add(new Cookie([
@@ -217,7 +305,7 @@ class Cashbox extends Component{
             ]);
         }
 
-        if($this->items[$good->ID]->save(false) && !isset($this->goods[$good->ID])){
+        if($this->items[$good->ID]->save(false)){
             $this->goods[$good->ID] = $good;
         }
 
@@ -244,10 +332,12 @@ class Cashbox extends Component{
         $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = 0;
 
         foreach($this->items as $item){
-            $this->retailSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
-            $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
-            $this->sum += ($item->originalPrice * $item->count);
-            $this->toPay += ($item->price * $item->count);
+            if(isset($this->goods[$item->itemID])){
+                $this->retailSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
+                $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
+                $this->sum += ($item->originalPrice * $item->count);
+                $this->toPay += ($item->price * $item->count);
+            }
         }
 
         $this->itemsCount = count($this->items);
