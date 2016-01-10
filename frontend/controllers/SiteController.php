@@ -1,11 +1,12 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\DomainsDeliveryPayments;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\OrderForm;
 use Yii;
-use common\models\Domains;
+use common\models\Domain;
 use common\models\Pagetype;
 
 use frontend\models\Banner;
@@ -179,9 +180,14 @@ class SiteController extends Controller
 
         $this->layout = 'order';
 
+	    $domainConfiguration = DomainsDeliveryPayments::getConfigArray();
+
+	    echo '<pre>';
+	    var_dump($domainConfiguration);
+		echo '</pre>';
         return $this->render('order2', [
             'model'             =>  $order,
-
+			'domainConfiguration'      =>  $domainConfiguration
         ]);
     }
 
@@ -396,7 +402,7 @@ class SiteController extends Controller
     }
 
 	public function beforeAction($action){
-		$domainInfo = Domains::findOne(['name' => \Yii::$app->request->getServerName()]);
+		$domainInfo = Domain::findOne(['name' => \Yii::$app->request->getServerName()]);
 		\Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;
 
         return parent::beforeAction($action);

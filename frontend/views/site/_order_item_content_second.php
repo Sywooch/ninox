@@ -8,33 +8,35 @@ $('label.tabsLabels').click(function () {
 SCRIPT;
 
 $this->registerJs($js);
+
+$items = [];
+
 ?>
 <div class="content-data-body-delivery-type">
-    <?=$form->field($model, 'deliveryType', [
-    ])->radioList(\common\models\DeliveryTypes::getDeliveryTypes(), [
-        'item' => function ($index, $label, $name, $checked, $value) {
-            return '<div class="tab">'. Html::radio($name, $checked, [
+<?=$form->field($model, 'deliveryType', [
+    ])->radioList($domainConfiguration, [
+        'item' => function($index, $label, $name, $checked, $value) use (&$items){
+	        $items[] = [
+		        'content'   =>  '<div class="content-data-body-address">
+									Мои адреса:
+								</div>',
+		        'label'     =>  'Адресная доставка',
+		        'id'        =>  '',
+		        'active' => $checked
+	        ];
+            return '<div class="tab">'.Html::radio($name, $checked, [
                 'value'     =>      $value,
-                'id'        =>      "tab-".$value
+                'id'        =>      "tab-".$index
             ])
-            .'<label class="tabsLabels" data-target="#w0-tab'.$value.'" for="tab-'.$value.'">'. $label .'</label>'.'</div>';
-        },
-
-          'itemOptions'   =>  [
-            'class' =>  'asdf'
-        ]
+            .'<label class="tabsLabels" data-target="#w0-tab'.$index.'" for="tab-'.$index.'">'.$label['name'].'</label></div>';
+        }
     ])->label(false)?>
     <?=\yii\bootstrap\Tabs::widget([
         'headerOptions' =>  [
             'style' =>  'display: none'
         ],
-        'items' =>  [
-            [
-                'content'   =>  '',
-                'label'     =>  '',
-                'id'        =>  ''
-            ],
-            [
+        'items' =>  $items
+/*            [
                 'content'   =>  '<div class="content-data-body-address">
                                         Мои адреса:
                                  </div>',
@@ -56,11 +58,6 @@ $this->registerJs($js);
                 'id'        =>  ''
             ],
             [
-                'content'   =>  '',
-                'label'     =>  '',
-                'id'        =>  ''
-            ],
-            [
                 'content'   =>  '<div>
                                 <div class="content-data-body-stock">
                                     <div class="semi-bold">Наш склад находится по адресу:</div>
@@ -75,8 +72,7 @@ $this->registerJs($js);
                                 </div>',
                 'label'     =>  'Самовывоз',
                 'id'        =>  ''
-            ],
-        ]
+            ],*/
     ])?>
 </div>
 
@@ -108,9 +104,9 @@ $this->registerJs($js);
         ],
         [
             'content'   =>  '<div class="content-data-body-first">'.
-                            $form->field($model, 'anotherReceiverName').$form->field($model, 'anotherReceiverSurname').$form->field($model, 'anotherReceiverPhone').
+                                $form->field($model, 'anotherReceiverName').$form->field($model, 'anotherReceiverSurname').$form->field($model, 'anotherReceiverPhone').
                             '</div>',
-            'label'     =>  'Адресная доставка',
+            'label'     =>  '',
             'id'        =>  '2'
 
 
@@ -118,10 +114,8 @@ $this->registerJs($js);
     ]
 ])?>
 </div>
-<div class="payment-type">
-    Способ оплаты
-</div>
-<?=$form->field($model, 'paymentType', [])->radioList(\common\models\PaymentTypes::getPaymentTypes(), [
+<div class="payment-type">Способ оплаты</div>
+<?/*=$form->field($model, 'paymentType', [])->radioList(\common\models\PaymentTypes::getPaymentTypes(), [
     'item' => function ($index, $label, $name, $checked, $value) {
         return '<div class="tab">'. Html::radio($name, $checked, [
             'value'     =>      $value,
@@ -140,7 +134,5 @@ $this->registerJs($js);
         </div>';
     }
 ])->label(false);
-?>
-<div class="add-comment">
-<a>Добавить коментарий к заказу</a>
-</div>
+*/?>
+<div class="add-comment">Добавить коментарий к заказу</div>
