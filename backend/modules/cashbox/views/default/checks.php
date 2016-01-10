@@ -1,8 +1,35 @@
 <?php
 
+use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
 $this->title = 'Отложенные чеки';
 
+$js = <<<'JS'
+var loadPostpone = function(orderID){
+    swal({
+        title: "Поднять чек",
+        text: "Поднять отложеный чек №" + orderID + "?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Поднять!",
+        cancelButtonText: "Отмена",
+        closeOnConfirm: false
+    },
+    function(){
+        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+    });
+};
+
+$("#cashboxGrid tr").on('click', function(e){
+    loadPostpone(e.currentTarget.getAttribute('data-key'));
+});
+JS;
+
+$this->registerJs($js);
+
+rmrevin\yii\fontawesome\AssetBundle::register($this);
+\bobroid\sweetalert\SweetalertAsset::register($this);
 ?>
 
 <div class="header">
@@ -18,18 +45,49 @@ $this->title = 'Отложенные чеки';
 <div class="content main-small">
     <?=\kartik\grid\GridView::widget([
         'dataProvider'  =>  $checksItems,
+        'id'            =>  'cashboxGrid',
+        'summary'       =>  false,
+        'emptyText'     =>  false,
+        'resizableColumns'=>false,
+        'hover'         =>false,
         'columns'       =>  [
             [
-                'class' =>  \kartik\grid\SerialColumn::className()
+                'contentOptions'   =>  [
+                    'class' =>  'removeGood'
+                ],
+                'format'    =>  'html',
+                'value'     =>  function(){
+                    return FA::icon('times')->size(FA::SIZE_LARGE);
+                },
+                'width' =>  '40px;'
             ],
             [
-                'attribute' =>  'customerID'
+                'class' =>  \kartik\grid\SerialColumn::className(),
+                'contentOptions'   =>  [
+                    'class' =>  'counter',
+                    'width' =>  '40px;'
+                ],
+            ],
+            [
+                'attribute' =>  'customerID',
+                'value'     =>  function($model) use(&$customers){
+                    if($model->customerID != 0){
+                        return $customers[$model->customerID]->Company;
+                    }
+                }
             ],
             [
                 'attribute' =>  'createdTime'
             ],
             [
-                'attribute' =>  'responsibleUser'
+                'attribute' =>  'responsibleUser',
+                'value'     =>  function($model){
+                    if($model->responsibleUser != 0){
+                        return \common\models\Siteuser::getUser($model->responsibleUser)->name;
+                    }
+
+                    return ;
+                }
             ],
             [
                 'value'     =>  function($model){

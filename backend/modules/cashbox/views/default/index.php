@@ -51,6 +51,10 @@ $js = <<<'SCRIPT'
 
                 updateSummary(data);
 
+                if(data.wholesaleSum < 500 && data.priceType == 1){
+                    changeCashboxType();
+                }
+
                 $(".removeGood > *").on('click', function(e){
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
                 });
@@ -70,7 +74,7 @@ $js = <<<'SCRIPT'
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                if(data.wholesaleSum >= 500 && data.priceType != 1){
+                if((data.wholesaleSum >= 500 && data.priceType != 1) || (data.wholesaleSum < 500 && data.priceType == 1)){
                     changeCashboxType();
                 }
 

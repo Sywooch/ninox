@@ -177,6 +177,24 @@ class Cashbox extends Component{
         return true;
     }
 
+    public function refund(){
+        foreach($this->items as $item){
+            if($this->remove($item->itemID)){
+                $good = Good::findOne($item->itemID);
+
+                $good->count += $item->count;
+
+                $good->save(false);
+            }
+        }
+
+        $this->order->doneTime = date('Y-m-d H:i:s');
+        $this->order->return = 1;
+        $this->order->save(false);
+
+        $this->clear();
+    }
+
     public function changeCount($itemID, $count){
         $this->items[$itemID]->count = $count;
 
@@ -191,7 +209,7 @@ class Cashbox extends Component{
         return false;
     }
 
-    public function sell(){
+    public function sell($amount){
         if(empty($this->order)){
             throw new NotFoundHttpException("Невозможно оформить несуществующий заказ!");
         }
@@ -205,15 +223,10 @@ class Cashbox extends Component{
         if($this->order->customerID != 0){
             $customer = Customer::findOne(['ID' => $this->order->customerID]);
 
-            $order->customerEmail = $customer->email;
-
-            $nameParts = explode(' ', $customer->Company);
-
-            $order->customerName = $nameParts[0];
-            $order->customerSurname = $nameParts[1];
+            $order->loadCustomer($customer);
         }
 
-        $order->actualAmount = \Yii::$app->request->post("actualAmount");
+        $order->actualAmount = $amount;
 
         if($order->save(false)){
             foreach($this->order->items as $item){
@@ -317,34 +330,47 @@ class Cashbox extends Component{
     }
 
     public function postpone(){
-        if(empty($this->orderID)){
+        if(!$this->order){
            throw new NotFoundHttpException("Нечего откладывать");
         }
 
+        $this->order->postpone = 1;
 
+        if($this->order->save(false)){
+            $this->clear();
+
+            return true;
+        }
+
+        return false;
     }
 
-    /*public function removeItem($itemID, $count = 1){
+    public function changeCustomer($customerID){
+        $this->customer = $customerID;
 
-    }*/
+        if($this->order){
+            $this->order->customerID = $this->customer;
+            $this->order->save(false);
+        }
+
+        \Yii::$app->response->cookies->add(new Cookie([
+            'name'  =>  'cashboxCurrentCustomer',
+            'value' =>  $this->customer
+        ]));
+
+        $this->save();
+    }
 
     public function recalculate(){
         $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = 0;
 
         foreach($this->items as $item){
-            if(isset($this->goods[$item->itemID])){
-                $this->retailSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
-                $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
-                $this->sum += ($item->originalPrice * $item->count);
-                $this->toPay += ($item->price * $item->count);
-            }
+            $this->retailSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
+            $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
+            $this->sum += ($item->originalPrice * $item->count);
+            $this->toPay += ($item->price * $item->count);
         }
 
         $this->itemsCount = count($this->items);
     }
-
-    /*public function clear(){
-
-    }*/
-
 }
