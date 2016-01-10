@@ -264,7 +264,7 @@ $css = <<<'STYLE'
 .content-data-body-stock{
     background: #fff9e7;
     border: 1px solid #f1e9d3;
-    width: 370px;
+    width: 400px;
     height: 100px;
     -moz-border-radius: 5px;
     -webkit-border-radius:5px;
@@ -272,6 +272,7 @@ $css = <<<'STYLE'
     margin-top: 20px;
     margin-bottom: 30px;
     padding: 10px;
+    font-size: 14px;
     text-shadow: 1px 0px 1px #bdb9ac;
 }
 
@@ -740,7 +741,8 @@ position: absolute;
     border-bottom: 1px dotted;
     text-decoration: none;
     display: block;
-float: right;
+    font-size: 14px;
+    float: right;
 }
 
 .map-icon{
@@ -858,13 +860,13 @@ $form = \yii\bootstrap\ActiveForm::begin([
 <script type="text/javascript">
     $(document).ready(function () {
         var offset = $('.ordering').offset();
-        var topPadding = 0;
+        var topPadding = 30;
         $(window).scroll(function() {
             if ($(window).scrollTop() > offset.top) {
                 $('.ordering').stop().animate({marginTop: $(window).scrollTop() - offset.top + topPadding});
             }
             else {
-                $('.ordering').stop().animate({marginTop: 0});
+                $('.ordering').stop().animate({marginTop: 5});
             }
         });
     });

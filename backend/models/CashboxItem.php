@@ -24,6 +24,7 @@ class CashboxItem extends \yii\db\ActiveRecord
 
     public $price = 0;
     public $changedValue = 0;
+    public $return = false;
 
     public function afterFind(){
         $this->price = $this->originalPrice;
@@ -84,10 +85,15 @@ class CashboxItem extends \yii\db\ActiveRecord
     }
 
     public function afterDelete(){
-        $good = Good::findOne(['ID' => $this->itemID]);
-        $good->count += $this->count;
+        if($this->return){
+            $good = Good::findOne($this->itemID);
 
-        $good->save(false);
+            if($good){
+                $good->count += $this->count;
+
+                $good->save(false);
+            }
+        }
     }
 
     public function beforeSave($insert){

@@ -2,11 +2,13 @@
 
 namespace backend\models;
 
+use common\models\Customer;
 use common\models\SborkaItem;
 use Yii;
 use common\models\Category;
 use common\models\DeliveryTypes;
 use common\models\PaymentTypes;
+use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 
 class History extends \common\models\History

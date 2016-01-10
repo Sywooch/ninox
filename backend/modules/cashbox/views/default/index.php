@@ -21,8 +21,11 @@ $js = <<<'SCRIPT'
                 'itemID': item
             },
             success: function(data){
-
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                if(data.wholesaleSum >= 500 && data.priceType != 1){
+                    changeCashboxType();
+                }
 
                 updateSummary(data);
 
@@ -48,6 +51,10 @@ $js = <<<'SCRIPT'
 
                 updateSummary(data);
 
+                if(data.wholesaleSum < 500 && data.priceType == 1){
+                    changeCashboxType();
+                }
+
                 $(".removeGood > *").on('click', function(e){
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
                 });
@@ -66,6 +73,10 @@ $js = <<<'SCRIPT'
             },
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                if((data.wholesaleSum >= 500 && data.priceType != 1) || (data.wholesaleSum < 500 && data.priceType == 1)){
+                    changeCashboxType();
+                }
 
                 updateSummary(data);
             },
@@ -371,10 +382,10 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 </div>
             </div>
             <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
-                <p style="font-size: 14px;">Сумма: <span class="summ"><?=$order->sum?></span> грн. Скидка: <span class="discountSize"><?=$order->discountSize?></span> грн.</p>
-                <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=$order->toPay?></span> грн.</h2>
+                <p style="font-size: 14px;">Сумма: <span class="summ"><?=\Yii::$app->cashbox->sum?></span> грн. Скидка: <span class="discountSize"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
+                <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=\Yii::$app->cashbox->toPay?></span> грн.</h2>
 
-                <p>Количество товаров: <span class="itemsCount"><?=count($order->items)?></span></p>
+                <p>Количество товаров: <span class="itemsCount"><?=\Yii::$app->cashbox->itemsCount?></span></p>
             </div>
         </div>
     </div>
