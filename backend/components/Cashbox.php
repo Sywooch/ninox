@@ -16,6 +16,7 @@ use backend\models\History;
 use common\models\SborkaItem;
 use common\models\Good;
 use common\models\Category;
+use common\models\Siteuser;
 use yii\base\Component;
 use yii\base\ErrorException;
 use yii\web\Cookie;
@@ -91,6 +92,23 @@ class Cashbox extends Component{
         $this->save();
     }
 
+    public function load(){
+        $this->items = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/items');
+        $this->goods = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/goods');
+        $this->order = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/info');
+    }
+
+    public function save(){
+        foreach($this->items as $item){
+            $item->changedValue = 0;
+            $this->items[$item->itemID] = $item;
+        }
+
+        \Yii::$app->cache->set('cashbox-'.$this->orderID.'/items', $this->items);
+        \Yii::$app->cache->set('cashbox-'.$this->orderID.'/goods', $this->goods);
+        \Yii::$app->cache->set('cashbox-'.$this->orderID.'/info', $this->order);
+    }
+
     public function loadInfo($model){
         if($model instanceof CashboxOrder == false){
             throw new ErrorException("Передан неверный объект!");
@@ -144,23 +162,6 @@ class Cashbox extends Component{
         return Good::find()->where(['in', 'ID', $items]);
     }
 
-    public function load(){
-        $this->items = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/items');
-        $this->goods = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/goods');
-        $this->order = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/info');
-    }
-
-    public function save(){
-        foreach($this->items as $item){
-            $item->changedValue = 0;
-            $this->items[$item->itemID] = $item;
-        }
-
-        \Yii::$app->cache->set('cashbox-'.$this->orderID.'/items', $this->items);
-        \Yii::$app->cache->set('cashbox-'.$this->orderID.'/goods', $this->goods);
-        \Yii::$app->cache->set('cashbox-'.$this->orderID.'/info', $this->order);
-    }
-
     public function remove($itemID, $return = true){
         unset($this->items[$itemID], $this->goods[$itemID]);
 
@@ -173,6 +174,27 @@ class Cashbox extends Component{
 
         $this->save();
         $this->recalculate();
+
+        return true;
+    }
+
+    public function changeManager($id){
+        if($id != 0 && !Siteuser::findOne($id)){
+            throw new NotFoundHttpException("Менеджер не найден!");
+        }
+
+        $this->responsibleUser = $id;
+
+        \Yii::$app->response->cookies->add(new Cookie([
+            'name'      =>  'cashboxManager',
+            'value'     =>  $this->responsibleUser
+        ]));
+
+        if($this->order){
+            $this->order->responsibleUser = $this->responsibleUser;
+
+            $this->order->save(false);
+        }
 
         return true;
     }
@@ -343,6 +365,30 @@ class Cashbox extends Component{
         }
 
         return false;
+    }
+
+    public function loadPostpone($id){
+        if($this->order){
+            $this->postpone();
+        }
+
+        $order = CashboxOrder::findOne($id);
+
+        if(!$order){
+            throw new NotFoundHttpException("Чек с ID ".$id." не найден!");
+        }
+
+        $this->order = $order;
+
+        $this->order->postpone = 0;
+        $this->loadInfo($this->order);
+
+        \Yii::$app->response->cookies->add(new Cookie([
+            'name'      =>  'cashboxOrderID',
+            'value'     =>  $this->order->id
+        ]));
+
+        $this->order->save();
     }
 
     public function changeCustomer($customerID){

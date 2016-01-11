@@ -6,12 +6,12 @@ use kartik\grid\GridView;
 
 $this->title = 'Касса';
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
     Messenger.options = {
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
         theme: 'air',
         hideOnNavigate: false
-    }
+    };
 
     var addItem = function(item){
         $.ajax({
@@ -36,7 +36,12 @@ $js = <<<'SCRIPT'
                 $("#itemInput")['0'].value = '';
             },
             error: function (request, status, error) {
-                console.log(request.responseText);
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
             }
         });
     }, removeItem = function(item){
@@ -60,7 +65,12 @@ $js = <<<'SCRIPT'
                 });
             },
             error: function (request, status, error) {
-                console.log(request.responseText);
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
             }
         });
     }, changeItemCount = function(e){
@@ -81,7 +91,12 @@ $js = <<<'SCRIPT'
                 updateSummary(data);
             },
             error: function (request, status, error) {
-                console.log(request.responseText);
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
             }
         });
     }, completeSell = function(){
@@ -126,7 +141,13 @@ $js = <<<'SCRIPT'
                     location.reload();
                 },
                 error: function (request, status, error) {
-                    console.log(request.responseText);
+                    swal.close();
+                    Messenger().post({
+                        message: request.responseText.replace(/(.*)\):\s/, ''),
+                        type: 'error',
+                        showCloseButton: true,
+                        hideAfter: 5
+                    });
                 }
             });
         });
@@ -154,8 +175,12 @@ $js = <<<'SCRIPT'
                 });
             },
             error: function (request, status, error) {
-                console.log(request.responseText);
-            }
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });            }
         });
     }, updateSummary = function(data){
         if(data.sum !== undefined){
@@ -211,7 +236,13 @@ $js = <<<'SCRIPT'
                 });
             },
             error: function (request, status, error) {
-                console.log(request.responseText);
+                swal.close();
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
             }
         });
     }, postponeCheck = function(){
@@ -235,7 +266,12 @@ $js = <<<'SCRIPT'
                 });
             },
             error: function (request, status, error) {
-                console.log(request.responseText);
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
             }
         });
     }, returnOrder = function(){
@@ -259,10 +295,15 @@ $js = <<<'SCRIPT'
                 });
             },
             error: function (request, status, error) {
-                console.log(request.responseText);
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
             }
         });
-    }
+    };
 
     $("#itemInput").on('keypress', function(e){
         e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
@@ -292,17 +333,6 @@ $js = <<<'SCRIPT'
         postponeCheck();
     });
 
-    $(document).on('pjax:complete', function() {
-        $(".removeGood > *").on('click', function(e){
-            removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
-        });
-
-        $(".changeItemCount").on('change', function(e){
-            changeItemCount(e);
-        });
-
-        $("#itemInput").focus();
-    });
 
     $("#sellButton").on('click', function(e){
         completeSell();
@@ -317,13 +347,25 @@ $js = <<<'SCRIPT'
         returnOrder();
     });
 
+    $("#itemInput").focus();
+
+    $(document).on('pjax:complete', function() {
+        $(".removeGood > *").on('click', function(e){
+            removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
+        });
+
+        $(".changeItemCount").on('change', function(e){
+            changeItemCount(e);
+        });
+
+        $("#itemInput").focus();
+    });
+
     $(document).on('keypress', function(e){
         if(e.keyCode == 120){
             completeSell();
         }
     });
-
-    $("#itemInput").focus();
 
     $(document).on('click', '*', function(){
         if($('input:focus').length <= 0){
@@ -348,7 +390,7 @@ $js = <<<'SCRIPT'
             $("#itemInput").focus();
         }
     });
-SCRIPT;
+JS;
 
 $this->registerJs($js);
 
@@ -469,7 +511,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
         ])?>
         <div class="form-group" style="margin-top: -20px;">
             <div class="inputField">
-                <input id="itemInput" class="form-control" value="" type="text">
+                <input id="itemInput" class="form-control" value="">
                 <p class="help-block help-block-error"></p>
             </div>
         </div>

@@ -17,7 +17,16 @@ var loadPostpone = function(orderID){
         closeOnConfirm: false
     },
     function(){
-        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+        $.ajax({
+            url:    '/cashbox/loadpostpone',
+            data: {
+                postponeOrderID: orderID
+            },
+            type:   'post',
+            success: function(){
+                location.href = '/cashbox';
+            }
+        });
     });
 };
 

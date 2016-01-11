@@ -49,6 +49,20 @@ $js = <<<'JS'
         });
     };
 
+    var guestRefresh = function(){
+        $.ajax({
+            type: 'POST',
+            url: '/login',
+            success: function(data){
+                if(data == 1){
+                    location.reload();
+                }
+            }
+        });
+    };
+
+setInterval(guestRefresh, 10000);
+
     $("#changeCashboxType").on('click', function(){
         changeCashboxType();
     });

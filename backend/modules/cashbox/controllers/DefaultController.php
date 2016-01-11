@@ -3,11 +3,9 @@
 namespace backend\modules\cashbox\controllers;
 
 use backend\models\CashboxCustomerForm;
-use backend\models\CashboxItem;
 use backend\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\Good;
-use backend\models\History;
 use backend\models\SborkaItem;
 use common\models\Siteuser;
 use yii\base\ErrorException;
@@ -73,20 +71,9 @@ class DefaultController extends Controller
             ]);
         }
 
-        \Yii::$app->response->cookies->add(new Cookie([
-            'name'      =>  'cashboxManager',
-            'value'     =>  \Yii::$app->request->post("manager")
-        ]));
+        \Yii::$app->cashbox->changeManager(\Yii::$app->request->post("manager"));
 
-        $cashboxOrder = CashboxOrder::findOne(['id' => \Yii::$app->request->cookies->getValue("cashboxOrderID")]);
-
-        if($cashboxOrder){
-            $cashboxOrder->responsibleUser = \Yii::$app->request->post("manager");
-
-            $cashboxOrder->save(false);
-        }
-
-        return \Yii::$app->request->post("manager");
+        return \Yii::$app->cashbox->responsibleUser;
     }
 
     public function actionChangeitemcount(){
@@ -344,6 +331,16 @@ class DefaultController extends Controller
         return \Yii::$app->cashbox->order->id;
     }
 
+    public function actionLoadpostpone(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+        }
+
+        \Yii::$app->cashbox->loadPostpone(\Yii::$app->request->post("postponeOrderID"));
+
+        return true;
+    }
+
     public function actionAdditem(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
@@ -354,7 +351,7 @@ class DefaultController extends Controller
         $good = Good::find()->where(['or', 'ID = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID])->one();
 
         if(!$good){
-            throw new NotFoundHttpException("Такой товар не найден!");
+            throw new NotFoundHttpException("Товар с идентификатором `".$itemID."` не найден!");
         }
 
         \Yii::$app->response->format = 'json';
