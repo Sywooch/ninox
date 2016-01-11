@@ -20,9 +20,9 @@ $form->begin();
         $form->field($model, 'customerEmail'),
         $form->field($model, 'deliveryCity'),
         $form->field($model, 'deliveryRegion'),
-        $form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()),
+        $form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryType::getDeliveryTypes()),
         $form->field($model, 'deliveryInfo'),
-        $form->field($model, 'paymentType')->dropDownList(\common\models\PaymentTypes::getPaymentTypes());
+        $form->field($model, 'paymentType')->dropDownList(\common\models\PaymentType::getPaymentTypes());
 
 echo \yii\helpers\Html::button('Оформить заказ', [
     'type'  =>  'submit'

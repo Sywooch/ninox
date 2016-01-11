@@ -120,7 +120,7 @@ $items = [];
 ])?>
 </div>
 <div class="payment-type">Способ оплаты</div>
-<?/*=$form->field($model, 'paymentType', [])->radioList(\common\models\PaymentTypes::getPaymentTypes(), [
+<?/*=$form->field($model, 'paymentType', [])->radioList(\common\models\PaymentType::getPaymentTypes(), [
     'item' => function ($index, $label, $name, $checked, $value) {
         return '<div class="tab">'. Html::radio($name, $checked, [
             'value'     =>      $value,

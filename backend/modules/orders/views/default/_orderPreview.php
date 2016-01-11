@@ -53,7 +53,7 @@ $form = ActiveForm::begin([
                         Способ доставки:
                     </td>
                     <td style="width: 30%;">
-                        <?=$form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes())->label(false)?>
+                        <?=$form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryType::getDeliveryTypes())->label(false)?>
                     </td>
                     <td style="width: 20%;">
                         Менеджер:
@@ -73,7 +73,7 @@ $form = ActiveForm::begin([
                         Способ оплаты:
                     </td>
                     <td>
-                        <?=$form->field($model, 'paymentType')->dropDownList(\common\models\PaymentTypes::getPaymentTypes())->label(false)?>
+                        <?=$form->field($model, 'paymentType')->dropDownList(\common\models\PaymentType::getPaymentTypes())->label(false)?>
                     </td>
                 </tr>
                 <tr>
