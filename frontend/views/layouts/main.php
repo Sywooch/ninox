@@ -186,8 +186,68 @@ $this->registerJs($js);
 			</ul>
 		</nav>
 	</div>
+	<div class="header-menu">
+		<div class="header-menu-content">
+			<div class="header-menu-items">
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a></a>
+				</div>
+			</div>
+		</dv>
+	</div>
 	<?php
-	Yamm::begin([
+	/*Yamm::begin([
 		'options' => [
 			'headerOptions'   =>  [
 				'class'   =>  'blue'
@@ -195,10 +255,10 @@ $this->registerJs($js);
 		],
 		'theme' =>  'blue',
 		'items' =>  $menu
-	]);
+	]);*/
 	?>
 	<?=$content?>
-	<?php Yamm::end(); ?>
+	<?php //Yamm::end(); ?>
 	<!--<footer>
 		<div class="footerCenter">
 			<div class="quickReference">
