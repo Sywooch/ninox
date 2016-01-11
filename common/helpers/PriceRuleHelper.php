@@ -18,49 +18,6 @@ class PriceRuleHelper extends Component{
 
 	public $cartSumm;
 
-	public function asArray($rule){
-		$query = $rule->Formula;
-		$parts = explode(' THEN ', $query);
-		$terms = $parts['0'];
-		$action = $parts['1'];
-		$terms = preg_replace('/IF/', '', $terms);
-		$terms = explode(' AND ', $terms);
-		foreach($terms as $key => $termt){
-			$termt = explode(' OR ', $termt);
-			foreach($termt as $term){
-				$term = preg_replace(array('/\(/', '/\)/', '/^\s/'), '', $term);
-				$tTerm = explode(' = ', $term);
-				if(isset($tTerm['1']) && $tTerm['1'] != ''){
-					$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '=');
-				}else{
-					$tTerm = explode(' >= ', $term);
-					if($tTerm['1'] != ''){
-						$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '>=');
-					}else{
-						$tTerm = explode(' <= ', $term);
-						if($tTerm['1'] != ''){
-							$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '<=');
-						}else{
-							$tTerm = explode(' != ', $term);
-							if($tTerm['1'] != ''){
-								$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '!=');
-							}
-						}
-					}
-				}
-			}
-		}
-		$actions = explode(' AND ', $action);
-		foreach($actions as $action){
-			$action = explode('=', $action);
-			foreach($action as $key => $row){
-				$action[$key] = trim($row);
-			}
-			$rArray['actions'][$action['0']] = $action['1'];
-		}
-		return $rArray;
-	}
-
 	public function recalc($model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
@@ -87,7 +44,7 @@ class PriceRuleHelper extends Component{
 	}
 
 	private function recalcItem($model, $rule, $category){
-		$ruleArray = self::asArray($rule);
+		$ruleArray = $rule->asArray();
 		$termsCount = 0;
 		$discount = 0;
 		foreach($ruleArray['terms'] as $term){

@@ -989,7 +989,8 @@ $('#submit').click(function() {
                     'content' => $this->render('_order_item_content_second', [
                         'form'  =>  $form,
                         'model' =>  $model,
-                        'class'    =>  'collapse'
+                        'class'    =>  'collapse',
+		                'domainConfiguration'      =>  $domainConfiguration
                     ]),
                     'options' => ['tag' => 'div'],
                 ],
@@ -1002,7 +1003,6 @@ $('#submit').click(function() {
             'headerOptions' => ['tag' => 'div'],
             'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => 'content', 'event' => false],
         ]);?>
-
             </div>
 
         <div class="content-ordering">

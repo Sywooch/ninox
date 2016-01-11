@@ -14,7 +14,7 @@ use Yii;
  * @property double $currencyExchange
  * @property integer $coins
  */
-class Domains extends \yii\db\ActiveRecord
+class Domain extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

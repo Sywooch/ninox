@@ -5,8 +5,8 @@ namespace backend\models;
 use common\models\SborkaItem;
 use Yii;
 use common\models\Category;
-use common\models\DeliveryTypes;
-use common\models\PaymentTypes;
+use common\models\DeliveryType;
+use common\models\PaymentType;
 use yii\data\ActiveDataProvider;
 
 class History extends \common\models\History
@@ -141,11 +141,11 @@ class History extends \common\models\History
     }
 
     public function paymentType(){
-        return PaymentTypes::getName($this->paymentType);
+        return PaymentType::getName($this->paymentType);
     }
 
     public function deliveryType(){
-        return DeliveryTypes::getName($this->deliveryType);
+        return DeliveryType::getName($this->deliveryType);
     }
 
     public function getItems($returnAll = true){

@@ -107,7 +107,7 @@ Html::tag('fieldset',
                             'class' =>  'col-xs-8'
                         ]
                     ])
-                    ->dropDownList(\common\models\DeliveryTypes::getDeliveryTypes()).
+                    ->dropDownList(\common\models\DeliveryType::getDeliveryTypes()).
                 $form->field($order, 'deliveryInfo',
                     [
                         'options'   =>  [
@@ -136,7 +136,7 @@ Html::tag('fieldset',
                         'class' =>  'col-xs-6'
                     ]
                 ])
-                ->dropDownList(\common\models\PaymentTypes::getPaymentTypes()),
+                ->dropDownList(\common\models\PaymentType::getPaymentTypes()),
             [
                 'class' => 'row',
                 'style' => 'margin: 0'

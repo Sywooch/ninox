@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\base\ErrorException;
 
 /**
  * This is the model class for table "history".
@@ -118,6 +119,24 @@ class History extends \yii\db\ActiveRecord
         }else{
             $this->status = '2';
         }
+    }
+
+    public function loadCustomer($customer){
+        if($customer instanceof Customer == false){
+            throw new ErrorException("Передана неверная модель клиента!");
+        }
+
+        $nameParts = explode(' ', $customer->Company);
+
+        isset($nameParts[0]) ? $this->customerName = $nameParts[0] : false;
+        isset($nameParts[1]) ? $this->customerSurname = $nameParts[1] : false;
+
+        $this->customerEmail = $customer->email;
+        $this->customerPhone = $customer->phone;
+    }
+
+    public function loadRecipient($recipient){
+
     }
 
     /**

@@ -3,6 +3,7 @@ return [
     'adminEmail' => 'admin@example.com',
     'audittrail.table'      =>  'tbl_audit_trail',
 	'domainInfo'            =>  [
+		'id'                    =>  '1',
 		'currencyExchange'      =>  '1',
 		'currencyCode'          =>  'UAH',
 		'currencyShortName'     =>  'грн.',
