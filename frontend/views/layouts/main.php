@@ -191,57 +191,59 @@ $this->registerJs($js);
 			<div class="header-menu-items">
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
-
+						<img src="/img/site/discount.png">
 					</div>
-					<a></a>
+					<a>Бижутерия</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Рукоделие</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Аксессуары</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Техника
+							для красоты</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Красота
+						и здоровье</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Все для дома</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Праздники</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Товары для детей</a>
 				</div>
 				<div class="header-menu-item">
 					<div class="header-menu-item-image">
 
 					</div>
-					<a></a>
+					<a>Распродажа</a>
 				</div>
 			</div>
 		</dv>

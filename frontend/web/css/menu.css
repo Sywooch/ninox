@@ -35,15 +35,22 @@
     width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
     display: table-cell; /* эмуляция ячейки таблицы */
     text-align: center;
-    height: 50px; /* высота пункта */
+    height: 77px; /* высота пункта */
     padding-left: 2px; /* визуальная граница между пунктами меню */
     vertical-align: bottom;
 }
 .header-menu-items a {
     width: 1000px; /* вот это заставляет наши псевдоячейки растянуться должным образом */
-    height: 50px;
     display: table-cell; /* без этого тоже никак */
     vertical-align: middle; /* вертикальное выравнивание текста */
+    font-size: 13px;
+    height: 38px;
+    color: white;
+    padding: 5px;
+    line-height: 12px;
+}
+.header-menu-item:hover a{
+    color: black;
 }
 .header-menu-content{
     border-left: 1px solid #3F99C9;
@@ -51,4 +58,14 @@
     width: 1172px;
     height: 77px;
     margin: auto;
+}
+.header-menu-item-image{
+    height: 30px;
+    background-size: cover;
+    background: ;
+    max-width: 1000px;
+    min-width: 120px;
+}
+.header-menu-item-image img{
+    height: 100%;
 }
