@@ -186,8 +186,70 @@ $this->registerJs($js);
 			</ul>
 		</nav>
 	</div>
+	<div class="header-menu">
+		<div class="header-menu-content">
+			<div class="header-menu-items">
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+						<img src="/img/site/discount.png">
+					</div>
+					<a>Бижутерия</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Рукоделие</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Аксессуары</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Техника
+							для красоты</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Красота
+						и здоровье</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Все для дома</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Праздники</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Товары для детей</a>
+				</div>
+				<div class="header-menu-item">
+					<div class="header-menu-item-image">
+
+					</div>
+					<a>Распродажа</a>
+				</div>
+			</div>
+		</dv>
+	</div>
 	<?php
-	Yamm::begin([
+	/*Yamm::begin([
 		'options' => [
 			'headerOptions'   =>  [
 				'class'   =>  'blue'
@@ -195,10 +257,10 @@ $this->registerJs($js);
 		],
 		'theme' =>  'blue',
 		'items' =>  $menu
-	]);
+	]);*/
 	?>
 	<?=$content?>
-	<?php Yamm::end(); ?>
+	<?php //Yamm::end(); ?>
 	<!--<footer>
 		<div class="footerCenter">
 			<div class="quickReference">

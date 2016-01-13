@@ -1,0 +1,71 @@
+.header-menu{
+    width: 100%;
+    background: #2ba3e1; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#5ec0f3, #018ad2); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#5ec0f3, #018ad2); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#5ec0f3, #018ad2); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#5ec0f3, #018ad2); /* Standard syntax */
+    height: 77px;
+}
+.header-menu-items{
+    width: 100%;
+    height: 77px;
+    display: table-row;
+}
+.header-menu-item{
+    border-left: 1px solid #8ed2f7;
+    border-right: 1px solid #3f99c9;
+    width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
+
+    display: table-cell; /* эмуляция ячейки таблицы */
+
+    text-align: center;
+
+    height: 50px; /* высота пункта */
+
+    padding-left: 2px; /* визуальная граница между пунктами меню */
+
+    vertical-align: bottom;
+}
+.header-menu-item:hover{
+    border-left: 1px solid #8ed2f7;
+    border-right: 1px solid #3f99c9;
+    background: #f1f1f1;
+    border-top: 3px solid #e7e7e7;
+    width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
+    display: table-cell; /* эмуляция ячейки таблицы */
+    text-align: center;
+    height: 77px; /* высота пункта */
+    padding-left: 2px; /* визуальная граница между пунктами меню */
+    vertical-align: bottom;
+}
+.header-menu-items a {
+    width: 1000px; /* вот это заставляет наши псевдоячейки растянуться должным образом */
+    display: table-cell; /* без этого тоже никак */
+    vertical-align: middle; /* вертикальное выравнивание текста */
+    font-size: 13px;
+    height: 38px;
+    color: white;
+    padding: 5px;
+    line-height: 12px;
+}
+.header-menu-item:hover a{
+    color: black;
+}
+.header-menu-content{
+    border-left: 1px solid #3F99C9;
+    border-right: 1px solid #8ED2F7;
+    width: 1172px;
+    height: 77px;
+    margin: auto;
+}
+.header-menu-item-image{
+    height: 30px;
+    background-size: cover;
+    background: ;
+    max-width: 1000px;
+    min-width: 120px;
+}
+.header-menu-item-image img{
+    height: 100%;
+}
