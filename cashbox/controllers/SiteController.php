@@ -72,7 +72,9 @@ class SiteController extends Controller
         $configuration = Cashbox::findOne(['domain' => $domain]);
 
         if(!$configuration){
-            $configuration = new Cashbox();
+            $configuration = new Cashbox([
+                'ID'    =>  0
+            ]);
 
             /*$configuration->autologin = [
                 [

@@ -18,6 +18,9 @@ use Yii;
  */
 class CashboxMoney extends \yii\db\ActiveRecord
 {
+    const OPERATION_SELL = 0;
+    const OPERATION_REFUND = 1;
+
     /**
      * @inheritdoc
      */

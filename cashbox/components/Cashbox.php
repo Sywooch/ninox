@@ -13,6 +13,7 @@ use backend\models\CashboxItem;
 use backend\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\History;
+use common\models\CashboxMoney;
 use common\models\SborkaItem;
 use common\models\Good;
 use common\models\Category;
@@ -200,6 +201,8 @@ class Cashbox extends Component{
     }
 
     public function refund(){
+        $refundSum = $this->sum;
+
         foreach($this->items as $item){
             if($this->remove($item->itemID)){
                 $good = Good::findOne($item->itemID);
@@ -212,7 +215,20 @@ class Cashbox extends Component{
 
         $this->order->doneTime = date('Y-m-d H:i:s');
         $this->order->return = 1;
-        $this->order->save(false);
+
+        if($this->order->save(false)){
+            $refund = new CashboxMoney([
+                'cashbox'   =>  \Yii::$app->params['configuration']->ID,
+                'amount'    =>  $refundSum,
+                'operation' =>  CashboxMoney::OPERATION_REFUND,
+                'order'     =>  $this->order->createdOrder,
+                'date'      =>  date('Y-m-d H:i:s'),
+                'customer'  =>  $this->customer,
+                'responsibleUser'   =>  $this->responsibleUser
+            ]);
+
+            $refund->save(false);
+        }
 
         $this->clear();
     }
@@ -275,6 +291,18 @@ class Cashbox extends Component{
             }
 
             $this->order->doneTime = date('Y-m-d H:i:s');
+
+            $payment = new CashboxMoney([
+                'cashbox'   =>  \Yii::$app->params['configuration']->ID,
+                'amount'    =>  $this->toPay,
+                'operation' =>  CashboxMoney::OPERATION_SELL,
+                'order'     =>  $this->order->createdOrder,
+                'date'      =>  date('Y-m-d H:i:s'),
+                'customer'  =>  $this->customer,
+                'responsibleUser'   =>  $this->responsibleUser
+            ]);;
+
+            $payment->save(false);
             $this->order->save(false);
 
             $this->clear();

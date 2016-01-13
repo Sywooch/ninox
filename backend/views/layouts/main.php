@@ -467,7 +467,11 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Касса',
-                                'url'   =>  Url::to('/cashbox')
+                                'url'   =>  \Yii::$app->params['cashbox']
+                            ],
+                            [
+                                'label' =>  'Кассы',
+                                'url'   =>  Url::to('/cashboxes')
                             ],
                             [
                                 'label' =>  'Руколдельницы',
