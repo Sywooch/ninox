@@ -7,7 +7,7 @@ $js = <<<'SCRIPT'
 var showSaleDetails = function(e){
     $.ajax({
         type: 'POST',
-        url: '/cashbox/getsaledetails',
+        url: '/getsaledetails',
         data: {
             'orderID':  e.currentTarget.getAttribute('data-key')
         },
@@ -20,7 +20,7 @@ var showSaleDetails = function(e){
         }
     });
 }, updateTable = function(date){
-    $.pjax({url: '/cashbox/sales?smartfilter=' + date, container: '#salesTable-pjax'});
+    $.pjax({url: '/sales?smartfilter=' + date, container: '#salesTable-pjax'});
 }
 
 $(".date-buttons button").on('click', function(e){
@@ -35,7 +35,7 @@ $("#salesTable table tbody tr").on('click', function(e){
 
 $("a.invoiceOrder").on('click', function(e){
     e.preventDefault();
-    window.open('/orders/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
+    window.open('/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
 });
 
 $(document).on('pjax:complete', function() {
@@ -45,7 +45,7 @@ $(document).on('pjax:complete', function() {
 
     $("a.invoiceOrder").on('click', function(e){
         e.preventDefault();
-        window.open('/orders/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
+        window.open('/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
     });
 });
 SCRIPT;
@@ -55,7 +55,7 @@ $this->registerJs($js);
 <div class="header">
     <div class="content">
         <div class="left">
-            <a class="btn btn-default btn-lg" href="/cashbox">Назад</a>
+            <a class="btn btn-default btn-lg" href="/">Назад</a>
         </div>
         <div class="title">
             <h1><?=$this->title?></h1>
@@ -141,7 +141,7 @@ $this->registerJs($js);
                 'width'     =>  '100px',
                 'format'    =>  'raw',
                 'value'     =>  function($model){
-                    return Html::a('Накладная', \yii\helpers\Url::toRoute('/orders/printinvoice/'.$model->createdOrder), ['style' => 'z-index: 1000', 'data-pjax' => 0, 'class' => 'invoiceOrder', 'data-attribute-id' => $model->createdOrder]);
+                    return Html::a('Накладная', \yii\helpers\Url::toRoute('/printinvoice/'.$model->createdOrder), ['style' => 'z-index: 1000', 'data-pjax' => 0, 'class' => 'invoiceOrder', 'data-attribute-id' => $model->createdOrder]);
                 }
             ]
         ],
@@ -151,8 +151,8 @@ $this->registerJs($js);
 <div class="footer">
     <div class="content">
         <div class="left">
-            <a class="btn btn-default btn-lg" href="/cashbox/checks">Чеки</a>
-            <a class="btn btn-default btn-lg" href="/cashbox/returns">Возвраты</a>
+            <a class="btn btn-default btn-lg" href="/checks">Чеки</a>
+            <a class="btn btn-default btn-lg" href="/returns">Возвраты</a>
         </div>
         <div class="right">
             <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [

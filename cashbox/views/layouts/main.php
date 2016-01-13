@@ -11,7 +11,7 @@ $js = <<<'JS'
             showConfirmButton: false
         });
         $.ajax({
-            url:    '/cashbox/changecashboxtype',
+            url:    '/changecashboxtype',
             type:   'post',
             success: function(data){
                 var summary = $('.header .summary'),

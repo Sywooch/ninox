@@ -1,0 +1,139 @@
+div.content{
+    width: 1000px;
+    margin: 0 auto;
+}
+
+div.header{
+    width: 100%;
+    background: #ECECEC;
+    position: fixed;
+    top: 0;
+    z-index: 5;
+    padding: 20px;
+}
+
+.content .right{
+    position: relative;
+    float: right;
+    right: 0;
+}
+
+.content .left{
+    position: relative;
+    float: left;
+    left: 0;
+}
+
+div.title{
+    display: inline-block;
+    float: left;
+    margin-left: 200px;
+}
+
+div.title > *{
+    margin: 0 auto;
+    font-size: 42px;
+}
+
+div.footer{
+    bottom: 0;
+    background: #ECECEC;
+    position: fixed;
+    width: 100%;
+    height: 65px;
+    padding: 10px;
+    z-index: 2;
+}
+
+.btn-big{
+    height: 74px;
+}
+
+.manyButtons button{
+    /*margin-right: 5px;*/
+}
+
+.no-padding{
+    padding: 0 !important;
+}
+
+.no-padding .content > *{
+    padding: 20px 0;
+}
+
+.summary{
+    /*background: #ff0000;*/
+    top: 0;
+    font-size: 14px;
+    text-align: right;
+    font-family: OpenSans, sans-serif;
+    height: 100%;
+}
+
+.summary p, .summary h2{
+    margin: 2px 0;
+    padding: 0 15px 0 0;
+}
+
+.buttonsRow{
+    margin-bottom: 5px;
+    display: block;
+    height: 35px;
+}
+
+.content.main{
+    margin-top: 150px;
+    margin-bottom: 100px;
+}
+
+.content.main-small{
+    margin-top: 100px;
+    margin-bottom: 70px;
+}
+
+div.empty{
+    display: none;
+}
+
+#cashboxGrid table{
+    border-left: none;
+}
+
+#cashboxGrid table thead tr th:first-child{
+    border: none;
+    background: #fff !important;
+}
+
+#cashboxGrid table tbody tr td:first-child{
+    border: none;
+    background: #fff !important;
+}
+
+#cashboxGrid .cashbox-table-column{
+    width: 20px;
+}
+
+#cashboxGrid .cashbox-table-column2x{
+    width: 40px;
+}
+
+#cashboxGrid .removeGood > *:hover{
+    cursor: pointer;
+}
+
+.changeItemCount{
+    width: 40px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    border: none;
+    background: none;
+}
+
+.header.no-padding .content > div{
+    height: 120px;
+}
+
+div.orderPreview thead th{
+    text-align: center;
+}

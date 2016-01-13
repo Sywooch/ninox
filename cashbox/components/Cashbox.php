@@ -6,7 +6,7 @@
  * Time: 13:51
  */
 
-namespace backend\components;
+namespace cashbox\components;
 
 
 use backend\models\CashboxItem;

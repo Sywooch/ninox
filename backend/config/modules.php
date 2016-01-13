@@ -19,9 +19,6 @@ return [
     'promocodes' => [
         'class' => 'backend\modules\promocodes\Module',
     ],
-    'cashbox' => [
-        'class' => 'backend\modules\cashbox\Module',
-    ],
     'gridview' =>  [
         'class' => '\kartik\grid\Module'
     ],

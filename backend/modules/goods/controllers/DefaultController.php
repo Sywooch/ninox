@@ -33,6 +33,31 @@ class DefaultController extends Controller
         $breadcrumbs = $goodsCount = [];
         $enabledGoods = $disabledGoods = 0;
 
+        /*
+         *
+         * SELECT
+         *  `a`.*
+         * FROM
+         *  `goodsgroups` `a`,
+         *  (
+         *      SELECT
+         *       SUBSTR(`a`.`Code`, '1', '6') AS `codeAlias` FROM `goodsgroups`
+         *      `a` LEFT JOIN `goods` `b` ON b.GroupID = a.ID
+         *          WHERE (`a`.`Code` LIKE 'AAB%')
+         *          AND ((LENGTH(a.Code) > 3) AND (`b`.`show_img`=0))
+         *          GROUP BY `codeAlias` ORDER BY `a`.`listorder`, `a`.`ID`) AS `tmp` WHERE `a`.`Code` = `tmp`.`codeAlias`;
+         *
+         *
+         */
+
+        $query = Category::find()
+            ->select("SUBSTR(`goodsgroups`.`Code`, '1', '6') AS `codeAlias`")
+            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+            ->where('`goodsgroups`.`Code` LIKE \''.$category.'\'')
+            ->andWhere('(LENGTH(`goodsgroups`.`Code`) > \'3) AND (`goods`.`show_img` = \'0\')');
+
+        $query = Category::find()->from('`goodsgroups` `a`');
+
         //Делаем запрос на колл-во товаров
         $tGoodsCount = Category::find()->
             select(['`a`.`Code` as `Code`', 'SUM(`b`.`show_img`) as `enabled`', 'COUNT(`b`.`ID`) as `all`'])->

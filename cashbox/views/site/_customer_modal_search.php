@@ -9,7 +9,7 @@ $js = <<<'JS'
 var typeaheadSelectFunc = function(suggestion){
     $.ajax({
         type: 'POST',
-        url: '/cashbox/changecustomer',
+        url: '/changecustomer',
         data: {
           customerID: suggestion.ID
         },

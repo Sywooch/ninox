@@ -16,7 +16,7 @@ $js = <<<'JS'
     var addItem = function(item){
         $.ajax({
             type: 'POST',
-            url: '/cashbox/additem',
+            url: '/additem',
             data: {
                 'itemID': item
             },
@@ -47,7 +47,7 @@ $js = <<<'JS'
     }, removeItem = function(item){
         $.ajax({
             type: 'POST',
-            url: '/cashbox/removeitem',
+            url: '/removeitem',
             data: {
                 'itemID': item
             },
@@ -76,7 +76,7 @@ $js = <<<'JS'
     }, changeItemCount = function(e){
         $.ajax({
             type: 'POST',
-            url: '/cashbox/changeitemcount',
+            url: '/changeitemcount',
             data: {
                 'itemID': e.currentTarget.getAttribute('data-key'),
                 'count': e.currentTarget.value
@@ -131,13 +131,13 @@ $js = <<<'JS'
 
             $.ajax({
                 type: 'POST',
-                url: '/cashbox/completesell',
+                url: '/completesell',
                 data: {
                     'actualAmount': inputValue
                 },
                 success: function(data){
                     swal("Успех!", "Заказ на сумму " + inputValue + " грн. успешно оформлен!", "success");
-                    window.open('/orders/printinvoice/' + data, '', 'scrollbars=1');
+                    window.open('/printinvoice/' + data, '', 'scrollbars=1');
                     location.reload();
                 },
                 error: function (request, status, error) {
@@ -154,7 +154,7 @@ $js = <<<'JS'
     }, clearOrder = function(){
         $.ajax({
             type: 'POST',
-            url: '/cashbox/removeitem',
+            url: '/removeitem',
             data: {
                 'itemID': 'all'
             },
@@ -197,7 +197,7 @@ $js = <<<'JS'
     }, changeManager = function(e){
         $.ajax({
             type: 'POST',
-            url: '/cashbox/changemanager',
+            url: '/changemanager',
             data: {
                 'action': 'showList'
             },
@@ -214,7 +214,7 @@ $js = <<<'JS'
                 $(".managersButtons > *").on('click', function(e){
                     $.ajax({
                         type: 'POST',
-                        url: '/cashbox/changemanager',
+                        url: '/changemanager',
                         data: {
                             'action': 'change',
                             'manager': e.currentTarget.getAttribute('manager-key')
@@ -248,7 +248,7 @@ $js = <<<'JS'
     }, postponeCheck = function(){
         $.ajax({
             type: 'POST',
-            url: '/cashbox/postponecheck',
+            url: '/postponecheck',
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
@@ -277,7 +277,7 @@ $js = <<<'JS'
     }, returnOrder = function(){
         $.ajax({
             type: 'POST',
-            url: '/cashbox/returnorder',
+            url: '/returnorder',
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
@@ -519,9 +519,9 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
     <div class="footer">
         <div class="content">
             <div class="left">
-                <a class="btn btn-default btn-lg" href="/cashbox/checks">Чеки</a>
-                <a class="btn btn-default btn-lg" href="/cashbox/sales">Продажи</a>
-                <a class="btn btn-default btn-lg" href="/cashbox/returns">Возвраты</a>
+                <a class="btn btn-default btn-lg" href="/checks">Чеки</a>
+                <a class="btn btn-default btn-lg" href="/sales">Продажи</a>
+                <a class="btn btn-default btn-lg" href="/returns">Возвраты</a>
             </div>
             <div class="right">
                 <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [

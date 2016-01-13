@@ -5,7 +5,7 @@ $this->title = 'Возвраты';
 
 $js = <<<'JS'
 var updateTable = function(date){
-    $.pjax({url: '/cashbox/returns?smartfilter=' + date, container: '#returnsTable-pjax'});
+    $.pjax({url: '/returns?smartfilter=' + date, container: '#returnsTable-pjax'});
 };
 
 $(".date-buttons button").on('click', function(e){
@@ -21,7 +21,7 @@ $this->registerJs($js);
 <div class="header">
     <div class="content">
         <div class="left">
-            <a class="btn btn-default btn-lg" href="/cashbox">Назад</a>
+            <a class="btn btn-default btn-lg" href="/">Назад</a>
         </div>
         <div class="title">
             <h1><?=$this->title?></h1>
@@ -58,8 +58,8 @@ $this->registerJs($js);
 <div class="footer">
     <div class="content">
         <div class="left">
-            <a class="btn btn-default btn-lg" href="/cashbox/sales">Продажи</a>
-            <a class="btn btn-default btn-lg" href="/cashbox/checks">Чеки</a>
+            <a class="btn btn-default btn-lg" href="/sales">Продажи</a>
+            <a class="btn btn-default btn-lg" href="/checks">Чеки</a>
         </div>
         <div class="right">
             <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [

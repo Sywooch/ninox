@@ -3,6 +3,8 @@ frontend/runtime/*
 frontend/web/assets/*
 backend/runtime/*
 backend/web/assets/*
+cashbox/runtime/*
+cashbox/web/assets/*
 vendor/*
 composer.lock
 composer.phar

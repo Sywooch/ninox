@@ -77,7 +77,7 @@
         color: #FFFFFF;
     }
     .td_top{
-        background: URL(//krasota-style.com.ua/img/bg_top_admin.jpg) repeat-x;
+        background: URL(http://krasota-style.com.ua/img/bg_top_admin.jpg) repeat-x;
         background-position: top;
         background-color: #8DB6D9;
     }
