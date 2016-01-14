@@ -76,12 +76,12 @@ class SiteController extends Controller
                 'ID'    =>  1
             ]);
 
-            /*$configuration->autologin = [
+            $configuration->autologin = [
                 [
-                    'username'  =>  'bobroid',
+                    'username'  =>  'root',
                     'ip'        =>  '127.0.0.1'
                 ]
-            ];*/
+            ];
         }
 
         if($configuration){
