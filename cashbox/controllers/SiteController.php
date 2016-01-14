@@ -73,7 +73,7 @@ class SiteController extends Controller
 
         if(!$configuration){
             $configuration = new Cashbox([
-                'ID'    =>  0
+                'ID'    =>  1
             ]);
 
             /*$configuration->autologin = [

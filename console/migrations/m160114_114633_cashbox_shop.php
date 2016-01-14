@@ -6,14 +6,13 @@ class m160114_114633_cashbox_shop extends Migration
 {
     public function up()
     {
-
+        $this->addColumn('cashbox', 'store', \yii\db\Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
     }
 
     public function down()
     {
-        echo "m160114_114633_cashbox_shop cannot be reverted.\n";
-
-        return false;
+        $this->dropColumn('cashbox', 'store');
+        return true;
     }
 
     /*

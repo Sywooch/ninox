@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?=\yii\widgets\ListView::widget([
     'dataProvider'  =>  $shops,
+    'summary'       =>  false,
     'itemView'      =>  function($model){
         return $this->render('_shop', [
             'model' =>  $model
