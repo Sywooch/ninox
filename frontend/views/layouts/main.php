@@ -302,46 +302,104 @@ $this->registerJs($js);
 					<a>Рукоделие</a>
 					<div class="header-menu-item-content">
 						<div class="header-menu-item-content-text">
-							<div class="header-menu-item-content-list">
-								<ul>
-									<li>
-										<a>asdfsdfsdfdf</a>
-									</li>
-									<li>
-										<a>Ювелирные украшения</a>
-									</li>
+							<ul class="square">
+								<li>
+									<a>qweqwrw</a>
+								</li>
+								<li>
+									<a>Ювелирные111111 украшения</a>
+								</li>
+								<li>
+									<a>Колье11111</a>
+								</li>
+								<li>
+									<a>•  Подарочные 11наборы</a>
+								</li>
+								<li>
+									<a>•  Свадебные1111 украшения</a>
+								</li>
+								<li>
+									<a>•  Детская1111 бижутерия</a>
+								</li>
+								<li>
+									<a>•  Заколки 1112для волос</a>
+								</li>
+								<li>
+									<a>Диа2222демы</a>
+								</li>
+								<li>
+									<a>Ювелирн222ая бижутерия</a>
+								</li>
+								<li>
+									<a>Ювелирн222ые украшения</a>
+								</li>
+								<li>
+									<a>Коль222е</a>
+								</li>
+								<li>
+									<a>•  Подар22очные наборы</a>
+								</li>
+								<li>
+									<a>•  Свадеб2222ные украшения</a>
+								</li>
+								<li>
+									<a>•  Детска22я бижутерия</a>
+								</li>
+								<li>
+									<a>•  Заколк222и для волос</a>
+								</li>
+								<li>
+									<a>Диадемы</a>
+								</li>
+								<li>
+									<a>Обручи</a>
+								</li>
+								<li>
+									<a>Шпильки</a>
+								</li>
 
-								</ul>
-							</div>
-							<div class="header-menu-item-content-list">
-								<ul>
-									<li>
-										<a>ghjghghj</a>
-									</li>
-									<li>
-										<a>•  Токи токи</a>
-									</li>
+								<li>
+									<a>Резинки</a>
+								</li>
+								<li>
+									<a>•  Токи токи</a>
+								</li>
 
-								</ul>
-							</div>
-							<div class="header-menu-item-content-list">
-								<ul>
-									<li>
-										<a>asdasd</a>
-									</li>
-									<li>
-										<a>asdsd</a>
-									</li>
+								<li>
+									<a>asdasd</a>
+								</li>
+								<li>
+									<a>asdsd</a>
+								</li>
+								<li>
+									<a>Шпильки</a>
+								</li>
 
-								</ul>
-							</div>
+								<li>
+									<a>Резинки</a>
+								</li>
+								<li>
+									<a>•  Токи токи</a>
+								</li>
+
+								<li>
+									<a>asdasd</a>
+								</li>
+								<li>
+									<a>asdsd</a>
+								</li>
+								<li>
+									<a>asdsd</a>
+								</li>
+								<li>
+									<a>asdsd</a>
+								</li>
+							</ul>
 						</div>
-						<div class="header-menu-item-content-list">
-							<div class="header-menu-item-content-slider">
-								<img src="/img/site/.png">
-								<div class="img">
+						<div class="header-menu-item-content-slider">
+							<img src="/img/site/">
+							<div class="img">
 
-								</div>
 							</div>
 						</div>
 					</div>
