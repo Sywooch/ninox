@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\modules\cashboxes;
+namespace backend\modules\printer;
 
 /**
- * cashboxes module definition class
+ * printer module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'backend\modules\cashboxes\controllers';
+    public $controllerNamespace = 'backend\modules\printer\controllers';
 
     /**
      * @inheritdoc

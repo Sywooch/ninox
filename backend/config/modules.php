@@ -13,6 +13,7 @@ return [
     'tasks'         =>  'backend\modules\tasks\Module',
     'users'         =>  'backend\modules\users\Module',
     'store'         =>  'backend\modules\store\Module',
+    'printer'       =>  'backend\modules\printer\Module',
     'cashboxes'     =>  'backend\modules\cashboxes\Module',
     'test' => [
         'class' => 'backend\modules\test\Module',

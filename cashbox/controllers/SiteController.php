@@ -63,7 +63,7 @@ class SiteController extends Controller
 
     public function actionPrintinvoice($param){
 
-        //return $this->redirect(\Yii::$app->params['backend'].'/orders/printinvoice/'.$param);
+        return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param);
     }
 
     public function init(){

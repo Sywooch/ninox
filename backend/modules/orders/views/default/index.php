@@ -5,7 +5,7 @@ use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
 $("a.deleteOrder").on('click', function(e){
     deleteOrder(e.currentTarget);
 });
@@ -108,6 +108,7 @@ var ordersChanges = function(e){
                 'confirm': isConfirm
             },
             success: function(data){
+                //TODO: can refactor
                 if(data == 1){
                     obj.setAttribute('class', obj.getAttribute('class').replace(/btn-\w+/g));
                     obj.setAttribute('class', 'btn-success ' + obj.getAttribute('class'));
@@ -128,7 +129,7 @@ var ordersChanges = function(e){
     });
 }
 
-SCRIPT;
+JS;
 
 $css = <<<'STYLE'
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
@@ -536,8 +537,7 @@ $this->title = 'Заказы';
                 },
                 'print'  =>  function($url, $model, $key){
                     return Html::a('', Url::toRoute([
-                        '/orders/printorder',
-                        'orderID'   =>  $model->id
+                        '/printer/order/'.$model->id
                     ]), [
                         'target'    =>  '_blank',
                         'class'     =>  'btn btn-default glyphicon glyphicon-print'
