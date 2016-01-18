@@ -15,20 +15,33 @@ use yii\bootstrap\Html;
 class MainMenuWidget extends Widget{
 
     private $defaultItemParams = [
-        'slider'    =>  true
+        'slider'    =>  [
+            [
+                'img'   =>  '#',
+            ],[
+                'img'   =>  '#',
+            ],[
+                'img'   =>  '#',
+            ],
+        ]
     ];
+    /*private $defaultItemParams = [
+        'slider'    =>  false
+    ];*/
     public $items = [];
     public $options = [];
     private $defaultOptions = [
         'firstLevelUlClass' =>  'header-menu-items',
         'firstLevelDivClass'=>  'header-menu-item-content',
         'wtfLevelDivClass'  =>  'header-menu-item-content-text',
-        'otherUlClass'      =>  'square',
+        'otherUlClass'      =>  'disc',
         'firstLevelLiClass' =>  'header-menu-item',
         'otherLiClass'      =>  '',
         'headerImageClass'  =>  'header-menu-item-image',
         'menuClass'         =>  'header-menu',
         'menuClassDiv'      =>  'header-menu-content',
+        'sliderClassDiv'    =>  'header-menu-item-content-slider',
+        'sliderClassImage'  =>  'img',
     ];
 
     public function init(){
@@ -73,12 +86,13 @@ class MainMenuWidget extends Widget{
                 ]);
 
                 if($item['slider']){
-                    $menu .= $this->renderSlider();
+                    $submenu .= $this->renderSlider($item['slider']);
                 }
 
                 $menu .= Html::tag('div', $submenu, [
                     'class' =>  $this->options['firstLevelDivClass']
                 ]);
+
             }
         }
 
@@ -87,8 +101,22 @@ class MainMenuWidget extends Widget{
         ]);
     }
 
-    public function renderSlider(){
-        return '';
+    public function renderSlider($slider){
+        $slides = [];
+
+        foreach($slider as $slide){
+            $slides[] = $this->renderSliderItem($slide);
+        }
+
+        return Html::tag('div', implode('', $slides), [
+            'class' =>  $this->options['sliderClassDiv']
+        ]);
+    }
+
+    public function renderSliderItem($item){
+        return Html::img($item['img']).Html::tag('div', '', [
+            'class' =>  $this->options['sliderClassImage']
+        ]);
     }
 
 }

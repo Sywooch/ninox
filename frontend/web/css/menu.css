@@ -11,8 +11,8 @@
 .header-menu-items{
     width: 100%;
     height: 77px;
-    display: table-row;
-    cursor: pointer;
+    display: table;
+    table-layout: fixed;
 }
 
 .header-menu-item{
@@ -49,6 +49,7 @@
     padding: 5px;
     line-height: 12px;
     padding-bottom: 10px;
+    text-decoration: none;
 }
 
 .header-menu-item:hover a{
@@ -123,11 +124,13 @@
 }
 
 .header-menu-item-content-text a{
-    vertical-align: top;
+    vertical-align: middle;
     height: 26px;
     width: 260px;
     padding: 5px;
-    padding-left: 25px;
+    padding-left: 10px;
+    float: left;
+    margin-top: -18px;
 }
 
 .header-menu-item-content ul {
@@ -138,11 +141,15 @@
     -webkit-column-gap: 0px; /* Chrome, Safari, Opera */
     -moz-column-gap: 0px; /* Firefox */
     column-gap: 0px;
-    list-style-type: square;
+    list-style-type:  ;
 }
 
-ul.square{
-    list-style-type: square;
+
+ul.disc, ul.disc li {
+    list-style: inside disc;
+    font-size: 10px;
+    color: #29a1e0;
+    text-indent: 25px;
 }
 
 .header-menu-item-content-text a:hover{
@@ -151,11 +158,12 @@ ul.square{
 
 .header-menu-item-content li {
     float: left;
-    display: inline;
     vertical-align: middle;
-    border-left: 1px solid #FFF;
-    border-right: 1px solid #D1D1D1;
+    border-left: 1px solid #D1D1D1;
+    border-right: 1px solid #FFF;
     height: 32px;
+    margin-bottom: auto;
+    padding-top: 4px;
 }
 
 .header-menu-item-content-list a{
@@ -175,8 +183,6 @@ ul.square{
     width: 100%;
     opacity: 0.5;
 }
-
-
 
 
 
