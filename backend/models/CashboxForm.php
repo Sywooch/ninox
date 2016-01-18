@@ -36,11 +36,11 @@ class CashboxForm extends Model{
             'defaultWholesaleCustomer'  =>  $this->defaultWholesaleCustomer,
         ]);
 
-        if(!$model->validate()){
+        /*if(!$model->validate()){
             return $model;
-        }
+        }*/
 
-        $model->save();
+        $model->save(false);
 
         return $model;
     }

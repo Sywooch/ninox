@@ -44,7 +44,7 @@ JS;
     ]);
 
     echo $addCashboxModal->renderModal($this->render('_addCashboxModal', [
-        'model'     =>  new CashboxForm
+        'model'     =>  new CashboxForm()
     ]));
     ?>
 <?php } ?>

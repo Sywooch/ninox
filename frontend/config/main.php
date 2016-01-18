@@ -52,6 +52,9 @@ return [
         'account' => [
             'class' => 'frontend\modules\account\Module',
         ],
+        'autopricelist' => [
+            'class' => 'frontend\modules\autopricelist\Module',
+        ],
     ],
     'params' => $params,
 ];

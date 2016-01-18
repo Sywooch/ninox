@@ -34,7 +34,11 @@ echo \yii\bootstrap\Html::tag('h2', 'Добавить кассу', [
 
 echo $form->field($model, 'name'),
     $form->field($model, 'defaultCustomer'),
-    $form->field($model, 'domain'),
+    $form->field($model, 'domain', [
+        'options'   =>  [
+            'placeholder'   =>  'обязательно с http://'
+        ]
+    ]),
     $form->field($model, 'defaultWholesaleCustomer');
     echo \yii\bootstrap\Html::tag('hr');
     echo \yii\bootstrap\Html::tag('h3', 'Автологин');

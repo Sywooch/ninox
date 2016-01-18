@@ -15,6 +15,9 @@ return [
     'store'         =>  'backend\modules\store\Module',
     'printer'       =>  'backend\modules\printer\Module',
     'cashboxes'     =>  'backend\modules\cashboxes\Module',
+    'pricelists' => [
+        'class' => 'backend\modules\pricelists\Module',
+    ],
     'test' => [
         'class' => 'backend\modules\test\Module',
     ],
@@ -23,6 +26,10 @@ return [
     ],
     'gridview' =>  [
         'class' => '\kartik\grid\Module'
+    ],
+    'treemanager' =>  [
+        'class' => '\kartik\tree\Module',
+        // other module settings, refer detailed documentation
     ],
     'debug' => [
         'class' => 'yii\debug\Module',
