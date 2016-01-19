@@ -3,13 +3,14 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "priceListFeeds".
  *
  * @property integer $id
  * @property string $name
- * @property string $categories
+ * @property array $categories
  * @property integer $format
  * @property integer $creator
  * @property integer $published
@@ -19,6 +20,22 @@ class PriceListFeed extends \yii\db\ActiveRecord
 
     const FORMAT_YML = '1';
     const FORMAT_XML = '2';
+
+    public function beforeSave($insert){
+        $this->categories = Json::encode($this->categories);
+
+        if($this->isNewRecord){
+            $this->creator = \Yii::$app->user->identity->getId();
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    public function afterFind(){
+        $this->categories = Json::decode($this->categories);
+
+        return parent::afterFind();
+    }
 
     /**
      * @inheritdoc
@@ -34,7 +51,6 @@ class PriceListFeed extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['categories'], 'string'],
             [['format', 'creator', 'published'], 'integer'],
             [['name'], 'string', 'max' => 255],
         ];
