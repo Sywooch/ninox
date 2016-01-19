@@ -34,7 +34,7 @@ class MainMenuWidget extends Widget{
         'firstLevelUlClass' =>  'header-menu-items',
         'firstLevelDivClass'=>  'header-menu-item-content',
         'wtfLevelDivClass'  =>  'header-menu-item-content-text',
-        'otherUlClass'      =>  'disc',
+        'otherUlClass'      =>  'header-menu-item-content-items',
         'firstLevelLiClass' =>  'header-menu-item',
         'otherLiClass'      =>  '',
         'headerImageClass'  =>  'header-menu-item-image',

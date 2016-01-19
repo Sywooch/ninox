@@ -39,7 +39,7 @@
     vertical-align: bottom;
 }
 
-.header-menu-items a {
+.header-menu-items >li>a {
     width: 1000px; /* вот это заставляет наши псевдоячейки растянуться должным образом */
     display: table-cell; /* без этого тоже никак */
     vertical-align: middle; /* вертикальное выравнивание текста */
@@ -74,13 +74,11 @@
 .header-menu-item-image{
     height: 30px;
     background-size: cover;
-    background: ;
     max-width: 1000px;
     min-width: 120px;
 }
 
 .header-menu-item-image img{
-    height: ;
     transform: scale(1);
 }
 
@@ -104,7 +102,6 @@
     float: left;
     border-right: 1px solid #ffffff;
     border-left: 1px solid #d1d1d1;
-    padding: ;
     display: inline-block;
     max-width: 260px;
     width: auto;
@@ -124,32 +121,44 @@
 }
 
 .header-menu-item-content-text a{
-    vertical-align: middle;
-    height: 26px;
     width: 260px;
-    padding: 5px;
-    padding-left: 10px;
+    display: inline-flex;
     float: left;
-    margin-top: -18px;
+    padding-left: 30px;
+    text-decoration: none;
+}
+
+.header-menu-item-content-text a:before {
+    content: '';
+    display: inline-table;
+    width: 3px !important;
+    height: 3px !important;
+    border-radius: 2px;
+    background: #29a1e0;
+    list-style: inside;
+    /* float: left; */
+    margin-top: 8px;
+    margin-right: 10px;
 }
 
 .header-menu-item-content ul {
-    -webkit-columns: 100px 3; /* Chrome, Safari, Opera */
-    -moz-columns: 100px 3; /* Firefox */
-    columns: 100px 3;
-    height: 320px;
     -webkit-column-gap: 0px; /* Chrome, Safari, Opera */
     -moz-column-gap: 0px; /* Firefox */
     column-gap: 0px;
-    list-style-type:  ;
 }
 
 
-ul.disc, ul.disc li {
-    list-style: inside disc;
-    font-size: 10px;
-    color: #29a1e0;
-    text-indent: 25px;
+ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
+    font-size: 13px;
+    -moz-column-rule: 2px outset #fff;
+    -moz-columns: 3 260px;
+    -webkit-column-count: 3;
+    -webkit-column-width: 200px;
+    -webkit-column-rule: 2px outset #d1d1d1;
+    column-count: 3;
+    column-width: 260px;
+    column-rule: 2px outset #d1d1d1;
+    margin-right: -3px;
 }
 
 .header-menu-item-content-text a:hover{
@@ -157,13 +166,8 @@ ul.disc, ul.disc li {
 }
 
 .header-menu-item-content li {
-    float: left;
-    vertical-align: middle;
-    border-left: 1px solid #D1D1D1;
-    border-right: 1px solid #FFF;
-    height: 32px;
-    margin-bottom: auto;
     padding-top: 4px;
+    display: inline-block;
 }
 
 .header-menu-item-content-list a{
