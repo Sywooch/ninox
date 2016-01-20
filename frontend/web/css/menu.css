@@ -126,6 +126,8 @@
     float: left;
     padding-left: 30px;
     text-decoration: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .header-menu-item-content-text a:before {
@@ -153,11 +155,11 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
     -moz-column-rule: 2px outset #fff;
     -moz-columns: 3 260px;
     -webkit-column-count: 3;
-    -webkit-column-width: 200px;
+    -webkit-column-width: 260px;
     -webkit-column-rule: 2px outset #d1d1d1;
     column-count: 3;
     column-width: 260px;
-    column-rule: 2px outset #d1d1d1;
+    column-rule: 2px outset #fff;
     margin-right: -3px;
 }
 
@@ -166,7 +168,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .header-menu-item-content li {
-    padding-top: 4px;
+    /*padding-top: 4px;*/
     display: inline-block;
 }
 
@@ -177,7 +179,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .header-menu-item-content-slider{
-    width: 390px;
+    width: 388px;
     background: linear-gradient(to bottom right, #17cad8, #a21ae6);
     height: 375px;
     float: right;
