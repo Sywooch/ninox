@@ -750,8 +750,8 @@ position: absolute;
     background-image: url(img/site/map-icon.png);
     background-repeat: no-repeat;
     width: 16px;
-height: 16px;
-float: left;
+    height: 16px;
+    float: left;
 }
 
 #modal_close{

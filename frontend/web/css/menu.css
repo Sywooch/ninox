@@ -54,7 +54,6 @@
 
 .header-menu-item:hover a{
     color: black;
-
 }
 
 .header-menu-item:hover .header-menu-item-content{
@@ -133,12 +132,11 @@
 .header-menu-item-content-text a:before {
     content: '';
     display: inline-table;
-    width: 3px !important;
-    height: 3px !important;
+    width: 3px;
+    height: 3px;
     border-radius: 2px;
     background: #29a1e0;
     list-style: inside;
-    /* float: left; */
     margin-top: 8px;
     margin-right: 10px;
 }
@@ -168,7 +166,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .header-menu-item-content li {
-    /*padding-top: 4px;*/
     display: inline-block;
 }
 
