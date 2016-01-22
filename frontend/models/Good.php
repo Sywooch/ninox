@@ -90,6 +90,9 @@ class Good extends \common\models\Good{
 		    case 'inCart':
 			    return \Yii::$app->cart->has($this->ID);
 			    break;
+            case 'video':
+                return true; //TODO: return video from dopVideo table
+                break;
 		    default:
 			    return parent::__get($name);
 			    break;

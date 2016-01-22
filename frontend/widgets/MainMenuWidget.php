@@ -65,8 +65,8 @@ class MainMenuWidget extends Widget{
     public function renderItem($item, $subitem = false){
         $menu = $submenu = '';
 
-        if(!$subitem && !empty($item['image'])){
-            $menu .= Html::tag('div', Html::img($item['image']), [
+        if(!$subitem && !empty($item['imgSrc'])){
+            $menu .= Html::tag('div', Html::img($item['imgSrc']), [
                 'class' =>  $this->options['headerImageClass']
             ]);
         }
