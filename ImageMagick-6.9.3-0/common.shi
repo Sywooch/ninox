@@ -1,0 +1,21 @@
+# Test environment
+top_srcdir='/var/www/krasota-style.yii/ImageMagick-6.9.3-0'
+top_builddir='/var/www/krasota-style.yii/ImageMagick-6.9.3-0'
+
+set -a
+COMPARE="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities/compare"
+COMPOSITE="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities/composite"
+CONJURE="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities/conjure"
+CONVERT="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities/convert"
+DISPLAY="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities/display"
+IDENTIFY="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities/identify"
+MONTAGE="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities/montage" 
+VALIDATE="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/tests/validate"
+DRAWTEST="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/tests/drawtest"
+WANDTEST="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/tests/wandtest"
+LD_LIBRARY_PATH="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/magick/.libs:${LD_LIBRARY_PATH}"
+MAGICK_CODER_MODULE_PATH="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/coders"
+MAGICK_CONFIGURE_PATH="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/config:/var/www/krasota-style.yii/ImageMagick-6.9.3-0/config"
+MAGICK_FILTER_MODULE_PATH="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/filters"
+PATH="/var/www/krasota-style.yii/ImageMagick-6.9.3-0/utilities:/var/www/krasota-style.yii/ImageMagick-6.9.3-0/tests:${PATH}"
+set +a
