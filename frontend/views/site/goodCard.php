@@ -167,11 +167,19 @@ if(isset($good->PrOut3)){
                             ]
                         )?>
                         <div class="counterWrapper">
-                            <div class="counter">
-                                <a class="minus" data-itemId="<?=$good->Code?>"></a>
-                                <input value="<?=$good->inCart ? $good->inCart : '1'?>" readonly="readonly" name="count" class="count" type="text" data-itemId="<?=$good->Code?>">
-                                <a class="plus" data-itemId="<?=$good->Code?>" data-countInStore="<?=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
+                            <div class="price">
+                                <span>1240</span>
                             </div>
+                            <div class="retail-price">
+                                <span>розничная цена: 1999 грн</span>
+                            </div>
+                            <!--<div class="counter">
+                                <a class="minus" data-itemId="<?//=$good->Code?>"></a>
+                                <input value="<?//=$good->inCart ? $good->inCart : '1'?>" readonly="readonly"
+                                name="count" class="count" type="text" data-itemId="<?//=$good->Code?>">
+                                <a class="plus" data-itemId="<?//=$good->Code?>" data-countInStore="
+                                <?//=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
+                            </div>-->
                         </div>
                         <div class="progress">
                             <?php if($good->count < 1){ ?>
@@ -179,16 +187,20 @@ if(isset($good->PrOut3)){
                                     <span>Доставка: 1 - 4 дня</span>
                                 </div>
                             <?php }else{ ?>
-                                <span>Остаток на складе:</span>
-                                <div class="progressBar">
-                                    <?=Html::tag('span', '', [
-                                        'class'         =>  'progressLine',
-                                        'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
-                                    ])?>
+                                <div class="how-much-left">
+                                    <div class="how-much-left-text">
+                                        <span>Остаток на складе:</span>
+                                        <span>заканчиваеться</span>
+                                    </div>
+                                    <div class="progressBar">
+                                        <?=Html::tag('span', '', [
+                                            'class'         =>  'progressLine',
+                                            'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
+                                        ])?>
+                                    </div>
+                                    <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
+                                    <?php } ?>
                                 </div>
-                                <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
-                            <?php } ?>
-
                                 <?php /*
                             <?php
                             $good['PrOut1'] = explode('.', (string)number_format((float)$good['PriceOut1'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
@@ -213,8 +225,8 @@ if(isset($good->PrOut3)){
                                 <?php
                                 $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
                                     ($good->inCart ? 'В корзине!' : 'КУПИТЬ')), [
-                                    'class'         =>  ($good->inCart ? 'greenButton openCart' : 'yellowButton buy')
-                                        .' button',
+                                    'class'         =>  ($good->inCart ? 'yellow-button openCart' : 'yellow-button buy')
+                                        .' large-button',
                                     'data-itemId'   =>  $good->Code,
                                     'data-count'    =>  '1'
                                 ]) : \Yii::t('shop', 'Нет в наличии');
@@ -266,7 +278,7 @@ if(isset($good->PrOut3)){
                         <div class="warranty"><img src="/template/img/warranty.png" alt="<?=\Yii::t('shop', 'гарантия')?>" width="82" height="66"><div class="semi-bold"><?=\Yii::t('shop', '12 месяцев гарантии')?></div><?=\Yii::t('shop', 'Обмен/возврат товара в течение 14 дней')?></div>
                     <?php } ?>
                     <div class="deliveryType">
-                        <div class="minihead"><?=\Yii::t('shop', 'Доставка')?><span class="tooltip-question"></span>
+                        <div class="minihead"><?=\Yii::t('shop', 'Доставка 2-4 дня')?><span class="tooltip-question"></span>
                             <div class="tooltip">
                                 <div class="deliveryTooltip"><?=\Yii::t('shop', 'Доставка заказа по Украине осуществляется от 1 до 5 дней транспортной организацией')?> «<span class="link-hide" data-href="//novaposhta.ua/"><?=\Yii::t('shop', 'Новая Почта')?></span>».</div>
                             </div>
@@ -280,8 +292,27 @@ if(isset($good->PrOut3)){
                                 <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
                             </div>
                         </div>
-                        <span><?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></span>
-                        <div>Visa/MasterCard</div>
+                        <span>• <?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></span>
+                        <div>• Visa/MasterCard</div>
+                    </div>
+                    <div class="purchase-returns">
+                        <div class="minihead"><?=\Yii::t('shop', '14 дней на возврат')?><span
+                                class="tooltip-question"></span>
+                            <div class="tooltip">
+                                <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
+                            </div>
+                        </div>
+                        <div><?=\Yii::t('shop', 'Возврат и обмен товара согласно')?></div>
+                        <div><?=\Yii::t('shop', 'законодательству Украины')?></div>
+                    </div>
+                    <div class="guarantee">
+                        <div class="minihead"><?=\Yii::t('shop', 'Гарантия 12 месяцев')?><span
+                                class="tooltip-question"></span>
+                            <div class="tooltip">
+                                <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
+                            </div>
+                        </div>
+                        <div>Официальная гарантия от производителя</div>
                     </div>
                 </div>
             </div>
