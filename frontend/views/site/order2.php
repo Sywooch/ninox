@@ -217,6 +217,7 @@ $css = <<<'STYLE'
 .content-data-body-first .next-button{
     width: 100%;
     height:40px;
+    padding-left: 100px;
 }
 
 .next-button button{
@@ -1063,7 +1064,7 @@ $('#submit').click(function() {
                             <?php
                                 echo \yii\helpers\Html::button('Оформить заказ', [
                                      'type'  =>  'submit',
-                                     'class' =>  'button',
+                                     'class' =>  'yellow-button large-button',
                                      'id'    =>  'submit'
                                         ]);
                             ?>

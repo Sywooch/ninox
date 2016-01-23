@@ -113,8 +113,14 @@ if(isset($good->PrOut3)){
                     <div class="title">
                         <h1 itemprop="name"><?=$good->Name?></h1>
                     </div>
-                    <div class="code blue"><?=\Yii::t('shop', 'Код')?>: <?=$good->Code?></div>
-
+                    <div class="code-novelty">
+                        <div class="code blue">
+                            <?=\Yii::t('shop', 'Код')?>: <?=$good->Code?>
+                        </div>
+                        <div class="novelty">
+                            НОВИНКА
+                        </div>
+                    </div>
                 <!--<div class="itemPhotos">
                     <img itemprop="image" data-modal-index="0" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288" height="214" alt="<?=$good->Name?>">
 
@@ -182,7 +188,7 @@ if(isset($good->PrOut3)){
                                 </div>
                                 <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
                             <?php } ?>
-                            <div>
+
                                 <?php /*
                             <?php
                             $good['PrOut1'] = explode('.', (string)number_format((float)$good['PriceOut1'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
@@ -205,8 +211,10 @@ if(isset($good->PrOut3)){
                         </div>
                     */ ?>
                                 <?php
-                                $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop', ($good->inCart ? 'В корзине!' : 'Купить!')), [
-                                    'class'         =>  ($good->inCart ? 'greenButton openCart' : 'yellowButton buy').' middleButton',
+                                $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
+                                    ($good->inCart ? 'В корзине!' : 'КУПИТЬ')), [
+                                    'class'         =>  ($good->inCart ? 'greenButton openCart' : 'yellowButton buy')
+                                        .' button',
                                     'data-itemId'   =>  $good->Code,
                                     'data-count'    =>  '1'
                                 ]) : \Yii::t('shop', 'Нет в наличии');
@@ -214,7 +222,7 @@ if(isset($good->PrOut3)){
                                 echo Html::tag('div', $divContent, [
                                     'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
                                 ])?>
-                            </div>
+
                             <div class="about-price">
                                 <a>Узнать о снижении цены</a>
                                 <a>в избранное</a>

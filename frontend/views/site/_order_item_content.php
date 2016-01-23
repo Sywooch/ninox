@@ -20,7 +20,7 @@
                 'afterValidate' => 'js:function(form, data, hasError) {if(!hasError){$('.[type=>submit].').removeAttr('.disabled.') } }'  ]]);*/
 
         echo \yii\helpers\Html::button('Далее', [
-            'class'     =>  'button goToPage',
+            'class'     =>  'yellow-button middle-button goToPage',
             'type'      =>  'button',
 	        'data-page' =>  1,
 
