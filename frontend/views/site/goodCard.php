@@ -52,18 +52,18 @@ if(isset($good->PrOut3)){
 };
 
 ?>
-<div class="leftMenu">
+<!--<div class="leftMenu">
     <span class="catTitle"><a href="/<?=$mainCategory->link?>" title="<?=$mainCategory->Name?>"><?=$mainCategory->Name?></a></span>
     <?=''//LeftMenu?>
     <?=''//LeftMenuBanners?>
-</div>
+</div>-->
 <div class="catalog">
     <?=\yii\widgets\Breadcrumbs::widget([
         'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
         'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span><span class="arrowBreadcrumbs"></span>',
         'links'                 =>  \Yii::$app->params['breadcrumbs']
     ])?>
-    <div class="label">
+    <!--<div class="label">
         <div class="mobilePrevCatalog">
             <a href="/<?=$category->link?>">
                 <div class="prevMobile">
@@ -72,24 +72,50 @@ if(isset($good->PrOut3)){
             </a>
             <?=$category->Name?>
         </div>
-    </div>
+    </div>-->
     <div class="goodsCard" itemscope itemtype="http://schema.org/Product">
         <div class="itemInfo">
-            <div class="title">
-                <h1 itemprop="name"><?=$good->Name?></h1>
-            </div>
-            <div class="code blue"><?=\Yii::t('shop', 'Код')?>: <?=$good->Code?></div>
-            <div class="rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-                <span class="currentRating" itemprop="ratingValue"><?=($good->rate ? $good->rate : 5)?></span>
-                <div class="shop-star<?=$good->rate == 5 ? ' current' : ''?>" itemprop="bestRating" title="<?=\Yii::t('shop', 'Отлично')?>" data-item="<?=$good->ID?>" data-rate="5">5</div>
-                <div class="shop-star<?=4 <= $good->rate && $good->rate < 5 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Хорошо')?>" data-item="<?=$good->ID?>" data-rate="4">4</div>
-                <div class="shop-star<?=3 <= $good->rate && $good->rate < 4 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Средне')?>" data-item="<?=$good->ID?>" data-rate="3">3</div>
-                <div class="shop-star<?=2 <= $good->rate && $good->rate < 3 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Приемлемо')?>" data-item="<?=$good->ID?>" data-rate="2">2</div>
-                <div class="shop-star<?=1 <= $good->rate && $good->rate < 2 ? ' current' : ''?>" itemprop="worstRating" title="<?=\Yii::t('shop', 'Плохо')?>" data-item="<?=$good->ID?>" data-rate="1">1</div>
-                <span class="rateCount" itemprop="reviewCount"><?=$good->reviewsCount ? $good->reviewsCount : 1?></span>
-            </div>
-            <div>
+            <div class="photo-and-order">
                 <div class="itemPhotos">
+                    <img itemprop="image" data-modal-index="0" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288" height="214" alt="<?=$good->Name?>">
+
+                    <?php /*
+                        <?php
+                        $good['PrOut3'] = $good['PriceOut3'] ? explode('.', (string)number_format((float)$good['PriceOut3'], 2, '.', '')) : false;
+                        ?>
+
+                        не знаю что это
+                        */ ?>
+
+                    <?=Html::tag('div', implode('', $captFlags), [
+                        'class' =>  'capt-flags'
+                    ])?>
+                    <?php /*
+                        <?php $dopPhotosSize = sizeof($good['dopPhoto']); if($dopPhotosSize >= 1){ ?>
+                            <div class="gallery itemImageSlider">
+                                <div class="galleryCenter">
+                                    <div class="centerSlide">
+                                        <div class="slides">
+                                            <?php $i = 1; foreach($good['dopPhoto'] as $onePhoto){ ?>
+                                                <div class="slide">
+                                                    <img data-modal-index="<?=$i?>" src="<?=$GLOBALS['CDN_LINK']?>/img/catalog/sm/<?=$onePhoto?>" width="85" height="65" alt="Дополнительное фото">
+                                                </div>
+                                                <?php $i++; } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        а тут мы вроде-бы планировалили прицепить новый слайдер
+                        */ ?>
+                </div>
+                <div class="about-order">
+                    <div class="title">
+                        <h1 itemprop="name"><?=$good->Name?></h1>
+                    </div>
+                    <div class="code blue"><?=\Yii::t('shop', 'Код')?>: <?=$good->Code?></div>
+
+                <!--<div class="itemPhotos">
                     <img itemprop="image" data-modal-index="0" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288" height="214" alt="<?=$good->Name?>">
 
                     <?php /*
@@ -100,9 +126,10 @@ if(isset($good->PrOut3)){
                     не знаю что это
                     */ ?>
 
-                    <?=Html::tag('div', implode('', $captFlags), [
+                    <?/*=Html::tag('div', implode('', $captFlags), [
                         'class' =>  'capt-flags'
-                    ])?>
+                    ])*/
+                    ?>
                     <?php /*
                     <?php $dopPhotosSize = sizeof($good['dopPhoto']); if($dopPhotosSize >= 1){ ?>
                         <div class="gallery itemImageSlider">
@@ -121,11 +148,42 @@ if(isset($good->PrOut3)){
                     <?php } ?>
                     а тут мы вроде-бы планировалили прицепить новый слайдер
                     */ ?>
-                </div>
+                </div>-->
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
-                        <div>
-                            <?php /*
+                        <?=Html::tag(
+                            'div',
+                            ($good->show_img == 1 ? $good->count < 1 ? \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии') : \Yii::t('shop', 'Нет в наличии')),
+                            [
+                                'class'     =>  'availability',
+                                'itemprop'  =>  'availability',
+                                'href'      =>  'http://schema.org/InStock'
+                            ]
+                        )?>
+                        <div class="counterWrapper">
+                            <div class="counter">
+                                <a class="minus" data-itemId="<?=$good->Code?>"></a>
+                                <input value="<?=$good->inCart ? $good->inCart : '1'?>" readonly="readonly" name="count" class="count" type="text" data-itemId="<?=$good->Code?>">
+                                <a class="plus" data-itemId="<?=$good->Code?>" data-countInStore="<?=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <?php if($good->count < 1){ ?>
+                                <div>
+                                    <span>Доставка: 1 - 4 дня</span>
+                                </div>
+                            <?php }else{ ?>
+                                <span>Остаток на складе:</span>
+                                <div class="progressBar">
+                                    <?=Html::tag('span', '', [
+                                        'class'         =>  'progressLine',
+                                        'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
+                                    ])?>
+                                </div>
+                                <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
+                            <?php } ?>
+                            <div>
+                                <?php /*
                             <?php
                             $good['PrOut1'] = explode('.', (string)number_format((float)$good['PriceOut1'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
                             $good['PrOut1'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut1'][1].'</sup>' : '';
@@ -146,50 +204,35 @@ if(isset($good->PrOut3)){
                             <?php } ?>
                         </div>
                     */ ?>
-                    <?php
-                        $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop', ($good->inCart ? 'В корзине!' : 'Купить!')), [
-                            'class'         =>  ($good->inCart ? 'greenButton openCart' : 'yellowButton buy').' middleButton',
-                            'data-itemId'   =>  $good->Code,
-                            'data-count'    =>  '1'
-                        ]) : \Yii::t('shop', 'Нет в наличии');
+                                <?php
+                                $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop', ($good->inCart ? 'В корзине!' : 'Купить!')), [
+                                    'class'         =>  ($good->inCart ? 'greenButton openCart' : 'yellowButton buy').' middleButton',
+                                    'data-itemId'   =>  $good->Code,
+                                    'data-count'    =>  '1'
+                                ]) : \Yii::t('shop', 'Нет в наличии');
 
-                    echo Html::tag('div', $divContent, [
-                        'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
-                    ])?>
-                    </div>
-                    <div class="counterWrapper">
-                        <div class="counter">
-                            <a class="minus" data-itemId="<?=$good->Code?>"></a>
-                            <input value="<?=$good->inCart ? $good->inCart : '1'?>" readonly="readonly" name="count" class="count" type="text" data-itemId="<?=$good->Code?>">
-                            <a class="plus" data-itemId="<?=$good->Code?>" data-countInStore="<?=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
-                        </div>
-                    </div>
-                    <div class="line"></div>
-                    <?=Html::tag(
-                        'div',
-                        ($good->show_img == 1 ? $good->count < 1 ? \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии') : \Yii::t('shop', 'Нет в наличии')),
-                        [
-                            'class'     =>  'availability',
-                            'itemprop'  =>  'availability',
-                            'href'      =>  'http://schema.org/InStock'
-                        ]
-                    )?>
-                    <div class="progress">
-                        <?php if($good->count < 1){ ?>
-                            <div>
-                                <span>Доставка: 1 - 4 дня</span>
-                            </div>
-                        <?php }else{ ?>
-                            <span>Остаток на складе:</span>
-                            <div class="progressBar">
-                                <?=Html::tag('span', '', [
-                                    'class'         =>  'progressLine',
-                                    'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
+                                echo Html::tag('div', $divContent, [
+                                    'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
                                 ])?>
                             </div>
-                            <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
-                        <?php } ?>
-                    </div>
+                            <div class="about-price">
+                                <a>Узнать о снижении цены</a>
+                                <a>в избранное</a>
+                            </div>
+
+                        </div>
+
+
+                    <div class="line"></div>
+                        <div class="rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                            <span class="currentRating" itemprop="ratingValue"><?=($good->rate ? $good->rate : 5)?></span>
+                            <div class="shop-star<?=$good->rate == 5 ? ' current' : ''?>" itemprop="bestRating" title="<?=\Yii::t('shop', 'Отлично')?>" data-item="<?=$good->ID?>" data-rate="5">5</div>
+                            <div class="shop-star<?=4 <= $good->rate && $good->rate < 5 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Хорошо')?>" data-item="<?=$good->ID?>" data-rate="4">4</div>
+                            <div class="shop-star<?=3 <= $good->rate && $good->rate < 4 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Средне')?>" data-item="<?=$good->ID?>" data-rate="3">3</div>
+                            <div class="shop-star<?=2 <= $good->rate && $good->rate < 3 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Приемлемо')?>" data-item="<?=$good->ID?>" data-rate="2">2</div>
+                            <div class="shop-star<?=1 <= $good->rate && $good->rate < 2 ? ' current' : ''?>" itemprop="worstRating" title="<?=\Yii::t('shop', 'Плохо')?>" data-item="<?=$good->ID?>" data-rate="1">1</div>
+                            <span class="rateCount" itemprop="reviewCount"><?=$good->reviewsCount ? $good->reviewsCount : 1?></span>
+                        </div>
                     <div class="line"></div>
                     <?php if($good->garantyShow == '1'){
                         if($good->anotherCurrencyPeg == '1'){
@@ -234,7 +277,8 @@ if(isset($good->PrOut3)){
                     </div>
                 </div>
             </div>
-        </div>
+</div>
+            </div>
         <div class="socialItemInfo">
             <div class="shareToFriends"><?=\Yii::t('shop', 'Рассказать друзьям')?></div>
             <div>
