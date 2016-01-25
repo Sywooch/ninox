@@ -157,90 +157,92 @@ if(isset($good->PrOut3)){
                 </div>-->
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
-                        <?=Html::tag(
-                            'div',
-                            ($good->show_img == 1 ? $good->count < 1 ? \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии') : \Yii::t('shop', 'Нет в наличии')),
-                            [
-                                'class'     =>  'availability',
-                                'itemprop'  =>  'availability',
-                                'href'      =>  'http://schema.org/InStock'
-                            ]
-                        )?>
-                        <div class="counterWrapper">
-                            <div class="price">
-                                <span>1240</span>
-                            </div>
-                            <div class="retail-price">
-                                <span>розничная цена: 1999 грн</span>
-                            </div>
-                            <!--<div class="counter">
-                                <a class="minus" data-itemId="<?//=$good->Code?>"></a>
-                                <input value="<?//=$good->inCart ? $good->inCart : '1'?>" readonly="readonly"
-                                name="count" class="count" type="text" data-itemId="<?//=$good->Code?>">
-                                <a class="plus" data-itemId="<?//=$good->Code?>" data-countInStore="
-                                <?//=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
-                            </div>-->
-                        </div>
-                        <div class="progress">
-                            <?php if($good->count < 1){ ?>
-                                <div>
-                                    <span>Доставка: 1 - 4 дня</span>
+                        <div class="pricelist-content">
+                            <?=Html::tag(
+                                'div',
+                                ($good->show_img == 1 ? $good->count < 1 ? \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии') : \Yii::t('shop', 'Нет в наличии')),
+                                [
+                                    'class'     =>  'availability',
+                                    'itemprop'  =>  'availability',
+                                    'href'      =>  'http://schema.org/InStock'
+                                ]
+                            )?>
+                            <div class="counterWrapper">
+                                <div class="price">
+                                    <span>1240</span>
                                 </div>
-                            <?php }else{ ?>
-                                <div class="how-much-left">
-                                    <div class="how-much-left-text">
-                                        <span>Остаток на складе:</span>
-                                        <span>заканчиваеться</span>
+                                <div class="retail-price">
+                                    <span>розничная цена: 1999 грн</span>
+                                </div>
+                                <!--<div class="counter">
+                                    <a class="minus" data-itemId="<?//=$good->Code?>"></a>
+                                    <input value="<?//=$good->inCart ? $good->inCart : '1'?>" readonly="readonly"
+                                    name="count" class="count" type="text" data-itemId="<?//=$good->Code?>">
+                                    <a class="plus" data-itemId="<?//=$good->Code?>" data-countInStore="
+                                    <?//=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
+                                </div>-->
+                            </div>
+                            <div class="progress">
+                                <?php if($good->count < 1){ ?>
+                                    <div class="deliv">
+                                        <span>Доставка: 1 - 4 дня</span>
                                     </div>
-                                    <div class="progressBar">
-                                        <?=Html::tag('span', '', [
-                                            'class'         =>  'progressLine',
-                                            'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
-                                        ])?>
+                                <?php }else{ ?>
+                                    <div class="how-much-left">
+                                        <div class="how-much-left-text">
+                                            <span>Остаток на складе:</span>
+                                            <span>заканчиваеться</span>
+                                        </div>
+                                        <div class="progressBar">
+                                            <?=Html::tag('span', '', [
+                                                'class'         =>  'progressLine',
+                                                'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
+                                            ])?>
+                                        </div>
+                                        <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
+
                                     </div>
-                                    <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
-                                    <?php } ?>
-                                </div>
-                                <?php /*
-                            <?php
-                            $good['PrOut1'] = explode('.', (string)number_format((float)$good['PriceOut1'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
-                            $good['PrOut1'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut1'][1].'</sup>' : '';
-                            $good['PrOut2'] = explode('.', (string)number_format((float)$good['PriceOut2'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
-                            $good['PrOut2'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut2'][1].'</sup>' : '';
-                            $good['PrOut3'] = $good['PriceOut3'] ? explode('.', (string)number_format((float)$good['PriceOut3'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' ')) : false;
-                            if($good['PrOut3']){
-                                $good['PrOut3'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut3'][1].'</sup>' : '';
-                            }
-                            ?>
-                            <div class="<?=($good['PrOut3'] ? 'new-' : '')?>opt semi-bold <?=($good['PrOut3'] ? 'red' : 'blue')?>">
-                                <span itemprop="price" content="<?=$good['PriceOut1']?>"><?=$good['PrOut1']['0']?></span><?=$good['PrOut1']['1']?><span class="uah" itemprop="priceCurrency" content="<?=$_SESSION['domainInfo']['currencyCode']?>"> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
-                            </div>
-                            <?php if(!$good['onePrice'] || $good['PrOut3']){ ?>
-                                <div class="<?=($good['PrOut3'] ? 'old-' : 's')?>opt">
-                                    <span><?=($good['PrOut3'] ? _("опт") : _("розница"))?> - <?=($good['PrOut3'] ? $good['PrOut3']['0'] : $good['PrOut2']['0'])?></span><?=($good['PrOut3'] ? $good['PrOut3']['1'] : $good['PrOut2']['1'])?><span> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
-                                </div>
-                            <?php } ?>
-                        </div>
-                    */ ?>
+                                        <?php } ?>
+                                    <?php /*
                                 <?php
-                                $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
-                                    ($good->inCart ? 'В корзине!' : 'КУПИТЬ')), [
-                                    'class'         =>  ($good->inCart ? 'yellow-button openCart' : 'yellow-button buy')
-                                        .' large-button',
-                                    'data-itemId'   =>  $good->Code,
-                                    'data-count'    =>  '1'
-                                ]) : \Yii::t('shop', 'Нет в наличии');
-
-                                echo Html::tag('div', $divContent, [
-                                    'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
-                                ])?>
-
-                            <div class="about-price">
-                                <a>Узнать о снижении цены</a>
-                                <a>в избранное</a>
+                                $good['PrOut1'] = explode('.', (string)number_format((float)$good['PriceOut1'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
+                                $good['PrOut1'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut1'][1].'</sup>' : '';
+                                $good['PrOut2'] = explode('.', (string)number_format((float)$good['PriceOut2'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
+                                $good['PrOut2'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut2'][1].'</sup>' : '';
+                                $good['PrOut3'] = $good['PriceOut3'] ? explode('.', (string)number_format((float)$good['PriceOut3'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' ')) : false;
+                                if($good['PrOut3']){
+                                    $good['PrOut3'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut3'][1].'</sup>' : '';
+                                }
+                                ?>
+                                <div class="<?=($good['PrOut3'] ? 'new-' : '')?>opt semi-bold <?=($good['PrOut3'] ? 'red' : 'blue')?>">
+                                    <span itemprop="price" content="<?=$good['PriceOut1']?>"><?=$good['PrOut1']['0']?></span><?=$good['PrOut1']['1']?><span class="uah" itemprop="priceCurrency" content="<?=$_SESSION['domainInfo']['currencyCode']?>"> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
+                                </div>
+                                <?php if(!$good['onePrice'] || $good['PrOut3']){ ?>
+                                    <div class="<?=($good['PrOut3'] ? 'old-' : 's')?>opt">
+                                        <span><?=($good['PrOut3'] ? _("опт") : _("розница"))?> - <?=($good['PrOut3'] ? $good['PrOut3']['0'] : $good['PrOut2']['0'])?></span><?=($good['PrOut3'] ? $good['PrOut3']['1'] : $good['PrOut2']['1'])?><span> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
+                                    </div>
+                                <?php } ?>
                             </div>
+                        */ ?>
+                                    <?php
+                                    $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
+                                        ($good->inCart ? 'В корзине!' : 'КУПИТЬ')), [
+                                        'class'         =>  ($good->inCart ? 'yellow-button openCart' : 'yellow-button buy')
+                                            .' large-button',
+                                        'data-itemId'   =>  $good->Code,
+                                        'data-count'    =>  '1'
+                                    ]) : \Yii::t('shop', 'Нет в наличии');
 
-                        </div>
+                                    echo Html::tag('div', $divContent, [
+                                        'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
+                                    ])?>
+
+                                <div class="about-price">
+                                    <a>Узнать о снижении цены</a>
+                                    <a class="favorites">в избранное</a>
+                                </div>
+
+                            </div>
 
 
                     <div class="line"></div>
@@ -272,6 +274,12 @@ if(isset($good->PrOut3)){
                             </div>
                         <?php }
                     } ?>
+                    </div>
+                        <div class="pricelist-warning">
+                            <span>Внимание!</span>
+                            Цена действительна при оплате заказа 03.11.14 до 21:00
+
+                        </div>
                 </div>
                 <div class="itemDopInfo">
                     <?php if($good->garantyShow == '1'){ ?>
