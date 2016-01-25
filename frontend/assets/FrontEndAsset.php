@@ -23,7 +23,6 @@ class FrontEndAsset extends AssetBundle
 		'css/outdatedbrowser.min.css',
 		'css/site.css',
 		'css/menu.css',
-		'css/goodCard.css',
 	];
 	public $js = [
 		'js/main.js',
