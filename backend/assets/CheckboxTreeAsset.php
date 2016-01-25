@@ -17,7 +17,7 @@ class CheckboxTreeAsset extends AssetBundle{
         'js/fancytree/jquery.fancytree-all.min.js'
     ];
     public $css = [
-        'js/fancytree/skin-win8/ui.fancytree.min.css'
+        'js/fancytree/skin-win8-n/ui.fancytree.min.css'
     ];
     public $depends = [
         'yii\web\JqueryAsset',
