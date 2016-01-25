@@ -8,6 +8,7 @@ $form = new \yii\bootstrap\ActiveForm([
 $js = <<<'JS'
 $("#tree").fancytree({
     checkbox: true,
+      selectMode: 4,
     source: {
         url: '/pricelists/categoriestree',
         cache: false

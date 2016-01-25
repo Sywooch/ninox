@@ -32,7 +32,7 @@ if(!empty($model->video)){
     ]);
 }
 
-if(!empty($_SESSION['userID'])){
+if(!\Yii::$app->user->isGuest){
     $blocks[] = Html::tag('div', \Yii::t('shop', 'В список желаний'), [
         'class' =>  'goods-bottom-desire'
     ]);
@@ -176,8 +176,8 @@ $discountBlock = function($model){
             <img class="link-hide" data-href="<?=$link?>" alt="<?=$model->Name?>" src="<?=$photo?>" title="<?=$model->Name?> - <?=\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')?>" height="190" width="243">
             <?php if($model->priceRuleID){
                 echo $discountBlock($model);
-            }?>
-            <?php
+            }
+
             if(!empty($flags)){
                 echo Html::tag('div', implode('', $flags), [
                     'class' =>  'capt-flags'
@@ -186,9 +186,7 @@ $discountBlock = function($model){
             ?>
             <div class="open-modal-item" data-itemId="<?=$model->Code?>"></div>
         </div>
-        <?php
-        echo $buyBlock($model, $button);
-        ?>
+        <?=$buyBlock($model, $button)?>
     </div>
     <div class="inner-sub">
 	    <?php if($model->count > 0){
@@ -213,12 +211,10 @@ $discountBlock = function($model){
                 <?=$model->priceForOneItem.' '.\Yii::$app->params['domainInfo']['currencyShortName'].' ('.$model->num_opt.' '.$model->Measure1.'/'.\Yii::t('shop', 'уп').')'?>
                 </span>
             </div>
-            <?php } ?>
+                <?php } ?>
             <div class="count-in-store">
                 <span>Остаток на складе:&nbsp;</span>
-                <?php
-                echo $countInStore($model);
-                ?>
+                <?=$countInStore($model)?>
             </div>
             <?php } ?>
             <div class="rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
@@ -244,7 +240,6 @@ $discountBlock = function($model){
                 'class' =>  'goods-bottom'
             ]);
         }
-
         ?>
     </div>
 </div>

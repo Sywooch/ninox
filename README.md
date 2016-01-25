@@ -1,54 +1,71 @@
-Yii 2 Advanced Project Template
+Yii 2 Krasota-Style CMF
 ===============================
 
-Yii 2 Advanced Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
-developing complex Web applications with multiple tiers.
+Проект растёт, растут его потребности, именно поэтому сделано с любовью на yii2
 
-The template includes three tiers: front end, back end, and console, each of which
-is a separate Yii application.
+Основные ведомости
+-------------------
+* Вся конфигурация делится на два вида: локальная (`main-local.php` и `params-local.php`) и глобальная (`main.php` и `params.php`). Если у вас нет локальной конфигурации, значит вы не инициализировали проект.
+* Конфигурация для подключения к базе данных должна указываться в локальной конфигурации
+* Работа с кодом проекта только через [ветки](#branches) на github.
 
-The template is designed to work in a team development environment. It supports
-deploying the application in different environments.
 
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
-
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-app-advanced/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii2-app-advanced/downloads.png)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Build Status](https://travis-ci.org/yiisoft/yii2-app-advanced.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-app-advanced)
-
-DIRECTORY STRUCTURE
+Структура проекта
 -------------------
 
 ```
 common
-    config/              contains shared configurations
-    mail/                contains view files for e-mails
-    models/              contains model classes used in both backend and frontend
+    config/              общая конфигурация
+    mail/                файлы видов (вьюшки) емейлов
+    models/              общие модели для всех приложений
 console
-    config/              contains console configurations
-    controllers/         contains console controllers (commands)
-    migrations/          contains database migrations
-    models/              contains console-specific model classes
-    runtime/             contains files generated during runtime
+    config/              конфигурация приложения консоли
+    controllers/         контроллеры приложения консоли
+    migrations/          миграции
+    models/              модели приложения консоли
+    runtime/             файлы, генерируемые во время работы приложения
 backend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains backend configurations
-    controllers/         contains Web controller classes
-    models/              contains backend-specific model classes
-    runtime/             contains files generated during runtime
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
+    assets/              содержит конфигурации подключаемых CSS и JS
+    config/              конфигурация админки
+    controllers/         контроллеры админки
+    models/              модели, спецефические для админки
+    runtime/             файлы, генерируемые во время работы приложения
+    views/               файлы видов (вьюшки) админки
+    web/                 директория доступная из вне
+cashbox
+    assets/              содержит конфигурации подключаемых CSS и JS
+    config/              конфигурация кассы
+    controllers/         контроллеры кассы
+    models/              модели, спецефические для кассы
+    runtime/             файлы, генерируемые во время работы приложения
+    views/               файлы видов (вьюшки) кассы
+    web/                 директория доступная из вне
 frontend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains frontend configurations
-    controllers/         contains Web controller classes
-    models/              contains frontend-specific model classes
-    runtime/             contains files generated during runtime
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-    widgets/             contains frontend widgets
-vendor/                  contains dependent 3rd-party packages
-environments/            contains environment-based overrides
-tests                    contains various tests for the advanced application
-    codeception/         contains tests developed with Codeception PHP Testing Framework
+    assets/              содержит конфигурации подключаемых CSS и JS
+    config/              конфигурация фронтенда
+    controllers/         контроллеры фронтенда
+    models/              модели, спецефические для фронтенда
+    runtime/             файлы, генерируемые во время работы приложения
+    views/               файлы видов (вьюшки) кассы
+    web/                 директория доступная из вне
+    widgets/             виджеты для фронтенда
+vendor/                  подключаемые модули
+environments/            среды окружения
+tests                    тесты
+    codeception/         тесты codeception
 ```
+
+При первой установке необходимо:
+* Установить composer (https://getcomposer.org/)
+* Установить composer asset plugin (php composer.phar global require "fxp/composer-asset-plugin")
+* Подтянуть зависимости через composer (php composer.phar update)
+* Инициализировать yii (./init из директории с проектом)
+* Настроить подключение к базе данных в common
+* Запустить миграции (./yii migrate)
+
+Для использования тестов необходимо использовать codeception (http://codeception.com/)
+
+
+Полезные ссылки
+-------------------
+<a name="branches"></a>[Ветки на Github](https://git-scm.com/book/ru/v1/%D0%92%D0%B5%D1%82%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2-Git-%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D1%8B-%D0%B2%D0%B5%D1%82%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-%D0%B8-%D1%81%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D1%8F)
