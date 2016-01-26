@@ -1,5 +1,6 @@
 <?php
 use bobroid\remodal\Remodal;
+use common\models\DeliveryType;
 use kartik\dropdown\DropdownX;
 use kartik\typeahead\Typeahead;
 use yii\bootstrap\Modal;
@@ -7,6 +8,7 @@ use yii\helpers\Html;
 use yii\web\JsExpression;
 
 $this->title = 'Заказ #'.$order->number;
+$deliveryType = DeliveryType::find()->select('description')->where(['id' => $order->deliveryType])->scalar();
 $customerOrdersSummary = $customer->getOrdersSummary();
 $customerOrders = '';
 $typeaheadTemplate = $this->render('order/_typeahead_template', [
@@ -250,7 +252,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
             <h1>№<?=$order->number?></h1>
         </div>
         <div>
-            <h4><?=$order->orderSumm()?> грн. > <?=''//$order->paymentType()?></h4>
+            <h4><?=$order->orderSumm()?> грн. > <?=$deliveryType?></h4>
         </div>
     </div>
     <div class="col-xs-4">
@@ -299,7 +301,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
                     <h4><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></h4>
                 </h3>
-                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=''//$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
+                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$deliveryType?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
                 <?=Remodal::widget([
                     'cancelButton'		=>	false,
                     'confirmButton'		=>	false,

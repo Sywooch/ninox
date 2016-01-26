@@ -140,14 +140,6 @@ class History extends \common\models\History
         return $this->real_summ;
     }
 
-    public function paymentType(){
-        return '';//PaymentType::getName($this->paymentType);
-    }
-
-    public function deliveryType(){
-        return '';//DeliveryType::getName($this->deliveryType);
-    }
-
     public function getItems($returnAll = true){
         if(!empty($this->items) && $returnAll){
             return $this->items;
