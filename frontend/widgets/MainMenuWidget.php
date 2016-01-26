@@ -34,7 +34,7 @@ class MainMenuWidget extends Widget{
         'firstLevelUlClass' =>  'header-menu-items',
         'firstLevelDivClass'=>  'header-menu-item-content',
         'wtfLevelDivClass'  =>  'header-menu-item-content-text',
-        'otherUlClass'      =>  'disc',
+        'otherUlClass'      =>  'header-menu-item-content-items',
         'firstLevelLiClass' =>  'header-menu-item',
         'otherLiClass'      =>  '',
         'headerImageClass'  =>  'header-menu-item-image',
@@ -65,8 +65,8 @@ class MainMenuWidget extends Widget{
     public function renderItem($item, $subitem = false){
         $menu = $submenu = '';
 
-        if(!$subitem && !empty($item['image'])){
-            $menu .= Html::tag('div', Html::img($item['image']), [
+        if(!$subitem && !empty($item['imgSrc'])){
+            $menu .= Html::tag('div', Html::img($item['imgSrc']), [
                 'class' =>  $this->options['headerImageClass']
             ]);
         }

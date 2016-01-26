@@ -1,0 +1,19 @@
+.deliveryType .minihead:before{
+    content: url('/img/site/delivery-car.png');
+}
+
+.payType .minihead:before{
+    content: url('/img/site/payment.png');
+}
+
+.purchase-returns .minihead:before{
+    content: url('/img/site/purchase-returns.png');
+}
+
+.guarantee .minihead:before{
+    content: url('/img/site/guarantee.png');
+}
+
+.favorites:before{
+    content: url('/img/site/favorites.png');
+}

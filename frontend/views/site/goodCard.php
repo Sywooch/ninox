@@ -1,3 +1,7 @@
+<link href="/css/goodCard.css" rel="stylesheet">
+<link href="/css/img.css" rel="stylesheet">
+<link href="/css/base64.css" rel="stylesheet">
+
 <?php
 use yii\helpers\Html;
 
@@ -52,18 +56,19 @@ if(isset($good->PrOut3)){
 };
 
 ?>
-<div class="leftMenu">
+
+<!--<div class="leftMenu">
     <span class="catTitle"><a href="/<?=$mainCategory->link?>" title="<?=$mainCategory->Name?>"><?=$mainCategory->Name?></a></span>
     <?=''//LeftMenu?>
     <?=''//LeftMenuBanners?>
-</div>
+</div>-->
 <div class="catalog">
     <?=\yii\widgets\Breadcrumbs::widget([
         'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
         'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span><span class="arrowBreadcrumbs"></span>',
         'links'                 =>  \Yii::$app->params['breadcrumbs']
     ])?>
-    <div class="label">
+    <!--<div class="label">
         <div class="mobilePrevCatalog">
             <a href="/<?=$category->link?>">
                 <div class="prevMobile">
@@ -72,24 +77,56 @@ if(isset($good->PrOut3)){
             </a>
             <?=$category->Name?>
         </div>
-    </div>
+    </div>-->
     <div class="goodsCard" itemscope itemtype="http://schema.org/Product">
         <div class="itemInfo">
-            <div class="title">
-                <h1 itemprop="name"><?=$good->Name?></h1>
-            </div>
-            <div class="code blue"><?=\Yii::t('shop', 'Код')?>: <?=$good->Code?></div>
-            <div class="rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-                <span class="currentRating" itemprop="ratingValue"><?=($good->rate ? $good->rate : 5)?></span>
-                <div class="shop-star<?=$good->rate == 5 ? ' current' : ''?>" itemprop="bestRating" title="<?=\Yii::t('shop', 'Отлично')?>" data-item="<?=$good->ID?>" data-rate="5">5</div>
-                <div class="shop-star<?=4 <= $good->rate && $good->rate < 5 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Хорошо')?>" data-item="<?=$good->ID?>" data-rate="4">4</div>
-                <div class="shop-star<?=3 <= $good->rate && $good->rate < 4 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Средне')?>" data-item="<?=$good->ID?>" data-rate="3">3</div>
-                <div class="shop-star<?=2 <= $good->rate && $good->rate < 3 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Приемлемо')?>" data-item="<?=$good->ID?>" data-rate="2">2</div>
-                <div class="shop-star<?=1 <= $good->rate && $good->rate < 2 ? ' current' : ''?>" itemprop="worstRating" title="<?=\Yii::t('shop', 'Плохо')?>" data-item="<?=$good->ID?>" data-rate="1">1</div>
-                <span class="rateCount" itemprop="reviewCount"><?=$good->reviewsCount ? $good->reviewsCount : 1?></span>
-            </div>
-            <div>
+            <div class="photo-and-order">
                 <div class="itemPhotos">
+                    <img itemprop="image" data-modal-index="0" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288" height="214" alt="<?=$good->Name?>">
+
+                    <?php /*
+                        <?php
+                        $good['PrOut3'] = $good['PriceOut3'] ? explode('.', (string)number_format((float)$good['PriceOut3'], 2, '.', '')) : false;
+                        ?>
+
+                        не знаю что это
+                        */ ?>
+
+                    <?=Html::tag('div', implode('', $captFlags), [
+                        'class' =>  'capt-flags'
+                    ])?>
+                    <?php /*
+                        <?php $dopPhotosSize = sizeof($good['dopPhoto']); if($dopPhotosSize >= 1){ ?>
+                            <div class="gallery itemImageSlider">
+                                <div class="galleryCenter">
+                                    <div class="centerSlide">
+                                        <div class="slides">
+                                            <?php $i = 1; foreach($good['dopPhoto'] as $onePhoto){ ?>
+                                                <div class="slide">
+                                                    <img data-modal-index="<?=$i?>" src="<?=$GLOBALS['CDN_LINK']?>/img/catalog/sm/<?=$onePhoto?>" width="85" height="65" alt="Дополнительное фото">
+                                                </div>
+                                                <?php $i++; } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        а тут мы вроде-бы планировалили прицепить новый слайдер
+                        */ ?>
+                </div>
+                <div class="about-order">
+                    <div class="title">
+                        <h1 itemprop="name"><?=$good->Name?></h1>
+                    </div>
+                    <div class="code-novelty">
+                        <div class="code blue">
+                            <?=\Yii::t('shop', 'Код')?>: <?=$good->Code?>
+                        </div>
+                        <div class="novelty">
+                            НОВИНКА
+                        </div>
+                    </div>
+                <!--<div class="itemPhotos">
                     <img itemprop="image" data-modal-index="0" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288" height="214" alt="<?=$good->Name?>">
 
                     <?php /*
@@ -100,9 +137,10 @@ if(isset($good->PrOut3)){
                     не знаю что это
                     */ ?>
 
-                    <?=Html::tag('div', implode('', $captFlags), [
+                    <?/*=Html::tag('div', implode('', $captFlags), [
                         'class' =>  'capt-flags'
-                    ])?>
+                    ])*/
+                    ?>
                     <?php /*
                     <?php $dopPhotosSize = sizeof($good['dopPhoto']); if($dopPhotosSize >= 1){ ?>
                         <div class="gallery itemImageSlider">
@@ -121,75 +159,107 @@ if(isset($good->PrOut3)){
                     <?php } ?>
                     а тут мы вроде-бы планировалили прицепить новый слайдер
                     */ ?>
-                </div>
+                </div>-->
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
-                        <div>
-                            <?php /*
-                            <?php
-                            $good['PrOut1'] = explode('.', (string)number_format((float)$good['PriceOut1'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
-                            $good['PrOut1'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut1'][1].'</sup>' : '';
-                            $good['PrOut2'] = explode('.', (string)number_format((float)$good['PriceOut2'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
-                            $good['PrOut2'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut2'][1].'</sup>' : '';
-                            $good['PrOut3'] = $good['PriceOut3'] ? explode('.', (string)number_format((float)$good['PriceOut3'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' ')) : false;
-                            if($good['PrOut3']){
-                                $good['PrOut3'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut3'][1].'</sup>' : '';
-                            }
-                            ?>
-                            <div class="<?=($good['PrOut3'] ? 'new-' : '')?>opt semi-bold <?=($good['PrOut3'] ? 'red' : 'blue')?>">
-                                <span itemprop="price" content="<?=$good['PriceOut1']?>"><?=$good['PrOut1']['0']?></span><?=$good['PrOut1']['1']?><span class="uah" itemprop="priceCurrency" content="<?=$_SESSION['domainInfo']['currencyCode']?>"> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
-                            </div>
-                            <?php if(!$good['onePrice'] || $good['PrOut3']){ ?>
-                                <div class="<?=($good['PrOut3'] ? 'old-' : 's')?>opt">
-                                    <span><?=($good['PrOut3'] ? _("опт") : _("розница"))?> - <?=($good['PrOut3'] ? $good['PrOut3']['0'] : $good['PrOut2']['0'])?></span><?=($good['PrOut3'] ? $good['PrOut3']['1'] : $good['PrOut2']['1'])?><span> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
+                        <div class="pricelist-content">
+                            <?=Html::tag(
+                                'div',
+                                ($good->show_img == 1 ? $good->count < 1 ? \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии') : \Yii::t('shop', 'Нет в наличии')),
+                                [
+                                    'class'     =>  'availability',
+                                    'itemprop'  =>  'availability',
+                                    'href'      =>  'http://schema.org/InStock'
+                                ]
+                            )?>
+                            <div class="counterWrapper">
+                                <div class="price">
+                                    <span>1240</span>
                                 </div>
-                            <?php } ?>
-                        </div>
-                    */ ?>
-                    <?php
-                        $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop', ($good->inCart ? 'В корзине!' : 'Купить!')), [
-                            'class'         =>  ($good->inCart ? 'greenButton openCart' : 'yellowButton buy').' middleButton',
-                            'data-itemId'   =>  $good->Code,
-                            'data-count'    =>  '1'
-                        ]) : \Yii::t('shop', 'Нет в наличии');
+                                <div class="retail-price">
+                                    <span>розничная цена: 1999 грн</span>
+                                </div>
+                                <!--<div class="counter">
+                                    <a class="minus" data-itemId="<?//=$good->Code?>"></a>
+                                    <input value="<?//=$good->inCart ? $good->inCart : '1'?>" readonly="readonly"
+                                    name="count" class="count" type="text" data-itemId="<?//=$good->Code?>">
+                                    <a class="plus" data-itemId="<?//=$good->Code?>" data-countInStore="
+                                    <?//=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
+                                </div>-->
+                            </div>
+                            <div class="progress">
+                                <?php if($good->count < 1){ ?>
+                                    <div class="deliv">
+                                        <span>Доставка: 1 - 4 дня</span>
+                                    </div>
+                                <?php }else{ ?>
+                                    <div class="how-much-left">
+                                        <div class="how-much-left-text">
+                                            <span>Остаток на складе:</span>
+                                            <span>заканчиваеться</span>
+                                        </div>
+                                        <div class="progressBar">
+                                            <?=Html::tag('span', '', [
+                                                'class'         =>  'progressLine',
+                                                'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
+                                            ])?>
+                                        </div>
+                                        <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
 
-                    echo Html::tag('div', $divContent, [
-                        'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
-                    ])?>
-                    </div>
-                    <div class="counterWrapper">
-                        <div class="counter">
-                            <a class="minus" data-itemId="<?=$good->Code?>"></a>
-                            <input value="<?=$good->inCart ? $good->inCart : '1'?>" readonly="readonly" name="count" class="count" type="text" data-itemId="<?=$good->Code?>">
-                            <a class="plus" data-itemId="<?=$good->Code?>" data-countInStore="<?=($good->isUnlimited == '1' ? 1000 : $good->count)?>"></a>
-                        </div>
-                    </div>
+                                    </div>
+                                        <?php } ?>
+                                    <?php /*
+                                <?php
+                                $good['PrOut1'] = explode('.', (string)number_format((float)$good['PriceOut1'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
+                                $good['PrOut1'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut1'][1].'</sup>' : '';
+                                $good['PrOut2'] = explode('.', (string)number_format((float)$good['PriceOut2'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' '));
+                                $good['PrOut2'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut2'][1].'</sup>' : '';
+                                $good['PrOut3'] = $good['PriceOut3'] ? explode('.', (string)number_format((float)$good['PriceOut3'] * $_SESSION['domainInfo']['exchange'], 2, '.', ' ')) : false;
+                                if($good['PrOut3']){
+                                    $good['PrOut3'][1] = $_SESSION['domainInfo']['coins'] == 1 ? '<sup>'.$good['PrOut3'][1].'</sup>' : '';
+                                }
+                                ?>
+                                <div class="<?=($good['PrOut3'] ? 'new-' : '')?>opt semi-bold <?=($good['PrOut3'] ? 'red' : 'blue')?>">
+                                    <span itemprop="price" content="<?=$good['PriceOut1']?>"><?=$good['PrOut1']['0']?></span><?=$good['PrOut1']['1']?><span class="uah" itemprop="priceCurrency" content="<?=$_SESSION['domainInfo']['currencyCode']?>"> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
+                                </div>
+                                <?php if(!$good['onePrice'] || $good['PrOut3']){ ?>
+                                    <div class="<?=($good['PrOut3'] ? 'old-' : 's')?>opt">
+                                        <span><?=($good['PrOut3'] ? _("опт") : _("розница"))?> - <?=($good['PrOut3'] ? $good['PrOut3']['0'] : $good['PrOut2']['0'])?></span><?=($good['PrOut3'] ? $good['PrOut3']['1'] : $good['PrOut2']['1'])?><span> <?=$_SESSION['domainInfo']['currencyShortName']?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        */ ?>
+                                    <?php
+                                    $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
+                                        ($good->inCart ? 'В корзине!' : 'КУПИТЬ')), [
+                                        'class'         =>  ($good->inCart ? 'yellow-button openCart' : 'yellow-button buy')
+                                            .' large-button',
+                                        'data-itemId'   =>  $good->Code,
+                                        'data-count'    =>  '1'
+                                    ]) : \Yii::t('shop', 'Нет в наличии');
+
+                                    echo Html::tag('div', $divContent, [
+                                        'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
+                                    ])?>
+
+                                <div class="about-price">
+                                    <a>Узнать о снижении цены</a>
+                                    <a class="favorites">в избранное</a>
+                                </div>
+
+                            </div>
+
+
                     <div class="line"></div>
-                    <?=Html::tag(
-                        'div',
-                        ($good->show_img == 1 ? $good->count < 1 ? \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии') : \Yii::t('shop', 'Нет в наличии')),
-                        [
-                            'class'     =>  'availability',
-                            'itemprop'  =>  'availability',
-                            'href'      =>  'http://schema.org/InStock'
-                        ]
-                    )?>
-                    <div class="progress">
-                        <?php if($good->count < 1){ ?>
-                            <div>
-                                <span>Доставка: 1 - 4 дня</span>
-                            </div>
-                        <?php }else{ ?>
-                            <span>Остаток на складе:</span>
-                            <div class="progressBar">
-                                <?=Html::tag('span', '', [
-                                    'class'         =>  'progressLine',
-                                    'data-width'    =>  ($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100)).'%'
-                                ])?>
-                            </div>
-                            <span><?=($good->isUnlimited == '1' ? 100 : ($good->count < 20 ? $good->count * 5 : 100))?>%</span>
-                        <?php } ?>
-                    </div>
+                        <div class="rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                            <span class="currentRating" itemprop="ratingValue"><?=($good->rate ? $good->rate : 5)?></span>
+                            <div class="shop-star<?=$good->rate == 5 ? ' current' : ''?>" itemprop="bestRating" title="<?=\Yii::t('shop', 'Отлично')?>" data-item="<?=$good->ID?>" data-rate="5">5</div>
+                            <div class="shop-star<?=4 <= $good->rate && $good->rate < 5 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Хорошо')?>" data-item="<?=$good->ID?>" data-rate="4">4</div>
+                            <div class="shop-star<?=3 <= $good->rate && $good->rate < 4 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Средне')?>" data-item="<?=$good->ID?>" data-rate="3">3</div>
+                            <div class="shop-star<?=2 <= $good->rate && $good->rate < 3 ? ' current' : ''?>" title="<?=\Yii::t('shop', 'Приемлемо')?>" data-item="<?=$good->ID?>" data-rate="2">2</div>
+                            <div class="shop-star<?=1 <= $good->rate && $good->rate < 2 ? ' current' : ''?>" itemprop="worstRating" title="<?=\Yii::t('shop', 'Плохо')?>" data-item="<?=$good->ID?>" data-rate="1">1</div>
+                            <span class="rateCount" itemprop="reviewCount"><?=$good->reviewsCount ? $good->reviewsCount : 1?></span>
+                        </div>
                     <div class="line"></div>
                     <?php if($good->garantyShow == '1'){
                         if($good->anotherCurrencyPeg == '1'){
@@ -209,13 +279,19 @@ if(isset($good->PrOut3)){
                             </div>
                         <?php }
                     } ?>
+                    </div>
+                        <div class="pricelist-warning">
+                            <span>Внимание!</span>
+                            Цена действительна при оплате заказа 03.11.14 до 21:00
+
+                        </div>
                 </div>
                 <div class="itemDopInfo">
                     <?php if($good->garantyShow == '1'){ ?>
                         <div class="warranty"><img src="/template/img/warranty.png" alt="<?=\Yii::t('shop', 'гарантия')?>" width="82" height="66"><div class="semi-bold"><?=\Yii::t('shop', '12 месяцев гарантии')?></div><?=\Yii::t('shop', 'Обмен/возврат товара в течение 14 дней')?></div>
                     <?php } ?>
                     <div class="deliveryType">
-                        <div class="minihead"><?=\Yii::t('shop', 'Доставка')?><span class="tooltip-question"></span>
+                        <div class="minihead"><?=\Yii::t('shop', 'Доставка 2-4 дня')?><span class="tooltip-question"></span>
                             <div class="tooltip">
                                 <div class="deliveryTooltip"><?=\Yii::t('shop', 'Доставка заказа по Украине осуществляется от 1 до 5 дней транспортной организацией')?> «<span class="link-hide" data-href="//novaposhta.ua/"><?=\Yii::t('shop', 'Новая Почта')?></span>».</div>
                             </div>
@@ -229,12 +305,32 @@ if(isset($good->PrOut3)){
                                 <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
                             </div>
                         </div>
-                        <span><?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></span>
-                        <div>Visa/MasterCard</div>
+                        <span>• <?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></span>
+                        <div>• Visa/MasterCard</div>
+                    </div>
+                    <div class="purchase-returns">
+                        <div class="minihead"><?=\Yii::t('shop', '14 дней на возврат')?><span
+                                class="tooltip-question"></span>
+                            <div class="tooltip">
+                                <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
+                            </div>
+                        </div>
+                        <div><?=\Yii::t('shop', 'Возврат и обмен товара согласно')?></div>
+                        <div><?=\Yii::t('shop', 'законодательству Украины')?></div>
+                    </div>
+                    <div class="guarantee">
+                        <div class="minihead"><?=\Yii::t('shop', 'Гарантия 12 месяцев')?><span
+                                class="tooltip-question"></span>
+                            <div class="tooltip">
+                                <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
+                            </div>
+                        </div>
+                        <div>Официальная гарантия от производителя</div>
                     </div>
                 </div>
             </div>
-        </div>
+</div>
+            </div>
         <div class="socialItemInfo">
             <div class="shareToFriends"><?=\Yii::t('shop', 'Рассказать друзьям')?></div>
             <div>

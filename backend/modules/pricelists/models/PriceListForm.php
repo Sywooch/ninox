@@ -18,4 +18,22 @@ class PriceListForm extends Model{
     public $categories = [];
     public $format = PriceListFeed::FORMAT_YML;
 
+    public function rules(){
+        return [
+            [['name', 'categories', 'format'], 'required'],
+            [['name'], 'string'],
+            [['format'], 'integer'],
+        ];
+    }
+
+    public function save(){
+        $priceList = new PriceListFeed([
+            'name'      =>  $this->name,
+            'format'    =>  $this->format,
+            'categories'=>  $this->categories
+        ]);
+
+        return $priceList->save(false);
+    }
+
 }

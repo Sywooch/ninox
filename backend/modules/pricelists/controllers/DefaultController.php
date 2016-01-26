@@ -2,8 +2,10 @@
 
 namespace backend\modules\pricelists\controllers;
 
+use backend\modules\pricelists\models\PriceListForm;
 use common\models\Category;
 use common\models\PriceListFeed;
+use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 
@@ -43,7 +45,6 @@ class DefaultController extends Controller
                 $subitems = $this->buildTree($items, $item->Code);
 
                 if($subitems){
-                    //array_unshift($subitems, ['title' => $item->Name, 'key' => $item->link]);
                     $branch[$item->Code]['children'] = $subitems;
                     $branch[$item->Code]['folder'] = true;
                 }
@@ -53,6 +54,22 @@ class DefaultController extends Controller
         sort($branch);
 
         return $branch;
+    }
+
+    public function actionAdd(){
+        \Yii::$app->response->format = 'json';
+
+        if(\Yii::$app->request->post("PriceListForm")){
+            $priceListForm = new PriceListForm();
+
+            $priceListForm->load(\Yii::$app->request->post());
+
+            if(!$priceListForm->save()){
+                //throw new ErrorException("Случилась ошибка при сохранении прайс-листа!");
+            }
+
+            return true;
+        }
 
     }
 }

@@ -1,61 +1,44 @@
 <?php
-$form = new \yii\bootstrap\ActiveForm();
+$form = new \yii\bootstrap\ActiveForm([
+    'id'    =>  'priceListForm'
+]);
 
 \backend\assets\CheckboxTreeAsset::register($this);
 
 $js = <<<'JS'
-var treeData = [
-    {title: "item1 with key and tooltip", tooltip: "Look, a tool tip!" },
-    {title: "item2: selected on init", selected: true },
-    {title: "Folder", folder: true, key: "id3",
-      children: [
-        {title: "Sub-item 3.1",
-          children: [
-            {title: "Sub-item 3.1.1", key: "id3.1.1" },
-            {title: "Sub-item 3.1.2", key: "id3.1.2" }
-          ]
-        },
-        {title: "Sub-item 3.2",
-          children: [
-            {title: "Sub-item 3.2.1", key: "id3.2.1" },
-            {title: "Sub-item 3.2.2", key: "id3.2.2" }
-          ]
-        }
-      ]
-    },
-    {title: "Document with some children (expanded on init)", key: "id4", expanded: true,
-      children: [
-        {title: "Sub-item 4.1 (active on init)", active: true,
-          children: [
-            {title: "Sub-item 4.1.1", key: "id4.1.1" },
-            {title: "Sub-item 4.1.2", key: "id4.1.2" }
-          ]
-        },
-        {title: "Sub-item 4.2 (selected on init)", selected: true,
-          children: [
-            {title: "Sub-item 4.2.1", key: "id4.2.1" },
-            {title: "Sub-item 4.2.2", key: "id4.2.2" }
-          ]
-        },
-        {title: "Sub-item 4.3 (hideCheckbox)", hideCheckbox: true },
-        {title: "Sub-item 4.4 (unselectable)", unselectable: true }
-      ]
-    },
-    {title: "Lazy folder", folder: true, lazy: true }
-  ];
-
-
 $("#tree").fancytree({
     checkbox: true,
+      selectMode: 4,
     source: {
         url: '/pricelists/categoriestree',
         cache: false
     }
 });
+$("#submitForm").on('click', function(){
+    $("#priceListForm").submit();
+});
+
+$("#priceListForm").submit(function() {
+      $("#tree").fancytree("getTree").generateFormElements("PriceListForm[categories][]");
+
+      $.ajax({
+        data: $(this).serialize(),
+        dataType: 'json',
+        url: '/pricelists/add',
+        method: 'POST',
+        success: function(data){
+            $.pjax.reload({container: '#priceLists-pjax'});
+        }
+      });
+
+      return false;
+    });
+
 JS;
 
 $this->registerJs($js);
 
+$form->begin();
 ?>
 
 <div class="row">
@@ -71,3 +54,4 @@ $this->registerJs($js);
     </div>
 </div>
 <br><br>
+<?php $form->end(); ?>
