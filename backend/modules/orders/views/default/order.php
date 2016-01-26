@@ -9,17 +9,27 @@ use yii\web\JsExpression;
 
 $this->title = 'Заказ #'.$order->number;
 $deliveryType = DeliveryType::find()->select('description')->where(['id' => $order->deliveryType])->scalar();
-$customerOrdersSummary = $customer->getOrdersSummary();
-$customerOrders = '';
+$deliveryParam = \common\models\DeliveryParam::find()->select('description')->where(['id' => $order->deliveryParam])->scalar();
+
+$customerOrdersSummary = [];
+
+if($customer){
+    $customerOrdersSummary = $customer->getOrdersSummary();
+}
+
 $typeaheadTemplate = $this->render('order/_typeahead_template', [
     'order' =>  $order
 ]);
 
-foreach($customer->getOrders() as $oneOrder){
-    $customerOrders[] = $this->render('order/_customer_order', [
-        'nowOrder'  =>  $order->id,
-        'order'     =>  $oneOrder
-    ]);
+$customerOrders = [];
+
+if($customer){
+    foreach($customer->getOrders() as $oneOrder){
+        $customerOrders[] = $this->render('order/_customer_order', [
+            'nowOrder'  =>  $order->id,
+            'order'     =>  $oneOrder
+        ]);
+    }
 }
 
 $priceRulesDropdown = [];
@@ -301,7 +311,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
                     <h4><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></h4>
                 </h3>
-                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$deliveryType?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
+                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$deliveryType?> <small>(<?=$deliveryParam?>)</small><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
                 <?=Remodal::widget([
                     'cancelButton'		=>	false,
                     'confirmButton'		=>	false,
@@ -342,14 +352,18 @@ $this->registerJsFile('/js/bootbox.min.js', [
     </div>
     <div>
         <div class="col-xs-7">
-            <?=\yii\bootstrap\Collapse::widget([
-                'items' =>  [
-                    [
-                        'label'     =>  'Заказов '.$customerOrdersSummary['count'].' на сумму '.$customerOrdersSummary['summ'].' грн.',
-                        'content'   =>  $customerOrders,
-                    ],
-                ]
-            ]);?>
+            <?php
+            if(!empty($customerOrders)){
+                echo \yii\bootstrap\Collapse::widget([
+                    'items' =>  [
+                        [
+                            'label'     =>  'Заказов '.$customerOrdersSummary['count'].' на сумму '.$customerOrdersSummary['summ'].' грн.',
+                            'content'   =>  $customerOrders,
+                        ],
+                    ]
+                ]);
+            }
+            ?>
         </div>
         <div class="col-xs-5">
             <button class="btn btn-lg btn-success btn-block">Сборка</button>

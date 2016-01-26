@@ -21,4 +21,4 @@ if($order->id == $nowOrder){
     ]);
 }
 
-return $orderText;
+echo $orderText;
