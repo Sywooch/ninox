@@ -1,6 +1,8 @@
 <?php
 use common\models\Category;
 use kartik\form\ActiveForm;
+use kartik\touchspin\TouchSpin;
+use yii\helpers\Html;
 
 $form = new ActiveForm([
     'id' => 'login-form-horizontal',
@@ -42,3 +44,16 @@ echo $form->field($model, 'description')->widget(\bobroid\imperavi\Widget::class
 echo $form->field($model, 'barcode');
 echo $form->field($model, 'wholesalePrice');
 echo $form->field($model, 'retailPrice');
+echo $form->field($model, 'inPackageAmount', [
+    'template'      =>  '{label}<div style="margin-left: -15px;" class="col-xs-8">{input}'.$form->field($model, 'undefinedPackageAmount', ['options' => ['class' => 'col-xs-3']])->checkbox(['label' => 'неизвестно']).'</div>',
+    'inputOptions'  =>  [
+        'class' =>  'col-xs-6'
+    ]
+])->widget(TouchSpin::classname(), [
+    'options'   =>  [
+        'disabled'  =>  empty($model->inPackageAmount)
+    ],
+    'pluginOptions' =>  [
+        'max'   =>  10000
+    ]
+]);

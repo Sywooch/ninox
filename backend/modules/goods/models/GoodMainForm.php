@@ -26,6 +26,7 @@ class GoodMainForm extends Model{
 
     public $measure;
     public $inPackageAmount;
+    public $undefinedPackageAmount = false;
 
     public $wholesalePrice;
     public $retailPrice;
@@ -46,11 +47,12 @@ class GoodMainForm extends Model{
     public $isOriginal = false;
     public $haveGuarantee = false;
 
-
     public function loadGood($good){
         foreach($this->modelAttributes() as $new => $old){
             $this->$new = $good->$old;
         }
+
+        $this->undefinedPackageAmount = empty($this->inPackageAmount);
     }
 
     public function modelAttributes(){
