@@ -14,14 +14,14 @@
             <div>12 х 34 х 56 мм</div>
         </div>
     </div>
-    <div class="properties" itemprop="description"><?=$good->Description?></div>
+    <!--<div class="properties" itemprop="description"><?=$good->Description?></div>-->
 </div>
 <div class="customer-reviews">
     <div>
-        <span>
+        <span class="semi-bold">
             Отзывы покупателей
         </span>
-        <div class="">
+        <div class="write-review">
             Напишите отзыв
         </div>
     </div>
