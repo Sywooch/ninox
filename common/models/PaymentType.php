@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "paymentType".
+ * This is the model class for table "paymentTypes".
  *
  * @property integer $id
  * @property string $description

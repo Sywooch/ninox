@@ -10,7 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $description
  * @property string $value
- * @property string $option
+ * @property string $options
  * @property integer $enabled
  */
 class PaymentParam extends \yii\db\ActiveRecord
@@ -30,7 +30,7 @@ class PaymentParam extends \yii\db\ActiveRecord
     {
         return [
             [['enabled'], 'integer'],
-            [['description', 'value', 'option'], 'string', 'max' => 255],
+            [['description', 'value', 'options'], 'string', 'max' => 255],
         ];
     }
 
@@ -43,7 +43,7 @@ class PaymentParam extends \yii\db\ActiveRecord
             'id' => Yii::t('shop', 'ID'),
             'description' => Yii::t('shop', 'Description'),
             'value' => Yii::t('shop', 'Value'),
-            'option' => Yii::t('shop', 'Option'),
+            'options' => Yii::t('shop', 'Options'),
             'enabled' => Yii::t('shop', 'Enabled'),
         ];
     }

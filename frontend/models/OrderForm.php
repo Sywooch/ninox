@@ -45,10 +45,11 @@ class OrderForm extends Model{
     public $deliveryAddress;
 
     public $deliveryType = 1;
+    public $deliveryParam = 1;
     public $deliveryInfo;
 
     public $paymentType = 1;
-    public $paymentInfo;
+    public $paymentParam = 0;
 
     /**
      * @var $customerComment - комментарий клиента к заказу
@@ -132,9 +133,9 @@ class OrderForm extends Model{
         $this->deliveryAddress = $receiver->address;
         $this->deliveryRegion = $receiver->region;
         $this->deliveryType = $receiver->shippingType;
-        $this->deliveryInfo = $receiver->shippingParam;
+        $this->deliveryParam = $receiver->shippingParam;
         $this->paymentType = $receiver->paymentType;
-        $this->paymentInfo = $receiver->paymentParam;
+        $this->paymentParam = $receiver->paymentParam;
     }
 
     public function create(){
@@ -170,9 +171,9 @@ class OrderForm extends Model{
                 'region' => $this->deliveryRegion,
                 'address' => $this->deliveryAddress,
                 'shippingType' => $this->deliveryType,
-                'shippingParam' => $this->deliveryInfo,
+                'shippingParam' => $this->deliveryParam,
                 'paymentType' => $this->paymentType,
-                'paymentParam' => $this->paymentInfo,
+                'paymentParam' => $this->paymentParam,
             ]);
 
             if(\Yii::$app->user->isGuest || $this->customerReceiverIsDefault != 0){
@@ -193,9 +194,10 @@ class OrderForm extends Model{
             $customerReceiver->address = $this->deliveryAddress;
             $customerReceiver->region = $this->deliveryRegion;
             $customerReceiver->shippingType = $this->deliveryType;
-            $customerReceiver->shippingParam = $this->deliveryInfo;
+            $customerReceiver->shippingParam = $this->deliveryParam;
+            $customerReceiver->shippingAddress = $this->deliveryInfo;
             $customerReceiver->paymentType = $this->paymentType;
-            $customerReceiver->paymentParam = $this->paymentInfo;
+            $customerReceiver->paymentParam = $this->paymentParam;
         }
 
         $customerReceiver->save();
@@ -214,12 +216,13 @@ class OrderForm extends Model{
             'customerFathername'=>  $customerReceiver->fathername,
             'deliveryCity'      =>  $customerReceiver->city,
             'deliveryType'      =>  $customerReceiver->shippingType,
-            'deliveryInfo'      =>  $customerReceiver->shippingParam,
+            'deliveryParam'     =>  $customerReceiver->shippingParam,
+            'deliveryInfo'      =>  $customerReceiver->shippingAddress,
             'customerComment'   =>  $this->customerComment,
             'customerID'        =>  $customer->ID,
             'coupon'            =>  $this->promoCode,
             'paymentType'       =>  $customerReceiver->paymentType,
-            'paymentInfo'       =>  $customerReceiver->paymentParam,
+            'paymentParam'       =>  $customerReceiver->paymentParam,
             'canChangeItems'    =>  $this->canChangeItems,
             'originalSum'       =>  \Yii::$app->cart->cartRealSumm,
         ]);

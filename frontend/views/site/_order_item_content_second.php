@@ -1,83 +1,96 @@
 <?php
+use yii\bootstrap\Tabs;
 use yii\helpers\Html;
 
 $js = <<<'SCRIPT'
-$('label.tabsLabels').click(function () {
-    $(this).tab('show');
+$('input:radio').on('change', function(){
+    $(this).next('.tabsLabels').tab('show');
+    var id = $(this).next('.tabsLabels').tab().attr('data-target');
+	var input = $(id + ' input:radio[name="OrderForm[deliveryParam]"] + label')[0];
+	if(input){
+		$(input).click();
+	}
+});
+
+$('.content-data-body-delivery-type input[type="radio"]:checked + label').tab('show');
+
+$('.content-data-body-delivery-type input:radio[name="OrderForm[deliveryType]"]:checked + label').each(function(){
+	var id = $(this).tab().attr('data-target');
+	var input = $(id + ' input:radio[name="OrderForm[deliveryParam]"]:checked + label')[0];
+	if(!input){
+		input = $(id + ' input:radio[name="OrderForm[deliveryParam]"] + label')[0];
+		if(input){
+			$(input).click();
+		}
+	}
 });
 SCRIPT;
 
 $this->registerJs($js);
 
-$items = [];
+$tabItems = [];
 
+function buildContent($blocks){
+	$return = '';
+	if(!empty($blocks)){
+		foreach($blocks as $block){
+			$return .= ($block->tag ? Html::tag($block->tag, (is_object($block->content) || is_array($block->content) ? buildContent($block->content) : $block->content), $block->options) : ($block->content ? $block->content : $block));
+		}
+	}
+	return $return;
+}
 ?>
 <div class="content-data-body-delivery-type">
 <?=$form->field($model, 'deliveryType', [
     ])->radioList($domainConfiguration, [
-        'item' => function($index, $label, $name, $checked, $value) use (&$items){
-	        $items[] = [
-		        'content'   =>  '<div class="content-data-body-address">
-									Мои адреса:
-								</div>',
-		        'label'     =>  'Адресная доставка',
+        'item' => function($index, $label, $name, $checked, $value) use (&$tabItems, $form, $model, $domainConfiguration){
+		    $subTabItems = [];
+	        $tabItems[] = [
+		        'content'   =>  $form->field($model, 'deliveryParam', (sizeof($label['params']) > 1 ? [] : (['options' => ['style' => 'display: none']]))
+			        )->radioList($label['params'],[
+					        'item' => function($index, $label, $name, $checked, $value) use (&$subTabItems){
+							        $subTabItems[] = [
+								        'content'   =>  buildContent($label['options']->block),
+								        'label'     =>  $label['name'],
+								        'id'        =>  ''
+							        ];
+							        return Html::tag('div', Html::radio($name, $checked, [
+								        'value'     =>      $value,
+								        'id'        =>      "tab-".Tabs::$counter.$index
+							        ]).
+							        Html::tag('label', $label['options']->label ? buildContent($label['options']->label) : $label['name'],[
+								        'class' =>  'tabsLabels',
+								        'data-target'   =>  '#w'.Tabs::$counter.'-tab'.$index,
+								        'for'   =>  'tab-'.Tabs::$counter.$index
+							        ]), ['class' =>  'tab']);
+						        }
+				        ])->label(false).
+			        Tabs::widget([
+				        'headerOptions' =>  [
+					        'style' =>  'display: none'
+				        ],
+				        'items' =>  $subTabItems
+			        ]),
+		        'label'     =>  $label['name'],
 		        'id'        =>  '',
-		        'active' => $checked
+		        'active'    =>  $checked
 	        ];
-            return '<div class="tab">'.Html::radio($name, $checked, [
-                'value'     =>      $value,
-                'id'        =>      "tab-".$index
-            ])
-            .'<label class="tabsLabels" data-target="#w0-tab'.$index.'" for="tab-'.$index.'">'.$label['name'].'</label></div>';
+            return Html::tag('div', Html::radio($name, $checked, [
+		            'value'     =>      $value,
+		            'id'        =>      "tab-".sizeof($domainConfiguration).$index
+	            ]).
+	            Html::tag('label', (sizeof($label['params']) < 2 && $label['replaceDescription'] == 1 ? reset($label['params'])['name'] : $label['name']), [
+		            'class' =>  'tabsLabels',
+		            'data-target'   =>  '#w'.sizeof($domainConfiguration).'-tab'.$index,
+		            'for'      =>   'tab-'.sizeof($domainConfiguration).$index
+	            ]), ['class' =>  'tab']);
         }
-    ])->label(false)?>
-    <?=\yii\bootstrap\Tabs::widget([
+    ])->label(false).
+    Tabs::widget([
         'headerOptions' =>  [
             'style' =>  'display: none'
         ],
-        'items' =>  $items
-/*            [
-                'content'   =>  '<div class="content-data-body-address">
-                                        Мои адреса:
-                                 </div>',
-                'label'     =>  'Адресная доставка',
-                'id'        =>  '',
-                'active' => true
-
-            ],
-            [
-                'content'   =>  '<div class="content-data-body-department">
-                                        Отделение:
-                                        <a id="go" href="#">
-                                            <div class="map-icon">
-                                            </div>
-                                            Cм. на карте
-                                        </a>
-                                 </div>',
-                'label'     =>  'Новая Почта',
-                'id'        =>  ''
-            ],
-            [
-                'content'   =>  '<div>
-                                <div class="content-data-body-stock">
-                                    <div class="semi-bold">Наш склад находится по адресу:</div>
-                                    г. Киев, ул. Электротехническая, 2
-                                     <a id="go" href="#">
-                                            <div class="map-icon">
-                                            </div>
-                                            Cм. на карте
-                                     </a>
-                                    <div class="work-time">
-                                        Время работы с 9:00 до 17:00
-                                    </div>
-                                    <div class="work-time">
-                                    все дни кроме понедельника
-                                    </div>
-                                </div>
-                                </div>',
-                'label'     =>  'Самовывоз',
-                'id'        =>  ''
-            ],*/
+        'items' =>  $tabItems
     ])?>
 </div>
 
@@ -90,13 +103,13 @@ $items = [];
         'item'  =>  function ($index, $label, $name, $checked, $value) {
                 echo Html::radio($name, $checked, [
                         'value' => $value,
-                        'id' => $value
+                        'id' => 'tab-'.Tabs::$counter.$index
                     ])
-                    . '<label class="tabsLabels" data-target="#w1-tab'.$value.'" for="'.$value.'">'.$label.'</label>';
+                    . '<label class="tabsLabels" data-target="#w'.Tabs::$counter.'-tab'.$index.'" for="tab-'.Tabs::$counter.$index.'">'.$label.'</label>';
         }
     ]
 )->label(false)?>
-<?=\yii\bootstrap\Tabs::widget([
+<?=Tabs::widget([
     'headerOptions' =>  [
         'style' =>  'display: none'
     ],
