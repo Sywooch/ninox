@@ -1,5 +1,3 @@
-<link href="/css/goodCard.css" rel="stylesheet">
-
 /*========* CART-ITEM *=========*/
 
 .breadcrumb{
@@ -10,6 +8,11 @@
 .breadcrumb span a{
     text-decoration: underline;
     padding-right: 20px;
+}
+
+.breadcrumb span a:after{
+    content: '';
+
 }
 
 .itemPhotos{
@@ -173,25 +176,25 @@
     padding-bottom: 25px;
 }
 
-.deliveryType .minihead:before{
-    content: url('/img/site/delivery-car.png');
+.minihead:before{
+    display: inline-block;
+    vertical-align: middle;
     padding-right: 12px;
+    width: 45px;
+}
+
+.deliveryType .minihead:before{
     vertical-align: middle;
 }
 
 .payType .minihead:before{
-    content: url('/img/site/payment.png');
-    padding-right: 12px;
+    height: 21px;
 }
 
 .purchase-returns .minihead:before{
-    content: url('/img/site/purchase-returns.png');
-    padding-right: 12px;
 }
 
 .guarantee .minihead:before{
-    content: url('/img/site/guarantee.png');
-    padding-right: 12px;
 }
 
 .shareToFriends{
@@ -234,7 +237,6 @@
 }
 
 .favorites:before{
-    content: url('/img/site/favorites.png');
     vertical-align: -moz-middle-with-baseline;
     padding-right: 4px;
 }
@@ -294,6 +296,22 @@
 .customer-reviews{
     width: 50%;
     float: left;
+}
+
+.customer-reviews span{
+    float: left;
+    padding-right: 10px;
+    font-size: 20px;
+}
+
+.write-review{
+    float: left;
+    background: #fbbf23;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
 }
 
 /*========* END CART-ITEM *=========*/

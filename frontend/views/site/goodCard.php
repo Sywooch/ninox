@@ -1,3 +1,7 @@
+<link href="/css/goodCard.css" rel="stylesheet">
+<link href="/css/img.css" rel="stylesheet">
+<link href="/css/base64.css" rel="stylesheet">
+
 <?php
 use yii\helpers\Html;
 
@@ -52,6 +56,7 @@ if(isset($good->PrOut3)){
 };
 
 ?>
+
 <!--<div class="leftMenu">
     <span class="catTitle"><a href="/<?=$mainCategory->link?>" title="<?=$mainCategory->Name?>"><?=$mainCategory->Name?></a></span>
     <?=''//LeftMenu?>
