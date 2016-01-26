@@ -237,13 +237,19 @@ class DefaultController extends Controller
             ]
         ]);
 
+        $customer = Customer::findOne($order->customerID);
+
+        if(!$customer){
+            $customer = new Customer;
+        }
+
         return $this->render('order', [
             'order'             =>  $order,
             'items'             =>  $sborkaItems,
             'itemsDataProvider' =>  $itemsDataProvider,
             'priceRules'        =>  Pricerule::find()->orderBy('priority')->all(),
             'goodsAdditionalInfo'   =>  $goodsAdditionalInfo,
-            'customer'          =>  Customer::findOne($order->customerID)
+            'customer'          =>  $customer
         ]);
     }
 
