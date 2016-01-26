@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "domains_delivery_payments".
@@ -12,11 +13,10 @@ use Yii;
  * @property integer $deliveryParam
  * @property integer $paymentType
  * @property integer $paymentParam
- * @property double $commissionPercent
- * @property double $commissionStatic
+ * @property string $options
  * @property integer $enabled
  */
-class DomainsDeliveryPayments extends \yii\db\ActiveRecord
+class DomainDeliveryPayment extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -32,9 +32,9 @@ class DomainsDeliveryPayments extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['domainId', 'deliveryType', 'deliveryParam', 'paymentType', 'paymentParam'], 'required'],
+            [['domainId', 'deliveryType', 'deliveryParam', 'paymentType', 'paymentParam', 'options'], 'required'],
             [['domainId', 'deliveryType', 'deliveryParam', 'paymentType', 'paymentParam', 'enabled'], 'integer'],
-            [['commissionPercent', 'commissionStatic'], 'number'],
+            [['options'], 'string'],
         ];
     }
 
@@ -49,8 +49,7 @@ class DomainsDeliveryPayments extends \yii\db\ActiveRecord
             'deliveryParam' => Yii::t('shop', 'Delivery Param'),
             'paymentType' => Yii::t('shop', 'Payment Type'),
             'paymentParam' => Yii::t('shop', 'Payment Param'),
-            'commissionPercent' => Yii::t('shop', 'Commission Percent'),
-            'commissionStatic' => Yii::t('shop', 'Commission Static'),
+            'options' => Yii::t('shop', 'Options'),
             'enabled' => Yii::t('shop', 'Enabled'),
         ];
     }
@@ -72,15 +71,15 @@ class DomainsDeliveryPayments extends \yii\db\ActiveRecord
 	}
 
 	public function getConfig(){
-		return DomainsDeliveryPayments::find()->
+		return DomainDeliveryPayment::find()->
 			joinWith('deliveryTypes')->
 			joinWith('deliveryParams')->
 			joinWith('paymentTypes')->
 			joinWith('paymentParams')->
-			where([DomainsDeliveryPayments::tableName().'.domainId' => \Yii::$app->params['domainInfo']['id'], DomainsDeliveryPayments::tableName().'.enabled' => 1, 'deliveryTypes.enabled' => 1])->
-			andWhere(['OR', ['deliveryParams.enabled' => 1], [DomainsDeliveryPayments::tableName().'.deliveryParam' => 0]])->
+			where([DomainDeliveryPayment::tableName().'.domainId' => \Yii::$app->params['domainInfo']['id'], DomainDeliveryPayment::tableName().'.enabled' => 1, 'deliveryTypes.enabled' => 1])->
+			andWhere(['OR', ['deliveryParams.enabled' => 1], [DomainDeliveryPayment::tableName().'.deliveryParam' => 0]])->
 			andWhere(['paymentTypes.enabled' => 1])->
-			andWhere(['OR', ['paymentParams.enabled' => 1], [DomainsDeliveryPayments::tableName().'.paymentParam' => 0]])->
+			andWhere(['OR', ['paymentParams.enabled' => 1], [DomainDeliveryPayment::tableName().'.paymentParam' => 0]])->
 			all();
 	}
 
@@ -90,9 +89,11 @@ class DomainsDeliveryPayments extends \yii\db\ActiveRecord
 		foreach($configs as $config){
 			$array[$config->deliveryType]['name'] = $config->deliveryTypes[0]->description;
 			$array[$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
-			$array[$config->deliveryType][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
-			$array[$config->deliveryType][$config->deliveryParam]['value'] = $config->deliveryParams[0]->id;
+			$array[$config->deliveryType]['replaceDescription'] = $config->deliveryTypes[0]->replaceDescription;
+			$array[$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
+			$array[$config->deliveryType]['params'][$config->deliveryParam]['options'] = (object)array_merge((array)Json::decode($config->options, false), (array)Json::decode($config->deliveryParams[0]->options, false));
 		}
+
 		return $array;
 	}
 }

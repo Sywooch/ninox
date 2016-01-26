@@ -9,8 +9,8 @@ use Yii;
  *
  * @property integer $id
  * @property string $description
- * @property string $option
  * @property integer $enabled
+ * @property string $options
  */
 class DeliveryParam extends \yii\db\ActiveRecord
 {
@@ -28,8 +28,9 @@ class DeliveryParam extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['option'], 'string'],
             [['enabled'], 'integer'],
+            [['options'], 'required'],
+            [['options'], 'string'],
             [['description'], 'string', 'max' => 255],
         ];
     }
@@ -42,8 +43,8 @@ class DeliveryParam extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('shop', 'ID'),
             'description' => Yii::t('shop', 'Description'),
-            'option' => Yii::t('shop', 'Option'),
             'enabled' => Yii::t('shop', 'Enabled'),
+            'options' => Yii::t('shop', 'Options'),
         ];
     }
 }

@@ -276,7 +276,7 @@ $css = <<<'STYLE'
     text-shadow: 1px 0px 1px #bdb9ac;
 }
 
-.content-data-body-stock .work-time{
+.content-data-body-stock .work-time, .content-data-body-stock .work-days{
     color: #a5976c;
     text-shadow: 1px 0px 1px #ded5bc;
 }
@@ -558,10 +558,9 @@ position: absolute;
 
 .content-data-body-delivery-type input[type="radio"] {
     display: none;
-    float: left;
 }
 
-.content-data-body-delivery-type input[type="radio"]:checked + label{
+.content-data-body-delivery-type input[name="OrderForm[deliveryType]"]:checked + label, .content-data-body-delivery-type input[name="OrderForm[anotherReceiver]"]:checked + label{
     -moz-border-radius: 5px;
     -webkit-border-radius:5px;
     border-radius:5px;
@@ -569,15 +568,27 @@ position: absolute;
     border: 1px solid #bdddf7;
 }
 
-.content-data-body-delivery-type label {
-    display:inline-block;
-    padding:4px 11px;
+.content-data-body-delivery-type input[name="OrderForm[deliveryType]"] + label, .content-data-body-delivery-type input[name="OrderForm[anotherReceiver]"] + label{
+    padding: 4px 11px;
     float: left;
     cursor: pointer;
     margin-right: 10px;
     color: #3e77aa;
     font-size: 14px;
     font-weight: normal;
+}
+
+.content-data-body-delivery-type input[name="OrderForm[deliveryParam]"] + label{
+    float: left;
+    cursor: pointer;
+    margin-right: 30px;
+    -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+    filter: grayscale(100%);
+}
+
+.content-data-body-delivery-type input[name="OrderForm[deliveryParam]"]:checked + label{
+	-webkit-filter: grayscale(0%); /* Chrome, Safari, Opera */
+    filter: grayscale(0%);
 }
 
 #ui-id-2{
@@ -737,21 +748,17 @@ position: absolute;
     border: 5px solid #FFF;
 }
 
-#go {
+.map-icon{
     color: #3E77AA !important;
     border-bottom: 1px dotted;
-    text-decoration: none;
-    display: block;
     font-size: 14px;
     float: right;
+    cursor: pointer;
 }
 
-.map-icon{
-    background-image: url(img/site/map-icon.png);
-    background-repeat: no-repeat;
-    width: 16px;
-height: 16px;
-float: left;
+.map-icon:before{
+	content: url(img/site/map-icon.png);
+	margin-right: 3px;
 }
 
 #modal_close{
@@ -860,7 +867,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
 </script>
     <script type="text/javascript">
     $(document).ready(function() { // вся мaгия пoсле зaгрузки стрaницы
-        $('a#go').click( function(event){ // лoвим клик пo ссылки с id="go"
+        $('span#go').click( function(event){ // лoвим клик пo ссылки с id="go"
             event.preventDefault(); // выключaем стaндaртную рoль элементa
             $('body').css('overflow', 'hidden'); // выключаем скролл
             $('#overlay').fadeIn(400, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку

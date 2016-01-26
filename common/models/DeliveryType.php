@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $description
+ * @property integer $replaceDescription
  * @property integer $enabled
  */
 class DeliveryType extends \yii\db\ActiveRecord
@@ -27,7 +28,7 @@ class DeliveryType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['enabled'], 'integer'],
+            [['replaceDescription', 'enabled'], 'integer'],
             [['description'], 'string', 'max' => 255],
         ];
     }
@@ -40,6 +41,7 @@ class DeliveryType extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('shop', 'ID'),
             'description' => Yii::t('shop', 'Description'),
+            'replaceDescription' => Yii::t('shop', 'Replace Description'),
             'enabled' => Yii::t('shop', 'Enabled'),
         ];
     }

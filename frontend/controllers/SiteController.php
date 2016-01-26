@@ -1,7 +1,7 @@
 <?php
 namespace frontend\controllers;
 
-use common\models\DomainsDeliveryPayments;
+use common\models\DomainDeliveryPayment;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\OrderForm;
@@ -180,11 +180,8 @@ class SiteController extends Controller
 
         $this->layout = 'order';
 
-	    $domainConfiguration = DomainsDeliveryPayments::getConfigArray();
+	    $domainConfiguration = DomainDeliveryPayment::getConfigArray();
 
-	    echo '<pre>';
-	    var_dump($domainConfiguration);
-		echo '</pre>';
         return $this->render('order2', [
             'model'             =>  $order,
 			'domainConfiguration'      =>  $domainConfiguration
