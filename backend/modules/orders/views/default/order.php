@@ -9,36 +9,15 @@ use yii\web\JsExpression;
 $this->title = 'Заказ #'.$order->number;
 $customerOrdersSummary = $customer->getOrdersSummary();
 $customerOrders = '';
-$typeaheadTemplate = '<a class="typeahead-list-item" onclick="addItemToOrder('.$order->id.', {{ID}})"><div class="row">';
-$typeaheadTemplate .= '<div class="col-xs-12 name">{{Name}}</div>';
-$typeaheadTemplate .= '<div class="col-xs-12 category"><span class="pull-right">{{categoryname}}</span></div>';
-$typeaheadTemplate .= '<div class="col-xs-12 code">Код товара: {{Code}}</div>';
-$typeaheadTemplate .= '</div></a>';
+$typeaheadTemplate = $this->render('order/_typeahead_template', [
+    'order' =>  $order
+]);
 
 foreach($customer->getOrders() as $oneOrder){
-    $orderText = 'Заказ №'.$oneOrder->number.' от '.\Yii::$app->formatter->asDate($oneOrder->added, 'php:d.m.Y').' на сумму '.$oneOrder->actualAmount.' грн.';
-
-    if($oneOrder->id == $order->id){
-        $orderText = '<span class="text-muted"> '.$orderText.' (текущий)<span>';
-    }else{
-        $orderClasses = [];
-
-        if($oneOrder->deleted != 0){
-            $orderClasses[] = 'text-danger';
-        }elseif($oneOrder->done == 1){
-            $orderClasses[] = 'text-success';
-        }
-
-        $s = '<a href="/orders/showorder/'.$oneOrder->id.'"';
-
-        if(sizeof($orderClasses) >= 1) {
-            $s .= ' class="'.implode(' ', $orderClasses).'"';
-        }
-
-        $orderText = $s.'>'.$orderText.'</a>';
-    }
-
-    $customerOrders[] = $orderText;
+    $customerOrders[] = $this->render('order/_customer_order', [
+        'nowOrder'  =>  $order->id,
+        'order'     =>  $oneOrder
+    ]);
 }
 
 $priceRulesDropdown = [];
@@ -271,7 +250,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
             <h1>№<?=$order->number?></h1>
         </div>
         <div>
-            <h4><?=$order->orderSumm()?> грн. > <?=$order->paymentType()?></h4>
+            <h4><?=$order->orderSumm()?> грн. > <?=''//$order->paymentType()?></h4>
         </div>
     </div>
     <div class="col-xs-4">
@@ -320,7 +299,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
                     <h4><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></h4>
                 </h3>
-                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
+                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=''//$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
                 <?=Remodal::widget([
                     'cancelButton'		=>	false,
                     'confirmButton'		=>	false,
@@ -485,8 +464,6 @@ $this->registerJsFile('/js/bootbox.min.js', [
 <?php
 $thiss = $this;
 ?>
-<?php
-$pjax = \yii\widgets\Pjax::begin(); ?>
 <?=\kartik\grid\GridView::widget([
     'id'    =>  'orderItems',
     'dataProvider'  =>  $itemsDataProvider,
@@ -634,5 +611,4 @@ $pjax = \yii\widgets\Pjax::begin(); ?>
         ],
     ]
 ]);
-\yii\widgets\Pjax::end();
 ?>
