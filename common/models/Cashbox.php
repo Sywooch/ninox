@@ -9,7 +9,6 @@ use yii\helpers\Json;
  * This is the model class for table "cashbox".
  *
  * @property integer $ID
- * @property string $domain
  * @property string $autologin
  * @property string $name
  * @property string $created
@@ -34,23 +33,10 @@ class Cashbox extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['autologin'], 'string'],
             [['created', 'lastOrder'], 'safe'],
             [['lastManager', 'defaultCustomer', 'defaultWholesaleCustomer'], 'integer'],
-            [['domain', 'name'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 255],
         ];
-    }
-
-    public function beforeSave($insert){
-        $this->autologin = Json::encode($this->autologin);
-
-        parent::beforeSave($insert);
-    }
-
-    public function afterFind(){
-        $this->autologin = Json::decode($this->autologin);
-
-        parent::afterFind();
     }
 
     /**
@@ -60,8 +46,6 @@ class Cashbox extends \yii\db\ActiveRecord
     {
         return [
             'ID' => Yii::t('common', 'ID'),
-            'domain' => Yii::t('common', 'Domain'),
-            'autologin' => Yii::t('common', 'Autologin'),
             'name' => Yii::t('common', 'Name'),
             'created' => Yii::t('common', 'Created'),
             'lastOrder' => Yii::t('common', 'Last Order'),

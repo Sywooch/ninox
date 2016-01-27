@@ -38,4 +38,3 @@ $this->beginPage() ?>
 </body>
 </html>
 <?php $this->endPage() ?>
-<?php die(); ?>

@@ -4,7 +4,7 @@ use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model cashbox\models\LoginForm */
+/* @var $model backend\models\LoginForm */
 
 $this->title = 'Войти';
 $this->params['breadcrumbs'][] = $this->title;
@@ -214,7 +214,7 @@ $this->registerCss($css);
 ?>
 <div class="login">
     <div class="heading">
-        <h2>krasota-style</h2>
+        <h2>krasota-style<br><small><?=\Yii::$app->params['configuration']->name?></small></h2>
         <?php $form = ActiveForm::begin([
             'id' => 'login-form',
             'options' => [

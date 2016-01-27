@@ -16,8 +16,8 @@ class m160112_140819_cashboxes extends Migration
             'lastOrderTime' =>  Schema::TYPE_DATETIME,
             'lastOrder'     =>  Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0',
             'lastManager'   => Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0',
-            'defaultCustomer'=> Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0',
-            'defaultWholesaleCustomer'=>    Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0'
+            'defaultCustomer'=> Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0',
+            'defaultWholesaleCustomer'=>    Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0'
         ]);
 
         $this->createTable('cashboxMoney', [

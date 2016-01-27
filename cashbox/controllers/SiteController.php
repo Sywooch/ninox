@@ -8,10 +8,12 @@ use backend\models\Good;
 use backend\models\SborkaItem;
 use common\models\Cashbox;
 use common\models\Siteuser;
+use common\models\SubDomain;
 use ErrorException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
 use backend\models\LoginForm;
@@ -67,28 +69,24 @@ class SiteController extends Controller
     }
 
     public function init(){
-        $domain = $_SERVER['SERVER_NAME'];
+        $configuration = false;
 
-        $configuration = Cashbox::findOne(['domain' => $domain]);
+        $domain = preg_replace('/\.'.$_SERVER['SERVER_NAME'].'/', '', $_SERVER['HTTP_HOST']);
+        $domain = SubDomain::find()->where(['name' => $domain])->andWhere('cashboxId != 0')->one();
+
+        if($domain){
+            if($domain->autologin){
+                \Yii::$app->params['autologin'] = $domain->autologinParams;
+            }
+
+            $configuration = Cashbox::findOne($domain->cashboxId);
+        }
 
         if(!$configuration){
-            $configuration = new Cashbox([
-                'ID'    =>  1
-            ]);
-
-            $configuration->autologin = [
-                [
-                    'username'  =>  'root',
-                    'ip'        =>  '127.0.0.1'
-                ]
-            ];
+            $configuration = Cashbox::findOne(['default' => 1]);
         }
 
-        if($configuration){
-            \Yii::$app->params['configuration'] = $configuration;
-        }
-
-        return parent::init();
+        \Yii::$app->params['configuration'] = $configuration;
     }
 
     public function beforeAction($action){
@@ -488,24 +486,30 @@ class SiteController extends Controller
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
-
-        /*if(!\Yii::$app->user->isGuest){
-            if(!empty(\Yii::$app->user->identity->default_route)){
-                return $this->redirect(\Yii::$app->user->identity->default_route);
-            }
-
-            return $this->redirect(Url::home());
-        }*/
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goBack();
+        }
 
         $model = new LoginForm();
 
-        if(!empty(\Yii::$app->params['configuration']) && !empty(\Yii::$app->params['configuration']->autologin)){
-            foreach(\Yii::$app->params['configuration']->autologin as $user){
-                if($user['ip'] == $_SERVER['REMOTE_ADDR']){
-                    $model->username = $user['username'];
+        \Yii::trace(Json::encode(\Yii::$app->params['autologin']));
 
-                    if(\Yii::$app->user->login($model->getUser(), 3600*24)){
-                        return $this->redirect(Url::home());
+        if(!empty(\Yii::$app->params['autologin'])){
+            foreach(\Yii::$app->params['autologin'] as $autoLogin){
+                if($autoLogin['ip'] == \Yii::$app->request->userIP){
+                    if(is_array($autoLogin['user'])){
+                        $autoLogin['user'] = $autoLogin['user'][0];
+                    }
+
+                    //TODO: временный фикс при использовании нескольких пользователей. В будущем - выводить форму, в которой есть только логины
+                    $user = Siteuser::findOne($autoLogin['user']);
+
+                    if($user){
+                        $model->username = $user->username;
+
+                        if(\Yii::$app->user->login($model->getUser(), 3600*24)){
+                            return $this->goBack();
+                        }
                     }
                 }
             }
@@ -513,7 +517,6 @@ class SiteController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
             return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
-            //return !$this->redirect($this->goBack() = '/login' ? \Yii::$app->user->identity->default_route : $this->goBack());
         }else{
             return $this->render('login', [
                 'model' => $model,
