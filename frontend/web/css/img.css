@@ -17,3 +17,7 @@
 .favorites:before{
     content: url('/img/site/favorites.png');
 }
+
+.customer-reviews a:before{
+    content: url('/img/site/review.png');
+}
