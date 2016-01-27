@@ -42,7 +42,7 @@ function buildContent($blocks){
 ?>
 <div class="content-data-body-delivery-type">
 <?=$form->field($model, 'deliveryType', [
-    ])->radioList($domainConfiguration, [
+    ])->radioList($domainConfiguration['deliveryTypes'], [
         'item' => function($index, $label, $name, $checked, $value) use (&$tabItems, $form, $model, $domainConfiguration){
 		    $subTabItems = [];
 	        $tabItems[] = [
@@ -77,12 +77,12 @@ function buildContent($blocks){
 	        ];
             return Html::tag('div', Html::radio($name, $checked, [
 		            'value'     =>      $value,
-		            'id'        =>      "tab-".sizeof($domainConfiguration).$index
+		            'id'        =>      "tab-".sizeof($domainConfiguration['deliveryTypes']).$index
 	            ]).
 	            Html::tag('label', (sizeof($label['params']) < 2 && $label['replaceDescription'] == 1 ? reset($label['params'])['name'] : $label['name']), [
 		            'class' =>  'tabsLabels',
-		            'data-target'   =>  '#w'.sizeof($domainConfiguration).'-tab'.$index,
-		            'for'      =>   'tab-'.sizeof($domainConfiguration).$index
+		            'data-target'   =>  '#w'.sizeof($domainConfiguration['deliveryTypes']).'-tab'.$index,
+		            'for'      =>   'tab-'.sizeof($domainConfiguration['deliveryTypes']).$index
 	            ]), ['class' =>  'tab']);
         }
     ])->label(false).
@@ -133,13 +133,13 @@ function buildContent($blocks){
 ])?>
 </div>
 <div class="payment-type">Способ оплаты</div>
-<?/*=$form->field($model, 'paymentType', [])->radioList(\common\models\PaymentType::getPaymentTypes(), [
+<?=$form->field($model, 'paymentType', [])->radioList($domainConfiguration['paymentTypes'], [
     'item' => function ($index, $label, $name, $checked, $value) {
         return '<div class="tab">'. Html::radio($name, $checked, [
             'value'     =>      $value,
-            'id'        =>      "radio-".$value,
+            'id'        =>      "radio-".$value.$index,
         ])
-        .'<label for="radio-'.$value.'"><i></i><div class="payment-type-text">'. $label .'</div></label>
+        .'<label for="radio-'.$value.$index.'"><i></i><div class="payment-type-text">'.$label['name'].'</div></label>
 
         <div class="question">
                             <div class="round-button">
@@ -151,6 +151,5 @@ function buildContent($blocks){
 
         </div>';
     }
-])->label(false);
-*/?>
+])->label(false);?>
 <div class="add-comment">Добавить коментарий к заказу</div>

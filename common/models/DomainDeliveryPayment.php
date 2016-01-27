@@ -86,14 +86,18 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 	public function getConfigArray(){
 		$configs = self::getConfig();
 		$array = [];
-		foreach($configs as $config){
-			$array[$config->deliveryType]['name'] = $config->deliveryTypes[0]->description;
-			$array[$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
-			$array[$config->deliveryType]['replaceDescription'] = $config->deliveryTypes[0]->replaceDescription;
-			$array[$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
-			$array[$config->deliveryType]['params'][$config->deliveryParam]['options'] = (object)array_merge((array)Json::decode($config->options, false), (array)Json::decode($config->deliveryParams[0]->options, false));
-		}
+		if(!empty($configs)){
+			foreach($configs as $config){
+				$array['deliveryTypes'][$config->deliveryType]['name'] = $config->deliveryTypes[0]->description;
+				$array['deliveryTypes'][$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
+				$array['deliveryTypes'][$config->deliveryType]['replaceDescription'] = $config->deliveryTypes[0]->replaceDescription;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['options'] = (object)array_merge((array)Json::decode($config->options, false), (array)Json::decode($config->deliveryParams[0]->options, false));
 
+				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes[0]->description;
+				$array['paymentTypes'][$config->paymentType]['value'] = $config->paymentTypes[0]->id;
+			}
+		}
 		return $array;
 	}
 }
