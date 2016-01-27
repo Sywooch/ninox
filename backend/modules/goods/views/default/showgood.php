@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\Html;
 use yii\widgets\ListView;
 
 foreach($breadcrumbs as $b){
@@ -95,7 +96,7 @@ SCRIPT;
 $this->registerCss($css);
 $this->registerJs($js);
 
-$this->title = "Товар \"".$good->Name."\"";
+$this->title = 'Товар "'.$good->Name.'"';
 ?>
 <h1><?=$good->Name?> <small><?=$nowCategory->Name?></small></h1>
 <div class="panel panel-info">
@@ -109,7 +110,7 @@ $this->title = "Товар \"".$good->Name."\"";
             <div class="col-xs-4">
                 <img class="img-thumbnail" src="http://krasota-style.com.ua/img/catalog/<?=$good->ico?>">
                 <br><br>
-                <?php if($good->video != ""){ ?>
+                <?php if(!empty($good->video)){ ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Прикреплённое видео</h3>
@@ -132,8 +133,11 @@ $this->title = "Товар \"".$good->Name."\"";
                         'dataProvider' => $additionalPhotos,
                         'itemOptions' => ['class' => 'image-thumb-mask'],
                         'summary'   =>  '',
-                        'itemView' => function ($model, $key, $index, $widget) {
-                            return '<img class="img-thumbnail" style="margin-bottom: 15px;" src="http://krasota-style.com.ua/img/catalog/'.$model->ico.'">';
+                        'itemView' => function ($model) {
+                            return Html::img('http://krasota-style.com.ua/img/catalog/'.$model->ico, [
+                                'class' =>  'img-thumbnail',
+                                'style' =>  'margin-bottom: 15px'
+                            ]);
                         },
                     ])?>
                     </div>
@@ -156,7 +160,7 @@ $this->title = "Товар \"".$good->Name."\"";
                                     Название:
                                 </td>
                                 <td>
-                                    '.\Yii::t('shop-info-goods', 'name-'.$good->ID).'
+                                    '.$good->Name.'
                                 </td>
                             </tr>
                             <tr>

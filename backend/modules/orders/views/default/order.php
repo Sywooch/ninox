@@ -416,8 +416,8 @@ $this->registerJsFile('/js/bootbox.min.js', [
                             'type'          =>  'button',
                             'data-toggle'   =>  'dropdown',
                             'aria-expanded' =>  'true'
-                        ])?>
-                        <?=DropdownX::widget([
+                        ]),
+                        DropdownX::widget([
                             'items' =>  [
                                 [
                                     'label'     =>  'По оптовым ценам',
@@ -490,7 +490,7 @@ $thiss = $this;
         'id'    =>  'orderItems'
     ],
     'pjax'      =>  true,
-    'summary'   =>  '',
+    'summary'   =>  false,
     'rowOptions'    =>  function($model){
         $classes = [];
         if($model->nezakaz == 1){

@@ -31,7 +31,16 @@ JS;
 <h2 style="margin-bottom: 5px">Кассы<small><a class="btn btn-link" href="#addCashbox"><?=\rmrevin\yii\fontawesome\FA::icon('plus')?> добавить</a></small></h2>
 <div class="well well-sm">
     <?=\kartik\grid\GridView::widget([
-        'dataProvider'  =>  $cashboxesDataProvider
+        'dataProvider'  =>  $cashboxesDataProvider,
+        'columns'       =>  [
+            [
+                'class' =>  \kartik\grid\SerialColumn::className()
+            ],
+            'name',
+            'created',
+            'defaultCustomer',
+            'defaultWholesaleCustomer'
+        ]
     ])?>
 </div>
 
