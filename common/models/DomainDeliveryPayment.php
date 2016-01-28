@@ -70,20 +70,20 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 		return $this->hasMany(PaymentParam::className(), ['id' => 'paymentParam']);
 	}
 
-	public function getConfig(){
-		return DomainDeliveryPayment::find()->
+	public static function getConfig(){
+		return self::find()->
 			joinWith('deliveryTypes')->
 			joinWith('deliveryParams')->
 			joinWith('paymentTypes')->
 			joinWith('paymentParams')->
-			where([DomainDeliveryPayment::tableName().'.domainId' => \Yii::$app->params['domainInfo']['id'], DomainDeliveryPayment::tableName().'.enabled' => 1, 'deliveryTypes.enabled' => 1])->
-			andWhere(['OR', ['deliveryParams.enabled' => 1], [DomainDeliveryPayment::tableName().'.deliveryParam' => 0]])->
+			where([self::tableName().'.domainId' => \Yii::$app->params['domainInfo']['id'], self::tableName().'.enabled' => 1, 'deliveryTypes.enabled' => 1])->
+			andWhere(['OR', ['deliveryParams.enabled' => 1], [self::tableName().'.deliveryParam' => 0]])->
 			andWhere(['paymentTypes.enabled' => 1])->
-			andWhere(['OR', ['paymentParams.enabled' => 1], [DomainDeliveryPayment::tableName().'.paymentParam' => 0]])->
+			andWhere(['OR', ['paymentParams.enabled' => 1], [self::tableName().'.paymentParam' => 0]])->
 			all();
 	}
 
-	public function getConfigArray(){
+	public static function getConfigArray(){
 		$configs = self::getConfig();
 		$array = [];
 		if(!empty($configs)){

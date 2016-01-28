@@ -24,6 +24,17 @@ $('.content-data-body-delivery-type input:radio[name="OrderForm[deliveryType]"]:
 		}
 	}
 });
+
+$('.content-data-body-delivery-type input:radio[name="OrderForm[anotherReciver]"]:checked + label').each(function(){
+	var id = $(this).tab().attr('data-target');
+	var input = $(id + ' input:radio[name="OrderForm[anotherReciver]"]:checked + label')[0];
+	if(!input){
+		input = $(id + ' input:radio[name="OrderForm[anotherReciver]"] + label')[0];
+		if(input){
+			$(input).click();
+		}
+	}
+});
 SCRIPT;
 
 $this->registerJs($js);
@@ -34,7 +45,7 @@ function buildContent($blocks){
 	$return = '';
 	if(!empty($blocks)){
 		foreach($blocks as $block){
-			$return .= ($block->tag ? Html::tag($block->tag, (is_object($block->content) || is_array($block->content) ? buildContent($block->content) : $block->content), $block->options) : ($block->content ? $block->content : $block));
+			$return .= (is_object($block) && $block->tag ? Html::tag($block->tag, (is_object($block->content) || is_array($block->content) ? buildContent($block->content) : $block->content), $block->options) : (is_object($block) && $block->content ? $block->content : $block));
 		}
 	}
 	return $return;
@@ -58,7 +69,7 @@ function buildContent($blocks){
 								        'value'     =>      $value,
 								        'id'        =>      "tab-".Tabs::$counter.$index
 							        ]).
-							        Html::tag('label', $label['options']->label ? buildContent($label['options']->label) : $label['name'],[
+							        Html::tag('label', !empty($label['options']->label) ? buildContent($label['options']->label) : $label['name'],[
 								        'class' =>  'tabsLabels',
 								        'data-target'   =>  '#w'.Tabs::$counter.'-tab'.$index,
 								        'for'   =>  'tab-'.Tabs::$counter.$index
@@ -101,15 +112,19 @@ function buildContent($blocks){
     ],
     [
         'item'  =>  function ($index, $label, $name, $checked, $value) {
-                echo Html::radio($name, $checked, [
+                return Html::radio($name, $checked, [
                         'value' => $value,
                         'id' => 'tab-'.Tabs::$counter.$index
-                    ])
-                    . '<label class="tabsLabels" data-target="#w'.Tabs::$counter.'-tab'.$index.'" for="tab-'.Tabs::$counter.$index.'">'.$label.'</label>';
+                    ]).
+                    Html::tag('label', $label, [
+	                    'class'         =>  'tabsLabels',
+	                    'data-target'   =>  '#w'.Tabs::$counter.'-tab'.$index,
+	                    'for'           =>  'tab-'.Tabs::$counter.$index
+                    ]);
         }
     ]
-)->label(false)?>
-<?=Tabs::widget([
+)->label(false).
+Tabs::widget([
     'headerOptions' =>  [
         'style' =>  'display: none'
     ],
@@ -121,9 +136,10 @@ function buildContent($blocks){
             'active' => true
         ],
         [
-            'content'   =>  '<div class="content-data-body-first">'.
-                                $form->field($model, 'anotherReceiverName').$form->field($model, 'anotherReceiverSurname').$form->field($model, 'anotherReceiverPhone').
-                            '</div>',
+            'content'   =>  Html::tag('div', $form->field($model, 'anotherReceiverName').
+		            $form->field($model, 'anotherReceiverSurname').
+		            $form->field($model, 'anotherReceiverPhone'),
+		            ['class' => 'content-data-body-first']),
             'label'     =>  '',
             'id'        =>  '2'
 
@@ -134,22 +150,22 @@ function buildContent($blocks){
 </div>
 <div class="payment-type">Способ оплаты</div>
 <?=$form->field($model, 'paymentType', [])->radioList($domainConfiguration['paymentTypes'], [
-    'item' => function ($index, $label, $name, $checked, $value) {
-        return '<div class="tab">'. Html::radio($name, $checked, [
+    'item' => function ($index, $label, $name, $checked, $value) use ($form, $model, $domainConfiguration){
+        return Html::tag('div', Html::radio($name, $checked, [
             'value'     =>      $value,
-            'id'        =>      "radio-".$value.$index,
-        ])
-        .'<label for="radio-'.$value.$index.'"><i></i><div class="payment-type-text">'.$label['name'].'</div></label>
+            'id'        =>      "tab-".Tabs::$counter.$index
+        ]).
+        Html::tag('label', $label['name'], [
+	        'for'   =>  'tab-'.Tabs::$counter.$index
+        ]).
+		Html::tag('span', '?', [
+			'class'         =>  'question-round-button',
+			'data-toggle'   =>  'tooltip',
+			'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
 
-        <div class="question">
-                            <div class="round-button">
-                                <div class="content-data-title-img">
-                                    <a class="round-button" data-toggle="tooltip" data-title="Эта сумма может измениться, в случае если вдруг не будет товаров на складе">?</a>                                </div>
-                            </div>
-                        </div>
-
-
-        </div>';
+		]), [
+			    'class' =>  'tab'
+		    ]);
     }
 ])->label(false);?>
 <div class="add-comment">Добавить коментарий к заказу</div>

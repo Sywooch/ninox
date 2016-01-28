@@ -3,8 +3,6 @@
 use yii\jui\Accordion;
 use yii\bootstrap\Html;
 
-$this->registerCss($css);
-
 $js = <<<'SCRIPT'
 $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
 
@@ -91,12 +89,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
 <script type="text/javascript">
     $(document).ready(function () {
         var offset = $('.ordering').offset();
-        var topPadding = 0;
-        $(window).scroll(function() {
-            if ($(window).scrollTop() > offset.top) {
+        var topPadding = 10;
+        $(window).scroll(function(){
+            if($(window).scrollTop() > offset.top){
                 $('.ordering').stop().animate({marginTop: $(window).scrollTop() - offset.top + topPadding});
-            }
-            else {
+            }else{
                 $('.ordering').stop().animate({marginTop: 5});
             }
         });

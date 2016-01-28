@@ -1310,6 +1310,10 @@ footer{
 
 /*========* ORDER *=========*/
 
+.order-body .question{
+
+}
+
 .content{
 	width: 100%;
 	max-width: 1050px;
@@ -1655,36 +1659,9 @@ footer{
 	cursor: pointer;
 }
 
-.ordering .question{
-	float: left;
-	padding-top: 3px;
-	height: 100%;
-}
-
 .ordering-body-items-price .semi-bold{
 	float: right;
 	font-size: 28px;
-}
-
-.question .round-button {
-	width: 15px;
-	float: left;
-	height: 15px;
-}
-
-.question .content-data-title-img{
-	width: 15px;
-	padding-bottom: 100%;
-	border-radius: 100%;
-	background: #03a7d4;
-}
-
-
-.question .round-button a {
-	display: block;
-	font-family: sans-serif;
-	font-size: 12px;
-	text-decoration: none;
 }
 
 .all-price .bold{
@@ -1736,11 +1713,6 @@ footer{
 
 .promotional-code .form-group{
 	float: left;
-}
-
-.promotional-code a{
-	float: left;
-
 }
 
 .promotional-code .question{
@@ -1886,13 +1858,6 @@ footer{
 	filter: grayscale(0%);
 }
 
-#ui-id-2{
-	height:370px;
-}
-
-#ui-id-4{
-	height: 500px;
-}
 .nav-tabs{
 	border: none;
 }
@@ -1922,7 +1887,8 @@ footer{
 }
 
 
-#orderform-paymenttype i{
+#orderform-paymenttype label:before{
+	content: '';
 	margin-right: 15px;
 	display: inline-block;
 	width: 15px;
@@ -1935,24 +1901,16 @@ footer{
 	box-shadow: inset 0px 0px 1px 3px #e4e4e4;
 }
 
-#orderform-paymenttype input[type="radio"]:checked + label i{
-	width: 15px;
-	height: 15px;
-	border-radius: 8px;
+#orderform-paymenttype input[type="radio"]:checked + label:before{
 	background-color: #3e77aa;
-}
-
-#orderform-paymenttype .tab{
-	padding-bottom: 25px;
 }
 
 #orderform-paymenttype label{
 	font-size: 14px;
-	margin-bottom: 0px;
+	margin-bottom: 25px;
+	padding: 0 15px 0 10px;
+	line-height: 13px;
 	font-weight: normal;
-	padding-left: 15px;
-	float: left;
-	padding-right: 10px;
 }
 
 .add-comment a{
