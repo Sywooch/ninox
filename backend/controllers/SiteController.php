@@ -73,20 +73,20 @@ class SiteController extends Controller
         ]);
     }
 
-    /*public function beforeAction($action){
+    public function beforeAction($action){
 
-        /*if(!\Yii::$app->user->isGuest){
+        if(!\Yii::$app->user->isGuest){
             if(\Yii::$app->user->identity->superAdmin == 1){
                 //\Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration');
             }
 
             \Yii::$app->user->identity->lastActivity = date('Y-m-d H:i:s');
-            \Yii::$app->user->identity->save(false);
+            \Yii::$app->user->identity->save();
             //echo \Yii::$app->user->identity->can('1') ? 'true' : 'false'; //если false - значит чувака нельзя пускать
-        }*/
+        }
 
-        /*return parent::beforeAction($action);
-    }*/
+        return parent::beforeAction($action);
+    }
 
     /**
      * @inheritdoc
