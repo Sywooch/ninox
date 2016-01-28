@@ -179,7 +179,7 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
                         <div class="pricelist-content">
-                            <div class="pricelist-content-not-available">
+                            <div class="pricelist-content-vip">
                             <!--
                             pricelist-content-discount
                             pricelist-content-available
@@ -200,10 +200,12 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                     <span>1240</span>
                                 </div>
                                 <div class="retail-price">
-                                        <span>розничная цена: 1999 грн</span>
-                                        <div class="quest">
-                                            <span>?</span>
-                                        </div>
+
+                                    <span>розничная цена: 1999 грн</span>
+                                    <span class="question-round-button">
+                                        ?
+                                    </span>
+
                                 </div>
                             </div>
                                 <div class="counterWrapper-vip">
@@ -211,17 +213,19 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                         <span>1240</span>
                                     </div>
                                     <div class="retail-price">
-                                    <span>
-                                       опт: 1255 грн   розница: 1999 грн
-                                        <div class="quest"></div>
-                                    </span>
+                                        <span>
+                                           опт: 1255 грн   розница: 1999 грн
+                                        </span>
+                                        <span class="question-round-button">
+                                            ?
+                                        </span>
                                     </div>
                                 </div>
                             <div class="counterWrapper-discount">
                                 <div class="retail-price">
                                     <span>
                                         старая цена:<i> 1999 грн </i>
-                                        <div class="quest"></div>
+                                        <span class="question-round-button"></span>
                                     </span>
                                 </div>
                                 <div class="price">

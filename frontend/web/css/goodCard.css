@@ -84,7 +84,6 @@
 }
 
 .counterWrapper{
-    height: 90px;
     border-top: 1px solid #ffffff;
     border-bottom: 1px solid #dedede;
     line-height: 28px;
@@ -143,13 +142,6 @@
 
 .pricelist-content-vip .availability{
     color: #6fad7e;
-}
-
-.pricelist-content-discount .counterWrapper{
-}
-
-.pricelist-content-discount .progress{
-    height: ;
 }
 
 .about-price{
@@ -255,6 +247,7 @@
 }
 
 .purchase-returns .minihead:before{
+    height: 19px;
 }
 
 .guarantee .minihead:before{
@@ -270,6 +263,13 @@
 
 .socialItemInfo{
     height: 50px;
+    display: -moz-box;
+    padding-top: 50px;
+    padding-bottom: 40px;
+}
+
+.soc-item-share .uptolike-buttons{
+    float: left;
 }
 
 .price{
@@ -291,7 +291,26 @@
     font-size:13px;
 }
 
-.retail-price span:after{
+.retail-price{
+    width: -moz-max-content;
+    margin: auto;
+    padding-bottom: 20px;
+    font-size: 13px;
+    line-height: 15px;
+}
+
+.question-round-button{
+    width: 16px;
+    height: 16px;
+    font-size: 13px;
+    background: #29A1E0 none repeat scroll 0% 0%;
+    border-radius: 50%;
+    color: #FFF;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.pricelist-content-available .retail-price .quest{
 
 }
 
@@ -375,11 +394,6 @@
 
 .pricelist-content-vip .counterWrapper-vip .price span{
     color: white;
-}
-
-.pricelist-content-vip .counterWrapper-vip .retail-price{
-    padding-bottom: 20px;
-    font-size: 13px;
 }
 
 .pricelist-content-vip .progress{
