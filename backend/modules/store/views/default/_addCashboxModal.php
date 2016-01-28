@@ -54,5 +54,12 @@ echo $form->field($model, 'name'),
         </li>
     </ol>
     <button type="button" class="autologinList_add btn btn-success btn-sm"><?=\rmrevin\yii\fontawesome\FA::icon('plus')?> Добавить</button>
+<br>
+<br>
+<br>
 <?php
+echo \yii\helpers\Html::button('Сохранить', [
+    'type'  =>  'submit',
+    'class' =>  'btn btn-primary btn-lg'
+]);
 $form->end();

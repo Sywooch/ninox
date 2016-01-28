@@ -44,13 +44,13 @@ class Cashbox extends \yii\db\ActiveRecord
     public function beforeSave($insert){
         $this->autologin = Json::encode($this->autologin);
 
-        parent::beforeSave($insert);
+        return parent::beforeSave($insert);
     }
 
     public function afterFind(){
         $this->autologin = Json::decode($this->autologin);
 
-        parent::afterFind();
+        return parent::afterFind();
     }
 
     /**

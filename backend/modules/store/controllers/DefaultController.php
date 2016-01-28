@@ -28,16 +28,10 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Склад или магазин с таким ID не найден!");
         }
 
-
-        \Yii::trace('cashboxForm?');
-
         if(\Yii::$app->request->post("CashboxForm")){
-            \Yii::trace('cashboxForm!');
-
             $cashboxForm = new CashboxForm();
             $cashboxForm->load(\Yii::$app->request->post());
-
-            \Yii::trace(Json::encode($cashboxForm));
+            $cashboxForm->store = $shop->id;
 
             $cashboxForm->save();
         }

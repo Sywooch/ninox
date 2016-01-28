@@ -15,6 +15,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use backend\models\LoginForm;
 use yii\filters\VerbFilter;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -33,6 +34,7 @@ class SiteController extends Controller
                 'rules' => [
                     [
                         'actions' => ['login', 'error'],
+                        'roles' =>  ['?'],
                         'allow' => true,
                     ],
                     [
@@ -152,16 +154,16 @@ class SiteController extends Controller
 
     public function actionUpdatecurrency(){
         if(!\Yii::$app->request->isAjax){
-            return;
+            throw new MethodNotAllowedHttpException("Данный метод доступен только через ajax!");
         }
 
         \Yii::$app->response->format = 'json';
 
-        $post = \Yii::$app->request->post("Service");
-        $m = Service::findOne(['key' => $post['key']]);
-        $m->load(\Yii::$app->request->post("Service"));
-        $m->value = \Yii::$app->request->post("Service[value]");
-        $m->save();
+        $m = Service::findOne(['key' => \Yii::$app->request->post("Service")['key']]);
+        $m->load(\Yii::$app->request->post());
+        if(!$m->save(false)){
+            throw new \ErrorException("Возникла ошибка при сохранении параметра ".$m->key);
+        }
 
         return \Yii::$app->request->post();
     }
@@ -193,27 +195,21 @@ class SiteController extends Controller
     }
 
 
-    public function actionLogin()
-    {
+    public function actionLogin(){
         $this->layout = 'login';
 
         if(\Yii::$app->request->isAjax){
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
-        /*if(!\Yii::$app->user->isGuest){
-            if(!empty(\Yii::$app->user->identity->default_route)){
-                return $this->redirect(\Yii::$app->user->identity->default_route);
-            }
-
-            return $this->redirect(Url::home());
-        }*/
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goBack();
+        }
 
         $model = new LoginForm();
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
-            //return !$this->redirect($this->goBack() = '/login' ? \Yii::$app->user->identity->default_route : $this->goBack());
+            return empty(\Yii::$app->user->identity->default_route) ? $this->goBack() : $this->redirect(\Yii::$app->user->identity->default_route);
         }else{
             return $this->render('login', [
                 'model' => $model,
