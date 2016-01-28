@@ -60,6 +60,18 @@ if(isset($good->PrOut3)){
 
 ?>
 
+<script type="text/javascript">(function(w,doc) {
+        if (!w.__utlWdgt ) {
+            w.__utlWdgt = true;
+            var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+            s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+            s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+            var h=d[g]('body')[0];
+            h.appendChild(s);
+        }})(window,document);
+</script>
+
+
 <!--<div class="leftMenu">
     <span class="catTitle"><a href="/<?=$mainCategory->link?>" title="<?=$mainCategory->Name?>"><?=$mainCategory->Name?></a></span>
     <?=''//LeftMenu?>
@@ -188,10 +200,12 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                     <span>1240</span>
                                 </div>
                                 <div class="retail-price">
-                                        <span>розничная цена: 1999 грн</span>
-                                        <div class="quest">
-                                            <span>?</span>
-                                        </div>
+
+                                    <span>розничная цена: 1999 грн</span>
+                                    <span class="question-round-button">
+                                        ?
+                                    </span>
+
                                 </div>
                             </div>
                                 <div class="counterWrapper-vip">
@@ -199,17 +213,19 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                         <span>1240</span>
                                     </div>
                                     <div class="retail-price">
-                                    <span>
-                                       опт: 1255 грн   розница: 1999 грн
-                                        <div class="quest"></div>
-                                    </span>
+                                        <span>
+                                           опт: 1255 грн   розница: 1999 грн
+                                        </span>
+                                        <span class="question-round-button">
+                                            ?
+                                        </span>
                                     </div>
                                 </div>
                             <div class="counterWrapper-discount">
                                 <div class="retail-price">
                                     <span>
                                         старая цена:<i> 1999 грн </i>
-                                        <div class="quest"></div>
+                                        <span class="question-round-button"></span>
                                     </span>
                                 </div>
                                 <div class="price">
@@ -386,41 +402,11 @@ class="fa fa-long-arrow-right fa-fw"></span>',
 </div>
             </div>
         <div class="socialItemInfo">
+<div class="soc-item-share">
             <div class="shareToFriends"><?=\Yii::t('shop', 'Рассказать друзьям')?></div>
-            <div>
-                <div>
-                    <a title="On VK" onclick="Share.vk('<?=$good->Name?>','<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>','')" target="_blank">
-                        <div class="social-border">
-                            <div><i class="shop-vkontakte-1"></i></div>
-                            <div id="share_vk"><?=''//$pageShares['share_vk']?></div>
-                        </div>
-                    </a>
-                    <a title="On Facebook" onclick="Share.fb('<?=$good->Name?>','<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>','')" target="_blank">
-                        <div class="social-border">
-                            <div><i class="shop-facebook-1"></i></div>
-                            <div id="share_fb"><?=''//$pageShares['share_fb']?></div>
-                        </div>
-                    </a>
-                    <a title="On Twitter" onclick="Share.twitter('<?=$good->Name?>')" target="_blank">
-                        <div class="social-border">
-                            <div><i class="shop-twitter"></i></div>
-                            <div id="share_twitter"><?=''//$pageShares['share_twitter']?></div>
-                        </div>
-                    </a>
-                    <a title="On Google Plus" onclick="Share.gplus()" target="_blank">
-                        <div class="social-border">
-                            <div><i class="shop-gplus"></i></div>
-                            <div id="share_gplus"><?=''//$pageShares['share_gplus']?></div>
-                        </div>
-                    </a>
-                    <a title="On Odnoklassniki" onclick="Share.ok('<?=$good->Name?>')" target="_blank">
-                        <div class="social-border">
-                            <div><i class="shop-odnoklassniki"></i></div>
-                            <div id="share_ok"><?=''//$pageShares['share_ok']?></div>
-                        </div>
-                    </a>
-                </div>
-            </div>
+
+    <div data-background-alpha="0.0" data-buttons-color="#ffffff" data-counter-background-color="#ffffff" data-share-counter-size="12" data-top-button="false" data-share-counter-type="separate" data-share-style="1" data-mode="share" data-like-text-enable="false" data-mobile-view="true" data-icon-color="#ffffff" data-orientation="horizontal" data-text-color="#000000" data-share-shape="round-rectangle" data-sn-ids="fb.vk.tw.ok.gp." data-share-size="20" data-background-color="#ffffff" data-preview-mobile="false" data-mobile-sn-ids="fb.vk.tw.wh.ok.vb." data-pid="1475324" data-counter-background-alpha="1.0" data-following-enable="false" data-exclude-show-more="true" data-selection-enable="false" class="uptolike-buttons" ></div>
+</div>
         </div>
 
             <div>

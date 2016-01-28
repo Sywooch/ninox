@@ -3,7 +3,7 @@
 use yii\jui\Accordion;
 use yii\bootstrap\Html;
 
-$this->registerCss($css);
+//$this->registerCss($css);
 
 $js = <<<'SCRIPT'
 $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
