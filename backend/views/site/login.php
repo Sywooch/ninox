@@ -215,7 +215,7 @@ $this->registerCss($css);
 <div class="login">
     <div class="heading">
         <h2>krasota-style</h2>
-        <?php $form = ActiveForm::begin([
+        <?php $form = new ActiveForm([
             'id' => 'login-form',
             'options' => [
 
@@ -224,9 +224,11 @@ $this->registerCss($css);
                 'template' => "{input} {error}",
                 'labelOptions' => ['class' => 'col-lg-1 control-label'],
             ],
-        ]); ?>
+        ]);
 
-        <?=$form->errorSummary($model, [
+        $form->begin();
+
+        echo $form->errorSummary($model, [
             'header'    =>  'При авторизации возникли некоторые ошибки: '
         ])?>
         <div class="input-group input-group-lg">
