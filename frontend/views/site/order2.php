@@ -85,6 +85,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
                 );
         });
     });
+        //TODO: что это за скрипт?
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -98,6 +99,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
             }
         });
     });
+    //TODO: что это за скрипт?
 </script>
 <script type="text/javascript">
 $(function() {
@@ -126,6 +128,8 @@ $('#submit').click(function() {
     return false;
     });
     });
+
+//TODO: что это за скрипт?
     </script>
 <div class="content">
     <div id="modal_form"><!-- Сaмo oкнo -->

@@ -2,6 +2,24 @@
 use yii\helpers\Html;
 use app\assets\AppAsset;
 
+$js = <<<'JS'
+var guestRefresh = function(){
+    $.ajax({
+        type: 'POST',
+        url: '/login',
+        success: function(data){
+            if(data == 0){
+                location.reload();
+            }
+        }
+    });
+};
+
+setInterval(guestRefresh, 10000);
+JS;
+
+$this->registerJs($js);
+
 $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -13,21 +31,6 @@ $this->beginPage() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<script>
-    var guestRefresh = function(){
-        $.ajax({
-            type: 'POST',
-            url: '/login',
-            success: function(data){
-                if(data == 0){
-                    location.reload();
-                }
-            }
-        });
-    };
-
-    setInterval(guestRefresh, 10000);
-</script>
 <body>
 <div class="wrap">
     <div class="container">
@@ -38,4 +41,3 @@ $this->beginPage() ?>
 </body>
 </html>
 <?php $this->endPage() ?>
-<?php die(); ?>

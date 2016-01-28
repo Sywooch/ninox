@@ -8,7 +8,6 @@
 
 namespace backend\models;
 
-
 use common\models\Cashbox;
 use yii\base\Model;
 
@@ -19,6 +18,7 @@ class CashboxForm extends Model{
     public $name;
     public $defaultCustomer;
     public $defaultWholesaleCustomer;
+    public $store;
 
     public function rules(){
         return [
@@ -34,6 +34,7 @@ class CashboxForm extends Model{
             'name'                      =>  $this->name,
             'defaultCustomer'           =>  $this->defaultCustomer,
             'defaultWholesaleCustomer'  =>  $this->defaultWholesaleCustomer,
+            'store'                     =>  $this->store
         ]);
 
         /*if(!$model->validate()){
