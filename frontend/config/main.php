@@ -18,6 +18,12 @@ return [
         'cart'  =>  [
             'class' =>  'frontend\components\Cart'
         ],
+        'email'  =>  [
+            'class' =>  'frontend\components\Email'
+        ],
+        'sms'  =>  [
+            'class' =>  'frontend\components\Sms'
+        ],
         'i18n' => [
             'translations' => [
                 '*' => [
