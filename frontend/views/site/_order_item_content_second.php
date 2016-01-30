@@ -67,7 +67,7 @@ function buildContent($blocks){
 							        ];
 							        return Html::tag('div', Html::radio($name, $checked, [
 								        'value'     =>      $value,
-								        'id'        =>      "tab-".Tabs::$counter.$index
+								        'id'        =>      'tab-'.Tabs::$counter.$index
 							        ]).
 							        Html::tag('label', !empty($label['options']->label) ? buildContent($label['options']->label) : $label['name'],[
 								        'class' =>  'tabsLabels',
@@ -88,9 +88,9 @@ function buildContent($blocks){
 	        ];
             return Html::tag('div', Html::radio($name, $checked, [
 		            'value'     =>      $value,
-		            'id'        =>      "tab-".sizeof($domainConfiguration['deliveryTypes']).$index
+		            'id'        =>      'tab-'.sizeof($domainConfiguration['deliveryTypes']).$index
 	            ]).
-	            Html::tag('label', (sizeof($label['params']) < 2 && $label['replaceDescription'] == 1 ? reset($label['params'])['name'] : $label['name']), [
+	            Html::tag('label', $label['name'], [
 		            'class' =>  'tabsLabels',
 		            'data-target'   =>  '#w'.sizeof($domainConfiguration['deliveryTypes']).'-tab'.$index,
 		            'for'      =>   'tab-'.sizeof($domainConfiguration['deliveryTypes']).$index
@@ -151,21 +151,30 @@ Tabs::widget([
 <div class="payment-type">Способ оплаты</div>
 <?=$form->field($model, 'paymentType', [])->radioList($domainConfiguration['paymentTypes'], [
     'item' => function ($index, $label, $name, $checked, $value) use ($form, $model, $domainConfiguration){
-        return Html::tag('div', Html::radio($name, $checked, [
-            'value'     =>      $value,
-            'id'        =>      "tab-".Tabs::$counter.$index
-        ]).
-        Html::tag('label', $label['name'], [
-	        'for'   =>  'tab-'.Tabs::$counter.$index
-        ]).
-		Html::tag('span', '?', [
-			'class'         =>  'question-round-button',
-			'data-toggle'   =>  'tooltip',
-			'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
+        return Html::radio($name, $checked, [
+	            'value'     =>      $value,
+	            'id'        =>      'radio-type-'.$value.$index
+	        ]).
+	        Html::tag('label', (sizeof($label['params']) < 2 && $label['modifyLabel'] == 1 ? reset($label['params'])['name'] : $label['name']), [
+		        'for'   =>  'radio-type-'.$value.$index
+	        ]).
+			Html::tag('span', '?', [
+				'class'         =>  'question-round-button',
+				'data-toggle'   =>  'tooltip',
+				'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
 
-		]), [
-			    'class' =>  'tab'
-		    ]);
+			]).
+			$form->field($model, 'paymentParam', ['template' => '<div class="payment-params">{input}{label}</div>'])->radioList($label['params'], [
+			    'item' => function ($index, $label, $name, $checked, $value){
+					    return Html::radio($name, $checked, [
+						    'value'     =>      $value,
+						    'id'        =>      'radio-param-'.$value.$index
+					    ]).
+					    Html::tag('label', $label['name'], [
+						    'for'   =>  'radio-param-'.$value.$index
+					    ]);
+				    }
+		    ])->label(false);
     }
 ])->label(false);?>
 <div class="add-comment">Добавить коментарий к заказу</div>

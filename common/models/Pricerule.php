@@ -17,33 +17,35 @@ class Pricerule extends \yii\db\ActiveRecord
 {
 
     public $customerRule = 0;
+	public $terms = [];
+	public $actions = [];
 	protected $termTypes = ['=', '>=', '<=', '!='];
 
 	public function asArray(){
-		$rArray = ['terms' => [], 'actions' => []];
 		$termPattern = '/'.implode('|', $this->termTypes).'/';
 		$parts = explode('THEN', preg_replace('/\s/', '', $this->Formula));
 		$terms = $parts[0];
 		$actions = $parts[1];
 		$terms = preg_replace('/IF/', '', $terms);
 		$terms = explode('AND', $terms);
-		foreach($terms as $key => $termt){
+		foreach($terms as $termt){
 			$termt = explode('OR', $termt);
 			foreach($termt as $term){
 				$term = preg_replace('/\(|\)/', '', $term);
 				preg_match($termPattern, $term, $matches);
-				$tTerm = explode($matches[0], $term);
-				if(!empty($tTerm[1])){
-					$rArray['terms'][$key][$tTerm[0]][] = array('term' => $tTerm[1], 'type' => $matches[0]);
+				if(!empty($matches)){
+					$tTerm = explode($matches[0], $term);
+					if(!empty($tTerm[1])){
+						$this->terms[$tTerm[0]][] = array('term' => $tTerm[1], 'type' => $matches[0]);
+					}
 				}
 			}
 		}
 		$actions = explode('AND', $actions);
 		foreach($actions as $action){
 			$action = explode('=', $action);
-			$rArray['actions'][$action[0]] = $action[1];
+			$this->actions[$action[0]] = $action[1];
 		}
-		return $rArray;
 	}
 
     /**

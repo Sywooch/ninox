@@ -90,13 +90,34 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 			foreach($configs as $config){
 				$array['deliveryTypes'][$config->deliveryType]['name'] = $config->deliveryTypes[0]->description;
 				$array['deliveryTypes'][$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
-				$array['deliveryTypes'][$config->deliveryType]['replaceDescription'] = $config->deliveryTypes[0]->replaceDescription;
+				$array['deliveryTypes'][$config->deliveryType]['modifyLabel'] = $config->deliveryTypes[0]->modifyLabel;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['options'] = (object)array_merge((array)Json::decode($config->options, false), (array)Json::decode($config->deliveryParams[0]->options, false));
 
 				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes[0]->description;
 				$array['paymentTypes'][$config->paymentType]['value'] = $config->paymentTypes[0]->id;
+				$array['paymentTypes'][$config->paymentType]['modifyLabel'] = $config->paymentTypes[0]->modifyLabel;
+				$array['paymentTypes'][$config->paymentType]['params'][$config->paymentParam]['name'] = !empty($config->paymentParams[0]) ? $config->paymentParams[0]->description : 'Default Param';
 			}
+
+			foreach($array as $type => $value){
+				foreach($value as $k => $v){
+					if(sizeof($v['params']) < 2){
+						switch($v['modifyLabel']){
+							case 1:
+								$array[$type][$k]['name'] = reset($v['params'])['name'];
+								break;
+							case 2:
+								$array[$type][$k]['name'] .= ' '.reset($v['params'])['name'];
+								break;
+							case 0:
+							default:
+								break;
+						}
+					}
+				}
+			}
+
 		}
 		return $array;
 	}

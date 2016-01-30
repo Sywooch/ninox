@@ -8,11 +8,8 @@
 
 namespace common\helpers;
 
-
-use frontend\models\Pricerule;
 use DateTime;
 use yii\base\Component;
-use yii\helpers\Json;
 
 class PriceRuleHelper extends Component{
 
@@ -44,21 +41,32 @@ class PriceRuleHelper extends Component{
 	}
 
 	private function recalcItem($model, $rule, $category){
-		$ruleArray = $rule->asArray();
 		$termsCount = 0;
 		$discount = 0;
-		foreach($ruleArray['terms'] as $term){
-			if(!empty($term['GoodGroup'])){
-				$this->checkCategory($term['GoodGroup'], $model->category, $termsCount, $discount);
-			}
-			if($discount == $termsCount && !empty($term['Date'])){
-				$this->checkDate($term['Date'], $termsCount, $discount);
-			}
-			if($category && $discount == $termsCount && !empty($term['WithoutBlyamba'][0]['term'])){
-				$termsCount++;
-			}
-			if(!$category && $discount == $termsCount && !empty($term['DocumentSum'])){
-				$this->checkDocumentSumm($term['DocumentSum'], $termsCount, $discount);
+		foreach($rule->terms as $keyTerm => $term){
+			if($discount == $termsCount){
+				switch($keyTerm){
+					case 'GoodGroup':
+						$this->checkCategory($term, $model->category, $termsCount, $discount);
+						break;
+					case 'Date':
+						$this->checkDate($term, $termsCount, $discount);
+						break;
+					case 'WithoutBlyamba':
+						if($category && !empty($term[0]['term'])){
+							$termsCount++;
+						}
+						break;
+					case 'DocumentSum':
+						if(!$category){
+							$this->checkDocumentSumm($term, $termsCount, $discount);
+						}
+						break;
+					default:
+						break;
+				}
+			}else{
+				break;
 			}
 			/*if($discount == $termsCount && !empty($term['ItemPrice'])){
 				$termsCount++;
@@ -135,8 +143,8 @@ class PriceRuleHelper extends Component{
 			\Yii::trace('Model: '.$model->priceRuleID.'; ID: '.$rule->ID);
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;
-			$model->discountType = empty($ruleArray['actions']['Type']) ? 2 : $ruleArray['actions']['Type'];
-			$model->discountSize = $ruleArray['actions']['Discount'];
+			$model->discountType = empty($rule->actions['Type']) ? 2 : $rule->actions['Type'];
+			$model->discountSize = $rule->actions['Discount'];
 			$model->customerRule = $rule->customerRule;
 			return $model;
 		}
@@ -145,31 +153,38 @@ class PriceRuleHelper extends Component{
 	private function checkCategory($term, $cat, &$termsCount, &$discount){
 		$termsCount++;
 		foreach($term as $gg){
-			if($gg['type'] == '='){
-				if($cat == $gg['term']){
-					$discount++;
+			switch($gg['type']){
+				case '=':
+					if($cat == $gg['term']){
+						$discount++;
+						return;
+					}
 					break;
-				}
-			}elseif($gg['type'] == '>='){
-				if(strlen($cat) != strlen($gg['term'])){
-					$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
-				}else{
-					$cat0 = $cat;
-				}
-				if($cat0 == $gg['term']){
-					$discount++;
+				case '>=':
+					if(strlen($cat) != strlen($gg['term'])){
+						$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+					}else{
+						$cat0 = $cat;
+					}
+					if($cat0 == $gg['term']){
+						$discount++;
+						return;
+					}
 					break;
-				}
-			}elseif($gg['type'] == '<=' || $gg['type'] == '!='){
-				if(strlen($cat) != strlen($gg['term'])){
-					$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
-				}else{
-					$cat0 = $cat;
-				}
-				if($cat0 != $gg['term']){
-					$discount++;
+				case '<=':
+				case '!=':
+					if(strlen($cat) != strlen($gg['term'])){
+						$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+					}else{
+						$cat0 = $cat;
+					}
+					if($cat0 != $gg['term']){
+						$discount++;
+						return;
+					}
 					break;
-				}
+				default:
+					break;
 			}
 		}
 	}
