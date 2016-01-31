@@ -16,8 +16,10 @@ class m151222_121721_created_shops extends Migration
         $this->createTable('shopsGoods', [
             'shopID'        =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL',
             'itemID'        =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL',
-            'count'         =>  Schema::TYPE_INTEGER.' UNSIGNED DEFAULT 0',
+            'count'         =>  Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0',
         ]);
+
+        $this->addPrimaryKey('shopGood', 'shopsGoods', ['shopID', 'itemID']);
 
         $this->createTable('shopsGoodsTransferringInvoices', [
             'id'            =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
@@ -26,14 +28,14 @@ class m151222_121721_created_shops extends Migration
             'sendDate'      =>  Schema::TYPE_DATETIME,
             'receiveDate'   =>  Schema::TYPE_DATETIME,
             'sender'        =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL',
-            'receiver'      =>  Schema::TYPE_INTEGER.' UNSIGNED DEFAULT 0',
+            'receiver'      =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0',
         ]);
 
         $this->createTable('shopsGoodsTransferringItems', [
             'invoiceID'     =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL',
             'itemID'        =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL',
             'count'         =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL',
-            'received'      =>  Schema::TYPE_SMALLINT.' UNSIGNED DEFAULT 0',
+            'received'      =>  Schema::TYPE_SMALLINT.' UNSIGNED NOT NULL DEFAULT 0',
         ]);
 
         $this->addPrimaryKey('invoiceItem', 'shopsGoodsTransferringItems', ['invoiceID', 'itemID']);
