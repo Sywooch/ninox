@@ -80,7 +80,7 @@ class DefaultController extends Controller
                 break;
         }
 
-        $this->view->params['showDateButtons'] = true;
+        $this->getView()->params['showDateButtons'] = true;
 
         $historySearch = new HistorySearch();
 
@@ -165,8 +165,15 @@ class DefaultController extends Controller
         return 0;
     }
 
+    /**
+     * Страница просмотра и редактирования заказа
+     * @param string $param ID заказа
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionShoworder($param = ''){
-        $order = History::findOne(['id' => $param]);
+        $order = History::findOne($param);
 
         if(!$order){
             throw new NotFoundHttpException("Такого заказа не существует!");
@@ -192,8 +199,8 @@ class DefaultController extends Controller
                 $good->count += $razn;
 
                 $good->save(false);
-            }
-            ;
+            };
+
             $order->save();
 
             $item->save();
@@ -230,13 +237,19 @@ class DefaultController extends Controller
             ]
         ]);
 
+        $customer = Customer::findOne($order->customerID);
+
+        if(!$customer){
+            $customer = new Customer;
+        }
+
         return $this->render('order', [
-            'order'     =>  $order,
-            'items'     =>  $sborkaItems,
-            'itemsDataProvider'  =>  $itemsDataProvider,
-            'priceRules'=>  Pricerule::find()->orderBy('priority')->all(),
+            'order'             =>  $order,
+            'items'             =>  $sborkaItems,
+            'itemsDataProvider' =>  $itemsDataProvider,
+            'priceRules'        =>  Pricerule::find()->orderBy('priority')->all(),
             'goodsAdditionalInfo'   =>  $goodsAdditionalInfo,
-            'customer'  =>  Customer::findOne(['id' => $order->customerID])
+            'customer'          =>  $customer
         ]);
     }
 
@@ -322,13 +335,6 @@ class DefaultController extends Controller
 
         return $return;
     }
-
-    public function actionGetboxes(){
-        return $this->render('_boxes', [
-            'boxes' =>  Box::findAll()
-        ]);
-    }
-
 
     public function actionDeleteorder(){
         if(!\Yii::$app->request->isAjax){
