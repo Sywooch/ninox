@@ -153,10 +153,10 @@ Tabs::widget([
     'item' => function ($index, $label, $name, $checked, $value) use ($form, $model, $domainConfiguration){
         return Html::radio($name, $checked, [
 	            'value'     =>      $value,
-	            'id'        =>      'radio-type-'.$value.$index
+	            'id'        =>      'radio-type-'.$value
 	        ]).
-	        Html::tag('label', (sizeof($label['params']) < 2 && $label['modifyLabel'] == 1 ? reset($label['params'])['name'] : $label['name']), [
-		        'for'   =>  'radio-type-'.$value.$index
+	        Html::tag('label', $label['name'], [
+		        'for'   =>  'radio-type-'.$value
 	        ]).
 			Html::tag('span', '?', [
 				'class'         =>  'question-round-button',
@@ -164,14 +164,14 @@ Tabs::widget([
 				'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
 
 			]).
-			$form->field($model, 'paymentParam', ['template' => '<div class="payment-params">{input}{label}</div>'])->radioList($label['params'], [
+			$form->field($model, 'paymentParam', ['template' => '<div class="payment-params-'.$value.'">{input}{label}</div>'])->radioList($label['params'], [
 			    'item' => function ($index, $label, $name, $checked, $value){
 					    return Html::radio($name, $checked, [
 						    'value'     =>      $value,
-						    'id'        =>      'radio-param-'.$value.$index
+						    'id'        =>      'radio-param-'.$value
 					    ]).
 					    Html::tag('label', $label['name'], [
-						    'for'   =>  'radio-param-'.$value.$index
+						    'for'   =>  'radio-param-'.$value
 					    ]);
 				    }
 		    ])->label(false);

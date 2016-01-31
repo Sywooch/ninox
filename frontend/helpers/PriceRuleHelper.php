@@ -20,9 +20,5 @@ class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
         if(!\Yii::$app->user->isGuest){
             $this->pricerules = array_merge(\Yii::$app->user->identity->getPriceRules(), $this->pricerules);
         }
-	    foreach($this->pricerules as $rule){
-		    $rule->asArray();
-	    }
     }
-
 }

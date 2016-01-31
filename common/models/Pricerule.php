@@ -17,9 +17,34 @@ class Pricerule extends \yii\db\ActiveRecord
 {
 
     public $customerRule = 0;
-	public $terms = [];
-	public $actions = [];
+	public $_terms = [];
+	public $_actions = [];
 	protected $termTypes = ['=', '>=', '<=', '!='];
+
+	public function __get($name){
+		switch($name){
+			case 'terms':
+				if(!empty($this->_terms)){
+					return $this->_terms;
+				}
+
+				$this->asArray();
+
+				return $this->_terms;
+				break;
+			case 'actions':
+				if(!empty($this->_actions)){
+					return $this->_actions;
+				}
+
+				$this->asArray();
+
+				return $this->_actions;
+				break;
+		}
+
+		return parent::__get($name);
+	}
 
 	public function asArray(){
 		$termPattern = '/'.implode('|', $this->termTypes).'/';
@@ -36,7 +61,7 @@ class Pricerule extends \yii\db\ActiveRecord
 				if(!empty($matches)){
 					$tTerm = explode($matches[0], $term);
 					if(!empty($tTerm[1])){
-						$this->terms[$tTerm[0]][] = array('term' => $tTerm[1], 'type' => $matches[0]);
+						$this->_terms[$tTerm[0]][] = array('term' => $tTerm[1], 'type' => $matches[0]);
 					}
 				}
 			}
@@ -44,7 +69,7 @@ class Pricerule extends \yii\db\ActiveRecord
 		$actions = explode('AND', $actions);
 		foreach($actions as $action){
 			$action = explode('=', $action);
-			$this->actions[$action[0]] = $action[1];
+			$this->_actions[$action[0]] = $action[1];
 		}
 	}
 
