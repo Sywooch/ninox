@@ -9,7 +9,7 @@
 namespace cashbox\components;
 
 
-use backend\models\CashboxItem;
+use cashbox\models\CashboxItem;
 use backend\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\History;
