@@ -46,6 +46,10 @@ class Cashbox extends Component{
     public function init(){
         $cache = \Yii::$app->cache;
 
+        if(empty($this->customer) && !empty(\Yii::$app->params['configuration'])){
+            $this->customer = $this->isWholesale() ? \Yii::$app->params['configuration']->defaultWholesaleCustomer : \Yii::$app->params['configuration']->defaultCustomer;
+        }
+
         if(\Yii::$app->request->cookies->has("cashboxOrderID")){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
         }
@@ -91,6 +95,10 @@ class Cashbox extends Component{
         $this->recalculate();
 
         $this->save();
+    }
+
+    public function isWholesale(){
+        return $this->priceType  == 1;
     }
 
     public function load(){
