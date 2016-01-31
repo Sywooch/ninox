@@ -6,4 +6,6 @@ return [
     ],
     'frontend'  =>  'http://krasota-style.com.ua',
     'backend'   =>  'http://admin.krasota-style.com.ua',
+    'autologin' =>  [],
+    'configuration' =>  [],
 ];

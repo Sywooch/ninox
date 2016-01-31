@@ -100,14 +100,8 @@ class m150615_131000_modify_sborka_table extends Migration
 
         $this->execute("DROP INDEX `historyid` ON `sborka`; CREATE INDEX `orderID` ON `sborka` (`orderID`, `added`) USING BTREE;");
 	    $this->execute("DELETE FROM `sborka` WHERE `itemID` = 0");
-		$goodsCount = \common\models\Good::find()->count();
-		$i = 0;
-		foreach(\common\models\Good::find()->each() as $good){
-			$i++;
-			echo '   > Updating good '.$i.' from '.$goodsCount."...\r\n";
-			\common\models\SborkaItem::updateAll(['itemID' => $good->ID], ['itemID' => $good->Code]);
-		}
-        //$this->execute("UPDATE `sborka`,`goods` SET `sborka`.`itemID` = `goods`.`ID` WHERE `sborka`.`itemID` = `goods`.`Code`"); //Выполнился на тестовом сервере за 40к секунд, мб можно как-то оптимизировать запрос?
+		$this->createIndex('itemID', 'sborka', 'itemID');
+        $this->execute("UPDATE `sborka`,`goods` SET `sborka`.`itemID` = `goods`.`ID` WHERE `sborka`.`itemID` = `goods`.`Code`");
         $this->execute("UPDATE `sborka` SET `originalPrice` = `price`");
         $this->execute("ALTER TABLE `sborka` DROP COLUMN `price`");
         $this->execute("UPDATE `sborka`, `operations` SET `sborka`.`originalCount` = `operations`.`Qtty` WHERE `sborka`.`orderID` = `operations`.`Acct` AND `sborka`.`itemID` = `operations`.`GoodID`");
