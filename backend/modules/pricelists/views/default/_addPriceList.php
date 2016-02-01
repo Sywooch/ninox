@@ -45,7 +45,10 @@ $form->begin();
     <div class="col-xs-4">
         <?php
         echo $form->field($model, 'name'),
-            $form->field($model, 'format')
+            $form->field($model, 'format')->dropDownList($model->getFormats()),
+            $form->field($model, 'available')->checkbox(),
+            $form->field($model, 'deleted')->checkbox(),
+            $form->field($model, 'unlimited')->checkbox()
         ?>
     </div>
     <div class="col-xs-8">

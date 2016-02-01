@@ -1,2 +1,2 @@
 
-            <category id="<?=$model->ID?>"><?=$model->Name?></category>
+            <?php if($parent = \common\models\Category::findOne(['Code' => substr($model->Code, 0, -3)])){ ?><category id="<?=$model->ID?>" parent="<?=$parent->ID?>"><?=$model->Name?></category><?php }else{ ?><category id="<?=$model->ID?>"><?=$model->Name?></category><?php } ?>
