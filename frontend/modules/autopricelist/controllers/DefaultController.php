@@ -24,7 +24,17 @@ class DefaultController extends Controller
         }
 
         \Yii::$app->response->format = 'raw';
-        $this->layout = 'yml';
+
+        switch($priceList->format){
+            case PriceListFeed::FORMAT_XML:
+                //$this->layout = 'xml';
+                $this->layout = 'yml';
+                break;
+            case PriceListFeed::FORMAT_YML:
+            default:
+                $this->layout = 'yml';
+                break;
+        }
 
         $categories = [];
 
@@ -32,9 +42,25 @@ class DefaultController extends Controller
             $categories[$category->ID] = $category;
         }
 
+        $items = Good::find()->where(['in', 'GroupID', $priceList->categories]);
+
+        if(isset($priceList->options['unlimited']) && !$priceList->options['unlimited']){
+            $items->andWhere(['isUnlimited' => 0]);
+        }
+
+        if(isset($priceList->options['deleted']) && !$priceList->options['deleted']){
+            $items->andWhere(['Deleted' =>  0]);
+        }
+
+        if(isset($priceList->options['available']) && $priceList->options['available']){
+            $items->andWhere(['show_img' =>  1])->andWhere('count > 0');
+        }
+
+        $items = $items->all();
+
         return $this->render('index', [
             'categories'    =>  $categories,
-            'items'         =>  Good::find()->where(['in', 'GroupID', $priceList->categories])->all(),
+            'items'         =>  $items,
             'shop'          =>  new Object()
         ]);
     }
