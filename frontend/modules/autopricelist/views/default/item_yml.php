@@ -10,12 +10,12 @@ if(!empty($model->vendor) && !empty($model->model)){
 }
 
 $offer = [];
-$offer[] = Html::tag('url', 'http://'.$_SERVER['SERVER_NAME'].'/tovar/'.$model->link.'-g'.$model->ID);
+$offer[] = Html::tag('url', 'http://krasota-style.com.ua/tovar/'.$model->link.'-g'.$model->ID);
 $offer[] = Html::tag('price', $model->PriceOut2);
 $offer[] = Html::tag('currencyId', 'UAH');
 $offer[] = Html::tag('categoryId', $model->GroupID);
 $offer[] = Html::tag('market_category', $category->yandexName);
-$offer[] = Html::tag('picture', $model->ico);
+$offer[] = Html::tag('picture', 'http://krasota-style.com.ua/img/catalog/'.$model->ico);
 
 /*if(!empty($model->has)){
     $offer[] = Html::tag('picture', $addPhoto->value);
