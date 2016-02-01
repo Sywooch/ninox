@@ -54,6 +54,18 @@ $css = <<<'CSS'
 
 .nav-tabs{
     border-bottom: none;
+    display: -webkit-box;
+    -webkit-box-pack: justify;
+    -webkit-box-align: center;
+    display: -moz-box;
+    -moz-box-pack: justify;
+    -moz-box-align: center;
+    display: -ms-flexbox;
+    -ms-flex-pack: justify;
+    -ms-flex-align: center;
+    display: box;
+    box-pack: justify;
+    box-align: center;
 }
 
 .nav-tabs > li > a{
@@ -84,7 +96,6 @@ var login = function(userID){
 };
 
 $(".autologin-user").on('click', function(e){
-console.log(e);
     login(e.currentTarget.getAttribute('data-userID'));
 })
 JS;

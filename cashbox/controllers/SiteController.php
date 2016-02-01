@@ -483,8 +483,7 @@ class SiteController extends Controller
         return true;
     }
 
-    public function actionLogin()
-    {
+    public function actionLogin(){
         $this->layout = 'login';
 
         if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
@@ -502,11 +501,7 @@ class SiteController extends Controller
         if(!empty(\Yii::$app->params['autologin'])){
             $model->autoLoginUsers = \Yii::$app->params['autologin'];
 
-            \Yii::trace('has autologin');
-
             if(isset(\Yii::$app->request->post("LoginForm")['userID']) && in_array(\Yii::$app->request->post("LoginForm")['userID'], $model->autoLoginUsers)){
-                \Yii::trace('received post');
-
                 $model->autoLoginUsers = [\Yii::$app->request->post("LoginForm")['userID']];
             }
 
