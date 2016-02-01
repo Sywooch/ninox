@@ -8,7 +8,8 @@ echo $this->render('shopInfo_yml', [
 echo '        <categories>';
 foreach($categories as $category){
     echo $this->render('category_yml', [
-        'model' =>  $category
+        'model' =>  $category,
+        'categories'    =>  $categoriesByCodes
     ]);
 }
 echo '
