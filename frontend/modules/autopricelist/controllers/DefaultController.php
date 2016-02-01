@@ -40,6 +40,7 @@ class DefaultController extends Controller
 
         foreach(Category::find()->where(['in', 'ID', $priceList->categories])->each() as $category){
             $categories[$category->ID] = $category;
+            $categoriesByCodes[$category->Code] = $category;
         }
 
         $items = Good::find()->where(['in', 'GroupID', $priceList->categories]);
@@ -60,6 +61,7 @@ class DefaultController extends Controller
 
         return $this->render('index', [
             'categories'    =>  $categories,
+            'categoriesByCodes'=>  $categoriesByCodes,
             'items'         =>  $items,
             'shop'          =>  new Object()
         ]);
