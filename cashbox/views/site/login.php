@@ -1,7 +1,4 @@
 <?php
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model backend\models\LoginForm */
@@ -215,37 +212,27 @@ $this->registerCss($css);
 <div class="login">
     <div class="heading">
         <h2>krasota-style<br><small><?=\Yii::$app->params['configuration']->name?></small></h2>
-        <?php $form = ActiveForm::begin([
-            'id' => 'login-form',
-            'options' => [
-
-            ],
-            'fieldConfig' => [
-                'template' => "{input} {error}",
-                'labelOptions' => ['class' => 'col-lg-1 control-label'],
-            ],
-        ]); ?>
-
-        <?=$form->errorSummary($model, [
-            'header'    =>  'При авторизации возникли некоторые ошибки: '
-        ])?>
-        <div class="input-group input-group-lg">
-            <span class="input-group-addon"><i class="fa fa-user"></i></span>
-            <?=Html::activeTextInput($model, 'username', [
-                'class'         =>  'form-control',
-                'placeholder'   =>  'Логин'
-            ])?>
-        </div>
-
-        <div class="input-group input-group-lg">
-            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-            <?=Html::activeTextInput($model, 'password', [
-                'class'         =>  'form-control',
-                'placeholder'   =>  'Пароль',
-                'type'          =>  'password'
-            ])?>
-        </div>
-        <?= Html::submitButton('Войти', ['class' => 'float', 'name' => 'login-button']) ?>
-        <?php $form->end(); ?>
+        <?php if(sizeof($model->autoLoginUsers) > 1){
+            echo \kartik\tabs\TabsX::widget([
+                'items' =>  [
+                    [
+                        'content' =>  $this->render('_autoLogin_form', [
+                            'model' =>  $model,
+                            'users' =>  $users
+                        ]),
+                        'label' =>  'Автологин'
+                    ],[
+                        'content' =>  $this->render('_login_form', [
+                            'model' =>  $model
+                        ]),
+                        'label' =>  'Логин и пароль'
+                    ],
+                ]
+            ]);
+        }else{
+            echo $this->render('_login_form', [
+                'model' =>  $model
+            ]);
+        }?>
     </div>
 </div>

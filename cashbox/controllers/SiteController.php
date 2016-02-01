@@ -13,7 +13,6 @@ use ErrorException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
-use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
 use backend\models\LoginForm;
@@ -76,7 +75,11 @@ class SiteController extends Controller
 
         if($domain){
             if($domain->autologin){
-                \Yii::$app->params['autologin'] = $domain->autologinParams;
+                foreach($domain->autologinParams as $autologinParam){
+                    if($autologinParam['ip'] == \Yii::$app->request->userIP){
+                        \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
+                    }
+                }
             }
 
             $configuration = Cashbox::findOne($domain->cashboxId);
@@ -87,6 +90,8 @@ class SiteController extends Controller
         }
 
         \Yii::$app->params['configuration'] = $configuration;
+
+        return parent::init();
     }
 
     public function beforeAction($action){
@@ -478,11 +483,10 @@ class SiteController extends Controller
         return true;
     }
 
-    public function actionLogin()
-    {
+    public function actionLogin(){
         $this->layout = 'login';
 
-        if(\Yii::$app->request->isAjax){
+        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
@@ -492,24 +496,23 @@ class SiteController extends Controller
 
         $model = new LoginForm();
 
-        \Yii::trace(Json::encode(\Yii::$app->params['autologin']));
+        $hasAutoLogin = !empty(\Yii::$app->params['autologin']);
 
         if(!empty(\Yii::$app->params['autologin'])){
-            foreach(\Yii::$app->params['autologin'] as $autoLogin){
-                if($autoLogin['ip'] == \Yii::$app->request->userIP){
-                    if(is_array($autoLogin['user'])){
-                        $autoLogin['user'] = $autoLogin['user'][0];
-                    }
+            $model->autoLoginUsers = \Yii::$app->params['autologin'];
 
-                    //TODO: временный фикс при использовании нескольких пользователей. В будущем - выводить форму, в которой есть только логины
-                    $user = Siteuser::findOne($autoLogin['user']);
+            if(isset(\Yii::$app->request->post("LoginForm")['userID']) && in_array(\Yii::$app->request->post("LoginForm")['userID'], $model->autoLoginUsers)){
+                $model->autoLoginUsers = [\Yii::$app->request->post("LoginForm")['userID']];
+            }
 
-                    if($user){
-                        $model->username = $user->username;
+            if(sizeof($model->autoLoginUsers) == 1){
+                $user = Siteuser::findOne($model->autoLoginUsers['0']);
 
-                        if(\Yii::$app->user->login($model->getUser(), 3600*24)){
-                            return $this->goBack();
-                        }
+                if($user){
+                    $model->username = $user->username;
+
+                    if(\Yii::$app->user->login($model->getUser(), 3600*24)){
+                        return $this->goBack();
                     }
                 }
             }
@@ -518,6 +521,13 @@ class SiteController extends Controller
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
             return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
         }else{
+            if($hasAutoLogin){
+                return $this->render('login', [
+                    'model' => $model,
+                    'users' => Siteuser::find()->where(['in', 'id', $model->autoLoginUsers])->all()
+                ]);
+            }
+
             return $this->render('login', [
                 'model' => $model,
             ]);
