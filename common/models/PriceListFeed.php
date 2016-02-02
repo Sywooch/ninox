@@ -67,11 +67,11 @@ class PriceListFeed extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('common', 'ID'),
-            'name' => Yii::t('common', 'Name'),
-            'categories' => Yii::t('common', 'Categories'),
-            'format' => Yii::t('common', 'Format'),
-            'creator' => Yii::t('common', 'Creator'),
-            'published' => Yii::t('common', 'Published'),
+            'name' => Yii::t('common', 'Название'),
+            'categories' => Yii::t('common', 'Категории'),
+            'format' => Yii::t('common', 'Формат'),
+            'creator' => Yii::t('common', 'Создатель'),
+            'published' => Yii::t('common', 'Опубликовано'),
             'options' => Yii::t('common', 'Опции'),
         ];
     }
