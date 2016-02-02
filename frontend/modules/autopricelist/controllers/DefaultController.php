@@ -6,6 +6,7 @@ use common\models\Category;
 use common\models\Good;
 use common\models\PriceListFeed;
 use yii\base\Object;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -36,7 +37,7 @@ class DefaultController extends Controller
                 break;
         }
 
-        $categories = [];
+        $categories = $categoriesByCodes = [];
 
         foreach(Category::find()->where(['in', 'ID', $priceList->categories])->each() as $category){
             $categories[$category->ID] = $category;
@@ -57,12 +58,15 @@ class DefaultController extends Controller
             $items->andWhere(['show_img' =>  1])->andWhere('count > 0 AND ico != \'\'');
         }
 
-        $items = $items->all();
-
         return $this->render('index', [
-            'categories'    =>  $categories,
-            'categoriesByCodes'=>  $categoriesByCodes,
-            'items'         =>  $items,
+            'categories'        =>  $categories,
+            'categoriesByCodes' =>  $categoriesByCodes,
+            'itemsDataProvider' =>  new ActiveDataProvider([
+                'query' =>  $items,
+                'pagination'    =>  [
+                    'pageSize'  =>  0
+                ]
+            ]),
             'shop'          =>  new Object()
         ]);
     }

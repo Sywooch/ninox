@@ -14,6 +14,52 @@ $this->title = 'Прайсы';
             'id'    =>  'submitForm'
         ]
     ]);
+
+$css = <<<'CSS'
+.remove{
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+.remove:hover{
+    cursor: pointer;
+    color: red;
+}
+CSS;
+
+$js = <<<'JS'
+var removePrice = function(priceListID){
+    $.ajax({
+        type: 'POST',
+        url: '/pricelists/remove',
+        data: {
+            'priceListID': priceListID
+        },
+        success: function(data){
+            $.pjax.reload({container: '#priceLists-pjax'});
+        }
+    });
+};
+
+$(document).on('pjax:complete', function() {
+    $(".remove").on('click', function(e){
+        removePrice(e.currentTarget.getAttribute('data-attribute-id'));
+    });
+});
+
+$(".remove").on('click', function(e){
+    removePrice(e.currentTarget.getAttribute('data-attribute-id'));
+});
+JS;
+
+$this->registerJs($js);
+
+$this->registerCss($css);
+
+$priceListForm = new PriceListForm();
+
 ?>
 <h1><?=$this->title?> <small><a href="#addPriceList" class="btn btn-link btn-small"><?=\rmrevin\yii\fontawesome\FA::icon('plus')?> добавить</a></small></h1>
 <?=\kartik\grid\GridView::widget([
@@ -23,13 +69,29 @@ $this->title = 'Прайсы';
     'summary'       =>  false,
     'columns'       =>  [
         [
+            'format'    =>  'raw',
+            'width'     =>  '20px',
+            'value'     =>  function($model){
+                return \yii\bootstrap\Html::tag('span', \rmrevin\yii\fontawesome\FA::icon('times'), [
+                    'class' =>  'remove',
+                    'data-attribute-id' =>  $model->id
+                ]);
+            }
+        ],
+        [
             'attribute' =>  'name'
         ],
         [
-            'attribute' =>  'format'
+            'attribute' =>  'format',
+            'value'     =>  function($model) use(&$priceListForm){
+                return $priceListForm->getFormats()[$model->format];
+            }
         ],
         [
-            'attribute' =>  'creator'
+            'attribute' =>  'creator',
+            'value'     =>  function($model){
+                return $model->creator;
+            }
         ],
         [
             'attribute' =>  'categories',
@@ -47,5 +109,5 @@ $this->title = 'Прайсы';
 ])?>
 
 <?=$modal->renderModal($this->render('_addPriceList', [
-    'model' =>  new PriceListForm()
+    'model' =>  $priceListForm
 ]))?>
