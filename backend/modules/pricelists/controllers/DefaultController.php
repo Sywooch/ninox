@@ -8,6 +8,8 @@ use common\models\PriceListFeed;
 use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 
 /**
  * Default controller for the `pricelists` module
@@ -70,6 +72,23 @@ class DefaultController extends Controller
 
             return true;
         }
+    }
 
+    public function actionRemove(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException();
+        }
+
+        $list = PriceListFeed::findOne(\Yii::$app->request->post("priceListID"));
+
+        if(!$list){
+            throw new NotFoundHttpException();
+        }
+
+        if($list->delete()){
+            return true;
+        }else{
+            throw new \ErrorException();
+        }
     }
 }
