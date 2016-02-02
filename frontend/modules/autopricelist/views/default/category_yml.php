@@ -1,2 +1,1 @@
 
-            <?php if(isset($categories[substr($model->Code, 0, -3)]) && $parent = $categories[substr($model->Code, 0, -3)]){ ?><category id="<?=$model->ID?>" parentId="<?=$parent->ID?>"><?=$model->Name?></category><?php }else{ ?><category id="<?=$model->ID?>"><?=$model->Name?></category><?php } ?>
