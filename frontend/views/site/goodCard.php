@@ -1,22 +1,31 @@
-<head>
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link href="/css/goodCard.css" rel="stylesheet">
-    <link href="/css/img.css" rel="stylesheet">
-    <link href="/css/base64.css" rel="stylesheet">
-</head>
-
 <?php
 use yii\helpers\Html;
 use evgeniyrru\yii2slick\Slick;
 use yii\web\JsExpression;
+
+$js = <<<'JS'
+(function(w,doc) {
+    if (!w.__utlWdgt ) {
+        w.__utlWdgt = true;
+        var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+        s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+        s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+        var h=d[g]('body')[0];
+        h.appendChild(s);
+    }})(window,document);
+JS;
+
+\rmrevin\yii\fontawesome\AssetBundle::register($this);
+
+$this->registerCssFile('/css/goodCard.css');
+$this->registerCssFile('/css/img.css');
+$this->registerCssFile('/css/base64.css');
 
 \Yii::$app->params['breadcrumbs'][] = [
     'label' =>  $good->Name
 ];
 
 $captFlags = [];
-
-
 
 $tabsItems = [
     [
@@ -82,16 +91,7 @@ foreach($photos as $img){
 
 ?>
 
-<script type="text/javascript">(function(w,doc) {
-        if (!w.__utlWdgt ) {
-            w.__utlWdgt = true;
-            var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
-            s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
-            s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
-            var h=d[g]('body')[0];
-            h.appendChild(s);
-        }})(window,document);
-</script>
+
 
 
 <!--<div class="leftMenu">
@@ -123,10 +123,6 @@ foreach($photos as $img){
                     <!--<img itemprop="image" data-modal-index="0"
                           src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288"
                           height="214" alt="<?=$good->Name?>">-->
-
-
-
-
                         <?=Slick::widget([
                             'containerOptions' => ['id' => 'sliderFor'],
                             'items' =>  $items,
