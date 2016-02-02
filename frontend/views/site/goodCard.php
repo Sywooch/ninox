@@ -127,29 +127,29 @@ foreach($photos as $img){
 
 
 
-                    <?=!empty($items) ? ('.slider-for').Slick::widget([
-                                                                          'containerOptions' => ['id' => ''],
-                                                                    'items' =>  $items,
-                                                                    'clientOptions' => [
-                                                                        'arrows'    =>false,
-                                                                        'fade'     => true,
-                                                                        'slidesToShow' => 1,
-                                                                        'slidesToScroll' => 1,
-                                                                        'asNavFor'  => '.slider-nav',
-                                                                 ]
-                                                                ]) : ''?>
-                    <?=!empty($items) ? ('.slider-nav').Slick::widget([
-                                                                          'containerOptions' => ['id' => ''],
-                                                                    'items' =>  $items,
-                                                                    'clientOptions' => [
-                                                                        'dots' => true,
-                                                                        'centerMode'    =>true,
-                                                                        'focusOnSelect'     =>true,
-                                                                        'slidesToShow' => 3,
-                                                                        'slidesToScroll' => 1,
-                                                                        'asNavFor'  => '.slider-for',
-                                                                    ]
-                                                                ]) : ''?>
+                        <?=Slick::widget([
+                            'containerOptions' => ['id' => 'sliderFor'],
+                            'items' =>  $items,
+                            'clientOptions' => [
+                                    'arrows'    =>false,
+                                    'fade'     => true,
+                                    'slidesToShow' => 1,
+                                    'slidesToScroll' => 1,
+                                    'asNavFor'  => '#sliderNav',
+                                ]
+                        ]),
+                        Slick::widget([
+                            'containerOptions' => ['id' => 'sliderNav'],
+                            'items' =>  $items,
+                            'clientOptions' => [
+                                'dots' => true,
+                                'centerMode'    =>true,
+                                'focusOnSelect'     =>true,
+                                'slidesToShow' => 3,
+                                'slidesToScroll' => 1,
+                                'asNavFor'  => '#sliderFor',
+                            ]
+                        ])?>
 
                     <?php /*
                         <?php
