@@ -1,9 +1,17 @@
 <div class="product-characteristics">
     <span class="tabTitle semi-bold">Характеристика товара</span>
-    <div>
+    <div class="details">
         <div class="characteristics">
-            <div class="characteristic">Количество в упаковке:</div>
-            <div>1 шт.</div>
+            <div class="characteristic">
+                <span>
+                    <?=_("Количество в упаковке")?>
+                </span>
+            </div>
+            <div>
+                <span>
+                    <?=$good['num_opt'].' '.$good['Measure1']?>
+                </span>
+            </div>
         </div>
         <div class="characteristics">
             <div class="characteristic">Материал:</div>
