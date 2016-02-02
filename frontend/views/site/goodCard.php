@@ -15,6 +15,8 @@ $js = <<<'JS'
     }})(window,document);
 JS;
 
+$this->registerJs($js);
+
 \rmrevin\yii\fontawesome\AssetBundle::register($this);
 
 $this->registerCssFile('/css/goodCard.css');
