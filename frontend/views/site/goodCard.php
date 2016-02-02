@@ -7,6 +7,8 @@
 
 <?php
 use yii\helpers\Html;
+use evgeniyrru\yii2slick\Slick;
+use yii\web\JsExpression;
 
 \Yii::$app->params['breadcrumbs'][] = [
     'label' =>  $good->Name
@@ -58,6 +60,26 @@ if(isset($good->PrOut3)){
     $captFlags[] = '<div class="capt-flag bg-capt-red">'.\Yii::t('shop', 'Распродажа').'</div>';
 };
 
+$items = [
+    Html::img('/img/site/minorder.png'),
+    Html::img('/img/site/opt.png'),
+    Html::img('/img/site/ret.png'),
+    Html::img('/img/site/discount.png'),
+];
+
+$mainGalleryHtml = [];
+
+if($items){
+    $mainGalleryHtml[] = $this->render('_card_item', [
+        'items' =>  $items
+    ]);
+}
+
+/*
+foreach($photos as $img){
+    $items[] = Html::img($img);
+}*/
+
 ?>
 
 <script type="text/javascript">(function(w,doc) {
@@ -80,8 +102,8 @@ if(isset($good->PrOut3)){
 <div class="catalog">
     <?=\yii\widgets\Breadcrumbs::widget([
         'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
-        'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span><span
-class="fa fa-long-arrow-right fa-fw"></span>',
+        'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
+<span class="fa fa-long-arrow-right fa-fw"></span>',
         'links'                 =>  \Yii::$app->params['breadcrumbs']
     ])?>
     <!--<div class="label">
@@ -98,7 +120,36 @@ class="fa fa-long-arrow-right fa-fw"></span>',
         <div class="itemInfo">
             <div class="photo-and-order">
                 <div class="itemPhotos">
-                    <img itemprop="image" data-modal-index="0" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288" height="214" alt="<?=$good->Name?>">
+                    <!--<img itemprop="image" data-modal-index="0"
+                          src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288"
+                          height="214" alt="<?=$good->Name?>">-->
+
+
+
+
+                    <?=!empty($items) ? ('.slider-for').Slick::widget([
+                                                                          'containerOptions' => ['id' => ''],
+                                                                    'items' =>  $items,
+                                                                    'clientOptions' => [
+                                                                        'arrows'    =>false,
+                                                                        'fade'     => true,
+                                                                        'slidesToShow' => 1,
+                                                                        'slidesToScroll' => 1,
+                                                                        'asNavFor'  => '.slider-nav',
+                                                                 ]
+                                                                ]) : ''?>
+                    <?=!empty($items) ? ('.slider-nav').Slick::widget([
+                                                                          'containerOptions' => ['id' => ''],
+                                                                    'items' =>  $items,
+                                                                    'clientOptions' => [
+                                                                        'dots' => true,
+                                                                        'centerMode'    =>true,
+                                                                        'focusOnSelect'     =>true,
+                                                                        'slidesToShow' => 3,
+                                                                        'slidesToScroll' => 1,
+                                                                        'asNavFor'  => '.slider-for',
+                                                                    ]
+                                                                ]) : ''?>
 
                     <?php /*
                         <?php
@@ -179,8 +230,8 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
                         <div class="pricelist-content">
-                            <div class="pricelist-content-vip">
-                            <!--
+                            <div class="pricelist-content-discount">
+                            <!-- 4 разных вида:
                             pricelist-content-discount
                             pricelist-content-available
                             pricelist-content-not-available
@@ -225,7 +276,7 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                 <div class="retail-price">
                                     <span>
                                         старая цена:<i> 1999 грн </i>
-                                        <span class="question-round-button"></span>
+                                        <span class="question-round-button">?</span>
                                     </span>
                                 </div>
                                 <div class="price">
@@ -312,7 +363,8 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                 </div>
                                 <div class="about-price">
                                     <a class="reserve">Нашли дешевлее?</a>
-                                    <a>Узнать о снижении цены</a>
+                                    <a class="about-price-available">Узнать о снижении цены</a>
+                                    <a class="about-price-not-available">Узнать когда появиться</a>
                                     <a class="favorites">в избранное</a>
                                 </div>
 
