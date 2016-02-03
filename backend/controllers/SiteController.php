@@ -4,6 +4,8 @@ namespace backend\controllers;
 use common\models\Chat;
 use common\models\ChatMessage;
 use common\models\Service;
+use common\models\Shop;
+use common\models\Siteuser;
 use common\models\SubDomain;
 use frontend\models\Customer;
 use frontend\models\Good;
@@ -105,7 +107,8 @@ class SiteController extends Controller
         $configuration = false;
 
         $domain = preg_replace('/\.'.$_SERVER['SERVER_NAME'].'/', '', $_SERVER['HTTP_HOST']);
-        $domain = SubDomain::find()->where(['name' => $domain])->andWhere('cashboxId = 0')->one();
+        $domain = SubDomain::find()->where(['name' => $domain])->andWhere('storeId != 0')->one();
+
 
         if($domain){
             if($domain->autologin){
@@ -116,12 +119,12 @@ class SiteController extends Controller
                 }
             }
 
-            //$configuration = Cashbox::findOne($domain->cashboxId);
+            $configuration = Shop::findOne($domain->storeId);
         }
 
-        /*if(!$configuration){
-            $configuration = Cashbox::findOne(['default' => 1]);
-        }*/
+        if(!$configuration){
+            $configuration = Shop::findOne(['default' => 1]);
+        }
 
         \Yii::$app->params['configuration'] = $configuration;
 
@@ -222,11 +225,10 @@ class SiteController extends Controller
         }
     }
 
-
     public function actionLogin(){
         $this->layout = 'login';
 
-        if(\Yii::$app->request->isAjax){
+        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
@@ -236,9 +238,38 @@ class SiteController extends Controller
 
         $model = new LoginForm();
 
+        $hasAutoLogin = !empty(\Yii::$app->params['autologin']);
+
+        if(!empty(\Yii::$app->params['autologin'])){
+            $model->autoLoginUsers = \Yii::$app->params['autologin'];
+
+            if(isset(\Yii::$app->request->post("LoginForm")['userID']) && in_array(\Yii::$app->request->post("LoginForm")['userID'], $model->autoLoginUsers)){
+                $model->autoLoginUsers = [\Yii::$app->request->post("LoginForm")['userID']];
+            }
+
+            if(sizeof($model->autoLoginUsers) == 1){
+                $user = Siteuser::findOne($model->autoLoginUsers['0']);
+
+                if($user){
+                    $model->username = $user->username;
+
+                    if(\Yii::$app->user->login($model->getUser(), 3600*24)){
+                        return Yii::$app->getUser()->getReturnUrl() == '/logout' ? $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home()) : $this->goBack();
+                    }
+                }
+            }
+        }
+
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
-            return empty(\Yii::$app->user->identity->default_route) ? $this->goBack() : $this->redirect(\Yii::$app->user->identity->default_route);
+            return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
         }else{
+            if($hasAutoLogin){
+                return $this->render('login', [
+                    'model' => $model,
+                    'users' => Siteuser::find()->where(['in', 'id', $model->autoLoginUsers])->all()
+                ]);
+            }
+
             return $this->render('login', [
                 'model' => $model,
             ]);
