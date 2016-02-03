@@ -4,6 +4,7 @@ namespace backend\controllers;
 use common\models\Chat;
 use common\models\ChatMessage;
 use common\models\Service;
+use common\models\SubDomain;
 use frontend\models\Customer;
 use frontend\models\Good;
 use sammaye\audittrail\AuditTrail;
@@ -98,6 +99,33 @@ class SiteController extends Controller
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
+    }
+
+    public function init(){
+        $configuration = false;
+
+        $domain = preg_replace('/\.'.$_SERVER['SERVER_NAME'].'/', '', $_SERVER['HTTP_HOST']);
+        $domain = SubDomain::find()->where(['name' => $domain])->andWhere('cashboxId = 0')->one();
+
+        if($domain){
+            if($domain->autologin){
+                foreach($domain->autologinParams as $autologinParam){
+                    if($autologinParam['ip'] == \Yii::$app->request->getUserIP()){
+                        \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
+                    }
+                }
+            }
+
+            //$configuration = Cashbox::findOne($domain->cashboxId);
+        }
+
+        /*if(!$configuration){
+            $configuration = Cashbox::findOne(['default' => 1]);
+        }*/
+
+        \Yii::$app->params['configuration'] = $configuration;
+
+        return parent::init();
     }
 
     public function actionIndex()
