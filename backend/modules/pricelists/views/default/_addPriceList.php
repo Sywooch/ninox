@@ -8,10 +8,26 @@ $form = new \yii\bootstrap\ActiveForm([
 $js = <<<'JS'
 $("#tree").fancytree({
     checkbox: true,
-      selectMode: 4,
+    selectMode: 2,
     source: {
         url: '/pricelists/categoriestree',
         cache: false
+    },
+    beforeSelect: function(event, data){
+        var selectChildren = function(children, selected){
+            children.forEach(function(item){
+                item.setSelected(selected != 1 ? true : false)
+
+                if(item.isFolder()){
+                    selectChildren(item.getChildren(), selected);
+                    console.log(item.getChildren());
+                }
+            });
+        };
+
+        if(data.node.isFolder()){
+            selectChildren(data.node.getChildren(), data.node.isSelected());
+        }
     }
 });
 $("#submitForm").on('click', function(){
@@ -26,7 +42,7 @@ $("#priceListForm").submit(function() {
         dataType: 'json',
         url: '/pricelists/add',
         method: 'POST',
-        success: function(data){
+        success: function(){
             $.pjax.reload({container: '#priceLists-pjax'});
         }
       });

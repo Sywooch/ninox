@@ -76,7 +76,7 @@ class SiteController extends Controller
         if($domain){
             if($domain->autologin){
                 foreach($domain->autologinParams as $autologinParam){
-                    if($autologinParam['ip'] == \Yii::$app->request->userIP){
+                    if($autologinParam['ip'] == \Yii::$app->request->getUserIP()){
                         \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
                     }
                 }

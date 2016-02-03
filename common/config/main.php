@@ -3,6 +3,9 @@ return [
     'language'  =>  'ru',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+		'request'	=>	[
+			'class'	=>	'common\components\Request'
+		],
 		'i18n' => [
 			'translations' => [
 				'shop-info-*' => [

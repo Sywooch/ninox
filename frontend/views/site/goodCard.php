@@ -1,20 +1,31 @@
-<head>
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link href="/css/goodCard.css" rel="stylesheet">
-    <link href="/css/img.css" rel="stylesheet">
-    <link href="/css/base64.css" rel="stylesheet">
-</head>
-
 <?php
 use yii\helpers\Html;
+use evgeniyrru\yii2slick\Slick;
+use yii\web\JsExpression;
+
+$js = <<<'JS'
+(function(w,doc) {
+    if (!w.__utlWdgt ) {
+        w.__utlWdgt = true;
+        var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
+        s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+        s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+        var h=d[g]('body')[0];
+        h.appendChild(s);
+    }})(window,document);
+JS;
+
+\rmrevin\yii\fontawesome\AssetBundle::register($this);
+
+$this->registerCssFile('/css/goodCard.css');
+$this->registerCssFile('/css/img.css');
+$this->registerCssFile('/css/base64.css');
 
 \Yii::$app->params['breadcrumbs'][] = [
     'label' =>  $good->Name
 ];
 
 $captFlags = [];
-
-
 
 $tabsItems = [
     [
@@ -58,18 +69,29 @@ if(isset($good->PrOut3)){
     $captFlags[] = '<div class="capt-flag bg-capt-red">'.\Yii::t('shop', 'Распродажа').'</div>';
 };
 
+$items = [
+    Html::img('/img/site/minorder.png'),
+    Html::img('/img/site/opt.png'),
+    Html::img('/img/site/ret.png'),
+    Html::img('/img/site/discount.png'),
+];
+
+$mainGalleryHtml = [];
+
+if($items){
+    $mainGalleryHtml[] = $this->render('_card_item', [
+        'items' =>  $items
+    ]);
+}
+
+/*
+foreach($photos as $img){
+    $items[] = Html::img($img);
+}*/
+
 ?>
 
-<script type="text/javascript">(function(w,doc) {
-        if (!w.__utlWdgt ) {
-            w.__utlWdgt = true;
-            var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
-            s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
-            s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
-            var h=d[g]('body')[0];
-            h.appendChild(s);
-        }})(window,document);
-</script>
+
 
 
 <!--<div class="leftMenu">
@@ -80,8 +102,8 @@ if(isset($good->PrOut3)){
 <div class="catalog">
     <?=\yii\widgets\Breadcrumbs::widget([
         'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
-        'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span><span
-class="fa fa-long-arrow-right fa-fw"></span>',
+        'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
+<span class="fa fa-long-arrow-right fa-fw"></span>',
         'links'                 =>  \Yii::$app->params['breadcrumbs']
     ])?>
     <!--<div class="label">
@@ -98,7 +120,32 @@ class="fa fa-long-arrow-right fa-fw"></span>',
         <div class="itemInfo">
             <div class="photo-and-order">
                 <div class="itemPhotos">
-                    <img itemprop="image" data-modal-index="0" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288" height="214" alt="<?=$good->Name?>">
+                    <!--<img itemprop="image" data-modal-index="0"
+                          src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width="288"
+                          height="214" alt="<?=$good->Name?>">-->
+                        <?=Slick::widget([
+                            'containerOptions' => ['id' => 'sliderFor'],
+                            'items' =>  $items,
+                            'clientOptions' => [
+                                    'arrows'    =>false,
+                                    'fade'     => true,
+                                    'slidesToShow' => 1,
+                                    'slidesToScroll' => 1,
+                                    'asNavFor'  => '#sliderNav',
+                                ]
+                        ]),
+                        Slick::widget([
+                            'containerOptions' => ['id' => 'sliderNav'],
+                            'items' =>  $items,
+                            'clientOptions' => [
+                                'dots' => true,
+                                'centerMode'    =>true,
+                                'focusOnSelect'     =>true,
+                                'slidesToShow' => 3,
+                                'slidesToScroll' => 1,
+                                'asNavFor'  => '#sliderFor',
+                            ]
+                        ])?>
 
                     <?php /*
                         <?php
@@ -179,8 +226,8 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
                         <div class="pricelist-content">
-                            <div class="pricelist-content-vip">
-                            <!--
+                            <div class="pricelist-content-discount">
+                            <!-- 4 разных вида:
                             pricelist-content-discount
                             pricelist-content-available
                             pricelist-content-not-available
@@ -225,7 +272,7 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                 <div class="retail-price">
                                     <span>
                                         старая цена:<i> 1999 грн </i>
-                                        <span class="question-round-button"></span>
+                                        <span class="question-round-button">?</span>
                                     </span>
                                 </div>
                                 <div class="price">
@@ -312,7 +359,8 @@ class="fa fa-long-arrow-right fa-fw"></span>',
                                 </div>
                                 <div class="about-price">
                                     <a class="reserve">Нашли дешевлее?</a>
-                                    <a>Узнать о снижении цены</a>
+                                    <a class="about-price-available">Узнать о снижении цены</a>
+                                    <a class="about-price-not-available">Узнать когда появиться</a>
                                     <a class="favorites">в избранное</a>
                                 </div>
 
