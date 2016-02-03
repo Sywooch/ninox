@@ -2,6 +2,7 @@
 return [
     'language'  =>  'ru',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+	'timeZone'	=>	'Europe/Kiev',
     'components' => [
 		'request'	=>	[
 			'class'	=>	'common\components\Request'
