@@ -9,6 +9,7 @@
 namespace frontend\models;
 
 use common\helpers\GoodHelper;
+use common\models\GoodsPhoto;
 
 class Good extends \common\models\Good{
 
@@ -92,6 +93,9 @@ class Good extends \common\models\Good{
 			    break;
             case 'video':
                 return true; //TODO: return video from dopVideo table
+                break;
+            case 'dopPhoto':
+                return GoodsPhoto::find()->where(['itemid' => $this->ID])->all();
                 break;
 		    default:
 			    return parent::__get($name);
