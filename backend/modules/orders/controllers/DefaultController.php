@@ -253,6 +253,20 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionShowlist($context = false){
+        if(!\Yii::$app->request->isAjax && !$context){
+            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+        }
+
+        $historySearch = new HistorySearch();
+
+        return Json::encode($this->renderPartial('_ordersList', [
+            'showUnfinished'    =>  !\Yii::$app->request->get("showDates") || \Yii::$app->request->get("showDates") == 'today',
+            'searchModel'       =>  $historySearch,
+            'orders'            =>  $historySearch->search(\Yii::$app->request->get())
+        ]));
+    }
+
     public function actionGetorderpreview(){
         if(!\Yii::$app->request->isAjax){
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");

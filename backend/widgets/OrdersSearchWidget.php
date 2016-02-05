@@ -13,14 +13,46 @@ use yii\base\Widget;
 
 class OrdersSearchWidget extends Widget{
 
+    public $items = [
+        [
+            'header'    =>  '№ заказа',
+            'content'   =>  'fasd',
+        ],[
+            'header'    =>  'Телефон',
+            'content'   =>  'fasd',
+        ],[
+            'header'    =>  'Фамилия',
+            'content'   =>  'fasd',
+        ],[
+            'header'    =>  'Эл. адрес',
+            'content'   =>  'fasd',
+        ],[
+            'header'    =>  'ТТН',
+            'content'   =>  'fasd',
+        ],[
+            'header'    =>  'Сумма',
+            'content'   =>  'fasd',
+        ],
+    ];
+
     public function init(){
 
     }
 
     public function run(){
-        //Сделать аккордеон с перебором существующих параметров для сортировки
-        //сами параметры сортировки сделать так, чтобы можно было задать в одном месте и не париться
-        //но при этом сделать дефолтные параметры сортировки
+        $items = [];
+
+        foreach($this->items as $item){
+            $items[] = $this->renderOne($item);
+        }
+
+        echo \bobroid\asaccordion\Widget::widget([
+            'items' =>  $this->items
+        ]);
+    }
+
+    public function renderOne($item){
+        return $item;
     }
 
 }

@@ -1,6 +1,5 @@
 <?php
 use backend\widgets\OrdersSearchWidget;
-use kartik\grid\GridView;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -128,7 +127,6 @@ var ordersChanges = function(e){
         swal.close();
     });
 }
-
 JS;
 
 $css = <<<'STYLE'
@@ -163,6 +161,10 @@ $css = <<<'STYLE'
 .orders-statistics li span, .orders-statistics li a:hover span{
     text-decoration: none !important;
 }
+
+.tab-content{
+    padding: 0;
+}
 STYLE;
 
 
@@ -172,7 +174,6 @@ $this->registerJs($js);
 $this->registerCss($css);
 
 $this->title = 'Заказы';
-//\yii\widgets\Pjax::begin();
 ?>
 <style>
     .ordersStats{
@@ -361,7 +362,75 @@ $this->title = 'Заказы';
     \Yii::$app->request->get("showDates") == 'alltime' ? 'disabled' : '' =>  'true'
 ]); ?>
 
-<?=\kartik\grid\GridView::widget([
+<?=\kartik\tabs\TabsX::widget([
+    'encodeLabels'  =>  false,
+    'pluginEvents'  =>  [
+        'tabsX.success' =>  'function(){
+            if($("#ordersGridView_-pjax").length > 0){
+                jQuery(document).pjax("#ordersGridView_ a", "#ordersGridView_-pjax", {"push":false,"replace":true,"timeout":10000,"scrollTo":true});
+
+                $("#ordersGridView_-pjax").on(\'pjax:timeout\', function(e){
+                    e.preventDefault()
+                }).on(\'pjax:send\', function(){
+                    jQuery("#ordersGridView_-container").addClass(\'kv-grid-loading\')
+                }).off(\'pjax:complete\').on(\'pjax:complete\', function(){
+                    jQuery("#ordersGridView_-container").removeClass(\'kv-grid-loading\');
+                });
+            }
+
+            if($("#ordersGridView_market-pjax").length > 0){
+                jQuery(document).pjax("#ordersGridView_market a", "#ordersGridView_market-pjax", {"push":false,"replace":true,"timeout":10000,"scrollTo":true});
+
+                $("#ordersGridView_market-pjax").on(\'pjax:timeout\', function(e){
+                    e.preventDefault()
+                }).on(\'pjax:send\', function(){
+                    jQuery("#ordersGridView_market-container").addClass(\'kv-grid-loading\')
+                }).off(\'pjax:complete\').on(\'pjax:complete\', function(){
+                    jQuery("#ordersGridView_market-container").removeClass(\'kv-grid-loading\');
+                });
+            }
+
+            if($("#ordersGridView_all-pjax").length > 0){
+                jQuery(document).pjax("#ordersGridView_all a", "#ordersGridView_all-pjax", {"push":false,"replace":true,"timeout":10000,"scrollTo":true});
+
+                $("#ordersGridView_all-pjax").on(\'pjax:timeout\', function(e){
+                    e.preventDefault()
+                }).on(\'pjax:send\', function(){
+                    jQuery("#ordersGridView_all-container").addClass(\'kv-grid-loading\')
+                }).off(\'pjax:complete\').on(\'pjax:complete\', function(){
+                    jQuery("#ordersGridView_all-container").removeClass(\'kv-grid-loading\');
+                });
+            }
+         }'
+    ],
+    'enableStickyTabs'  =>  true,
+    'items' =>  [
+        [
+            'label'   =>  'Интернет',
+            'options'   =>  [
+                'id'        =>  'source-internet',
+            ],
+            'content'   =>  \yii\helpers\Json::decode($this->context->runAction('showlist', ['context' => true])),
+            'active'    =>  true,
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates')])]
+        ],
+        [
+            'label'   =>  'Магазин',
+            'options'   =>  [
+                'id'        =>  'source-local_store',
+                'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market'])]
+            ],
+        ],
+        [
+            'label'   =>  'Все',
+            'options'   =>  [
+                'id'        =>  'source-all',
+            ],
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all'])]
+        ]
+    ]
+])?>
+<?='';/*\kartik\grid\GridView::widget([
     'dataProvider'  =>  $orders,
     'resizableColumns' =>  false,
     'summary'   =>  '',
@@ -389,9 +458,9 @@ $this->title = 'Заказы';
         return [];
     },
     'beforeHeader'  =>  '<div style="margin-bottom: -1px;" class="btn-group">
-<a href="'.\common\components\RequestHelper::createGetLink('ordersSource', '').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'shop' || \Yii::$app->request->get("ordersSource") == '' ? ' disabled' : '').'>Интернет</a>
-<a href="'.\common\components\RequestHelper::createGetLink('ordersSource', 'market').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'market' ? ' disabled' : '').'>Магазин</a>
-<a href="'.\common\components\RequestHelper::createGetLink('ordersSource', 'all').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'all' ? ' disabled' : '').'>Все</a>
+<a href="'.RequestHelper::createGetLink('ordersSource', '').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'shop' || \Yii::$app->request->get("ordersSource") == '' ? ' disabled' : '').'>Интернет</a>
+<a href="'.RequestHelper::createGetLink('ordersSource', 'market').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'market' ? ' disabled' : '').'>Магазин</a>
+<a href="'.RequestHelper::createGetLink('ordersSource', 'all').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'all' ? ' disabled' : '').'>Все</a>
 </div>',
     'hover'         =>  true,
     'columns'       =>  [
@@ -597,7 +666,7 @@ $this->title = 'Заказы';
             }'
         ],
     ]
-]);
+]);*/
 
 $modal = new \bobroid\remodal\Remodal([
     'id'            =>  'orderChanges',
@@ -611,6 +680,4 @@ $modal = new \bobroid\remodal\Remodal([
     ]
 ]);
 echo $modal->renderModal();
-
-//\yii\widgets\Pjax::end();
 ?>

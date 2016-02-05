@@ -18,7 +18,7 @@ class HistorySearch extends History{
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
             'pagination'    =>  [
-                'pageSize'  =>  isset($params['pageSize']) ? $params['pageSize'] : 50
+                'pageSize'  =>  isset($params['pageSize']) ? $params['pageSize'] : 50,
             ]
         ]);
 
