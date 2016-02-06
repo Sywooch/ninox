@@ -9,32 +9,12 @@
 namespace backend\widgets;
 
 
+use kartik\form\ActiveForm;
 use yii\base\Widget;
 
 class OrdersSearchWidget extends Widget{
 
-    public $items = [
-        [
-            'header'    =>  '№ заказа',
-            'content'   =>  'fasd',
-        ],[
-            'header'    =>  'Телефон',
-            'content'   =>  'fasd',
-        ],[
-            'header'    =>  'Фамилия',
-            'content'   =>  'fasd',
-        ],[
-            'header'    =>  'Эл. адрес',
-            'content'   =>  'fasd',
-        ],[
-            'header'    =>  'ТТН',
-            'content'   =>  'fasd',
-        ],[
-            'header'    =>  'Сумма',
-            'content'   =>  'fasd',
-        ],
-    ];
-
+    public $items = [];
     public $searchModel = null;
 
     public function init(){
@@ -46,17 +26,27 @@ class OrdersSearchWidget extends Widget{
     public function run(){
         $items = [];
 
-        foreach($this->items as $item){
-            $items[] = $this->renderOne($item);
-        }
+        $this->getView()->registerJsFile('js/orders_search_widget.js');
 
+        $form = new ActiveForm();
+        $this->getView()->registerJs("OrdersSearch('form#".$form->getId()."')");
+        $form->begin();
+
+        foreach($this->items as $item){
+            $items[] = $this->renderOne($item, $form);
+        }
         echo \bobroid\asaccordion\Widget::widget([
-            'items' =>  $this->items
+            'items' =>  $items,
+            'id'    =>  'searchAccordion'
         ]);
+        $form->end();
     }
 
-    public function renderOne($item){
-        return $item;
+    public function renderOne($item, $form){
+        return [
+            'header' =>  $item['label'],
+            'content'   =>  $form->field($this->searchModel, $item['attribute'])
+        ];
     }
 
 }

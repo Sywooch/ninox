@@ -11,7 +11,7 @@ echo \kartik\grid\GridView::widget([
     'pjaxSettings'   =>  [
         'options' => [
             'enablePushState'       =>  false,
-            'enableReplaceState'    =>  true,
+            'enableReplaceState'    =>  false,
             'timeout'               =>  '10000',
             'id'                    =>  'ordersGridView_'.\Yii::$app->request->get('ordersSource').'-pjax'
         ]
@@ -76,7 +76,7 @@ echo \kartik\grid\GridView::widget([
             }
         ],
         [
-            'attribute' =>  'name',
+            'attribute' =>  'customerName',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '140px',

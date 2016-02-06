@@ -351,7 +351,28 @@ $this->title = 'Заказы';
 
 <div class="row" style="margin: 30px 0;">
     <?=OrdersSearchWidget::widget([
-        'searchModel'   =>  $searchModel
+        'searchModel'   =>  $searchModel,
+        'items'         =>  [
+            [
+                'label'     =>  '№ заказа',
+                'attribute' =>  'number'
+            ],[
+                'label'     =>  'Телефон',
+                'attribute' =>  'customerPhone'
+            ],[
+                'label'     =>  'Фамилия',
+                'attribute' =>  'customerSurname'
+            ],[
+                'label'     =>  'Эл. адрес',
+                'attribute' =>  'customerEmail'
+            ],[
+                'label'     =>  'ТТН',
+                'attribute' =>  'nakladna'
+            ],[
+                'label'     =>  'Сумма',
+                'attribute' =>  'actualAmount'
+            ],
+        ]
     ])?>
 </div>
 
@@ -368,44 +389,32 @@ $this->title = 'Заказы';
     'encodeLabels'  =>  false,
     'pluginEvents'  =>  [
         'tabsX.success' =>  'function(){
-            if($("#ordersGridView_-pjax").length > 0){
-                jQuery(document).pjax("#ordersGridView_ a", "#ordersGridView_-pjax", {"push":false,"replace":true,"timeout":10000,"scrollTo":true});
+            var setListeners = function(selector){
+                $(document).pjax(selector + " a", selector + "-pjax", {"push":false,"replace":false,"timeout":10000,"scrollTo":true});
 
-                $("#ordersGridView_-pjax").on(\'pjax:timeout\', function(e){
+                $(selector + "-pjax").on(\'pjax:timeout\', function(e){
                     e.preventDefault()
                 }).on(\'pjax:send\', function(){
-                    jQuery("#ordersGridView_-container").addClass(\'kv-grid-loading\')
+                    $(selector + "-container").addClass(\'kv-grid-loading\')
                 }).off(\'pjax:complete\').on(\'pjax:complete\', function(){
-                    jQuery("#ordersGridView_-container").removeClass(\'kv-grid-loading\');
+                    $(selector + "-container").removeClass(\'kv-grid-loading\');
                 });
+            }
+
+            if($("#ordersGridView_-pjax").length > 0){
+                setListeners("#ordersGridView_");
             }
 
             if($("#ordersGridView_market-pjax").length > 0){
-                jQuery(document).pjax("#ordersGridView_market a", "#ordersGridView_market-pjax", {"push":false,"replace":true,"timeout":10000,"scrollTo":true});
-
-                $("#ordersGridView_market-pjax").on(\'pjax:timeout\', function(e){
-                    e.preventDefault()
-                }).on(\'pjax:send\', function(){
-                    jQuery("#ordersGridView_market-container").addClass(\'kv-grid-loading\')
-                }).off(\'pjax:complete\').on(\'pjax:complete\', function(){
-                    jQuery("#ordersGridView_market-container").removeClass(\'kv-grid-loading\');
-                });
+                setListeners("#ordersGridView_market");
             }
 
             if($("#ordersGridView_all-pjax").length > 0){
-                jQuery(document).pjax("#ordersGridView_all a", "#ordersGridView_all-pjax", {"push":false,"replace":true,"timeout":10000,"scrollTo":true});
-
-                $("#ordersGridView_all-pjax").on(\'pjax:timeout\', function(e){
-                    e.preventDefault()
-                }).on(\'pjax:send\', function(){
-                    jQuery("#ordersGridView_all-container").addClass(\'kv-grid-loading\')
-                }).off(\'pjax:complete\').on(\'pjax:complete\', function(){
-                    jQuery("#ordersGridView_all-container").removeClass(\'kv-grid-loading\');
-                });
+                setListeners("#ordersGridView_all");
             }
          }'
     ],
-    'enableStickyTabs'  =>  true,
+    'enableStickyTabs'  =>  false,
     'items' =>  [
         [
             'label'   =>  'Интернет',
