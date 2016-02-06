@@ -35,8 +35,12 @@ class OrdersSearchWidget extends Widget{
         ],
     ];
 
-    public function init(){
+    public $searchModel = null;
 
+    public function init(){
+        if($this->searchModel == null){
+            throw new \ErrorException("Невозможно сделать виджет поиска без модели поиска!");
+        }
     }
 
     public function run(){

@@ -350,7 +350,9 @@ $this->title = 'Заказы';
 ])?>
 
 <div class="row" style="margin: 30px 0;">
-    <?=OrdersSearchWidget::widget()?>
+    <?=OrdersSearchWidget::widget([
+        'searchModel'   =>  $searchModel
+    ])?>
 </div>
 
 <?=Html::tag('a', 'За всё время', [
