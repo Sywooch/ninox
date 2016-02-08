@@ -42,8 +42,8 @@ echo \yii\widgets\ListView::widget([
         }
 
         $offer = [
-            Html::tag('url', 'http://krasota-style.com.ua/tovar/'.$model->link.'-g'.$model->ID),
-            Html::tag('price', $model->PriceOut2),
+            Html::tag('url', 'http://krasota-style.com.ua/tovar/'.preg_replace('/&/', '', $model->link).'-g'.$model->ID),
+            Html::tag('price', $model->wholesale_price),
             Html::tag('currencyId', 'UAH'),
             Html::tag('categoryId', $model->GroupID),
             Html::tag('market_category', $categories[$model->GroupID]->yandexName),
