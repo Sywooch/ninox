@@ -3,6 +3,7 @@ namespace backend\controllers;
 
 use common\models\Chat;
 use common\models\ChatMessage;
+use common\models\ControllerAction;
 use common\models\Service;
 use common\models\Shop;
 use common\models\Siteuser;
@@ -171,10 +172,10 @@ class SiteController extends Controller
             throw new NotFoundHttpException("Такой контроллер не найден!");
         }
 
-        $action = \common\models\ControllerAction::findOne(['controllerID'  =>  $controller->id, 'action'   =>  \Yii::$app->request->post("action")]);
+        $action = ControllerAction::findOne(['controllerID'  =>  $controller->id, 'action'   =>  \Yii::$app->request->post("action")]);
 
         if(!$action){
-            $action = new \common\models\ControllerAction();
+            $action = new ControllerAction();
             $action->attributes = \Yii::$app->request->post("ControllerAction");
             $action->controllerID = $controller->id;
             return $action->save() ? 1 : 0;
