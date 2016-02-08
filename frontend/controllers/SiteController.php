@@ -404,4 +404,18 @@ class SiteController extends Controller
 
         return parent::beforeAction($action);
 	}
+
+    public function actionPay()
+    {
+        $model=new PayForm;
+        //some form code was here...
+        $this->render('vozvra', [
+            'model' => $model,
+        ]);
+
+        return $this->render('view', [
+            'model' => $model,
+        ]);
+    }
 }
+

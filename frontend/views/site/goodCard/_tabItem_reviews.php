@@ -2,10 +2,10 @@
 <div class="customer-reviews">
     <div>
         <span class="semi-bold">
-            Отзывы покупателей
+           <?=_("Отзывы покупателей")?>
         </span>
         <div class="write-review">
-            Напишите отзыв
+           <?=_("Напишите отзыв")?>
         </div>
         <a class="review-number">2</a>
     </div>

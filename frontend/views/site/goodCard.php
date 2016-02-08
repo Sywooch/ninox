@@ -220,7 +220,7 @@ foreach($good->dopPhoto as $photo){
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
                         <div class="pricelist-content">
-                            <div class="pricelist-content-discount">
+                            <div class="pricelist-content-not-available">
                             <!-- 4 разных вида:
                             pricelist-content-discount
                             pricelist-content-available
@@ -238,41 +238,62 @@ foreach($good->dopPhoto as $photo){
                             )?>
                             <div class="counterWrapper">
                                 <div class="price">
-                                    <span>1240</span>
+                                     <span>
+                                        <?=$good->wholesale_price?>
+                                        <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
+                                     </span>
                                 </div>
                                 <div class="retail-price">
-
-                                    <span>розничная цена: 1999 грн</span>
+                                    <span>
+                                        <?=\Yii::t('shop', 'розничная цена: {retailPrice} {currency}', [
+                                            'retailPrice' => $good->retail_price,
+                                            'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']])
+                                        ?>
+                                    </span>
                                     <span class="question-round-button">
                                         ?
                                     </span>
-
                                 </div>
                             </div>
-                                <div class="counterWrapper-vip">
-                                    <div class="price">
-                                        <span>1240</span>
-                                    </div>
-                                    <div class="retail-price">
-                                        <span>
-                                           опт: 1255 грн   розница: 1999 грн
-                                        </span>
-                                        <span class="question-round-button">
-                                            ?
-                                        </span>
-                                    </div>
+                            <div class="counterWrapper-vip">
+                                <div class="price">
+                                    <span>
+                                        <?=$good->wholesale_price?>
+                                        <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
+                                    </span>
                                 </div>
+                                <div class="retail-price">
+                                    <span>
+                                        <?=\Yii::t('shop', 'опт: {wholesalePrice} {currency}   розница:
+                                            {retailPrice} {currency}', [
+                                                'retailPrice'   => $good->retail_price,
+                                                'wholesalePrice'   => $good->wholesale_price,
+                                                'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']
+                                            ])
+                                        ?>
+                                    </span>
+                                    <span class="question-round-button">
+                                            ?
+                                    </span>
+                                </div>
+                            </div>
                             <div class="counterWrapper-discount">
                                 <div class="retail-price">
                                     <span>
-                                        старая цена:<i> 1999 грн </i>
+                                        старая цена:<i>
+                                            <?=$good->wholesale_real_price?>
+                                            <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
+                                                </i>
                                         <span class="question-round-button">?</span>
                                     </span>
                                 </div>
                                 <div class="price">
-                                    <span>1240</span>
+                                    <span><?=$good->wholesale_price?></span>
                                 </div>
-                                <span class="saving">(Экономия: 650 грн)</span>
+                                <span class="saving"><?=\Yii::t('shop', '(Экономия: {economy} {currency})', [
+                                        'economy'       => $good->wholesale_real_price - $good->wholesale_price,
+                                        'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']
+                                    ])?></span>
                                 <!--<div class="counter">
                                     <a class="minus" data-itemId="<?//=$good->Code?>"></a>
                                     <input value="<?//=$good->inCart ? $good->inCart : '1'?>" readonly="readonly"
