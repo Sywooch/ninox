@@ -1,4 +1,4 @@
-<?php
+sb<?php
 /**
  * Created by PhpStorm.
  * User: bobroid
@@ -16,7 +16,7 @@ use backend\models\History;
 use common\models\CashboxMoney;
 use common\models\SborkaItem;
 use common\models\Good;
-use common\models\Category;
+use common\models\Category;sb
 use common\models\Siteuser;
 use yii\base\Component;
 use yii\base\ErrorException;
@@ -290,7 +290,7 @@ class Cashbox extends Component{
                     'customerRule'  =>  $item->customerRule
                 ]);
 
-                if($sborkaItem->save()){
+                if($sborkaItem->save(false)){
                     $item->changedValue = 0;
                     $item->delete();
                 }
