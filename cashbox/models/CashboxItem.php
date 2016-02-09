@@ -2,7 +2,9 @@
 
 namespace cashbox\models;
 
+use common\models\SborkaItem;
 use Yii;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "cashboxItems".
@@ -42,6 +44,23 @@ class CashboxItem extends \yii\db\ActiveRecord
         return parent::__set($name, $value);
     }
 
+
+    public function loadAssemblyItem($assemblyItem, $orderID){
+        if($assemblyItem instanceof SborkaItem == false){
+            throw new BadRequestHttpException();
+        }
+
+        $this->category = $assemblyItem->category;
+        $this->count = $assemblyItem->count;
+        $this->customerRule = $assemblyItem->customerRule;
+        $this->discountSize  = $assemblyItem->discountSize;
+        $this->discountType = $assemblyItem->discountType;
+        $this->itemID = $assemblyItem->itemID;
+        $this->orderID = $orderID;
+        $this->name = $assemblyItem->name;
+        $this->originalPrice = $assemblyItem->originalPrice;
+        $this->priceRuleID   = $assemblyItem->priceRuleID;
+    }
 
     /**
      * @inheritdoc

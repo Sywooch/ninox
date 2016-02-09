@@ -6,6 +6,7 @@ use backend\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\Good;
 use backend\models\SborkaItem;
+use cashbox\models\CashboxItem;
 use common\models\Cashbox;
 use cashbox\models\Siteuser;
 use common\models\SubDomain;
@@ -16,10 +17,12 @@ use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use backend\models\LoginForm;
 use yii\filters\VerbFilter;
 use yii\web\Cookie;
+use yii\web\HttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -341,6 +344,10 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
+        if(empty(\Yii::$app->request->post("orderID"))){
+            throw new BadRequestHttpException("пустой orderID!");
+        }
+
         $cashboxOrder = CashboxOrder::findOne(['ID'    =>  \Yii::$app->request->post("orderID")]);
 
         if(!$cashboxOrder){
@@ -352,6 +359,40 @@ class SiteController extends Controller
                 'query' =>  SborkaItem::find()->where(['orderID'   =>  $cashboxOrder->createdOrder]),
             ])
         ]);
+    }
+
+    public function actionLoadorder(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("");
+        }
+
+        if(empty(\Yii::$app->request->post("orderID"))){
+            throw new BadRequestHttpException("");
+        }
+
+        $order = CashboxOrder::findOne(\Yii::$app->request->post("orderID"));
+
+        if(!$order){
+            throw new NotFoundHttpException();
+        }
+
+        if(!empty($order->createdOrder)){
+            foreach(SborkaItem::find()->where(['orderID' => $order->createdOrder])->each() as $assemblyItem){
+                $cashboxItem = CashboxItem::findOne(['itemID' => $assemblyItem->itemID, 'orderID' => $order->id]);
+
+                if(!$cashboxItem){
+                    $cashboxItem = new CashboxItem();
+                }
+
+                $cashboxItem->loadAssemblyItem($assemblyItem, $order->id);
+
+                $cashboxItem->save(false);
+            }
+        }
+
+        \Yii::$app->cashbox->loadOrder(\Yii::$app->request->post("orderID"), \Yii::$app->request->post("dropOrder", false));
+
+        return true;
     }
 
     public function actionSales(){
