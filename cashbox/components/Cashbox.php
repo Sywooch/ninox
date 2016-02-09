@@ -20,6 +20,7 @@ use common\models\Category;
 use common\models\Siteuser;
 use yii\base\Component;
 use yii\base\ErrorException;
+use yii\helpers\Json;
 use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 
@@ -275,7 +276,13 @@ class Cashbox extends Component{
         $order->actualAmount = $amount;
 
         if($order->save(false)){
-            foreach($this->order->items as $item){
+            \Yii::trace('Заказ сохранился! ID: '.$order->id);
+            \Yii::trace('Колличество товаров в локальной переменной $this->order->items '.sizeof($this->order->items));
+            \Yii::trace('Колличество товаров по запросу в БД: '.CashboxItem::find()->where(['orderID' => $this->orderID])->count());
+
+
+            foreach(CashboxItem::find()->where(['orderID' => $this->orderID])->each() as $item){
+            //foreach($this->order->items as $item){
                 $sborkaItem = new SborkaItem([
                     'orderID'       =>  $order->id,
                     'itemID'        =>  $item->itemID,
