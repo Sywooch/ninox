@@ -108,14 +108,13 @@ var ordersChanges = function(e){
             },
             success: function(data){
                 //TODO: can refactor
+                obj.setAttribute('class', obj.getAttribute('class').replace(/btn-\w+/g));
                 if(data == 1){
-                    obj.setAttribute('class', obj.getAttribute('class').replace(/btn-\w+/g));
                     obj.setAttribute('class', 'btn-success ' + obj.getAttribute('class'));
                     if(obj.parentNode.querySelector("button[disabled]") !== null){
                         obj.parentNode.querySelector("button[disabled]").removeAttribute('disabled');
                     }
                 }else{
-                    obj.setAttribute('class', obj.getAttribute('class').replace(/btn-\w+/g));
                     obj.setAttribute('class', 'btn-danger ' + obj.getAttribute('class'));
                     if(obj.parentNode.querySelector("button.doneOrder") !== null){
                         obj.parentNode.querySelector("button.doneOrder").setAttribute('disabled', 'disabled');
