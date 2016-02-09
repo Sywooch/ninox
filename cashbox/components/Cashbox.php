@@ -290,7 +290,7 @@ class Cashbox extends Component{
                     'customerRule'  =>  $item->customerRule
                 ]);
 
-                if($sborkaItem->save()){
+                if($sborkaItem->save(false)){
                     $item->changedValue = 0;
                     $item->delete();
                 }

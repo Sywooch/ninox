@@ -38,7 +38,7 @@ h2{
 	color: #4f4f4f;
 }
 
-.link-hide{
+.goods-comments .link-hide{
 	cursor: pointer;
 	line-height: normal;
 	text-decoration: underline;
@@ -166,16 +166,6 @@ h2{
     font-style: normal;
     font-weight: normal;
 }
-/*@font-face {
-	font-family: "shop-star";
-	src: url("../fonts/flaticon.eot");
-	src: url("../fonts/flaticon.eot#iefix") format("embedded-opentype"),
-	url("../fonts/flaticon.woff") format("woff"),
-	url("../fonts/flaticon.ttf") format("truetype"),
-	url("../fonts/flaticon.svg") format("svg");
-	font-weight: normal;
-	font-style: normal;
-}*/
 @font-face {
 	font-family: 'shop-star';
 	src: url('../fonts/shop-star.eot?47776960');
@@ -231,7 +221,7 @@ h2{
 	   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
    }
 
-.shop-star-half:before { content: '\e801'; } /* '' */
+.shop-star-half-1:before { content: '\e801'; } /* '' */
 .shop-star-half-alt:before { content: '\e802'; } /* '' */
 .shop-star:before { content: '\e803'; } /* '' */
 .shop-star-empty:before { content: '\e804'; } /* '' */
@@ -2724,3 +2714,218 @@ footer{
     cursor: pointer;
 }
 /*========* END ACCOUNT *=========*/
+
+
+/*========* O-NAS *=========*/
+
+.left-side{
+	float: left;
+	width: 285px;
+	margin-left: 35px;
+}
+
+.left-side-menu{
+	border-radius: 3px;
+	border: 1px solid #ebebeb;
+}
+
+.left-side-menu-item{
+	border-bottom: 1px slolid #dedede;
+	height: 42px;
+	width: 100%;
+	font-size: 14px;
+	color: #282828;
+}
+
+.about{
+	float: left;
+}
+
+.about-header{
+	border-bottom: 1px dotted #8c8c8c;
+	font-size: 22px;
+	color: #282828;
+}
+
+.about-as-header{
+	/*border-bottom: 1px dotted #8c8c8c;
+	font-size: 22px;
+	color: #282828;*/
+}
+
+.about-as-header:before{
+	content: url("/img/site/about.png");
+}
+
+.about-as-center{
+	text-align: center;
+	margin: auto;
+}
+
+.about-as-price{
+	height: 115px;
+	background: #eaf6f9;
+}
+
+.about-as-price-rules{
+	width: 50%;
+	float: left;
+}
+
+.about-as-price-rules-img{
+	float: left;
+	padding-right: 33px;
+}
+
+.wholesale-prices{
+	content: url("/img/site/wholesale-prices.png");
+}
+
+.retail-prices{
+	content: url("/img/site/retail-prices.png");
+}
+
+.about-as-price-rules-text{
+	float: left;
+	font-size: 14px;
+}
+
+.about-as-price-rules-text span{
+	font-size: 18px;
+}
+
+.about-as-order-head{
+	font-size: 16px;
+}
+
+.about-as-order-infogramma-item{
+	float: left;
+}
+
+.decor{
+	content: url("/img/site/decor.png");
+}
+
+.assembly-of-goods{
+	content: url("/img/site/assembly-of-goods.png");
+}
+
+.order-shipping{
+	content: url("/img/site/order-shipping.png");
+}
+
+.arrow-rght{
+	float: left;
+	content: url("/img/site/arrow-right.png");
+
+}
+
+.about-as-order-infogramma-item-text{
+	font-size: 10px;
+}
+
+.about-as-order-infogramma-item-text span{
+	font-size: 14px;
+}
+
+.about-as-order-text{
+	font-size: 14px;
+}
+
+.about-delivery-header{
+	/*border-bottom: 1px dotted #8c8c8c;
+	font-size: 22px;
+	color: #282828;*/
+}
+
+.about-delivery-header:before{
+	content: url("/img/site/car.png");
+}
+
+.about-delivery-content-img{
+	float: left;
+	width: 350px;
+}
+
+.about-delivery-content-info{
+	float: left;
+}
+
+.about-delivery-content-info-delivery{
+	height: 70px;
+}
+
+.about-delivery-content-info-delivery-time{
+	float: left;
+	font-size: 16px;
+}
+
+.about-delivery-content-info-delivery-time span{
+	font-size: 38px;
+	color: #008ad2;
+}
+
+.about-delivery-content-info-text{
+	font-size: 14px;
+}
+
+.about-payment-header{
+	/*border-bottom: 1px dotted #8c8c8c;
+	font-size: 22px;
+	color: #282828;	*/
+}
+
+.about-payment-header:before{
+	content: url("/img/site/payment-card.png");
+}
+
+.about-payment .bold{
+	font-size: 18px;
+}
+
+.about-payment span{
+	font-size: 14px;
+}
+
+.about-inform{
+	height: 100px;
+	background: #f6f6f6;
+}
+
+.about-inform span{
+	font-size: 16px;
+}
+
+.about-payment-inform{
+	/*height: 100px;
+	background: #f6f6f6;*/
+}
+
+.about-return-header{
+	/*border-bottom: 1px dotted #8c8c8c;
+	font-size: 22px;
+	color: #282828;	*/
+}
+
+.about-return-header:before{
+	content: url("/img/site/return.png");
+}
+
+.about-return-inform{
+	/*height: 100px;
+	background: #f6f6f6;*/
+}
+
+.about-TermsOfUse span{
+	font-size: 14px;
+}
+
+.about-TermsOfUse .bold{
+	font-size: 16px;
+}
+
+
+
+
+
+/*========* END O-NAS *=========*/
