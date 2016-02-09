@@ -66,7 +66,7 @@ class SiteController extends Controller
 
     public function actionPrintinvoice($param){
 
-        return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param);
+        return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param.'?secret=secretKeyForPrinter');
     }
 
     public function init(){
@@ -78,7 +78,7 @@ class SiteController extends Controller
         if($domain){
             if($domain->autologin){
                 foreach($domain->autologinParams as $autologinParam){
-                    if($autologinParam['ip'] == \Yii::$app->request->userIP){
+                    if($autologinParam['ip'] == \Yii::$app->request->getUserIP()){
                         \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
                     }
                 }
@@ -105,7 +105,7 @@ class SiteController extends Controller
     }
 
     public function beforeAction($action){
-        /*if(!\Yii::$app->user->isGuest){
+        if(!\Yii::$app->user->isGuest){
             if(\Yii::$app->user->identity->superAdmin == 1){
                 //\Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration');
             }
@@ -113,7 +113,7 @@ class SiteController extends Controller
             \Yii::$app->user->identity->lastActivity = date('Y-m-d H:i:s');
             \Yii::$app->user->identity->save();
             //echo \Yii::$app->user->identity->can('1') ? 'true' : 'false'; //если false - значит чувака нельзя пускать
-        }*/
+        }
 
         return parent::beforeAction($action);
     }

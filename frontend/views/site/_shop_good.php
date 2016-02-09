@@ -40,7 +40,7 @@ if(!\Yii::$app->user->isGuest){
 
 $button = [
 	'value'         =>   \Yii::t('shop', $model->inCart ? 'В корзине!' : 'Купить!'),
-	'class'         =>  ($model->inCart ? 'green-button open-cart' : 'yellow-button buy').' middle-button',
+	'class'         =>  ($model->inCart ? 'green-button open-cart' : 'yellow-button buy').' small-button',
 	'data-itemId'   =>  $model->ID,
 	'data-count'    =>  '1',
 ];
@@ -227,7 +227,7 @@ $discountBlock = function($model){
                 <span class="rateCount" itemprop="reviewCount"><?=$model->reviewsCount ? $model->reviewsCount : 1?></span>
             </div>
             <div class="goods-comments">
-                <span class="link-hide blue" data-href="<?=$link?>#tab-reviews">
+                <span class="link-hide blue shop-comment-empty" data-href="<?=$link?>#tab-reviews">
                     <?=Yii::t('shop', '{n, number} {n, plural, one{отзыв} few{отзыва} many{отзывов} other{отзывов}}', [
                         'n' =>  $model->reviewsCount
                     ])?>
