@@ -94,6 +94,8 @@ class CashboxItem extends \yii\db\ActiveRecord
                 $good->save(false);
             }
         }
+
+        return parent::afterDelete();
     }
 
     public function beforeSave($insert){

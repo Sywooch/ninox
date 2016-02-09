@@ -7,6 +7,11 @@ return [
 		'request'	=>	[
 			'class'	=>	'common\components\Request'
 		],
+		'db'	=>	[
+			'enableSchemaCache'	=>	true,
+			'schemaCacheDuration' => 3600,
+			'schemaCache' => 'cache',
+		],
 		'i18n' => [
 			'translations' => [
 				'shop-info-*' => [
@@ -26,6 +31,9 @@ return [
 					],
 				],
 			],
+		],
+		'log'	=>	[
+			'flushInterval'	=>	'1000',
 		],
 	    'cache' => [
             'class' => 'yii\caching\FileCache',

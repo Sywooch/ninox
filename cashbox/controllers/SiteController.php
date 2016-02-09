@@ -7,12 +7,14 @@ use backend\models\Customer;
 use backend\models\Good;
 use backend\models\SborkaItem;
 use common\models\Cashbox;
-use common\models\Siteuser;
+use cashbox\models\Siteuser;
 use common\models\SubDomain;
+use common\models\SubDomainAccess;
 use ErrorException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
 use backend\models\LoginForm;
@@ -79,6 +81,14 @@ class SiteController extends Controller
                     if($autologinParam['ip'] == \Yii::$app->request->getUserIP()){
                         \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
                     }
+                }
+            }
+
+            $allowedUsers = SubDomainAccess::findAll(['subDomainId' => $domain->id]);
+
+            if($allowedUsers){
+                foreach($allowedUsers as $user){
+                    \Yii::$app->params['allowedUsers'][] = $user->userId;
                 }
             }
 
@@ -524,7 +534,7 @@ class SiteController extends Controller
             if($hasAutoLogin){
                 return $this->render('login', [
                     'model' => $model,
-                    'users' => Siteuser::find()->where(['in', 'id', $model->autoLoginUsers])->all()
+                    'users' => Siteuser::find()->andWhere(['in', 'id', $model->autoLoginUsers])->all()
                 ]);
             }
 
