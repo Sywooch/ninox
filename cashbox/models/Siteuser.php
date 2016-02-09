@@ -14,9 +14,9 @@ class Siteuser extends \common\models\Siteuser{
     public static function find(){
         $parent = parent::find();
 
-        if(!empty(\Yii::$app->params['allowedUsers'])){
+        /*if(!empty(\Yii::$app->params['allowedUsers'])){
             $parent->andWhere(['in', 'id', \Yii::$app->params['allowedUsers']]);
-        }
+        }*/
 
         return $parent;
     }
