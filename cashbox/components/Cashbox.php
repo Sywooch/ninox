@@ -99,7 +99,7 @@ class Cashbox extends Component{
     }
 
     public function isWholesale(){
-        return $this->priceType  == 1;
+        return $this->priceType == 1;
     }
 
     public function load(){
@@ -109,9 +109,9 @@ class Cashbox extends Component{
     }
 
     public function save(){
-        foreach($this->items as $item){
+        foreach($this->items as $key => $item){
             $item->changedValue = 0;
-            $this->items[$item->itemID] = $item;
+            $this->items[$key] = $item;
         }
 
         \Yii::$app->cache->set('cashbox-'.$this->orderID.'/items', $this->items);
@@ -139,21 +139,31 @@ class Cashbox extends Component{
         if(!empty($this->order)){
             $this->order->priceType = $this->priceType;
 
-            if($this->order->save(false)){
-                foreach($this->items as $item){
-                    $price = ($this->priceType == 1 ? $this->goods[$item->itemID]->PriceOut1 : $this->goods[$item->itemID]->PriceOut2);
-                    \Yii::trace("item: ".$item->itemID.'; price: '.$price.'; oldPrice: '.$item->originalPrice);
-                    $item->originalPrice = $price;
-                    $item->changedValue = 0;
-                    $item->save(false);
-                }
-            }
+            $this->order->save(false);
+
+            $this->updateItems();
         }
 
         \Yii::$app->response->cookies->add(new Cookie([
             'name'      =>  'cashboxPriceType',
             'value'     =>  $this->priceType
         ]));
+    }
+
+    public function updateItems(){
+        $this->items = $this->order->getItems();
+
+        $itemsIDs = [];
+
+        foreach($this->items as $item){
+            $itemsIDs[] = $item->itemID;
+        }
+
+        foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
+            $this->goods[$good->ID] = $good;
+        }
+
+        $this->recalculate();
 
         $this->save();
     }
@@ -281,8 +291,10 @@ class Cashbox extends Component{
             \Yii::trace('Колличество товаров по запросу в БД: '.CashboxItem::find()->where(['orderID' => $this->orderID])->count());
 
 
-            foreach(CashboxItem::find()->where(['orderID' => $this->orderID])->each() as $item){
-            //foreach($this->order->items as $item){
+            //foreach(CashboxItem::find()->where(['orderID' => $this->orderID])->each() as $item){
+            \Yii::trace(Json::encode($this->order->getItems()));
+            \Yii::trace("Items: ".count($this->order->getItems()));
+            foreach($this->order->getItems() as $item){
                 $sborkaItem = new SborkaItem([
                     'orderID'       =>  $order->id,
                     'itemID'        =>  $item->itemID,
@@ -365,33 +377,34 @@ class Cashbox extends Component{
         }
 
         if(!isset($this->goods[$itemID])){
-            $good = Good::find()->where(['ID'   =>  $itemID])->one();
-        }else{
-            $good = $this->goods[$itemID];
+            $this->goods[$itemID] = Good::find()->where(['ID'   =>  $itemID])->one();
         }
 
-        if(isset($this->items[$good->ID])){
-            $this->items[$good->ID]->count += $count;
-        }else{
-            $this->items[$good->ID] = new CashboxItem([
+        $good = $this->goods[$itemID];
+
+        if(!isset($this->items[$itemID])){
+            $this->items[$itemID] = new CashboxItem([
                 'orderID'       =>  $this->order->id,
                 'itemID'        =>  $good->ID,
-                'count'         =>  $count,
                 'category'      =>  Category::find()->select("Code")->where(['ID' => $good->GroupID])->scalar(),
                 'name'          =>  $good->Name,
                 'originalPrice' =>  $this->priceType == 1 ? $good->PriceOut2 : $good->PriceOut1,
             ]);
+
+            $this->order->_items[$itemID] = $this->items[$itemID];
         }
 
-        if($this->items[$good->ID]->save(false)){
-            $this->goods[$good->ID] = $good;
+        $this->items[$itemID]->count += $count;
+
+        if($this->items[$itemID]->save(false)){
+            $this->goods[$itemID] = $good;
         }
 
         $this->recalculate();
 
         $this->save();
 
-        return $this->items[$good->ID];
+        return $this->items[$itemID];
     }
 
     public function postpone(){

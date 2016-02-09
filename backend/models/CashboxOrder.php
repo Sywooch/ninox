@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use cashbox\models\CashboxItem;
 use Yii;
 
 /**
@@ -33,12 +34,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
     public function __get($name){
         switch($name){
             case 'items':
-                if(empty($this->_items)){
-                    \Yii::trace('getItems');
-                    return $this->getItems();
-                }
-
-                return $this->_items;
+                return $this->getItems();
                 break;
             case 'createdItems':
                 if(empty($this->_createdItems)){
@@ -54,15 +50,12 @@ class CashboxOrder extends \yii\db\ActiveRecord
                 return $this->calcCreatedOrderItems();
                 break;
             case 'itemsCount':
-                \Yii::trace('itemsCount');
                 return $this->itemsCount = count($this->_items);
                 break;
             case 'sum':
-                \Yii::trace('sum');
                 return $this->calcSum();
                 break;
             case 'toPay':
-                \Yii::trace('toPay');
                 return $this->calcToPay();
                 break;
         }
@@ -71,12 +64,13 @@ class CashboxOrder extends \yii\db\ActiveRecord
     }
 
     public function getItems(){
-        if(!empty($this->_items)){
-            return $this->_items;
+        $this->_items = [];
+
+        foreach(CashboxItem::find()->where(['orderID' =>  $this->id])->each() as $item){
+            $this->_items[$item->itemID] = $item;
         }
 
-        $this->_items = CashboxItem::findAll(['orderID' =>  $this->id]);
-
+        \Yii::trace('return new...');
         return $this->_items;
     }
 
@@ -126,30 +120,52 @@ class CashboxOrder extends \yii\db\ActiveRecord
         return $this->toPay = $sum;
     }
 
+    public function changePriceType($priceType = 'wholesale'){
+        switch($priceType){
+            case 0:
+            case 'rozn':
+            case 'retail':
+                $priceType = 'PriceOut2';
+                break;
+            case 1:
+            case 'opt':
+            case 'wholesale':
+                $priceType = 'PriceOut1';
+                break;
+        }
+
+        $cashboxItems = CashboxItem::findAll(['orderID' => $this->id]);
+
+        $itemsIDs = $goods = [];
+
+        foreach($cashboxItems as $item){
+            $itemsIDs[] = $item->itemID;
+        }
+
+        foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
+            $goods[$good->ID] = $good;
+        }
+
+        foreach($cashboxItems as $item){
+            if(isset($goods[$item->itemID])){
+                $item->originalPrice = $goods[$item->itemID]->$priceType;
+                $item->save(false);
+            }
+        }
+
+        return true;
+    }
+
     public function beforeSave($insert){
         if($this->isNewRecord){
+            \Yii::trace('new record!');
             $this->id = hexdec(uniqid());
 
             if(empty($this->responsibleUser)){
                 $this->responsibleUser = \Yii::$app->request->cookies->getValue("cashboxManager", 0);
             }
         }elseif($this->isAttributeChanged('priceType')){
-            $itemsIDs = $goods = [];
-
-            $priceType = $this->priceType == 1 ? 'PriceOut1' : 'PriceOut2';
-
-            foreach($this->items as $item){
-                $itemsIDs[] = $item->itemID;
-            }
-
-            foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
-                $goods[$good->ID] = $good;
-            }
-
-            foreach($this->items as $item){
-                $item->originalPrice = $goods[$item->itemID]->$priceType;
-                $item->save();
-            }
+            $this->changePriceType($this->priceType);
         }
 
         return parent::beforeSave($insert);

@@ -26,8 +26,7 @@ class Good extends \common\models\Good{
     public $canBuy = true;
 	public $customerRule = 0;               //Персональное правило
 
-    public function afterFind()
-    {
+    public function afterFind(){
 	    parent::afterFind();
 
         //на товар работает отлично
