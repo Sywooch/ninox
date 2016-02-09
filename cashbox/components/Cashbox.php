@@ -1,4 +1,4 @@
-sb<?php
+<?php
 /**
  * Created by PhpStorm.
  * User: bobroid
