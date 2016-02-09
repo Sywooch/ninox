@@ -108,6 +108,12 @@ class Cashbox extends Component{
         $this->order = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/info');
     }
 
+    public function clearCache(){
+        \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/items');
+        \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/goods');
+        \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/info');
+    }
+
     public function save(){
         foreach($this->items as $key => $item){
             $item->changedValue = 0;
@@ -153,7 +159,10 @@ class Cashbox extends Component{
     public function updateItems(){
         $this->items = $this->order->getItems();
 
+        $this->clearCache();
+
         $itemsIDs = [];
+        $this->goods = [];
 
         foreach($this->items as $item){
             $itemsIDs[] = $item->itemID;
@@ -349,6 +358,12 @@ class Cashbox extends Component{
             $this->remove($item->itemID, false);
         }
 
+        $this->clearCache();
+
+        $this->items = $this->goods = [];
+
+        $this->order = $this->orderID = null;
+
         \Yii::$app->response->cookies->remove('cashboxOrderID');
         \Yii::$app->response->cookies->remove('cashboxCurrentCustomer');
     }
@@ -423,10 +438,12 @@ class Cashbox extends Component{
         return false;
     }
 
-    public function loadPostpone($id){
-        if($this->order){
+    public function loadOrder($id, $drop = false){
+        if($this->order && !$drop){
             $this->postpone();
         }
+
+        $this->clear();
 
         $order = CashboxOrder::findOne($id);
 
@@ -438,13 +455,18 @@ class Cashbox extends Component{
 
         $this->order->postpone = 0;
         $this->loadInfo($this->order);
+        $this->updateItems();
 
         \Yii::$app->response->cookies->add(new Cookie([
             'name'      =>  'cashboxOrderID',
             'value'     =>  $this->order->id
         ]));
 
-        $this->order->save();
+        $this->order->save(false);
+    }
+
+    public function loadPostpone($id){
+        $this->loadOrder($id, \Yii::$app->request->post('dropOrder', false));
     }
 
     public function changeCustomer($customerID){
