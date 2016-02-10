@@ -283,7 +283,10 @@ class Cashbox extends Component{
         $order = new History([
             'responsibleUserID' =>  $this->order->responsibleUser,
             'customerID'        =>  $this->order->customerID,
-            'originalSum'       =>  $this->order->sum
+            'originalSum'       =>  $this->order->sum,
+            'sourceType'        =>  History::SOURCETYPE_SHOP,
+            'orderSource'       =>  \Yii::$app->params['configuration']->store,
+            'sourceInfo'        =>  \Yii::$app->params['configuration']->ID,
         ]);
 
         if($this->order->customerID != 0){
@@ -295,14 +298,6 @@ class Cashbox extends Component{
         $order->actualAmount = $amount;
 
         if($order->save(false)){
-            \Yii::trace('Заказ сохранился! ID: '.$order->id);
-            \Yii::trace('Колличество товаров в локальной переменной $this->order->items '.sizeof($this->order->items));
-            \Yii::trace('Колличество товаров по запросу в БД: '.CashboxItem::find()->where(['orderID' => $this->orderID])->count());
-
-
-            //foreach(CashboxItem::find()->where(['orderID' => $this->orderID])->each() as $item){
-            \Yii::trace(Json::encode($this->order->getItems()));
-            \Yii::trace("Items: ".count($this->order->getItems()));
             foreach($this->order->getItems() as $item){
                 $sborkaItem = new SborkaItem([
                     'orderID'       =>  $order->id,
@@ -341,9 +336,11 @@ class Cashbox extends Component{
             $payment->save(false);
             $this->order->save(false);
 
+            $createdOrder = $this->order->createdOrder;
+
             $this->clear();
 
-            return $this->order->createdOrder;
+            return $createdOrder;
         }
 
         return false;
