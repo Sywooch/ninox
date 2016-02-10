@@ -22,10 +22,13 @@ class Cart extends Component{
     public $itemsCount = 0;
     public $cartWholesaleSumm = 0;
     public $cartWholesaleRealSumm = 0;
+	public $cartWholesaSumWithoutDiscount = 0;
     public $cartRetailSumm = 0;
     public $cartRetailRealSumm = 0;
+	public $cartRetailSumWithoutDiscount = 0;
     public $cartSumm = 0;
     public $cartRealSumm = 0;
+	public $cartSumWithoutDiscount = 0;
     public $wholesale = false;
 
     public function init(){
@@ -155,21 +158,23 @@ class Cart extends Component{
 		$this->cartWholesaleRealSumm = 0;
 		$this->cartRetailSumm = 0;
 		$this->cartRetailRealSumm = 0;
+		$this->cartSumWithoutDiscount = 0;
 		if(!empty($this->goods)){
 			foreach($this->goods as $good){
 				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
 				$this->cartWholesaleRealSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
+				$this->cartWholesaSumWithoutDiscount += $good->discountType == 0 ? $good->wholesale_real_price * $this->items[$good->ID]->count : 0;
 				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
 				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;
+				$this->cartRetailSumWithoutDiscount += $good->discountType == 0 ? $good->retail_real_price * $this->items[$good->ID]->count : 0;
 			}
-			$this->cartSumm = $this->cartRetailSumm;
-			$this->cartRealSumm = $this->cartRetailRealSumm;
 		}
 
 		$this->wholesale = $this->cartWholesaleSumm >= \Yii::$app->params['domainInfo']['wholesaleThreshold'];
 
 		$this->cartSumm = $this->wholesale ? $this->cartWholesaleSumm : $this->cartRetailSumm;
 		$this->cartRealSumm = $this->wholesale ? $this->cartWholesaleRealSumm : $this->cartRetailRealSumm;
+		$this->cartSumWithoutDiscount = $this->wholesale ? $this->cartWholesaSumWithoutDiscount : $this->cartRetailSumWithoutDiscount;
 	}
 
 	public function recalcCart(){
@@ -196,8 +201,10 @@ class Cart extends Component{
 				$good = $helper->recalc($good);
 				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
 				$this->cartWholesaleRealSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
+				$this->cartWholesaSumWithoutDiscount += $good->discountType == 0 ? $good->wholesale_real_price * $this->items[$good->ID]->count : 0;
 				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
 				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;
+				$this->cartRetailSumWithoutDiscount += $good->discountType == 0 ? $good->retail_real_price * $this->items[$good->ID]->count : 0;
 			}
 		}
 
@@ -205,5 +212,6 @@ class Cart extends Component{
 
 		$this->cartSumm = $this->wholesale ? $this->cartWholesaleSumm : $this->cartRetailSumm;
 		$this->cartRealSumm = $this->wholesale ? $this->cartWholesaleRealSumm : $this->cartRetailRealSumm;
+		$this->cartSumWithoutDiscount = $this->wholesale ? $this->cartWholesaSumWithoutDiscount : $this->cartRetailSumWithoutDiscount;
 	}
 }

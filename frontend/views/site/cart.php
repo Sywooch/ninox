@@ -1,5 +1,5 @@
 <?php
-use common\helpers\GoodHelper;
+use common\helpers\Formatter;
 use frontend\helpers\PriceRuleHelper;
 use yii\helpers\Html;
 ?>
@@ -100,10 +100,10 @@ use yii\helpers\Html;
 				        'class'         =>  'sums',
 			        ],
 			        'value'         =>  function($model){
-					        return Html::tag('div', GoodHelper::getPriceFormat($model->retail_real_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
+					        return Html::tag('div', Formatter::getFormattedPrice($model->retail_real_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
 						        'class' =>  'old-sum semi-bold blue'.($model->discountType == 0 ? ' disabled' : ''),
 					        ]).
-						    Html::tag('div', GoodHelper::getPriceFormat($model->retail_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
+						    Html::tag('div', Formatter::getFormattedPrice($model->retail_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
 							    'class' =>  'current-sum blue'
 						    ]);
 				        }

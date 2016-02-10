@@ -92,6 +92,9 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 				$array['deliveryTypes'][$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
 				$array['deliveryTypes'][$config->deliveryType]['modifyLabel'] = $config->deliveryTypes[0]->modifyLabel;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentTypes'][$config->paymentType] = $config->paymentType;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentParams'][$config->paymentParam]['commissionStatic'] = Json::decode($config->options, false)->commissionStatic;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentParams'][$config->paymentParam]['commissionPercent'] = Json::decode($config->options, false)->commissionPercent;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['options'] = (object)array_merge((array)Json::decode($config->options, false), (array)Json::decode($config->deliveryParams[0]->options, false));
 
 				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes[0]->description;

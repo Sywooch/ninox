@@ -183,8 +183,9 @@ class SiteController extends Controller
 	    $domainConfiguration = DomainDeliveryPayment::getConfigArray();
 
         return $this->render('order2', [
-            'model'             =>  $order,
-			'domainConfiguration'      =>  $domainConfiguration
+            'model'                 =>  $order,
+			'domainConfiguration'   =>  $domainConfiguration,
+	        'customer'              =>  $customer
         ]);
     }
 

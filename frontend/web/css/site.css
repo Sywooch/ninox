@@ -1687,10 +1687,8 @@ footer{
 	padding-bottom: 25px;
 }
 
-.br{
+.amount{
 	padding-left: 20px;
-	padding-right: 5px;
-	padding-bottom: 3px;
 }
 
 .text-align-center{
@@ -1856,6 +1854,26 @@ footer{
 .content-data-body-delivery-type input[name="OrderForm[deliveryParam]"]:checked + label{
 	-webkit-filter: grayscale(0%); /* Chrome, Safari, Opera */
 	filter: grayscale(0%);
+}
+
+.field-orderform-paymentparam{
+	padding-left: 30px;
+}
+
+input[name="OrderForm[paymentType]"]:disabled + label,
+input[name="OrderForm[paymentType]"]:disabled + label + .question-round-button,
+input[name="OrderForm[paymentType]"] + label + .question-round-button + .field-orderform-paymentparam > div,
+.payment-params-none,
+input[name="OrderForm[paymentParam]"]:disabled + label{
+	display: none;
+}
+
+input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + .field-orderform-paymentparam > div:not(.payment-params-none){
+	display: block;
+}
+
+.commission-static.disabled + .currency{
+	display: none;
 }
 
 .nav-tabs{

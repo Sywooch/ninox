@@ -1,6 +1,6 @@
 <?php
 
-use common\helpers\GoodHelper;
+use common\helpers\Formatter;
 use yii\helpers\Html;
 
 $link = '/tovar/'.$model->link.'-g'.$model->ID;
@@ -81,10 +81,10 @@ $buyBlock = function($model, $button){
 				'div',
 				Html::tag(
 					'span',
-					GoodHelper::getPriceInteger($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_price : $model->wholesale_real_price),
+					Formatter::getPriceInteger($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_price : $model->wholesale_real_price),
 					[]
 				).
-				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', GoodHelper::getPriceFraction($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_price : $model->wholesale_real_price), []) : '').
+				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', Formatter::getPriceFraction($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_price : $model->wholesale_real_price), []) : '').
 				Html::tag(
 					'span',
 					' '.\Yii::$app->params['domainInfo']['currencyShortName'],
@@ -100,10 +100,10 @@ $buyBlock = function($model, $button){
 				'div',
 				Html::tag(
 					'span',
-					($model->discountType > 0 && $model->priceRuleID == 0 ? \Yii::t('shop', 'опт') : \Yii::t('shop', 'розница')).' - '.GoodHelper::getPriceInteger($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_real_price : $model->retail_real_price),
+					($model->discountType > 0 && $model->priceRuleID == 0 ? \Yii::t('shop', 'опт') : \Yii::t('shop', 'розница')).' - '.Formatter::getPriceInteger($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_real_price : $model->retail_real_price),
 					[]
 				).
-				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', GoodHelper::getPriceFraction($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_real_price : $model->retail_real_price), []) : '').
+				(\Yii::$app->params['domainInfo']['coins'] ? Html::tag('sup', Formatter::getPriceFraction($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_real_price : $model->retail_real_price), []) : '').
 				Html::tag(
 					'span',
 					' '.\Yii::$app->params['domainInfo']['currencyShortName'],
@@ -153,7 +153,7 @@ $discountBlock = function($model){
 				'class' => 'top'
 			]).
 		Html::tag('div',
-			Html::tag('div', GoodHelper::getPriceFormat($model->wholesale_price), ['class' => 'semi-bold']).
+			Html::tag('div', Formatter::getFormattedPrice($model->wholesale_price), ['class' => 'semi-bold']).
 			Html::tag('div', \Yii::$app->params['domainInfo']['currencyShortName'], []),
 			[
 				'class' =>  'bottom'
