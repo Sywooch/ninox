@@ -575,6 +575,11 @@
     cursor: pointer;
 }
 
+.customer-reviews a:hover{
+    text-decoration: none;
+    color: #bab6b6;
+}
+
 .customer-reviews a:before{
     display: inline-block;
     vertical-align: middle;

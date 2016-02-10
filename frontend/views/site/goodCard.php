@@ -82,7 +82,6 @@ foreach($good->dopPhoto as $photo){
 }
 
 ?>
-
 <script type="text/javascript">(function(w,doc) {
         if (!w.__utlWdgt ) {
             w.__utlWdgt = true;
@@ -93,7 +92,6 @@ foreach($good->dopPhoto as $photo){
             h.appendChild(s);
         }})(window,document);
 </script>
-
 <div class="catalog">
     <div class="under-menu">
     <?=\yii\widgets\Breadcrumbs::widget([
@@ -123,7 +121,7 @@ foreach($good->dopPhoto as $photo){
                                     'slidesToScroll' => 1,
                                     'asNavFor'       => '#sliderNav',
                                 ]
-                        ]) : '',
+                        ]) : 'Нет изобраения',
                         !empty($itemsNav) ? Slick::widget([
                             'containerOptions' => [
                                 'id'    => 'sliderNav',

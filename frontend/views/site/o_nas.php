@@ -29,51 +29,53 @@ use yii\jui\Accordion;
     </div>
     <div class="about">
         <div class="about-as">
-            <div class="about-as-header">
+            <div class="about-as-header about-header semi-bold">
                 Как мы работаем
             </div>
-            <div class="">
+            <div class="bold about-as-center">
                 На сайте krasota-style.ua действует 2 типа цен
             </div>
             <div class="about-as-price">
                 <div class="about-as-price-rules">
-                    <div class="about-as-price-rules-img"></div>
+                    <div class="about-as-price-rules-img wholesale-prices"></div>
                     <div class="about-as-price-rules-text">
-                        <span>ОПТОВЫЕ ЦЕНЫ</span>
+                        <span class="bold">ОПТОВЫЕ ЦЕНЫ</span>
                         При заказе на суммуот 1000 грн.
                     </div>
                 </div>
                 <div class="about-as-price-rules">
-                    <div class="about-as-price-rules-img"></div>
+                    <div class="about-as-price-rules-img retail-prices"></div>
                     <div class="about-as-price-rules-text">
-                        <span>РОЗНИЧНЫЕ ЦЕНЫ</span>
+                        <span class="bold">РОЗНИЧНЫЕ ЦЕНЫ</span>
                         При заказе на сумму от 500 до 1000 грн.
                     </div>
                 </div>
             </div>
             <div class="about-as-order">
-                <div class="about-as-order-head">
+                <div class="about-as-order-head bold">
                     Сколько времени обрабатываеться заказ?
                 </div>
                 <div class="about-as-order-infogramma">
                     <div class="about-as-order-infogramma-item">
-                        <div class="about-as-order-infogramma-item-img"></div>
+                        <div class="about-as-order-infogramma-item-img decor"></div>
                         <div class="about-as-order-infogramma-item-text">
-                            <span>ОФОРМЛЕНИЕ</span>
+                            <span class="bold">ОФОРМЛЕНИЕ</span>
                             ЧТО-ТО ДА ПИСАТЬ
                         </div>
                     </div>
+                    <div class="arrow-right"></div>
                     <div class="about-as-order-infogramma-item">
-                        <div class="about-as-order-infogramma-item-img"></div>
+                        <div class="about-as-order-infogramma-item-img assembly-of-goods"></div>
                         <div class="about-as-order-infogramma-item-text">
-                            <span>СБОРКА ТОВАРОВ</span>
+                            <span class="bold">СБОРКА ТОВАРОВ</span>
                             1-10 ЧАСОВ
                         </div>
                     </div>
+                    <div class="arrow-right"></div>
                     <div class="about-as-order-infogramma-item">
-                        <div class="about-as-order-infogramma-item-img"></div>
+                        <div class="about-as-order-infogramma-item-img order-shipping"></div>
                         <div class="about-as-order-infogramma-item-text">
-                            <span>ОТПРАВКА ЗАКАЗА</span>
+                            <span class="bold">ОТПРАВКА ЗАКАЗА</span>
                             ЕЖЕДНЕВНО
                         </div>
                     </div>
@@ -87,33 +89,35 @@ use yii\jui\Accordion;
             </div>
         </div>
         <div class="about-delivery">
-            <div class="about-delivery-header">
+            <div class="about-delivery-header about-header semi-bold">
                 Доставка
             </div>
             <div class="about-delivery-content">
                 <div class="about-delivery-content-img"></div>
                 <div class="about-delivery-content-info">
-                    <div class="about-delivery-content-info-24">
-                        <span>24 часа</span>
-                        ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТРЫ
-                    </div>
-                    <div class="about-delivery-content-info-48">
-                        <span>48 часов</span>
-                        ДОСТАВКА В РЕГИОНЫ
+                    <div class="about-delivery-content-info-delivery">
+                        <div class="about-delivery-content-info-delivery-time">
+                            <span>24 часа</span>
+                            ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТРЫ
+                        </div>
+                        <div class="about-delivery-content-info-delivery-time">
+                            <span>48 часов</span>
+                            ДОСТАВКА В РЕГИОНЫ
+                        </div>
                     </div>
                     <div class="about-delivery-content-info-text">
-                        Доставка заказа по Украине осуществляется от 1 до 5 дней  транспортной организацией «Новая Почта».
-                        Стоимость доставки определяется тарифами транспортной организации, не входит в сумму заказа,
-                        и оплачивается заказчиком отдельно, при получении посылки.
+                            Доставка заказа по Украине осуществляется от 1 до 5 дней  транспортной организацией «Новая Почта».
+                            Стоимость доставки определяется тарифами транспортной организации, не входит в сумму заказа,
+                            и оплачивается заказчиком отдельно, при получении посылки.
 
-                        Посылка хранится в отделении «Новая Почта» в течении 5 дней, по истечении этого времени,
-                        она автоматически отправляется назад. Повторная отправка заказа оплачивается клиентом отдельно.
+                            Посылка хранится в отделении «Новая Почта» в течении 5 дней, по истечении этого времени,
+                            она автоматически отправляется назад. Повторная отправка заказа оплачивается клиентом отдельно.
                     </div>
                 </div>
             </div>
         </div>
         <div class="about-payment">
-            <div class="about-payment-header">
+            <div class="about-payment-header about-header semi-bold">
                 Оплата
             </div>
             <span class="bold">
@@ -123,8 +127,8 @@ use yii\jui\Accordion;
                 После того, как заказ был собран и готов к отправке, Вам на телефон приходит смс с номером расчетного счета и суммой к оплате.
                 Как правило, деньги поступают на счет сразу после отправки, но банком также предусмотрен срок на пересылку денег до 3-х рабочих дней.
             </span>
-            <div class="about-payment-inform">
-                <span>
+            <div class="about-payment-inform about-inform">
+                <span class="semi-bold">
                     Для того, чтобы Ваш заказ был отправлен как можно скорее,
                     перезвоните нам или заполните форму после перевода денег.
                 </span>
@@ -150,7 +154,7 @@ use yii\jui\Accordion;
             </span>
         </div>
         <div class="about-return">
-            <div class="about-return-header">
+            <div class="about-return-header about-header semi-bold">
                 Возврат
             </div>
             <span>
@@ -180,7 +184,7 @@ use yii\jui\Accordion;
                 • сумма возврата меньше 5 гривен
                 • прошло более 14 дней со дня получения заказа
             </span>
-            <div class="about-return-inform">
+            <div class="about-return-inform about-inform">
                 <span>
                     После того как Вы отправили нам посылку, для того, чтобы
                     оформить возврат, необходимо заполнить форму возврата.
@@ -197,7 +201,7 @@ use yii\jui\Accordion;
                     'header'    => Html::tag('div', Html::tag('span', 'Гарантийные обязательства (техника)'),
                     ['class' =>  'content-data-first_1']
                     ),
-                    'content' =>'',
+                    'content' =>'о технике',
                     'headerOptions' => [
                     'tag'   =>  'div',
                     'onclick' => 'return false;'
@@ -212,7 +216,7 @@ use yii\jui\Accordion;
                     'headerOptions' => ['tag' => 'div',
 
                     ],
-                    'content' => '',
+                    'content' => 'о бижутерии',
                     'options' => ['tag' => 'div'],
                     ],
                     ],
@@ -227,7 +231,7 @@ use yii\jui\Accordion;
             </div>
         </div>
         <div class="about-TermsOfUse">
-            <div class="about-TermsOfUse-header">
+            <div class="about-TermsOfUse-header about-header semi-bold">
                 Условия использования сайта
             </div>
             <span>
@@ -287,10 +291,6 @@ use yii\jui\Accordion;
                 предложенными нашими партнерами, такими как рекламные услуги, например, которые могут появиться на других сайтах.
             </span>
         </div>
-
-
-
-
     </div>
 </div>
 
