@@ -178,11 +178,11 @@ h2{
 }*/
 @font-face {
 	font-family: 'shop-star';
-	src: url('../fonts/shop-star.eot?47776960');
-	src: url('../fonts/shop-star.eot?47776960#iefix') format('embedded-opentype'),
-	url('../fonts/shop-star.woff?47776960') format('woff'),
-	url('../fonts/shop-star.ttf?47776960') format('truetype'),
-	url('../fonts/shop-star.svg?47776960#shop-star') format('svg');
+	src: url('../fonts/shop-star.eot');
+	src: url('../fonts/shop-star.eot') format('embedded-opentype'),
+	url('../fonts/shop-star.woff') format('woff'),
+	url('../fonts/shop-star.ttf') format('truetype'),
+	url('../fonts/shop-star.svg') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -2755,6 +2755,7 @@ footer{
 
 .about{
 	float: left;
+	width: 810px;
 }
 
 .about-header{
@@ -2941,9 +2942,5 @@ footer{
 .about-TermsOfUse .bold{
 	font-size: 16px;
 }
-
-
-
-
 
 /*========* END O-NAS *=========*/
