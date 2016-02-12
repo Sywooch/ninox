@@ -63,11 +63,11 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
-        $goodComment = GoodsComment::findOne(['`goodscomments`.`goodID`' => $id]);
+        /*$goodComment = GoodsComment::findOne(['`goodscomments`.`goodID`' => $id]);
 
         if(!$goodComment){
             return \Yii::$app->runAction('site/error');
-        }
+        }*/
 
         $category = Category::findOne(['ID' => $good->GroupID]);
 
@@ -99,7 +99,7 @@ class SiteController extends Controller
             'mainCategory'  =>  $mainCategory,
             'good'          =>  $good,
             'category'      =>  $category,
-            'goodComment'   =>  $goodComment
+            /*'goodComment'   =>  $goodComment*/
         ]);
     }
 
