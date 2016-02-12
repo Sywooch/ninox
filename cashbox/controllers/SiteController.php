@@ -411,6 +411,13 @@ class SiteController extends Controller
             case 'month':
                 $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime(($date - (date("j") - 1) * 86400), 'php:Y-m-d H:i:s')."'");
                 break;
+            case 'range':
+                $dateFrom = \Yii::$app->request->get("dateFrom");
+                $dateTo = \Yii::$app->request->get("dateTo");
+                $orders
+                    ->andWhere('doneTime <= \''.\Yii::$app->formatter->asDatetime($dateTo, 'php:Y-m-d H:i:s').'\'')
+                    ->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($dateFrom, 'php:Y-m-d H:i:s').'\'');
+                break;
             case 'today':
             default:
                 $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($date, 'php:Y-m-d H:i:s')."'");

@@ -49,10 +49,10 @@ class CashboxOrder extends \yii\db\ActiveRecord
                 return $this->itemsCount = count($this->getItems());
                 break;
             case 'sum':
-                return $this->calcSum();
+                return $this->sum = $this->calcSum();
                 break;
             case 'toPay':
-                return $this->calcToPay();
+                return $this->toPay = $this->calcToPay();
                 break;
         }
 

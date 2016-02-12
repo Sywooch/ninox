@@ -8,19 +8,17 @@
 
 namespace cashbox\components;
 
-
-use cashbox\models\CashboxItem;
 use backend\models\CashboxOrder;
 use backend\models\Customer;
-use backend\models\History;
+use cashbox\models\AssemblyItem;
+use cashbox\models\CashboxItem;
+use cashbox\models\Order;
 use common\models\CashboxMoney;
-use common\models\SborkaItem;
 use common\models\Good;
 use common\models\Category;
 use common\models\Siteuser;
 use yii\base\Component;
 use yii\base\ErrorException;
-use yii\helpers\Json;
 use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 
@@ -44,6 +42,19 @@ class Cashbox extends Component{
 
     public $order;
 
+    /**
+     * @throws \yii\base\ErrorException
+     * Инициализация компоненты
+     * Во время инициализации проверяется:
+     *  * выбран-ли покупатель
+     *  ** если покупатель не выбран - выбирается дефолтный
+     *  * есть-ли кука с cashboxOrderID
+     *  ** если есть - устанавливается $this->orderID этой кукой
+     *  * есть-ли кука с ID текущего клиента
+     *  ** если есть - устанавливается ID клиента этой кукой
+     *
+     * дальше метод проверяет, чтобы все необходимые нам товары присутствовали в переменной $this->goods
+     */
     public function init(){
         $cache = \Yii::$app->cache;
 
@@ -93,27 +104,49 @@ class Cashbox extends Component{
             }
         }
 
+        //Делаем проверку на существование всех товаров в локальной переменной товаров
+        foreach($this->items as $item){
+            if(empty($this->goods[$item->itemID])){
+                $this->goods[$item->itemID] = Good::findOne($item->itemID);
+            }
+        }
+
         $this->recalculate();
 
         $this->save();
     }
 
+    /**
+     * Возвращает тип заказа
+     *
+     * @return bool - оптовый заказ
+     */
     public function isWholesale(){
         return $this->priceType == 1;
     }
 
+    /**
+     * Загружает данные из кэша
+     */
     public function load(){
         $this->items = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/items');
         $this->goods = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/goods');
         $this->order = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/info');
     }
 
+    /**
+     * Чистит кэш
+     */
     public function clearCache(){
         \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/items');
         \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/goods');
         \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/info');
     }
 
+
+    /**
+     * Сохраняет данные в кэш
+     */
     public function save(){
         foreach($this->items as $key => $item){
             $item->changedValue = 0;
@@ -125,6 +158,13 @@ class Cashbox extends Component{
         \Yii::$app->cache->set('cashbox-'.$this->orderID.'/info', $this->order);
     }
 
+    /**
+     * Загружает данные из модели в компонент
+     *
+     * @param $model \backend\models\CashboxOrder
+     *
+     * @throws \yii\base\ErrorException
+     */
     public function loadInfo($model){
         if($model instanceof CashboxOrder == false){
             throw new ErrorException("Передан неверный объект!");
@@ -139,6 +179,9 @@ class Cashbox extends Component{
         $this->save();
     }
 
+    /**
+     * Меняет тип цен
+     */
     public function changePriceType(){
         $this->priceType = $this->priceType == 1 ? 0 : 1;
 
@@ -156,6 +199,9 @@ class Cashbox extends Component{
         ]));
     }
 
+    /**
+     * Обновляет товары
+     */
     public function updateItems(){
         $this->items = $this->order->getItems();
 
@@ -181,6 +227,11 @@ class Cashbox extends Component{
         return CashboxItem::find()->where(['orderID' => $this->orderID]);
     }
 
+    /**
+     * Возвращает запрос для получения товаров
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function goodsQuery(){
         $items = [];
 
@@ -191,6 +242,14 @@ class Cashbox extends Component{
         return Good::find()->where(['in', 'ID', $items]);
     }
 
+    /**
+     * Удаляет товар из заказа в кассе
+     *
+     * @param $itemID - ID товара
+     * @param bool $return - необходимо возвратить удалённый товар на склад
+     *
+     * @return bool - удалён-ли товар
+     */
     public function remove($itemID, $return = true){
         unset($this->items[$itemID], $this->goods[$itemID]);
 
@@ -207,6 +266,13 @@ class Cashbox extends Component{
         return true;
     }
 
+    /**
+     * Меняет ответственного за заказ на выбраного пользователя
+     * @param $id - ID пользователя
+     *
+     * @return bool изменён-ли менеджер
+     * @throws \yii\web\NotFoundHttpException - если не найден менеджер
+     */
     public function changeManager($id){
         if($id != 0 && !Siteuser::findOne($id)){
             throw new NotFoundHttpException("Менеджер не найден!");
@@ -275,16 +341,51 @@ class Cashbox extends Component{
         return false;
     }
 
+    public function edit($orderID, $amount){
+        $createdOrder = Order::findOne($orderID);
+
+        if(!$createdOrder){
+            throw new NotFoundHttpException("Такого заказа не существует!");
+        }
+
+        $createdOrder->loadCashboxOrder($this->order, $amount);
+
+        AssemblyItem::deleteAll(['orderID' => $createdOrder->id]);
+
+        foreach($this->order->getItems() as $item){
+            $AssemblyItem = new AssemblyItem();
+            $AssemblyItem->loadCashboxItem($item, $createdOrder->id);
+
+            if($AssemblyItem->save(false)){
+                $item->changedValue = 0;
+                $item->delete();
+            }
+
+            $this->order->createdOrder = $createdOrder->id;
+        }
+
+        $this->order->save(false);
+        $createdOrder->save(false);
+
+        $this->clear();
+
+        return $createdOrder->id;
+    }
+
     public function sell($amount){
         if(empty($this->order)){
             throw new NotFoundHttpException("Невозможно оформить несуществующий заказ!");
         }
 
-        $order = new History([
+        if(!empty($this->order->createdOrder)){
+            return $this->edit($this->order->createdOrder, $amount);
+        }
+
+        $order = new Order([
             'responsibleUserID' =>  $this->order->responsibleUser,
             'customerID'        =>  $this->order->customerID,
             'originalSum'       =>  $this->order->sum,
-            'sourceType'        =>  History::SOURCETYPE_SHOP,
+            'sourceType'        =>  Order::SOURCETYPE_SHOP,
             'orderSource'       =>  \Yii::$app->params['configuration']->store,
             'sourceInfo'        =>  \Yii::$app->params['configuration']->ID,
         ]);
@@ -299,21 +400,10 @@ class Cashbox extends Component{
 
         if($order->save(false)){
             foreach($this->order->getItems() as $item){
-                $sborkaItem = new SborkaItem([
-                    'orderID'       =>  $order->id,
-                    'itemID'        =>  $item->itemID,
-                    'name'          =>  $item->name,
-                    'count'         =>  $item->count,
-                    'originalCount' =>  $item->count,
-                    'originalPrice' =>  $item->originalPrice,
-                    'discountSize'  =>  $item->discountSize,
-                    'discountType'  =>  $item->discountType,
-                    'priceRuleID'   =>  $item->priceRuleID,
-                    'category'      =>  $item->category,
-                    'customerRule'  =>  $item->customerRule
-                ]);
+                $AssemblyItem = new AssemblyItem();
+                $AssemblyItem->loadCashboxItem($item, $order->id);
 
-                if($sborkaItem->save(false)){
+                if($AssemblyItem->save(false)){
                     $item->changedValue = 0;
                     $item->delete();
                 }
