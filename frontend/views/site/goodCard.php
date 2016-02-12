@@ -82,32 +82,6 @@ foreach($good->dopPhoto as $photo){
 }
 
 ?>
-<script type="text/javascript">
-    $(document).ready(function() { // вся мaгия пoсле зaгрузки стрaницы
-        $('span#go').click( function(event){ // лoвим клик пo ссылки с id="go"
-            event.preventDefault(); // выключaем стaндaртную рoль элементa
-            $('body').css('overflow', 'hidden'); // выключаем скролл
-            $('#overlay').fadeIn(400, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку
-                function(){ // пoсле выпoлнения предъидущей aнимaции
-                    $('#modal_form')
-                        .css('display', 'block') // убирaем у мoдaльнoгo oкнa display: none;
-                        .animate({opacity: 1, top: '5%'}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
-                });
-        });
-        /* Зaкрытие мoдaльнoгo oкнa, тут делaем тo же сaмoе нo в oбрaтнoм пoрядке */
-        $('#modal_close, #overlay').click( function(){ // лoвим клик пo крестику или пoдлoжке
-            $('body').css('overflow', 'auto'); // включаем скролл
-            $('#modal_form')
-                .animate({opacity: 0, top: '45%'}, 200,  // плaвнo меняем прoзрaчнoсть нa 0 и oднoвременнo двигaем oкнo вверх
-                    function(){ // пoсле aнимaции
-                        $(this).css('display', 'none'); // делaем ему display: none;
-                        $('#overlay').fadeOut(400); // скрывaем пoдлoжку
-                    }
-                );
-        });
-    });
-    //TODO: что это за скрипт?
-</script>
 <script type="text/javascript">(function(w,doc) {
         if (!w.__utlWdgt ) {
             w.__utlWdgt = true;
@@ -119,21 +93,13 @@ foreach($good->dopPhoto as $photo){
         }})(window,document);
 </script>
 <div class="catalog">
-    <div id="modal_form"><!-- Сaмo oкнo -->
-        <span id="modal_close">
-            <a>
-                <div class="close-map"></div>
-            </a>
-        </span> <!-- Кнoпкa зaкрыть -->
-        fhhfhfh
-    </div>
     <div class="under-menu">
-    <?=\yii\widgets\Breadcrumbs::widget([
-        'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
-        'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
-<span class="fa fa-long-arrow-right fa-fw"></span>',
-        'links'                 =>  \Yii::$app->params['breadcrumbs']
-    ])?>
+        <?=\yii\widgets\Breadcrumbs::widget([
+            'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
+            'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
+        <span class="fa fa-long-arrow-right fa-fw"></span>',
+            'links'                 =>  \Yii::$app->params['breadcrumbs']
+        ])?>
     </div>
     <div class="goodsCard" itemscope itemtype="http://schema.org/Product">
         <div class="itemInfo">
@@ -155,7 +121,8 @@ foreach($good->dopPhoto as $photo){
                                     'slidesToScroll' => 1,
                                     'asNavFor'       => '#sliderNav',
                                 ]
-                        ]) : 'Нет изобраения',
+                        ]) : print '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$good->ico.'"
+                        width="475px" height="355px" alt="'.$good->Name.'">',
                         !empty($itemsNav) ? Slick::widget([
                             'containerOptions' => [
                                 'id'    => 'sliderNav',
@@ -313,7 +280,7 @@ foreach($good->dopPhoto as $photo){
                                 <div class="retail-price">
                                     <span>
                                         старая цена:<i>
-                                            <?=$good->wholesale_real_price?>
+
                                             <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
                                                 </i>
                                         <span class="question-round-button">?</span>
@@ -389,7 +356,7 @@ foreach($good->dopPhoto as $photo){
                                     echo Html::tag('div', $divContent, [
                                         'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
                                     ])?>
-                                <div class="reserve-button">
+                        <div class="reserve-button">
                                     <?php
                                     $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
                                         ($good->inCart ? 'В корзине!' : 'Резервировать')), [
@@ -403,22 +370,18 @@ foreach($good->dopPhoto as $photo){
                                     echo Html::tag('div', $divContent, [
                                         'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
                                     ])?>
-                                </div>
-                                <div class="about-price">
-                                    <a class="reserve">Нашли дешевлее?</a>
-                                    <a class="about-price-available">Узнать о снижении цены</a>
-                                    <a class="about-price-not-available">Узнать когда появиться</a>
-                                    <a class="favorites">в избранное</a>
-                                </div>
-
-                            </div>
-
-
+                        </div>
+                        <div class="about-price">
+                            <a class="reserve">Нашли дешевлее?</a>
+                            <a class="about-price-available">Узнать о снижении цены</a>
+                            <a class="about-price-not-available">Узнать когда появиться</a>
+                            <a class="favorites">в избранное</a>
+                        </div>
+                    </div>
                     <div class="line-rating">
                         <div class="rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
                            <!--<span class="currentRating" itemprop="ratingValue"><?=($good->rate ? $good->rate : 5)
                                 ?></span>-->
-
                             <div class="shop-star<?=$good->rate == 5 ? ' current' : ''?>" itemprop="bestRating"
                                  title="<?=\Yii::t('shop', 'Отлично')?>" data-item="<?=$good->ID?>" data-rate="5">5</div>
                             <div class="shop-star<?=4 <= $good->rate && $good->rate < 5 ? ' current' : ''?>"
@@ -429,21 +392,20 @@ foreach($good->dopPhoto as $photo){
                                  title="<?=\Yii::t('shop', 'Приемлемо')?>" data-item="<?=$good->ID?>" data-rate="2">2</div>
                             <div class="shop-star<?=1 <= $good->rate && $good->rate < 2 ? ' current' : ''?>"
                                  itemprop="worstRating" title="<?=\Yii::t('shop', 'Плохо')?>" data-item="<?=$good->ID?>" data-rate="1">1</div>
-
                         </div>
-                                     <span class="link-hide blue shop-comment-empty" data-href="<?=$link?>#tab-reviews">
-                    <?=Yii::t('shop', '{n, number} {n, plural, one{отзыв} few{отзыва} many{отзывов} other{отзывов}}', [
-                        'n' =>  $good->reviewsCount
-                    ])?>
-                </span>
-
+                        <span class="link-hide blue shop-comment-empty" data-href="<?=$link?>#tab-reviews">
+                            <?=Yii::t('shop', '{n, number} {n, plural, one{отзыв} few{отзыва} many{отзывов} other{отзывов}}', [
+                                'n' =>  $good->reviewsCount
+                            ])?>
+                        </span>
                     </div>
                     <div class="line"></div>
                     <?php if($good->garantyShow == '1'){
                         if($good->anotherCurrencyPeg == '1'){
                             echo Html::tag('div', Html::tag('span', \Yii::t('shop', 'Внимание!'), [
                                 'class' =>  'semi-bold blue'
-                            ]).' '.\Yii::t('shop', 'Цена действительна при отправке или оплате заказа {date} до 23:59', [
+                            ]).' '.\Yii::t('shop', 'Цена действительна при отправке или оплате заказа {date} до
+                            23:59', [
                                    'date'  =>  date('d.m.Y')
                                 ]), [
                                 'class' =>  'underline'
@@ -508,22 +470,19 @@ foreach($good->dopPhoto as $photo){
                     </div>
                 </div>
             </div>
-</div>
-            </div>
-        <div class="socialItemInfo">
-<div class="soc-item-share">
+        </div>
+    </div>
+    <div class="socialItemInfo">
+        <div class="soc-item-share">
             <div class="shareToFriends"><?=\Yii::t('shop', 'Рассказать друзьям')?></div>
-
-    <div data-background-alpha="0.0" data-buttons-color="#FFFFFF" data-counter-background-color="#ffffff" data-share-counter-size="12" data-top-button="false" data-share-counter-type="disable" data-share-style="1" data-mode="share" data-like-text-enable="false" data-mobile-view="true" data-icon-color="#ffffff" data-orientation="horizontal" data-text-color="#000000" data-share-shape="round-rectangle" data-sn-ids="fb.vk.tw.ok.gp.em." data-share-size="20" data-background-color="#ffffff" data-preview-mobile="false" data-mobile-sn-ids="fb.vk.tw.wh.ok.vb." data-pid="1479727" data-counter-background-alpha="1.0" data-following-enable="false" data-exclude-show-more="true" data-selection-enable="false" class="uptolike-buttons" ></div>
-
-</div>
+            <div data-background-alpha="0.0" data-buttons-color="#FFFFFF" data-counter-background-color="#ffffff" data-share-counter-size="12" data-top-button="false" data-share-counter-type="disable" data-share-style="1" data-mode="share" data-like-text-enable="false" data-mobile-view="true" data-icon-color="#ffffff" data-orientation="horizontal" data-text-color="#000000" data-share-shape="round-rectangle" data-sn-ids="fb.vk.tw.ok.gp.em." data-share-size="20" data-background-color="#ffffff" data-preview-mobile="false" data-mobile-sn-ids="fb.vk.tw.wh.ok.vb." data-pid="1479727" data-counter-background-alpha="1.0" data-following-enable="false" data-exclude-show-more="true" data-selection-enable="false" class="uptolike-buttons" ></div>
         </div>
-
-            <div class="about-item">
-            <?=\kartik\tabs\TabsX::widget([
+    </div>
+    <div class="about-item">
+        <?=\kartik\tabs\TabsX::widget([
                 'items' =>  $tabsItems
-            ])?>
-        </div>
+        ])?>
+    </div>
 
     <?php /*
     <div class="goodsCard" itemscope itemtype="http://schema.org/Product">
@@ -666,3 +625,4 @@ foreach($good->dopPhoto as $photo){
         </div>-->
     </div>
 </div>
+

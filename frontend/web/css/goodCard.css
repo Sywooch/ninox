@@ -16,8 +16,9 @@
     padding-left: 5px;
 }
 
-.fa{
-    font-size: 10px;
+.under-menu .fa{
+    font-size: 10px ;
+
 }
 
 .itemPhotos{
@@ -37,6 +38,13 @@
 
 .itemDopInfo{
     float: right;
+}
+
+.about-order .blue{
+    color: #3e77aa;
+    font-size: 12px;
+    float: left;
+    margin-right: 15px;
 }
 
 .pricelist{
