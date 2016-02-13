@@ -207,21 +207,15 @@ class SiteController extends Controller
 	    return [
 		    'cartSumm'      =>  \Yii::$app->cart->cartSumm,
 		    'cartRealSumm'  =>  \Yii::$app->cart->cartRealSumm,
+		    'cartRetailRealSumm'  =>  \Yii::$app->cart->cartRetailRealSumm,
+		    'cartRetailSumm'  =>  \Yii::$app->cart->cartRetailSumm,
+		    'cartWholesaleSumm'  =>  \Yii::$app->cart->cartWholesaleSumm,
+		    'cartWholesaleRealSumm'  =>  \Yii::$app->cart->cartWholesaleRealSumm,
+		    'wholesale'  =>  \Yii::$app->cart->wholesale,
 		    'inCart'        =>  $count == 0 ? 0 : $item->count,
 		    'goods'         =>  $goods,
 	    ];
     }
-
-	public function actionGetcart(){
-		return $this->renderAjax('cart', [
-			'dataProvider'	=>	new ActiveDataProvider([
-				'query'         =>  \Yii::$app->cart->goodsQuery(),
-				'pagination'    =>  [
-					'pageSize'  =>  0
-				]
-			])
-		]);
-	}
 
     public function actionSuccess($order = []){
         if(!empty($order)){

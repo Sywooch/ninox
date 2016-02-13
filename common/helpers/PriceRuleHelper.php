@@ -140,7 +140,6 @@ class PriceRuleHelper extends Component{
 			$cartInfo[$key]['flag'] = true;*/
 		}
 		if($discount == $termsCount && $termsCount != 0){
-			\Yii::trace('Model: '.$model->priceRuleID.'; ID: '.$rule->ID);
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;
 			$model->discountType = empty($rule->actions['Type']) ? 2 : $rule->actions['Type'];
@@ -204,7 +203,7 @@ class PriceRuleHelper extends Component{
 
 	private function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
-		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartRealSumm;
+		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartWholesaleRealSumm;
 		foreach($term as $ds){
 			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
 				$discount += 1;

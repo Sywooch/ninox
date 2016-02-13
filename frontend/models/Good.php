@@ -36,30 +36,33 @@ class Good extends \common\models\Good{
         }*/
 
 	    $this->wholesale_real_price = $this->PriceOut1;
-	    $this->retail_real_price = $this->PriceOut2;
-
+	    $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
 	    $this->num_opt = preg_replace('/D+/', '', $this->num_opt);
 
         switch($this->discountType){
             case 1:
                 //Размер скидки в деньгах
-                $this->wholesale_price = $this->PriceOut1 - $this->discountSize;
-                $this->retail_price = $this->PriceOut2 - $this->discountSize;
+                $this->wholesale_price = $this->wholesale_real_price - $this->discountSize;
+                $this->retail_price = $this->retail_real_price - $this->discountSize;
                 break;
             case 2:
                 //Размер скидки в процентах
-                $this->wholesale_price = round($this->PriceOut1 - ($this->PriceOut1 / 100 * $this->discountSize), 2);
-                $this->retail_price = round($this->PriceOut2 - ($this->PriceOut2 / 100 * $this->discountSize), 2);
+                $this->wholesale_price = round($this->wholesale_real_price - ($this->wholesale_real_price / 100 * $this->discountSize), 2);
+                $this->retail_price = round($this->retail_real_price - ($this->retail_real_price / 100 * $this->discountSize), 2);
                 break;
             default:
-                $this->wholesale_price = $this->PriceOut1;
-                $this->retail_price = $this->PriceOut2;
+                $this->wholesale_price = $this->wholesale_real_price;
+                $this->retail_price = $this->retail_real_price;
                 break;
         }
 
+	    if($this->priceRuleID == 0 && $this->discountType > 0){
+		    $this->wholesale_real_price = $this->wholesale_price;
+		    $this->retail_real_price = $this->retail_price;
+	    }
+
 	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
 	    $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
-
     }
 
 	public static function find(){

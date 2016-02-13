@@ -25,21 +25,18 @@ if(empty($userCart)){
 	$userCart = new \common\models\Cart();
 }
 
-$cartItemsDataProvider = new \yii\data\ActiveDataProvider([
-	'query' =>  \Yii::$app->cart->goodsQuery()
-]);
-
 $cartModal = new \bobroid\remodal\Remodal([
 	'cancelButton'		=>	false,
 	'confirmButton'		=>	false,
 	'closeButton'		=>	false,
-	'content'			=>	$this->render('../site/cart', [
-		'dataProvider'	=>	$cartItemsDataProvider
-	]),
-	'id'	=>	'modalCart',
+	'content'			=>	$this->render('../site/cart', []),
+	'options'           =>  [
+		'id'            =>  'modal-cart'
+	],
+	'id'	            =>	'modalCart',
 	'addRandomToID'		=>	false,
 	'events'			=>	[
-		'opening'	=>	new \yii\web\JsExpression("getCart(e)")
+		'opening'	    =>	new \yii\web\JsExpression("getCart()")
 	]
 ]);
 
@@ -77,17 +74,28 @@ $js = <<<SCRIPT
 		e.preventDefault();
 		openCart();
 	});
+
+	$(document).on('pjax:complete', function(){
+		cartScroll();
+	});
+
+	cartScroll();
 SCRIPT;
 
 $this->registerJs($js);
 
+
+$this->registerJsFile('/perfect-scrollbar/js/perfect-scrollbar.jquery.js', [
+	'depends'   =>  'yii\web\JqueryAsset'
+]);
+$this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<html lang="<?=Yii::$app->language?>">
 	<head>
-	    <?= Html::csrfMetaTags() ?>
-	    <title><?= Html::encode($this->title) ?></title>
+	    <?=Html::csrfMetaTags()?>
+	    <title><?=Html::encode($this->title)?></title>
 	    <?php $this->head() ?>
 	</head>
 	<body>

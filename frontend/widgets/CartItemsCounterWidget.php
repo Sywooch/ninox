@@ -51,17 +51,6 @@ class CartItemsCounterWidget extends Widget{
 		]);
 	}
 
-	public function renderDelete(){
-		if(empty($this->itemID)){
-			throw new InvalidConfigException('ID товара не может быть пустым');
-		}
-		return Html::button(\Yii::t('shop', 'Удалить'), [
-			'class'         =>  'remove-item',
-			'data-itemId'   =>  $this->itemID,
-			'data-count'    =>  0,
-		]);
-	}
-
 	public function renderInput(){
 		if(empty($this->itemID)){
 			throw new InvalidConfigException('ID товара не может быть пустым');
@@ -75,7 +64,7 @@ class CartItemsCounterWidget extends Widget{
 			'data-itemId'   =>  $this->itemID,
 			'data-store'    =>  $this->store,
 			'data-inCart'   =>  $this->inCart,
-
+			'autocomplete'  =>  'off'
 		]);
 	}
 

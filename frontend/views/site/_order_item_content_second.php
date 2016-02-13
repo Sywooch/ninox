@@ -39,9 +39,9 @@ var deliveryType = function(element){
 	}
 }, paymentParam = function(element){
 	element.checked = true;
-	var amount = parseFloat($('.amount').text().replace(/\D+/, ''));
-	var actionDiscount = parseFloat($('.action-discount-amount').text().replace(/\D+/, ''));
-	var cardDiscount = parseFloat($('.card-discount-amount').text().replace(/\D+/, ''));
+	var amount = parseFloat($('.amount').text().replace(/[^\d\.]+/g, ''));
+	var actionDiscount = parseFloat($('.action-discount-amount').text().replace(/[^\d\.]+/g, ''));
+	var cardDiscount = parseFloat($('.card-discount-amount').text().replace(/[^\d\.]+/g, ''));
 	var cst = parseFloat($(element).data('commission-static'));
 	var cpc = parseFloat($(element).data('commission-percent'));
 	$('.commission-percent').toggleClass('disabled', !(cpc > 0)).text(cpc + '% ');
