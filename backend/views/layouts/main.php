@@ -205,13 +205,13 @@ span.twitter-typeahead div.tt-menu{
     height: 30px;
     font-size: 12px;
     width: 100%;
-    max-width: 1140px;
+    //max-width: 1140px;
     white-space: nowrap;
 }
 
 .afterMenu > div{
     display: inline-block;
-    min-width: 29%;
+    min-width: 31.8%;
     max-width: 66%;
     line-height: 30px;
     color: #999;
@@ -470,8 +470,8 @@ $this->beginPage() ?>
                                 'url'   =>  \Yii::$app->params['cashbox']
                             ],
                             [
-                                'label' =>  'Кассы',
-                                'url'   =>  Url::to('/cashboxes')
+                                'label' =>  'Прайсы',
+                                'url'   =>  Url::to('/pricelists')
                             ],
                             [
                                 'label' =>  'Руколдельницы',

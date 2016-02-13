@@ -14,6 +14,7 @@ use yii\helpers\Json;
  * @property integer $format
  * @property integer $creator
  * @property integer $published
+ * @property array $options
  */
 class PriceListFeed extends \yii\db\ActiveRecord
 {
@@ -23,6 +24,7 @@ class PriceListFeed extends \yii\db\ActiveRecord
 
     public function beforeSave($insert){
         $this->categories = Json::encode($this->categories);
+        $this->options = Json::encode($this->options);
 
         if($this->isNewRecord){
             $this->creator = \Yii::$app->user->identity->getId();
@@ -33,6 +35,7 @@ class PriceListFeed extends \yii\db\ActiveRecord
 
     public function afterFind(){
         $this->categories = Json::decode($this->categories);
+        $this->options = Json::decode($this->options);
 
         return parent::afterFind();
     }
@@ -53,6 +56,7 @@ class PriceListFeed extends \yii\db\ActiveRecord
         return [
             [['format', 'creator', 'published'], 'integer'],
             [['name'], 'string', 'max' => 255],
+            [['options'], 'string']
         ];
     }
 
@@ -63,11 +67,12 @@ class PriceListFeed extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('common', 'ID'),
-            'name' => Yii::t('common', 'Name'),
-            'categories' => Yii::t('common', 'Categories'),
-            'format' => Yii::t('common', 'Format'),
-            'creator' => Yii::t('common', 'Creator'),
-            'published' => Yii::t('common', 'Published'),
+            'name' => Yii::t('common', 'Название'),
+            'categories' => Yii::t('common', 'Категории'),
+            'format' => Yii::t('common', 'Формат'),
+            'creator' => Yii::t('common', 'Создатель'),
+            'published' => Yii::t('common', 'Опубликовано'),
+            'options' => Yii::t('common', 'Опции'),
         ];
     }
 }

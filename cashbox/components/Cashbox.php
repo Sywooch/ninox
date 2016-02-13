@@ -9,7 +9,7 @@
 namespace cashbox\components;
 
 
-use backend\models\CashboxItem;
+use cashbox\models\CashboxItem;
 use backend\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\History;
@@ -20,6 +20,7 @@ use common\models\Category;
 use common\models\Siteuser;
 use yii\base\Component;
 use yii\base\ErrorException;
+use yii\helpers\Json;
 use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 
@@ -45,6 +46,10 @@ class Cashbox extends Component{
 
     public function init(){
         $cache = \Yii::$app->cache;
+
+        if(empty($this->customer) && !empty(\Yii::$app->params['configuration'])){
+            $this->customer = $this->isWholesale() ? \Yii::$app->params['configuration']->defaultWholesaleCustomer : \Yii::$app->params['configuration']->defaultCustomer;
+        }
 
         if(\Yii::$app->request->cookies->has("cashboxOrderID")){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
@@ -93,16 +98,26 @@ class Cashbox extends Component{
         $this->save();
     }
 
+    public function isWholesale(){
+        return $this->priceType == 1;
+    }
+
     public function load(){
         $this->items = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/items');
         $this->goods = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/goods');
         $this->order = \Yii::$app->cache->get('cashbox-'.$this->orderID.'/info');
     }
 
+    public function clearCache(){
+        \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/items');
+        \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/goods');
+        \Yii::$app->cache->delete('cashbox-'.$this->orderID.'/info');
+    }
+
     public function save(){
-        foreach($this->items as $item){
+        foreach($this->items as $key => $item){
             $item->changedValue = 0;
-            $this->items[$item->itemID] = $item;
+            $this->items[$key] = $item;
         }
 
         \Yii::$app->cache->set('cashbox-'.$this->orderID.'/items', $this->items);
@@ -130,21 +145,34 @@ class Cashbox extends Component{
         if(!empty($this->order)){
             $this->order->priceType = $this->priceType;
 
-            if($this->order->save(false)){
-                foreach($this->items as $item){
-                    $price = ($this->priceType == 1 ? $this->goods[$item->itemID]->PriceOut1 : $this->goods[$item->itemID]->PriceOut2);
-                    \Yii::trace("item: ".$item->itemID.'; price: '.$price.'; oldPrice: '.$item->originalPrice);
-                    $item->originalPrice = $price;
-                    $item->changedValue = 0;
-                    $item->save(false);
-                }
-            }
+            $this->order->save(false);
+
+            $this->updateItems();
         }
 
         \Yii::$app->response->cookies->add(new Cookie([
             'name'      =>  'cashboxPriceType',
             'value'     =>  $this->priceType
         ]));
+    }
+
+    public function updateItems(){
+        $this->items = $this->order->getItems();
+
+        $this->clearCache();
+
+        $itemsIDs = [];
+        $this->goods = [];
+
+        foreach($this->items as $item){
+            $itemsIDs[] = $item->itemID;
+        }
+
+        foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
+            $this->goods[$good->ID] = $good;
+        }
+
+        $this->recalculate();
 
         $this->save();
     }
@@ -267,7 +295,15 @@ class Cashbox extends Component{
         $order->actualAmount = $amount;
 
         if($order->save(false)){
-            foreach($this->order->items as $item){
+            \Yii::trace('Заказ сохранился! ID: '.$order->id);
+            \Yii::trace('Колличество товаров в локальной переменной $this->order->items '.sizeof($this->order->items));
+            \Yii::trace('Колличество товаров по запросу в БД: '.CashboxItem::find()->where(['orderID' => $this->orderID])->count());
+
+
+            //foreach(CashboxItem::find()->where(['orderID' => $this->orderID])->each() as $item){
+            \Yii::trace(Json::encode($this->order->getItems()));
+            \Yii::trace("Items: ".count($this->order->getItems()));
+            foreach($this->order->getItems() as $item){
                 $sborkaItem = new SborkaItem([
                     'orderID'       =>  $order->id,
                     'itemID'        =>  $item->itemID,
@@ -282,7 +318,7 @@ class Cashbox extends Component{
                     'customerRule'  =>  $item->customerRule
                 ]);
 
-                if($sborkaItem->save()){
+                if($sborkaItem->save(false)){
                     $item->changedValue = 0;
                     $item->delete();
                 }
@@ -322,6 +358,12 @@ class Cashbox extends Component{
             $this->remove($item->itemID, false);
         }
 
+        $this->clearCache();
+
+        $this->items = $this->goods = [];
+
+        $this->order = $this->orderID = null;
+
         \Yii::$app->response->cookies->remove('cashboxOrderID');
         \Yii::$app->response->cookies->remove('cashboxCurrentCustomer');
     }
@@ -350,33 +392,34 @@ class Cashbox extends Component{
         }
 
         if(!isset($this->goods[$itemID])){
-            $good = Good::find()->where(['ID'   =>  $itemID])->one();
-        }else{
-            $good = $this->goods[$itemID];
+            $this->goods[$itemID] = Good::find()->where(['ID'   =>  $itemID])->one();
         }
 
-        if(isset($this->items[$good->ID])){
-            $this->items[$good->ID]->count += $count;
-        }else{
-            $this->items[$good->ID] = new CashboxItem([
+        $good = $this->goods[$itemID];
+
+        if(!isset($this->items[$itemID])){
+            $this->items[$itemID] = new CashboxItem([
                 'orderID'       =>  $this->order->id,
                 'itemID'        =>  $good->ID,
-                'count'         =>  $count,
                 'category'      =>  Category::find()->select("Code")->where(['ID' => $good->GroupID])->scalar(),
                 'name'          =>  $good->Name,
                 'originalPrice' =>  $this->priceType == 1 ? $good->PriceOut2 : $good->PriceOut1,
             ]);
+
+            $this->order->_items[$itemID] = $this->items[$itemID];
         }
 
-        if($this->items[$good->ID]->save(false)){
-            $this->goods[$good->ID] = $good;
+        $this->items[$itemID]->count += $count;
+
+        if($this->items[$itemID]->save(false)){
+            $this->goods[$itemID] = $good;
         }
 
         $this->recalculate();
 
         $this->save();
 
-        return $this->items[$good->ID];
+        return $this->items[$itemID];
     }
 
     public function postpone(){
@@ -395,10 +438,12 @@ class Cashbox extends Component{
         return false;
     }
 
-    public function loadPostpone($id){
-        if($this->order){
+    public function loadOrder($id, $drop = false){
+        if($this->order && !$drop){
             $this->postpone();
         }
+
+        $this->clear();
 
         $order = CashboxOrder::findOne($id);
 
@@ -410,13 +455,18 @@ class Cashbox extends Component{
 
         $this->order->postpone = 0;
         $this->loadInfo($this->order);
+        $this->updateItems();
 
         \Yii::$app->response->cookies->add(new Cookie([
             'name'      =>  'cashboxOrderID',
             'value'     =>  $this->order->id
         ]));
 
-        $this->order->save();
+        $this->order->save(false);
+    }
+
+    public function loadPostpone($id){
+        $this->loadOrder($id, \Yii::$app->request->post('dropOrder', false));
     }
 
     public function changeCustomer($customerID){

@@ -77,8 +77,12 @@ use Yii;
  * @property integer $count
  * @property integer $isUnlimited
  */
-class Good extends \yii\db\ActiveRecord
-{
+class Good extends \yii\db\ActiveRecord{
+
+    public $wholesale_price;
+    public $wholesale_real_price;
+    public $retail_price;
+    public $retail_real_price;
 
     public static function searchGoods($string, $params = []){
         if(empty($params) || $string == ''){
@@ -116,6 +120,15 @@ class Good extends \yii\db\ActiveRecord
                 ],
             ]
         ];
+    }
+
+    public function afterFind(){
+        $this->wholesale_price = $this->PriceOut1;
+        $this->wholesale_real_price = $this->PriceOut1;
+        $this->retail_price = $this->PriceOut2;
+        $this->retail_real_price = $this->PriceOut2;
+
+        return parent::afterFind();
     }
 
     public function beforeSave($insert){

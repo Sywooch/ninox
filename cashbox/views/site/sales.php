@@ -3,13 +3,13 @@ use yii\bootstrap\Html;
 
 $this->title = 'Продажи';
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
 var showSaleDetails = function(e){
     $.ajax({
         type: 'POST',
         url: '/getsaledetails',
         data: {
-            'orderID':  e.currentTarget.getAttribute('data-key')
+            'orderID':  e.currentTarget.getAttribute('data-attribute-id')
         },
         success: function(data){
             $("[data-remodal-id=saleDetails] > div").replaceWith(data);
@@ -21,34 +21,54 @@ var showSaleDetails = function(e){
     });
 }, updateTable = function(date){
     $.pjax({url: '/sales?smartfilter=' + date, container: '#salesTable-pjax'});
-}
+}, editOrder = function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/loadorder',
+        data: {
+            'orderID':  e.currentTarget.getAttribute('data-attribute-id')
+        },
+        success: function(data){
+            if(data){
+                location.href = '/';
+            }
+        },
+        error: function (request, status, error) {
+            console.log(request.responseText);
+        }
+    });
+}, registerEvents = function(){
+    $(".date-buttons button").on('click', function(e){
+        updateTable(e.currentTarget.getAttribute('data-attribute-id'));
+        $(".date-buttons button:disabled")[0].removeAttribute('disabled');
+        e.currentTarget.setAttribute('disabled', 'disabled');
+    });
 
-$(".date-buttons button").on('click', function(e){
-    updateTable(e.currentTarget.getAttribute('data-attribute'));
-    $(".date-buttons button:disabled")[0].removeAttribute('disabled');
-    e.currentTarget.setAttribute('disabled', 'disabled');
-});
+    $(document).on('pjax:complete', function() {
+        registerPjaxEvents();
+    });
 
-$("#salesTable table tbody tr").on('click', function(e){
-    showSaleDetails(e);
-});
-
-$("a.invoiceOrder").on('click', function(e){
-    e.preventDefault();
-    window.open('/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
-});
-
-$(document).on('pjax:complete', function() {
-    $("#salesTable table tbody tr").on('click', function(e){
+    registerPjaxEvents();
+}, registerPjaxEvents = function(){
+    $(".view-order-btn").on('click', function(e){
         showSaleDetails(e);
     });
 
-    $("a.invoiceOrder").on('click', function(e){
+    $(".view-invoice-btn").on('click', function(e){
         e.preventDefault();
         window.open('/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
     });
-});
-SCRIPT;
+
+    $(".edit-order-btn").on("click", function(e){
+        //editOrder(e);
+        swal("Проблемы с кэшированием - устраним, и сразу же запустим");
+    });
+};
+
+registerEvents();
+JS;
+
+\rmrevin\yii\fontawesome\cdn\AssetBundle::register($this);
 
 $this->registerJs($js);
 ?>
@@ -138,11 +158,44 @@ $this->registerJs($js);
             ],
             [
                 'hAlign'    =>  'center',
-                'width'     =>  '100px',
-                'format'    =>  'raw',
-                'value'     =>  function($model){
+                'width'     =>  '150px',
+                //'format'    =>  'raw',
+                /*'value'     =>  function($model){
+
                     return Html::a('Накладная', \yii\helpers\Url::toRoute('/printinvoice/'.$model->createdOrder), ['style' => 'z-index: 1000', 'data-pjax' => 0, 'class' => 'invoiceOrder', 'data-attribute-id' => $model->createdOrder]);
-                }
+                }*/
+                'class'     =>  \kartik\grid\ActionColumn::className(),
+                'buttons'   =>  [
+                    'view'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('eye'), [
+                            'class' =>  'btn btn-default btn-default-sm view-order-btn',
+                            'title' =>  'Просмотреть содержимое',
+                            'data-attribute-id' =>  $model->id
+                        ]);
+                    },
+                    'invoice'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('file-text'), [
+                            'class' =>  'btn btn-default btn-default-sm view-invoice-btn',
+                            'title' =>  'Открыть накладную',
+                            'data-attribute-id' =>  $model->createdOrder
+                        ]);
+                    },
+                    'update'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('pencil'), [
+                            'class' =>  'btn btn-default btn-default-sm edit-order-btn',
+                            'title' =>  'Редактировать заказ',
+                            'data-attribute-id' =>  $model->id
+                        ]);
+                    },
+                    'delete'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('trash'), [
+                            'class' =>  'btn btn-danger btn-default-sm delete-order-btn',
+                            'title' =>  'Удалить заказ',
+                            'data-attribute-id' =>  $model->id
+                        ]);
+                    },
+                ],
+                'template'  =>  Html::tag('div', '{view}{invoice}{update}{delete}', ['class' => 'btn-group btn-group-sm'])
             ]
         ],
     ])?>

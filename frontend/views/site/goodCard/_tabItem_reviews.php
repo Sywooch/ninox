@@ -1,7 +1,41 @@
-<span class="tabTitle semi-bold">Отзывы покупателей
-    <span class="rewsAnswer rewsToGood" data-rews-target="<?=$good->ID?>" data-rews-type="1">Оставить отзыв</span>
+<div class="reviews-tab">
+<div class="customer-reviews">
+    <div>
+        <span class="semi-bold">
+           <?=_("Отзывы покупателей")?>
+        </span>
+        <div class="write-review">
+           <?=_("Напишите отзыв")?>
+        </div>
+        <a class="review-number">2</a>
+    </div>
+    <div class="customer-review">
+        <div class="reviewer-name semi-bold">Валентина Блондинка</div>
+        <div class="review-data">21 декабря 2015 г.</div>
+        <span>Познакомьтесь с Axure RP Pro - программой для создания прототипов ваших веб-сайтов,
+            их отладки и последующей публикации. Все действия в программе наглядны и удобны, т.к.
+            проектирование не требует от вас знаний по веб-программированию, вам достаточно перетаскивать
+            и компоновать элементы мышкой, назначая на них различные действия и редактируя атрибуты.
+        </span>
+        <div class="review-answer">Ответить</div>
+
+    </div>
+    <div class="customer-review">
+        <div class="reviewer-name semi-bold">Валентина Блондинка</div>
+        <div class="review-data">21 декабря 2015 г.</div>
+        <span>Познакомьтесь с Axure RP Pro - программой для создания прототипов ваших веб-сайтов,
+            их отладки и последующей публикации. Все действия в программе наглядны и удобны, т.к.
+            проектирование не требует от вас знаний по веб-программированию, вам достаточно перетаскивать
+            и компоновать элементы мышкой, назначая на них различные действия и редактируя атрибуты.
+        </span>
+        <div class="review-answer">1 ответ</div>
+
+    </div>
+
+</div>
+    </div>
     <?php /*if(!empty($rewsList)){ ?> <span class="rewsQnt"> <?=sizeof($rewsList)?></span><?php }*/ ?>
-</span>
+
 <?php echo '';/* if(empty($rewsList)){ ?> <div class="rewsZero">Отзывов к даному товару еще нет, Ваш отзыв будет первым.</div><?php } ?>
 <?php foreach($rewsList as $rew){
     if($rew['show'] == '1'){

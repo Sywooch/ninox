@@ -6,17 +6,23 @@ use backend\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\Good;
 use backend\models\SborkaItem;
+use cashbox\models\CashboxItem;
 use common\models\Cashbox;
-use common\models\Siteuser;
+use cashbox\models\Siteuser;
+use common\models\SubDomain;
+use common\models\SubDomainAccess;
 use ErrorException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use backend\models\LoginForm;
 use yii\filters\VerbFilter;
 use yii\web\Cookie;
+use yii\web\HttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -63,36 +69,46 @@ class SiteController extends Controller
 
     public function actionPrintinvoice($param){
 
-        return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param);
+        return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param.'?secret=secretKeyForPrinter');
     }
 
     public function init(){
-        $domain = $_SERVER['SERVER_NAME'];
+        $configuration = false;
 
-        $configuration = Cashbox::findOne(['domain' => $domain]);
+        $domain = preg_replace('/\.'.$_SERVER['SERVER_NAME'].'/', '', $_SERVER['HTTP_HOST']);
+        $domain = SubDomain::find()->where(['name' => $domain])->andWhere('cashboxId != 0')->one();
+
+        if($domain){
+            if($domain->autologin){
+                foreach($domain->autologinParams as $autologinParam){
+                    if($autologinParam['ip'] == \Yii::$app->request->getUserIP()){
+                        \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
+                    }
+                }
+            }
+
+            $allowedUsers = SubDomainAccess::findAll(['subDomainId' => $domain->id]);
+
+            if($allowedUsers){
+                foreach($allowedUsers as $user){
+                    \Yii::$app->params['allowedUsers'][] = $user->userId;
+                }
+            }
+
+            $configuration = Cashbox::findOne($domain->cashboxId);
+        }
 
         if(!$configuration){
-            $configuration = new Cashbox([
-                'ID'    =>  1
-            ]);
-
-            $configuration->autologin = [
-                [
-                    'username'  =>  'root',
-                    'ip'        =>  '127.0.0.1'
-                ]
-            ];
+            $configuration = Cashbox::findOne(['default' => 1]);
         }
 
-        if($configuration){
-            \Yii::$app->params['configuration'] = $configuration;
-        }
+        \Yii::$app->params['configuration'] = $configuration;
 
         return parent::init();
     }
 
     public function beforeAction($action){
-        /*if(!\Yii::$app->user->isGuest){
+        if(!\Yii::$app->user->isGuest){
             if(\Yii::$app->user->identity->superAdmin == 1){
                 //\Yii::$app->params['moduleConfiguration'] = $this->renderPartial('_moduleConfiguration');
             }
@@ -100,7 +116,7 @@ class SiteController extends Controller
             \Yii::$app->user->identity->lastActivity = date('Y-m-d H:i:s');
             \Yii::$app->user->identity->save();
             //echo \Yii::$app->user->identity->can('1') ? 'true' : 'false'; //если false - значит чувака нельзя пускать
-        }*/
+        }
 
         return parent::beforeAction($action);
     }
@@ -328,6 +344,10 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
+        if(empty(\Yii::$app->request->post("orderID"))){
+            throw new BadRequestHttpException("пустой orderID!");
+        }
+
         $cashboxOrder = CashboxOrder::findOne(['ID'    =>  \Yii::$app->request->post("orderID")]);
 
         if(!$cashboxOrder){
@@ -339,6 +359,40 @@ class SiteController extends Controller
                 'query' =>  SborkaItem::find()->where(['orderID'   =>  $cashboxOrder->createdOrder]),
             ])
         ]);
+    }
+
+    public function actionLoadorder(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("");
+        }
+
+        if(empty(\Yii::$app->request->post("orderID"))){
+            throw new BadRequestHttpException("");
+        }
+
+        $order = CashboxOrder::findOne(\Yii::$app->request->post("orderID"));
+
+        if(!$order){
+            throw new NotFoundHttpException();
+        }
+
+        if(!empty($order->createdOrder)){
+            foreach(SborkaItem::find()->where(['orderID' => $order->createdOrder])->each() as $assemblyItem){
+                $cashboxItem = CashboxItem::findOne(['itemID' => $assemblyItem->itemID, 'orderID' => $order->id]);
+
+                if(!$cashboxItem){
+                    $cashboxItem = new CashboxItem();
+                }
+
+                $cashboxItem->loadAssemblyItem($assemblyItem, $order->id);
+
+                $cashboxItem->save(false);
+            }
+        }
+
+        \Yii::$app->cashbox->loadOrder(\Yii::$app->request->post("orderID"), \Yii::$app->request->post("dropOrder", false));
+
+        return true;
     }
 
     public function actionSales(){
@@ -480,32 +534,36 @@ class SiteController extends Controller
         return true;
     }
 
-    public function actionLogin()
-    {
+    public function actionLogin(){
         $this->layout = 'login';
 
-        if(\Yii::$app->request->isAjax){
+        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
-
-        /*if(!\Yii::$app->user->isGuest){
-            if(!empty(\Yii::$app->user->identity->default_route)){
-                return $this->redirect(\Yii::$app->user->identity->default_route);
-            }
-
-            return $this->redirect(Url::home());
-        }*/
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goBack();
+        }
 
         $model = new LoginForm();
 
-        if(!empty(\Yii::$app->params['configuration']) && !empty(\Yii::$app->params['configuration']->autologin)){
-            foreach(\Yii::$app->params['configuration']->autologin as $user){
-                if($user['ip'] == $_SERVER['REMOTE_ADDR']){
-                    $model->username = $user['username'];
+        $hasAutoLogin = !empty(\Yii::$app->params['autologin']);
+
+        if(!empty(\Yii::$app->params['autologin'])){
+            $model->autoLoginUsers = \Yii::$app->params['autologin'];
+
+            if(isset(\Yii::$app->request->post("LoginForm")['userID']) && in_array(\Yii::$app->request->post("LoginForm")['userID'], $model->autoLoginUsers)){
+                $model->autoLoginUsers = [\Yii::$app->request->post("LoginForm")['userID']];
+            }
+
+            if(sizeof($model->autoLoginUsers) == 1){
+                $user = Siteuser::findOne($model->autoLoginUsers['0']);
+
+                if($user){
+                    $model->username = $user->username;
 
                     if(\Yii::$app->user->login($model->getUser(), 3600*24)){
-                        return $this->redirect(Url::home());
+                        return $this->goBack();
                     }
                 }
             }
@@ -513,8 +571,14 @@ class SiteController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
             return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
-            //return !$this->redirect($this->goBack() = '/login' ? \Yii::$app->user->identity->default_route : $this->goBack());
         }else{
+            if($hasAutoLogin){
+                return $this->render('login', [
+                    'model' => $model,
+                    'users' => Siteuser::find()->andWhere(['in', 'id', $model->autoLoginUsers])->all()
+                ]);
+            }
+
             return $this->render('login', [
                 'model' => $model,
             ]);

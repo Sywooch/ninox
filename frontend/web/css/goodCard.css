@@ -5,25 +5,25 @@
     margin: auto;
 }
 
-.breadcrumb{
+.under-menu .breadcrumb{
     background: none;
     padding: 25px 0px 0px;
 }
 
-.breadcrumb span a{
+.under-menu .breadcrumb span a{
     text-decoration: underline;
     padding-right: 5px;
     padding-left: 5px;
 }
 
-.breadcrumb span a:after{
-
-
+.fa{
+    font-size: 10px;
 }
 
 .itemPhotos{
     width: 45%;
     float: left;
+    padding-right: 40px;
 }
 
 .about-order{
@@ -32,7 +32,7 @@
 }
 
 .photo-and-order{
-    height: 480px;
+    min-height: 500px;
 }
 
 .itemDopInfo{
@@ -55,7 +55,6 @@
     text-align: center;
 }
 
-
 .pricelist-warning{
     padding-top: 20px;
     padding-left: 10px;
@@ -68,10 +67,27 @@
     font-weight: bold;
 }
 
+.link-hide{
+    cursor: pointer;
+    line-height: normal;
+    text-decoration: underline;
+    margin-left: 5px;
+}
+
 .rating{
-    padding-top: 15px;
-    border-top: 1px solid white;
+    float: left;
+    padding-left: 65px;
+}
+
+.line-rating{
     height: 40px;
+    text-align: left;
+    padding-top: 10px;
+    border-top: 1px solid white;
+}
+
+.line-rating span{
+
 }
 
 .availability{
@@ -89,7 +105,19 @@
     line-height: 28px;
 }
 
-.progress{
+.counterWrapper-vip{
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #dedede;
+    line-height: 28px;
+}
+
+.counterWrapper-discount{
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #dedede;
+    line-height: 28px;
+}
+
+.pricelist-content .progress{
     border-top: 1px solid #ffffff;
     border-bottom: 1px solid #dedede;
     box-shadow: none;
@@ -206,7 +234,6 @@
     width: 60%;
     text-align: left;
     padding-left: 35px;
-
 }
 
 .minihead{
@@ -283,7 +310,7 @@
 }
 
 .price span:after{
-    content: 'грн';
+    content: '';
     font-size:14px;
 }
 
@@ -294,7 +321,7 @@
 .retail-price{
     width: -moz-max-content;
     margin: auto;
-    padding-bottom: 20px;
+    padding-bottom: 13px;
     font-size: 13px;
     line-height: 15px;
 }
@@ -308,10 +335,6 @@
     color: #FFF;
     cursor: pointer;
     display: inline-block;
-}
-
-.pricelist-content-available .retail-price .quest{
-
 }
 
 .pricelist-content-discount .counterWrapper-discount .retail-price i{
@@ -357,11 +380,19 @@
     display: none;
 }
 
+.pricelist-content-discount .about-price-not-available{
+    display: none;
+}
+
 .pricelist-content-available .counterWrapper-discount{
     display: none;
 }
 
 .pricelist-content-available .counterWrapper-vip{
+    display: none;
+}
+
+.pricelist-content-available .about-price-not-available{
     display: none;
 }
 
@@ -373,10 +404,18 @@
     display: none;
 }
 
+.pricelist-content-not-available .about-price-available{
+    display: none;
+}
+
 .pricelist-content-vip .counterWrapper-discount{
     display: none;
 }
 .pricelist-content-vip .counterWrapper{
+    display: none;
+}
+
+.pricelist-content-vip .about-price-not-available{
     display: none;
 }
 
@@ -385,11 +424,8 @@
     background: #66a775 none repeat scroll 0% 0%;
     height: 46px;
     border-radius: 5px;
-    padding: 0px;
-    margin: auto;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    padding-top: 2px;
+    margin: 20px auto 10px;
+    padding: 10px 0px 0px;
 }
 
 .pricelist-content-vip .counterWrapper-vip .price span{
@@ -430,7 +466,6 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
 }
 
-
 .about-price .reserve{
     display: none;
 }
@@ -439,27 +474,27 @@
     display: block;
 }
 
-
 .reserve-button{
     display: none;
 }
-
 
 .price{
     padding-top: 16px;
 }
 
 .favorites:before{
+    vertical-align: middle;
+    vertical-align: -webkit-baseline-middle;
     vertical-align: -moz-middle-with-baseline;
     padding-right: 4px;
 }
 
-.nav-tabs{
+.about-item .nav-tabs{
     border-bottom: 3px solid;
     border-color: #bcbcbc;
 }
 
-.nav-tabs li a{
+.about-item .nav-tabs li a{
     color: black;
     border-left: 1px solid #bcbcbc;
     border-right:  1px solid #bcbcbc;
@@ -468,19 +503,18 @@
     border-top-right-radius: 5px;
 }
 
-.nav-tabs > .active > a{
+.about-item .nav-tabs > .active > a{
     color: white ;
 }
-
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus{
-    background-color: #bcbcbc;
+            .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus
+.about-item .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus{
+    background-color: #bcbcbc !important;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    color: white;
+    color: white !important;
     border-left: none;
     border-right: none;
     border-top: none;
-
 }
 
 .product-characteristics{
@@ -490,7 +524,7 @@
     color: #414141;
 }
 
-.product-characteristics .tabTitle{
+.tabTitle{
     font-size: 20px;
 }
 
@@ -509,6 +543,11 @@
 .customer-reviews{
     width: 50%;
     float: left;
+}
+
+.reviews-tab .customer-reviews{
+    width: 100%;
+    float: none;
 }
 
 .customer-reviews span{
@@ -579,4 +618,25 @@
     padding-right: 20px;
     padding-top: 3px;
 }
+
+.item-detail{
+    float: left;
+    width: 50%;
+}
+
+.item-detail .details{
+    font-size: 13px;
+    float: left;
+}
+
+.details {
+    padding-top: 20px;
+}
+
+.item-video{
+    margin: auto;
+    display: block;
+    padding-top: 10px;
+}
+
 /*========* END CART-ITEM *=========*/
