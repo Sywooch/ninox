@@ -168,12 +168,12 @@ class Cart extends Component{
 			$helper = new PriceRuleHelper();
 			$helper->cartSumm = 0;
 			foreach($this->goods as $good){
-				$helper->cartSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
+				$helper->cartSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesale_price : $good->wholesale_real_price) * $this->items[$good->ID]->count;
 			}
 			foreach($this->goods as $good){
-				$good = $helper->recalc($good);
+				$helper->recalc($good);
 				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
-				$this->cartWholesaleRealSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
+				$this->cartWholesaleRealSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesale_price : $good->wholesale_real_price) * $this->items[$good->ID]->count;
 				$this->cartWholesaSumWithoutDiscount += $good->discountType == 0 ? $good->wholesale_real_price * $this->items[$good->ID]->count : 0;
 				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
 				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;

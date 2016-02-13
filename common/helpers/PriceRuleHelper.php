@@ -15,12 +15,11 @@ class PriceRuleHelper extends Component{
 
 	public $cartSumm;
 
-	public function recalc($model, $category = false){
+	public function recalc(&$model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
-				$tmodel = $this->recalcItem($model, $rule, $category);
-				if($tmodel){
-					return $tmodel;
+				if($this->recalcItem($model, $rule, $category)){
+					return;
 				}
 			}
 			if($model->priceRuleID != 0){
@@ -29,18 +28,17 @@ class PriceRuleHelper extends Component{
 				$model->discountType = 0;
 				$model->discountSize = 0;
 				$model->customerRule = 0;
-				return $model;
+				return;
 			}
 		}
 		$model->priceModified = false;
-		return $model;
 	}
 
 	public function recalcSborkaItem($model, $rule){
 		return $this->recalcItem($model, $rule, false);
 	}
 
-	private function recalcItem($model, $rule, $category){
+	private function recalcItem(&$model, $rule, $category){
 		$termsCount = 0;
 		$discount = 0;
 		foreach($rule->terms as $keyTerm => $term){
@@ -145,7 +143,7 @@ class PriceRuleHelper extends Component{
 			$model->discountType = empty($rule->actions['Type']) ? 2 : $rule->actions['Type'];
 			$model->discountSize = $rule->actions['Discount'];
 			$model->customerRule = $rule->customerRule;
-			return $model;
+			return true;
 		}
 	}
 

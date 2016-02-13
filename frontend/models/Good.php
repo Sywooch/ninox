@@ -56,11 +56,6 @@ class Good extends \common\models\Good{
                 break;
         }
 
-	    if($this->priceRuleID == 0 && $this->discountType > 0){
-		    $this->wholesale_real_price = $this->wholesale_price;
-		    $this->retail_real_price = $this->retail_price;
-	    }
-
 	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
 	    $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
     }
