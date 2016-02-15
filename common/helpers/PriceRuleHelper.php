@@ -43,7 +43,7 @@ class PriceRuleHelper extends Component{
 		return $this->recalcItem($model, $rule, false);
 	}
 
-	private function recalcItem($model, $rule, $category){
+	protected function recalcItem($model, $rule, $category){
 		$ruleArray = $rule->asArray();
 		$termsCount = 0;
 		$discount = 0;
@@ -142,7 +142,7 @@ class PriceRuleHelper extends Component{
 		}
 	}
 
-	private function checkCategory($term, $cat, &$termsCount, &$discount){
+	protected function checkCategory($term, $cat, &$termsCount, &$discount){
 		$termsCount++;
 		foreach($term as $gg){
 			if($gg['type'] == '='){
@@ -174,7 +174,7 @@ class PriceRuleHelper extends Component{
 		}
 	}
 
-	private function checkDate($term, &$termsCount, &$discount){
+	protected function checkDate($term, &$termsCount, &$discount){
 		$termsCount++;
 		date_default_timezone_set('Europe/Kiev');
 		$now = new DateTime(date('Y-m-d'));
@@ -187,7 +187,7 @@ class PriceRuleHelper extends Component{
 		}
 	}
 
-	private function checkDocumentSumm($term, &$termsCount, &$discount){
+	protected function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
 		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartRealSumm;
 		foreach($term as $ds){

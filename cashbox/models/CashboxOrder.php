@@ -1,8 +1,7 @@
 <?php
 
-namespace backend\models;
+namespace cashbox\models;
 
-use cashbox\models\CashboxItem;
 use Yii;
 
 /**
@@ -19,6 +18,7 @@ use Yii;
  * @property double $toPay
  * @property array $items
  * @property integer $postpone
+ * @property string $promoCode
  */
 class CashboxOrder extends \yii\db\ActiveRecord
 {
@@ -74,7 +74,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
             return [];
         }
 
-        return SborkaItem::findAll(['orderID' => $this->createdOrder]);
+        return AssemblyItem::findAll(['orderID' => $this->createdOrder]);
     }
 
     public function calcCreatedOrderSum(){

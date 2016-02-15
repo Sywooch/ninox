@@ -2,27 +2,27 @@
 namespace cashbox\controllers;
 
 use backend\models\CashboxCustomerForm;
-use backend\models\CashboxOrder;
+use cashbox\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\Good;
 use backend\models\SborkaItem;
 use cashbox\models\CashboxItem;
 use common\models\Cashbox;
 use cashbox\models\Siteuser;
+use common\models\Pricerule;
+use common\models\Promocode;
 use common\models\SubDomain;
 use common\models\SubDomainAccess;
 use ErrorException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
-use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use backend\models\LoginForm;
 use yii\filters\VerbFilter;
 use yii\web\Cookie;
-use yii\web\HttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -121,8 +121,7 @@ class SiteController extends Controller
         return parent::beforeAction($action);
     }
 
-    public function actionIndex()
-    {
+    public function actionIndex(){
         if(!empty(\Yii::$app->cashbox->order)){
             $order = \Yii::$app->cashbox->order;
         }else{
@@ -487,7 +486,16 @@ class SiteController extends Controller
 
         $itemID = \Yii::$app->request->post("itemID");
 
-        $good = Good::find()->where(['or', 'ID = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID])->one();
+        $promoCode = Promocode::findOne(['code' => $itemID]);
+
+        if($promoCode && \Yii::$app->cashbox->order){
+            \Yii::$app->cashbox->promoCode = \Yii::$app->cashbox->order->promoCode = $promoCode->code;
+            \Yii::$app->cashbox->order->save(false);
+
+            return \Yii::$app->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
+        }
+
+        $good = Good::find()->where(['or', 'BarCode2 = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID, 'ID = '.$itemID, ])->one();
 
         if(!$good){
             throw new NotFoundHttpException("Товар с идентификатором `".$itemID."` не найден!");
