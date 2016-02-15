@@ -27,9 +27,20 @@ class CashboxItem extends \yii\db\ActiveRecord
     public $price = 0;
     public $changedValue = 0;
     public $return = false;
+    public $priceModified = false;
 
     public function afterFind(){
-        $this->price = $this->originalPrice;
+        switch($this->discountType){
+            case '1':
+                $this->price = $this->originalPrice - $this->discountSize;
+                break;
+            case '2':
+                $this->price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
+                break;
+            default:
+                $this->price = $this->originalPrice;
+                break;
+        }
 
         return parent::afterFind();
     }

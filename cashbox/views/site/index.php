@@ -394,6 +394,17 @@ JS;
 
 $this->registerJs($js);
 
+$css = <<<'CSS'
+#mainContent .header .summary.bg-success .wholesale-sum{
+    display: none;
+}
+#mainContent .header .summary.bg-danger .wholesale-sum{
+    display: block;
+}
+CSS;
+
+$this->registerCss($css);
+
 \bobroid\messenger\ThemeairAssetBundle::register($this);
 rmrevin\yii\fontawesome\AssetBundle::register($this);
 
@@ -426,7 +437,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
             <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
                 <p style="font-size: 14px;">Сумма: <span class="summ"><?=\Yii::$app->cashbox->sum?></span> грн. Скидка: <span class="discountSize"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
                 <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=\Yii::$app->cashbox->toPay?></span> грн.</h2>
-
+                <p class="wholesale-sum"><span>Сумма по опту: <?=\Yii::$app->cashbox->wholesaleSum?></span></p>
                 <p>Количество товаров: <span class="itemsCount"><?=\Yii::$app->cashbox->itemsCount?></span></p>
             </div>
         </div>
@@ -434,6 +445,8 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
     <div class="content main">
         <?=GridView::widget([
             'pjax'          =>  true,
+            'responsive'    =>  false,
+            'resizableColumns'=>  false,
             'dataProvider'  =>  $orderItems,
             'rowOptions'    =>  function($model) use(&$goodsModels){
                 return [
@@ -494,7 +507,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'header'    =>  'Сумма',
                     'width'     =>  '130px',
                     'value'     =>  function($model){
-                        return ($model->originalPrice * $model->count).' грн.';
+                        return ($model->price * $model->count).' грн.';
                     }
                 ],
                 [

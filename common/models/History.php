@@ -69,6 +69,9 @@ class History extends \yii\db\ActiveRecord
     const CALLBACK_UNANSWERED = 1;
     const CALLBACK_COMPLETED = 2;
 
+    const SOURCETYPE_INTERNET = 0;
+    const SOURCETYPE_SHOP = 1;
+
     public $status;
 
     /**
