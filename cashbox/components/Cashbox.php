@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: bobroid
+ * User: Nikolai Gilko <n.gilko@gmail.com>
  * Date: 28.12.15
  * Time: 13:51
  */
@@ -27,34 +27,88 @@ use yii\web\NotFoundHttpException;
 
 class Cashbox extends Component{
 
+
+    /**
+     * ID заказа (CashboxOrder->id)
+     *
+     * @type int
+     */
     public $orderID;
 
+    /**
+     * Сумма заказа без учёта скидок
+     *
+     * @type float
+     */
     public $sum = 0;
+
+    /**
+     * @deprecated
+     *
+     * @type float
+     */
     public $sumWithoutDiscount = 0;
+
+    /**
+     * Размер скидки (в грн.)
+     *
+     * @type float
+     */
+    public $discountSize = 0;
+
+    /**
+     * Розничная цена заказа
+     *
+     * @type float
+     */
     public $retailSum = 0;
+
+    /**
+     * Оптовая цена заказа
+     *
+     * @type float
+     */
     public $wholesaleSum = 0;
 
+    /**
+     * Сумма к оплате (сумма с учётом скидки)
+     *
+     * @type float
+     */
     public $toPay = 0;
 
+    /**
+     * ID клиента, который совершает заказ
+     *
+     * @type bool|int
+     */
     public $customer = false;
+
+    /**
+     * ID менеджера, на которого будет оформлен заказ
+     *
+     * @type int
+     */
     public $responsibleUser = 0;
 
+    /**
+     * Промо-код к заказу
+     *
+     * @type bool|string
+     */
     public $promoCode = false;
 
     /**
-     * @type array
-     * @var array $items CashboxItem[]
+     * @type CashboxItem[]
      */
     public $items = [];
 
     /**
-     * @type array
-     * @var array $goods Good[]
+     * @type Good[]
      */
     public $goods = [];
     public $itemsCount = 0;
     public $priceType = 0;
-    public $discountSize = 0;
 
     /**
      * @deprecated
@@ -437,6 +491,20 @@ class Cashbox extends Component{
         return false;
     }
 
+    /**
+     * Метод используется для редактирования уже созданого заказа, те - добавления в него
+     * новых товаров (мб применение скидки, хз)
+     *
+     * @param $orderID - ID заказа
+     * @param $amount - Фактическая сумма заказа
+     *
+     * @return integer - ID созданого заказа
+     * @throws \yii\base\ErrorException
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\NotFoundHttpException - если нет такого заказа
+     *
+     * @todo: сделать пересчёт стоимости заказа
+     */
     public function edit($orderID, $amount){
         $createdOrder = Order::findOne($orderID);
 
@@ -444,7 +512,7 @@ class Cashbox extends Component{
             throw new NotFoundHttpException("Такого заказа не существует!");
         }
 
-        $createdOrder->loadCashboxOrder($this->order, $amount);
+        $createdOrder->loadCashboxOrder($this->cashboxOrder, $amount);
 
         AssemblyItem::deleteAll(['orderID' => $createdOrder->id]);
 
@@ -645,13 +713,13 @@ class Cashbox extends Component{
     }
 
     public function postpone(){
-        if(!$this->order){
+        if(!$this->cashboxOrder){
            throw new NotFoundHttpException("Нечего откладывать");
         }
 
-        $this->order->postpone = 1;
+        $this->cashboxOrder->postpone = 1;
 
-        if($this->order->save(false)){
+        if($this->cashboxOrder->save(false)){
             $this->clear();
 
             return true;
@@ -661,7 +729,7 @@ class Cashbox extends Component{
     }
 
     public function loadOrder($id, $drop = false){
-        if($this->order && !$drop){
+        if($this->cashboxOrder && !$drop){
             $this->postpone();
         }
 
@@ -673,18 +741,18 @@ class Cashbox extends Component{
             throw new NotFoundHttpException("Чек с ID ".$id." не найден!");
         }
 
-        $this->order = $order;
+        $this->cashboxOrder = $order;
 
-        $this->order->postpone = 0;
-        $this->loadInfo($this->order);
+        $this->cashboxOrder->postpone = 0;
+        $this->loadCashboxOrder($this->cashboxOrder);
         $this->updateItems();
 
         \Yii::$app->response->cookies->add(new Cookie([
             'name'      =>  'cashboxOrderID',
-            'value'     =>  $this->order->id
+            'value'     =>  $this->cashboxOrder->id
         ]));
 
-        $this->order->save(false);
+        $this->cashboxOrder->save(false);
     }
 
     public function loadPostpone($id){
@@ -694,9 +762,9 @@ class Cashbox extends Component{
     public function changeCustomer($customerID){
         $this->customer = $customerID;
 
-        if($this->order){
-            $this->order->customerID = $this->customer;
-            $this->order->save(false);
+        if($this->cashboxOrder){
+            $this->cashboxOrder->customerID = $this->customer;
+            $this->cashboxOrder->save(false);
         }
 
         \Yii::$app->response->cookies->add(new Cookie([
@@ -715,6 +783,7 @@ class Cashbox extends Component{
             $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
             $this->sum += ($item->originalPrice * $item->count);
             $this->toPay += ($item->price * $item->count);
+            //$this->discountSize += (($item->originalPrice - $item->price) * $item->count);
         }
 
         $this->discountSize = $this->sum - $this->toPay;

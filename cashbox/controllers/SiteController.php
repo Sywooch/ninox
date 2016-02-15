@@ -508,6 +508,7 @@ class SiteController extends Controller
         return [
             'toPay'         =>  \Yii::$app->cashbox->toPay,
             'sum'           =>  \Yii::$app->cashbox->sum,
+            'discount'      =>  \Yii::$app->cashbox->discountSize,
             'itemsCount'    =>  \Yii::$app->cashbox->itemsCount,
             'wholesaleSum'  =>  \Yii::$app->cashbox->wholesaleSum,
             'priceType'     =>  \Yii::$app->cashbox->priceType
