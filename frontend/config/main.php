@@ -55,6 +55,9 @@ return [
         'autopricelist' => [
             'class' => 'frontend\modules\autopricelist\Module',
         ],
+	    'gridview' =>  [
+		    'class' => '\kartik\grid\Module'
+	    ],
     ],
     'params' => $params,
 ];
