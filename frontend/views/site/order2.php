@@ -1,9 +1,8 @@
 <?php
 
+use common\helpers\Formatter;
 use yii\jui\Accordion;
 use yii\bootstrap\Html;
-
-//$this->registerCss($css);
 
 $js = <<<'SCRIPT'
 $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
@@ -47,9 +46,8 @@ $form = \yii\bootstrap\ActiveForm::begin([
 ]);
 ?>
 <head>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"> </script>
+    <script src="//api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"> </script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="http://code.jquery.com/jquery-latest.js"></script><!-- Прелоадер -->
 </head>
 <script type="text/javascript">
     var kyiv_map;
@@ -92,12 +90,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
 <script type="text/javascript">
     $(document).ready(function () {
         var offset = $('.ordering').offset();
-        var topPadding = 0;
-        $(window).scroll(function() {
-            if ($(window).scrollTop() > offset.top) {
+        var topPadding = 10;
+        $(window).scroll(function(){
+            if($(window).scrollTop() > offset.top){
                 $('.ordering').stop().animate({marginTop: $(window).scrollTop() - offset.top + topPadding});
-            }
-            else {
+            }else{
                 $('.ordering').stop().animate({marginTop: 5});
             }
         });
@@ -224,27 +221,25 @@ $('#submit').click(function() {
                             <div class="all-price">
                                 <?=\Yii::t('shop', '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}}', ['n' => \Yii::$app->cart->itemsCount])?> на сумму
                                 <div class="bold">
-                                    <div class="br">
-                                        <?=\Yii::$app->cart->cartRealSumm?> <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
-                                    </div>
+                                    <span class="amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartRealSumm)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
                             </div>
-                            <div class="price">
-                                Скидка по карте
-                                <div class="bold">
-                                    -200 грн.
-                                </div>
-                            </div>
-                            <div class="price">
+                            <div class="price action-discount">
                                 Сумма скидки по акции
                                 <div class="bold">
-                                    -4000 грн.
+	                                <span class="action-discount-amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm - \Yii::$app->cart->cartRealSumm, true)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
                             </div>
-                            <div class="price">
-                                Услуги банка (+1%)
+	                        <div class="price card-discount">
+		                        Скидка по карте (<span class="card-discount-percent"><?=((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumWithoutDiscount)) ? 0 : '-'.$customer->discount)?>%</span>)
+		                        <div class="bold">
+			                        <span class="card-discount-amount"><?=Formatter::getFormattedPrice(((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumWithoutDiscount)) ? 0 : -\Yii::$app->cart->cartSumWithoutDiscount / 100 * $customer->discount), true)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
+		                        </div>
+	                        </div>
+                            <div class="price commission">
+                                Коммиссия (<span class="commission-percent"></span><span class="commission-static"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>)
                                 <div class="bold">
-                                    +13 грн.
+	                                <span class="commission-amount"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
                             </div>
                         </div>
@@ -262,7 +257,7 @@ $('#submit').click(function() {
                                 </div>
                             </div>
                             <div class="semi-bold">
-                                21 500 грн.
+                                <span class="total-amount"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                             </div>
                         </div>
                         <div class="ordering-body-order-confirm">
@@ -283,9 +278,7 @@ $('#submit').click(function() {
                                 <a>пользовательского соглашение</a>
                             </div>
                         </div>
-                            <div class="text-align-center"><a href="#modalCart">Редактировать заказ</a>
-
-                            </div>
+                            <div class="text-align-center"><a href="#modalCart">Редактировать заказ</a></div>
                             <div class="text-align-center">
                                 <div class="promotional-code">
                                     <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
@@ -307,13 +300,10 @@ $('#submit').click(function() {
 
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 <?php $form->end(); ?>

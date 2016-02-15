@@ -67,9 +67,16 @@
     font-weight: bold;
 }
 
+.link-hide{
+    cursor: pointer;
+    line-height: normal;
+    text-decoration: underline;
+    margin-left: 5px;
+}
+
 .rating{
     float: left;
-    padding-left: 79px;
+    padding-left: 65px;
 }
 
 .line-rating{
@@ -303,7 +310,7 @@
 }
 
 .price span:after{
-    content: 'грн';
+    content: '';
     font-size:14px;
 }
 

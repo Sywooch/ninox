@@ -1,31 +1,39 @@
 <div class="product-characteristics">
-    <span class="tabTitle semi-bold">Характеристика товара</span>
+    <span class="tabTitle semi-bold">
+        <?=_("Характеристика товара")?>
+    </span>
     <div class="details">
         <div class="characteristics">
             <div class="characteristic">
                 <span>
-                    <?=_("Количество в упаковке")?>
+                    <?=_("Количество в упаковке:")?>
                 </span>
             </div>
             <div>
                 <span>
-                    <?=$good['num_opt'].' '.$good['Measure1']?>
+                    <?=$good->num_opt.' '.$good->Measure1?>
                 </span>
             </div>
         </div>
         <div class="characteristics">
-            <div class="characteristic">Материал:</div>
+            <div class="characteristic">
+                <?=_("Материал:")?>
+            </div>
             <div>Ткань тканьевая</div>
         </div>
         <div class="characteristics">
-            <div class="characteristic">Размеры:</div>
-            <div>12 х 34 х 56 мм</div>
+            <div class="characteristic">
+                <?=_("Размеры:")?>
+            </div>
+            <div>
+                <?=$good->gabarity?>
+            </div>
         </div>
     </div>
     <!--<div class="properties" itemprop="description"><?php$good->Description?></div>-->
 </div>
 <div class="item-detail">
-    <span class="tabTitle semi-bold">Описание товара</span>
+    <span class="tabTitle semi-bold"><?=_("Описание товара")?></span>
     <span class="details">
         Детский манеж Open от Chicco это чудное место, в котором малыш может поиграть и отдохнуть.
         Эта модель представлена в двух цветах: Green и Baby world. Манеж имеет квадратную форму и подбитое изголовье,
@@ -34,7 +42,6 @@
         а размер в открытом виде – 94х94х76.  Манежик подходит для детей от рождения до 3-х лет и весом не более 15 кг
     </span>
 </div>
-
     <?php if(sizeof($good['options']) >= 1){ foreach($good['options'] as $option){  ?>
     <div class="properties"><span class="semi-bold
     blue"><span><?=$option['name']?></span></span><span><?=$option['value']?></span></div>

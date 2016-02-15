@@ -13,4 +13,4 @@ class Pricerule extends \common\models\Pricerule{
 
 	public $customerRule = 0;
 
-} 
+}

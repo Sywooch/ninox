@@ -2,18 +2,23 @@
 namespace cashbox\controllers;
 
 use backend\models\CashboxCustomerForm;
-use backend\models\CashboxOrder;
+use cashbox\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\Good;
 use backend\models\SborkaItem;
+use cashbox\models\CashboxItem;
 use common\models\Cashbox;
-use common\models\Siteuser;
+use cashbox\models\Siteuser;
+use common\models\Pricerule;
+use common\models\Promocode;
 use common\models\SubDomain;
+use common\models\SubDomainAccess;
 use ErrorException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use backend\models\LoginForm;
 use yii\filters\VerbFilter;
@@ -64,7 +69,7 @@ class SiteController extends Controller
 
     public function actionPrintinvoice($param){
 
-        return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param);
+        return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param.'?secret=secretKeyForPrinter');
     }
 
     public function init(){
@@ -79,6 +84,14 @@ class SiteController extends Controller
                     if($autologinParam['ip'] == \Yii::$app->request->getUserIP()){
                         \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
                     }
+                }
+            }
+
+            $allowedUsers = SubDomainAccess::findAll(['subDomainId' => $domain->id]);
+
+            if($allowedUsers){
+                foreach($allowedUsers as $user){
+                    \Yii::$app->params['allowedUsers'][] = $user->userId;
                 }
             }
 
@@ -108,8 +121,7 @@ class SiteController extends Controller
         return parent::beforeAction($action);
     }
 
-    public function actionIndex()
-    {
+    public function actionIndex(){
         if(!empty(\Yii::$app->cashbox->order)){
             $order = \Yii::$app->cashbox->order;
         }else{
@@ -331,6 +343,10 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
+        if(empty(\Yii::$app->request->post("orderID"))){
+            throw new BadRequestHttpException("пустой orderID!");
+        }
+
         $cashboxOrder = CashboxOrder::findOne(['ID'    =>  \Yii::$app->request->post("orderID")]);
 
         if(!$cashboxOrder){
@@ -342,6 +358,40 @@ class SiteController extends Controller
                 'query' =>  SborkaItem::find()->where(['orderID'   =>  $cashboxOrder->createdOrder]),
             ])
         ]);
+    }
+
+    public function actionLoadorder(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("");
+        }
+
+        if(empty(\Yii::$app->request->post("orderID"))){
+            throw new BadRequestHttpException("");
+        }
+
+        $order = CashboxOrder::findOne(\Yii::$app->request->post("orderID"));
+
+        if(!$order){
+            throw new NotFoundHttpException();
+        }
+
+        if(!empty($order->createdOrder)){
+            foreach(SborkaItem::find()->where(['orderID' => $order->createdOrder])->each() as $assemblyItem){
+                $cashboxItem = CashboxItem::findOne(['itemID' => $assemblyItem->itemID, 'orderID' => $order->id]);
+
+                if(!$cashboxItem){
+                    $cashboxItem = new CashboxItem();
+                }
+
+                $cashboxItem->loadAssemblyItem($assemblyItem, $order->id);
+
+                $cashboxItem->save(false);
+            }
+        }
+
+        \Yii::$app->cashbox->loadOrder(\Yii::$app->request->post("orderID"), \Yii::$app->request->post("dropOrder", false));
+
+        return true;
     }
 
     public function actionSales(){
@@ -359,6 +409,13 @@ class SiteController extends Controller
                 break;
             case 'month':
                 $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime(($date - (date("j") - 1) * 86400), 'php:Y-m-d H:i:s')."'");
+                break;
+            case 'range':
+                $dateFrom = \Yii::$app->request->get("dateFrom");
+                $dateTo = \Yii::$app->request->get("dateTo");
+                $orders
+                    ->andWhere('doneTime <= \''.\Yii::$app->formatter->asDatetime($dateTo, 'php:Y-m-d H:i:s').'\'')
+                    ->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($dateFrom, 'php:Y-m-d H:i:s').'\'');
                 break;
             case 'today':
             default:
@@ -429,7 +486,16 @@ class SiteController extends Controller
 
         $itemID = \Yii::$app->request->post("itemID");
 
-        $good = Good::find()->where(['or', 'ID = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID])->one();
+        $promoCode = Promocode::findOne(['code' => $itemID]);
+
+        if($promoCode && \Yii::$app->cashbox->cashboxOrder){
+            \Yii::$app->cashbox->promoCode = \Yii::$app->cashbox->cashboxOrder->promoCode = $promoCode->code;
+            \Yii::$app->cashbox->cashboxOrder->save(false);
+
+            return \Yii::$app->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
+        }
+
+        $good = Good::find()->where(['or', 'BarCode2 = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID, 'ID = '.$itemID, ])->one();
 
         if(!$good){
             throw new NotFoundHttpException("Товар с идентификатором `".$itemID."` не найден!");
@@ -524,7 +590,7 @@ class SiteController extends Controller
             if($hasAutoLogin){
                 return $this->render('login', [
                     'model' => $model,
-                    'users' => Siteuser::find()->where(['in', 'id', $model->autoLoginUsers])->all()
+                    'users' => Siteuser::find()->andWhere(['in', 'id', $model->autoLoginUsers])->all()
                 ]);
             }
 

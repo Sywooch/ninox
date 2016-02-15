@@ -2,7 +2,9 @@
 
 namespace cashbox\models;
 
+use common\models\SborkaItem;
 use Yii;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "cashboxItems".
@@ -25,9 +27,20 @@ class CashboxItem extends \yii\db\ActiveRecord
     public $price = 0;
     public $changedValue = 0;
     public $return = false;
+    public $priceModified = false;
 
     public function afterFind(){
-        $this->price = $this->originalPrice;
+        switch($this->discountType){
+            case '1':
+                $this->price = $this->originalPrice - $this->discountSize;
+                break;
+            case '2':
+                $this->price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
+                break;
+            default:
+                $this->price = $this->originalPrice;
+                break;
+        }
 
         return parent::afterFind();
     }
@@ -42,6 +55,23 @@ class CashboxItem extends \yii\db\ActiveRecord
         return parent::__set($name, $value);
     }
 
+
+    public function loadAssemblyItem($assemblyItem, $orderID){
+        if($assemblyItem instanceof SborkaItem == false){
+            throw new BadRequestHttpException();
+        }
+
+        $this->category = $assemblyItem->category;
+        $this->count = $assemblyItem->count;
+        $this->customerRule = $assemblyItem->customerRule;
+        $this->discountSize  = $assemblyItem->discountSize;
+        $this->discountType = $assemblyItem->discountType;
+        $this->itemID = $assemblyItem->itemID;
+        $this->orderID = $orderID;
+        $this->name = $assemblyItem->name;
+        $this->originalPrice = $assemblyItem->originalPrice;
+        $this->priceRuleID   = $assemblyItem->priceRuleID;
+    }
 
     /**
      * @inheritdoc
@@ -94,6 +124,8 @@ class CashboxItem extends \yii\db\ActiveRecord
                 $good->save(false);
             }
         }
+
+        return parent::afterDelete();
     }
 
     public function beforeSave($insert){

@@ -80,9 +80,9 @@ $helper = new PriceRuleHelper();
             </div>
             <?=\yii\widgets\ListView::widget([
                 'dataProvider'  =>  $goods,
-                'itemView'      =>  function($model, $param2, $param3, $widget) use (&$helper){
+                'itemView'      =>  function($model, $param2, $param3, $widget) use (&$helper){$helper->recalc($model, true);
                     return $this->render('_shop_good', [
-                        'model' =>  $helper->recalc($model, true)
+                        'model' =>  $model
                     ]);
                 },
 	            'itemOptions'   =>  [
