@@ -12,23 +12,17 @@ class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
 
     protected function checkDocumentSumm($term, &$termsCount, &$discount){
         $termsCount++;
-        $cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cashbox->sum;
+        $cartSum = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cashbox->sum;
         foreach($term as $ds){
-            if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
+            if(($cartSum == $ds['term'] && $ds['type'] == '=') || ($cartSum >= $ds['term'] && $ds['type'] == '>=') || ($cartSum <= $ds['term'] && $ds['type'] == '<=')){
                 $discount += 1;
                 break;
             }
         }
     }
 
-    protected function recalcItem($model, $rule){
-        $tempModel = parent::recalcItem($model, $rule, false);
-
-        if($tempModel){
-            $tempModel->priceModified = true;
-            return $tempModel;
-        }
-
+    protected function recalcItem(&$model, $rule, $category = false){
+        parent::recalcItem($model, $rule, $category);
         return $model;
     }
 

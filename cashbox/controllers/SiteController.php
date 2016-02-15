@@ -488,9 +488,9 @@ class SiteController extends Controller
 
         $promoCode = Promocode::findOne(['code' => $itemID]);
 
-        if($promoCode && \Yii::$app->cashbox->order){
-            \Yii::$app->cashbox->promoCode = \Yii::$app->cashbox->order->promoCode = $promoCode->code;
-            \Yii::$app->cashbox->order->save(false);
+        if($promoCode && \Yii::$app->cashbox->cashboxOrder){
+            \Yii::$app->cashbox->promoCode = \Yii::$app->cashbox->cashboxOrder->promoCode = $promoCode->code;
+            \Yii::$app->cashbox->cashboxOrder->save(false);
 
             return \Yii::$app->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
         }
