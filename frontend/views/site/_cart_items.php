@@ -14,7 +14,7 @@ $w = new \app\widgets\CartItemsCounterWidget();
 
 echo \kartik\grid\GridView::widget([
 	'dataProvider'  =>  new \yii\data\ArrayDataProvider([
-		'models'     =>  \Yii::$app->cart->goods
+		'models'     =>  \Yii::$app->cart->itemsCount ? \Yii::$app->cart->goods : []
 	]),
 	'id'            =>  'cart-gridview',
 	'emptyText'     =>  \Yii::t('shop', 'Ваша корзина пуста!'),
@@ -52,9 +52,11 @@ echo \kartik\grid\GridView::widget([
 			'format'        =>  'html',
 			'value'         =>  function($model){
 					return Html::tag('div', $model->Name, ['class'  =>  'item-name blue']).
-					Html::tag('div', \Yii::t('shop', 'Код').': '.$model->Code, ['class'   =>  'item-code']).
-					Html::tag('div', $model->wholesale_price, ['class'   =>  'item-price']).
-					Html::tag('div', $model->retail_price, ['class'   =>  'item-price']);
+					Html::tag('div',
+						Html::tag('div', $model->wholesale_price, ['class'   =>  'item-price']).
+						Html::tag('div', $model->retail_price, ['class'   =>  'item-price']), [
+							'class'   =>  'item-prices'
+						]);
 				}
 		],
 		[
