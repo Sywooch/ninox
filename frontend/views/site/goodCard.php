@@ -1,4 +1,5 @@
 <?php
+use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use evgeniyrru\yii2slick\Slick;
 use yii\web\JsExpression;
@@ -95,9 +96,11 @@ foreach($good->dopPhoto as $photo){
 <div class="catalog">
     <div class="under-menu">
         <?=\yii\widgets\Breadcrumbs::widget([
-            'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
-            'itemTemplate'          =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
-        <span class="fa fa-long-arrow-right fa-fw"></span>',
+            'activeItemTemplate'    =>  '<span class="item-name" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
+            'itemTemplate'          =>  '
+                <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
+                <span class="fa fa-long-arrow-right fa-fw"></span>
+            ',
             'links'                 =>  \Yii::$app->params['breadcrumbs']
         ])?>
     </div>
@@ -121,7 +124,8 @@ foreach($good->dopPhoto as $photo){
                                     'slidesToScroll' => 1,
                                     'asNavFor'       => '#sliderNav',
                                 ]
-                        ]) : print '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$good->ico.'"
+                        ]) : '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link']
+                        .'/img/catalog/sm/'.$good->ico.'"
                         width="475px" height="355px" alt="'.$good->Name.'">',
                         !empty($itemsNav) ? Slick::widget([
                             'containerOptions' => [
@@ -219,7 +223,7 @@ foreach($good->dopPhoto as $photo){
                 <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <div class="pricelist">
                         <div class="pricelist-content">
-                            <div class="pricelist-content-not-available">
+                            <div class="pricelist-content-available">
                             <!-- 4 разных вида:
                             pricelist-content-discount
                             pricelist-content-available

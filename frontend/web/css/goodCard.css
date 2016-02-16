@@ -20,6 +20,10 @@
     font-size: 10px ;
 }
 
+.item-name{
+    padding-left: 5px;
+}
+
 .itemPhotos{
     width: 45%;
     float: left;
@@ -39,8 +43,7 @@
     float: right;
 }
 
-.about-order .blue{
-    color: #3e77aa;
+.about-order .code{
     font-size: 12px;
     float: left;
     margin-right: 15px;
@@ -565,13 +568,77 @@
 
 .write-review{
     float: left;
+}
+
+.write-review .btn-lg{
+   padding: 0px;
+}
+
+.write-review .btn{
+    font-size: 13px !important;
+}
+
+.write-review .btn-info{
+    color: #fff;
+    background-color: #03a7d4;
+    border: none;
+}
+
+.write-review .btn-lg{
+    float: left;
     background: #fbbf23;
     padding-left: 7px;
     padding-right: 7px;
     border-radius: 3px;
-    color: white;
-    margin-top: 5px;
+    color: #565655;
+    margin-top: 7px;
     cursor: pointer;
+    line-height: 1.3333333;
+    padding-bottom: 1px;
+}
+
+.write-review .modal-content{
+    background-color: #fafafa;
+}
+
+.write-review .modal-dialog{
+    width: 850px;
+}
+
+.write-review span{
+    font-size: 30px;
+    float: none;
+    padding-bottom: 30px;
+    display: block;
+}
+
+.write-review .row{
+    margin: 0px;
+    padding-bottom: 20px;
+    color: #565655;
+}
+
+.write-review .row span{
+    width: 200px;
+    font-size: 16px;
+    line-height: 40px;
+    padding: 0px;
+    text-align: left;
+    float: left;
+}
+
+.write-review .row input{
+    width: 300px;
+    height: 40px;
+}
+
+.write-review .row textarea{
+    width: 100%;
+    max-width: 800px;
+}
+
+.write-review .modal-body{
+    text-align: center;
 }
 
 .customer-reviews a{
@@ -634,11 +701,14 @@
 .item-detail{
     float: left;
     width: 50%;
+    text-align: center;
 }
 
 .item-detail .details{
     font-size: 13px;
     float: left;
+    width: 100%;
+    text-align: left;
 }
 
 .details {

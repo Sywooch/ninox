@@ -1,3 +1,4 @@
+<?php use yii\bootstrap\Modal;?>
 <div class="product-characteristics">
     <span class="tabTitle semi-bold">
         <?=_("Характеристика товара")?>
@@ -6,7 +7,7 @@
         <div class="characteristics">
             <div class="characteristic">
                 <span>
-                    <?=_("Количество в упаковке:")?>
+                    <?=!empty($good->num_opt) ? _("Количество в упаковке:") : ''?>
                 </span>
             </div>
             <div>
@@ -25,7 +26,7 @@
         </div>
         <div class="characteristics">
             <div class="characteristic">
-                <?=_("Размеры:")?>
+                <?=!empty($good->gabarity) ? _("Размеры:") : ''?>
             </div>
             <div>
                 <?=$good->gabarity?>
@@ -40,7 +41,24 @@
            <?=_("Отзывы покупателей")?>
         </span>
         <div class="write-review">
-           <?=_("Напишите отзыв")?>
+            <?php
+            Modal::begin([
+                             'header' => $this->render('_write_review', [
+                                 'good'  =>  $good
+                             ]),
+                             'toggleButton' => [
+                                 'tag' => 'button',
+                                 'class' => 'btn btn-lg btn-block btn-info',
+                                 'label' => 'Напишите отзыв',
+                             ]
+                         ]);
+            echo \yii\helpers\Html::button('Отправить', [
+                'type'  =>  'submit',
+                'class' =>  'yellow-button large-button ',
+                'id'    =>  'submit'
+            ]);
+            Modal::end();
+            ?>
         </div>
         <a class="review-number">18</a>
     </div>
@@ -53,7 +71,6 @@
             и компоновать элементы мышкой, назначая на них различные действия и редактируя атрибуты.
         </span>
         <div class="review-answer">Ответить</div>
-
     </div>
     <div class="customer-review">
         <div class="reviewer-name semi-bold">Валентина Блондинка</div>
@@ -64,7 +81,5 @@
             и компоновать элементы мышкой, назначая на них различные действия и редактируя атрибуты.
         </span>
         <div class="review-answer">1 ответ</div>
-
     </div>
-
 </div>

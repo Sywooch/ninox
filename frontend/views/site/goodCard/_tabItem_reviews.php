@@ -1,3 +1,4 @@
+<?php use yii\bootstrap\Modal;?>
 <div class="reviews-tab">
 <div class="customer-reviews">
     <div>
@@ -5,12 +6,29 @@
            <?=_("Отзывы покупателей")?>
         </span>
         <div class="write-review">
-           <?=_("Напишите отзыв")?>
+            <?php
+            Modal::begin([
+                             'header' => $this->render('_write_review', [
+                                 'good'  =>  $good
+                             ]),
+                             'toggleButton' => [
+                                 'tag' => 'button',
+                                 'class' => 'btn btn-lg btn-block btn-info',
+                                 'label' => 'Напишите отзыв',
+                             ]
+                         ]);
+            echo \yii\helpers\Html::button('Отправить', [
+                'type'  =>  'submit',
+                'class' =>  'yellow-button large-button ',
+                'id'    =>  'submit'
+            ]);
+            Modal::end();
+            ?>
         </div>
         <a class="review-number">2</a>
     </div>
     <div class="customer-review">
-        <div class="reviewer-name semi-bold">Валентина Блондинка<?php/*$goodComment->who*/?>
+        <div class="reviewer-name semi-bold">Валентина Блондинка<!--<?/*=$goodComment->who*/?>-->
         </div>
         <div class="review-data">21 декабря 2015 г.</div>
         <span>Познакомьтесь с Axure RP Pro - программой для создания прототипов ваших веб-сайтов,
