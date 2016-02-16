@@ -31,6 +31,10 @@ use yii\web\NotFoundHttpException;
  */
 class SiteController extends Controller
 {
+    /**
+     * @type \cashbox\components\Cashbox
+     */
+    protected $cashbox;
 
     public function actions()
     {
@@ -68,11 +72,12 @@ class SiteController extends Controller
 
 
     public function actionPrintinvoice($param){
-
         return $this->redirect(\Yii::$app->params['backend'].'/printer/invoice/'.$param.'?secret=secretKeyForPrinter');
     }
 
     public function init(){
+        $this->cashbox = \Yii::$app->cashbox;
+
         $configuration = false;
 
         $domain = preg_replace('/\.'.$_SERVER['SERVER_NAME'].'/', '', $_SERVER['HTTP_HOST']);
@@ -122,13 +127,13 @@ class SiteController extends Controller
     }
 
     public function actionIndex(){
-        if(!empty(\Yii::$app->cashbox->order)){
-            $order = \Yii::$app->cashbox->order;
+        if(!empty($this->cashbox->cashboxOrder)){
+            $order = $this->cashbox->cashboxOrder;
         }else{
             $order = new CashboxOrder();
         }
 
-        $customer = \Yii::$app->cashbox->customer;
+        $customer = $this->cashbox->customer;
 
         if(\Yii::$app->request->post("CashboxCustomerForm")){
             $cashboxCustomerForm = new CashboxCustomerForm();
@@ -159,7 +164,7 @@ class SiteController extends Controller
         }
 
         $orderItems = new ActiveDataProvider([
-            'query'     =>  \Yii::$app->cashbox->itemsQuery(),
+            'query'     =>  $this->cashbox->itemsQuery(),
             'pagination'    =>  [
                 'pageSize'  =>  0
             ]
@@ -185,7 +190,7 @@ class SiteController extends Controller
             'orderItems'        =>  $orderItems,
             'order'             =>  $order,
             'customer'          =>  $customer,
-            'manager'           =>  Siteuser::getActiveUsers()[\Yii::$app->cashbox->responsibleUser]
+            'manager'           =>  Siteuser::getActiveUsers()[$this->cashbox->responsibleUser]
         ]);
     }
 
@@ -194,7 +199,7 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Этот метод доступен только через ajax!");
         }
 
-        return \Yii::$app->cashbox->sell(\Yii::$app->request->post("actualAmount"));
+        return $this->cashbox->sell(\Yii::$app->request->post("actualAmount"));
     }
 
     public function actionChangecashboxtype(){
@@ -204,21 +209,15 @@ class SiteController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        \Yii::$app->cashbox->changePriceType();
+        $this->cashbox->changePriceType();
 
-        if(!empty(\Yii::$app->cashbox->order)){
-            \Yii::$app->cashbox->recalculate();
+        if(!empty($this->cashbox->cashboxOrder)){
+            $this->cashbox->recalculate();
 
-            return [
-                'priceType' =>  \Yii::$app->cashbox->order->priceType,
-                'orderSum'  =>  \Yii::$app->cashbox->sum,
-                'orderToPay'=>  \Yii::$app->cashbox->toPay
-            ];
+            return $this->cashbox->getSummary();
         }
 
-        return [
-            'priceType' =>  \Yii::$app->cashbox->priceType
-        ];
+        return $this->cashbox->getSummary();
     }
 
     public function actionChangemanager(){
@@ -232,9 +231,9 @@ class SiteController extends Controller
             ]);
         }
 
-        \Yii::$app->cashbox->changeManager(\Yii::$app->request->post("manager"));
+        $this->cashbox->changeManager(\Yii::$app->request->post("manager"));
 
-        return \Yii::$app->cashbox->responsibleUser;
+        return $this->cashbox->responsibleUser;
     }
 
     public function actionChangeitemcount(){
@@ -244,14 +243,8 @@ class SiteController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        if(\Yii::$app->cashbox->changeCount(\Yii::$app->request->post("itemID"), \Yii::$app->request->post("count"))){
-            return [
-                'itemsCount'    =>  \Yii::$app->cashbox->itemsCount,
-                'sum'           =>  \Yii::$app->cashbox->sum,
-                'toPay'         =>  \Yii::$app->cashbox->toPay,
-                'wholesaleSum'  =>  \Yii::$app->cashbox->wholesaleSum,
-                'priceType'     =>  \Yii::$app->cashbox->priceType,
-            ];
+        if($this->cashbox->changeCount(\Yii::$app->request->post("itemID"), \Yii::$app->request->post("count"))){
+            return $this->cashbox->getSummary();
         }
 
         return false;
@@ -264,7 +257,7 @@ class SiteController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        \Yii::$app->cashbox->changeCustomer(\Yii::$app->request->post("customerID"));
+        $this->cashbox->changeCustomer(\Yii::$app->request->post("customerID"));
 
         return true;
     }
@@ -389,7 +382,7 @@ class SiteController extends Controller
             }
         }
 
-        \Yii::$app->cashbox->loadOrder(\Yii::$app->request->post("orderID"), \Yii::$app->request->post("dropOrder", false));
+        $this->cashbox->loadOrder(\Yii::$app->request->post("orderID"), \Yii::$app->request->post("dropOrder", false));
 
         return true;
     }
@@ -452,9 +445,9 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
-        \Yii::$app->cashbox->refund();
+        $this->cashbox->refund();
 
-        return \Yii::$app->cashbox->order->id;
+        return $this->cashbox->cashboxOrder->id;
     }
 
     public function actionPostponecheck(){
@@ -462,11 +455,11 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
-        if(!\Yii::$app->cashbox->postpone()){
+        if(!$this->cashbox->postpone()){
             throw new ErrorException("Произошла ошибка при выполнении метода actionPostponeCheck");
         }
 
-        return \Yii::$app->cashbox->order->id;
+        return $this->cashbox->cashboxOrder->id;
     }
 
     public function actionLoadpostpone(){
@@ -474,7 +467,7 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
-        \Yii::$app->cashbox->loadPostpone(\Yii::$app->request->post("postponeOrderID"));
+        $this->cashbox->loadPostpone(\Yii::$app->request->post("postponeOrderID"));
 
         return true;
     }
@@ -488,11 +481,11 @@ class SiteController extends Controller
 
         $promoCode = Promocode::findOne(['code' => $itemID]);
 
-        if($promoCode && \Yii::$app->cashbox->cashboxOrder){
-            \Yii::$app->cashbox->promoCode = \Yii::$app->cashbox->cashboxOrder->promoCode = $promoCode->code;
-            \Yii::$app->cashbox->cashboxOrder->save(false);
+        if($promoCode && $this->cashbox->cashboxOrder){
+            $this->cashbox->promoCode = $this->cashbox->cashboxOrder->promoCode = $promoCode->code;
+            $this->cashbox->cashboxOrder->save(false);
 
-            return \Yii::$app->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
+            return $this->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
         }
 
         $good = Good::find()->where(['or', 'BarCode2 = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID, 'ID = '.$itemID, ])->one();
@@ -503,16 +496,9 @@ class SiteController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        \Yii::$app->cashbox->put($good->ID);
+        $this->cashbox->put($good->ID);
 
-        return [
-            'toPay'         =>  \Yii::$app->cashbox->toPay,
-            'sum'           =>  \Yii::$app->cashbox->sum,
-            'discount'      =>  \Yii::$app->cashbox->discountSize,
-            'itemsCount'    =>  \Yii::$app->cashbox->itemsCount,
-            'wholesaleSum'  =>  \Yii::$app->cashbox->wholesaleSum,
-            'priceType'     =>  \Yii::$app->cashbox->priceType
-        ];
+        return $this->cashbox->getSummary();
     }
 
     public function actionRemoveitem()
@@ -525,25 +511,19 @@ class SiteController extends Controller
 
         $itemID = \Yii::$app->request->post("itemID");
 
-        if ($itemID != 'all' && !isset(\Yii::$app->cashbox->items[$itemID])) {
+        if ($itemID != 'all' && !isset($this->cashbox->items[$itemID])) {
             throw new NotFoundHttpException("Такой товар не найден!");
         }
 
-        if (\Yii::$app->cashbox->itemsCount > 0) {
+        if ($this->cashbox->itemsCount > 0) {
             if ($itemID == 'all') {
-                foreach (\Yii::$app->cashbox->items as $item) {
-                    \Yii::$app->cashbox->remove($item->itemID);
+                foreach ($this->cashbox->items as $item) {
+                    $this->cashbox->remove($item->itemID);
                 }
             } else {
-                \Yii::$app->cashbox->remove($itemID);
+                $this->cashbox->remove($itemID);
 
-                return [
-                    'itemsCount' => \Yii::$app->cashbox->itemsCount,
-                    'sum' => \Yii::$app->cashbox->sum,
-                    'toPay' => \Yii::$app->cashbox->toPay,
-                    'wholesaleSum' => \Yii::$app->cashbox->wholesaleSum,
-                    'priceType' => \Yii::$app->cashbox->priceType,
-                ];
+                return $this->cashbox->getSummary();
             }
         }
 

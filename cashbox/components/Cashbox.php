@@ -580,7 +580,8 @@ class Cashbox extends Component{
         $order = new Order([
             'responsibleUserID' =>  $this->cashboxOrder->responsibleUser,
             'customerID'        =>  $this->cashboxOrder->customerID,
-            'originalSum'       =>  $this->cashboxOrder->sum,
+            'originalSum'       =>  $this->cashboxOrder->toPay,
+            'actualAmount'      =>  $amount,
             'coupon'            =>  $this->promoCode,
             'sourceType'        =>  Order::SOURCETYPE_SHOP,
             'orderSource'       =>  \Yii::$app->params['configuration']->store,
@@ -592,8 +593,6 @@ class Cashbox extends Component{
 
             $order->loadCustomer($customer);
         }
-
-        $order->actualAmount = $amount;
 
         if($order->save(false)){
             foreach($this->cashboxOrder->getItems() as $item){
@@ -612,7 +611,7 @@ class Cashbox extends Component{
 
             $payment = new CashboxMoney([
                 'cashbox'   =>  \Yii::$app->params['configuration']->ID,
-                'amount'    =>  $this->toPay,
+                'amount'    =>  $amount,
                 'operation' =>  CashboxMoney::OPERATION_SELL,
                 'order'     =>  $this->cashboxOrder->createdOrder,
                 'date'      =>  date('Y-m-d H:i:s'),
@@ -774,6 +773,17 @@ class Cashbox extends Component{
         ]));
 
         $this->save();
+    }
+
+    public function getSummary(){
+        return [
+            'priceType'         =>  $this->priceType,
+            'sum'               =>  $this->sum,
+            'sumToPay'          =>  $this->toPay,
+            'wholesaleSum'      =>  $this->wholesaleSum,
+            'discountSum'       =>  $this->discountSize,
+            'itemsCount'        =>  $this->itemsCount,
+        ];
     }
 
     public function recalculate(){

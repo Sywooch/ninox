@@ -100,7 +100,7 @@ $js = <<<JS
             }
         });
     }, completeSell = function(){
-        var paymentSum = $(".summ")[0].innerHTML;
+        var paymentSum = $(".toPay")[0].innerHTML;
 
         var s = swal({
             title: "Введите сумму к оплате",
@@ -187,19 +187,19 @@ $js = <<<JS
             $(".summ")[0].innerHTML = data.sum;
         }
 
-        if(data.toPay !== undefined){
-            $(".toPay")[0].innerHTML = data.toPay;
+        if(data.sumToPay !== undefined){
+            $(".toPay")[0].innerHTML = data.sumToPay;
         }
 
-        if(data.discount !== undefined){
-            $(".discount")[0].innerHTML = data.discount;
+        if(data.wholesaleSum !== undefined){
+            $(".wholesale-sum")[0].innerHTML = data.wholesaleSum;
         }
 
-        if(data.wholesalePrice !== undefined){
-            $(".wholesale-sum")[0].innerHTML = data.wholesalePrice;
+        if(data.discountSum !== undefined){
+            $(".discount")[0].innerHTML = data.discountSum;
         }
 
-        if(data.toPay !== undefined){
+        if(data.itemsCount !== undefined){
             $(".itemsCount")[0].innerHTML = data.itemsCount;
         }
     }, changeManager = function(e){
@@ -403,10 +403,10 @@ JS;
 $this->registerJs($js);
 
 $css = <<<'CSS'
-#mainContent .header .summary.bg-success .wholesale-sum{
+#mainContent .header .summary.bg-success .wholesale-block{
     display: none;
 }
-#mainContent .header .summary.bg-danger .wholesale-sum{
+#mainContent .header .summary.bg-danger .wholesale-block{
     display: block;
 }
 CSS;
@@ -445,7 +445,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
             <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
                 <p style="font-size: 14px;">Сумма: <span class="summ"><?=\Yii::$app->cashbox->sum?></span> грн. Скидка: <span class="discount"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
                 <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=\Yii::$app->cashbox->toPay?></span> грн.</h2>
-                <p class="wholesale-sum"><span>Сумма по опту: <?=\Yii::$app->cashbox->wholesaleSum?></span></p>
+                <p class="wholesale-block">Сумма по опту: <span class="wholesale-sum" style="display: inline"><?=\Yii::$app->cashbox->wholesaleSum?></span></p>
                 <p>Количество товаров: <span class="itemsCount"><?=\Yii::$app->cashbox->itemsCount?></span></p>
             </div>
         </div>
