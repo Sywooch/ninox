@@ -445,9 +445,21 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
-        $this->cashbox->refund();
+        $oldOrder = $this->cashbox->cashboxOrder->id;
 
-        return $this->cashbox->cashboxOrder->id;
+        if(\Yii::$app->request->post("orderID")){
+            $this->cashbox->loadOrder(\Yii::$app->request->post("orderID"));
+        }
+
+        $orderID = $this->cashbox->refund()->id;
+
+        if(!empty($oldOrder) && $orderID != $oldOrder){
+            $this->cashbox->loadOrder($oldOrder);
+
+            $orderID = $this->cashbox->cashboxOrder->id;
+        }
+
+        return $orderID;
     }
 
     public function actionPostponecheck(){
@@ -485,7 +497,11 @@ class SiteController extends Controller
             $this->cashbox->promoCode = $this->cashbox->cashboxOrder->promoCode = $promoCode->code;
             $this->cashbox->cashboxOrder->save(false);
 
-            return $this->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
+            $this->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
+
+            \Yii::$app->response->format = 'json';
+
+            return $this->cashbox->getSummary();
         }
 
         $good = Good::find()->where(['or', 'BarCode2 = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID, 'ID = '.$itemID, ])->one();
@@ -517,9 +533,7 @@ class SiteController extends Controller
 
         if ($this->cashbox->itemsCount > 0) {
             if ($itemID == 'all') {
-                foreach ($this->cashbox->items as $item) {
-                    $this->cashbox->remove($item->itemID);
-                }
+                $this->cashbox->clear();
             } else {
                 $this->cashbox->remove($itemID);
 
