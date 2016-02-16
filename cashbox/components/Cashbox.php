@@ -227,7 +227,9 @@ class Cashbox extends Component{
      * Загружает данные о заказе
      */
     public function load(){
-        $this->items = $this->cashboxItemsQuery()->all();
+        foreach($this->cashboxItemsQuery()->each() as $item){
+            $this->items[$item->itemID] = $item;
+        }
 
         if($this->cache->exists('cashbox-'.$this->orderID.'/goods')){
             $this->goods = $this->cache->get('cashbox-'.$this->orderID.'/goods');
