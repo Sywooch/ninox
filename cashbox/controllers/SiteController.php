@@ -533,9 +533,7 @@ class SiteController extends Controller
 
         if ($this->cashbox->itemsCount > 0) {
             if ($itemID == 'all') {
-                foreach ($this->cashbox->items as $item) {
-                    $this->cashbox->remove($item->itemID);
-                }
+                $this->cashbox->clear();
             } else {
                 $this->cashbox->remove($itemID);
 
