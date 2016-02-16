@@ -499,6 +499,8 @@ class SiteController extends Controller
 
             $this->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
 
+            \Yii::$app->response->format = 'json';
+
             return $this->cashbox->getSummary();
         }
 

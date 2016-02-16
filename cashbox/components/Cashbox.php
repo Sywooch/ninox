@@ -668,6 +668,7 @@ class Cashbox extends Component{
         }
 
         $this->clearCache();
+        $this->promoCode = false;
 
         $this->items = $this->goods = [];
 
@@ -852,6 +853,8 @@ class Cashbox extends Component{
      * @return array
      */
     public function getSummary(){
+        $this->updateItems();
+
         return [
             'priceType'         =>  $this->priceType,
             'sum'               =>  $this->sum,
