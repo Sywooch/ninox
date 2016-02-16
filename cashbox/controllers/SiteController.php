@@ -588,15 +588,24 @@ class SiteController extends Controller
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
             return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
         }else{
+            $users = [];
+
             if($hasAutoLogin){
+                $users = Siteuser::find()->andWhere(['in', 'id', $model->autoLoginUsers])->all();
+
+                if(!$users){
+                    $users = [];
+                }
+
                 return $this->render('login', [
-                    'model' => $model,
-                    'users' => Siteuser::find()->andWhere(['in', 'id', $model->autoLoginUsers])->all()
+                    'model' =>  $model,
+                    'users' =>  $users
                 ]);
             }
 
             return $this->render('login', [
                 'model' => $model,
+                'users' =>  $users
             ]);
         }
     }

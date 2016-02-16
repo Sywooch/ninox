@@ -522,7 +522,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'header'    =>  'Дисконт',
                     'width'     =>  '100px',
                     'value'     =>  function($model){
-                        return '-'.$model->discountSize.($model->discountType == '2' ? ' грн.' : '%');
+                        return '-'.(($model->originalPrice - $model->price) * $model->count).' грн.';
                     }
                 ]
             ],
