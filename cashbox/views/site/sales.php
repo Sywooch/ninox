@@ -41,7 +41,7 @@ var showSaleDetails = function(e){
             break;
     }
 
-    if(options && options.withoutUrl){
+    if(options != undefined && options.withoutUrl){
         $.pjax({container: '#salesTable-pjax'});
     }else{
         $.pjax({url: url, container: '#salesTable-pjax'});
