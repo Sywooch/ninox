@@ -13,6 +13,7 @@ use common\models\GoodsPhoto;
 use common\models\GoodUk;
 use backend\models\History;
 use backend\models\SborkaItem;
+use common\models\PriceListImport;
 use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
 use yii\bootstrap\ActiveForm;
@@ -181,7 +182,11 @@ class DefaultController extends Controller
             ]);
         }
 
-        return $this->render('import_index');
+        return $this->render('import_index', [
+            'priceListsProvider'    =>  new ActiveDataProvider([
+                'query' =>  PriceListImport::find()
+            ])
+        ]);
     }
 
     public function actionLog(){

@@ -26,7 +26,6 @@
         "kartik-v/yii2-widget-growl": "*",
         "kartik-v/yii2-tabs-x": "*",
         "kartik-v/yii2-widget-touchspin": "*",
-        "2amigos/yii2-file-input-widget": "*",
         "kartik-v/yii2-widget-activeform": "*",
         "kartik-v/yii2-editable": "*",
         "kartik-v/yii2-grid": "*",
@@ -50,8 +49,8 @@
         "bobroid/yii2-sweetalert": "dev-master",
         "bobroid/yii2-remodal": "dev-master",
         "bobroid/yii2-imperavi-redactor": "dev-master",
-        "liqpay/liqpay": "dev-master",
         "bobroid/yii2-messenger": "*",
+        "liqpay/liqpay": "dev-master",
         "phpoffice/phpexcel": "*",
         "morozovsk/yii2-websocket": "dev-master",
         "kop/yii2-scroll-pager": "dev-master",
@@ -60,7 +59,8 @@
         "vilochane/yii2-barcode-generator": "dev-master",
         "kartik-v/yii2-tree-manager": "@dev",
         "yiisoft/yii2-jui": "^2.0",
-        "codeception/codeception": "*"
+        "codeception/codeception": "*",
+        "bobroid/yii2-file-input-widget": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",
@@ -100,6 +100,10 @@
         {
             "type": "git",
             "url":  "https://github.com/BoBRoID/yii2-messenger"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/BoBRoID/yii2-file-input-widget"
         }
     ],
     "extra": {
