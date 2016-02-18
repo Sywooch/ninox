@@ -155,6 +155,18 @@ class DefaultController extends Controller
     public function actionImport(){
         $filename = \Yii::$app->request->get("filename");
 
+        if($_FILES){
+            \Yii::$app->response->format = 'json';
+
+
+            $file = UploadHelper::__upload($_FILES['pricelist'], [
+                'filename'  =>  $_FILES['pricelist']['name'].'-'.rand(0, 1000000),
+                'directory' =>  \Yii::getAlias('@webroot').'/files/importedPrices/'
+            ]);
+
+            //$file->save();
+        }
+
         if(!empty($filename)){
             $filename = \Yii::getAlias('@webroot').'/files/importedPrices/'.$filename;
             if(!file_exists($filename)){
