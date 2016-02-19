@@ -20,8 +20,32 @@ var showSaleDetails = function(e){
             console.log(request.responseText);
         }
     });
-}, updateTable = function(date){
-    $.pjax({url: '/sales?smartfilter=' + date, container: '#salesTable-pjax'});
+}, updateTable = function(date, options){
+    var url = '/sales';
+
+    if(date == undefined){
+        date = null;
+    }
+
+    switch(date){
+        case 'today':
+        case 'yesterday':
+        case 'week':
+        case 'month':
+            url += '?smartfilter=' + date;
+            break;
+        case 'range':
+            url += '?smartfilter=range&dateFrom=' + options.dateFrom + '&dateTo=' + options.dateTo;
+            break;
+        default:
+            break;
+    }
+
+    if(options != undefined && options.withoutUrl){
+        $.pjax({container: '#salesTable-pjax'});
+    }else{
+        $.pjax({url: url, container: '#salesTable-pjax'});
+    }
 }, editOrder = function(e){
     $.ajax({
         type: 'POST',
@@ -57,7 +81,23 @@ var showSaleDetails = function(e){
    }else if(disabledTwo.length == 1){
        disabledTwo.removeClass('disabled');
    }
-}, registerEvents = function(){
+}, deleteOrder = function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/returnorder',
+        data: {
+            'orderID':  e.currentTarget.getAttribute('data-attribute-id')
+        },
+        success: function(){
+            updateTable('', {
+                withoutUrl: true
+            });
+        },
+        error: function (request, status, error) {
+            console.log(request.responseText);
+        }
+    });
+},registerEvents = function(){
     $(".date-buttons > button").on('click', function(e){
         updateTable(e.currentTarget.getAttribute('data-attribute'));
 
@@ -88,6 +128,10 @@ var showSaleDetails = function(e){
     $(".edit-order-btn").on("click", function(e){
         editOrder(e);
     });
+
+    $(".delete-order-btn").on("click", function(e){
+        deleteOrder(e);
+    });
 };
 
 rangePicked = function(picker){
@@ -110,7 +154,10 @@ rangePicked = function(picker){
     $("#period-button").addClass('disabled');
     $("#editable-period-cont").editable('toggle');
 
-    $.pjax({url: '/sales?smartfilter=range&dateFrom=' + formatDate(startDate) + '&dateTo=' + formatDate(endDate), container: '#salesTable-pjax'});
+    updateTable('range', {
+        dateFrom: formatDate(startDate),
+        dateTo: formatDate(endDate)
+    });
 };
 
 registerEvents();
