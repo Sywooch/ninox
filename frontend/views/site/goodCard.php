@@ -1,10 +1,20 @@
 <?php
+use bobroid\remodal\Remodal;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use evgeniyrru\yii2slick\Slick;
 use yii\web\JsExpression;
 
 $link = '/tovar/'.$good->link.'-g'.$good->ID;
+
+$reviewModal = new Remodal([
+                                               'cancelButton'		=>	false,
+                                               'confirmButton'		=>	false,
+                                               'closeButton'		=>	false,
+                                               'addRandomToID'		=>	false,
+                                               'content'			=>	$this->render('goodCard/_write_review'),
+                                               'id'				=>	'reviewModal',
+                                           ]);
 
 $js = <<<'JS'
 (function(w,doc) {

@@ -1,4 +1,16 @@
-<?php use yii\bootstrap\Modal;?>
+<?php
+use yii\bootstrap\Modal;
+use bobroid\remodal\Remodal;
+
+$reviewModal = new Remodal([
+                               'cancelButton'		=>	false,
+                               'confirmButton'		=>	false,
+                               'closeButton'		=>	true,
+                               'addRandomToID'		=>	false,
+                               'content'			=>	$this->render('_write_review'),
+                           ]);
+?>
+
 <div class="product-characteristics">
     <span class="tabTitle semi-bold">
         <?=_("Характеристика товара")?>
@@ -41,7 +53,18 @@
            <?=_("Отзывы покупателей")?>
         </span>
         <div class="write-review">
-            <?php
+            <?=\bobroid\remodal\Remodal::widget([
+                                                    'confirmButton'	=>	false,
+                                                    'id'			=>	'review',
+                                                    'cancelButton'	=>	false,
+                                                    'addRandomToID'	=>	false,
+                                                    'content'		=>	$this->render('_write_review'),
+                                                    'buttonOptions'	=>	[
+                                                        'label'		=>	\Yii::t('shop', 'Напишите отзыв'),
+                                                        'class'     =>  'btn btn-lg btn-block btn-info'
+                                                    ],
+                                                ])?>
+            <?/*php
             Modal::begin([
                              'header' => $this->render('_write_review', [
                                  'good'  =>  $good
@@ -58,7 +81,7 @@
                 'id'    =>  'submit'
             ]);
             Modal::end();
-            ?>
+          */  ?>
         </div>
         <a class="review-number">18</a>
     </div>

@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <!--<div class="properties" itemprop="description"><?php$good->Description?></div>-->
+    <!--<div class="properties" itemprop="description"><?/*php$good->Description*/?></div>-->
 </div>
 <div class="item-detail">
     <span class="tabTitle semi-bold"><?=_("Описание товара")?></span>

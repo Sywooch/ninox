@@ -2123,7 +2123,17 @@ footer{
 .load{
 	width: 100%;
 	height: 100%;
+}
 
+.question-round-button{
+	width: 16px;
+	height: 16px;
+	font-size: 13px;
+	background: #29A1E0 none repeat scroll 0% 0%;
+	border-radius: 50%;
+	color: #FFF;
+	cursor: pointer;
+	display: inline-block;
 }
 
 /*========* END ORDER *=========*/

@@ -1,5 +1,60 @@
 /*========* CART-ITEM *=========*/
 
+/* Font loading */
+@font-face {
+    font-family: 'write-review';
+    src: url('../fonts/write-review.eot?10260552');
+    src: url('../fonts/write-review.eot?10260552#iefix') format('embedded-opentype'),
+    url('../fonts/write-review.woff?10260552') format('woff'),
+    url('../fonts/write-review.ttf?10260552') format('truetype'),
+    url('../fonts/write-review.svg?10260552#write-review') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+    font-family: "write-review";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.icon-ok:before { content: '\e800'; }
+.icon-cw:before { content: '\e801'; }
+.icon-mail-alt:before { content: '\e802'; }
+.icon-pencil:before { content: '\e803'; }
+.icon-user:before { content: '\e805'; }
+
+/* End font loading */
+
 .catalog{
     width: 1168px;
     margin: auto;
@@ -336,17 +391,6 @@
     line-height: 15px;
 }
 
-.question-round-button{
-    width: 16px;
-    height: 16px;
-    font-size: 13px;
-    background: #29A1E0 none repeat scroll 0% 0%;
-    border-radius: 50%;
-    color: #FFF;
-    cursor: pointer;
-    display: inline-block;
-}
-
 .pricelist-content-discount .counterWrapper-discount .retail-price i{
     text-decoration: line-through;
     text-decoration-color: red;
@@ -570,6 +614,10 @@
     float: left;
 }
 
+.write-review a:before{
+    content: '' !important;
+}
+
 .write-review .btn-lg{
    padding: 0px;
 }
@@ -605,6 +653,10 @@
     width: 850px;
 }
 
+.remodal{
+    max-width: 570px;
+}
+
 .write-review span{
     font-size: 30px;
     float: none;
@@ -616,6 +668,11 @@
     margin: 0px;
     padding-bottom: 20px;
     color: #565655;
+}
+
+.row label{
+    position: absolute;
+
 }
 
 .write-review .row span{
@@ -630,11 +687,14 @@
 .write-review .row input{
     width: 300px;
     height: 40px;
+    padding-left: 20px;
 }
 
 .write-review .row textarea{
     width: 100%;
-    max-width: 800px;
+    max-width: 500px;
+    resize: none;
+    height: 200px;
 }
 
 .write-review .modal-body{
@@ -649,12 +709,12 @@
     cursor: pointer;
 }
 
-.customer-reviews a:hover{
+.review-number a:hover{
     text-decoration: none;
     color: #bab6b6;
 }
 
-.customer-reviews a:before{
+.review-number a:before{
     display: inline-block;
     vertical-align: middle;
     height: 26px;
