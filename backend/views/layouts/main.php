@@ -595,7 +595,7 @@ $this->beginPage() ?>
                                 'url'   =>  '#'
                             ],
                             [
-                                'label' =>  'Импорт excel',
+                                'label' =>  'Импорт прайслистов',
                                 'url'   =>  Url::toRoute('/goods/import')
                             ],
                             [
