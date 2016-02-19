@@ -1,15 +1,27 @@
 <?php
+use common\helpers\Formatter;
 use yii\helpers\Html;
 
+$currency = \Yii::$app->params['domainInfo']['currencyShortName'];
+
 echo Html::tag('div',
-	Html::tag('div', \Yii::$app->cart->itemsCount ?
-		(\Yii::$app->cart->wholesale ?
-			\Yii::t('shop', 'Вы покупаете по оптовым ценам') :
-			(\Yii::t('shop', 'Вы покупаете по розничным ценам').' - '.(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm).' '.\Yii::t('shop', 'до опта'))
-		) : \Yii::t('shop', 'Ваша корзина пуста'), [
-		'class' =>  'cart-message semi-bold'
+	Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
+		'class' =>  'cart-message cart-message-empty semi-bold'
 	]).
-	Html::tag('div', 'Продолжить покупки'.
+	Html::tag('div',
+		\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} {currency} до опта', [
+			'wholesaleRemind'   =>  Html::tag('span',
+					Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm), [
+						'class' =>  'amount-remind'
+					]),
+			'currency'          =>  $currency
+		]), [
+		'class' =>  'cart-message cart-message-retail semi-bold'
+	]).
+	Html::tag('div', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), [
+		'class' =>  'cart-message cart-message-wholesale semi-bold'
+	]).
+	Html::tag('div', \Yii::t('shop', 'Продолжить покупки').
 		Html::tag('div', '', [
 			'class'   =>  'cross'
 		]), [
@@ -17,65 +29,106 @@ echo Html::tag('div',
 		'data-remodal-action'   =>  'close'
 	]), [
 	'class' =>  'cart-caption'
-]);
-?>
-<div class="cart-description semi-bold">Корзина<span class="cart-number">№1234567890<?=\Yii::$app->cart->cartCode?></span></div>
-<?=$this->render('_cart_items', [])?>
-<div class="miniFooter">
-    <div class="bottomShadow"></div>
-	<?php $form = new \yii\bootstrap\ActiveForm([
+]).
+Html::tag('div', \Yii::t('shop', 'Корзина').
+	Html::tag('span', '№'.\Yii::$app->cart->cartCode, [
+		'class' =>  'cart-number'
+	]), [
+	'class' =>  'cart-description semi-bold'
+]).
+$this->render('_cart_items');
+echo Html::beginTag('div', ['class' => 'cart-footer']).
+	Html::tag('div',
+		Html::tag('div',
+			Html::tag('div',
+				\Yii::t('shop', 'Ваша скидка {discount} {currency}', [
+					'discount'   =>  Html::tag('span',
+							Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm), [
+								'class' =>  'amount-discount'
+							]),
+					'currency'          =>  $currency
+				]), [
+				'class' =>  'amount-cart-discount bold font-size-20px'
+			]).
+			Html::tag('div',
+				\Yii::t('shop', 'сумма заказа без скидки {realAmount} {currency}', [
+					'realAmount'   =>  Html::tag('span',
+							Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount), [
+								'class' =>  'amount-real'
+							]),
+					'currency'          =>  $currency
+				]), [
+				'class' =>  'amount-cart-real font-size-13px'
+			]), [
+			'class' =>  'left'
+		]).
+		Html::tag('div',
+			Html::tag('div',
+				Html::tag('span', '?', [
+					'class'         =>  'question-round-button',
+					'data-toggle'   =>  'tooltip',
+					'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
+				]).
+				\Yii::t('shop', 'Предварительная сумма к оплате'), [
+				'class' =>  'amount-cart-text font-size-13px'
+			]).
+			Html::tag('div', Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm).' '.$currency, [
+				'class' =>  'amount-cart bold font-size-28px'
+			]), [
+			'class' =>  'right'
+		]), [
+		'class' =>  'cart-footer-top'
+	]).
+	Html::beginTag('div', ['class' => 'cart-footer-bottom']);
+	$form = new \yii\bootstrap\ActiveForm([
 		'action'	=>	'/order'
 	]);
-	$form->begin(); ?>
-    <!--<form method="POST" action="/order" onkeypress="if(event.keyCode == 13) return false;" onsubmit="submitForm(this); return false;">-->
-        <div class="row first">
-            <span id="optSumm" class="semi-bold">Сумма заказа по оптовым ценам: <?=\Yii::$app->cart->cartWholesaleSumm?> грн</span>
-            <span>Сумма заказа <span id="totalSumm" class="blue"><?=\Yii::$app->cart->cartSumm?> грн</span></span>
-        </div>
-        <div class="row second">
-            <span id="optSummDiff">Ваша корзина пуста</span>
-			<span class="extended-info">
-				<span id="totalSummWithoutDiscount">сумма заказа без скидки 0 грн</span> <span id="totalDiscount" class="orange">скидка 0 грн</span>
-			</span>
-        </div>
-        <div class="row third">
-            <div class="phone">
-                <span class="flag"></span>
-				<?php
+	$form->begin();
+		$maskedInputOptions = [
+			'name'			=>	'phone',
+			'mask'			=>	'+38-999-999-99-99',
+			'options'		=>	[
+				'class'			=>	'phone-number',
+			]
+		];
 
-				$maskedInputOptions = [
-					'name'			=>	'phone',
-					'mask'			=>	'+38-999-999-99-99',
-					'options'		=>	[
-						'class'			=>	'input_phone',
-					]
-				];
+		if(!\Yii::$app->user->isGuest){
+			$maskedInputOptions['value'] 	=	\Yii::$app->user->identity->phone;
+		}elseif(\Yii::$app->request->cookies->getValue("customerPhone", false)){
+			$maskedInputOptions['value']	=   \Yii::$app->request->cookies->getValue("customerPhone");
+		}
 
-				if(!\Yii::$app->user->isGuest){
-					$maskedInputOptions['value'] 	=	\Yii::$app->user->identity->phone;
-				}elseif(\Yii::$app->request->cookies->getValue("customerPhone", false)){
-					$maskedInputOptions['value']	= substr(\Yii::$app->request->cookies->getValue("customerPhone"), 2, strlen(\Yii::$app->request->cookies->getValue("customerPhone")));
-				}
-
-				echo \yii\widgets\MaskedInput::widget($maskedInputOptions)?>
-				<!--<input placeholder="+_(___)___-____" class="input_phone" name="phone" value="" type="text">-->
-            </div>
-			<?=Html::button(\Yii::t('site', 'Заказать в 1 клик'), [
-				'type'	=>	'submit',
-				'name'	=>	'orderType',
-				'value'	=>	'1',
-				'class'	=>	'yellowButton largeButton'
-			]),
-			Html::button(\Yii::t('site', 'Оформить заказ'), [
-				'type'	=>	'submit',
-				'name'	=>	'orderType',
-				'value'	=>	'0',
-				'class'	=>	'yellowButton largeButton'
-			])?>
-            <!--<input id="one_click" class="yellowButton largeButton" name="orderType" value="Заказать в 1 клик" data-disabled="true" onclick="this.form.oneClickOrder = true" type="submit">
-            <input id="checkout" class="yellowButton largeButton" value="Оформить заказ" data-disabled="true" onclick="this.form.oneClickOrder = false" type="submit">
-            <input value="true" name="doOrder" type="hidden">-->
-        </div>
-    <!--</form>-->
-	<?php $form->end(); ?>
-</div>
+		echo Html::tag('div',
+			Html::tag('div',
+				Html::tag('div',
+					\Yii::t('shop', 'Введите ваш телефон:'), [
+					'class' =>  'phone-number-text'
+				]).
+				\yii\widgets\MaskedInput::widget($maskedInputOptions), [
+				'class' =>  'phone-number-block'
+			]), [
+			'class' =>  'left'
+		]).
+		Html::tag('div',
+			Html::tag('div',
+				Html::button(\Yii::t('site', 'Оформить заказ'), [
+					'type'	    =>	'submit',
+					'name'	    =>	'orderType',
+					'value'	    =>	'0',
+					'class'	    =>	'yellow-button cart-button form-order',
+					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+				]).
+				Html::button(\Yii::t('site', 'Заказать в 1 клик'), [
+					'type'	    =>	'submit',
+					'name'	    =>	'orderType',
+					'value'	    =>	'1',
+					'class'	    =>	'cart-button one-click-order',
+					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+				]), [
+					'class' =>  'cart-buttons'
+				]), [
+			'class' =>  'right'
+		]);
+	$form->end();
+echo Html::endTag('div').
+Html::endTag('div');

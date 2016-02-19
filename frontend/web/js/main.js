@@ -45,7 +45,6 @@ function addToCart(item){
 	item = $(item);
 	var itemId = item.data('itemid');
 	var count = item.data('count');
-	console.log(count);
 	if(itemId && count){
 		$.ajax({
 			type: 'POST',
@@ -59,9 +58,9 @@ function addToCart(item){
 					$(this).val(texts.itemText.inCart).toggleClass('yellow-button green-button buy open-cart');
 				});
 				$('.count[data-itemId='+ itemId +']').each(function(){
-					$(this).data('incart', data.inCart);
+					$(this).data('incart', count);
 				});
-				//updateMinicartInfo();
+				updateCart(data);
 			}
 		});
 	}
@@ -79,7 +78,6 @@ function changeItemCount(item){
 	if((maxItemsCount > itemsCount && count > 0) || (1 < itemsCount && count < 0)){
 		itemsCount += count;
 		if(incart){
-			console.log(incart);
 			$.ajax({
 				type: 'POST',
 				url: '/modifycart',
@@ -88,14 +86,12 @@ function changeItemCount(item){
 					'count': count
 				},
 				success: function(data){
-					console.log(data);
-					//updateCart(this, data);
+					updateCart(data);
 				}
 			});
 		}else{
 			$('.buy[data-itemId='+ itemId +']').each(function(){
 				$(this).data('count', itemsCount);
-				console.log('dtcnt: ' + $(this).data('count'));
 			});
 		}
 		$('.count[data-itemId='+ itemId +']').each(function(){
@@ -129,7 +125,7 @@ function changeItemCount(item){
 				'count': count
 			},
 			success: function(data){
-				//updateCart(itemId, true);
+				updateCart(data);
 				$('.open-cart[data-itemId='+ itemId +']').each(function(){
 					$(this).val(texts.itemText.buy).toggleClass('green-button yellow-button open-cart buy').data('count', 1);
 				});
@@ -154,4 +150,40 @@ function getCart(){
 
 function cartScroll(){
 	$('#modal-cart .grid-view').perfectScrollbar({maxScrollbarLength:20});
+}
+
+function updateCart(data){
+	for(var i in data){
+		switch(i){
+			case 'wholesale':
+				$('#modal-cart').toggleClass('wholesale', data[i]).toggleClass('retail', !data[i]);
+				break;
+			case 'count':
+				$('#modal-cart').toggleClass('empty', !data[i]).removeClass(function(){
+					return data[i] ? '' : 'wholesale retail';
+				});
+				break;
+			case 'items':
+				for(var j in data[i]){
+					for(var k in data[i][j]){
+						var item = $('#modal-cart .grid-view [data-key="' + j + '"]');
+						switch(k){
+							case 'discount':
+								item.find('.item-price-' + k).toggleClass('disabled', data[i][j][k] == 0);
+								item.find('.item-prices').toggleClass('discounted', data[i][j][k] != 0);
+							default:
+								item.find('.item-price-' + k).text(data[i][j][k]);
+								break;
+						}
+					}
+				}
+				break;
+			case 'button':
+				$('#modal-cart .cart-' + i).attr('disabled', data[i]);
+				break;
+			default:
+				$('#modal-cart .amount-' + i).text(data[i]);
+				break;
+		}
+	}
 }

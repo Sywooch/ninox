@@ -31,7 +31,8 @@ $cartModal = new \bobroid\remodal\Remodal([
 	'closeButton'		=>	false,
 	'content'			=>	$this->render('../site/cart', []),
 	'options'           =>  [
-		'id'            =>  'modal-cart'
+		'id'            =>  'modal-cart',
+		'class'         =>  \Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'wholesale' : 'retail') : 'empty'
 	],
 	'id'	            =>	'modalCart',
 	'addRandomToID'		=>	false,

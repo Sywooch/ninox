@@ -23,12 +23,15 @@ class Cart extends Component{
     public $cartWholesaleSumm = 0;
     public $cartWholesaleRealSumm = 0;
 	public $cartWholesaSumWithoutDiscount = 0;
+	public $cartWholesaSumNotDiscounted = 0;
     public $cartRetailSumm = 0;
     public $cartRetailRealSumm = 0;
 	public $cartRetailSumWithoutDiscount = 0;
+	public $cartRetailSumNotDiscounted = 0;
     public $cartSumm = 0;
     public $cartRealSumm = 0;
 	public $cartSumWithoutDiscount = 0;
+	public $cartSumNotDiscounted = 0;
     public $wholesale = false;
 
     public function init(){
@@ -174,10 +177,12 @@ class Cart extends Component{
 				$helper->recalc($good);
 				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
 				$this->cartWholesaleRealSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesale_price : $good->wholesale_real_price) * $this->items[$good->ID]->count;
-				$this->cartWholesaSumWithoutDiscount += $good->discountType == 0 ? $good->wholesale_real_price * $this->items[$good->ID]->count : 0;
+				$this->cartWholesaSumNotDiscounted += $good->discountType == 0 ? $good->wholesale_real_price * $this->items[$good->ID]->count : 0;
+				$this->cartWholesaSumWithoutDiscount += $good->wholesale_real_price * $this->items[$good->ID]->count;
 				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
 				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;
-				$this->cartRetailSumWithoutDiscount += $good->discountType == 0 ? $good->retail_real_price * $this->items[$good->ID]->count : 0;
+				$this->cartRetailSumNotDiscounted += $good->discountType == 0 ? $good->retail_real_price * $this->items[$good->ID]->count : 0;
+				$this->cartRetailSumWithoutDiscount += $good->retail_real_price * $this->items[$good->ID]->count;
 			}
 		}
 
@@ -185,6 +190,7 @@ class Cart extends Component{
 
 		$this->cartSumm = $this->wholesale ? $this->cartWholesaleSumm : $this->cartRetailSumm;
 		$this->cartRealSumm = $this->wholesale ? $this->cartWholesaleRealSumm : $this->cartRetailRealSumm;
+		$this->cartSumNotDiscounted = $this->wholesale ? $this->cartWholesaSumNotDiscounted : $this->cartRetailSumNotDiscounted;
 		$this->cartSumWithoutDiscount = $this->wholesale ? $this->cartWholesaSumWithoutDiscount : $this->cartRetailSumWithoutDiscount;
 	}
 }
