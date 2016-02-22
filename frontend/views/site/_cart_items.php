@@ -17,7 +17,7 @@ echo \kartik\grid\GridView::widget([
 		'models'     =>  \Yii::$app->cart->itemsCount ? \Yii::$app->cart->goods : []
 	]),
 	'id'            =>  'cart-gridview',
-	'emptyText'     =>  \Yii::t('shop', 'Ваша корзина пуста!'),
+	'emptyText'     =>  '',
 	'showHeader'    =>  false,
 	'summary'       =>  false,
 	'pjax'          =>  true,
@@ -31,16 +31,8 @@ echo \kartik\grid\GridView::widget([
 						'class'         =>  'remove-item',
 						'data-itemId'   =>  $model->ID,
 						'data-count'    =>  0,
-					]);
-				},
-			'contentOptions'       =>  [
-				'valign'    =>  'top'
-			]
-		],
-		[
-			'format'        =>  'html',
-			'value'         =>  function($model){
-					return Html::tag('img', '', [
+					]).
+					Html::tag('img', '', [
 						'src'       =>  \Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$model->ico,
 						'alt'       =>  $model->Name.' '.\Yii::t('shop', 'от интернет магазина Krasota-Style.ua'),
 						'width'     =>  '100px',
@@ -53,9 +45,10 @@ echo \kartik\grid\GridView::widget([
 			'value'         =>  function($model){
 					return Html::tag('div', $model->Name, ['class'  =>  'item-name blue']).
 					Html::tag('div',
-						Html::tag('div', $model->wholesale_price, ['class'   =>  'item-price']).
-						Html::tag('div', $model->retail_price, ['class'   =>  'item-price']), [
-							'class'   =>  'item-prices'
+						Html::tag('span', Formatter::getFormattedPrice($model->retail_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'], ['class'   =>  'item-price-retail semi-bold']).
+						Html::tag('span', Formatter::getFormattedPrice($model->wholesale_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'], ['class'   =>  'item-price-wholesale semi-bold']).
+						Html::tag('sup', '-'.$model->discountSize.($model->discountType == 1 ? \Yii::$app->params['domainInfo']['currencyShortName'] : ($model->discountType == 2 ? '%' : '')), ['class'   =>  'item-price-discount'.($model->discountSize ? '' : ' disabled')]), [
+							'class'   =>  'item-prices'.($model->discountSize ? ' discounted' : '')
 						]);
 				}
 		],
@@ -96,19 +89,11 @@ echo \kartik\grid\GridView::widget([
 		],
 		[
 			'format'        =>  'html',
-			'contentOptions'    =>  [
-				'class'         =>  'sums',
-			],
 			'value'         =>  function($model){
-					return Html::tag('div', Formatter::getFormattedPrice($model->retail_real_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
-						'class' =>  'old-sum semi-bold blue'.($model->discountType == 0 ? ' disabled' : ''),
-					]).
-					Html::tag('div', Formatter::getFormattedPrice($model->retail_price * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
-						'class' =>  'current-sum blue'
+					return Html::tag('div', Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $model->wholesale_price : $model->retail_price) * $model->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'], [
+						'class' =>  'item-price-amount'
 					]);
 				}
 		]
 	],
 ]);
-
-?>

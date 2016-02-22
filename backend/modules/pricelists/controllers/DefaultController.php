@@ -32,9 +32,15 @@ class DefaultController extends Controller
     }
 
     public function actionCategoriestree(){
+        if(!\Yii::$app->request->isAjax){
+            throw new \BadMethodCallException("Этот метод доступен только через ajax!");
+        }
+
         \Yii::$app->response->format = 'json';
 
-        return $this->buildTree(Category::find()->all());
+        $categories = Category::find()->all();
+
+        return $this->buildTree($categories);
     }
 
     public function buildTree(&$items, $parent = ''){

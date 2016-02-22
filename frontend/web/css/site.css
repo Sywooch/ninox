@@ -101,7 +101,7 @@ h2{
 	font-style: normal;
 }
 
-@font-face {
+@font-face{
 	font-family: 'OpenSans-Semibold';
 	src: url('../fonts/OpenSans-Semibold.eot?#iefix') format('embedded-opentype'),
 	url('../fonts/OpenSans-Semibold.woff') format('woff'),
@@ -111,13 +111,14 @@ h2{
 	font-style: normal;
 }
 
-@font-face {
-    font-family: 'OpenSansBold';
-    src: url('../fonts/OpenSansBold.eot?#iefix')format('embedded-opentype'),
-    url('../fonts/OpenSansBold.woff') format('woff'),
-    url('../fonts/OpenSansBold.ttf') format('truetype');
-    font-style: normal;
-    font-weight: normal;
+@font-face{
+	font-family: 'OpenSans-Bold';
+	src: url('../fonts/OpenSans-Bold.eot?#iefix') format('embedded-opentype'),
+	url('../fonts/OpenSans-Bold.woff') format('woff'),
+	url('../fonts/OpenSans-Bold.ttf') format('truetype'),
+	url('../fonts/OpenSans-Bold.svg#open_sansbold') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
 
 @font-face{
@@ -411,6 +412,11 @@ h2{
 	height: 40px;
 }
 
+.form-order{
+	width: 200px;
+	height: 45px;
+}
+
 .middle-button{
 	width: 155px;
 	height: 40px;
@@ -419,6 +425,18 @@ h2{
 .small-button{
 	width: 120px;
 	height: 40px;
+}
+
+.font-size-13px{
+	font-size: 13px;
+}
+
+.font-size-20px{
+	font-size: 20px;
+}
+
+.font-size-28px{
+	font-size: 28px;
 }
 
 .italic{
@@ -446,8 +464,8 @@ h2{
 }
 
 .bold{
-    font-family: OpenSansBold;
-    }
+    font-family: OpenSans-Bold;
+}
 
 .myriad{
     font-family: MyriadProRegular;
@@ -1537,32 +1555,10 @@ footer{
 	float: left !important;
 }
 
-.button{
-	margin-left: 100px;
-	height: 40px;
-	width: 155px;
-	background: #ffd600; /* For browsers that do not support gradients */
-	background: -webkit-linear-gradient(#ffd600, #f9b519); /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#ffd600, #f9b519); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#ffd600, #f9b519); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(#ffd600, #f9b519); /* Standard syntax */
-	box-shadow: 0px 2px 1px 1px #a1a1a1;
-	border:solid 0px #ff00ff;
-	-moz-border-radius: 5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-	border-top: 1px solid #fdff27;
-}
-
 .ordering-body-order-confirm-button{
 	width: 100%;
 	text-align: center;
 	padding-bottom: 20px;
-}
-
-.ordering .button{
-	width: 285px;
-	margin-left: 0px;
 }
 
 .content-data-body-department{
@@ -2113,7 +2109,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #eeeeee;
 	font-size: 16px;
 	padding: 0 15px;
+	display: none;
 }
+
+#modal-cart.retail .cart-message-retail,
+#modal-cart.wholesale .cart-message-wholesale,
+#modal-cart.empty .cart-message-empty{
+	display: block;
+}
+
 
 #modal-cart .cart-close{
 	float: right;
@@ -2174,7 +2178,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-align: left;
 	font-size: 22px;
 	color: #40403e;
-	padding-left: 40px;
+	padding: 0 0 15px 40px;
 }
 
 #modal-cart .cart-number{
@@ -2204,13 +2208,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 #modal-cart .ps-scrollbar-y-rail{
 	width: 6px;
-	right: 8px;
+	right: 10px;
+	background: #bfbfbf;
+	opacity: 1;
 }
 
 #modal-cart .ps-scrollbar-y{
 	width: 20px;
 	background: green;
 	border-radius: 50%;
+	margin-right: -7px;
 }
 
 #modal-cart .remove-item{
@@ -2218,9 +2225,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 22px;
 	border-radius: 50%;
 	background: #df9696;
-	margin-left: 40px;
+	margin: 0 10px 0 10px;
 	position: relative;
 	cursor: pointer;
+	display: inline-block;
+	vertical-align: top;
 }
 
 #modal-cart .remove-item:before, #modal-cart .remove-item:after{
@@ -2251,6 +2260,135 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	-o-transform: rotate(135deg);
 	transform: rotate(135deg);
 }
+
+#modal-cart.wholesale .item-price-retail, #modal-cart.retail .item-price-wholesale{
+	display: none;
+}
+
+#modal-cart .item-prices span{
+	padding: 0 7px;
+	border-radius: 5px;
+	font-size: 18px;
+}
+
+#modal-cart .item-prices sup{
+	color: #7bafce;
+	font-size: 13px;
+	padding-left: 5px;
+	text-decoration: none;
+}
+
+#modal-cart.retail .item-prices span{
+	background: #fbf5d5;
+	color: #49565d;
+}
+
+#modal-cart.wholesale .item-prices span{
+	background: #66a775;
+	color: #fff;
+}
+
+#modal-cart .item-prices.discounted span{
+	background: #d3e8f9;
+	color: #49565d;
+}
+
+#modal-cart td[data-col-seq="1"]{
+	text-align: left;
+}
+
+#modal-cart .item-name{
+	width: 240px;
+	height: 45px;
+	overflow: hidden;
+}
+
+#modal-cart .cart-footer{
+	height: 190px;
+	padding: 25px;
+	border-top: 1px solid #e0e0e0;
+}
+
+#modal-cart .cart-footer-top{
+	margin-bottom: 15px;
+}
+
+#modal-cart .cart-footer-top:after{
+	content: '';
+	display: table;
+	clear: both;
+}
+
+#modal-cart .cart-footer-bottom:after{
+	content: '';
+	display: table;
+	clear: both;
+}
+
+
+#modal-cart .cart-footer .left{
+	float: left;
+	text-align: left;
+}
+
+#modal-cart .cart-footer .right{
+	float: right;
+	text-align: right;
+}
+
+#modal-cart .amount-cart-text, #modal-cart .amount-cart{
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+#modal-cart .amount-cart-text{
+	width: 140px;
+	margin-right: 20px;
+}
+
+#modal-cart .amount-cart-text .question-round-button{
+	margin-right: 15px;
+}
+
+#modal-cart .phone-number-block{
+	padding: 6px 15px;
+	background: #fbf5d5;
+	border-radius: 5px;
+	width: 300px;
+	height: 85px;
+}
+
+#modal-cart .phone-number-text{
+	margin-bottom: 10px;
+}
+
+#modal-cart .phone-number{
+	width: 100%;
+	height: 30px;
+	border-radius: 5px;
+	border: 1px solid #e4e4e4;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+#modal-cart .cart-buttons{
+	background: #f1f1f1;
+	padding: 20px 40px 20px 25px;
+	border-radius: 5px;
+	height: 85px;
+}
+
+#modal-cart .one-click-order{
+	background: none;
+	border: none;
+	text-decoration: underline;
+	cursor: pointer;
+	margin-left: 40px;
+}
+
+#modal-cart .one-click-order:disabled{
+	cursor: default;
+}
+
 
 /*========* END CART *=========*/
 

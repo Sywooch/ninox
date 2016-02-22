@@ -13,11 +13,13 @@ use common\models\GoodsPhoto;
 use common\models\GoodUk;
 use backend\models\History;
 use backend\models\SborkaItem;
+use common\models\PriceListImport;
 use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
 use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\data\ArrayDataProvider;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\MethodNotAllowedHttpException;
@@ -152,36 +154,128 @@ class DefaultController extends Controller
     }
 
     public function actionImport(){
-        $filename = \Yii::$app->request->get("filename");
+        $pricelist = PriceListImport::findOne(\Yii::$app->request->get("fileid"));
 
-        if(!empty($filename)){
-            $filename = \Yii::getAlias('@webroot').'/files/importedPrices/'.$filename;
-            if(!file_exists($filename)){
-                throw new NotFoundHttpException("Файл не найден!");
+        if(\Yii::$app->request->isAjax){
+            switch(\Yii::$app->request->post("action")){
+                case 'renameFile':
+                    $file = PriceListImport::findOne(\Yii::$app->request->post("id"));
+
+                    if(!$file){
+                        throw new NotFoundHttpException("Такой файл не найден!");
+                    }
+
+                    $file->name = \Yii::$app->request->post("value");
+                    $file->save(false);
+                    break;
             }
+        }
 
+        if($pricelist){
             $data = [];
 
-            $xls = \PHPExcel_IOFactory::load($filename);
+            $xls = \PHPExcel_IOFactory::load(\Yii::getAlias('@webroot').'/files/importedPrices/'.$pricelist->file);
 
-            //Прямо на этом месте можно реализовать DataProvider
-            //Это даст все фишки обычного DataProvider'а - пагинацию, сортировку, удобные колонки без костылей
-            //но над этим нужно морочиться, а мне сегодня лень
-            //если кто захочет - вот тут написано как это можно сделать
-            //http://stackoverflow.com/questions/28428492/using-yii2-with-array-of-data-and-a-gridview-with-sorting-and-filter
-            //
-            //по документации можно копать в сторону класса ArrayDataProvider
-            //http://www.yiiframework.com/doc-2.0/yii-data-arraydataprovider.html
+            $models = $xls->getActiveSheet()->toArray();
+
+            $dataProvider = new ArrayDataProvider();
+
+            /*if(true){
+                $header = $xls[0];
+                //die();
+                //$dataProvider->
+                unset($xls[0]);
+            }
+            //TODO: сделать возможность загрузки прайсов с заголовками
+            */
+
+            $dataProvider->setModels($models);
+
+            if(\Yii::$app->request->post("PriceListImportTable")){
+                $keys = $attributes = [];
+                $replaceExtising = false;
+
+                foreach(\Yii::$app->request->post("PriceListImportTable")['columns'] as $key => $subarray){
+                    if(!empty($subarray['key'])){
+                        $keys[$key] = $subarray['attribute'];
+                    }
+
+                    $attributes[$key] = $subarray['attribute'];
+                }
+
+                if(!empty($keys)){
+                    $replaceExtising = true;
+                }
+
+                foreach($dataProvider->getModels() as $model){
+                    $good = false;
+
+                    if($replaceExtising){
+                        $good = Good::find();
+
+                        foreach($keys as $key => $attribute){
+                            $good->andWhere([$attribute => $model[$key]]);
+                        }
+
+                        $good = $good->one();
+                    }
+
+                    if(!$good){
+                        $good = new Good();
+                    }
+
+                    foreach($model as $key => $field){
+                        $changedAttribute = $attributes[$key];
+                        $good->$changedAttribute = $field;
+                    }
+
+                    $good->save(false);
+                }
+            }
 
             return $this->render('import_table', [
-                'data'      =>  $data,
-                'filename'  =>  \Yii::$app->request->get("filename"),
-                'columns'   =>  $xls->getActiveSheet()->getHighestColumn(),
-                'xls'       =>  $xls->getActiveSheet()->toArray()
+                'data'          =>  $data,
+                'columns'       =>  $xls->getActiveSheet()->getHighestColumn(),
+                'filename'      =>  $pricelist->name,
+                'dataProvider'  =>  $dataProvider
             ]);
         }
 
-        return $this->render('import_index');
+        if($_FILES && $_FILES['pricelist']){
+            \Yii::$app->response->format = 'json';
+
+            $file = UploadHelper::__upload($_FILES['pricelist'], [
+                'filename'  =>  \Yii::$app->security->generateRandomString(),
+                'directory' =>  'files/importedPrices',
+                'fullReturn'=>  true
+            ]);
+
+            $pricelist = new PriceListImport([
+                'file'  =>  $file['filename'],
+                'format'=>  $file['mime'],
+                'name'  =>  $file['original_filename']
+            ]);
+
+            if($pricelist->save()){
+                return [
+                    'id'    =>  $pricelist->id,
+                    'name'  =>  $file['original_filename']
+                ];
+            }
+
+            return false;
+        }
+
+        return $this->render('import_index', [
+            'priceListsProvider'    =>  new ActiveDataProvider([
+                'query' =>  PriceListImport::find(),
+                'sort'  =>  [
+                    'defaultOrder'  =>  [
+                        'created'   =>  SORT_DESC
+                    ]
+                ]
+            ])
+        ]);
     }
 
     public function actionLog(){
