@@ -255,7 +255,7 @@ class DefaultController extends Controller
                 }
 
                 $importInfo = [
-                    'updated'   =>  $updated,
+                    'updated'   =>  $updated - $added,
                     'added'     =>  $added,
                     'totalCount'=>  sizeof($models)
                 ];
