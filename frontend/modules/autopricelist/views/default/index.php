@@ -62,7 +62,7 @@ echo \yii\widgets\ListView::widget([
             $offer[] = Html::tag('vendor');
             $offer[] = Html::tag('model');
         }else{
-            $offer[] = Html::tag('name', $model->Name);
+            $offer[] = Html::tag('name', preg_replace('/&\S+;/m', '', strip_tags($model->Name)));
         }
 
         if(!empty($model->country)){
