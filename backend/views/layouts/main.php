@@ -325,8 +325,8 @@ $this->beginPage() ?>
 <div class="wrap">
     <?php
     Yamm::begin([
-        //'typeaheadSearch'   =>  true,
-        /*'typeaheadConfig'   =>  [
+        'typeaheadSearch'   =>  true,
+        'typeaheadConfig'   =>  [
             'name' => 'country_1',
             'options' => ['placeholder' => 'Начните вводить текст для поиска...'],
             'scrollable' => true,
@@ -345,7 +345,7 @@ $this->beginPage() ?>
                     ]
                 ]
             ]
-        ],*/
+        ],
         'options' => [
             'headerOptions'   =>  [
                 'class'   =>  'gray'
