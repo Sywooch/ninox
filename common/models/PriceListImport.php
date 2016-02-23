@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "priceListsImport".
@@ -19,12 +20,39 @@ use Yii;
  */
 class PriceListImport extends \yii\db\ActiveRecord
 {
+    public function init(){
+        if(empty($this->configuration)){
+            $this->configuration = [];
+        }
+    }
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'priceListsImport';
+    }
+
+    public function beforeSave($insert)
+    {
+        if($this->isNewRecord){
+            $this->creator = \Yii::$app->user->id;
+            $this->created = date('Y-m-d H:i:s');
+        }
+
+        $this->configuration = Json::encode($this->configuration);
+
+        return parent::beforeSave($insert);
+    }
+
+    public function afterFind()
+    {
+        if(!is_array($this->configuration)){
+            $this->configuration = !empty($this->configuration) ? Json::decode($this->configuration) : [];
+        }
+
+        parent::afterFind();
     }
 
     /**
