@@ -60,29 +60,10 @@ $good = new \backend\models\Good();
 ?>
 <h1><?=$this->title?></h1>
 <?php
-/*
-<table class="table">
-    <thead>
-        <tr></tr>
-    </thead>
-<?php
-foreach($xls as $row){
-    $column = 0;
-    echo '<tr>';
-    foreach($row as $col){
-        if(!empty($col)){
-            echo Html::tag('td', $col, [
-                'data-attribute-column' =>  $column,
-            ]);
-            $column++;
-        }
-    }
-    echo '</tr>';
-}
-?>
-</table>
 
-*/
+if($importInfo){
+    echo Html::tag('div', \Yii::t('admin', '<b>Прайслист импортирован!</b> Всего товаров: {totalCount}, добавлено новых {added}, изменено существующих {updated}', $importInfo), ['class' => 'alert alert-success']);
+}
 
 echo Html::beginForm();
 
