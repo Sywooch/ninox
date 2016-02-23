@@ -48,7 +48,7 @@ echo \yii\widgets\ListView::widget([
             Html::tag('categoryId', $model->GroupID),
             Html::tag('market_category', $categories[$model->GroupID]->yandexName),
             Html::tag('picture', 'http://krasota-style.com.ua/img/catalog/'.$model->ico),
-            Html::tag('description', preg_replace('/(?<!\s)&|&(?!\s)/m', '', strip_tags($model->Description))),
+            Html::tag('description', preg_replace('/\&/', '', strip_tags($model->Description))),
             Html::tag('manufacturer_warranty', 'true'),
             Html::tag('seller_warranty', 'P1Y')
         ];
@@ -62,7 +62,7 @@ echo \yii\widgets\ListView::widget([
             $offer[] = Html::tag('vendor');
             $offer[] = Html::tag('model');
         }else{
-            $offer[] = Html::tag('name', preg_replace('/(?<!\s)&|&(?!\s)/m', '', strip_tags($model->Name)));
+            $offer[] = Html::tag('name', preg_replace('/\&/', '', strip_tags($model->Name)));
         }
 
         if(!empty($model->country)){
