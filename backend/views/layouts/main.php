@@ -201,11 +201,10 @@ span.twitter-typeahead div.tt-menu{
 
 .afterMenu{
     margin-top: -5px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     height: 30px;
     font-size: 12px;
     width: 100%;
-    //max-width: 1140px;
     white-space: nowrap;
 }
 
@@ -657,7 +656,7 @@ $this->beginPage() ?>
             [
                 'label'     =>  'Задания',
                 'url'       =>  Url::toRoute('/tasks/index')
-            ],
+            ]
             /*[
                 'label' =>  '<i class="glyphicon glyphicon-usd large" id="currency-icon" data-target="#currencyModal" data-toggle="modal"></i><span class="visible-xs-inline">&nbsp;Курс</span>'
             ],

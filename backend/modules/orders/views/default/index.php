@@ -1,5 +1,5 @@
 <?php
-use backend\widgets\OrdersSearchWidget;
+use backend\modules\orders\widgets\OrdersSearchWidget;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -128,7 +128,7 @@ var ordersChanges = function(e){
 }
 JS;
 
-$css = <<<'STYLE'
+$css = <<<'CSS'
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
     border: 3px solid #000;
@@ -164,8 +164,87 @@ $css = <<<'STYLE'
 .tab-content{
     padding: 0;
 }
-STYLE;
 
+#accordion {
+	list-style:none;
+	padding:0;
+	overflow:hidden;
+}
+#accordion .panel {
+	float:left;
+	display:block;
+	width: 100px;
+	height: 40px;
+	overflow:hidden;
+	text-decoration:none;
+	font-size: 12px;
+	line-height: 24px;
+	vertical-align: middle;
+	text-align: center;
+	color: #fff;
+	margin-right: 20px;
+	margin-bottom: 0;
+	border: none;
+	background-color: transparent;
+	box-shadow: none;
+}
+
+#accordion .panel .panelContent{
+    display: none;
+}
+
+#accordion .panel.active {
+	width: 340px;
+	margin-right: 0px;
+}
+
+#accordion .panel.active .panelContent{
+    display: inline-block;
+}
+.pink, #accordion .panel .header {
+	width: 98px;
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor:pointer;
+	background: #e5e5e5;
+	color: #000;
+	float: left;
+}
+
+
+.pink, #accordion .panel.active .header {
+	background: #74b009;
+	color: #fff;
+}
+
+.last {
+	border:none
+}
+
+.-accordion--horizontal{
+    height: auto;
+}
+CSS;
+
+$js = <<<'JS'
+$(document).ready(function(){
+
+    activePanel = $("#accordion div.panel:first");
+    $(activePanel).addClass('active');
+
+    $("#accordion").delegate('.panel', 'click', function(e){
+        if( ! $(this).is('.active') ){
+			$(activePanel).animate({width: "100px"}, 300);
+			$(this).animate({width: "340px"}, 300);
+			$('#accordion .panel').removeClass('active');
+			$(this).addClass('active');
+			activePanel = this;
+		 };
+    });
+});
+JS;
+
+$this->registerJs($js);
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
@@ -221,9 +300,11 @@ $this->title = 'Заказы';
     }
 
     .ordersStats > div > div{
-        height: 88px; background: #fff; margin: 0 30px; border-bottom: 3px solid #cfcfcf; width: 220px;
-        -webkit-box-shadow: 0 10px 5px -4px #000000;
-        box-shadow: 0 10px 5px -4px #000000;
+        height: 88px;
+        background: #fff;
+        margin: 0 30px;
+        border-bottom: 3px solid #cfcfcf;
+        width: 220px;
     }
 
     .ordersStats div > div{
@@ -264,7 +345,6 @@ $this->title = 'Заказы';
         float: left;
     }
 </style>
-<div style="margin: 30px 0;">
     <div class="ordersStats">
         <div style="display: table; margin: 0 auto; position: relative; top: 11px;">
             <div style="display: table-cell;">
@@ -342,13 +422,13 @@ $this->title = 'Заказы';
             </div>
         </div>
     </div>
-</div>
+
 <?=\backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
 ])?>
 
-<div class="row" style="margin: 30px 0;">
+<div class="row well well-sm" style="margin: 30px 0;">
     <?=OrdersSearchWidget::widget([
         'searchModel'   =>  $searchModel,
         'items'         =>  [
