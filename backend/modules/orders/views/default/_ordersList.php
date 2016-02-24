@@ -3,8 +3,12 @@ use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+if(!isset($orderSource)){
+    $orderSource = \Yii::$app->request->get('ordersSource');
+}
+
 echo \kartik\grid\GridView::widget([
-    'id'            =>  'ordersGridView_'.\Yii::$app->request->get('ordersSource'),
+    'id'            =>  'ordersGridView_'.$orderSource,
     'dataProvider'  =>  $orders,
     'resizableColumns' =>  false,
     'pjax'  =>  true,
@@ -13,7 +17,7 @@ echo \kartik\grid\GridView::widget([
             'enablePushState'       =>  false,
             'enableReplaceState'    =>  false,
             'timeout'               =>  '10000',
-            'id'                    =>  'ordersGridView_'.\Yii::$app->request->get('ordersSource').'-pjax'
+            'id'                    =>  'ordersGridView_'.$orderSource.'-pjax'
         ]
     ],
     'summary'   =>  false,

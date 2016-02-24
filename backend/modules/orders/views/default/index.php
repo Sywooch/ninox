@@ -125,7 +125,10 @@ var ordersChanges = function(e){
 
         swal.close();
     });
-}
+};
+
+
+
 JS;
 
 $css = <<<'CSS'
@@ -174,7 +177,7 @@ $css = <<<'CSS'
 	float:left;
 	display:block;
 	width: 100px;
-	height: 40px;
+	height: 35px;
 	overflow:hidden;
 	text-decoration:none;
 	font-size: 12px;
@@ -195,7 +198,7 @@ $css = <<<'CSS'
 
 #accordion .panel.active {
 	width: 340px;
-	margin-right: 0px;
+	margin-right: 0;
 }
 
 #accordion .panel.active .panelContent{
@@ -224,32 +227,68 @@ $css = <<<'CSS'
 .-accordion--horizontal{
     height: auto;
 }
+
+#searchResults{
+    display: none;
+}
+
+.active #searchResults{
+    display: block;
+}
 CSS;
-
-$js = <<<'JS'
-$(document).ready(function(){
-
-    activePanel = $("#accordion div.panel:first");
-    $(activePanel).addClass('active');
-
-    $("#accordion").delegate('.panel', 'click', function(e){
-        if( ! $(this).is('.active') ){
-			$(activePanel).animate({width: "100px"}, 300);
-			$(this).animate({width: "340px"}, 300);
-			$('#accordion .panel').removeClass('active');
-			$(this).addClass('active');
-			activePanel = this;
-		 };
-    });
-});
-JS;
-
-$this->registerJs($js);
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
 $this->registerJs($js);
 $this->registerCss($css);
+
+$accordionJs = <<<'JS'
+(function( $ ){
+    $.fn.menuAccordion = function(options) {
+        if(options == undefined || options == null){
+            options = {};
+        }
+
+        var defaultOptions = {
+                panelWidth:  '340',
+                labelWidth: '100',
+                animationDelay: '300'
+            },
+            container = this,
+            activePanel = container.find('.panel:first');
+
+        options = $.extend(defaultOptions, options);
+
+        $(activePanel).addClass('active');
+
+        this.delegate('.panel', 'click', function(e){
+            if(!$(this).is('.active')){
+                $(activePanel).animate({width: options.labelWidth + "px"}, options.animationDelay);
+                $(this).animate({width: options.panelWidth + "px"}, options.animationDelay);
+                container.find('.panel').removeClass('active');
+                $(this).addClass('active');
+                activePanel = this;
+            };
+        });
+
+        this.delegate('input', 'keypress', function(e){
+            if(e.keyCode == 13){
+                console.log(e);
+                e.preventDefault();
+                $("#searchResults").tab('show');
+                $("#searchResults").css('display', 'block');
+                url = '/orders/showlist?ordersSource=search&context=true&' + e.currentTarget.name + '=' + e.currentTarget.value;
+                $.pjax({url: url, container: '#ordersGridView_search-pjax', push: false, replace: false, timeout: 10000,scrollTo: true});
+
+            }
+        });
+    };
+})( jQuery );
+
+$("#accordion").menuAccordion();
+JS;
+
+$this->registerJs($accordionJs, 3);
 
 $this->title = 'Заказы';
 ?>
@@ -345,126 +384,125 @@ $this->title = 'Заказы';
         float: left;
     }
 </style>
-    <div class="ordersStats">
-        <div style="display: table; margin: 0 auto; position: relative; top: 11px;">
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('dropbox', [
-                            'class' =>  'yellow'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <table>
-                            <tr>
-                                <td>
-                                    <span>Заказов</span>
-                                </td>
-                                <td>
-                                    <span>Выполнено</span>
-                                </td>
-                            </tr>
-                            <tr style="text-align: center;">
-                                <td>
-                                    <?=Html::tag('h1', strlen($ordersStats['totalOrders']) >= 4 ? Html::tag('small', $ordersStats['totalOrders']) : $ordersStats['totalOrders'], [
-                                        'style' =>  'line-height: '.(strlen($ordersStats['totalOrders']) < 4 ? '26px;' : '0px;')
-                                    ])?>
-                                </td>
-                                <td>
-                                    <?=Html::tag('h1', strlen($ordersStats['completedOrders']) >= 4 ? Html::tag('small', $ordersStats['completedOrders'], ['style' => 'color: #fff']) : $ordersStats['completedOrders'], [
-                                        'style' =>  'color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; border-radius: 3px; display: inline-block; line-height: '.(strlen($ordersStats['completedOrders']) < 4 ? '26px;' : '0px;')
-                                    ])?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+<div class="ordersStats">
+    <div style="display: table; margin: 0 auto; position: relative; top: 11px;">
+        <div style="display: table-cell;">
+            <div>
+                <div class="icon">
+                    <?=FA::icon('dropbox', [
+                        'class' =>  'yellow'
+                    ])->size(FA::SIZE_3X)->inverse()?>
+                </div>
+                <div class="description">
+                    <table>
+                        <tr>
+                            <td>
+                                <span>Заказов</span>
+                            </td>
+                            <td>
+                                <span>Выполнено</span>
+                            </td>
+                        </tr>
+                        <tr style="text-align: center;">
+                            <td>
+                                <?=Html::tag('h1', strlen($ordersStats['totalOrders']) >= 4 ? Html::tag('small', $ordersStats['totalOrders']) : $ordersStats['totalOrders'], [
+                                    'style' =>  'line-height: '.(strlen($ordersStats['totalOrders']) < 4 ? '26px;' : '0px;')
+                                ])?>
+                            </td>
+                            <td>
+                                <?=Html::tag('h1', strlen($ordersStats['completedOrders']) >= 4 ? Html::tag('small', $ordersStats['completedOrders'], ['style' => 'color: #fff']) : $ordersStats['completedOrders'], [
+                                    'style' =>  'color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; border-radius: 3px; display: inline-block; line-height: '.(strlen($ordersStats['completedOrders']) < 4 ? '26px;' : '0px;')
+                                ])?>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('frown-o', [
-                            'class' =>  'purple'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Не прозвонено</span>
-                        <h1><?=$ordersStats['notCalled']?></h1>
-                    </div>
+        </div>
+        <div style="display: table-cell;">
+            <div>
+                <div class="icon">
+                    <?=FA::icon('frown-o', [
+                        'class' =>  'purple'
+                    ])->size(FA::SIZE_3X)->inverse()?>
+                </div>
+                <div class="description">
+                    <span>Не прозвонено</span>
+                    <h1><?=$ordersStats['notCalled']?></h1>
                 </div>
             </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('cubes', [
-                            'class' =>  'green'
-                        ])->size(FA::SIZE_2X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Всего на складе</span>
-                        <h1>150 000</h1>
-                    </div>
+        </div>
+        <div style="display: table-cell;">
+            <div>
+                <div class="icon">
+                    <?=FA::icon('cubes', [
+                        'class' =>  'green'
+                    ])->size(FA::SIZE_2X)->inverse()?>
+                </div>
+                <div class="description">
+                    <span>Всего на складе</span>
+                    <h1>150 000</h1>
                 </div>
             </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('calculator', [
-                            'class' =>  'blue'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Сума заказов</span>
-                        <h1 title="Фактическая сумма заказов" style="line-height: 22px; font-size: 22px;"><?=$ordersStats['ordersFaktSumm']?>₴</h1>
-                        <small title="Общая сумма заказов"><?=$ordersStats['ordersSumm']?>₴</small>
-                    </div>
+        </div>
+        <div style="display: table-cell;">
+            <div>
+                <div class="icon">
+                    <?=FA::icon('calculator', [
+                        'class' =>  'blue'
+                    ])->size(FA::SIZE_3X)->inverse()?>
+                </div>
+                <div class="description">
+                    <span>Сума заказов</span>
+                    <h1 title="Фактическая сумма заказов" style="line-height: 22px; font-size: 22px;"><?=$ordersStats['ordersFaktSumm']?>₴</h1>
+                    <small title="Общая сумма заказов"><?=$ordersStats['ordersSumm']?>₴</small>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <?=\backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
-])?>
-
-<div class="row well well-sm" style="margin: 30px 0;">
-    <?=OrdersSearchWidget::widget([
-        'searchModel'   =>  $searchModel,
-        'items'         =>  [
-            [
-                'label'     =>  '№ заказа',
-                'attribute' =>  'number'
-            ],[
-                'label'     =>  'Телефон',
-                'attribute' =>  'customerPhone'
-            ],[
-                'label'     =>  'Фамилия',
-                'attribute' =>  'customerSurname'
-            ],[
-                'label'     =>  'Эл. адрес',
-                'attribute' =>  'customerEmail'
-            ],[
-                'label'     =>  'ТТН',
-                'attribute' =>  'nakladna'
-            ],[
-                'label'     =>  'Сумма',
-                'attribute' =>  'actualAmount'
-            ],
-        ]
-    ])?>
-</div>
-
-<?=Html::tag('a', 'За всё время', [
+]),
+Html::tag('div', OrdersSearchWidget::widget([
+    'searchModel'   =>  $searchModel,
+    'items'         =>  [
+        [
+            'label'     =>  '№ заказа',
+            'attribute' =>  'number'
+        ],[
+            'label'     =>  'Телефон',
+            'attribute' =>  'customerPhone'
+        ],[
+            'label'     =>  'Фамилия',
+            'attribute' =>  'customerSurname'
+        ],[
+            'label'     =>  'Эл. адрес',
+            'attribute' =>  'customerEmail'
+        ],[
+            'label'     =>  'ТТН',
+            'attribute' =>  'nakladna'
+        ],[
+            'label'     =>  'Сумма',
+            'attribute' =>  'actualAmount'
+        ],
+    ]
+]), [
+    'style' =>  'margin: 30px 0',
+    'class' =>  'row well well-lg'
+]),
+Html::tag('a', 'За всё время', [
     'href'  =>  \yii\helpers\Url::toRoute([
         '',
         'showDates' =>  'alltime'
     ]),
     'class' =>  'btn btn-default btn-disabled',
     \Yii::$app->request->get("showDates") == 'alltime' ? 'disabled' : '' =>  'true'
-]); ?>
-
-<?=\kartik\tabs\TabsX::widget([
+]),
+\kartik\tabs\TabsX::widget([
+    'id'            =>  'ordersSourcesTabs',
     'encodeLabels'  =>  false,
     'pluginEvents'  =>  [
         'tabsX.success' =>  'function(){
@@ -491,6 +529,10 @@ $this->title = 'Заказы';
             if($("#ordersGridView_all-pjax").length > 0){
                 setListeners("#ordersGridView_all");
             }
+
+            if($("#ordersGridView_search-pjax").length > 0){
+                setListeners("#ordersGridView_search");
+            }
          }'
     ],
     'enableStickyTabs'  =>  false,
@@ -500,16 +542,16 @@ $this->title = 'Заказы';
             'options'   =>  [
                 'id'        =>  'source-internet',
             ],
-            'content'   =>  \yii\helpers\Json::decode($this->context->runAction('showlist', ['context' => true])),
+            'content'   =>  $this->context->runAction('showlist', ['context' => true]),
             'active'    =>  true,
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates')])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet'])]
         ],
         [
             'label'   =>  'Магазин',
             'options'   =>  [
                 'id'        =>  'source-local_store',
-                'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market'])]
             ],
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market'])]
         ],
         [
             'label'   =>  'Все',
@@ -517,246 +559,17 @@ $this->title = 'Заказы';
                 'id'        =>  'source-all',
             ],
             'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all'])]
+        ],
+        [
+            'label'     =>  'Результаты поиска',
+            'linkOptions'   =>  ['id' =>  'searchResults'],
+            'content'   =>  $this->context->runAction('showlist', ['context' => true, 'search' => true]),
+            'options'   =>  [
+                'id'    =>  'source-search_results'
+            ]
         ]
     ]
-])?>
-<?='';/*\kartik\grid\GridView::widget([
-    'dataProvider'  =>  $orders,
-    'resizableColumns' =>  false,
-    'summary'   =>  '',
-    'options'       =>  [
-        'style' =>  'overflow: hidden',
-        'data-attribute-type'   =>  'ordersGrid'
-    ],
-    'rowOptions'    =>  function($model){
-        if($model->deleted != 0){
-            return ['class' => 'danger'];
-        }
-
-        if($model->done == 1){
-            return ['class' =>  'success'];
-        }
-
-        if($model->confirmed == 1){
-            return ['class' =>  'warning'];
-        }
-
-        if($model->callback == -1 || $model->callback == 0){
-            return ['class' =>  'danger'];
-        }
-
-        return [];
-    },
-    'beforeHeader'  =>  '<div style="margin-bottom: -1px;" class="btn-group">
-<a href="'.RequestHelper::createGetLink('ordersSource', '').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'shop' || \Yii::$app->request->get("ordersSource") == '' ? ' disabled' : '').'>Интернет</a>
-<a href="'.RequestHelper::createGetLink('ordersSource', 'market').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'market' ? ' disabled' : '').'>Магазин</a>
-<a href="'.RequestHelper::createGetLink('ordersSource', 'all').'" class="btn btn-default"'.(\Yii::$app->request->get("ordersSource") == 'all' ? ' disabled' : '').'>Все</a>
-</div>',
-    'hover'         =>  true,
-    'columns'       =>  [
-        [
-            'attribute' =>  'id',
-            'format'    =>  'html',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '40px',
-            'options'   =>  function($model){
-                return [];
-            },
-            'value'     =>  function($model){
-                return Html::a($model->number, Url::to([
-                    '/orders/showorder/'.$model->id
-                ])).Html::tag('br').Html::tag('small',
-                    Html::a($model->deleted != 0 ? Html::tag('small', 'Восст.') : 'Удалить', '#', [
-                        'class' =>  $model->deleted != 0 ? 'restoreOrder' : 'deleteOrder'
-                    ]));
-            }
-        ],
-        [
-            'attribute' =>  'added',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '40px',
-            'format'    =>  'html',
-            'options'   =>  function($model){
-                return [];
-            },
-            'value'     =>  function($model){
-                return \Yii::$app->formatter->asDate($model->added, 'php:d.m').'<br>'.
-                \Yii::$app->formatter->asDate($model->added, 'php:H').
-                Html::tag('sup', Html::tag('u', \Yii::$app->formatter->asDate($model->added, 'php:i')));
-            }
-        ],
-        [
-            'attribute' =>  'name',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '140px',
-            'format'    =>  'html',
-            'value'     =>  function($model){
-                return $model->customerName.'<br>'.$model->customerSurname;
-            }
-        ],
-        [
-            'attribute' =>  'customerPhone',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '80px',
-        ],
-        [
-            'attribute' =>  'deliveryCity',
-            'format'    =>  'html',
-            'width'     =>  '140px',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'value'     =>  function($model){
-                if(strlen($model->deliveryCity) >= 20){
-                    $a = explode(',', $model->deliveryCity);
-                    $model->deliveryCity = implode(', ', $a);
-                }
-
-                return Html::tag('b', $model->deliveryCity).'<br>'.$model->deliveryRegion;
-            }
-        ],
-        [
-            'header'    =>  'Статус',
-            'vAlign'    =>  \kartik\grid\GridView::ALIGN_MIDDLE,
-            'hAlign'    =>  \kartik\grid\GridView::ALIGN_CENTER,
-            'format'    =>  'html',
-            'noWrap'    =>  true,
-            'attribute' =>  'status',
-            'value'     =>  function($model){
-                if(!empty($model->status)){
-                    $string = 'status_'.$model->status;
-                    $status1 = $model::$$string;
-                }else{
-                    $status1 = '';
-                }
-
-                if($model->status == '1' && $model->done == 1 && $model->doneDate != '0000-00-00 00:00:00'){
-                    $status2 = 'Выполнено '.\Yii::$app->formatter->asDatetime($model->doneDate, 'php:d.m.Y');
-                }else{
-                    $status2 = 'Не выполнено';
-                }
-
-                return Html::tag('div', Html::tag('div', $status1, [
-                    'style' =>  'width: 100%; height: 40%'
-                ]).Html::tag('small', $status2), [
-                    'style' =>  'width: 100%; display: block; position: inherit; height: 100%;'
-                ]);
-            }
-        ],
-        [
-            'width'     =>  '70px',
-            'format'    =>  'html',
-            'attribute' =>  'originalSum',
-            'header'    =>  'Сумма заказа',
-            'noWrap'    =>  true,
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'value'     =>  function($model){
-                return $model->originalSum.' грн.';
-            }
-        ],
-        [
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'attribute' =>  'actualAmount',
-            'width'     =>  '70px',
-            'format'    =>  'html',
-            'options'   =>  [
-                'style'      =>  'font-size: 8px'
-            ],
-            'noWrap'    =>  true,
-            'value'     =>  function($model){
-                $user = \common\models\Siteuser::getUser($model->responsibleUserID);
-                return  Html::tag('span' , $model->actualAmount.' грн.', ['class' => 'actualAmount']).
-                        Html::tag('br').
-                        ($model->responsibleUserID != 0 && !empty($model->responsibleUserID) ? Html::tag('small', (is_object($user) ? $user->name : $user), ['class' => 'responsibleUser']) : '');
-            }
-        ],
-        [
-            'header'    =>  'СМС',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-        ],
-        [
-            'class'     =>  \kartik\grid\ActionColumn::className(),
-            'hAlign'    =>  GridView::ALIGN_CENTER,
-            'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '180px',
-            'buttons'   =>  [
-                'contents'  =>  function($url, $model, $key){
-                    return Html::a('Содержимое', Url::toRoute([
-                        '/orders/showorder/'.$model->id
-                    ]), [
-                        'class' =>  'btn btn-default',
-                        'style' =>  'margin-top: 1px'
-                    ]);
-                },
-                'print'  =>  function($url, $model, $key){
-                    return Html::a('', Url::toRoute([
-                        '/printer/order/'.$model->id
-                    ]), [
-                        'target'    =>  '_blank',
-                        'class'     =>  'btn btn-default glyphicon glyphicon-print'
-                    ]);
-                },
-                'done'  =>  function($url, $model, $key){
-                    return Html::button('', [
-                        'class' =>  'btn btn-default doneOrder glyphicon glyphicon-ok'.($model->done == 1 ? ' btn-success' : ''),
-                        ($model->confirmed == 1 ? '' : 'disabled')  =>  'disabled'
-                    ]);
-                },
-                'call'  =>  function($url, $model, $key){
-                    switch($model->callback){
-                        case '2':
-                            $subclass = 'btn-danger';
-                            break;
-                        case '1':
-                            $subclass = 'btn-success';
-                            break;
-                        default:
-                            $subclass = 'btn-default';
-                    }
-
-                    if($model->callback == '0'){
-                        $subclass = 'btn-warning';
-                    }
-
-                    return Html::button('', [
-                        'class' =>  'btn confirmCall glyphicon glyphicon-phone-alt '.$subclass
-                    ]);
-                },
-                'changes'   =>  function($url, $model, $key){
-                    return Html::a('', '#orderChanges', [
-                        'class'                     =>  'ordersChanges btn btn-default glyphicon glyphicon-list-alt',
-                        'data-attribute-orderID'    =>  $model->id,
-                        ($model->hasChanges != 1 ? 'disabled' : 'enabled') => 'disabled',
-                        'onclick'   =>  ($model->hasChanges != 1 ? 'return false;' : '')
-                    ]);
-                },
-            ],
-            'template'  =>  Html::tag('div', '{contents}', [
-                    'class' =>  'btn-group btn-group-sm',
-                ]).Html::tag('div', '{print}{changes}{call}{done}',[
-                    'class' =>  'btn-group btn-group-sm',
-                    'style' =>  'margin-top: -2px;'
-                ])
-        ],
-        [
-            'class'     =>  \kartik\grid\ExpandRowColumn::className(),
-            'value'     =>  function(){
-                return GridView::ROW_COLLAPSED;
-            },
-            'detailRowCssClass' =>  GridView::TYPE_DEFAULT,
-            'detailUrl' =>  '/orders/getorderpreview',
-            'onDetailLoaded'    =>  'function(){
-                //TODO: вешать на кнопки eventListener\'ы
-            }'
-        ],
-    ]
-]);*/
+]);
 
 $modal = new \bobroid\remodal\Remodal([
     'id'            =>  'orderChanges',
