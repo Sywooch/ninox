@@ -123,8 +123,11 @@ class HistorySearch extends History{
         $this->addCondition($query, 'id');
         $this->addCondition($query, 'number');
         $this->addCondition($query, 'customerPhone', true);
+        $this->addCondition($query, 'customerSurname', true);
         $this->addCondition($query, 'customerEmail', true);
         $this->addCondition($query, 'deliveryCity', true);
+        $this->addCondition($query, 'nakladna', true);
+        $this->addCondition($query, 'actualAmount');
         $this->addCondition($query, 'responsibleUserID', true);
 
         return $onlyQuery ? $query : $dataProvider;
@@ -133,7 +136,7 @@ class HistorySearch extends History{
     public function rules()
     {
         return [
-            [['id', 'number', 'customerPhone', 'customerEmail', 'deliveryCity', 'responsibleUserID'], 'safe']
+            [['id', 'number', 'customerPhone', 'customerSurname', 'customerEmail', 'deliveryCity', 'nakladna', 'actualAmount', 'responsibleUserID'], 'safe']
         ];
     }
 

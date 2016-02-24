@@ -273,7 +273,6 @@ $accordionJs = <<<'JS'
 
         this.delegate('input', 'keypress', function(e){
             if(e.keyCode == 13){
-                console.log(e);
                 e.preventDefault();
                 $("#searchResults").tab('show');
                 $("#searchResults").css('display', 'block');
@@ -492,14 +491,6 @@ Html::tag('div', OrdersSearchWidget::widget([
 ]), [
     'style' =>  'margin: 30px 0',
     'class' =>  'row well well-lg'
-]),
-Html::tag('a', 'За всё время', [
-    'href'  =>  \yii\helpers\Url::toRoute([
-        '',
-        'showDates' =>  'alltime'
-    ]),
-    'class' =>  'btn btn-default btn-disabled',
-    \Yii::$app->request->get("showDates") == 'alltime' ? 'disabled' : '' =>  'true'
 ]),
 \kartik\tabs\TabsX::widget([
     'id'            =>  'ordersSourcesTabs',
