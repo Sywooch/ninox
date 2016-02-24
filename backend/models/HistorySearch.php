@@ -8,6 +8,7 @@
 
 namespace backend\models;
 
+use common\models\History;
 use yii\data\ActiveDataProvider;
 
 class HistorySearch extends History{
@@ -18,7 +19,7 @@ class HistorySearch extends History{
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
             'pagination'    =>  [
-                'pageSize'  =>  isset($params['pageSize']) ? $params['pageSize'] : 50
+                'pageSize'  =>  isset($params['pageSize']) ? $params['pageSize'] : 50,
             ]
         ]);
 
@@ -38,25 +39,25 @@ class HistorySearch extends History{
             ]
         ]);
 
-        if(\Yii::$app->request->get("ordersSource") != ''){
-	        switch(\Yii::$app->request->get("ordersSource")){
+        if(!empty($params["ordersSource"])){
+	        switch($params["ordersSource"]){
 		        case 'all':
 			        break;
 		        case 'market':
-			        $query->andWhere(['deliveryType' => 5, 'paymentType' =>  6]);
+			        $query->andWhere(['sourceType' => History::SOURCETYPE_SHOP]);
 			        break;
 		        case 'deleted':
 			        $query->andWhere('deleted != 0');
 			        break;
-		        case 'shop':
+		        case 'internet':
 		        default:
-			        $query->andWhere('deliveryType != 5 AND paymentType != 6');
+			        $query->andWhere(['sourceType' => History::SOURCETYPE_INTERNET]);
 			        break;
 	        }
         }
 
-	    if(\Yii::$app->request->get("smartFilter")){
-		    switch(\Yii::$app->request->get("smartFilter")){
+	    if(!empty($params["smartFilter"])){
+		    switch($params["smartFilter"]){
 			    case 'shipping':
 					$query->andWhere(
 						[
@@ -90,7 +91,9 @@ class HistorySearch extends History{
 	    }elseif(empty($params['HistorySearch'])){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
-            switch(\Yii::$app->request->get("showDates")){
+            $params['showDates'] = empty($params['showDates']) ? 'today' : $params['showDates'];
+
+            switch($params["showDates"]){
                 case 'yesterday':
                     $query->andWhere('added <= '.$date.' AND added >= '.($date - 86400));
                     break;
@@ -109,7 +112,7 @@ class HistorySearch extends History{
             }
         }
 
-        if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
+        if(!empty($params["showDeleted"]) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted')){
             $query->andWhere('deleted = 0');
         }
 
@@ -118,8 +121,13 @@ class HistorySearch extends History{
         }
 
         $this->addCondition($query, 'id');
+        $this->addCondition($query, 'number');
         $this->addCondition($query, 'customerPhone', true);
+        $this->addCondition($query, 'customerSurname', true);
+        $this->addCondition($query, 'customerEmail', true);
         $this->addCondition($query, 'deliveryCity', true);
+        $this->addCondition($query, 'nakladna', true);
+        $this->addCondition($query, 'actualAmount');
         $this->addCondition($query, 'responsibleUserID', true);
 
         return $onlyQuery ? $query : $dataProvider;
@@ -128,7 +136,7 @@ class HistorySearch extends History{
     public function rules()
     {
         return [
-            [['id', 'customerPhone', 'deliveryCity', 'responsibleUserID'], 'safe']
+            [['id', 'number', 'customerPhone', 'customerSurname', 'customerEmail', 'deliveryCity', 'nakladna', 'actualAmount', 'responsibleUserID'], 'safe']
         ];
     }
 
