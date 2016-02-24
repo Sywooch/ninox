@@ -172,7 +172,7 @@ class DefaultController extends Controller
         }
 
         if($pricelist){
-            $data = [];
+            $data = $importInfo = [];
 
             $xls = \PHPExcel_IOFactory::load(\Yii::getAlias('@webroot').'/files/importedPrices/'.$pricelist->file);
 
@@ -180,64 +180,98 @@ class DefaultController extends Controller
 
             $dataProvider = new ArrayDataProvider();
 
-            /*if(true){
-                $header = $xls[0];
-                //die();
-                //$dataProvider->
-                unset($xls[0]);
+            if(isset($pricelist->configuration['withHeaders'])){
+                $header = $models[0];
+                unset($models[0]);
             }
-            //TODO: сделать возможность загрузки прайсов с заголовками
-            */
+            //TODO: сделать чтобы заголовки отображались заголовками таблицы
 
             $dataProvider->setModels($models);
 
             if(\Yii::$app->request->post("PriceListImportTable")){
                 $keys = $attributes = [];
-                $replaceExtising = false;
+                $replaceExisting = false;
+                $keysCount = $added = $updated = 0;
 
-                foreach(\Yii::$app->request->post("PriceListImportTable")['columns'] as $key => $subarray){
+                $columns = \Yii::$app->request->post("PriceListImportTable")['columns'];
+
+                foreach($columns as $key => $subarray){
                     if(!empty($subarray['key'])){
                         $keys[$key] = $subarray['attribute'];
                     }
 
-                    $attributes[$key] = $subarray['attribute'];
+                    if(!empty($subarray['attribute'])){
+                        $attributes[$key] = $subarray['attribute'];
+                    }
                 }
 
                 if(!empty($keys)){
-                    $replaceExtising = true;
+                    $keysCount = sizeof($keys);
+                    $replaceExisting = true;
                 }
 
                 foreach($dataProvider->getModels() as $model){
-                    $good = false;
+                    $good = $badParams = false;
 
-                    if($replaceExtising){
+                    if($replaceExisting){
                         $good = Good::find();
 
+                        $conditions = [];
+
                         foreach($keys as $key => $attribute){
-                            $good->andWhere([$attribute => $model[$key]]);
+                            $conditions[$attribute] = $model[$key];
                         }
 
-                        $good = $good->one();
+                        if(!empty($conditions) && $keysCount == sizeof($conditions)){
+                            $good->andWhere($conditions);
+                        }else{
+                            $badParams = true;
+                        }
+
+                        if(!$badParams){
+                            $good = $good->one();
+                        }
                     }
 
                     if(!$good){
                         $good = new Good();
                     }
 
-                    foreach($model as $key => $field){
-                        $changedAttribute = $attributes[$key];
-                        $good->$changedAttribute = $field;
-                    }
+                    if(!$badParams){
+                        foreach($model as $key => $field){
+                            if(!empty($attributes[$key])){
+                                $changedAttribute = $attributes[$key];
+                                $good->$changedAttribute = $field;
+                            }
+                        }
 
-                    $good->save(false);
+                        $thisAdded = $good->isNewRecord ? 1 : 0;
+
+                        if($good->save(false)){
+                            $added += $thisAdded;
+                            $updated++;
+                        }
+                    }
                 }
+
+                $importInfo = [
+                    'updated'   =>  $updated - $added,
+                    'added'     =>  $added,
+                    'totalCount'=>  sizeof($models)
+                ];
+
+                $pricelist->imported = 1;
+                $pricelist->importedDate = date('Y-m-d H:i:s');
+
+                $pricelist->save(false);
             }
 
             return $this->render('import_table', [
                 'data'          =>  $data,
                 'columns'       =>  $xls->getActiveSheet()->getHighestColumn(),
                 'filename'      =>  $pricelist->name,
-                'dataProvider'  =>  $dataProvider
+                'dataProvider'  =>  $dataProvider,
+                'importInfo'    =>  $importInfo
             ]);
         }
 
