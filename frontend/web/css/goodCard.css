@@ -1,16 +1,27 @@
 /*========* CART-ITEM *=========*/
 
 /* Font loading */
+
 @font-face {
     font-family: 'write-review';
-    src: url('../fonts/write-review.eot?10260552');
-    src: url('../fonts/write-review.eot?10260552#iefix') format('embedded-opentype'),
-    url('../fonts/write-review.woff?10260552') format('woff'),
-    url('../fonts/write-review.ttf?10260552') format('truetype'),
-    url('../fonts/write-review.svg?10260552#write-review') format('svg');
+    src: url('../fonts/write-review.eot?62832115');
+    src: url('../fonts/write-review.eot?62832115#iefix') format('embedded-opentype'),
+    url('../fonts/write-review.woff?62832115') format('woff'),
+    url('../fonts/write-review.ttf?62832115') format('truetype'),
+    url('../fonts/write-review.svg?62832115#write-review') format('svg');
     font-weight: normal;
     font-style: normal;
 }
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'write-review';
+    src: url('../font/write-review.svg?62832115#write-review') format('svg');
+  }
+}
+*/
 
 [class^="icon-"]:before, [class*=" icon-"]:before {
     font-family: "write-review";
@@ -47,11 +58,14 @@
     /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-ok:before { content: '\e800'; }
-.icon-cw:before { content: '\e801'; }
-.icon-mail-alt:before { content: '\e802'; }
-.icon-pencil:before { content: '\e803'; }
-.icon-user:before { content: '\e805'; }
+.icon-email:before {
+    content: '\e800';
+    color: #a4a4a3;
+    /*color: #81bb72; accept*/
+    /*color: #ec7e82; denied*/
+
+}
+.icon-name:before { content: '\e801'; }
 
 /* End font loading */
 
@@ -604,13 +618,18 @@
     float: none;
 }
 
-.customer-reviews span{
+.customer-reviews-title span{
     float: left;
     padding-right: 10px;
     font-size: 20px;
 }
 
-.write-review{
+.customer-reviews span{
+    float: left;
+}
+
+
+/*.write-review{
     float: left;
 }
 
@@ -654,7 +673,7 @@
 }
 
 .remodal{
-    max-width: 570px;
+    max-width: 570px !important;
 }
 
 .write-review span{
@@ -672,7 +691,7 @@
 
 .row label{
     position: absolute;
-
+    margin: 10px;
 }
 
 .write-review .row span{
@@ -687,8 +706,13 @@
 .write-review .row input{
     width: 300px;
     height: 40px;
-    padding-left: 20px;
-}
+    padding-left: 35px;
+    border: 1px solid #d2d8d8;
+    /*color: rgb(129, 187, 114);
+    border: 1px solid rgb(129, 187, 114); accept*/
+    /*border: 1px solid rgb(246, 193, 195);
+    color: rgb(236, 126, 130); denied*/
+/*}
 
 .write-review .row textarea{
     width: 100%;
@@ -699,6 +723,59 @@
 
 .write-review .modal-body{
     text-align: center;
+}*/
+
+.all-reviews{
+    width: 100%;
+    height: 40px;
+    display: block;
+    background: rgba(255, 136, 0, 0.1) none repeat scroll 0% 0%;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px;
+}
+
+.add-review{
+    margin-top: 10px;
+    background: rgba(100, 136, 150, 0.1) none repeat scroll 0% 0%;
+    padding: 10px 15px;
+}
+
+.add-review-info span{
+    font-size: 14px;
+    float: left;
+    width: 50%;
+}
+
+.add-review-info .review{
+    width: inherit;
+    margin-top: 40px;
+    height: 20px;
+}
+
+.add-review input{
+    float: left;
+}
+
+.main {
+    display: none;
+}
+
+.add-review textarea[type=text]{
+    max-width: 550px;
+    width: 100%;
+    height: 16px;
+    font-size: 12px;
+    -webkit-transition: .35s ease-in-out;
+    transition: .35s ease-in-out;
+    resize: none;
+}
+
+.add-review textarea[type=text]:focus{
+    width: 400px;
+    height: 100px;
+    font-size: 12px;
+    float: right;
 }
 
 .customer-reviews a{
@@ -779,6 +856,30 @@
     margin: auto;
     display: block;
     padding-top: 10px;
+}
+
+.reloadCaptchaz {
+    background: url("/img/site/reload.png")  no-repeat scroll 0% 50% transparent;;
+    width: 28px !important;
+    height: 40px;
+    border: medium none;
+    color: transparent;
+    float: left;
+}
+
+.captcha{
+
+}
+
+.icon-review{
+
+}
+
+.icon-user{
+    background-image: url("/img/site/name.svg");
+    width: 20px;
+    height: 20px;
+
 }
 
 /*========* END CART-ITEM *=========*/
