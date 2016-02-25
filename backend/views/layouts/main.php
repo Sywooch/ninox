@@ -201,11 +201,10 @@ span.twitter-typeahead div.tt-menu{
 
 .afterMenu{
     margin-top: -5px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     height: 30px;
     font-size: 12px;
     width: 100%;
-    //max-width: 1140px;
     white-space: nowrap;
 }
 
@@ -325,27 +324,6 @@ $this->beginPage() ?>
 <div class="wrap">
     <?php
     Yamm::begin([
-        'typeaheadSearch'   =>  true,
-        'typeaheadConfig'   =>  [
-            'name' => 'country_1',
-            'options' => ['placeholder' => 'Начните вводить текст для поиска...'],
-            'scrollable' => true,
-            'pluginOptions' => ['highlight'=>true],
-            'dataset' => [
-                [
-                    'remote' => [
-                        'url' => Url::to(['/goods/searchgoods']) . '?string=%QUERY',
-                        'wildcard' => '%QUERY'
-                    ],
-                    'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
-                    'display' => 'value',
-                    'templates' => [
-                        'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
-                        'suggestion' => new JsExpression('Handlebars.compile(\'<a class="typeahead-list-item" href="/goods/showgood/{{ID}}"><div class="row"><div class="col-xs-12 name">{{Name}}</div><div class="col-xs-12 category"><span class="pull-right ">{{categoryname}}</span></div><div class="col-xs-12 code">Код товара: {{Code}}</div></div></a>\')')
-                    ]
-                ]
-            ]
-        ],
         'options' => [
             'headerOptions'   =>  [
                 'class'   =>  'gray'
@@ -353,10 +331,10 @@ $this->beginPage() ?>
         ],
         'theme' =>  'gray',
         'items' => [
-            [
+            /*[
                 'label'     =>  FA::icon('home')->size(FA::SIZE_2X),
                 'url'       =>  \Yii::$app->params['frontend'].'?serviceMenu=true&currentUser='.\Yii::$app->user->identity->id.'&secretKey=lazyPenguinsEatsMoreIceCreams'
-            ],
+            ],*/
             [
                 'label'     => FA::icon('check-circle-o')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Заказы</span>',
                 'url'       => Url::home(),
@@ -384,7 +362,7 @@ $this->beginPage() ?>
                 ]
             ],
             [
-                'label' => FA::icon('bars'),
+                'label' => FA::icon('bars')->size(FA::SIZE_2X),
                 'url' => ['#'],
                 'items' =>  [
                     [
@@ -595,7 +573,7 @@ $this->beginPage() ?>
                                 'url'   =>  '#'
                             ],
                             [
-                                'label' =>  'Импорт excel',
+                                'label' =>  'Импорт прайслистов',
                                 'url'   =>  Url::toRoute('/goods/import')
                             ],
                             [
@@ -641,6 +619,34 @@ $this->beginPage() ?>
                 ],
             ],
             [
+                'type'          =>  'search',
+                'pluginOptions' =>  [
+                    'name'          => 'menuSearch',
+                    'options'       => ['placeholder' => 'Поиск'],
+                    'scrollable'    => true,
+                    'pluginOptions' => [
+                        'highlight'     =>  true
+                    ],
+                    'dataset' => [
+                        [
+                            'remote' => [
+                                'url' => Url::to(['/goods/searchgoods']).'?string=%QUERY',
+                                'wildcard' => '%QUERY'
+                            ],
+                            'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+                            'display' => 'value',
+                            'templates' => [
+                                'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
+                                'suggestion' => new JsExpression('Handlebars.compile(\'<a class="typeahead-list-item" href="/goods/showgood/{{ID}}"><div class="row"><div class="col-xs-12 name">{{Name}}</div><div class="col-xs-12 category"><span class="pull-right ">{{categoryname}}</span></div><div class="col-xs-12 code">Код товара: {{Code}}</div></div></a>\')')
+                            ]
+                        ]
+                    ]
+                ],
+                'options'  =>   [
+                    'class' =>  'inline-search-container'
+                ]
+            ],
+            [
                 'label'     =>  'Сообщения',
                 'options'   =>  [
                     'class'   =>  'showChat'
@@ -650,7 +656,7 @@ $this->beginPage() ?>
             [
                 'label'     =>  'Задания',
                 'url'       =>  Url::toRoute('/tasks/index')
-            ],
+            ]
             /*[
                 'label' =>  '<i class="glyphicon glyphicon-usd large" id="currency-icon" data-target="#currencyModal" data-toggle="modal"></i><span class="visible-xs-inline">&nbsp;Курс</span>'
             ],
