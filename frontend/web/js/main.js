@@ -56,7 +56,9 @@ function addToCart(item){
 				"count": count
 			},
 			success: function(data){
-				$('.buy[data-itemId='+ itemId +']').val(texts.itemText.inCart).toggleClass('yellow-button green-button buy open-cart');
+				$('.buy[data-itemId='+ itemId +']')
+					.val(texts.itemText.inCart)
+					.toggleClass('yellow-button green-button buy open-cart');
 				$('.count[data-itemId='+ itemId +']').data('incart', count);
 				updateCart(data);
 			}
@@ -95,7 +97,8 @@ function changeItemCount(item){
 				}
 				count = className == 'count' ?
 					(tempRes >= maxItemsCount && maxItemsCount == val ?
-						1 : (tempRes == val ? -1 : (maxItemsCount > tempRes ? tempRes - val : maxItemsCount - val))) : count;
+						1 : (tempRes == val ? -1 : (maxItemsCount > tempRes ?
+							tempRes - val : maxItemsCount - val))) : count;
 				itemsCount = val + count;
 				incart = parseInt(item.data('incart'));
 				break;
