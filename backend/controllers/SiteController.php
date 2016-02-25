@@ -3,7 +3,11 @@ namespace backend\controllers;
 
 use common\models\Chat;
 use common\models\ChatMessage;
+use common\models\ControllerAction;
 use common\models\Service;
+use common\models\Shop;
+use common\models\Siteuser;
+use common\models\SubDomain;
 use frontend\models\Customer;
 use frontend\models\Good;
 use sammaye\audittrail\AuditTrail;
@@ -15,6 +19,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use backend\models\LoginForm;
 use yii\filters\VerbFilter;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -33,6 +38,7 @@ class SiteController extends Controller
                 'rules' => [
                     [
                         'actions' => ['login', 'error'],
+                        'roles' =>  ['?'],
                         'allow' => true,
                     ],
                     [
@@ -98,6 +104,34 @@ class SiteController extends Controller
         ];
     }
 
+    public function init(){
+        $configuration = false;
+
+        $domain = preg_replace('/\.'.$_SERVER['SERVER_NAME'].'/', '', $_SERVER['HTTP_HOST']);
+        $domain = SubDomain::find()->where(['name' => $domain])->andWhere('storeId != 0')->one();
+
+
+        if($domain){
+            if($domain->autologin){
+                foreach($domain->autologinParams as $autologinParam){
+                    if($autologinParam['ip'] == \Yii::$app->request->getUserIP()){
+                        \Yii::$app->params['autologin'] = is_array($autologinParam['user']) ? $autologinParam['user'] : [$autologinParam['user']];
+                    }
+                }
+            }
+
+            $configuration = Shop::findOne($domain->storeId);
+        }
+
+        if(!$configuration){
+            $configuration = Shop::findOne(['default' => 1]);
+        }
+
+        \Yii::$app->params['configuration'] = $configuration;
+
+        return parent::init();
+    }
+
     public function actionIndex()
     {
         return $this->run('orders/default/index');
@@ -138,10 +172,10 @@ class SiteController extends Controller
             throw new NotFoundHttpException("Такой контроллер не найден!");
         }
 
-        $action = \common\models\ControllerAction::findOne(['controllerID'  =>  $controller->id, 'action'   =>  \Yii::$app->request->post("action")]);
+        $action = ControllerAction::findOne(['controllerID'  =>  $controller->id, 'action'   =>  \Yii::$app->request->post("action")]);
 
         if(!$action){
-            $action = new \common\models\ControllerAction();
+            $action = new ControllerAction();
             $action->attributes = \Yii::$app->request->post("ControllerAction");
             $action->controllerID = $controller->id;
             return $action->save() ? 1 : 0;
@@ -152,16 +186,16 @@ class SiteController extends Controller
 
     public function actionUpdatecurrency(){
         if(!\Yii::$app->request->isAjax){
-            return;
+            throw new MethodNotAllowedHttpException("Данный метод доступен только через ajax!");
         }
 
         \Yii::$app->response->format = 'json';
 
-        $post = \Yii::$app->request->post("Service");
-        $m = Service::findOne(['key' => $post['key']]);
-        $m->load(\Yii::$app->request->post("Service"));
-        $m->value = \Yii::$app->request->post("Service[value]");
-        $m->save();
+        $m = Service::findOne(['key' => \Yii::$app->request->post("Service")['key']]);
+        $m->load(\Yii::$app->request->post());
+        if(!$m->save(false)){
+            throw new \ErrorException("Возникла ошибка при сохранении параметра ".$m->key);
+        }
 
         return \Yii::$app->request->post();
     }
@@ -192,29 +226,51 @@ class SiteController extends Controller
         }
     }
 
-
-    public function actionLogin()
-    {
+    public function actionLogin(){
         $this->layout = 'login';
 
-        if(\Yii::$app->request->isAjax){
+        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
-        /*if(!\Yii::$app->user->isGuest){
-            if(!empty(\Yii::$app->user->identity->default_route)){
-                return $this->redirect(\Yii::$app->user->identity->default_route);
-            }
-
-            return $this->redirect(Url::home());
-        }*/
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goBack();
+        }
 
         $model = new LoginForm();
 
+        $hasAutoLogin = !empty(\Yii::$app->params['autologin']);
+
+        if(!empty(\Yii::$app->params['autologin'])){
+            $model->autoLoginUsers = \Yii::$app->params['autologin'];
+
+            if(isset(\Yii::$app->request->post("LoginForm")['userID']) && in_array(\Yii::$app->request->post("LoginForm")['userID'], $model->autoLoginUsers)){
+                $model->autoLoginUsers = [\Yii::$app->request->post("LoginForm")['userID']];
+            }
+
+            if(sizeof($model->autoLoginUsers) == 1){
+                $user = Siteuser::findOne($model->autoLoginUsers['0']);
+
+                if($user){
+                    $model->username = $user->username;
+
+                    if(\Yii::$app->user->login($model->getUser(), 3600*24)){
+                        return Yii::$app->getUser()->getReturnUrl() == '/logout' ? $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home()) : $this->goBack();
+                    }
+                }
+            }
+        }
+
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
             return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
-            //return !$this->redirect($this->goBack() = '/login' ? \Yii::$app->user->identity->default_route : $this->goBack());
         }else{
+            if($hasAutoLogin){
+                return $this->render('login', [
+                    'model' => $model,
+                    'users' => Siteuser::find()->where(['in', 'id', $model->autoLoginUsers])->all()
+                ]);
+            }
+
             return $this->render('login', [
                 'model' => $model,
             ]);

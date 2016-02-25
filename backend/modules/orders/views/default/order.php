@@ -1,5 +1,6 @@
 <?php
 use bobroid\remodal\Remodal;
+use common\models\DeliveryType;
 use kartik\dropdown\DropdownX;
 use kartik\typeahead\Typeahead;
 use yii\bootstrap\Modal;
@@ -7,38 +8,28 @@ use yii\helpers\Html;
 use yii\web\JsExpression;
 
 $this->title = 'Заказ #'.$order->number;
-$customerOrdersSummary = $customer->getOrdersSummary();
-$customerOrders = '';
-$typeaheadTemplate = '<a class="typeahead-list-item" onclick="addItemToOrder('.$order->id.', {{ID}})"><div class="row">';
-$typeaheadTemplate .= '<div class="col-xs-12 name">{{Name}}</div>';
-$typeaheadTemplate .= '<div class="col-xs-12 category"><span class="pull-right">{{categoryname}}</span></div>';
-$typeaheadTemplate .= '<div class="col-xs-12 code">Код товара: {{Code}}</div>';
-$typeaheadTemplate .= '</div></a>';
+$deliveryType = DeliveryType::find()->select('description')->where(['id' => $order->deliveryType])->scalar();
+$deliveryParam = \common\models\DeliveryParam::find()->select('description')->where(['id' => $order->deliveryParam])->scalar();
 
-foreach($customer->getOrders() as $oneOrder){
-    $orderText = 'Заказ №'.$oneOrder->number.' от '.\Yii::$app->formatter->asDate($oneOrder->added, 'php:d.m.Y').' на сумму '.$oneOrder->actualAmount.' грн.';
+$customerOrdersSummary = [];
 
-    if($oneOrder->id == $order->id){
-        $orderText = '<span class="text-muted"> '.$orderText.' (текущий)<span>';
-    }else{
-        $orderClasses = [];
+if($customer){
+    $customerOrdersSummary = $customer->getOrdersSummary();
+}
 
-        if($oneOrder->deleted != 0){
-            $orderClasses[] = 'text-danger';
-        }elseif($oneOrder->done == 1){
-            $orderClasses[] = 'text-success';
-        }
+$typeaheadTemplate = $this->render('order/_typeahead_template', [
+    'order' =>  $order
+]);
 
-        $s = '<a href="/orders/showorder/'.$oneOrder->id.'"';
+$customerOrders = [];
 
-        if(sizeof($orderClasses) >= 1) {
-            $s .= ' class="'.implode(' ', $orderClasses).'"';
-        }
-
-        $orderText = $s.'>'.$orderText.'</a>';
+if($customer){
+    foreach($customer->getOrders() as $oneOrder){
+        $customerOrders[] = $this->render('order/_customer_order', [
+            'nowOrder'  =>  $order->id,
+            'order'     =>  $oneOrder
+        ]);
     }
-
-    $customerOrders[] = $orderText;
 }
 
 $priceRulesDropdown = [];
@@ -271,7 +262,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
             <h1>№<?=$order->number?></h1>
         </div>
         <div>
-            <h4><?=$order->orderSumm()?> грн. > <?=$order->paymentType()?></h4>
+            <h4><?=$order->orderSumm()?> грн. > <?=$deliveryType?></h4>
         </div>
     </div>
     <div class="col-xs-4">
@@ -320,7 +311,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                     <span class="roundedItem item-lang"><?=$customer->lang?></span>
                     <h4><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></h4>
                 </h3>
-                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$order->deliveryType()?><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
+                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$deliveryType?> <small>(<?=$deliveryParam?>)</small><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
                 <?=Remodal::widget([
                     'cancelButton'		=>	false,
                     'confirmButton'		=>	false,
@@ -341,7 +332,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                 if($order->deliveryType == 2){
                     echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#' : '#novaPoshtaModal'), ['class' => 'btn btn-default', (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true']);
                 }
-                echo Html::a('Накладная', \yii\helpers\Url::to(['printinvoice/'.$order->id]), [
+                echo Html::a('Накладная', \yii\helpers\Url::to(['/printer/invoice/'.$order->id]), [
                     'class' =>  'btn btn-default'
                 ]),
                 Html::button('Транспортный лист', [
@@ -361,14 +352,18 @@ $this->registerJsFile('/js/bootbox.min.js', [
     </div>
     <div>
         <div class="col-xs-7">
-            <?=\yii\bootstrap\Collapse::widget([
-                'items' =>  [
-                    [
-                        'label'     =>  'Заказов '.$customerOrdersSummary['count'].' на сумму '.$customerOrdersSummary['summ'].' грн.',
-                        'content'   =>  $customerOrders,
-                    ],
-                ]
-            ]);?>
+            <?php
+            if(!empty($customerOrders)){
+                echo \yii\bootstrap\Collapse::widget([
+                    'items' =>  [
+                        [
+                            'label'     =>  'Заказов '.$customerOrdersSummary['count'].' на сумму '.$customerOrdersSummary['summ'].' грн.',
+                            'content'   =>  $customerOrders,
+                        ],
+                    ]
+                ]);
+            }
+            ?>
         </div>
         <div class="col-xs-5">
             <button class="btn btn-lg btn-success btn-block">Сборка</button>
@@ -421,8 +416,8 @@ $this->registerJsFile('/js/bootbox.min.js', [
                             'type'          =>  'button',
                             'data-toggle'   =>  'dropdown',
                             'aria-expanded' =>  'true'
-                        ])?>
-                        <?=DropdownX::widget([
+                        ]),
+                        DropdownX::widget([
                             'items' =>  [
                                 [
                                     'label'     =>  'По оптовым ценам',
@@ -485,8 +480,6 @@ $this->registerJsFile('/js/bootbox.min.js', [
 <?php
 $thiss = $this;
 ?>
-<?php
-$pjax = \yii\widgets\Pjax::begin(); ?>
 <?=\kartik\grid\GridView::widget([
     'id'    =>  'orderItems',
     'dataProvider'  =>  $itemsDataProvider,
@@ -497,7 +490,7 @@ $pjax = \yii\widgets\Pjax::begin(); ?>
         'id'    =>  'orderItems'
     ],
     'pjax'      =>  true,
-    'summary'   =>  '',
+    'summary'   =>  false,
     'rowOptions'    =>  function($model){
         $classes = [];
         if($model->nezakaz == 1){
@@ -634,5 +627,4 @@ $pjax = \yii\widgets\Pjax::begin(); ?>
         ],
     ]
 ]);
-\yii\widgets\Pjax::end();
 ?>

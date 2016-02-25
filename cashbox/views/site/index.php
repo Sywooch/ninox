@@ -6,7 +6,7 @@ use kartik\grid\GridView;
 
 $this->title = 'Касса';
 
-$js = <<<'JS'
+$js = <<<JS
     Messenger.options = {
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
         theme: 'air',
@@ -100,7 +100,7 @@ $js = <<<'JS'
             }
         });
     }, completeSell = function(){
-        var paymentSum = $(".summ")[0].innerHTML;
+        var paymentSum = $(".toPay")[0].innerHTML;
 
         var s = swal({
             title: "Введите сумму к оплате",
@@ -187,11 +187,19 @@ $js = <<<'JS'
             $(".summ")[0].innerHTML = data.sum;
         }
 
-        if(data.toPay !== undefined){
-            $(".toPay")[0].innerHTML = data.toPay;
+        if(data.sumToPay !== undefined){
+            $(".toPay")[0].innerHTML = data.sumToPay;
         }
 
-        if(data.toPay !== undefined){
+        if(data.wholesaleSum !== undefined){
+            $(".wholesale-sum")[0].innerHTML = data.wholesaleSum;
+        }
+
+        if(data.discountSum !== undefined){
+            $(".discount")[0].innerHTML = data.discountSum;
+        }
+
+        if(data.itemsCount !== undefined){
             $(".itemsCount")[0].innerHTML = data.itemsCount;
         }
     }, changeManager = function(e){
@@ -394,6 +402,17 @@ JS;
 
 $this->registerJs($js);
 
+$css = <<<'CSS'
+#mainContent .header .summary.bg-success .wholesale-block{
+    display: none;
+}
+#mainContent .header .summary.bg-danger .wholesale-block{
+    display: block;
+}
+CSS;
+
+$this->registerCss($css);
+
 \bobroid\messenger\ThemeairAssetBundle::register($this);
 rmrevin\yii\fontawesome\AssetBundle::register($this);
 
@@ -424,9 +443,9 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 </div>
             </div>
             <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
-                <p style="font-size: 14px;">Сумма: <span class="summ"><?=\Yii::$app->cashbox->sum?></span> грн. Скидка: <span class="discountSize"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
+                <p style="font-size: 14px;">Сумма: <span class="summ"><?=\Yii::$app->cashbox->sum?></span> грн. Скидка: <span class="discount"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
                 <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=\Yii::$app->cashbox->toPay?></span> грн.</h2>
-
+                <p class="wholesale-block">Сумма по опту: <span class="wholesale-sum" style="display: inline"><?=\Yii::$app->cashbox->wholesaleSum?></span></p>
                 <p>Количество товаров: <span class="itemsCount"><?=\Yii::$app->cashbox->itemsCount?></span></p>
             </div>
         </div>
@@ -434,6 +453,8 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
     <div class="content main">
         <?=GridView::widget([
             'pjax'          =>  true,
+            'responsive'    =>  false,
+            'resizableColumns'=>  false,
             'dataProvider'  =>  $orderItems,
             'rowOptions'    =>  function($model) use(&$goodsModels){
                 return [
@@ -494,14 +515,14 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'header'    =>  'Сумма',
                     'width'     =>  '130px',
                     'value'     =>  function($model){
-                        return ($model->originalPrice * $model->count).' грн.';
+                        return ($model->price * $model->count).' грн.';
                     }
                 ],
                 [
                     'header'    =>  'Дисконт',
                     'width'     =>  '100px',
                     'value'     =>  function($model){
-                        return '-'.$model->discountSize.($model->discountType == '2' ? ' грн.' : '%');
+                        return '-'.(($model->originalPrice - $model->price) * $model->count).' грн.';
                     }
                 ]
             ],

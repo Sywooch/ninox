@@ -1,15 +1,16 @@
 <?php
+use kartik\editable\Editable;
 use yii\bootstrap\Html;
 
 $this->title = 'Продажи';
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
 var showSaleDetails = function(e){
     $.ajax({
         type: 'POST',
         url: '/getsaledetails',
         data: {
-            'orderID':  e.currentTarget.getAttribute('data-key')
+            'orderID':  e.currentTarget.getAttribute('data-attribute-id')
         },
         success: function(data){
             $("[data-remodal-id=saleDetails] > div").replaceWith(data);
@@ -19,36 +20,199 @@ var showSaleDetails = function(e){
             console.log(request.responseText);
         }
     });
-}, updateTable = function(date){
-    $.pjax({url: '/sales?smartfilter=' + date, container: '#salesTable-pjax'});
-}
+}, updateTable = function(date, options){
+    var url = '/sales';
 
-$(".date-buttons button").on('click', function(e){
-    updateTable(e.currentTarget.getAttribute('data-attribute'));
-    $(".date-buttons button:disabled")[0].removeAttribute('disabled');
-    e.currentTarget.setAttribute('disabled', 'disabled');
-});
+    if(date == undefined){
+        date = null;
+    }
 
-$("#salesTable table tbody tr").on('click', function(e){
-    showSaleDetails(e);
-});
+    switch(date){
+        case 'today':
+        case 'yesterday':
+        case 'week':
+        case 'month':
+            url += '?smartfilter=' + date;
+            break;
+        case 'range':
+            url += '?smartfilter=range&dateFrom=' + options.dateFrom + '&dateTo=' + options.dateTo;
+            break;
+        default:
+            break;
+    }
 
-$("a.invoiceOrder").on('click', function(e){
-    e.preventDefault();
-    window.open('/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
-});
+    if(options != undefined && options.withoutUrl){
+        $.pjax({container: '#salesTable-pjax'});
+    }else{
+        $.pjax({url: url, container: '#salesTable-pjax'});
+    }
+}, editOrder = function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/loadorder',
+        data: {
+            'orderID':  e.currentTarget.getAttribute('data-attribute-id')
+        },
+        success: function(data){
+            if(data){
+                location.href = '/';
+            }
+        },
+        error: function (request, status, error) {
+            console.log(request.responseText);
+        }
+    });
+}, unsetDisabled = function(){
+   var disabledOne = $(".date-buttons > *:disabled"),
+       disabledTwo = $(".date-buttons > *.disabled");
 
-$(document).on('pjax:complete', function() {
-    $("#salesTable table tbody tr").on('click', function(e){
+   if(disabledOne.length > 1){
+       disabledOne.forEach(function(item){
+           item.removeAttribute('disabled');
+       });
+   }else if(disabledOne.length == 1){
+       disabledOne[0].removeAttribute('disabled');
+   }
+
+   if(disabledTwo.length > 1){
+       disabledTwo.forEach(function(item){
+           item.removeClass('disabled');
+       });
+   }else if(disabledTwo.length == 1){
+       disabledTwo.removeClass('disabled');
+   }
+}, deleteOrder = function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/returnorder',
+        data: {
+            'orderID':  e.currentTarget.getAttribute('data-attribute-id')
+        },
+        success: function(){
+            updateTable('', {
+                withoutUrl: true
+            });
+        },
+        error: function (request, status, error) {
+            console.log(request.responseText);
+        }
+    });
+},registerEvents = function(){
+    $(".date-buttons > button").on('click', function(e){
+        updateTable(e.currentTarget.getAttribute('data-attribute'));
+
+        unsetDisabled();
+
+        e.currentTarget.setAttribute('disabled', 'disabled');
+    });
+
+    /*$("#rangePicker-container").on('apply.daterangepicker', function(e, picker){
+
+    });*/
+
+    $(document).on('pjax:complete', function() {
+        registerPjaxEvents();
+    });
+
+    registerPjaxEvents();
+}, registerPjaxEvents = function(){
+    $(".view-order-btn").on('click', function(e){
         showSaleDetails(e);
     });
 
-    $("a.invoiceOrder").on('click', function(e){
+    $(".view-invoice-btn").on('click', function(e){
         e.preventDefault();
         window.open('/printinvoice/' + e.currentTarget.getAttribute("data-attribute-id"), '', 'scrollbars=1');
     });
-});
-SCRIPT;
+
+    $(".edit-order-btn").on("click", function(e){
+        editOrder(e);
+    });
+
+    $(".delete-order-btn").on("click", function(e){
+        deleteOrder(e);
+    });
+};
+
+rangePicked = function(picker){
+    var formatDate = function(date){
+        var day = (date.getDate().toString().length == 1 ? '0' : '') + date.getDate(),
+            month = date.getMonth() + 1;
+
+            month = (month.toString().length == 1 ? '0' : '') + month;
+
+        return day + '.' + month + '.' + date.getFullYear();
+    };
+
+    var startDate = new Date(picker.startDate),
+        endDate = new Date(picker.endDate);
+
+    $("#editable-period-targ")[0].innerHTML = 'С ' + formatDate(startDate) + ' по ' + formatDate(endDate);
+
+    unsetDisabled();
+
+    $("#period-button").addClass('disabled');
+    $("#editable-period-cont").editable('toggle');
+
+    updateTable('range', {
+        dateFrom: formatDate(startDate),
+        dateTo: formatDate(endDate)
+    });
+};
+
+registerEvents();
+JS;
+
+$css = <<<'CSS'
+.kv-editable-link{
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+    max-height: 20px;
+}
+
+.kv-editable-popover{
+    position: absolute;
+    z-index: 1000;
+}
+
+.panel .kv-editable-form-inline{
+    padding: 0;
+
+}
+
+.kv-editable{
+    margin: -5px 0px -10px;
+}
+
+.kv-my-upgrade > *{
+    float: left;
+}
+
+.kv-my-upgrade .kv-editable-input{
+    margin: -5px -10px;
+}
+
+.kv-my-upgrade .kv-editable-close{
+    margin-left: 12px;
+    margin-right: -8px;
+    margin-top: 3px;
+}
+
+#editable-period-cont #editable-period-container .input-group-addon{
+    display: none;
+}
+
+#editable-period-cont #editable-period-container span.form-control.text-right{
+    padding:0;
+    margin: -3px 0 0;
+    height: 23px;
+}
+CSS;
+
+\rmrevin\yii\fontawesome\cdn\AssetBundle::register($this);
+
+$this->registerCss($css);
 
 $this->registerJs($js);
 ?>
@@ -68,6 +232,34 @@ $this->registerJs($js);
         <button data-attribute="yesterday" class="btn btn-default">Вчера</button>
         <button data-attribute="week" class="btn btn-default">Неделя</button>
         <button data-attribute="month" class="btn btn-default">Месяц</button>
+        <div class="btn btn-default" id="period-button"><?=Editable::widget([
+                'name'          =>  'period',
+                'id'            =>  'editable-period',
+                'asPopover'     =>  false,
+                'value'         =>  'За период',
+                'size'          =>  'sm',
+                'options'       =>  [
+                    'hideInput'     =>  true,
+                    'useWithAddon'  =>  false,
+                    'pluginOptions' =>  [
+                        'locale'        =>  [
+                            'format'    =>  'DD.MM.YYYY'
+                        ],
+                    ],
+                    'pluginEvents'  =>  [
+                        'apply.daterangepicker' =>  "function(e, picker){ rangePicked(picker); }"
+                    ]
+                ],
+                'inlineSettings'=>  [
+                    'templateBefore'    =>  '<div class="kv-my-upgrade">{loading}',
+                    'templateAfter'     =>  '{close}</div>',
+                    'options'   =>  [
+                        'class'     =>  '',
+                        'style'     =>  'padding: 0; margin: 0',
+                    ]
+                ],
+                'inputType'     =>  Editable::INPUT_DATE_RANGE,
+            ]);?></div>
     </div>
     <br>
     <br>
@@ -79,6 +271,13 @@ $this->registerJs($js);
         'hover'         =>  true,
         'striped'       =>  false,
         'pjax'          =>  true,
+        'pjaxSettings'  =>  [
+            'options'   =>  [
+                'enablePushState'       =>  false,
+                'enableReplaceState'    =>  false,
+                'id'                    =>  'salesTable-pjax'
+            ]
+        ],
         'rowOptions'    =>  [
             'style'     =>  'cursor: pointer'
         ],
@@ -138,11 +337,44 @@ $this->registerJs($js);
             ],
             [
                 'hAlign'    =>  'center',
-                'width'     =>  '100px',
-                'format'    =>  'raw',
-                'value'     =>  function($model){
+                'width'     =>  '150px',
+                //'format'    =>  'raw',
+                /*'value'     =>  function($model){
+
                     return Html::a('Накладная', \yii\helpers\Url::toRoute('/printinvoice/'.$model->createdOrder), ['style' => 'z-index: 1000', 'data-pjax' => 0, 'class' => 'invoiceOrder', 'data-attribute-id' => $model->createdOrder]);
-                }
+                }*/
+                'class'     =>  \kartik\grid\ActionColumn::className(),
+                'buttons'   =>  [
+                    'view'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('eye'), [
+                            'class' =>  'btn btn-default btn-default-sm view-order-btn',
+                            'title' =>  'Просмотреть содержимое',
+                            'data-attribute-id' =>  $model->id
+                        ]);
+                    },
+                    'invoice'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('file-text'), [
+                            'class' =>  'btn btn-default btn-default-sm view-invoice-btn',
+                            'title' =>  'Открыть накладную',
+                            'data-attribute-id' =>  $model->createdOrder
+                        ]);
+                    },
+                    'update'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('pencil'), [
+                            'class' =>  'btn btn-default btn-default-sm edit-order-btn',
+                            'title' =>  'Редактировать заказ',
+                            'data-attribute-id' =>  $model->id
+                        ]);
+                    },
+                    'delete'   =>  function($widget, $model){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('undo'), [
+                            'class' =>  'btn btn-danger btn-default-sm delete-order-btn',
+                            'title' =>  'Сделать возврат заказа',
+                            'data-attribute-id' =>  $model->id
+                        ]);
+                    },
+                ],
+                'template'  =>  Html::tag('div', '{view}{invoice}{update}{delete}', ['class' => 'btn-group btn-group-sm'])
             ]
         ],
     ])?>

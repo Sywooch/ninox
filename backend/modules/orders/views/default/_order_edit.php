@@ -1,5 +1,6 @@
 <?php
 use yii\bootstrap\Html;
+use yii\helpers\ArrayHelper;
 
 $form = new \yii\bootstrap\ActiveForm([
 'options' =>  [
@@ -107,7 +108,7 @@ Html::tag('fieldset',
                             'class' =>  'col-xs-8'
                         ]
                     ])
-                    ->dropDownList(\common\models\DeliveryType::getDeliveryTypes()).
+                    ->dropDownList(ArrayHelper::map(\common\models\DeliveryType::find()->where(['enabled' => 1])->all(), 'id', 'description')).
                 $form->field($order, 'deliveryInfo',
                     [
                         'options'   =>  [
@@ -136,7 +137,7 @@ Html::tag('fieldset',
                         'class' =>  'col-xs-6'
                     ]
                 ])
-                ->dropDownList(\common\models\PaymentType::getPaymentTypes()),
+                ->dropDownList(ArrayHelper::map(\common\models\PaymentType::find()->where(['enabled' => 1])->all(), 'id', 'description')),
             [
                 'class' => 'row',
                 'style' => 'margin: 0'

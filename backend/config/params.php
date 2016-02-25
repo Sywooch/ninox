@@ -6,4 +6,6 @@ return [
     ],
     'frontend'  =>  'http://krasota-style.com.ua',
     'cashbox'   =>  'http://cashbox.krasota-style.com.ua',
+    'configuration'     =>  [],
+    'autologin'         =>  []
 ];

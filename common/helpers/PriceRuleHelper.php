@@ -8,22 +8,18 @@
 
 namespace common\helpers;
 
-
-use frontend\models\Pricerule;
 use DateTime;
 use yii\base\Component;
-use yii\helpers\Json;
 
 class PriceRuleHelper extends Component{
 
 	public $cartSumm;
 
-	public function recalc($model, $category = false){
+	public function recalc(&$model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
-				$tmodel = $this->recalcItem($model, $rule, $category);
-				if($tmodel){
-					return $tmodel;
+				if($this->recalcItem($model, $rule, $category)){
+					return;
 				}
 			}
 			if($model->priceRuleID != 0){
@@ -32,33 +28,43 @@ class PriceRuleHelper extends Component{
 				$model->discountType = 0;
 				$model->discountSize = 0;
 				$model->customerRule = 0;
-				return $model;
+				return;
 			}
 		}
 		$model->priceModified = false;
-		return $model;
 	}
 
 	public function recalcSborkaItem($model, $rule){
 		return $this->recalcItem($model, $rule, false);
 	}
 
-	private function recalcItem($model, $rule, $category){
-		$ruleArray = $rule->asArray();
+	protected function recalcItem(&$model, $rule, $category){
 		$termsCount = 0;
 		$discount = 0;
-		foreach($ruleArray['terms'] as $term){
-			if(!empty($term['GoodGroup'])){
-				$this->checkCategory($term['GoodGroup'], $model->category, $termsCount, $discount);
-			}
-			if($discount == $termsCount && !empty($term['Date'])){
-				$this->checkDate($term['Date'], $termsCount, $discount);
-			}
-			if($category && $discount == $termsCount && !empty($term['WithoutBlyamba'][0]['term'])){
-				$termsCount++;
-			}
-			if(!$category && $discount == $termsCount && !empty($term['DocumentSum'])){
-				$this->checkDocumentSumm($term['DocumentSum'], $termsCount, $discount);
+		foreach($rule->terms as $keyTerm => $term){
+			if($discount == $termsCount){
+				switch($keyTerm){
+					case 'GoodGroup':
+						$this->checkCategory($term, $model->category, $termsCount, $discount);
+						break;
+					case 'Date':
+						$this->checkDate($term, $termsCount, $discount);
+						break;
+					case 'WithoutBlyamba':
+						if($category && !empty($term[0]['term'])){
+							$termsCount++;
+						}
+						break;
+					case 'DocumentSum':
+						if(!$category){
+							$this->checkDocumentSumm($term, $termsCount, $discount);
+						}
+						break;
+					default:
+						break;
+				}
+			}else{
+				break;
 			}
 			/*if($discount == $termsCount && !empty($term['ItemPrice'])){
 				$termsCount++;
@@ -132,49 +138,55 @@ class PriceRuleHelper extends Component{
 			$cartInfo[$key]['flag'] = true;*/
 		}
 		if($discount == $termsCount && $termsCount != 0){
-			\Yii::trace('Model: '.$model->priceRuleID.'; ID: '.$rule->ID);
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;
-			$model->discountType = empty($ruleArray['actions']['Type']) ? 2 : $ruleArray['actions']['Type'];
-			$model->discountSize = $ruleArray['actions']['Discount'];
+			$model->discountType = empty($rule->actions['Type']) ? 2 : $rule->actions['Type'];
+			$model->discountSize = $rule->actions['Discount'];
 			$model->customerRule = $rule->customerRule;
-			return $model;
+			return true;
 		}
 	}
 
-	private function checkCategory($term, $cat, &$termsCount, &$discount){
+	protected function checkCategory($term, $cat, &$termsCount, &$discount){
 		$termsCount++;
 		foreach($term as $gg){
-			if($gg['type'] == '='){
-				if($cat == $gg['term']){
-					$discount++;
+			switch($gg['type']){
+				case '=':
+					if($cat == $gg['term']){
+						$discount++;
+						return;
+					}
 					break;
-				}
-			}elseif($gg['type'] == '>='){
-				if(strlen($cat) != strlen($gg['term'])){
-					$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
-				}else{
-					$cat0 = $cat;
-				}
-				if($cat0 == $gg['term']){
-					$discount++;
+				case '>=':
+					if(strlen($cat) != strlen($gg['term'])){
+						$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+					}else{
+						$cat0 = $cat;
+					}
+					if($cat0 == $gg['term']){
+						$discount++;
+						return;
+					}
 					break;
-				}
-			}elseif($gg['type'] == '<=' || $gg['type'] == '!='){
-				if(strlen($cat) != strlen($gg['term'])){
-					$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
-				}else{
-					$cat0 = $cat;
-				}
-				if($cat0 != $gg['term']){
-					$discount++;
+				case '<=':
+				case '!=':
+					if(strlen($cat) != strlen($gg['term'])){
+						$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+					}else{
+						$cat0 = $cat;
+					}
+					if($cat0 != $gg['term']){
+						$discount++;
+						return;
+					}
 					break;
-				}
+				default:
+					break;
 			}
 		}
 	}
 
-	private function checkDate($term, &$termsCount, &$discount){
+	protected function checkDate($term, &$termsCount, &$discount){
 		$termsCount++;
 		date_default_timezone_set('Europe/Kiev');
 		$now = new DateTime(date('Y-m-d'));
@@ -187,9 +199,9 @@ class PriceRuleHelper extends Component{
 		}
 	}
 
-	private function checkDocumentSumm($term, &$termsCount, &$discount){
+	protected function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
-		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartRealSumm;
+		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartWholesaleRealSumm;
 		foreach($term as $ds){
 			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
 				$discount += 1;

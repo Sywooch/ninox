@@ -36,27 +36,53 @@ $this->params['breadcrumbs'][] = [
 
 $this->params['breadcrumbs'][] = $filename;
 
-$this->title = 'Импорт из файла "'.$filename.'"'
+$this->title = 'Импорт из файла "'.$filename.'"';
+
+$allowedColumns = [
+    'PriceOut1'             =>  'Цена опт',
+    'PriceOut2'             =>  'Цена розничная',
+    'anotherCurrencyValue'  =>  'Цена в валюте',
+    'anotherCurrencyTag'    =>  'Валюта',
+    'GroupID'               =>  'Категория',
+    'Name'                  =>  'Название',
+    'Code'                  =>  'Код',
+    'BarCode1'              =>  'Штрихкод',
+    'BarCode2'              =>  'Добавочный код',
+    'count'                 =>  'Колличество',
+];
+
+$allowedOptions = ['PriceOut1', 'PriceOut2', 'anotherCurrencyValue', 'anotherCurrencyTag', 'GroupID', 'Name', 'Code', 'BarCode1', 'BarCode2', 'count'];
+
+$good = new \backend\models\Good();
+
+//$allowedColumns = array_diff_assoc($allowedOptions, $good->attributeLabels());
 
 ?>
 <h1><?=$this->title?></h1>
-<table class="table">
-    <thead>
-        <tr></tr>
-    </thead>
 <?php
-foreach($xls as $row){
-    $column = 0;
-    echo '<tr>';
-    foreach($row as $col){
-        if(!empty($col)){
-            echo Html::tag('td', $col, [
-                'data-attribute-column' =>  $column,
-            ]);
-            $column++;
-        }
-    }
-    echo '</tr>';
+
+if($importInfo){
+    echo Html::tag('div', \Yii::t('admin', '<b>Прайслист импортирован!</b> Всего товаров: {totalCount}, добавлено новых {added}, изменено существующих {updated}', $importInfo), ['class' => 'alert alert-success']);
 }
-?>
-</table>
+
+echo Html::beginForm();
+
+for($a = 'A', $i = 0; $a <= $columns; $a++){
+    echo Html::tag('div', Html::label('Столбец '.$i, 'forColumn'.$i).'&nbsp;'.Html::dropDownList('PriceListImportTable[columns]['.$i.'][attribute]', null, array_merge(['' => 'Не выбрано'], $allowedColumns), [
+            'id'    =>  'forColumn'.$i
+    ]).Html::checkbox('PriceListImportTable[columns]['.$i.'][key]', false, ['value' => 1, 'label' => ' ключ']));
+
+    $i++;
+}
+
+echo Html::submitButton('Импортировать');
+
+echo Html::endForm();
+
+echo \kartik\grid\GridView::widget([
+    'dataProvider'  =>  $dataProvider,
+    'summary'       =>  false,
+    'options'       =>  [
+        'class' =>  'table'
+    ]
+]);
