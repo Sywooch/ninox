@@ -23,6 +23,8 @@ var isMobile = {
 	}
 };
 
+var keysdown = {};
+
 String.prototype.isJSON = function(){
 	if(this.length && (/^[\],:{}\s]*$/.test(this.replace(/\\["\\\/bfnrtu]/g, '@').
 		replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
@@ -54,12 +56,8 @@ function addToCart(item){
 				"count": count
 			},
 			success: function(data){
-				$('.buy[data-itemId='+ itemId +']').each(function(){
-					$(this).val(texts.itemText.inCart).toggleClass('yellow-button green-button buy open-cart');
-				});
-				$('.count[data-itemId='+ itemId +']').each(function(){
-					$(this).data('incart', count);
-				});
+				$('.buy[data-itemId='+ itemId +']').val(texts.itemText.inCart).toggleClass('yellow-button green-button buy open-cart');
+				$('.count[data-itemId='+ itemId +']').data('incart', count);
 				updateCart(data);
 			}
 		});
@@ -67,17 +65,45 @@ function addToCart(item){
 }
 
 function changeItemCount(item){
-	item = $(item);
 	var itemId = item.data('itemid');
-	var counter = $('.count[data-itemid=\''+ itemId +'\']');
-	var maxItemsCount = parseInt(counter.data('store'));
-	var itemsCount = parseInt(counter.val().replace(/\D+/g, ''));
-	var count = parseInt(item.data('count'));
-	var incart = parseInt(counter.data('incart'));
+	var maxItemsCount, itemsCount, incart, count, tempRes, val;
+	var classList = item.attr('class').split(/\s+/)
+	$.each(classList, function(index, className){
+		switch(className){
+			case 'remove-item':
+				$('.open-cart[data-itemId='+ itemId +']')
+					.val(texts.itemText.buy)
+					.toggleClass('green-button yellow-button open-cart buy')
+					.data('count', 1);
+				$('#modal-cart .grid-view [data-key="' + itemId + '"]').remove();
+				maxItemsCount = 0;
+				itemsCount = 1;
+				incart = 0;
+				count = 0;
+				break;
+			case 'plus':
+			case 'minus':
+				count = className == 'plus' ? 1 : -1;
+				item = item.parent().find('.count');
+			case 'count':
+				tempRes = parseInt(item.val()) || 1;
+				maxItemsCount = parseInt(item.data('store'));
+				val = parseInt(item.data('value'));
+				if((tempRes >= maxItemsCount && maxItemsCount == val || tempRes == val) && className == 'count'){
+					item.val(val);
+					break;
+				}
+				count = className == 'count' ?
+					(tempRes >= maxItemsCount && maxItemsCount == val ?
+						1 : (tempRes == val ? -1 : (maxItemsCount > tempRes ? tempRes - val : maxItemsCount - val))) : count;
+				itemsCount = val + count;
+				incart = parseInt(item.data('incart'));
+				break;
+		}
+	});
 
-	if((maxItemsCount > itemsCount && count > 0) || (1 < itemsCount && count < 0)){
-		itemsCount += count;
-		if(incart){
+	if((maxItemsCount >= itemsCount && count > 0) || (1 <= itemsCount && count < 0) || count == 0){
+		if(incart || count == 0){
 			$.ajax({
 				type: 'POST',
 				url: '/modifycart',
@@ -90,53 +116,14 @@ function changeItemCount(item){
 				}
 			});
 		}else{
-			$('.buy[data-itemId='+ itemId +']').each(function(){
-				$(this).data('count', itemsCount);
-			});
+			$('.buy[data-itemId='+ itemId +']').data('count', itemsCount);
 		}
-		$('.count[data-itemId='+ itemId +']').each(function(){
-			$(this).val(itemsCount).data('incart', incart ? itemsCount : incart);
-		});
-	}else if(maxItemsCount < itemsCount){
-		if(!$(item).data('tooltipsy')){
-			$(item).tooltipsy({
-				alignTo: 'element',
-				offset: [0, -10],
-				className: 'noMoreItemTooltip',
-				content: texts.itemText.noMoreItems,
-				showEvent: '',
-				hideEvent: hasTouch? 'touchstart' : 'mouseleave',
-				show: function(e, $el){
-					$el.fadeIn(100);
-				},
-				hide: function(e, $el){
-					$el.fadeOut(100);
-				}
-			});
-		}
-		$(item).data('tooltipsy').show();
-	}else if(count == 0){
-		item.disabled = true;
-		$.ajax({
-			type: 'POST',
-			url: '/modifycart',
-			data: {
-				'itemID': itemId,
-				'count': count
-			},
-			success: function(data){
-				updateCart(data);
-				$('.open-cart[data-itemId='+ itemId +']').each(function(){
-					$(this).val(texts.itemText.buy).toggleClass('green-button yellow-button open-cart buy').data('count', 1);
-				});
-				$('.count[data-itemId='+ itemId +']').each(function(){
-					$(this).val(1).data('incart', 0);
-				});
-				$('#modal-cart .grid-view [data-key="' + itemId + '"]').each(function(){
-					$(this).remove();
-				});
-			}
-		});
+		$('.count[data-itemId='+ itemId +']')
+			.val(itemsCount)
+			.data('value', itemsCount)
+			.data('incart', incart ? itemsCount : incart);
+		$('.plus[data-itemId='+ itemId +']').toggleClass('prohibited', maxItemsCount == itemsCount);
+		$('.minus[data-itemId='+ itemId +']').toggleClass('prohibited', itemsCount == 1);
 	}
 }
 
