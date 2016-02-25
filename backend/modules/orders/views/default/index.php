@@ -235,6 +235,30 @@ $css = <<<'CSS'
 .active #searchResults{
     display: block;
 }
+
+.nav.nav-tabs{
+    border-bottom: 4px solid #cfcfcf;
+}
+
+.nav.nav-tabs li{
+    margin-right: 9px;
+    margin-bottom: 0;
+    max-height: 37px;
+    overflow: hidden;
+}
+
+.nav.nav-tabs li a{
+    color: #000;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    padding: 10px 25px;
+    font-family: Arial;
+    margin-bottom: -3px;
+}
+
+.nav.nav-tabs li.active a{
+    background-color: #cfcfcf;
+}
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
@@ -292,6 +316,10 @@ $this->registerJs($accordionJs, 3);
 $this->title = 'Заказы';
 ?>
 <style>
+    .ordersStatsContainer{
+        height: 100px;
+    }
+
     .ordersStats{
         /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#33363f+73,1c202a+77 */
         background: rgb(51,54,63); /* Old browsers */
@@ -306,7 +334,7 @@ $this->title = 'Заказы';
         height: 90px;
         border-radius: 3px;
         vertical-align: middle;
-        font-family: "Open Sans";
+        font-family: "Open Sans", serif;
     }
 
     .ordersStats .fa{
@@ -383,78 +411,80 @@ $this->title = 'Заказы';
         float: left;
     }
 </style>
-<div class="ordersStats">
-    <div style="display: table; margin: 0 auto; position: relative; top: 11px;">
-        <div style="display: table-cell;">
-            <div>
-                <div class="icon">
-                    <?=FA::icon('dropbox', [
-                        'class' =>  'yellow'
-                    ])->size(FA::SIZE_3X)->inverse()?>
-                </div>
-                <div class="description">
-                    <table>
-                        <tr>
-                            <td>
-                                <span>Заказов</span>
-                            </td>
-                            <td>
-                                <span>Выполнено</span>
-                            </td>
-                        </tr>
-                        <tr style="text-align: center;">
-                            <td>
-                                <?=Html::tag('h1', strlen($ordersStats['totalOrders']) >= 4 ? Html::tag('small', $ordersStats['totalOrders']) : $ordersStats['totalOrders'], [
-                                    'style' =>  'line-height: '.(strlen($ordersStats['totalOrders']) < 4 ? '26px;' : '0px;')
-                                ])?>
-                            </td>
-                            <td>
-                                <?=Html::tag('h1', strlen($ordersStats['completedOrders']) >= 4 ? Html::tag('small', $ordersStats['completedOrders'], ['style' => 'color: #fff']) : $ordersStats['completedOrders'], [
-                                    'style' =>  'color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; border-radius: 3px; display: inline-block; line-height: '.(strlen($ordersStats['completedOrders']) < 4 ? '26px;' : '0px;')
-                                ])?>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div style="display: table-cell;">
-            <div>
-                <div class="icon">
-                    <?=FA::icon('frown-o', [
-                        'class' =>  'purple'
-                    ])->size(FA::SIZE_3X)->inverse()?>
-                </div>
-                <div class="description">
-                    <span>Не прозвонено</span>
-                    <h1><?=$ordersStats['notCalled']?></h1>
+<div class="ordersStatsContainer">
+    <div class="ordersStats">
+        <div style="display: table; margin: 0 auto; position: relative; top: 11px;">
+            <div style="display: table-cell;">
+                <div>
+                    <div class="icon">
+                        <?=FA::icon('dropbox', [
+                            'class' =>  'yellow'
+                        ])->size(FA::SIZE_3X)->inverse()?>
+                    </div>
+                    <div class="description">
+                        <table>
+                            <tr>
+                                <td>
+                                    <span>Заказов</span>
+                                </td>
+                                <td>
+                                    <span>Выполнено</span>
+                                </td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td>
+                                    <?=Html::tag('h1', strlen($ordersStats['totalOrders']) >= 4 ? Html::tag('small', $ordersStats['totalOrders']) : $ordersStats['totalOrders'], [
+                                        'style' =>  'line-height: '.(strlen($ordersStats['totalOrders']) < 4 ? '26px;' : '0px;')
+                                    ])?>
+                                </td>
+                                <td>
+                                    <?=Html::tag('h1', strlen($ordersStats['completedOrders']) >= 4 ? Html::tag('small', $ordersStats['completedOrders'], ['style' => 'color: #fff']) : $ordersStats['completedOrders'], [
+                                        'style' =>  'color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; border-radius: 3px; display: inline-block; line-height: '.(strlen($ordersStats['completedOrders']) < 4 ? '26px;' : '0px;')
+                                    ])?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div style="display: table-cell;">
-            <div>
-                <div class="icon">
-                    <?=FA::icon('cubes', [
-                        'class' =>  'green'
-                    ])->size(FA::SIZE_2X)->inverse()?>
-                </div>
-                <div class="description">
-                    <span>Всего на складе</span>
-                    <h1>150 000</h1>
+            <div style="display: table-cell;">
+                <div>
+                    <div class="icon">
+                        <?=FA::icon('frown-o', [
+                            'class' =>  'purple'
+                        ])->size(FA::SIZE_3X)->inverse()?>
+                    </div>
+                    <div class="description">
+                        <span>Не прозвонено</span>
+                        <h1><?=$ordersStats['notCalled']?></h1>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div style="display: table-cell;">
-            <div>
-                <div class="icon">
-                    <?=FA::icon('calculator', [
-                        'class' =>  'blue'
-                    ])->size(FA::SIZE_3X)->inverse()?>
+            <div style="display: table-cell;">
+                <div>
+                    <div class="icon">
+                        <?=FA::icon('cubes', [
+                            'class' =>  'green'
+                        ])->size(FA::SIZE_2X)->inverse()?>
+                    </div>
+                    <div class="description">
+                        <span>Всего на складе</span>
+                        <h1>150 000</h1>
+                    </div>
                 </div>
-                <div class="description">
-                    <span>Сума заказов</span>
-                    <h1 title="Фактическая сумма заказов" style="line-height: 22px; font-size: 22px;"><?=$ordersStats['ordersFaktSumm']?>₴</h1>
-                    <small title="Общая сумма заказов"><?=$ordersStats['ordersSumm']?>₴</small>
+            </div>
+            <div style="display: table-cell;">
+                <div>
+                    <div class="icon">
+                        <?=FA::icon('calculator', [
+                            'class' =>  'blue'
+                        ])->size(FA::SIZE_3X)->inverse()?>
+                    </div>
+                    <div class="description">
+                        <span>Сума заказов</span>
+                        <h1 title="Фактическая сумма заказов" style="line-height: 22px; font-size: 22px;"><?=$ordersStats['ordersFaktSumm']?>₴</h1>
+                        <small title="Общая сумма заказов"><?=$ordersStats['ordersSumm']?>₴</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -489,7 +519,7 @@ Html::tag('div', OrdersSearchWidget::widget([
         ],
     ]
 ]), [
-    'style' =>  'margin: 30px 0',
+    'style' =>  'margin: 0 10px 10px 0',
     'class' =>  'row well well-lg'
 ]),
 \kartik\tabs\TabsX::widget([
