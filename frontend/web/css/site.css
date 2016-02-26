@@ -3024,6 +3024,11 @@ footer{
 	margin: auto;
 }
 
+.sticky-on-scroll{
+	z-index: 1;
+	position: relative;
+}
+
 .header .search{
 	float: left;
 	padding-left: 50px;
@@ -3135,6 +3140,7 @@ footer{
 .basket{
 	padding-left: 25px;
 	float: left;
+	text-decoration: none;
 }
 
 .header .desire-basket span{

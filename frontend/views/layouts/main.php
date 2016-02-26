@@ -126,13 +126,11 @@ $this->registerJs($js);
 					<div class="search">
 						<label class="icon-search" for=""></label>
 						<input type="text" placeholder="Поиск..."/>
-						<?
-						echo \yii\helpers\Html::button('Найти', [
+						<?=\yii\helpers\Html::button('Найти', [
 							'type'  =>  'submit',
 							'class' =>  'blue-button small-button ',
 							'id'    =>  'submit'
-						]);
-						?>
+						])?>
 					</div>
 					<div class="phone-number">
 						<div class="phone"></div>
@@ -144,11 +142,7 @@ $this->registerJs($js);
 							<div class="count">5</div>
 							<span>Желания</span>
 						</div>
-						<div class="basket">
-							<div class="basket-icon"></div>
-							<div class="count">500</div>
-							<span>Корзина</span>
-						</div>
+						<?=\common\components\CartWidget::widget(['remodalInstance' => $cartModal])?>
 					</div>
 				</div>
 				<!--<ul class="left">
