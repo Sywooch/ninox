@@ -142,7 +142,9 @@ class CashboxItem extends \yii\db\ActiveRecord
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
         }
 
-        $this->added = date('Y-m-d H:i:s');
+        if($this->isNewRecord || $this->isAttributeChanged('count')){
+            $this->added = date('Y-m-d H:i:s');
+        }
 
         $this->price = $this->originalPrice;
 
