@@ -20,6 +20,7 @@ class AssemblyItem extends \common\models\SborkaItem{
 
         $this->setAttributes([
             'orderID'       =>  $createdOrder,
+            'added'         =>  strtotime($cashboxItem->added),
             'itemID'        =>  $cashboxItem->itemID,
             'name'          =>  $cashboxItem->name,
             'count'         =>  $cashboxItem->count,
@@ -31,8 +32,6 @@ class AssemblyItem extends \common\models\SborkaItem{
             'category'      =>  $cashboxItem->category,
             'customerRule'  =>  $cashboxItem->customerRule
         ], false);
-
-
     }
 
 }
