@@ -1054,22 +1054,11 @@ h2{
 	padding-left: 5px;
 }
 
-
-[class^="shop-star"], [class*="shop-star"]{
-	width: 18px;
-	height: 20px;
-	float: right;
-	color: transparent;
-	cursor: pointer;
-	font-family: shop-star;
-}
-
 .rating .currentRating, .rating .rateCount{
 	color: transparent;
 	position: absolute;
 	z-index: -10;
 }
-
 
 .rating > div:before{
 	color: #aeaeae;
@@ -2029,9 +2018,9 @@ footer{
 }
 
 .department-logo{
-	background-image: url("/img/site/logo.png");
 	width: 250px;
 	height: 80px;
+	background: url("/img/site/logo.png") no-repeat;
 }
 
 #overlay {
@@ -2951,3 +2940,307 @@ footer{
 }
 
 /*========* END O-NAS *=========*/
+
+
+/*========* UNDER MENU *=========*/
+.top-menu-content{
+	display: block;
+	width: 1172px;
+	margin: auto;
+	height: 30px;
+}
+
+.top-menu-content .items{
+	padding-right: 45px;
+	top: 5px;
+	position: relative;
+	float: left;
+	font-size: 14px;
+}
+
+.top-menu-content .currency-rate{
+	color: #aeaeae;
+}
+
+.top-menu-content .currency-rate:after{
+	content: '\e803';
+}
+
+.top-menu-content span{
+	color: #3b3b39;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.top-menu-content .blog{
+	background: #6faa80;
+	color: white;
+	border-radius: 10px;
+	width: 50px;
+	height: 16px;
+	text-align: center;
+	padding: 0px;
+	top: 7px;
+	font-size: 14px;
+	cursor: pointer;
+	margin-right: 30px;
+	line-height: 15px;
+}
+
+.personal-account .items{
+	padding-right: 0px;
+	padding-left: 30px;
+}
+
+.top-menu-content .personal-account{
+	float: right;
+}
+
+.under-menu{
+	background: -o-linear-gradient(#ffffff, #f3f3f3); /* For Opera 11.1 to 12.0 */
+	background: -webkit-linear-gradient(#ffffff, #f3f3f3); /* For Safari 5.1 to 6.0 */
+	background: -moz-linear-gradient(#ffffff, #f3f3f3); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#ffffff, #f3f3f3); /* Standard syntax */
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #fefefe;
+}
+
+.under-menu-content{
+	display: block;
+	width: 1172px;
+	margin: auto;
+	padding-top: 10px;
+	height: 90px;
+}
+
+.under-menu-sticky{
+}
+
+.sticky  .under-menu-content{
+	padding-top: 8px;
+	height: 50px;
+	display: block;
+	width: 1172px;
+	margin: auto;
+}
+
+.header .search{
+	float: left;
+	padding-left: 50px;
+}
+
+.under-menu .logo{
+	float: left;
+	width: 250px;
+	height: 80px;
+	background: url("/img/site/logo.png") no-repeat;
+}
+
+.sticky .logo{
+	background: url("/img/site/short-logo.png") no-repeat;
+	float: left;
+	width: 160px;
+	height: 23px;
+	margin-top: 6px;
+}
+
+.header .search input[type='text'] {
+	background: url("/img/site/search.png") no-repeat 10px 7px;
+	width: 305px;
+	height: 35px;
+	-moz-box-shadow: inset 0 0 3px #e4e4e4;
+	-webkit-box-shadow: inset 0 0 3px #e4e4e4;
+	box-shadow: inset 0 0 3px #e4e4e4;
+	border: 1px solid #e4e4e4;
+	border-radius: 3px;
+	padding-left: 40px;
+	margin-top: 18px;
+	color: #8b8b8b;
+	margin-right: 5px;
+}
+
+.sticky .search input[type='text'] {
+	width: 575px;
+	margin-top: 0px;
+}
+
+.search .small-button {
+	width:90px;
+	height: 35px;
+}
+
+.search .blue-button {
+	background: #29a1e0;
+	position: relative;
+	border:none;
+	border-bottom: 3px solid #098fd5;
+	border-radius: 5px;
+	font-size: 14px;
+	font-family: OpenSans-Semibold;
+	color: white;
+	vertical-align: bottom;
+	/*background: #ffd600; /* Old browsers */
+	/*background: -moz-linear-gradient(top,  #ffd600 0%, #f9b519 80%); /* FF3.6+ */
+	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffd600), color-stop(80%,#f9b519)); /* Chrome,Safari4+ */
+	/*background: -webkit-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* Chrome10+,Safari5.1+ */
+	/*background: -o-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* Opera 11.10+ */
+/*	background: -ms-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* IE10+ */
+/*	background: linear-gradient(to bottom,  #ffd600 0%,#f9b519 80%); /* W3C */
+/*	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd600', endColorstr='#f9b519',GradientType=0 ); /* IE6-9 */
+}
+
+.sticky .blue-button{
+	display: none;
+}
+
+.header .phone-number{
+	float: left;
+	padding-left: 40px;
+	padding-top: 20px;
+}
+
+.sticky .phone-number{
+	padding-top: 3px;
+}
+
+.header .phone-number span{
+	padding-left: 5px;
+	vertical-align: middle;
+	font-size: 18px;
+	font-family: OpenSans-Semibold;
+	color: #3b3b39;
+
+}
+
+.header .number:after{
+	 content: url("/img/site/arrow-bot.png");
+	 padding-left: 5px;
+	 top: -4px;
+	 position: relative;
+}
+
+.header .desire-basket{
+	float: right;
+	padding-right: 10px;
+	padding-top: 6px;
+}
+
+.desire{
+	border-right: 1px solid #afafaf;
+	padding-right: 20px;
+	float: left;
+	height: 54px;
+}
+
+.basket{
+	padding-left: 25px;
+	float: left;
+}
+
+.header .desire-basket span{
+	color: #29a1e0;
+	font-size: 10px;
+	display: block;
+	top: -12px;
+	position: relative;
+	cursor: pointer;
+	margin-top: 14px;
+}
+
+.desire-icon{
+	background: url("/img/site/desire.png") no-repeat;
+	width: 25px;
+	height: 25px;
+	margin: 8px auto auto;
+	cursor: pointer;
+}
+
+.count{
+	background: #e9a218;
+	color: white;
+	float: right;
+	top: -30px;
+	border-radius: 10px;
+	text-align: center;
+	font-size: 10px;
+	position: relative;
+	padding-left: 4px;
+	padding-right: 4px;
+	display: block;
+	left: 7px;
+	cursor: pointer;
+}
+
+.basket-icon{
+	background: url("/img/site/basket.png") no-repeat;
+	width: 25px;
+	height: 25px;
+	margin: 8px auto auto;
+	cursor: pointer;
+}
+
+.sticky .basket-icon{
+	margin-top: 3px;
+	margin-left: 55px;
+	cursor: pointer;
+}
+
+.sticky .desire-basket{
+	float: left;
+	padding: 0px;
+}
+
+.sticky .desire{
+	display: none;
+}
+
+.sticky .basket span{
+	display: none;
+}
+
+.sticky .top-menu{
+	display: none;
+}
+
+.sticky{
+	z-index: 1;
+	display: block;
+	position: relative;
+}
+
+.sticky .header-menu{
+	height: 45px;
+}
+
+.sticky .header-menu-item{
+	height: 45px;
+}
+
+.sticky .header-menu-item:hover{
+	height: 45px;
+}
+
+.sticky .header-menu-content{
+	height: 45px;
+}
+
+.sticky .header-menu-items{
+	height: 45px;
+}
+
+.sticky .header-menu-item a{
+	display: none;
+}
+
+.sticky .header-menu-item-content a{
+	display: block;
+}
+
+.sticky .header-menu-item-content-text a:before{
+	vertical-align: middle;
+	margin-top: 0px;
+}
+
+
+
+/*========* END UNDER MENU *=========*/
