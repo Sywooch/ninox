@@ -57,7 +57,9 @@ class SborkaItem extends \yii\db\ActiveRecord
         }
 
         if($this->isNewRecord){
-            $this->added = time();
+            if(empty($this->added)){
+                $this->added = time();
+            }
             $this->originalCount = $this->count;
         }
 

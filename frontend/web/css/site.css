@@ -431,6 +431,10 @@ h2{
 	font-size: 13px;
 }
 
+.font-size-15px{
+	font-size: 15px;
+}
+
 .font-size-20px{
 	font-size: 20px;
 }
@@ -1016,35 +1020,28 @@ h2{
 	width: 15px;
 	height: 15px;
 	display: inline-block;
-	position: relative;
 	cursor: pointer;
-	color: #03a7d4;
-}
-
-.counter .minus:after, .counter .plus:after{
-	font-family: shop;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-.counter .minus:hover, .counter .plus:hover{
-	color: #1c7bd3 !important;
-}
-
-.counter .minus:after{
-	content: '\e824';
-}
-
-.counter .plus:after{
-	content: '\e80a';
+	text-align: center;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select:none;
+	user-select: none;
 }
 
 .counter .count{
-	border: none;
-	width: 40px;
+	width: 30px;
+	height: 30px;
+	border: 1px solid #bfced6;
+	border-radius: 3px;
 	text-align: center;
 	background: transparent;
+}
+
+.counter .prohibited{
+	cursor: default;
+	color: #c3d1d9;
 }
 
 .item .outerSpan{
@@ -2295,6 +2292,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 #modal-cart td[data-col-seq="1"]{
 	text-align: left;
+}
+
+#modal-cart td[data-col-seq="2"], #modal-cart td[data-col-seq="3"]{
+	vertical-align: middle;
 }
 
 #modal-cart .item-name{

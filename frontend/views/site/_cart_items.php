@@ -84,7 +84,10 @@ echo \kartik\grid\GridView::widget([
 						return $w->renderInput();
 					},
 			],
-			'template'      =>  Html::tag('div', '{minus}{counter}{plus}', ['class' => 'counter'])
+			'template'      =>  Html::tag('div', '{minus}{counter}{plus}', ['class' => 'counter']),
+			'contentOptions'       =>  [
+				'data-col-seq'  =>  2
+			]
 
 		],
 		[
