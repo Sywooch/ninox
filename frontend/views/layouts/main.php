@@ -223,7 +223,7 @@ $this->registerJs($js);
 					</li>
 
 					<li id="cart">
-						<?=\common\components\CartWidget::widget(['remodalInstance' => $cartModal])?>
+						<?=\frontend\widgets\CartWidget::widget(['remodalInstance' => $cartModal])?>
 					</li>
 				</ul>-->
 			</div>

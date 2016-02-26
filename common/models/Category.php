@@ -294,14 +294,21 @@ class Category extends \yii\db\ActiveRecord
     }
 
 	static function buildTree(array &$elements, $parentCode = ''){
-		$branch = array();
+		$branch = [];
+
 		foreach($elements as $element){
+
 			if($element->menu_show == 1){
 				if(substr($element->Code, 0, -3) == $parentCode){
 					$branch[$element->Code]['label'] = $element->Name;
 					$branch[$element->Code]['url'] = $element->link;
+
+                    if(!empty($element->imgSrc)){
+                        $branch[$element->Code]['imgSrc'] = $element->imgSrc;
+                    }
+
 					$items = Category::buildTree($elements, $element->Code);
-					if($items){
+					if($items && $parentCode == ''){
 						array_unshift($items, ['label' => $element->Name, 'url' => $element->link, 'options' => ['class' => 'see-all']]);
 						$branch[$element->Code]['items'] = $items;
 						$branch[$element->Code]['url'] = '#0';
@@ -310,6 +317,7 @@ class Category extends \yii\db\ActiveRecord
 			}
 
 		}
+
 		return $branch;
 	}
 
@@ -318,6 +326,11 @@ class Category extends \yii\db\ActiveRecord
     }
 
 	public static function getMenu(){
-		return Category::buildTree(Category::find()->select(['ID', 'Name', 'Code', 'link', 'listorder', 'menu_show'])->orderBy('Code')->all());
+        $categories = Category::find()
+            ->select(['ID', 'Name', 'Code', 'link', 'listorder', 'imgSrc', 'menu_show'])
+            ->orderBy('Code')
+            ->all();
+
+		return Category::buildTree($categories);
 	}
 }

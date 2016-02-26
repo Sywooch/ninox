@@ -6,15 +6,23 @@
  * Time: 15:10
  */
 
-namespace common\components;
+namespace frontend\widgets;
 
 
 use yii\base\Widget;
-use yii\bootstrap\Modal;
 use yii\helpers\Html;
+
+/**
+ * Class CartWidget
+ * @package frontend\widgets
+ * @author  Nikolai Gilko   <n.gilko@gmail.com>
+ */
 
 class CartWidget extends Widget{
 
+    /**
+     * @type \bobroid\remodal\Remodal
+     */
     public $remodalInstance;
 
     public function init(){
