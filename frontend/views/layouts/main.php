@@ -126,13 +126,11 @@ $this->registerJs($js);
 					<div class="search">
 						<label class="icon-search" for=""></label>
 						<input type="text" placeholder="Поиск..."/>
-						<?
-						echo \yii\helpers\Html::button('Найти', [
+						<?=\yii\helpers\Html::button('Найти', [
 							'type'  =>  'submit',
 							'class' =>  'blue-button small-button ',
 							'id'    =>  'submit'
-						]);
-						?>
+						])?>
 					</div>
 					<div class="phone-number">
 						<div class="phone"></div>
@@ -229,7 +227,7 @@ $this->registerJs($js);
 					</li>
 
 					<li id="cart">
-						<?=\common\components\CartWidget::widget(['remodalInstance' => $cartModal])?>
+						<?=\frontend\widgets\CartWidget::widget(['remodalInstance' => $cartModal])?>
 					</li>
 				</ul>-->
 			</div>
