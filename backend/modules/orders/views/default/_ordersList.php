@@ -3,7 +3,7 @@ use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-if(!isset($orderSource)){
+if($orderSource == false){
     $orderSource = \Yii::$app->request->get('ordersSource');
 }
 
@@ -49,6 +49,7 @@ echo \kartik\grid\GridView::widget([
         [
             'attribute' =>  'id',
             'format'    =>  'html',
+            'label'     =>  '№',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '40px',
@@ -66,6 +67,7 @@ echo \kartik\grid\GridView::widget([
         ],
         [
             'attribute' =>  'added',
+            'label'     =>  'Дата',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '40px',
@@ -81,6 +83,7 @@ echo \kartik\grid\GridView::widget([
         ],
         [
             'attribute' =>  'customerName',
+            'label'     =>  'Ф.И.О.',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '140px',
@@ -91,12 +94,14 @@ echo \kartik\grid\GridView::widget([
         ],
         [
             'attribute' =>  'customerPhone',
+            'label'     =>  'Телефон',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '80px',
         ],
         [
             'attribute' =>  'deliveryCity',
+            'label'     =>  'Город/Область',
             'format'    =>  'html',
             'width'     =>  '140px',
             'hAlign'    =>  GridView::ALIGN_CENTER,
@@ -142,7 +147,7 @@ echo \kartik\grid\GridView::widget([
             'width'     =>  '70px',
             'format'    =>  'html',
             'attribute' =>  'originalSum',
-            'header'    =>  'Сумма заказа',
+            'header'    =>  'Сумма',
             'noWrap'    =>  true,
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
@@ -154,6 +159,7 @@ echo \kartik\grid\GridView::widget([
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'attribute' =>  'actualAmount',
+            'label'     =>  'К оплате',
             'width'     =>  '70px',
             'format'    =>  'html',
             'options'   =>  [
@@ -177,6 +183,7 @@ echo \kartik\grid\GridView::widget([
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '180px',
+            'header'    =>  '',
             'buttons'   =>  [
                 'contents'  =>  function($url, $model, $key){
                     return Html::a('Содержимое', Url::toRoute([
