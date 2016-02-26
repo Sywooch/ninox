@@ -164,9 +164,15 @@ class SiteController extends Controller
         }
 
         $orderItems = new ActiveDataProvider([
-            'query'     =>  $this->cashbox->itemsQuery(),
+            'query'     =>  $this->cashbox->cashboxItemsQuery(),
             'pagination'    =>  [
                 'pageSize'  =>  0
+            ]
+        ]);
+
+        $orderItems->setSort([
+            'defaultOrder'  =>  [
+                'added' =>  SORT_ASC
             ]
         ]);
 

@@ -20,6 +20,7 @@ use yii\web\BadRequestHttpException;
  * @property string $category
  * @property integer $customerRule
  * @property integer $deleted
+ * @property integer $added
  */
 class CashboxItem extends \yii\db\ActiveRecord
 {
@@ -61,16 +62,23 @@ class CashboxItem extends \yii\db\ActiveRecord
             throw new BadRequestHttpException();
         }
 
-        $this->category = $assemblyItem->category;
-        $this->count = $assemblyItem->count;
-        $this->customerRule = $assemblyItem->customerRule;
-        $this->discountSize  = $assemblyItem->discountSize;
-        $this->discountType = $assemblyItem->discountType;
-        $this->itemID = $assemblyItem->itemID;
+        $attributes = [
+            'category',
+            'count',
+            'customerRule',
+            'discountSize',
+            'discountType',
+            'itemID',
+            'name',
+            'originalPrice',
+            'priceRuleID'
+        ];
+
+        foreach($attributes as $attribute){
+            $this->$attribute = $assemblyItem->$attribute;
+        }
+
         $this->orderID = $orderID;
-        $this->name = $assemblyItem->name;
-        $this->originalPrice = $assemblyItem->originalPrice;
-        $this->priceRuleID   = $assemblyItem->priceRuleID;
     }
 
     /**
@@ -88,7 +96,7 @@ class CashboxItem extends \yii\db\ActiveRecord
     {
         return [
             [['itemID', 'orderID'], 'required'],
-            [['itemID', 'orderID', 'count', 'discountType', 'discountSize', 'priceRuleID', 'customerRule', 'deleted'], 'integer'],
+            [['itemID', 'orderID', 'added', 'count', 'discountType', 'discountSize', 'priceRuleID', 'customerRule', 'deleted'], 'integer'],
             [['originalPrice'], 'number'],
             [['name', 'category'], 'string', 'max' => 255],
         ];
@@ -111,6 +119,7 @@ class CashboxItem extends \yii\db\ActiveRecord
             'category' => Yii::t('common', 'Category'),
             'customerRule' => Yii::t('common', 'Customer Rule'),
             'deleted' => Yii::t('common', 'Deleted'),
+            'added' =>  \Yii::t('common', 'Added'),
         ];
     }
 
@@ -131,6 +140,10 @@ class CashboxItem extends \yii\db\ActiveRecord
     public function beforeSave($insert){
         if($this->isNewRecord && empty($this->orderID)){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
+        }
+
+        if($this->isNewRecord || $this->isAttributeChanged('count')){
+            $this->added = date('Y-m-d H:i:s');
         }
 
         $this->price = $this->originalPrice;
