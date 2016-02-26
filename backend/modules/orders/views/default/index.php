@@ -539,8 +539,8 @@ Html::tag('div', OrdersSearchWidget::widget([
                 });
             }
 
-            if($("#ordersGridView_-pjax").length > 0){
-                setListeners("#ordersGridView_");
+            if($("#ordersGridView_internet-pjax").length > 0){
+                setListeners("#ordersGridView_internet");
             }
 
             if($("#ordersGridView_market-pjax").length > 0){
@@ -563,7 +563,7 @@ Html::tag('div', OrdersSearchWidget::widget([
             'options'   =>  [
                 'id'        =>  'source-internet',
             ],
-            'content'   =>  $this->context->runAction('showlist', ['context' => true]),
+            'content'   =>  $this->context->runAction('showlist', ['context' => true, 'ordersSource' => 'internet']),
             'active'    =>  true,
             'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet'])]
         ],
@@ -584,7 +584,7 @@ Html::tag('div', OrdersSearchWidget::widget([
         [
             'label'     =>  'Результаты поиска',
             'linkOptions'   =>  ['id' =>  'searchResults'],
-            'content'   =>  $this->context->runAction('showlist', ['context' => true, 'search' => true]),
+            'content'   =>  $this->context->runAction('showlist', ['context' => true, 'ordersSource' => 'search']),
             'options'   =>  [
                 'id'    =>  'source-search_results'
             ]

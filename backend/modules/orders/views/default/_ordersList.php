@@ -3,7 +3,7 @@ use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-if(!isset($orderSource)){
+if($orderSource == false){
     $orderSource = \Yii::$app->request->get('ordersSource');
 }
 

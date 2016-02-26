@@ -253,7 +253,7 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function actionShowlist($context = false, $search = false){
+    public function actionShowlist($context = false, $ordersSource = false){
         if(!\Yii::$app->request->isAjax && !$context){
             throw new BadRequestHttpException("Этот метод доступен только через ajax!");
         }
@@ -266,8 +266,10 @@ class DefaultController extends Controller
 
         $return = $this->renderPartial('_ordersList', [
             'searchModel'       =>  $historySearch,
-            'orderSource'       =>  $search ? 'search' : null,
-            'orders'            =>  $historySearch->search($search ? [] : \Yii::$app->request->get())
+            'orderSource'       =>  $ordersSource,
+            'orders'            =>  $historySearch->search(
+                $ordersSource == 'search' ? [] :
+                    $ordersSource != false ? ['ordersSource' => $ordersSource] : \Yii::$app->request->get())
         ]);
 
         if($context == true){
