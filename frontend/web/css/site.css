@@ -1054,6 +1054,11 @@ h2{
 	padding-left: 5px;
 }
 
+.item .heart{
+	position: relative;
+	width: 100px;
+	height: 90px;
+}
 
 [class^="shop-star"], [class*="shop-star"]{
 	width: 18px;

@@ -172,6 +172,7 @@ $discountBlock = function($model){
             <a class="blue" href="<?=$link?>" title="<?=$model->Name?>"><?=$model->Name?></a>
         </div>
         <div class="code"><?=\Yii::t('shop', 'Код')?>: <?=$model->Code?></div>
+	    <div class="favorites" style="width: 10px; height: 10px;"></div>
         <div class="open-item">
             <img class="link-hide" data-href="<?=$link?>" alt="<?=$model->Name?>" src="<?=$photo?>" title="<?=$model->Name?> - <?=\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')?>" height="190" width="243">
             <?php if($model->priceRuleID){
