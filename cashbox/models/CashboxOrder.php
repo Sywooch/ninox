@@ -2,6 +2,7 @@
 
 namespace cashbox\models;
 
+use common\models\CashboxMoney;
 use Yii;
 
 /**
@@ -16,6 +17,7 @@ use Yii;
  * @property integer $deleted
  * @property double $sum
  * @property double $toPay
+ * @property double $actualAmount
  * @property array $items
  * @property integer $postpone
  * @property string $promoCode
@@ -25,11 +27,19 @@ class CashboxOrder extends \yii\db\ActiveRecord
 
     public $_items = [];
     public $_createdItems = [];
-    private $sum = 0.00;
     public $discountPercent = 0;
     public $discountSize = 0.00;
+    private $sum = 0.00;
     private $toPay = 0.00;
     private $itemsCount = 0;
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'cashboxOrders';
+    }
 
     public function __get($name){
         switch($name){
@@ -111,6 +121,32 @@ class CashboxOrder extends \yii\db\ActiveRecord
         return $this->toPay = $sum;
     }
 
+    public function getAmount(){
+        return CashboxMoney::find()->select('amount')->where(['order' => $this->id])->scalar();
+    }
+
+    public function beforeSave($insert){
+        if($this->isNewRecord){
+            \Yii::trace('new record!');
+            $this->id = hexdec(uniqid());
+
+            if(empty($this->responsibleUser)){
+                $this->responsibleUser = \Yii::$app->request->cookies->getValue("cashboxManager", 0);
+            }
+        }elseif($this->isAttributeChanged('priceType')){
+            $this->changePriceType($this->priceType);
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * Меняет тип цен на товары в кассе
+     *
+     * @param string $priceType
+     *
+     * @return bool всегда true
+     */
     public function changePriceType($priceType = 'wholesale'){
         switch($priceType){
             case 0:
@@ -147,29 +183,6 @@ class CashboxOrder extends \yii\db\ActiveRecord
         return true;
     }
 
-    public function beforeSave($insert){
-        if($this->isNewRecord){
-            \Yii::trace('new record!');
-            $this->id = hexdec(uniqid());
-
-            if(empty($this->responsibleUser)){
-                $this->responsibleUser = \Yii::$app->request->cookies->getValue("cashboxManager", 0);
-            }
-        }elseif($this->isAttributeChanged('priceType')){
-            $this->changePriceType($this->priceType);
-        }
-
-        return parent::beforeSave($insert);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'cashboxOrders';
-    }
-
     /**
      * @inheritdoc
      */
@@ -177,6 +190,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
     {
         return [
             [['id', 'customerID', 'responsibleUser', 'priceType', 'deleted', 'postpone'], 'integer'],
+            [['actualAmount'], 'double'],
             [['createdTime', 'doneTime'], 'safe'],
         ];
     }
@@ -188,6 +202,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('common', 'ID'),
+            'actualAmount' => Yii::t('common', 'actualAmount'),
             'customerID' => Yii::t('common', 'Customer ID'),
             'responsibleUser' => Yii::t('common', 'Responsible User'),
             'createdTime' => Yii::t('common', 'Created Time'),

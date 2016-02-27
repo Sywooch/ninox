@@ -473,11 +473,13 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
+        $order = $this->cashbox->cashboxOrder;
+
         if(!$this->cashbox->postpone()){
             throw new ErrorException("Произошла ошибка при выполнении метода actionPostponeCheck");
         }
 
-        return $this->cashbox->cashboxOrder->id;
+        return $order->id;
     }
 
     public function actionLoadpostpone(){
@@ -510,7 +512,7 @@ class SiteController extends Controller
             return $this->cashbox->getSummary();
         }
 
-        $good = Good::find()->where(['or', 'BarCode2 = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID, 'ID = '.$itemID, ])->one();
+        $good = Good::find()->where(['or', "`BarCode2` = '{$itemID}'", "`BarCode1` = '{$itemID}'", "`Code` = '{$itemID}'", "`ID` = '{$itemID}'"])->one();
 
         if(!$good){
             throw new NotFoundHttpException("Товар с идентификатором `".$itemID."` не найден!");

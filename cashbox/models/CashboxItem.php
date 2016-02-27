@@ -30,6 +30,14 @@ class CashboxItem extends \yii\db\ActiveRecord
     public $return = false;
     public $priceModified = false;
 
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'cashboxItems';
+    }
+
     public function afterFind(){
         switch($this->discountType){
             case '1':
@@ -56,7 +64,6 @@ class CashboxItem extends \yii\db\ActiveRecord
         return parent::__set($name, $value);
     }
 
-
     public function loadAssemblyItem($assemblyItem, $orderID){
         if($assemblyItem instanceof SborkaItem == false){
             throw new BadRequestHttpException();
@@ -79,14 +86,6 @@ class CashboxItem extends \yii\db\ActiveRecord
         }
 
         $this->orderID = $orderID;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'cashboxItems';
     }
 
     /**
@@ -144,6 +143,7 @@ class CashboxItem extends \yii\db\ActiveRecord
 
         if($this->isNewRecord || $this->isAttributeChanged('count')){
             $this->added = date('Y-m-d H:i:s');
+            \Yii::trace($this->added);
         }
 
         $this->price = $this->originalPrice;
