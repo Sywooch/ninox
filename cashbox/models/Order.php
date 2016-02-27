@@ -8,9 +8,6 @@
 
 namespace cashbox\models;
 
-
-use backend\models\CashboxOrder;
-
 class Order extends \common\models\History{
 
     public function loadCashboxOrder($cashboxOrder, $amount){
