@@ -11,6 +11,7 @@ namespace backend\modules\goods\models;
 
 use backend\models\Good;
 use yii\base\Model;
+use yii\base\Object;
 
 class GoodMainForm extends Model{
 
@@ -127,14 +128,26 @@ class GoodMainForm extends Model{
     public $haveGuarantee = false;
 
     /**
+     * Была-ли сохранена модель
+     *
+     * @type bool
+     */
+    public $isSaved = false;
+
+    /**
      * загружает в эту модель модель Good
      *
      * @param $good Good
      */
+
     public function loadGood($good){
         foreach($this->modelAttributes() as $new => $old){
             $this->$new = $good->$old;
         }
+
+        $this->isUnlimited = $this->isUnlimited == 1;
+        $this->isOriginal = $this->isOriginal == 1;
+        $this->haveGuarantee = $this->haveGuarantee == 1;
 
         $this->undefinedPackageAmount = empty($this->inPackageAmount);
     }
@@ -154,6 +167,13 @@ class GoodMainForm extends Model{
             'inPackageAmount'=> 'num_opt',
             'wholesalePrice'=>  'PriceOut1',
             'retailPrice'   =>  'PriceOut2',
+            'anotherCurrencyTag'    =>  'anotherCurrencyTag',
+            'anotherCurrencyPeg'    =>  'anotherCurrencyPeg',
+            'anotherCurrencyValue'  =>  'anotherCurrencyValue',
+            'count'         =>  'count',
+            'isOriginal'    =>  'originalGood',
+            'haveGuarantee' =>  'garantyShow',
+            'isUnlimited'   =>  'isUnlimited'
         ];
     }
 
@@ -167,10 +187,23 @@ class GoodMainForm extends Model{
             $good = Good::findOne($this->id);
         }
 
-        $good->Name = $this->name;
-        //$good->ico = $this->image;
-        $good->Code = $this->code;
-        $good->BarCode1 = $this->barcode;
+        foreach($this->modelAttributes() as $newAttribute => $oldAttribute){
+            if(is_bool($this->$newAttribute)){
+                $good->$oldAttribute = $this->$newAttribute ? 1 : 0;
+            }else{
+                $good->$oldAttribute = $this->$newAttribute;
+            }
+        }
+
+        if($this->validate() && $good->save(false)){
+            return $this->afterSave();
+        }else{
+            foreach($this->modelAttributes() as $newAttribute => $oldAttribute){
+                $good->getErrors($oldAttribute) ? $this->addError($newAttribute, $good->getErrors($oldAttribute)[0]) : false;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -197,7 +230,27 @@ class GoodMainForm extends Model{
             'anotherCurrencyTag'    =>  'Валюта',
             'anotherCurrencyValue'  =>  'Цена в валюте',
             'anotherCurrencyPeg'    =>  '',
+            'count'          =>  'Количество',
+            'isOriginal'     =>  'Оригинальный товар',
+            'haveGuarantee'  =>  'Есть гарантия',
         ];
+    }
+
+    public function rules(){
+        return [
+            [['name', 'image', 'code', 'additionalCode', 'measure', 'anotherCurrencyTag'], 'string'],
+            [['description'], 'string', 'max' => 255],
+            [['enabled', 'anotherCurrencyPeg', 'isOriginal', 'haveGuarantee', 'isUnlimited', 'undefinedPackageAmount'],
+                'boolean'],
+            [['id', 'barcode', 'category', 'inPackageAmount', 'count'], 'integer'],
+            [['wholesalePrice', 'retailPrice', 'anotherCurrencyValue'], 'double'],
+        ];
+    }
+
+    public function afterSave(){
+        $this->isSaved = true;
+
+        return true;
     }
 
     /**

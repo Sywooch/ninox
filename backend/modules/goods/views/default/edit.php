@@ -1,3 +1,22 @@
+<?php
+$js = <<<'JS'
+var sendForm = function(data){
+    console.log(data);
+}
+
+$("#saveGoodBtn").on('click', function(){
+    $(".tab-content .active .goodEditForm").submit();
+});
+
+$(".tab-content form").on('submit', function(e){
+    console.log(e);
+    //e.preventDefault();
+});
+JS;
+
+$this->registerJs($js);
+
+?>
 <h1><?=$good->Name?> <small>редактирование</small></h1>
 <div class="row">
     <div class="col-xs-4">
@@ -9,6 +28,7 @@
     <div class="col-xs-8">
         <?=\kartik\tabs\TabsX::widget([
             'bordered'  =>  true,
+            'id'    =>  'goodEditTabs',
             'items' =>  [
                 [
                     'label'     =>  'Основное',
@@ -37,18 +57,18 @@
                     ])
                 ],
             ]
-        ]);
-        ?>
+        ]);?>
     </div>
     <div class="col-xs-12">
         <br>
         <br>
         <center>
-            <?=\yii\helpers\Html::button('Сохранить и закончить', [
+            <?=\yii\helpers\Html::button('Сохранить', [
                 'class' =>  'btn btn-success',
-            ]), ' или ', \yii\helpers\Html::button('Сохранить и продолжить', [
-                'class' =>  'btn btn-primary',
+                'id'    =>  'saveGoodBtn'
             ]);?>
         </center>
+        <br>
+        <br>
     </div>
 </div>

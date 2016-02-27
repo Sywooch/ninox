@@ -531,6 +531,7 @@ class DefaultController extends Controller
 
     public function actionView($param){
         $good = Good::findOne($param);
+        $request = \Yii::$app->request;
 
         if(!$good){
             throw new NotFoundHttpException("Товар с ID ".$param." не найден!");
@@ -569,10 +570,12 @@ class DefaultController extends Controller
         $goodMainForm = new GoodMainForm();
         $goodMainForm->loadGood($good);
 
-        if(\Yii::$app->request->get("act") == "edit"){
-            if(\Yii::$app->request->post("GoodMainForm") && $goodMainForm->load(\Yii::$app->request->post("Good"))){
+        if($request->get("act") == "edit"){
+            if($request->post("GoodMainForm") && $goodMainForm->load($request->post())){
                 $goodMainForm->save();
             }
+
+
             /*$post = \Yii::$app->request->post();
 
             if(\Yii::$app->request->isAjax && isset($post['validate']) && $post['validate']){
@@ -604,6 +607,20 @@ class DefaultController extends Controller
                 }
                 //TODO: добавить сообщение об успешном обновлении инфо о товаре, или о ошибке
             }*/
+
+            return $this->render('edit', [
+                'good'              =>  $good,
+                //'goodUk'          =>  $goodUK,
+                'goodMainForm'      =>  $goodMainForm,
+                'nowCategory'       =>  $category,
+                'uploadPhoto'       =>  new UploadPhoto(),
+                'additionalPhotos'  =>  new ActiveDataProvider([
+                    'query' =>  GoodsPhoto::find()->where(['ItemId' => $good->ID]),
+                    'pagination'    =>  [
+                        'pageSize'  =>  0
+                    ]
+                ])
+            ]);
         }
 
         return $this->render('edit', [
