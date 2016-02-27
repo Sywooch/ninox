@@ -81,7 +81,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
         $sum = 0;
 
         foreach($this->createdItems as $item){
-            $sum += $item->originalPrice * $item->count;
+            $sum += $item->price * $item->count;
         }
 
         return $sum;
