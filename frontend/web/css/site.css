@@ -462,11 +462,8 @@ h2{
 }
 
 .blue{
-<<<<<<< HEAD
 	color: #29a1e0;
-=======
-	color: #3e77aa;
->>>>>>> o-nas
+	/*color: #3e77aa;*/
 }
 
 .red{
@@ -3011,12 +3008,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .left-side-menu{
 	border-radius: 3px;
-<<<<<<< HEAD
-	border: 1px solid #ebebeb;
-=======
 	border-top: 1px solid #ebebeb;
 	border-bottom: 1px solid #ebebeb;
->>>>>>> o-nas
 }
 
 .left-side-menu-item{
@@ -3025,22 +3018,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: 100%;
 	font-size: 14px;
 	color: #282828;
-<<<<<<< HEAD
-=======
 	border-left: 1px slolid #ebebeb;
 	border-right: 1px slolid #ebebeb;
 	margin-bottom: 1px;
 	padding-left: 32px;
 	padding-top: 16px;
->>>>>>> o-nas
 }
 
 .about{
 	float: left;
-<<<<<<< HEAD
-=======
 	width: 810px;
->>>>>>> o-nas
 }
 
 .about-header{
@@ -3147,11 +3134,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .about-delivery-content-img{
 	float: left;
 	width: 350px;
-<<<<<<< HEAD
-=======
 	content: url("/img/site/map.png");
 	padding-left: 15px;
->>>>>>> o-nas
 }
 
 .about-delivery-content-info{
@@ -3231,13 +3215,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 16px;
 }
 
-<<<<<<< HEAD
-
-
-
-
-/*========* END O-NAS *=========*/
-=======
 /*========* END O-NAS *=========*/
 
 
@@ -3549,4 +3526,3 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 
 /*========* END UNDER MENU *=========*/
->>>>>>> o-nas
