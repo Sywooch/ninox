@@ -6,12 +6,13 @@
  * Time: 17:56
  */
 
-namespace backend\models;
+namespace cashbox\models;
 
 
+use backend\models\Customer;
 use yii\base\Model;
 
-class CashboxCustomerForm extends Model{
+class CustomerForm extends Model{
 
     public $name;
     public $surname;
@@ -26,8 +27,8 @@ class CashboxCustomerForm extends Model{
     public function rules(){
         return [
             [['name', 'surname', 'city', 'region'], 'string'],
-            [['phone', 'cardNumber'], 'integer'],
-            [['cardNumber'], 'required'],
+            [['phone', 'cardNumber', 'cardNumber'], 'integer'],
+            [['name', 'surname', 'phone'], 'required'],
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => '\backend\models\Customer', 'message' => 'Пользователь с таким аддресом электронной почты уже существует!'],
             ['phone', 'unique', 'targetClass' => '\backend\models\Customer', 'message' => 'Пользователь с таким номером телефона уже существует!'],

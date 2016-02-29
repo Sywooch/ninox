@@ -1,7 +1,7 @@
 <?php
 namespace cashbox\controllers;
 
-use backend\models\CashboxCustomerForm;
+use cashbox\models\CustomerForm;
 use cashbox\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\Good;
@@ -136,7 +136,7 @@ class SiteController extends Controller
         $customer = $this->cashbox->customer;
 
         if(\Yii::$app->request->post("CashboxCustomerForm")){
-            $cashboxCustomerForm = new CashboxCustomerForm();
+            $cashboxCustomerForm = new CustomerForm();
             $cashboxCustomerForm->load(\Yii::$app->request->post());
 
             if($cashboxCustomerForm->save()){

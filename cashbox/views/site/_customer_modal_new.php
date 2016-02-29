@@ -1,7 +1,7 @@
 <?php
 use kartik\form\ActiveForm;
 
-$model = new \backend\models\CashboxCustomerForm();
+$model = new \cashbox\models\CustomerForm();
 
 $form = new ActiveForm([
     'formConfig'    =>  ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_SMALL],
