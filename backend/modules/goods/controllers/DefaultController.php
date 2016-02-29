@@ -2,6 +2,7 @@
 
 namespace backend\modules\goods\controllers;
 
+use backend\modules\goods\models\GoodMainForm;
 use common\helpers\UploadHelper;
 use common\helpers\TranslitHelper;
 use common\models\Category;
@@ -525,6 +526,115 @@ class DefaultController extends Controller
             'subCats'       =>  Category::getSubCategories($c->Code),
             'parentCategory'=>  Category::getParentCategory($c->Code),
             'categoryUk'    =>  CategoryUk::findOne(['ID' => $c->ID])
+        ]);
+    }
+
+    public function actionView($param){
+        $good = Good::findOne($param);
+        $request = \Yii::$app->request;
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар с ID ".$param." не найден!");
+        }
+
+        //Начало хлебных крошек
+        $category = Category::findOne($good->GroupID);
+        $parents = Category::getParentCategories($category->Code);
+
+        $this->getView()->params['breadcrumbs'][] = [
+            'label' =>  'Категории',
+            'url'   =>  '/goods'
+        ];
+
+        if (sizeof($parents) >= 1) {
+            $parents = array_reverse($parents);
+
+            foreach ($parents as $parentCategory) {
+                if ($parentCategory != '') {
+                    $this->getView()->params['breadcrumbs'][] = [
+                        'label' => $parentCategory->Name,
+                        'url'   => Url::toRoute(['/goods', 'category' => $parentCategory->Code])
+                    ];
+                }
+            }
+        }
+
+        $this->getView()->params['breadcrumbs'][] = [
+            'label' =>  $category->Name,
+            'url'   => Url::toRoute(['/goods', 'category' => $category->Code])
+        ];
+
+        $this->getView()->params['breadcrumbs'][] = $good->Name;
+        //Конец хлебных крошек
+
+        $goodMainForm = new GoodMainForm();
+        $goodMainForm->loadGood($good);
+
+        if($request->get("act") == "edit"){
+            if($request->post("GoodMainForm") && $goodMainForm->load($request->post())){
+                $goodMainForm->save();
+            }
+
+
+            /*$post = \Yii::$app->request->post();
+
+            if(\Yii::$app->request->isAjax && isset($post['validate']) && $post['validate']){
+                $good = new Good;
+                $good->load($post['Good']);
+                \Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($good);
+            }
+
+            if(!empty($post)){
+                if(empty($goodUK)){
+                    $goodUK = new GoodUk;
+                    $goodUK->ID = $param;
+                }
+
+                $goodUK->Name = $post['GoodUk']['Name'];
+                $goodUK->Name2 = $post['GoodUk']['Name'];
+                $goodUK->Description = $post['GoodUk']['Description'];
+
+                $goodUK->save(false);
+
+                $good->attributes = $post['Good'];
+
+                if($good->save(false)){
+
+                    //Модель успешно сохранена
+                }else{
+                    //Произошла ошибка валидации
+                }
+                //TODO: добавить сообщение об успешном обновлении инфо о товаре, или о ошибке
+            }*/
+
+            return $this->render('edit', [
+                'good'              =>  $good,
+                //'goodUk'          =>  $goodUK,
+                'goodMainForm'      =>  $goodMainForm,
+                'nowCategory'       =>  $category,
+                'uploadPhoto'       =>  new UploadPhoto(),
+                'additionalPhotos'  =>  new ActiveDataProvider([
+                    'query' =>  GoodsPhoto::find()->where(['ItemId' => $good->ID]),
+                    'pagination'    =>  [
+                        'pageSize'  =>  0
+                    ]
+                ])
+            ]);
+        }
+
+        return $this->render('edit', [
+            'good'              =>  $good,
+            //'goodUk'          =>  $goodUK,
+            'goodMainForm'      =>  $goodMainForm,
+            'nowCategory'       =>  $category,
+            'uploadPhoto'       =>  new UploadPhoto(),
+            'additionalPhotos'  =>  new ActiveDataProvider([
+                'query' =>  GoodsPhoto::find()->where(['ItemId' => $good->ID]),
+                'pagination'    =>  [
+                    'pageSize'  =>  0
+                ]
+            ])
         ]);
     }
 
