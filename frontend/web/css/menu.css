@@ -79,12 +79,6 @@
 
 .header-menu-item-image img{
     transform: scale(1);
-    fill: #ff0000;
-}
-
-.header-menu-item-image img{
-    fill: #ff0000;
-    stroke:#848484;
 }
 
 .header-menu-item-content{

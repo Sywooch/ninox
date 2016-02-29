@@ -17,6 +17,21 @@ if($questions){
 }
 
 ?>
+<?=!empty($items) ? Slick::widget([
+		'containerOptions' => [
+			'id'    => 'sliderFor',
+			'class' => 'first'
+		],
+		'items' =>  '',
+		'clientOptions' => [
+			'arrows'         => false,
+			'fade'           => true,
+			'slidesToShow'   => 1,
+			'slidesToScroll' => 1,
+			'asNavFor'       => '#sliderNav',
+		]
+]) : ''
+?>
 <div class="all-banners">
 	<div class="all-banners-center-line"></div>
 	<div class="all-banners-center">
