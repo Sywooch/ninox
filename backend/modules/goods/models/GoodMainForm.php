@@ -162,7 +162,7 @@ class GoodMainForm extends Model{
             'barcode'       =>  'BarCode1',
             'additionalCode'=>  'BarCode2',
             'enabled'       =>  'show_img',
-            'measure'       =>  'Measure1',
+            'measure'       =>  'measure',
             'category'      =>  'GroupID',
             'inPackageAmount'=> 'num_opt',
             'wholesalePrice'=>  'PriceOut1',

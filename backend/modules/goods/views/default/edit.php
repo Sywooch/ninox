@@ -36,19 +36,19 @@ $this->registerJs($js);
                         'model' =>  $goodMainForm
                     ])
                 ],[
-                    'label'     =>  'Параметры',
+                    'label'     =>  'Аттрибуты',
                     'content'   =>  $this->render('_goodEdit/params', [
                         'model' =>  $goodMainForm
                     ])
                 ],[
                     'label'     =>  'Изображения',
                     'content'   =>  $this->render('_goodEdit/images', [
-                        'model' =>  $goodMainForm
+                        'good'  =>  $good
                     ])
                 ],[
-                    'label'     =>  'SEO',
-                    'content'   =>  $this->render('_goodEdit/seo', [
-                        'model' =>  $goodMainForm
+                    'label'     =>  'Експорт',
+                    'content'   =>  $this->render('_goodEdit/export', [
+                        'model' =>  $goodExportForm
                     ])
                 ],[
                     'label'     =>  'Склад',

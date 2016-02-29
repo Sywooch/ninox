@@ -9,6 +9,11 @@
 namespace backend\modules\goods\models;
 
 
-class GoodSeoForm {
+use yii\base\Model;
+
+class GoodSeoForm extends Model{
+
+    public $link;
+    //public $
 
 }

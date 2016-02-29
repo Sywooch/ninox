@@ -2,6 +2,8 @@
 
 namespace backend\modules\goods\controllers;
 
+use backend\modules\goods\models\GoodAttributesForm;
+use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
 use common\helpers\UploadHelper;
 use common\helpers\TranslitHelper;
@@ -568,7 +570,12 @@ class DefaultController extends Controller
         //Конец хлебных крошек
 
         $goodMainForm = new GoodMainForm();
+        $goodAttributesForm = new GoodAttributesForm();
+        $goodExportForm = new GoodExportForm();
+
         $goodMainForm->loadGood($good);
+        $goodAttributesForm->loadGood($good);
+        $goodExportForm->loadGood($good);
 
         if($request->get("act") == "edit"){
             if($request->post("GoodMainForm") && $goodMainForm->load($request->post())){
@@ -612,6 +619,8 @@ class DefaultController extends Controller
                 'good'              =>  $good,
                 //'goodUk'          =>  $goodUK,
                 'goodMainForm'      =>  $goodMainForm,
+                'goodAttributesForm'=>  $goodAttributesForm,
+                'goodExportForm'    =>  $goodExportForm,
                 'nowCategory'       =>  $category,
                 'uploadPhoto'       =>  new UploadPhoto(),
                 'additionalPhotos'  =>  new ActiveDataProvider([
@@ -627,6 +636,8 @@ class DefaultController extends Controller
             'good'              =>  $good,
             //'goodUk'          =>  $goodUK,
             'goodMainForm'      =>  $goodMainForm,
+            'goodAttributesForm'=>  $goodAttributesForm,
+            'goodExportForm'    =>  $goodExportForm,
             'nowCategory'       =>  $category,
             'uploadPhoto'       =>  new UploadPhoto(),
             'additionalPhotos'  =>  new ActiveDataProvider([
