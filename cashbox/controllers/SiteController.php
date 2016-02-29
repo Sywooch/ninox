@@ -135,23 +135,23 @@ class SiteController extends Controller
 
         $customer = $this->cashbox->customer;
 
-        if(\Yii::$app->request->post("CashboxCustomerForm")){
-            $cashboxCustomerForm = new CustomerForm();
-            $cashboxCustomerForm->load(\Yii::$app->request->post());
+        if(\Yii::$app->request->post("CustomerForm")){
+            $customerForm = new CustomerForm();
+            $customerForm->load(\Yii::$app->request->post());
 
-            if($cashboxCustomerForm->save()){
+            if($customerForm->save()){
                 if(!$order->isNewRecord){
-                    $order->customerID = $cashboxCustomerForm->id;
+                    $order->customerID = $customerForm->id;
 
                     $order->save(false);
                 }
 
                 \Yii::$app->response->cookies->add(new Cookie([
                     'name'  =>  'cashboxCurrentCustomer',
-                    'value' =>  $cashboxCustomerForm->id
+                    'value' =>  $customerForm->id
                 ]));
 
-                $customer = $cashboxCustomerForm->id;
+                $customer = $customerForm->id;
             }
         }
 

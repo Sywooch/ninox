@@ -1,4 +1,4 @@
-removeItem<?php
+<?php
 
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
@@ -537,8 +537,20 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'attribute' =>  'price',
                     'header'    =>  'Цена',
                     'width'     =>  '130px',
-                    'value'     =>  function($model){
-                        return $model->price.' грн.';
+                    'format'    =>  'raw',
+                    'value'     =>  function($model) use(&$goodsModels){
+                        $return = $model->price.' грн.';
+
+                        if(!empty($goodsModels[$model->itemID]->num_opt)
+                            && filter_var($goodsModels[$model->itemID]->num_opt, FILTER_VALIDATE_INT)
+                            && $goodsModels[$model->itemID]->num_opt != 1){
+                            $return .= Html::tag('small',
+                                '('.\Yii::$app->formatter->asPrice($model->price / $goodsModels[$model->itemID]->num_opt).' грн. за шт.)',
+                                ['style' => 'display: block;']
+                            );
+                        }
+
+                        return $return;
                     }
                 ],
                 [

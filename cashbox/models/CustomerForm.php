@@ -28,7 +28,7 @@ class CustomerForm extends Model{
         return [
             [['name', 'surname', 'city', 'region'], 'string'],
             [['phone', 'cardNumber', 'cardNumber'], 'integer'],
-            [['name', 'surname', 'phone'], 'required'],
+            [['name', 'surname'], 'required'],
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => '\backend\models\Customer', 'message' => 'Пользователь с таким аддресом электронной почты уже существует!'],
             ['phone', 'unique', 'targetClass' => '\backend\models\Customer', 'message' => 'Пользователь с таким номером телефона уже существует!'],
@@ -36,25 +36,41 @@ class CustomerForm extends Model{
     }
 
     public function save(){
-        if(!$this->validate()){
-            return false;
+        $customer = new Customer();
+
+        foreach($this->modelAttributes() as $newAttribute => $oldAttribute){
+            if(is_bool($this->$newAttribute)){
+                $customer->$oldAttribute = $this->$newAttribute ? 1 : 0;
+            }else{
+                $customer->$oldAttribute = $this->$newAttribute;
+            }
         }
 
-        $customer = new Customer();
-        $customer->name = $this->name;
-        $customer->surname = $this->surname;
-        $customer->City = $this->city.', '.$this->region;
-        $customer->phone = $this->phone;
-        $customer->email = $this->email;
-        $customer->cardNumber = $this->cardNumber;
-
-        if($customer->save()){
+        if($this->validate() && $customer->save()){
             $this->id = $customer->ID;
 
             return true;
+        }else{
+            foreach($this->modelAttributes() as $newAttribute => $oldAttribute){
+                $customer->getErrors($oldAttribute) ? $this->addError($newAttribute, $customer->getErrors($oldAttribute)[0]) : false;
+            }
         }
 
+
         return false;
+    }
+
+    public function modelAttributes(){
+        return [
+            'name'          =>  'name',
+            'surname'       =>  'surname',
+            'city'          =>  'city',
+            'region'        =>  'region',
+            'phone'         =>  'phone',
+            'email'         =>  'email',
+            'cardNumber'    =>  'cardNumber'
+
+        ];
     }
 
     public function attributeLabels(){

@@ -1,8 +1,9 @@
 <?php
 use kartik\tabs\TabsX;
-?>
-<h2>Введите информацию о клиенте</h2>
-<?=TabsX::widget([
+
+echo \yii\bootstrap\Html::tag('h2', 'Введите информацию о клиенте');
+
+echo TabsX::widget([
     'items' =>  [
         [
             'label'     =>  'Существующий',
@@ -14,4 +15,6 @@ use kartik\tabs\TabsX;
         ]
     ],
     'position'  =>  TabsX::ALIGN_LEFT
-])?>
+]);
+
+?>
