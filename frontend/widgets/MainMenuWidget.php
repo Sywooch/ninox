@@ -65,10 +65,15 @@ class MainMenuWidget extends Widget{
     public function renderItem($item, $subitem = false){
         $menu = $submenu = '';
 
-        if(!$subitem && !empty($item['imgSrc'])){
-            $menu .= Html::tag('div', Html::img($item['imgSrc']), [
+        /*if(!$subitem && !empty($item['imgSrc'])){
+            $menu .= Html::tag('div', $item['imgSrc'], [
                 'class' =>  $this->options['headerImageClass']
             ]);
+        }*/
+
+        if(!$subitem){// && !empty($item['badge'])){
+            $menu .= Html::tag('span', '',//$item['badge']
+            []);
         }
 
         $menu .= Html::a($item['label'], '/'.$item['url']);

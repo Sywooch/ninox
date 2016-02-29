@@ -6,6 +6,7 @@
 use frontend\assets\RuLangAsset;
 use bobroid\yamm\Yamm;
 use common\components\SocialButtonWidget;
+use frontend\widgets\CartWidget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -115,7 +116,7 @@ $this->registerJs($js);
 				<div class="items currency-rate">1 USD - 24.2 UAH</div>
 				<div class="personal-account">
 					<div class="items">РУС</div>
-					<div class="items">Личный кабинет</div>
+					<div class="items account-icon">Личный кабинет</div>
 				</div>
 			</div>
 		</div>
@@ -142,7 +143,7 @@ $this->registerJs($js);
 							<div class="count">5</div>
 							<span>Желания</span>
 						</div>
-						<?=\common\components\CartWidget::widget(['remodalInstance' => $cartModal])?>
+						<?=CartWidget::widget(['remodalInstance' => $cartModal])?>
 					</div>
 				</div>
 				<!--<ul class="left">

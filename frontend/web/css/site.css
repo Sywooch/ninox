@@ -1856,8 +1856,7 @@ footer{
 }
 
 .phone{
-	background-image: url("/img/site/phone.png");
-	background-repeat: no-repeat;
+	background: url("/img/site/phone.png") no-repeat;
 	height: 20px;
 	width: 20px;
 	float: left;
@@ -2079,14 +2078,12 @@ footer{
 }
 
 .close-map{
-	background-image: url("/img/site/close.png");
-	background-repeat: no-repeat;
+	background: url("/img/site/close.png") no-repeat;
 	width: 28px;
 	height: 28px;
 }
 .close-map:hover{
-	background-image: url("/img/site/close-on-hover.png");
-	background-repeat: no-repeat;
+	background: url("/img/site/close-on-hover.png") no-repeat;
 	width: 28px;
 	height: 28px;
 }
@@ -2962,8 +2959,14 @@ footer{
 	color: #aeaeae;
 }
 
+.top-menu-content .items:after{
+	padding-left: 5px;
+	margin-top: 8px;
+	position: absolute;
+}
+
 .top-menu-content .currency-rate:after{
-	content: '\e803';
+	content: url("/img/site/red-arrow-top-menu.png");
 }
 
 .top-menu-content span{
@@ -2989,11 +2992,21 @@ footer{
 
 .personal-account .items{
 	padding-right: 0px;
-	padding-left: 30px;
+	padding-left: 45px;
+}
+
+.personal-account .account-icon:before{
+	content: url("/img/site/account.png");
+	margin-right: 5px;
+}
+
+.personal-account .items:after{
+	content: url("/img/site/arrow-bot-menu.png");
 }
 
 .top-menu-content .personal-account{
 	float: right;
+	margin-right: 13px;
 }
 
 .under-menu{
@@ -3092,6 +3105,9 @@ footer{
 /*	background: -ms-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* IE10+ */
 /*	background: linear-gradient(to bottom,  #ffd600 0%,#f9b519 80%); /* W3C */
 /*	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd600', endColorstr='#f9b519',GradientType=0 ); /* IE6-9 */
+	-webkit-box-shadow: inset 0px 0px 5px 0px white;
+	box-shadow: inset 0px 1px 5px 0px white;
+	background: #29a1e0;
 }
 
 .sticky .blue-button{
