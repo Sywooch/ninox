@@ -4,6 +4,9 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
 	'timeZone'	=>	'UTC',
     'components' => [
+		'formatter' =>  [
+			'class' =>  'common\components\Formatter'
+		],
 		'request'	=>	[
 			'class'	=>	'common\components\Request'
 		],

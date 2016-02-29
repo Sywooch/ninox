@@ -1,7 +1,7 @@
 <?php
 namespace cashbox\controllers;
 
-use backend\models\CashboxCustomerForm;
+use cashbox\models\CustomerForm;
 use cashbox\models\CashboxOrder;
 use backend\models\Customer;
 use backend\models\Good;
@@ -135,23 +135,23 @@ class SiteController extends Controller
 
         $customer = $this->cashbox->customer;
 
-        if(\Yii::$app->request->post("CashboxCustomerForm")){
-            $cashboxCustomerForm = new CashboxCustomerForm();
-            $cashboxCustomerForm->load(\Yii::$app->request->post());
+        if(\Yii::$app->request->post("CustomerForm")){
+            $customerForm = new CustomerForm();
+            $customerForm->load(\Yii::$app->request->post());
 
-            if($cashboxCustomerForm->save()){
+            if($customerForm->save()){
                 if(!$order->isNewRecord){
-                    $order->customerID = $cashboxCustomerForm->id;
+                    $order->customerID = $customerForm->id;
 
                     $order->save(false);
                 }
 
                 \Yii::$app->response->cookies->add(new Cookie([
                     'name'  =>  'cashboxCurrentCustomer',
-                    'value' =>  $cashboxCustomerForm->id
+                    'value' =>  $customerForm->id
                 ]));
 
-                $customer = $cashboxCustomerForm->id;
+                $customer = $customerForm->id;
             }
         }
 
@@ -473,11 +473,13 @@ class SiteController extends Controller
             throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
         }
 
+        $order = $this->cashbox->cashboxOrder;
+
         if(!$this->cashbox->postpone()){
             throw new ErrorException("Произошла ошибка при выполнении метода actionPostponeCheck");
         }
 
-        return $this->cashbox->cashboxOrder->id;
+        return $order->id;
     }
 
     public function actionLoadpostpone(){
@@ -510,7 +512,7 @@ class SiteController extends Controller
             return $this->cashbox->getSummary();
         }
 
-        $good = Good::find()->where(['or', 'BarCode2 = '.$itemID, 'BarCode1 = '.$itemID, 'Code = '.$itemID, 'ID = '.$itemID, ])->one();
+        $good = Good::find()->where(['or', "`BarCode2` = '{$itemID}'", "`BarCode1` = '{$itemID}'", "`Code` = '{$itemID}'", "`ID` = '{$itemID}'"])->one();
 
         if(!$good){
             throw new NotFoundHttpException("Товар с идентификатором `".$itemID."` не найден!");

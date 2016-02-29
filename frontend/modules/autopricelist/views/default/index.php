@@ -57,6 +57,14 @@ echo \yii\widgets\ListView::widget([
             $offer[] = Html::tag('picture', $addPhoto->value);
         }*/
 
+        if(!empty($model->BarCode1)){
+            $offer[] = Html::tag('barcode', $model->BarCode1);
+        }
+
+        if(!empty($model->BarCode2)){
+            $offer[] = Html::tag('vendorCode', preg_replace('/\&/', '', strip_tags($model->BarCode2)));
+        }
+
         if($vendorModel){
             $offer[] = Html::tag('typePrefix');
             $offer[] = Html::tag('vendor');

@@ -290,6 +290,7 @@ $this->registerJs($js);
             ],
             [
                 'hAlign'    =>  'center',
+                'vAlign'    =>  'middle',
                 'attribute' =>  'customerID',
                 'value'     =>  function($model) use(&$customers){
                     if($model->customerID != 0){
@@ -299,6 +300,7 @@ $this->registerJs($js);
             ],
             [
                 'hAlign'    =>  'center',
+                'vAlign'    =>  'middle',
                 'width'     =>  '140px',
                 'attribute' =>  'responsibleUser',
                 'value'     =>  function($model){
@@ -311,6 +313,7 @@ $this->registerJs($js);
             ],
             [
                 'hAlign'    =>  'center',
+                'vAlign'    =>  'middle',
                 'attribute' =>  'doneTime',
                 'width'     =>  '120px',
                 'value'     =>  function($model){
@@ -319,6 +322,7 @@ $this->registerJs($js);
             ],
             [
                 'hAlign'    =>  'center',
+                'vAlign'    =>  'middle',
                 'header'    =>  'Колл-во товаров',
                 'width'     =>  '100px',
                 'pageSummary'=> true,
@@ -328,15 +332,25 @@ $this->registerJs($js);
             ],
             [
                 'hAlign'    =>  'center',
-                'header'    =>  'Сумма',
-                'width'     =>  '120px',
+                'vAlign'    =>  'middle',
+                'header'    =>  'Оплата',
+                'width'     =>  '150px',
+                'format'    =>  'raw',
                 'pageSummary'=> true,
+                'attribute' =>  'amount',
                 'value'     =>  function($model){
-                    return $model->createdOrderSum.' грн.';
+                    $return = $model->amount.' грн.';
+
+                    if(round($model->amount) != round($model->createdOrderSum)){
+                        $return .= Html::tag('small', "Сумма: {$model->createdOrderSum} грн.", ['style' => 'display: block']);
+                    }
+
+                    return $return;
                 }
             ],
             [
                 'hAlign'    =>  'center',
+                'vAlign'    =>  'middle',
                 'width'     =>  '150px',
                 //'format'    =>  'raw',
                 /*'value'     =>  function($model){

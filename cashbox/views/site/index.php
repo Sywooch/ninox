@@ -1,4 +1,4 @@
-removeItem<?php
+<?php
 
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
@@ -27,7 +27,7 @@ $js = <<<JS
                     changeCashboxType();
                 }
 
-                updateSummary(data);
+                summary.update(data);
 
                 $(".removeGood > *").on('click', function(e){
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
@@ -54,7 +54,7 @@ $js = <<<JS
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                updateSummary(data);
+                summary.update(data);
 
                 if(data.wholesaleSum < 500 && data.priceType == 1){
                     changeCashboxType();
@@ -88,7 +88,7 @@ $js = <<<JS
                     changeCashboxType();
                 }
 
-                updateSummary(data);
+                summary.update(data);
             },
             error: function (request, status, error) {
                 Messenger().post({
@@ -161,11 +161,7 @@ $js = <<<JS
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                updateSummary({
-                    'sum': 0.00,
-                    'toPay': 0.00,
-                    'itemsCount': 0
-                });
+                summary.clear();
 
                 Messenger().post({
                     message: 'Текущий заказ очищен',
@@ -180,29 +176,65 @@ $js = <<<JS
                     type: 'error',
                     showCloseButton: true,
                     hideAfter: 5
-                });            }
+                });
+            }
         });
-    }, updateSummary = function(data){
-        if(data.sum !== undefined){
-            $(".summ")[0].innerHTML = data.sum;
-        }
+    },
+    summary = {
+        selector: '.summary',
+        wholesaleClass: 'success',
+        retailClass: 'danger',
+        buttonSelector: '#changeCashboxType',
+        update: function(data){
+            if(data.sum !== undefined){
+                $(this.selector).find(".summ")[0].innerHTML = data.sum;
+            }
 
-        if(data.sumToPay !== undefined){
-            $(".toPay")[0].innerHTML = data.sumToPay;
-        }
+            if(data.sumToPay !== undefined){
+                $(this.selector).find(".toPay")[0].innerHTML = data.sumToPay;
+            }
 
-        if(data.wholesaleSum !== undefined){
-            $(".wholesale-sum")[0].innerHTML = data.wholesaleSum;
-        }
+            if(data.sumToPay !== undefined){
+                $(this.selector).find(".wholesale-sum")[0].innerHTML = data.wholesaleSum;
+            }
 
-        if(data.discountSum !== undefined){
-            $(".discount")[0].innerHTML = data.discountSum;
-        }
+            if(data.sumToPay !== undefined){
+                $(this.selector).find(".discount")[0].innerHTML = data.discountSum;
+            }
 
-        if(data.itemsCount !== undefined){
-            $(".itemsCount")[0].innerHTML = data.itemsCount;
+            if(data.sumToPay !== undefined){
+                $(this.selector).find(".itemsCount")[0].innerHTML = data.itemsCount;
+            }
+        },
+        clear: function(){
+            this.update({
+                'sum': 0.00,
+                'sumToPay': 0.00,
+                'itemsCount': 0,
+                'discountSum': 0,
+                'wholesaleSum': 0
+            });
+
+            this.setRetail();
+        },
+        setWholesale: function(){
+            $(this.selector).toggleClass('bg-' + this.retailClass);
+            $(this.buttonSelector).toggleClass('btn-' + this.retailClass);
+
+            $(this.selector).addClass('bg-' + this.wholesaleClass);
+            $(this.buttonSelector).addClass('btn-' + this.wholesaleClass);
+            $(this.buttonSelector)[0].innerHTML = 'Опт';
+        },
+        setRetail: function(){
+            $(this.selector).toggleClass('bg-' + this.wholesaleClass);
+            $(this.buttonSelector).toggleClass('btn-' + this.wholesaleClass)
+
+            $(this.selector).addClass('bg-' + this.retailClass)
+            $(this.buttonSelector).addClass('btn-' + this.retailClass);
+            $(this.buttonSelector)[0].innerHTML = 'Розница';
         }
-    }, changeManager = function(e){
+    },
+    changeManager = function(e){
         $.ajax({
             type: 'POST',
             url: '/changemanager',
@@ -260,11 +292,7 @@ $js = <<<JS
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                updateSummary({
-                    'sum': 0.00,
-                    'toPay': 0.00,
-                    'itemsCount': 0
-                });
+                summary.clear();
 
                 Messenger().post({
                     message: 'Чек #' + data + ' отложен',
@@ -289,11 +317,7 @@ $js = <<<JS
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                updateSummary({
-                    'sum': 0.00,
-                    'toPay': 0.00,
-                    'itemsCount': 0
-                });
+                summary.clear();
 
                 Messenger().post({
                     message: 'Возврат #' + data + ' совершён',
@@ -457,9 +481,15 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
             'resizableColumns'=>  false,
             'dataProvider'  =>  $orderItems,
             'rowOptions'    =>  function($model) use(&$goodsModels){
-                return [
-                    'data-attribute-key'  =>  $goodsModels[$model->itemID]->ID
+                $return = [
+                    'data-attribute-key'    =>  $goodsModels[$model->itemID]->ID,
                 ];
+
+                if($model->price <= 0){
+                    $return['class'] = 'danger';
+                }
+
+                return $return;
             },
             'emptyTextOptions'  =>  [
                 'class' =>  'emptyText'
@@ -507,8 +537,20 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'attribute' =>  'price',
                     'header'    =>  'Цена',
                     'width'     =>  '130px',
-                    'value'     =>  function($model){
-                        return $model->price.' грн.';
+                    'format'    =>  'raw',
+                    'value'     =>  function($model) use(&$goodsModels){
+                        $return = $model->price.' грн.';
+
+                        if(!empty($goodsModels[$model->itemID]->num_opt)
+                            && filter_var($goodsModels[$model->itemID]->num_opt, FILTER_VALIDATE_INT)
+                            && $goodsModels[$model->itemID]->num_opt != 1){
+                            $return .= Html::tag('small',
+                                '('.\Yii::$app->formatter->asPrice($model->price / $goodsModels[$model->itemID]->num_opt).' грн. за шт.)',
+                                ['style' => 'display: block;']
+                            );
+                        }
+
+                        return $return;
                     }
                 ],
                 [
