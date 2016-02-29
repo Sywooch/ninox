@@ -6,7 +6,7 @@
         <div class="characteristics">
             <div class="characteristic">
                 <span>
-                    <?=_("Количество в упаковке:")?>
+                    <?=!empty($good->num_opt) ? _("Количество в упаковке:") : ''?>
                 </span>
             </div>
             <div>
@@ -23,29 +23,23 @@
         </div>
         <div class="characteristics">
             <div class="characteristic">
-                <?=_("Размеры:")?>
+                <?=!empty($good->gabarity) ? _("Размеры:") : ''?>
             </div>
             <div>
                 <?=$good->gabarity?>
             </div>
         </div>
     </div>
-    <!--<div class="properties" itemprop="description"><?php$good->Description?></div>-->
+    <!--<div class="properties" itemprop="description"><?/*php$good->Description*/?></div>-->
 </div>
 <div class="item-detail">
     <span class="tabTitle semi-bold"><?=_("Описание товара")?></span>
-    <span class="details">
-        Детский манеж Open от Chicco это чудное место, в котором малыш может поиграть и отдохнуть.
-        Эта модель представлена в двух цветах: Green и Baby world. Манеж имеет квадратную форму и подбитое изголовье,
-        которое защищает ребенка от ударов. Стенки этой модели исполнены из сетки, один край которой можно открывать,
-        что позволит малышу покидать манеж самостоятельно. В сложенном состоянии размеры модели 25х25х87,
-        а размер в открытом виде – 94х94х76.  Манежик подходит для детей от рождения до 3-х лет и весом не более 15 кг
-    </span>
+    <div class="details">
+        <?=!empty($good->Description) ? $good->Description : 'Нет описания'?>
+    </div>
 </div>
-    <?php if(sizeof($good['options']) >= 1){ foreach($good['options'] as $option){  ?>
-    <div class="properties"><span class="semi-bold
-    blue"><span><?=$option['name']?></span></span><span><?=$option['value']?></span></div>
-<?php } }
+
+<?php /*} }
 /*
 if($good['width'] || $good['height'] || $good['length']){
     if($good['width']){
