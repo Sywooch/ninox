@@ -231,11 +231,10 @@ h2{
 	   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
    }
 
-.shop-star-half:before { content: '\e801'; } /* '' */
-.shop-star-half-alt:before { content: '\e802'; } /* '' */
-.shop-star:before { content: '\e803'; } /* '' */
-.shop-star-empty:before { content: '\e804'; } /* '' */
-
+.shop-star-half:before { content: '\e801'; }
+.shop-star-half-alt:before { content: '\e802'; }
+.shop-star:before { content: '\e803'; }
+.shop-star-empty:before { content: '\e804'; }
 .icon-note:before { content: '\e800'; }
 .icon-your-discont:before { content: '\e801'; }
 .icon-box:before { content: '\e802'; }
@@ -3263,6 +3262,249 @@ footer{
 	margin-top: 0px;
 }
 
-
-
 /*========* END UNDER MENU *=========*/
+
+
+/*========*  MAIN  *=========*/
+
+.main-content-items{
+	background: #f3f3f3;
+	height: 1050px;
+}
+
+.main-content .arrow-bottom{
+	width: 60px;
+	height: 60px;
+	border-radius: 30px;
+	background: #eaa51e;
+	position: absolute;
+	left: 50%;
+	margin: -27px 0 0 -30px;
+}
+
+
+
+.goods-content{
+	width: 1175px;
+	margin: auto;
+	padding-top: 75px;
+}
+
+.goods-content-main{
+	height: 505px;
+}
+
+.goods-items{
+	height: 450px;
+	width: 470px;
+	float: left;
+}
+
+.two-items{
+	float: left;
+}
+
+.two-items .goods-item{
+	float: none;
+}
+
+.content-items span{
+	display: block;
+	width: 50%;
+	color: #7d8d95;
+	font-family: OpenSans-Semibold;
+
+}
+
+.content-items .goods-item{
+	padding: 20px;
+}
+
+.content-items .icons-fav-bask{
+	float: right;
+	position: relative;
+	top: -74px;
+	left: 50px;
+}
+
+.content-items .icons-fav-bask:before{
+	padding-top: 0px;
+}
+
+.content-banners .goods-item-style{
+	background: #eaa51e
+}
+
+.goods-items .goods-item{
+	height: 215px;
+}
+
+.goods-item{
+	width: 215px;
+	border-left: 1px solid rgb(236, 236, 236);
+	box-shadow: 0px 1px 0px rgb(236, 236, 236);
+	border-bottom: 1px solid rgb(222, 222, 222);
+	border-right: 1px solid rgb(236, 236, 236);
+	background: white;
+	border-radius: 4px;
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+
+.right-item{
+	height: 450px;
+}
+
+.right-item .price{
+	display: block;
+	position: relative;
+	top: 380px;
+	margin-left: 28px;
+}
+
+.goods-item .price{
+	color: #eaa51e;
+	font-family: OpenSans-Semibold;
+	font-size: 16px;
+
+}
+
+.goods-item .icons-fav-bask:before{
+	content: url("/img/site/favor.svg");
+	padding-top: 32px;
+	position: absolute;
+	color: #7d8d95;
+}
+
+.goods-item .icons-fav-bask:after{
+	content: url("/img/site/basket.svg");
+	padding-top: 32px;
+	position: absolute;
+	left: 22px;
+	color: #7d8d95;
+}
+
+.goods-content-icons{
+	margin: auto;
+	width: -moz-max-content;
+	width: -webkit-max-content;
+	width: max-content;
+	height: 105px;
+}
+
+.main-icons{
+	margin-right: 100px;
+	margin-left: 100px;
+	float: left;
+	cursor: pointer;
+}
+
+.main-icons span{
+	color: #717e84;
+	font-size: 16px;
+	font-family: OpenSans-Semibold;
+	display: block;
+	margin-top: 10px;
+}
+
+.main-icon{
+	height: 40px;
+	width: 40px;
+	border-radius: 20px;
+	margin: auto;
+}
+
+.icon-best{
+	background: #8acc5e;
+}
+
+.icon-best:before{
+	background: url("/img/site/best.svg");
+}
+
+.icon-news{
+	background: #45b1ea;
+}
+
+.icon-sale{
+	background: #eaa51e;
+}
+
+.goods-content-all .goods-item{
+	height: 345px;
+	padding-top: 20px;
+	padding-left: 13px;
+	padding-right: 15px;
+}
+.goods-content-all .goods-item span{
+	color: #7d8d95;
+	font-size: 15px;
+	display: block;
+}
+
+.goods-content-all .goods-item-style{
+	margin-right: 6px;
+	background: #8acc5e;
+
+}
+
+.goods-content-all .item-id:before{
+	content: url("/img/site/favorites.png");
+	float: left;
+	margin-top: 4px;
+}
+
+.goods-content-all .goods-item .item-id{
+	text-align: right;
+	float: right;
+	width: 100%;
+}
+
+.goods-item-style span{
+	font-family: OpenSans-Semibold;
+	color: #ffffff !important;
+	text-align: left;
+	word-spacing: 60px;
+	font-size: 24px !important;
+}
+
+.item-image{
+	background: url("/img/site/scissors.png") no-repeat;
+	height: 160px;
+	margin-top: 40px;
+}
+
+.price-and-order{
+	padding-top: 15px;
+	padding-bottom: 25px;
+}
+
+.price-and-order span{
+	width: 50%;
+}
+
+.price-and-order .semi-bold{
+	font-size: 18px !important;
+}
+
+.goods-basket{
+	width: 40px;
+	height: 40px;
+	background: #ffc600;
+	border-radius: 2px;
+	float: right;
+	margin-top: -43px;
+}
+
+/*========* END MAIN  *=========*/
+
+
+
+
+
+
+
+
+
