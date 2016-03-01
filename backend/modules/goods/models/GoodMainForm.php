@@ -29,11 +29,6 @@ class GoodMainForm extends Model{
     public $name;
 
     /**
-     * @type string ссылка на изображение товара
-     */
-    public $image;
-
-    /**
      * @type string код товара
      */
     public $code;
@@ -157,7 +152,6 @@ class GoodMainForm extends Model{
             'id'            =>  'ID',
             'name'          =>  'Name',
             'description'   =>  'Description',
-            'image'         =>  'ico',
             'code'          =>  'Code',
             'barcode'       =>  'BarCode1',
             'additionalCode'=>  'BarCode2',
@@ -217,7 +211,6 @@ class GoodMainForm extends Model{
             'id'            =>  'ID',
             'name'          =>  'Название',
             'description'   =>  'Описание',
-            'image'         =>  'Фото',
             'code'          =>  'Код',
             'barcode'       =>  'Штрихкод',
             'additionalCode'=>  'Добавочный код',
@@ -238,8 +231,8 @@ class GoodMainForm extends Model{
 
     public function rules(){
         return [
-            [['name', 'image', 'code', 'additionalCode', 'measure', 'anotherCurrencyTag'], 'string'],
-            [['description'], 'string', 'max' => 255],
+            [['name', 'code', 'additionalCode', 'measure', 'anotherCurrencyTag'], 'string', 'max' => 255],
+            [['description'], 'string'],
             [['enabled', 'anotherCurrencyPeg', 'isOriginal', 'haveGuarantee', 'isUnlimited', 'undefinedPackageAmount'],
                 'boolean'],
             [['id', 'barcode', 'category', 'inPackageAmount', 'count'], 'integer'],

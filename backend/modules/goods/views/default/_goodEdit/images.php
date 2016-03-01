@@ -15,7 +15,7 @@ $this->registerCss($css);
 
 $form = new \yii\bootstrap\ActiveForm();
 
-$photos = [];
+$photos = $previewPhotos = [];
 
 foreach($good->photos as $photo){
     $previewPhotos[] = \yii\bootstrap\Html::img('http://krasota-style.com.ua/img/catalog/'.$photo->ico, [
