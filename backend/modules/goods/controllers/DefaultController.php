@@ -531,6 +531,10 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionPhoto(){
+        return true;
+    }
+
     public function actionView($param){
         $good = Good::findOne($param);
         $request = \Yii::$app->request;

@@ -215,7 +215,7 @@ class GoodMainForm extends Model{
             'barcode'       =>  'Штрихкод',
             'additionalCode'=>  'Добавочный код',
             'enabled'       =>  'Включен',
-            'measure'       =>  'Measure1',
+            'measure'       =>  'measure',
             'category'      =>  'Категория',
             'inPackageAmount'=> 'штук в упаковке',
             'wholesalePrice'=>  'Оптовая цена',
