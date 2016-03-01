@@ -23,7 +23,6 @@ foreach($good->photos as $photo){
     ]);
     $photos[] = [
         'caption'   =>  $photo->ico,
-        'url'       =>  '/goods/photo&act=delete',
         'key'       =>  $photo->id, //TODO: Заменить на другое значение ключа
         'frameAttr' =>  [
             'style'     =>  'max-height: 80px; max-width: 80px;'
@@ -43,6 +42,7 @@ echo FileInput::widget([
         'initialPreview'        =>  $previewPhotos,
         'initialPreviewConfig'  =>  $photos,
         'previewFileType'       =>  'any',
-        'uploadUrl'             =>  Url::to(['/site/file-upload']),
+        'deleteUrl'             =>  Url::toRoute(['/goods/photo', 'act' => 'delete']),
+        'uploadUrl'             =>  Url::toRoute(['/goods/photo', 'act' => 'upload']),
     ]
 ]);
