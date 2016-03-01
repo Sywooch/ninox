@@ -55,7 +55,7 @@ class DefaultController extends Controller
         }
 
         if(isset($priceList->options['available']) && $priceList->options['available']){
-            $items->andWhere(['show_img' =>  1])->andWhere('count > 0 AND ico != \'\'');
+            $items->andWhere(['show_img' =>  1])->andWhere('count > 0');
         }
 
         return $this->render('index', [
