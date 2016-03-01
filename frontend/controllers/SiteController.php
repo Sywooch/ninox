@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
+use common\models\GoodsComment;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\OrderForm;
@@ -63,6 +64,12 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
+        /*$goodComment = GoodsComment::findOne(['`goodscomments`.`goodID`' => $id]);
+
+        if(!$goodComment){
+            return \Yii::$app->runAction('site/error');
+        }*/
+
         $category = Category::findOne(['ID' => $good->GroupID]);
 
         $mainCategory = null;
@@ -92,7 +99,8 @@ class SiteController extends Controller
         return $this->render('goodCard', [
             'mainCategory'  =>  $mainCategory,
             'good'          =>  $good,
-            'category'      =>  $category
+            'category'      =>  $category,
+            /*'goodComment'   =>  $goodComment*/
         ]);
     }
 

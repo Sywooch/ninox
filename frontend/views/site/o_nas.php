@@ -1,4 +1,5 @@
 <?php
+use yii\bootstrap\Html;
 use yii\jui\Accordion;
 /**
  * Created by PhpStorm.
@@ -7,22 +8,23 @@ use yii\jui\Accordion;
  * Time: 14:07
  */
    ?>
+
 <div class="content">
     <div class="left-side">
         <div class="left-side-menu">
-            <div class="left-side-menu-item">
+            <div class="left-side-menu-item" href="#about-as-header">
                 Как мы работаем
             </div>
-            <div class="left-side-menu-item">
+            <div class="left-side-menu-item" href="#about-delivery-header">
                 Доставка
             </div>
-            <div class="left-side-menu-item">
+            <div class="left-side-menu-item" href="#about-payment-header">
                 Оплата
             </div>
-            <div class="left-side-menu-item">
+            <div class="left-side-menu-item" href="#about-return-header">
                 Возврат товара
             </div>
-            <div class="left-side-menu-item">
+            <div class="left-side-menu-item" href="#about-TermOfUse-header">
                 Условия использования сайта
             </div>
         </div>
@@ -30,16 +32,15 @@ use yii\jui\Accordion;
     <div class="about">
         <div class="about-as">
             <div class="about-as-header about-header semi-bold">
-                Как мы работаем
+
+                <a name="about-as-header">Как мы работаем</a>
             </div>
             <div class="bold about-as-center">
                 На сайте krasota-style.ua действует 2 типа цен
             </div>
             <div class="about-as-price">
                 <div class="about-as-price-rules">
-                    <div class="about-as-price-rules-img wholesale-prices">
-
-                    </div>
+                    <div class="about-as-price-rules-img wholesale-prices"></div>
                     <div class="about-as-price-rules-text">
                         <span class="bold">ОПТОВЫЕ ЦЕНЫ</span>
                         При заказе на суммуот 1000 грн.
@@ -92,7 +93,7 @@ use yii\jui\Accordion;
         </div>
         <div class="about-delivery">
             <div class="about-delivery-header about-header semi-bold">
-                Доставка
+                <a name="about-delivery-header">Доставка</a>
             </div>
             <div class="about-delivery-content">
                 <div class="about-delivery-content-img"></div>
@@ -120,7 +121,7 @@ use yii\jui\Accordion;
         </div>
         <div class="about-payment">
             <div class="about-payment-header about-header semi-bold">
-                Оплата
+                <a name="about-payment-header">Оплата</a>
             </div>
             <span class="bold">
                 Оплата на карту «Приват Банка»
@@ -157,7 +158,7 @@ use yii\jui\Accordion;
         </div>
         <div class="about-return">
             <div class="about-return-header about-header semi-bold">
-                Возврат
+                <a name="about-return-header">Возврат</a>
             </div>
             <span>
                 Товары, приобретенные в интернет-магазине krasota-style.ua, можно вернуть в течении 14 дней с момента получения заказа.
@@ -196,8 +197,7 @@ use yii\jui\Accordion;
                 </div>
             </div>
             <div class="about-return-accordion">
-                <?php
-                echo Accordion::widget([
+                <?=Accordion::widget([
                     'items' => [
                     [
                     'header'    => Html::tag('div', Html::tag('span', 'Гарантийные обязательства (техника)'),
@@ -234,7 +234,7 @@ use yii\jui\Accordion;
         </div>
         <div class="about-TermsOfUse">
             <div class="about-TermsOfUse-header about-header semi-bold">
-                Условия использования сайта
+                <a name="about-TermOfUse-header">Условия использования сайта</a>
             </div>
             <span>
                 Внимание! Перед просмотром этого сайта внимательно прочитайте данные условия.
@@ -293,10 +293,6 @@ use yii\jui\Accordion;
                 предложенными нашими партнерами, такими как рекламные услуги, например, которые могут появиться на других сайтах.
             </span>
         </div>
-
-
-
-
     </div>
 </div>
 

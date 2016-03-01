@@ -6,6 +6,7 @@
 use frontend\assets\RuLangAsset;
 use bobroid\yamm\Yamm;
 use common\components\SocialButtonWidget;
+use frontend\widgets\CartWidget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -123,6 +124,13 @@ $this->registerJsFile('/perfect-scrollbar/js/perfect-scrollbar.jquery.js', [
 ]);
 $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 ?>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.sticky.js"></script>
+	<script>
+		$(document).ready(function(){
+			$(".sticky-on-scroll").sticky({ topSpacing: 0, className:"sticky" });
+		});
+	</script>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?=Yii::$app->language?>">
@@ -137,99 +145,133 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 		echo $this->render('_admin_menu');
 	}
 	?>
-	<div class="topCaption">
-		<div class="topAction">
-			<div class="top-action-center">
-				<a href="/"><div class="top-action-text"></div></a>
+	<div class="header">
+		<div class="top-menu">
+			<div class="top-menu-content">
+				<div class="items"><span>О компании</span></div>
+				<div class="items"><span>Помощь</span></div>
+				<div class="items"><span>Контакты</span></div>
+				<div class="blog items">Блог</div>
+				<div class="items currency-rate">1 USD - 24.2 UAH</div>
+				<div class="personal-account">
+					<div class="items">РУС</div>
+					<div class="items account-icon">Личный кабинет</div>
+				</div>
 			</div>
 		</div>
-		<nav class="topCaptionCenter">
-			<ul class="left">
-				<li id="users"><span class="menuImage"></span>Покупателям<span class="arrow"></span>
-					<ul>
-						<li><a href="/dostavka">Доставка</a></li>
-						<li><a href="/oplata">Оплата</a></li>
-						<li><a href="/vozvrat-i-obmen">Возврат и обмен</a></li>
-						<li><span class="link-hide" data-href="/status-zakaza">Статус заказа</span></li>
-						<li><a href="/voprosy-i-otvety">Вопросы и ответы</a></li>
-						<li><a href="/pomoshch">Как заказать</a></li>
-						<li><a href="/akcii">Акции</a></li>
-						<li><a href="/garantii">Гарантии</a></li>
-					</ul>
-				</li>
-				<li id="about"><span class="menuImage"></span>О компании<span class="arrow"></span>
-					<ul>
-						<li><a href="/kontakty">Контакты</a></li>
-						<li><a href="/otzyvy">Отзывы</a></li>
-						<li><a href="/o-nas">О нас</a></li>
-						<li><a href="/vakansii">Вакансии</a></li>
-					</ul>
-				</li>
-				<li id="partners"><a href="/sotrudnichestvo"><span class="menuImage"></span>Сотрудничество</a></li>
-				<li id="blog"><a target="_blank" href="/blog"><span class="menuImage"></span>Блог</a></li>
-				<li id="allGoods">На сайте 9599 товаров</li>
-			</ul>
-			<div class="logo mobileLogo" itemscope="" itemtype="http://schema.org/Organization">
-				<img alt="Мобильный логотип интернет магазина Krasota-Style" src="/img/logo/xnew_mobile_logo_ru.png">
-				<noscript>
-					<div class="contact_phone" itemprop="telephone">(044) 232 82 20</div>
-					<div class="contact_phone" itemprop="email"><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="e28b8c848da2899083918d9683cf91969b8e87cc9783">[email&#160;protected]</a></div>
-					<span itemprop="name">Оптовый интернет-магазин Krasota-Style.ua</span>
-					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-						<span itemprop="postalCode">02217</span>, <span itemprop="addressLocality">Украина, г. Киев</span>, <span itemprop="streetAddress">ул. Электротехническая, 2</span>
+		<div class="sticky-on-scroll">
+			<div class="under-menu">
+				<div class="under-menu-content">
+					<div class="logo"></div>
+					<div class="search">
+						<label class="icon-search" for=""></label>
+						<input type="text" placeholder="Поиск..."/>
+						<?=\yii\helpers\Html::button('Найти', [
+							'type'  =>  'submit',
+							'class' =>  'blue-button small-button ',
+							'id'    =>  'submit'
+						])?>
 					</div>
-					<img itemprop="logo" src="/img/xlogo_ukraine.png" alt="shop logo">
-				</noscript>
-			</div>
-			<ul class="right">
-				<li id="loginRegistration">
-				<?php if(\Yii::$app->user->isGuest){ ?>
-					<span id="login">
-					<?=\bobroid\remodal\Remodal::widget([
-						'confirmButton'	=>	false,
-						'id'			=>	'login',
-						'cancelButton'	=>	false,
-						'addRandomToID'	=>	false,
-						'content'		=>	$this->render('parts/_login_modal'),
-						'buttonOptions'	=>	[
-							'label'		=>	\Yii::t('shop', 'Войти')
-						],
-					])?>
-					</span>
-					&nbsp;/&nbsp;
-					<span id="registration">
+					<div class="phone-number">
+						<div class="phone"></div>
+						<span class="number">(044)257-45-54</span>
+					</div>
+					<div class="desire-basket">
+						<div class="desire">
+							<div class="desire-icon"></div>
+							<div class="count">5</div>
+							<span>Желания</span>
+						</div>
+						<?=CartWidget::widget(['remodalInstance' => $cartModal])?>
+					</div>
+				</div>
+				<!--<ul class="left">
+					<li id="users"><span class="menuImage"></span>Покупателям<span class="arrow"></span>
+						<ul>
+							<li><a href="/dostavka">Доставка</a></li>
+							<li><a href="/oplata">Оплата</a></li>
+							<li><a href="/vozvrat-i-obmen">Возврат и обмен</a></li>
+							<li><span class="link-hide" data-href="/status-zakaza">Статус заказа</span></li>
+							<li><a href="/voprosy-i-otvety">Вопросы и ответы</a></li>
+							<li><a href="/pomoshch">Как заказать</a></li>
+							<li><a href="/akcii">Акции</a></li>
+							<li><a href="/garantii">Гарантии</a></li>
+						</ul>
+					</li>
+					<li id="about"><span class="menuImage"></span>О компании<span class="arrow"></span>
+						<ul>
+							<li><a href="/kontakty">Контакты</a></li>
+							<li><a href="/otzyvy">Отзывы</a></li>
+							<li><a href="/o-nas">О нас</a></li>
+							<li><a href="/vakansii">Вакансии</a></li>
+						</ul>
+					</li>
+					<li id="partners"><a href="/sotrudnichestvo"><span class="menuImage"></span>Сотрудничество</a></li>
+					<li id="blog"><a target="_blank" href="/blog"><span class="menuImage"></span>Блог</a></li>
+					<li id="allGoods">На сайте 9599 товаров</li>
+				</ul>-->
+				<!--<div class="logo mobileLogo" itemscope="" itemtype="http://schema.org/Organization">
+					<img alt="Мобильный логотип интернет магазина Krasota-Style" src="/img/logo/xnew_mobile_logo_ru.png">
+					<noscript>
+						<div class="contact_phone" itemprop="telephone">(044) 232 82 20</div>
+						<div class="contact_phone" itemprop="email"><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="e28b8c848da2899083918d9683cf91969b8e87cc9783">[email&#160;protected]</a></div>
+						<span itemprop="name">Оптовый интернет-магазин Krasota-Style.ua</span>
+						<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+							<span itemprop="postalCode">02217</span>, <span itemprop="addressLocality">Украина, г. Киев</span>, <span itemprop="streetAddress">ул. Электротехническая, 2</span>
+						</div>
+						<img itemprop="logo" src="/img/xlogo_ukraine.png" alt="shop logo">
+					</noscript>
+				</div>-->
+			<!--	<ul class="right">
+					<li id="loginRegistration">
+					<?php if(\Yii::$app->user->isGuest){ ?>
+						<span id="login">
 						<?=\bobroid\remodal\Remodal::widget([
 							'confirmButton'	=>	false,
-							'id'			=>	'registration',
+							'id'			=>	'login',
 							'cancelButton'	=>	false,
 							'addRandomToID'	=>	false,
-							'content'		=>	$this->render('parts/_registration_modal'),
+							'content'		=>	$this->render('parts/_login_modal'),
 							'buttonOptions'	=>	[
-								'label'		=>	\Yii::t('shop', 'Регистрация')
+								'label'		=>	\Yii::t('shop', 'Войти')
 							],
 						])?>
-					</span>
-				<?php }else{ ?>
-					<span>Здравствуйте, <?=Html::a(\Yii::$app->user->identity->Company, '/account')?>! <?=Html::a('Выйти', Url::to('/logout'), [
-							'data-method'   =>  'post'
-						])?></span>
-				<?php }	?>
-				</li>
-				<li id="lang">РУС<span class="arrow"></span>
-					<ul>
-						<li><a href="/uk">УКР</a></li>
-					</ul>
-				</li>
+						</span>
+						&nbsp;/&nbsp;
+						<span id="registration">
+							<?=\bobroid\remodal\Remodal::widget([
+								'confirmButton'	=>	false,
+								'id'			=>	'registration',
+								'cancelButton'	=>	false,
+								'addRandomToID'	=>	false,
+								'content'		=>	$this->render('parts/_registration_modal'),
+								'buttonOptions'	=>	[
+									'label'		=>	\Yii::t('shop', 'Регистрация')
+								],
+							])?>
+						</span>
+					<?php }else{ ?>
+						<span>Здравствуйте, <?=Html::a(\Yii::$app->user->identity->Company, '/account')?>! <?=Html::a('Выйти', Url::to('/logout'), [
+								'data-method'   =>  'post'
+							])?></span>
+					<?php }	?>
+					</li>
+					<li id="lang">РУС<span class="arrow"></span>
+						<ul>
+							<li><a href="/uk">УКР</a></li>
+						</ul>
+					</li>
 
-				<li id="cart">
-					<?=\common\components\CartWidget::widget(['remodalInstance' => $cartModal])?>
-				</li>
-			</ul>
-		</nav>
+					<li id="cart">
+						<?=\frontend\widgets\CartWidget::widget(['remodalInstance' => $cartModal])?>
+					</li>
+				</ul>-->
+			</div>
+		<?=\frontend\widgets\MainMenuWidget::widget([
+			'items'	=>	$menu
+		])?>
+		</div>
 	</div>
-	<?=\frontend\widgets\MainMenuWidget::widget([
-		'items'	=>	$menu
-	])?>
 	<?=$content?>
 	<!--<footer>
 		<div class="footerCenter">
