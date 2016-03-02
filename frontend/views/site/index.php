@@ -70,17 +70,17 @@ if($questions){
 					<div class="two-items content-items">
 						<div class="goods-item">
 							<div>
+								<span class="icons-fav-bask"></span>
 								<span>СЕРЬГИ</span>
 								<span class="price">17 грн </span>
-								<span class="icons-fav-bask"></span>
 							</div>
 							<div></div>
 						</div>
 						<div class="goods-item">
 							<div>
+								<span class="icons-fav-bask"></span>
 								<span>СЕРЬГИ</span>
 								<span class="price">17 грн </span>
-								<span class="icons-fav-bask"></span>
 							</div>
 							<div></div>
 						</div>
@@ -162,7 +162,60 @@ if($questions){
 		</div>
 	</div>
 	<!--30 px gradiend -->
-	<div class="all-banners">
+
+	<div class="news-and-events-content">
+		<div class="news-and-events">
+			<div class="news-events style">
+				<span class="news-events-header">Новости и акции</span>
+				<div class="news">
+					<span class="news-header">
+						Распродажа зонтов, расчесок и маникюрных наборов Zinger
+					</span>
+					<span>
+						Каждый покупатель акционных ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
+					</span>
+				</div>
+				<div class="news">
+					<span class="news-header">
+						Распродажа зонтов, расчесок и маникюрных наборов Zinger
+					</span>
+					<span>
+						Каждый покупатель акционных ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
+					</span>
+				</div>
+				<div class="news">
+					<span class="news-header">
+						Распродажа зонтов, расчесок и маникюрных наборов Zinger
+					</span>
+					<span>
+						Каждый покупатель акционных ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
+					</span>
+				</div>
+				<span class="all-news-events">Все новости ></span>
+			</div>
+			<div class="subscribe style">
+				<div class="style">
+					<span>Подпишитесь на рассылку, не пропустите скидки</span>
+					<div class="subscribe-email input-style-main">
+						<input type="text" placeholder="Ваш эл. адрес">
+						<?=\yii\helpers\Html::button('Подписаться', [
+							'type'  =>  'submit',
+							'class' =>  'blue-button small-button ',
+							'id'    =>  'submit'
+						])?>
+					</div>
+				</div>
+				<div class="style"></div>
+			</div>
+			<div class="right-block style"></div>
+			<div></div>
+		</div>
+	</div>
+	<div class="about-main-content">
+		safdsdsdfsdf
+	</div>
+
+<!--	<div class="all-banners">
 		<div class="all-banners-center-line"></div>
 		<div class="all-banners-center">
 			<div class="single-banner left-banner">
@@ -201,7 +254,7 @@ if($questions){
 				<li id="disc"><div><span><?=\Yii::t('shop', 'Скидки для оптовиков')?></span></div></li>
 			</ul>
 		</div>
-	</div>
+	</div>-->
 </div>
 <div class="info">
 	<div class="info-center">

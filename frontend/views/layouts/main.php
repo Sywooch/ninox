@@ -124,7 +124,7 @@ $this->registerJs($js);
 			<div class="under-menu">
 				<div class="under-menu-content">
 					<div class="logo"></div>
-					<div class="search">
+					<div class="input-style-main">
 						<label class="icon-search" for=""></label>
 						<input type="text" placeholder="Поиск..."/>
 						<?=\yii\helpers\Html::button('Найти', [

@@ -3041,7 +3041,7 @@ footer{
 	position: relative;
 }
 
-.header .search{
+.header .input-style-main{
 	float: left;
 	padding-left: 50px;
 }
@@ -3061,7 +3061,7 @@ footer{
 	margin-top: 6px;
 }
 
-.header .search input[type='text'] {
+.input-style-main input[type='text'] {
 	background: url("/img/site/search.png") no-repeat 10px 7px;
 	width: 305px;
 	height: 35px;
@@ -3076,17 +3076,17 @@ footer{
 	margin-right: 5px;
 }
 
-.sticky .search input[type='text'] {
+.sticky .input-style-main input[type='text'] {
 	width: 575px;
 	margin-top: 0px;
 }
 
-.search .small-button {
+.input-style-main .small-button {
 	width:90px;
 	height: 35px;
 }
 
-.search .blue-button {
+.input-style-main .blue-button {
 	background: #29a1e0;
 	position: relative;
 	border:none;
@@ -3269,7 +3269,6 @@ footer{
 
 .main-content-items{
 	background: #f3f3f3;
-	height: 1050px;
 }
 
 .main-content .arrow-bottom{
@@ -3281,8 +3280,6 @@ footer{
 	left: 50%;
 	margin: -27px 0 0 -30px;
 }
-
-
 
 .goods-content{
 	width: 1175px;
@@ -3310,7 +3307,7 @@ footer{
 
 .content-items span{
 	display: block;
-	width: 50%;
+	width: ;
 	color: #7d8d95;
 	font-family: OpenSans-Semibold;
 
@@ -3322,17 +3319,18 @@ footer{
 
 .content-items .icons-fav-bask{
 	float: right;
-	position: relative;
-	top: -74px;
-	left: 50px;
+	width: auto;
 }
 
 .content-items .icons-fav-bask:before{
-	padding-top: 0px;
 }
 
 .content-banners .goods-item-style{
 	background: #eaa51e
+}
+
+.content-banners .goods-item{
+	cursor: pointer;
 }
 
 .goods-items .goods-item{
@@ -3371,15 +3369,21 @@ footer{
 
 }
 
-.goods-item .icons-fav-bask:before{
+.icons-fav-bask:before{
 	content: url("/img/site/favor.svg");
+}
+
+.right-item .icons-fav-bask:before{
 	padding-top: 32px;
 	position: absolute;
 	color: #7d8d95;
 }
 
-.goods-item .icons-fav-bask:after{
+.icons-fav-bask:after{
 	content: url("/img/site/basket.svg");
+}
+
+.right-item .icons-fav-bask:after{
 	padding-top: 32px;
 	position: absolute;
 	left: 22px;
@@ -3432,11 +3436,13 @@ footer{
 	background: #eaa51e;
 }
 
+.goods-content-all{
+	height: 365px;
+}
+
 .goods-content-all .goods-item{
 	height: 345px;
-	padding-top: 20px;
-	padding-left: 13px;
-	padding-right: 15px;
+	padding: 20px 15px 20px 13px;
 }
 .goods-content-all .goods-item span{
 	color: #7d8d95;
@@ -3447,7 +3453,7 @@ footer{
 .goods-content-all .goods-item-style{
 	margin-right: 6px;
 	background: #8acc5e;
-
+	cursor: pointer;
 }
 
 .goods-content-all .item-id:before{
@@ -3468,6 +3474,11 @@ footer{
 	text-align: left;
 	word-spacing: 60px;
 	font-size: 24px !important;
+	margin: auto;
+	width: -moz-min-content;
+	top: 35%;
+	position: relative;
+	display: block;
 }
 
 .item-image{
@@ -3496,6 +3507,108 @@ footer{
 	border-radius: 2px;
 	float: right;
 	margin-top: -43px;
+}
+
+.news-and-events{
+	width: 1175px;
+	margin: auto;
+	padding-top: 30px;
+	overflow: auto;
+}
+
+.news-and-events .style{
+	border-radius: 3px;
+	float: left;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 25px;
+}
+
+.news-events{
+	height: 370px;
+	width: 450px;
+	background: #f3f3f3;
+	padding-top: 25px;
+	padding-left: 25px;
+	padding-right: 20px;
+}
+
+.news-events-header{
+	font-size: 22px;
+	font-family: OpenSans-Semibold;
+	color: #717e84;
+}
+
+.news{
+	padding-top: 15px;
+}
+
+.news span{
+	font-size: 13px;
+	color: #4f4f4f;
+	font-family: unset;
+	display: block;
+	line-height: 16px;
+	padding-right: 15px;
+}
+
+.news .news-header{
+	font-size: 14px;
+	color: #1998db;
+	padding-bottom: 5px;
+}
+
+.all-news-events{
+	text-decoration: underline;
+	font-size: 14px;
+	color: #1998db;
+	cursor: pointer;
+	float: right;
+	padding-top: 20px;
+	padding-right: 15px;
+}
+
+.subscribe span{
+	font-size: 14px;
+	color: #7d8d95;
+}
+
+.subscribe .style{
+	float: none;
+	height: 172px;
+	width: 450px;
+	background: #f3f3f3;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding-top: 30px;
+	padding-left: 25px;
+}
+
+.news-and-events  .right-block{
+	width: 215px;
+	height: 370px;
+	background: #f3f3f3;
+}
+
+.subscribe-email input[type='text']{
+	background: #ffffff;
+	height: 30px;
+	width: 255px;
+	font-size: 13px;
+	padding-left: 10px;
+	margin-right: 10px;
+}
+
+.subscribe-email .blue-button{
+	height: 30px;
+	width: 132px;
+	border: none;
+}
+
+.about-main-content{
+	width: 1175px;
+	margin: auto;
+
 }
 
 /*========* END MAIN  *=========*/
