@@ -91,30 +91,14 @@ STYLE;
 $this->registerCss($css);
 $this->registerJs($js);
 
-if(!empty($nowCategory)){
-  $this->params['breadcrumbs'][] = [
-      'label' =>  'Категории',
-      'url'   =>  Url::toRoute(['/goods', 'smartfilter' => \Yii::$app->request->get("smartfilter")])
-  ];
-}else{
-  $this->params['breadcrumbs'][] = $this->title;
-}
-
-foreach($breadcrumbs as $b){
-  $this->params['breadcrumbs'][] = $b;
-}
-
-if(!empty($nowCategory)){
-  $this->params['breadcrumbs'][] = $nowCategory->Name;
-}
 
 $sf = \Yii::$app->request->get("smartfilter");
 
 $items = [];
 ?>
-<h1>Категории<?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small></h1>
+    <h1>Категории<?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small></h1>
     <ul class="nav nav-pills">
-        <?=Html::tag('li',
+        <?=''/*Html::tag('li',
             Html::a('Всего товаров: '.Html::tag('span', ($goodsCount['all']['enabled'] + $goodsCount['all']['disabled']), ['class'=>'label label-info']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => ''])),
             [
                 'role'      =>  'presentation',
@@ -131,7 +115,7 @@ $items = [];
             [
                 'role'      =>  'presentation',
                 'class'     =>  $sf == 'enabled' ? 'active' : ''
-            ])?>
+            ])*/?>
     </ul>
     <br style="margin-bottom: 0;">
     <div class="clearfix"></div>
@@ -200,9 +184,9 @@ $items = [];
     </h1>
     <?php
 }
-foreach($categories as $c){
-    $goodsCount['all']['enabled'] -= isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0;
-    $goodsCount['all']['disabled'] -= isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0;
+foreach($categories->getModels() as $c){
+    //$goodsCount['all']['enabled'] -= isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0;
+    //$goodsCount['all']['disabled'] -= isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0;
 
     $items[] = [
         'content' =>  $this->render('_category_list_item', [
@@ -217,7 +201,7 @@ foreach($categories as $c){
     ];
 };
 
-if(!empty($nowCategory)){
+/*if(!empty($nowCategory)){
     $nowItemText = 'Товары этой категории';
     $nowItemText .= ' (включеных: '.$goodsCount['all']['enabled'];
     $nowItemText .= ' выключеных: '.$goodsCount['all']['disabled'].')';
@@ -231,15 +215,15 @@ if(!empty($nowCategory)){
     ];
 
     array_unshift($items, $nowItem);
-}
+}*/
 
 echo Sortable::widget([
-  'showHandle'  =>  true,
-  'options'   =>  [
-      'id'  =>  'goods-categories'
-  ],
-  'items' =>  $items,
-  'pluginEvents' => [
+    'showHandle'  =>  true,
+    'options'   =>  [
+        'id'  =>  'goods-categories'
+    ],
+    'items' =>  $items,
+    'pluginEvents' => [
         'sortupdate' => 'function() { updSort(); }',
     ]
 ]);

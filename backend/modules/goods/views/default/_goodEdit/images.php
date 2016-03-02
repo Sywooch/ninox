@@ -2,18 +2,55 @@
 use kartik\file\FileInput;
 use yii\helpers\Url;
 
+\kartik\sortable\SortableAsset::register($this);
+
 $css = <<<'CSS'
-.file-preview-image{
-    max-width: 100px;
+.file-preview{
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.file-preview .file-drop-zone{
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.file-preview .file-footer-caption{
+    width: 152px;
+}
+
+.file-preview .file-preview-image{
     max-height: 100px;
 }
+
+.file-preview .file-drop-zone.file-highlighted {
+    border: 0 !important;
+    outline: 2px dashed #999 !important;
+}
+
+.sortable-placeholder{
+    display: table;
+    width: 160px;
+    border-radius: 3px;
+    outline: 1px #ddd dashed;
+    margin-top: 10px;
+    margin-bottom: -10px;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.file-preview .file-preview-thumbnails .file-preview-frame:first-child{
+    outline: 2px solid rgba(117,187,253, 0.5);
+}
+
 CSS;
 
 $this->registerCss($css);
-
-//TODO: нужно поправить здесь так, чтобы картинки ровно показывались
-
-$form = new \yii\bootstrap\ActiveForm();
 
 $photos = $previewPhotos = [];
 
@@ -24,13 +61,14 @@ foreach($good->photos as $photo){
     $photos[] = [
         'caption'   =>  $photo->ico,
         'key'       =>  $photo->id, //TODO: Заменить на другое значение ключа
+        'extra'     =>  [
+            'order' =>  $photo->order
+        ],
         'frameAttr' =>  [
             'style'     =>  'max-height: 80px; max-width: 80px;'
         ]
     ];
 }
-
-\Yii::trace(\yii\helpers\Json::encode($photos));
 
 echo FileInput::widget([
     'name' => 'input-ru[]',
@@ -41,8 +79,28 @@ echo FileInput::widget([
     'pluginOptions' => [
         'initialPreview'        =>  $previewPhotos,
         'initialPreviewConfig'  =>  $photos,
-        'previewFileType'       =>  'any',
+        'uploadExtraData'       =>  [
+            'goodID'            =>  $good->ID
+        ],
+        'showCaption'           =>  false,
+        'showUpload'            =>  false,
+        'showRemove'            =>  false,
+        'showClose'             =>  false,
+        'overwriteInitial'      =>  false,
+        'previewFileType'       =>  'image',
         'deleteUrl'             =>  Url::toRoute(['/goods/photo', 'act' => 'delete']),
         'uploadUrl'             =>  Url::toRoute(['/goods/photo', 'act' => 'upload']),
     ]
 ]);
+
+$js = <<<'JS'
+$(".file-preview-thumbnails").sortable({
+    forcePlaceholderSize: true,
+    items: '.file-preview-frame',
+    placeholderClass: 'imagesPlaceholder',
+    showHandle: true,
+    type: 'grid'
+});
+JS;
+
+$this->registerJs($js);

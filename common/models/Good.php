@@ -135,6 +135,8 @@ class Good extends \yii\db\ActiveRecord
         $this->retail_price = $this->PriceOut2;
         $this->retail_real_price = $this->PriceOut2;
 
+        $this->Description = htmlspecialchars_decode($this->Description);
+
         return parent::afterFind();
     }
 
@@ -142,6 +144,8 @@ class Good extends \yii\db\ActiveRecord
         if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name){
             $this->link = TranslitHelper::to($this->Name);
         }
+
+        $this->Description = htmlspecialchars($this->Description);
 
         return parent::beforeSave($insert);
     }

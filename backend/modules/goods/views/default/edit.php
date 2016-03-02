@@ -29,6 +29,7 @@ $this->registerJs($js);
         <?=\kartik\tabs\TabsX::widget([
             'bordered'  =>  true,
             'id'    =>  'goodEditTabs',
+            'enableStickyTabs'    =>  true,
             'items' =>  [
                 [
                     'label'     =>  'Основное',
