@@ -10,6 +10,7 @@ use common\models\CategoryUk;
 use common\models\GoodSearch;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -138,11 +139,6 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function actionEdit(){
-
-    }
-
-
     public function actionAdd(){
         $c = new Category();
         $cUk = new CategoryUk();
@@ -218,6 +214,49 @@ class DefaultController extends Controller
             'categoryUk'    =>  $cUk
         ]);
     }
+
+
+    public function actionUploadcategoryphoto(){
+        if(\Yii::$app->request->isAjax){
+            \Yii::$app->response->format = 'json';
+            $f = UploadHelper::__upload($_FILES['categoryPhoto']);
+            if($f){
+                $m = Category::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
+                if($m){
+                    $m->cat_img = $f;
+                    if($m->save(false)){ //TODO: потом поровнять так, чтобы было норм, с валидацией, ёпта
+                        return [
+                            'link'  =>  $f
+                        ];
+                    }
+                }
+            }
+            return [
+                'state' =>  0
+            ];
+        }else{
+            return $this->run('site/error');
+        }
+    }
+
+    public function actionUpdateattribute(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        $category = Category::findOne(['id' => \Yii::$app->request->post("categoryID")]);
+
+        if(!$category){
+            throw new NotFoundHttpException("Категория не найден!");
+        }
+
+        $category->$attribute = \Yii::$app->request->post("value");
+
+        $category->save(false);
+    }
+
 
     /**
      * Делает хлебные крошки

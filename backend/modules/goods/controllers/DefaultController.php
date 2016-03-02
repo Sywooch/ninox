@@ -652,28 +652,6 @@ class DefaultController extends Controller
         return $this->run('site/error');
     }
 
-    public function actionUploadcategoryphoto(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = 'json';
-            $f = UploadHelper::__upload($_FILES['categoryPhoto']);
-            if($f){
-                $m = Category::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
-                if($m){
-                    $m->cat_img = $f;
-                    if($m->save(false)){ //TODO: потом поровнять так, чтобы было норм, с валидацией, ёпта
-                        return [
-                            'link'  =>  $f
-                        ];
-                    }
-                }
-            }
-            return [
-                'state' =>  0
-            ];
-        }else{
-            return $this->run('site/error');
-        }
-    }
 
     public function actionUploadgoodphoto(){
         if(\Yii::$app->request->isAjax){
@@ -776,31 +754,6 @@ class DefaultController extends Controller
         return Good::changeState(\Yii::$app->request->post("GoodID"));
     }
 
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionChangecategorystate(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Category::change(\Yii::$app->request->post("category"), 'menu_show');
-    }
-
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionChangecategorycanbuy(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Category::change(\Yii::$app->request->post("category"), 'canBuy');
-    }
 
     /**
      * @return bool|string
@@ -817,37 +770,6 @@ class DefaultController extends Controller
         }
 
         return Good::changeTrashState(\Yii::$app->request->post("GoodID"));
-    }
-
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionWorkwithcategorytrash(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Good::changeTrashState(\Yii::$app->request->post("CategoryID"));
-    }
-
-    public function actionChangecategoryvalue(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        $attribute = \Yii::$app->request->post("attribute");
-
-        $category = Category::findOne(['id' => \Yii::$app->request->post("categoryID")]);
-
-        if(!$category){
-            throw new NotFoundHttpException("Категория не найден!");
-        }
-
-        $category->$attribute = \Yii::$app->request->post("value");
-
-        $category->save(false);
     }
 
     public function actionChangegoodvalue(){
@@ -867,35 +789,4 @@ class DefaultController extends Controller
 
         $good->save(false);
     }
-
-    public function actionUpdatecategorysort(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = "json";
-            $a = \Yii::$app->request->post("data");
-            $b = \Yii::$app->request->post("category");
-            $len = (strlen($b) + 3);
-
-            $a = array_flip($a);
-
-            $c = Category::find()->where(['like', 'Code', $b.'%', false]);
-            $c->andWhere(['LENGTH(`Code`)' => $len]);
-            $c->orderBy('listorder, ID ASC');
-            $c = $c->all();
-            $d = [];
-
-            foreach($c as $cc){
-                $d[] = $cc->listorder;
-            }
-
-            foreach($c as $cc){
-                $cc->listorder = $a[$cc->ID];
-                $cc->save(false);
-            }
-
-            return $d;
-        }else{
-            return $this->run('site/error');
-        }
-    }
-
 }
