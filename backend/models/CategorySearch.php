@@ -41,10 +41,10 @@ class CategorySearch extends Category
 
         switch(\Yii::$app->request->get("smartFilter")){
             case 'enabled':
-                $query->andWhere(['`goods`.`show_img`' => 0]);
+                $query->andWhere(['`goods`.`show_img`' => 1]);
                 break;
             case 'disabled':
-                $query->andWhere(['`goods`.`show_img`' => 1]);
+                $query->andWhere(['`goods`.`show_img`' => 0]);
                 break;
         }
 

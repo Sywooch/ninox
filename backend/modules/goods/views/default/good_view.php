@@ -199,7 +199,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Категория:
                                 </td>
                                 <td>
-                                    <a href="/goods/showcategory/<?=$nowCategory->ID?>"><?=$nowCategory->Name?></a>
+                                    <a href="/categories/view/<?=$nowCategory->ID?>"><?=$nowCategory->Name?></a>
                                 </td>
                             </tr>
                             <tr>

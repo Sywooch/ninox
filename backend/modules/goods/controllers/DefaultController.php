@@ -37,28 +37,12 @@ class DefaultController extends Controller
         $breadcrumbs = $goodsCount = [];
         $enabledGoods = $disabledGoods = 0;
 
-        $query = Category::find()
-            ->select(['SUBSTR(`goodsgroups`.`Code`, \'1\', \'6\') AS `codeAlias`'])
-            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-            ->andWhere('`goodsgroups`.`Code` LIKE \''.$category.'%\'')
-            ->andWhere('(LENGTH(`goodsgroups`.`Code`) > \'3\') AND (`goods`.`show_img` = \'0\')')
-            ->groupBy('codeAlias')
-            ->orderBy('`goodsgroups`.`listorder`')
-            ->addOrderBy('`goodsgroups`.`ID`');
-
-        $query = Category::find()
-            ->select('`a`.*')
-            ->from(['`goodsgroups` `a`', '('.$query->prepare(\Yii::$app->db->queryBuilder)->createCommand()->rawSql.') as `tmp`'])
-            ->where('`a`.`Code` = `tmp`.`codeAlias`');
-
         //Делаем запрос на колл-во товаров
         $tGoodsCount = Category::find()->
             select(['`a`.`Code` as `Code`', 'SUM(`b`.`show_img`) as `enabled`', 'COUNT(`b`.`ID`) as `all`'])->
             from([Category::tableName().' a', Good::tableName().' b'])->
             where('`b`.`GroupID` = `a`.`ID`')
             ->groupBy('`b`.`GroupID`');
-
-
 
         if ($categoryLength != 3) {
             //Добавляем новое условие для запроса на колл-во товаров
@@ -72,7 +56,7 @@ class DefaultController extends Controller
                     if ($parentCategory != '') {
                         $breadcrumbs[] = [
                             'label' => $parentCategory->Name,
-                            'url'   =>  Url::toRoute(['/goods', 'category' => $parentCategory->Code, 'smartfilter' => \Yii::$app->request->get("smartfilter")])
+                            'url'   =>  Url::toRoute(['/categories', 'category' => $parentCategory->Code, 'smartfilter' => \Yii::$app->request->get("smartfilter")])
                         ];
                     }
                 }
@@ -397,81 +381,6 @@ class DefaultController extends Controller
 
     public function actionRating(){
 
-    }
-
-    /**
-     * @return string
-     * метод добавляет категорию на сайт
-     * @deprecated метод actionCategory должен добавлять и редактировать категорию
-     */
-    public function actionAddcategory(){
-        $c = new Category();
-        $cUk = new CategoryUk();
-        $breadcrumbs = [];
-        $ct = \Yii::$app->request->get("category");
-
-        if(!empty($ct)){
-            $cc = Category::findOne(['ID' => $ct]);
-            $c->Code = $cc->Code.'AAA';
-
-            if(!empty($cc)){
-                $b = Category::getParentCategories($cc->Code);
-
-                if(!empty($b)){
-                    foreach($b as $bb){
-                        $breadcrumbs[] = [
-                            'label' =>  $bb->Name,
-                            'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
-                        ];
-                    }
-                }
-
-                $b = Category::findOne(['ID' => $ct]);
-                if(!empty($b)){
-                    $breadcrumbs[] = $b->Name;
-                }
-            }
-        }
-
-        if(\Yii::$app->request->post() && \Yii::$app->request->post("parent_category") != ''){
-            $m = new Category();
-            $mUk = new CategoryUk();
-
-            foreach(\Yii::$app->request->post("Category") as $y=>$yy){
-                if($y == 'keywords'){
-                    $y = 'keyword';
-                    $yy = implode(', ', $yy);
-                }
-                $m->$y = $yy;
-            }
-
-            $m->Code = Category::createCategoryCode(\Yii::$app->request->post("parent_category"));
-
-            foreach(\Yii::$app->request->post("CategoryUk") as $y=>$yy){
-                if($y == 'keywords'){
-                    $y = 'keyword';
-                    $yy = implode(', ', $yy);
-                }
-                $mUk->$y = $yy;
-            }
-
-            if($m->save()){
-                $mUk->ID = $m->ID;
-                $mUk->Code = $m->Code;
-                $mUk->save(false);
-            }else{
-                $c = $m;
-                $mUk->validate();
-                $cUk = $mUk;
-            }
-        }
-
-        return $this->render('editcategory', [
-            'category'      =>  $c,
-            'breadcrumbs'   =>  $breadcrumbs,
-            'parentCategory'=>  $ct == '' ? new Category : Category::findOne(['ID' => $ct]),
-            'categoryUk'    =>  $cUk
-        ]);
     }
 
     public function actionShowcategory($param){
