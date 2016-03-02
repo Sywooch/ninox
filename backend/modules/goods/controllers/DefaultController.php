@@ -23,7 +23,6 @@ use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 use yii\data\ArrayDataProvider;
-use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
@@ -38,30 +37,19 @@ class DefaultController extends Controller
         $breadcrumbs = $goodsCount = [];
         $enabledGoods = $disabledGoods = 0;
 
-        /*
-         *
-         * SELECT
-         *  `a`.*
-         * FROM
-         *  `goodsgroups` `a`,
-         *  (
-         *      SELECT
-         *       SUBSTR(`a`.`Code`, '1', '6') AS `codeAlias` FROM `goodsgroups`
-         *      `a` LEFT JOIN `goods` `b` ON b.GroupID = a.ID
-         *          WHERE (`a`.`Code` LIKE 'AAB%')
-         *          AND ((LENGTH(a.Code) > 3) AND (`b`.`show_img`=0))
-         *          GROUP BY `codeAlias` ORDER BY `a`.`listorder`, `a`.`ID`) AS `tmp` WHERE `a`.`Code` = `tmp`.`codeAlias`;
-         *
-         *
-         */
+        $query = Category::find()
+            ->select(['SUBSTR(`goodsgroups`.`Code`, \'1\', \'6\') AS `codeAlias`'])
+            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+            ->andWhere('`goodsgroups`.`Code` LIKE \''.$category.'%\'')
+            ->andWhere('(LENGTH(`goodsgroups`.`Code`) > \'3\') AND (`goods`.`show_img` = \'0\')')
+            ->groupBy('codeAlias')
+            ->orderBy('`goodsgroups`.`listorder`')
+            ->addOrderBy('`goodsgroups`.`ID`');
 
         $query = Category::find()
-            ->select("SUBSTR(`goodsgroups`.`Code`, '1', '6') AS `codeAlias`")
-            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-            ->where('`goodsgroups`.`Code` LIKE \''.$category.'\'')
-            ->andWhere('(LENGTH(`goodsgroups`.`Code`) > \'3) AND (`goods`.`show_img` = \'0\')');
-
-        $query = Category::find()->from('`goodsgroups` `a`');
+            ->select('`a`.*')
+            ->from(['`goodsgroups` `a`', '('.$query->prepare(\Yii::$app->db->queryBuilder)->createCommand()->rawSql.') as `tmp`'])
+            ->where('`a`.`Code` = `tmp`.`codeAlias`');
 
         //Делаем запрос на колл-во товаров
         $tGoodsCount = Category::find()->
@@ -156,8 +144,14 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * Импорт прайслистов
+     *
+     * @return array|bool|string
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionImport(){
-        $pricelist = PriceListImport::findOne(\Yii::$app->request->get("fileid"));
+        $priceList = PriceListImport::findOne(\Yii::$app->request->get("fileid"));
 
         if(\Yii::$app->request->isAjax){
             switch(\Yii::$app->request->post("action")){
@@ -174,16 +168,16 @@ class DefaultController extends Controller
             }
         }
 
-        if($pricelist){
+        if($priceList){
             $data = $importInfo = [];
 
-            $xls = \PHPExcel_IOFactory::load(\Yii::getAlias('@webroot').'/files/importedPrices/'.$pricelist->file);
+            $xls = \PHPExcel_IOFactory::load(\Yii::getAlias('@webroot').'/files/importedPrices/'.$priceList->file);
 
             $models = $xls->getActiveSheet()->toArray();
 
             $dataProvider = new ArrayDataProvider();
 
-            if(isset($pricelist->configuration['withHeaders'])){
+            if(isset($priceList->configuration['withHeaders'])){
                 $header = $models[0];
                 unset($models[0]);
             }
@@ -263,16 +257,16 @@ class DefaultController extends Controller
                     'totalCount'=>  sizeof($models)
                 ];
 
-                $pricelist->imported = 1;
-                $pricelist->importedDate = date('Y-m-d H:i:s');
+                $priceList->imported = 1;
+                $priceList->importedDate = date('Y-m-d H:i:s');
 
-                $pricelist->save(false);
+                $priceList->save(false);
             }
 
             return $this->render('import_table', [
                 'data'          =>  $data,
                 'columns'       =>  $xls->getActiveSheet()->getHighestColumn(),
-                'filename'      =>  $pricelist->name,
+                'filename'      =>  $priceList->name,
                 'dataProvider'  =>  $dataProvider,
                 'importInfo'    =>  $importInfo
             ]);
@@ -287,15 +281,15 @@ class DefaultController extends Controller
                 'fullReturn'=>  true
             ]);
 
-            $pricelist = new PriceListImport([
+            $priceList = new PriceListImport([
                 'file'  =>  $file['filename'],
                 'format'=>  $file['mime'],
                 'name'  =>  $file['original_filename']
             ]);
 
-            if($pricelist->save()){
+            if($priceList->save()){
                 return [
-                    'id'    =>  $pricelist->id,
+                    'id'    =>  $priceList->id,
                     'name'  =>  $file['original_filename']
                 ];
             }
@@ -368,7 +362,7 @@ class DefaultController extends Controller
 
             $breadcrumbs[] = [
                 'label' =>  'Категории',
-                'url'   =>  Url::toRoute(['/goods'])
+                'url'   =>  Url::toRoute(['/categories'])
             ];
 
             if (sizeof($p) >= 1) {
@@ -378,7 +372,7 @@ class DefaultController extends Controller
                     if ($c != '') {
                         $breadcrumbs[] = [
                             'label' => $c->Name,
-                            'url' => Url::toRoute(['/goods', 'category' => $c->Code])
+                            'url' => Url::toRoute(['/categories', 'category' => $c->Code])
                         ];
                     }
                 }
@@ -586,39 +580,6 @@ class DefaultController extends Controller
                 $goodMainForm->save();
             }
 
-
-            /*$post = \Yii::$app->request->post();
-
-            if(\Yii::$app->request->isAjax && isset($post['validate']) && $post['validate']){
-                $good = new Good;
-                $good->load($post['Good']);
-                \Yii::$app->response->format = Response::FORMAT_JSON;
-                return ActiveForm::validate($good);
-            }
-
-            if(!empty($post)){
-                if(empty($goodUK)){
-                    $goodUK = new GoodUk;
-                    $goodUK->ID = $param;
-                }
-
-                $goodUK->Name = $post['GoodUk']['Name'];
-                $goodUK->Name2 = $post['GoodUk']['Name'];
-                $goodUK->Description = $post['GoodUk']['Description'];
-
-                $goodUK->save(false);
-
-                $good->attributes = $post['Good'];
-
-                if($good->save(false)){
-
-                    //Модель успешно сохранена
-                }else{
-                    //Произошла ошибка валидации
-                }
-                //TODO: добавить сообщение об успешном обновлении инфо о товаре, или о ошибке
-            }*/
-
             return $this->render('edit', [
                 'good'              =>  $good,
                 //'goodUk'          =>  $goodUK,
@@ -636,19 +597,13 @@ class DefaultController extends Controller
             ]);
         }
 
-        return $this->render('edit', [
-            'good'              =>  $good,
-            //'goodUk'          =>  $goodUK,
-            'goodMainForm'      =>  $goodMainForm,
-            'goodAttributesForm'=>  $goodAttributesForm,
-            'goodExportForm'    =>  $goodExportForm,
-            'nowCategory'       =>  $category,
-            'uploadPhoto'       =>  new UploadPhoto(),
-            'additionalPhotos'  =>  new ActiveDataProvider([
-                'query' =>  GoodsPhoto::find()->where(['ItemId' => $good->ID]),
-                'pagination'    =>  [
-                    'pageSize'  =>  0
-                ]
+        return $this->render('good_view', [
+            'good'       => $good,
+            'goodUk'     => new GoodUk(),
+            'nowCategory' => $good->category,
+            'uploadPhoto'  =>  new UploadPhoto(),
+            'additionalPhotos'  =>  new ArrayDataProvider([
+                'models'    =>  $good->photos
             ])
         ]);
     }
@@ -733,7 +688,7 @@ class DefaultController extends Controller
 
         $gp = GoodsPhoto::find()->where(['ItemId' => $good->ID]);
 
-        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editgood' : 'showgood', [
+        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editgood' : 'good_view', [
             'breadcrumbs' => $breadcrumbs,
             'good'       => $good,
             'goodUk'     => $goodUK,

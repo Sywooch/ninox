@@ -14,6 +14,7 @@ return [
     'users'         =>  'backend\modules\users\Module',
     'store'         =>  'backend\modules\store\Module',
     'printer'       =>  'backend\modules\printer\Module',
+    'categories'    =>  'backend\modules\categories\Module',
     'cashboxes'     =>  'backend\modules\cashboxes\Module',
     'pricelists' => [
         'class' => 'backend\modules\pricelists\Module',

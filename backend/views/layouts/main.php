@@ -345,7 +345,7 @@ $this->beginPage() ?>
             ],
             [
                 'label'     => FA::icon('list-alt')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Товары</span>',
-                'url'       => Url::toRoute('/goods/index'),
+                'url'       => Url::toRoute('/categories'),
                 'options'   =>  [
                     'class' =>  'bordered'
                 ]

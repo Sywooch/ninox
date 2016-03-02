@@ -9,6 +9,8 @@
 namespace backend\models;
 
 
+use common\models\Category;
+
 class Good extends \common\models\Good{
 
     public static function changeTrashState($id){
@@ -22,6 +24,10 @@ class Good extends \common\models\Good{
         }
 
         return false;
+    }
+
+    public function getCategory(){
+        return Category::findOne($this->GroupID);
     }
 
 }
