@@ -7,7 +7,6 @@ use backend\models\Category;
 use backend\models\Good;
 use backend\models\CategorySearch;
 use common\models\CategoryUk;
-use common\models\GoodSearch;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;

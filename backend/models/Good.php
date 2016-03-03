@@ -26,6 +26,10 @@ class Good extends \common\models\Good{
         return false;
     }
 
+    public function getPhotos(){
+        return GoodPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+    }
+
     public function getCategory(){
         return Category::findOne($this->GroupID);
     }

@@ -3,28 +3,47 @@ use kartik\dropdown\DropdownX;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
-$sf = \Yii::$app->request->get("smartFilter");
 ?>
-<ul class="nav nav-pills">
-    <?=Html::tag('li',
-            Html::a('Всего товаров: '.Html::tag('span', ($goodsCount['all']['enabled'] + $goodsCount['all']['disabled']), ['class'=>'label label-info']), Url::toRoute(['/categories', 'category' => $nowCategory->Code, 'smartFilter' => ''])),
-            [
-                'role'      =>  'presentation',
-                'class'     =>  $sf == '' ? 'active' : ''
-            ])?>
-        <?=Html::tag('li',
-            Html::a('Выключено: '.Html::tag('span', ($goodsCount['all']['disabled']), ['class'=>'label label-danger']), Url::toRoute(['/categories', 'category' => $nowCategory->Code, 'smartFilter' => 'disabled'])),
-            [
-                'role'      =>  'presentation',
-                'class'     =>  $sf == 'disabled' ? 'active' : ''
-            ])?>
-        <?=Html::tag('li',
-            Html::a('Включено: '.Html::tag('span', ($goodsCount['all']['enabled']), ['class'=>'label label-success']), Url::toRoute(['/categories', 'category' => $nowCategory->Code, 'smartFilter' => 'enabled'])),
-            [
-                'role'      =>  'presentation',
-                'class'     =>  $sf == 'enabled' ? 'active' : ''
-            ])?>
-</ul>
+<?=\backend\widgets\SmartFiltersWidget::widget([
+    'items' =>  [
+        [
+            'label'         =>  'Всего товаров: ',
+            'counterValue'  =>  $goodsCount['all']['enabled'] + $goodsCount['all']['disabled'],
+            'labelClass'    =>  'label-info',
+            'filter'        =>  ''
+        ],
+        [
+            'label'         =>  'Отключеных: ',
+            'counterValue'  =>  $goodsCount['all']['disabled'],
+            'labelClass'    =>  'label-danger',
+            'filter'        =>  'disabled'
+        ],
+        [
+            'label'         =>  'Включеных: ',
+            'counterValue'  =>  $goodsCount['all']['enabled'],
+            'labelClass'    =>  'label-success',
+            'filter'        =>  'enabled'
+        ],
+        [
+            'label'         =>  'Другие',
+            'labelClass'    =>  'label-success',
+            'items'         =>  [
+                [
+                    'label'         =>  'Без фотографий',
+                    'filter'        =>  'withoutPhoto'
+                ],
+                [
+                    'label'         =>  'Без аттрибутов',
+                    'filter'        =>  'withoutAttributes'
+                ],
+                [
+                    'label'         =>  'На распродаже',
+                    'filter'        =>  'onSale'
+                ],
+            ]
+        ],
+    ]
+])?>
 <br style="margin-bottom: 0;">
 <div class="clearfix"></div>
 <div class="dropdown categoryActions">

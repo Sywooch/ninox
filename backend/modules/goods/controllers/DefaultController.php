@@ -2,6 +2,7 @@
 
 namespace backend\modules\goods\controllers;
 
+use backend\models\GoodPhoto;
 use backend\modules\goods\models\GoodAttributesForm;
 use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
@@ -12,7 +13,6 @@ use common\models\CategorySearch;
 use common\models\CategoryUk;
 use backend\models\Good;
 use common\models\GoodSearch;
-use common\models\GoodsPhoto;
 use common\models\GoodUk;
 use backend\models\History;
 use backend\models\SborkaItem;
@@ -24,6 +24,7 @@ use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -435,6 +436,62 @@ class DefaultController extends Controller
     }
 
     public function actionPhoto(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
+
+        $result = null;
+
+        $good = Good::findOne(\Yii::$app->request->post("key"));
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        switch(\Yii::$app->request->get('act')){
+            case 'upload':
+                $result = $this->addPhoto($_FILES['goodPhoto'], $good);
+                break;
+            case 'delete':
+                $item = GoodPhoto::findOne(['itemID' => $good->ID, 'order' => \Yii::$app->request->post("order")]);
+
+                if(!$item){
+                    throw new NotFoundHttpException("Такой фотографии нет!");
+                }
+
+                return $item->delete();
+                break;
+            case 'reorder':
+                $result =  $this->reorderPhotos(\Yii::$app->request->post("items"), $good);
+                break;
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        return $result;
+    }
+
+    public function addPhoto($file, $good){
+
+
+        $file = UploadHelper::__upload($file);
+    }
+
+    public function reorderPhotos($data, $good){
+        $photos = [];
+
+        foreach($good->photos as $photo){
+            $photos[$photo->order] = $photo;
+        }
+
+        foreach($data as $newPosition => $oldPosition){
+            $newPosition++;
+
+            $photos[$oldPosition]->order = $newPosition;
+
+            $photos[$oldPosition]->save(false);
+        }
+
         return true;
     }
 
@@ -498,7 +555,7 @@ class DefaultController extends Controller
                 'nowCategory'       =>  $category,
                 'uploadPhoto'       =>  new UploadPhoto(),
                 'additionalPhotos'  =>  new ActiveDataProvider([
-                    'query' =>  GoodsPhoto::find()->where(['ItemId' => $good->ID]),
+                    'query' =>  GoodPhoto::find()->where(['ItemId' => $good->ID]),
                     'pagination'    =>  [
                         'pageSize'  =>  0
                     ]
@@ -506,7 +563,7 @@ class DefaultController extends Controller
             ]);
         }
 
-        return $this->render('good_view', [
+        return $this->render('view', [
             'good'       => $good,
             'goodUk'     => new GoodUk(),
             'nowCategory' => $good->category,
@@ -595,9 +652,9 @@ class DefaultController extends Controller
             }
         }
 
-        $gp = GoodsPhoto::find()->where(['ItemId' => $good->ID]);
+        $gp = GoodPhoto::find()->where(['ItemId' => $good->ID]);
 
-        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editgood' : 'good_view', [
+        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editgood' : 'view', [
             'breadcrumbs' => $breadcrumbs,
             'good'       => $good,
             'goodUk'     => $goodUK,
@@ -615,14 +672,14 @@ class DefaultController extends Controller
     public function actionUploadadditionalphoto(){
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
-            if(isset($_FILES['GoodsPhoto'])){
+            if(isset($_FILES['GoodPhoto'])){
                 $m = Good::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
 
-                $f = UploadHelper::__upload($_FILES['GoodsPhoto'], [
+                $f = UploadHelper::__upload($_FILES['GoodPhoto'], [
                     'filename'  =>  $m ? TranslitHelper::to($m->Name).'-'.rand(0, 1000000) : ''
                 ]);
                 if(!empty($f)) {
-                    $m = new GoodsPhoto();
+                    $m = new GoodPhoto();
                     $m->ico = $f;
                     $m->itemid = \Yii::$app->request->post("ItemId");
                     if($m->save()){
@@ -642,7 +699,7 @@ class DefaultController extends Controller
     public function actionRemoveadditionalphoto(){
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
-            $m = GoodsPhoto::findOne([
+            $m = GoodPhoto::findOne([
                 'ID'    =>  \Yii::$app->request->post("additionalPhotoID")
             ]);
 
@@ -659,7 +716,7 @@ class DefaultController extends Controller
             $m = Good::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
 
             if($m){
-                $f = UploadHelper::__upload($_FILES['GoodsPhoto'], [
+                $f = UploadHelper::__upload($_FILES['GoodPhoto'], [
                     'filename'  =>  TranslitHelper::to($m->Name).'-'.rand(0, 1000000)
                 ]);
                 if($f){

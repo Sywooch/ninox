@@ -21,7 +21,7 @@ $this->registerJs($js);
 <div class="row">
     <div class="col-xs-4">
         <div class="well well-sm">
-            <img src="http://krasota-style.com.ua/img/catalog/<?=$good->ico?>" alt="<?=$good->Name?>" class="col-xs-12">
+            <img src="http://krasota-style.com.ua/img/catalog/<?=$good->ico?>" id="goodMainPhoto" alt="<?=$good->Name?>" class="col-xs-12">
             <div class="clearfix"></div>
         </div>
     </div>
