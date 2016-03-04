@@ -104,7 +104,7 @@ foreach($good->dopPhoto as $photo){
         }})(window,document);
 </script>
 <div class="catalog">
-    <div class="under-menu">
+    <div class="catalog-menu">
         <?=\yii\widgets\Breadcrumbs::widget([
             'activeItemTemplate'    =>  '<span class="item-name" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
             'itemTemplate'          =>  '
@@ -639,4 +639,5 @@ foreach($good->dopPhoto as $photo){
         </div>-->
     </div>
 </div>
+    </div>
 

@@ -211,8 +211,9 @@ if($questions){
 			<div></div>
 		</div>
 	</div>
-	<div class="about-main-content">
-		safdsdsdfsdf
+	<div class="about-main">
+		<div class="about-main-title">afasfsfasfsf</div>
+		<div class="about-main-content"></div>
 	</div>
 
 <!--	<div class="all-banners">
@@ -256,7 +257,7 @@ if($questions){
 		</div>
 	</div>-->
 </div>
-<div class="info">
+<!--<div class="info">
 	<div class="info-center">
 		<?=!empty($mainGalleryHtml) ? Slick::widget([
 			'items' =>  $mainGalleryHtml,
@@ -271,4 +272,4 @@ if($questions){
 			],
 		]) : ''?>
 	</div>
-</div>
+</div>-->

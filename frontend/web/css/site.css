@@ -677,7 +677,7 @@ h2{
 }
 
 .info .slick-slide{
-	height: auto;
+	height: ;
 }
 
 .info .slick-dots{
@@ -3425,15 +3425,23 @@ footer{
 }
 
 .icon-best:before{
-	background: url("/img/site/best.svg");
+	content: url("/img/site/icon-best.svg");
 }
 
 .icon-news{
 	background: #45b1ea;
 }
 
+.icon-news:before{
+	content: url("/img/site/icon-news.svg");
+}
+
 .icon-sale{
 	background: #eaa51e;
+}
+
+.icon-sale{
+	content: url("/img/site/icon-sale.svg");
 }
 
 .goods-content-all{
@@ -3507,6 +3515,14 @@ footer{
 	border-radius: 2px;
 	float: right;
 	margin-top: -43px;
+	cursor: pointer;
+}
+
+.goods-basket:before{
+	content: url("/img/site/basket.svg");
+	display: block;
+	text-align: center;
+	margin-top: 12px;
 }
 
 .news-and-events{
@@ -3564,8 +3580,8 @@ footer{
 	color: #1998db;
 	cursor: pointer;
 	float: right;
-	padding-top: 20px;
-	padding-right: 15px;
+	margin-top: 20px;
+	margin-right: 15px;
 }
 
 .subscribe span{
@@ -3605,10 +3621,11 @@ footer{
 	border: none;
 }
 
-.about-main-content{
+.about-main{
 	width: 1175px;
 	margin: auto;
-
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 /*========* END MAIN  *=========*/
@@ -3638,7 +3655,8 @@ footer{
 }
 
 .blue-line .footer-content{
-	padding-top: 30px;
+	padding-top: 27px;
+	padding-bottom: 27px;
 }
 
 .blue-line .footer-content:before{
@@ -3703,6 +3721,9 @@ footer{
 	display: block;
 	padding-bottom: 5px;
 	font-size: 14px;
+	width: -moz-max-content;
+	width: -webkit-max-content;
+	width: max-content;
 }
 
 .underline .feedback-link .link-hide{

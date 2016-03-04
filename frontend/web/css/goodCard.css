@@ -74,18 +74,18 @@
     margin: auto;
 }
 
-.under-menu .breadcrumb{
+.catalog-menu .breadcrumb{
     background: none;
     padding: 25px 0px 0px;
 }
 
-.under-menu .breadcrumb span a{
+.catalog-menu .breadcrumb span a{
     text-decoration: underline;
     padding-right: 5px;
     padding-left: 5px;
 }
 
-.under-menu .fa{
+.catalog-menu .fa{
     font-size: 10px ;
 }
 
@@ -97,6 +97,10 @@
     width: 45%;
     float: left;
     padding-right: 40px;
+}
+
+.itemPhotos .slick-slide{
+    height: auto;
 }
 
 .about-order{
@@ -557,6 +561,10 @@
     padding-right: 4px;
 }
 
+.about-item .tab-content{
+    overflow: auto;
+}
+
 .about-item .nav-tabs{
     border-bottom: 3px solid;
     border-color: #bcbcbc;
@@ -739,6 +747,7 @@
     margin-top: 10px;
     background: rgba(100, 136, 150, 0.1) none repeat scroll 0% 0%;
     padding: 10px 15px;
+    overflow: auto;
 }
 
 .add-review-info span{
