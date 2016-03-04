@@ -68,7 +68,7 @@ class Category extends \yii\db\ActiveRecord
         $q = $q->select('COUNT(*)')
             ->from([Category::tableName().' a', Good::tableName().' b'])
             ->andWhere('a.ID = b.GroupID')
-            ->andWhere('b.show_img = 1 AND b.ico != \'\' AND b.deleted = 0 AND (b.PriceOut1 != 0 AND b.PriceOut2 != 0)');
+            ->andWhere('b.show_img = 1 AND b.deleted = 0 AND (b.PriceOut1 != 0 AND b.PriceOut2 != 0)');
 
         if($withSubcategories){
             $q->andWhere(['like', 'a.Code', $this->Code.'%', false]);

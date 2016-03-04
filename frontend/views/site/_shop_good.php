@@ -208,7 +208,7 @@ $discountBlock = function($model){
             <div>
             <?=\Yii::t('shop', 'Цена за единицу')?>:
                 <span class="inner-span semi-bold">
-                <?=$model->priceForOneItem.' '.\Yii::$app->params['domainInfo']['currencyShortName'].' ('.$model->num_opt.' '.$model->Measure1.'/'.\Yii::t('shop', 'уп').')'?>
+                <?=$model->priceForOneItem.' '.\Yii::$app->params['domainInfo']['currencyShortName'].' ('.$model->num_opt.' '.$model->measure.'/'.\Yii::t('shop', 'уп').')'?>
                 </span>
             </div>
                 <?php } ?>
