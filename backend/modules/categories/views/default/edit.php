@@ -5,22 +5,7 @@ use kartik\select2\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = $category->Name == "" ? "Новая категория" : "Категория \"".$category->Name.'"';
-$this->params['breadcrumbs'][] = [
-    'label' =>  "Категории",
-    'url'   =>  '/goods'
-];
-
-if(!empty($breadcrumbs)){
-    foreach($breadcrumbs as $bb){
-        $this->params['breadcrumbs'][] = $bb;
-    }
-}
-
-if(isset($category->Name)) {
-    $this->params['breadcrumbs'][] = $category->Name;
-}
-
+$this->title = $category->isNewRecord == "" ? "Новая категория" : "Категория \"".$category->Name.'"';
 
 $css = <<<'STYLE'
 .tab-content .good-table tr:first-child td{
@@ -65,7 +50,7 @@ $form = ActiveForm::begin([
     ]
 ]);
 ?>
-<h1><?=$category->Name != '' ? $category->Name : 'Новая категория'?>&nbsp;<small>Категория</small></h1>
+<h1><?=!$category->isNewRecord ? $category->Name : 'Новая категория'?>&nbsp;<small>Категория</small></h1>
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="btn-group pull-left">
@@ -131,14 +116,14 @@ $form = ActiveForm::begin([
                         'items' => [
                             [
                                 'label' =>  'Русский язык',
-                                'content'   =>  $this->render('_editcategory_catinfo', [
+                                'content'   =>  $this->render('_edit_catinfo', [
                                     'category'  =>  $category,
                                     'form'      =>  $form
                                 ])
                             ],
                             [
                                 'label' =>  'Українська мова',
-                                'content'   =>  $this->render('_editcategory_catinfo', [
+                                'content'   =>  $this->render('_edit_catinfo', [
                                     'category'  =>  $categoryUk,
                                     'form'      =>  $form
                                 ])

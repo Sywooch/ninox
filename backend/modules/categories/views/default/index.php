@@ -4,13 +4,17 @@ use kartik\dropdown\DropdownX;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+/**
+ * @param $nowCategory \backend\models\Category
+ */
+
 $this->title = "Категории";
 
-if(!empty($nowCategory)){
-    $this->title = 'Товары категории "'.$nowCategory->Name.'"';
+if(!$nowCategory->isNewRecord){
+    $this->title = 'Дочерние категории раздела "'.$nowCategory->Name.'"';
 }
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -29,7 +33,7 @@ function updSort(){
 
     $.ajax({
 		type: 'POST',
-		url: '/goods/updatecategorysort',
+		url: '/categories/updateorder',
 		data: {
 		    'data': b,
 		    'category': getParameterByName('category')
@@ -40,7 +44,7 @@ function updSort(){
 function changeCategoryState(e){
     $.ajax({
 		type: 'POST',
-		url: '/goods/changecategorystate',
+		url: '/categories/changecategorystate',
 		data: {
 		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
 		},
@@ -76,7 +80,7 @@ $(".categoryActions .shutdown").on('click', function(e){
 $(".categoryActions .canBuy").on('click', function(e){
     changeCategoryCanBuy(e);
 });
-SCRIPT;
+JS;
 
 $css = <<<'STYLE'
 .dropdown li{
@@ -91,117 +95,37 @@ STYLE;
 $this->registerCss($css);
 $this->registerJs($js);
 
-
-$sf = \Yii::$app->request->get("smartfilter");
-
 $items = [];
-?>
-    <h1>Категории<?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small></h1>
-    <ul class="nav nav-pills">
-        <?=''/*Html::tag('li',
-            Html::a('Всего товаров: '.Html::tag('span', ($goodsCount['all']['enabled'] + $goodsCount['all']['disabled']), ['class'=>'label label-info']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => ''])),
-            [
-                'role'      =>  'presentation',
-                'class'     =>  $sf == '' ? 'active' : ''
-            ])?>
-        <?=Html::tag('li',
-            Html::a('Выключено: '.Html::tag('span', ($goodsCount['all']['disabled']), ['class'=>'label label-danger']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => 'disabled'])),
-            [
-                'role'      =>  'presentation',
-                'class'     =>  $sf == 'disabled' ? 'active' : ''
-            ])?>
-        <?=Html::tag('li',
-            Html::a('Включено: '.Html::tag('span', ($goodsCount['all']['enabled']), ['class'=>'label label-success']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => 'enabled'])),
-            [
-                'role'      =>  'presentation',
-                'class'     =>  $sf == 'enabled' ? 'active' : ''
-            ])*/?>
-    </ul>
-    <br style="margin-bottom: 0;">
-    <div class="clearfix"></div>
-    <div class="dropdown categoryActions">
-        <div class="btn-group" role="group" aria-label="Действия">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
-                Действия с категорией <span class="caret"></span>
-            </button>
-            <?=DropdownX::widget([
-                'items' =>  [
-                    [
-                        'label'     =>  'Просмотреть',
-                        'url'       =>  Url::toRoute('showcategory/'.$nowCategory->ID)
-                    ],
-                    [
-                        'label'     =>  'Просмотреть на сайте',
-                        'url'       =>  'https://krasota-style.com.ua/'.$nowCategory->link
-                    ],
-                    [
-                        'label'     =>  'Редактировать',
-                        'url'       =>  Url::toRoute(['showcategory/'.$nowCategory->ID, 'act' => 'edit'])
-                    ],
-                    [
-                        'label'     =>  'Добавить',
-                        'items'     =>  [
-                            [
-                                'label'     =>  'Товар',
-                                'url'       =>  Url::toRoute(['addgood', 'category' => $nowCategory->ID])
-                            ],
-                            [
-                                'label'     =>  'Несколько товаров',
-                                'url'       =>  Url::toRoute(['addgood', 'category' => $nowCategory->ID, 'mode' => 'lot'])
-                            ],
-                            '<li class="divider"></li>',
-                            [
-                                'label'     =>  'Категорию',
-                                'url'       =>  Url::to(['addcategory', 'category' => $nowCategory->ID])
-                            ],
-                        ]
-                    ],
-                    '<li class="divider"></li>',
-                    [
-                        'label' =>  $nowCategory->menu_show == "1" ? "Выключить" : "Включить",
-                        'options'   =>  [
-                            'class' =>  'shutdown',
-                            'data-attribute-categoryID' =>  $nowCategory->ID
-                        ],
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  $nowCategory->canBuy == "1" ? "Не продавать" : "Продавать",
-                        'options'   =>  [
-                            'class' =>  'canBuy',
-                            'data-attribute-categoryID' =>  $nowCategory->ID
-                        ],
-                        'url'   =>  '#'
-                    ]
 
-                ]
-            ])?>
-        </div>
-    </div>
-    <br>
-<?php }else{
-    ?>
-    </h1>
-    <?php
+
+echo Html::tag('h1', 'Категории '.(!$nowCategory->isNewRecord ? Html::tag('small', $nowCategory->Name) : ''));
+
+if(!$nowCategory->isNewRecord){
+    echo $this->render('_category_actions', [
+        'nowCategory'   =>  $nowCategory,
+        'goodsCount'    =>  $goodsCount
+    ]);
 }
-foreach($categories->getModels() as $c){
-    //$goodsCount['all']['enabled'] -= isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0;
-    //$goodsCount['all']['disabled'] -= isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0;
+
+
+foreach($categories->getModels() as $child){
+    $goodsCount['all']['enabled'] -= isset($goodsCount[$child->Code]['enabled']) ? $goodsCount[$child->Code]['enabled'] : 0;
+    $goodsCount['all']['disabled'] -= isset($goodsCount[$child->Code]['disabled']) ? $goodsCount[$child->Code]['disabled'] : 0;
 
     $items[] = [
         'content' =>  $this->render('_category_list_item', [
-            'category'  =>  $c,
-            'enabled'   =>  isset($goodsCount[$c->Code]['enabled']) ? $goodsCount[$c->Code]['enabled'] : 0,
-            'disabled'  =>  isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0
+            'category'  =>  $child,
+            'enabled'   =>  isset($goodsCount[$child->Code]['enabled']) ? $goodsCount[$child->Code]['enabled'] : 0,
+            'disabled'  =>  isset($goodsCount[$child->Code]['disabled']) ? $goodsCount[$child->Code]['disabled'] : 0
         ]),
         'options' =>  [
-            'class' =>  "category ".($c->menu_show == "1" ? "bg-success" : "bg-danger"),
-            'data-category-id'    =>  $c->ID
+            'class' =>  "category ".($child->menu_show == "1" ? "bg-success" : "bg-danger"),
+            'data-category-id'    =>  $child->ID
         ]
     ];
 };
 
-/*if(!empty($nowCategory)){
+if(!$nowCategory->isNewRecord){
     $nowItemText = 'Товары этой категории';
     $nowItemText .= ' (включеных: '.$goodsCount['all']['enabled'];
     $nowItemText .= ' выключеных: '.$goodsCount['all']['disabled'].')';
@@ -215,7 +139,7 @@ foreach($categories->getModels() as $c){
     ];
 
     array_unshift($items, $nowItem);
-}*/
+}
 
 echo Sortable::widget([
     'showHandle'  =>  true,

@@ -323,6 +323,8 @@ class Category extends \yii\db\ActiveRecord
 
     public function afterFind(){
         $this->link = urldecode($this->link);
+
+        return parent::afterFind();
     }
 
 	public static function getMenu(){

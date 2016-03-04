@@ -2,6 +2,7 @@
 
 namespace backend\modules\goods\controllers;
 
+use backend\models\GoodPhoto;
 use backend\modules\goods\models\GoodAttributesForm;
 use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
@@ -12,7 +13,6 @@ use common\models\CategorySearch;
 use common\models\CategoryUk;
 use backend\models\Good;
 use common\models\GoodSearch;
-use common\models\GoodsPhoto;
 use common\models\GoodUk;
 use backend\models\History;
 use backend\models\SborkaItem;
@@ -24,6 +24,7 @@ use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -37,28 +38,12 @@ class DefaultController extends Controller
         $breadcrumbs = $goodsCount = [];
         $enabledGoods = $disabledGoods = 0;
 
-        $query = Category::find()
-            ->select(['SUBSTR(`goodsgroups`.`Code`, \'1\', \'6\') AS `codeAlias`'])
-            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-            ->andWhere('`goodsgroups`.`Code` LIKE \''.$category.'%\'')
-            ->andWhere('(LENGTH(`goodsgroups`.`Code`) > \'3\') AND (`goods`.`show_img` = \'0\')')
-            ->groupBy('codeAlias')
-            ->orderBy('`goodsgroups`.`listorder`')
-            ->addOrderBy('`goodsgroups`.`ID`');
-
-        $query = Category::find()
-            ->select('`a`.*')
-            ->from(['`goodsgroups` `a`', '('.$query->prepare(\Yii::$app->db->queryBuilder)->createCommand()->rawSql.') as `tmp`'])
-            ->where('`a`.`Code` = `tmp`.`codeAlias`');
-
         //Делаем запрос на колл-во товаров
         $tGoodsCount = Category::find()->
             select(['`a`.`Code` as `Code`', 'SUM(`b`.`show_img`) as `enabled`', 'COUNT(`b`.`ID`) as `all`'])->
             from([Category::tableName().' a', Good::tableName().' b'])->
             where('`b`.`GroupID` = `a`.`ID`')
             ->groupBy('`b`.`GroupID`');
-
-
 
         if ($categoryLength != 3) {
             //Добавляем новое условие для запроса на колл-во товаров
@@ -72,7 +57,7 @@ class DefaultController extends Controller
                     if ($parentCategory != '') {
                         $breadcrumbs[] = [
                             'label' => $parentCategory->Name,
-                            'url'   =>  Url::toRoute(['/goods', 'category' => $parentCategory->Code, 'smartfilter' => \Yii::$app->request->get("smartfilter")])
+                            'url'   =>  Url::toRoute(['/categories', 'category' => $parentCategory->Code, 'smartfilter' => \Yii::$app->request->get("smartfilter")])
                         ];
                     }
                 }
@@ -324,11 +309,53 @@ class DefaultController extends Controller
     }
 
     public function actionSearchgoods(){
+        return $this->actionSearch();
+    }
+
+    /**
+     * Ищет товары
+     *
+     * @return array массив товаров для TypeAhead виджета
+     * @throws \yii\web\MethodNotAllowedHttpException
+     */
+    public function actionSearch(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
         \Yii::$app->response->format = "json";
 
-        return Good::searchGoods(\Yii::$app->request->get("string"), [
-            'Name', 'Code'
-        ]);
+        $item = \Yii::$app->request->get("string");
+
+        $goods = Good::find()
+            ->where(['like', 'Name', $item])
+            ->orWhere(['like', 'Code', $item.'%', false])
+            ->orWhere(['like', 'BarCode1', $item])
+            ->orWhere(['like', 'BarCode2', $item])
+            ->limit(10);
+
+        $return = [];
+
+        foreach($goods->each() as $good) {
+            $tArray = [
+                'name'      =>  $good->Name,
+                'category'  =>  !empty($good->category) ? $good->category->Name : '(без категории)',
+                'photo'     =>  $good->ico,
+                'code'      =>  $good->Code,
+                'ID'        =>  $good->ID,
+                'disabled'  =>  $good->show_img == 0,
+                'ended'     =>  $good->count <= 0,
+                'sale'      =>  $good->discountType != 0
+            ];
+
+            if(!empty(trim($good->BarCode2))){
+                $tArray['vendorCode'] = $good->BarCode2;
+            }
+
+            $return[] = $tArray;
+        }
+
+        return $return;
     }
 
     /**
@@ -399,81 +426,6 @@ class DefaultController extends Controller
 
     }
 
-    /**
-     * @return string
-     * метод добавляет категорию на сайт
-     * @deprecated метод actionCategory должен добавлять и редактировать категорию
-     */
-    public function actionAddcategory(){
-        $c = new Category();
-        $cUk = new CategoryUk();
-        $breadcrumbs = [];
-        $ct = \Yii::$app->request->get("category");
-
-        if(!empty($ct)){
-            $cc = Category::findOne(['ID' => $ct]);
-            $c->Code = $cc->Code.'AAA';
-
-            if(!empty($cc)){
-                $b = Category::getParentCategories($cc->Code);
-
-                if(!empty($b)){
-                    foreach($b as $bb){
-                        $breadcrumbs[] = [
-                            'label' =>  $bb->Name,
-                            'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
-                        ];
-                    }
-                }
-
-                $b = Category::findOne(['ID' => $ct]);
-                if(!empty($b)){
-                    $breadcrumbs[] = $b->Name;
-                }
-            }
-        }
-
-        if(\Yii::$app->request->post() && \Yii::$app->request->post("parent_category") != ''){
-            $m = new Category();
-            $mUk = new CategoryUk();
-
-            foreach(\Yii::$app->request->post("Category") as $y=>$yy){
-                if($y == 'keywords'){
-                    $y = 'keyword';
-                    $yy = implode(', ', $yy);
-                }
-                $m->$y = $yy;
-            }
-
-            $m->Code = Category::createCategoryCode(\Yii::$app->request->post("parent_category"));
-
-            foreach(\Yii::$app->request->post("CategoryUk") as $y=>$yy){
-                if($y == 'keywords'){
-                    $y = 'keyword';
-                    $yy = implode(', ', $yy);
-                }
-                $mUk->$y = $yy;
-            }
-
-            if($m->save()){
-                $mUk->ID = $m->ID;
-                $mUk->Code = $m->Code;
-                $mUk->save(false);
-            }else{
-                $c = $m;
-                $mUk->validate();
-                $cUk = $mUk;
-            }
-        }
-
-        return $this->render('editcategory', [
-            'category'      =>  $c,
-            'breadcrumbs'   =>  $breadcrumbs,
-            'parentCategory'=>  $ct == '' ? new Category : Category::findOne(['ID' => $ct]),
-            'categoryUk'    =>  $cUk
-        ]);
-    }
-
     public function actionShowcategory($param){
         $c = Category::findOne(['ID' => $param]);
 
@@ -526,6 +478,65 @@ class DefaultController extends Controller
     }
 
     public function actionPhoto(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
+
+        $result = null;
+
+        $good = Good::findOne(\Yii::$app->request->post("key"));
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        switch(\Yii::$app->request->get('act')){
+            case 'upload':
+                $result = $this->addPhoto($_FILES['goodPhoto'], $good);
+                break;
+            case 'delete':
+                $result = $this->deletePhoto($good, \Yii::$app->request->post("order"));
+                break;
+            case 'reorder':
+                $result =  $this->reorderPhotos(\Yii::$app->request->post("items"), $good);
+                break;
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        return $result;
+    }
+
+    /**
+     * @param $good
+     * @param $order
+     *
+     * @return bool
+     */
+    public function deletePhoto($good, $order){
+        return $good->deletePhoto($order);
+    }
+
+    public function addPhoto($file, $good){
+        $file = UploadHelper::__upload($file);
+
+        return $good->addPhoto($file);
+    }
+
+    public function reorderPhotos($newOrder, $good){
+        $photos = [];
+
+        foreach($good->photos as $photo){
+            $photos[$photo->order] = $photo;
+        }
+
+        foreach($newOrder as $newPosition => $oldPosition){
+            $newPosition++;
+
+            $photos[$oldPosition]->order = $newPosition;
+            $photos[$oldPosition]->save(false);
+        }
+
         return true;
     }
 
@@ -589,7 +600,7 @@ class DefaultController extends Controller
                 'nowCategory'       =>  $category,
                 'uploadPhoto'       =>  new UploadPhoto(),
                 'additionalPhotos'  =>  new ActiveDataProvider([
-                    'query' =>  GoodsPhoto::find()->where(['ItemId' => $good->ID]),
+                    'query' =>  GoodPhoto::find()->where(['ItemId' => $good->ID]),
                     'pagination'    =>  [
                         'pageSize'  =>  0
                     ]
@@ -597,7 +608,7 @@ class DefaultController extends Controller
             ]);
         }
 
-        return $this->render('good_view', [
+        return $this->render('view', [
             'good'       => $good,
             'goodUk'     => new GoodUk(),
             'nowCategory' => $good->category,
@@ -686,9 +697,9 @@ class DefaultController extends Controller
             }
         }
 
-        $gp = GoodsPhoto::find()->where(['ItemId' => $good->ID]);
+        $gp = GoodPhoto::find()->where(['ItemId' => $good->ID]);
 
-        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editgood' : 'good_view', [
+        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editgood' : 'view', [
             'breadcrumbs' => $breadcrumbs,
             'good'       => $good,
             'goodUk'     => $goodUK,
@@ -706,14 +717,14 @@ class DefaultController extends Controller
     public function actionUploadadditionalphoto(){
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
-            if(isset($_FILES['GoodsPhoto'])){
+            if(isset($_FILES['GoodPhoto'])){
                 $m = Good::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
 
-                $f = UploadHelper::__upload($_FILES['GoodsPhoto'], [
+                $f = UploadHelper::__upload($_FILES['GoodPhoto'], [
                     'filename'  =>  $m ? TranslitHelper::to($m->Name).'-'.rand(0, 1000000) : ''
                 ]);
                 if(!empty($f)) {
-                    $m = new GoodsPhoto();
+                    $m = new GoodPhoto();
                     $m->ico = $f;
                     $m->itemid = \Yii::$app->request->post("ItemId");
                     if($m->save()){
@@ -733,7 +744,7 @@ class DefaultController extends Controller
     public function actionRemoveadditionalphoto(){
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
-            $m = GoodsPhoto::findOne([
+            $m = GoodPhoto::findOne([
                 'ID'    =>  \Yii::$app->request->post("additionalPhotoID")
             ]);
 
@@ -743,28 +754,6 @@ class DefaultController extends Controller
         return $this->run('site/error');
     }
 
-    public function actionUploadcategoryphoto(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = 'json';
-            $f = UploadHelper::__upload($_FILES['categoryPhoto']);
-            if($f){
-                $m = Category::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
-                if($m){
-                    $m->cat_img = $f;
-                    if($m->save(false)){ //TODO: потом поровнять так, чтобы было норм, с валидацией, ёпта
-                        return [
-                            'link'  =>  $f
-                        ];
-                    }
-                }
-            }
-            return [
-                'state' =>  0
-            ];
-        }else{
-            return $this->run('site/error');
-        }
-    }
 
     public function actionUploadgoodphoto(){
         if(\Yii::$app->request->isAjax){
@@ -772,7 +761,7 @@ class DefaultController extends Controller
             $m = Good::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
 
             if($m){
-                $f = UploadHelper::__upload($_FILES['GoodsPhoto'], [
+                $f = UploadHelper::__upload($_FILES['GoodPhoto'], [
                     'filename'  =>  TranslitHelper::to($m->Name).'-'.rand(0, 1000000)
                 ]);
                 if($f){
@@ -867,31 +856,6 @@ class DefaultController extends Controller
         return Good::changeState(\Yii::$app->request->post("GoodID"));
     }
 
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionChangecategorystate(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Category::change(\Yii::$app->request->post("category"), 'menu_show');
-    }
-
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionChangecategorycanbuy(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Category::change(\Yii::$app->request->post("category"), 'canBuy');
-    }
 
     /**
      * @return bool|string
@@ -908,37 +872,6 @@ class DefaultController extends Controller
         }
 
         return Good::changeTrashState(\Yii::$app->request->post("GoodID"));
-    }
-
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionWorkwithcategorytrash(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Good::changeTrashState(\Yii::$app->request->post("CategoryID"));
-    }
-
-    public function actionChangecategoryvalue(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        $attribute = \Yii::$app->request->post("attribute");
-
-        $category = Category::findOne(['id' => \Yii::$app->request->post("categoryID")]);
-
-        if(!$category){
-            throw new NotFoundHttpException("Категория не найден!");
-        }
-
-        $category->$attribute = \Yii::$app->request->post("value");
-
-        $category->save(false);
     }
 
     public function actionChangegoodvalue(){
@@ -958,35 +891,4 @@ class DefaultController extends Controller
 
         $good->save(false);
     }
-
-    public function actionUpdatecategorysort(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = "json";
-            $a = \Yii::$app->request->post("data");
-            $b = \Yii::$app->request->post("category");
-            $len = (strlen($b) + 3);
-
-            $a = array_flip($a);
-
-            $c = Category::find()->where(['like', 'Code', $b.'%', false]);
-            $c->andWhere(['LENGTH(`Code`)' => $len]);
-            $c->orderBy('listorder, ID ASC');
-            $c = $c->all();
-            $d = [];
-
-            foreach($c as $cc){
-                $d[] = $cc->listorder;
-            }
-
-            foreach($c as $cc){
-                $cc->listorder = $a[$cc->ID];
-                $cc->save(false);
-            }
-
-            return $d;
-        }else{
-            return $this->run('site/error');
-        }
-    }
-
 }

@@ -55,12 +55,15 @@ $this->registerCss($css);
 $photos = $previewPhotos = [];
 
 foreach($good->photos as $photo){
-    $previewPhotos[] = \yii\bootstrap\Html::img('http://krasota-style.com.ua/img/catalog/'.$photo->ico, [
-        'class' =>  'file-preview-image'
+    $previewPhotos[] = \yii\bootstrap\Html::img('/img/catalog/'.$photo->ico, [
+        'class'         =>  'file-preview-image',
+        'data-itemID'   =>  $good->ID,
+        'data-order'    =>  $photo->order
     ]);
     $photos[] = [
         'caption'   =>  'http://krasota-style.com.ua/img/catalog/'.$photo->ico,
-        'key'       =>  $photo->id, //TODO: Заменить на другое значение ключа
+        'caption'   =>  $photo->ico,
+        'key'       =>  $photo->itemid,
         'extra'     =>  [
             'order' =>  $photo->order
         ],
@@ -71,7 +74,7 @@ foreach($good->photos as $photo){
 }
 
 echo FileInput::widget([
-    'name' => 'input-ru[]',
+    'name' => 'goodPhoto[]',
     'language' => \Yii::$app->language,
     'options' => [
         'multiple' => true
@@ -80,10 +83,9 @@ echo FileInput::widget([
         'initialPreview'        =>  $previewPhotos,
         'initialPreviewConfig'  =>  $photos,
         'uploadExtraData'       =>  [
-            'goodID'            =>  $good->ID
+            'key'               =>  $good->ID
         ],
         'showCaption'           =>  false,
-        'showUpload'            =>  false,
         'showRemove'            =>  false,
         'showClose'             =>  false,
         'overwriteInitial'      =>  false,
@@ -100,7 +102,33 @@ $(".file-preview-thumbnails").sortable({
     placeholderClass: 'imagesPlaceholder',
     showHandle: true,
     type: 'grid'
+}).bind('sortupdate', function(e, ui){
+    var firstImage = $(".file-preview-thumbnails:first-child");
+
+    $("#goodMainPhoto")[0].src = firstImage.find("img")[0].src;
+
+    var a = $(".file-preview-thumbnails div img"),
+        items = new Array(),
+        good = null;
+
+
+    for(var i = 0; i < a.length; i++){
+        items.push(a[i].getAttribute("data-order"));
+        good = a[i].getAttribute("data-itemID");
+        a[i].setAttribute("data-order", i + 1);
+    }
+
+    $.ajax({
+		type: 'POST',
+		url: '/goods/photo?act=reorder',
+		data: {
+		    items: items,
+		    key: good
+		}
+	});
 });
+
+
 JS;
 
 $this->registerJs($js);
