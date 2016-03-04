@@ -163,7 +163,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 			<div class="under-menu">
 				<div class="under-menu-content">
 					<div class="logo"></div>
-					<div class="search">
+					<div class="input-style-main">
 						<label class="icon-search" for=""></label>
 						<input type="text" placeholder="Поиск..."/>
 						<?=\yii\helpers\Html::button('Найти', [
@@ -273,6 +273,128 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 		</div>
 	</div>
 	<?=$content?>
+	<div class="footer">
+		<div class="blue-line">
+			<div class="footer-content">
+				<span class="phone-numbers">044 123 45 67 • 067 123 45 67</span>
+				<div class="hours">
+					<span>
+						Время работы call-центра:
+					</span>
+					<span>
+						с 8.00 до 17:30, без выходных
+					</span>
+				</div>
+				<?=\yii\helpers\Html::button('Заказать обратный звонок', [
+					'type'  =>  'submit',
+					'class' =>  'yellow-button large-button',
+					'id'    =>  'submit'
+				])?>
+			</div>
+		</div>
+		<div class="underline">
+			<div class="goods-item">
+				<?=Html::tag('span', \Yii::t('shop', 'О компании'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/status-zakaza'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Контакты'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/oplata'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Вакансии'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/vozvrat-i-obmen'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Блог'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/kontakty'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Отзывы о магазине'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/kontakty'
+				]),
+				Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
+					'class'		=>	'link-hide',
+					'href'		=>	'/map'
+				])?>
+			</div>
+			<div class="goods-item">
+				<?=Html::tag('span', \Yii::t('shop', 'Услуги'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/status-zakaza'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Акции'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/oplata'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Гарантии'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/vozvrat-i-obmen'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Бонусная программа'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/kontakty'
+				])
+				?>
+			</div>
+			<div class="goods-item">
+				<?=Html::tag('span', \Yii::t('shop', 'Как заказать'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/status-zakaza'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Оплата'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/oplata'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Доставка'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/vozvrat-i-obmen'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Возврат товара'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/kontakty'
+				])
+				?>
+			</div>
+			<div class="goods-item feedback-link">
+				<?=Html::tag('span', \Yii::t('shop', 'Обратная связь'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/vakansii'
+				]),
+				Html::tag('span', \Yii::t('shop', 'Проблемы с заказом?'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/kontakty'
+				])
+				?>
+			</div>
+		</div>
+		<div class="feedback-block">
+			<div class="footer-content">
+				<div class="card">
+					<img src="/img/site/visa-icon.png">
+					<img src="/img/site/mastercard-icon.png">
+					<img src="/img/site/privat24-icon.png">
+				</div>
+				<div class="socialNetworks">
+					<?=SocialButtonWidget::widget([
+													  'items' => [
+														  ['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
+														  ['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
+														  ['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
+														  ['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
+														  ['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
+													  ]
+												  ])?>
+				</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer-content">
+			<span class="left">© Интернет-магазин «krasota-style™» 2011–2015</span>
+			<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
+		</div>
+	</div>
 	<!--<footer>
 		<div class="footerCenter">
 			<div class="quickReference">
