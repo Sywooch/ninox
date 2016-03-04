@@ -55,7 +55,7 @@ $this->registerCss($css);
 $photos = $previewPhotos = [];
 
 foreach($good->photos as $photo){
-    $previewPhotos[] = \yii\bootstrap\Html::img('http://krasota-style.com.ua/img/catalog/'.$photo->ico, [
+    $previewPhotos[] = \yii\bootstrap\Html::img('/img/catalog/'.$photo->ico, [
         'class'         =>  'file-preview-image',
         'data-itemID'   =>  $good->ID,
         'data-order'    =>  $photo->order
@@ -85,7 +85,6 @@ echo FileInput::widget([
             'key'               =>  $good->ID
         ],
         'showCaption'           =>  false,
-        'showUpload'            =>  false,
         'showRemove'            =>  false,
         'showClose'             =>  false,
         'overwriteInitial'      =>  false,
@@ -115,6 +114,7 @@ $(".file-preview-thumbnails").sortable({
     for(var i = 0; i < a.length; i++){
         items.push(a[i].getAttribute("data-order"));
         good = a[i].getAttribute("data-itemID");
+        a[i].setAttribute("data-order", i + 1);
     }
 
     $.ajax({
@@ -125,9 +125,6 @@ $(".file-preview-thumbnails").sortable({
 		    key: good
 		}
 	});
-
-    console.log(e);
-    console.log(ui);
 });
 
 

@@ -28,10 +28,7 @@ class CategorySearch extends Category
 
         $query = Category::find()
             ->select(["SUBSTR(`goodsgroups`.`Code`, '1', '{$categoryLength}') AS `codeAlias`"])
-            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-            ->groupBy('codeAlias')
-            ->orderBy('`goodsgroups`.`listorder`')
-            ->addOrderBy('`goodsgroups`.`ID`');
+            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`');
 
         if($categoryLength > 3){
             $tLen = $categoryLength - 3; //когда нельзя сделать эту операцию в скобке :с
@@ -46,7 +43,18 @@ class CategorySearch extends Category
             case 'disabled':
                 $query->andWhere(['`goods`.`show_img`' => 0]);
                 break;
+            case 'onSale':
+                $query->andWhere("`goods`.`discountType` != '0'");
+                break;
+            case 'withoutPhoto':
+                $query->leftJoin('dopfoto', '`dopfoto`.`itemid` = `goods`.`ID`')
+                    ->having("COUNT(`dopfoto`.`itemid`) < 1");
+                break;
         }
+
+        $query->groupBy('codeAlias')
+            ->orderBy('`goodsgroups`.`listorder`')
+            ->addOrderBy('`goodsgroups`.`ID`');
 
         $query = Category::find()
             ->select('`a`.*')

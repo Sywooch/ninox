@@ -309,11 +309,53 @@ class DefaultController extends Controller
     }
 
     public function actionSearchgoods(){
+        return $this->actionSearch();
+    }
+
+    /**
+     * Ищет товары
+     *
+     * @return array массив товаров для TypeAhead виджета
+     * @throws \yii\web\MethodNotAllowedHttpException
+     */
+    public function actionSearch(){
+        if(!\Yii::$app->request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
         \Yii::$app->response->format = "json";
 
-        return Good::searchGoods(\Yii::$app->request->get("string"), [
-            'Name', 'Code'
-        ]);
+        $item = \Yii::$app->request->get("string");
+
+        $goods = Good::find()
+            ->where(['like', 'Name', $item])
+            ->orWhere(['like', 'Code', $item.'%', false])
+            ->orWhere(['like', 'BarCode1', $item])
+            ->orWhere(['like', 'BarCode2', $item])
+            ->limit(10);
+
+        $return = [];
+
+        foreach($goods->each() as $good) {
+            $tArray = [
+                'name'      =>  $good->Name,
+                'category'  =>  !empty($good->category) ? $good->category->Name : '(без категории)',
+                'photo'     =>  $good->ico,
+                'code'      =>  $good->Code,
+                'ID'        =>  $good->ID,
+                'disabled'  =>  $good->show_img == 0,
+                'ended'     =>  $good->count <= 0,
+                'sale'      =>  $good->discountType != 0
+            ];
+
+            if(!empty(trim($good->BarCode2))){
+                $tArray['vendorCode'] = $good->BarCode2;
+            }
+
+            $return[] = $tArray;
+        }
+
+        return $return;
     }
 
     /**
@@ -453,13 +495,7 @@ class DefaultController extends Controller
                 $result = $this->addPhoto($_FILES['goodPhoto'], $good);
                 break;
             case 'delete':
-                $item = GoodPhoto::findOne(['itemID' => $good->ID, 'order' => \Yii::$app->request->post("order")]);
-
-                if(!$item){
-                    throw new NotFoundHttpException("Такой фотографии нет!");
-                }
-
-                return $item->delete();
+                $result = $this->deletePhoto($good, \Yii::$app->request->post("order"));
                 break;
             case 'reorder':
                 $result =  $this->reorderPhotos(\Yii::$app->request->post("items"), $good);
@@ -471,24 +507,33 @@ class DefaultController extends Controller
         return $result;
     }
 
-    public function addPhoto($file, $good){
-
-
-        $file = UploadHelper::__upload($file);
+    /**
+     * @param $good
+     * @param $order
+     *
+     * @return bool
+     */
+    public function deletePhoto($good, $order){
+        return $good->deletePhoto($order);
     }
 
-    public function reorderPhotos($data, $good){
+    public function addPhoto($file, $good){
+        $file = UploadHelper::__upload($file);
+
+        return $good->addPhoto($file);
+    }
+
+    public function reorderPhotos($newOrder, $good){
         $photos = [];
 
         foreach($good->photos as $photo){
             $photos[$photo->order] = $photo;
         }
 
-        foreach($data as $newPosition => $oldPosition){
+        foreach($newOrder as $newPosition => $oldPosition){
             $newPosition++;
 
             $photos[$oldPosition]->order = $newPosition;
-
             $photos[$oldPosition]->save(false);
         }
 

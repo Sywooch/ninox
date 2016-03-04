@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property integer $itemid
  * @property string $ico
+ * @property integer $order
  */
 class GoodsPhoto extends \yii\db\ActiveRecord
 {
@@ -31,6 +32,7 @@ class GoodsPhoto extends \yii\db\ActiveRecord
             'id' => 'ID',
             'itemid' => 'Itemid',
             'ico' => 'Ico',
+            'order' =>  'Order'
         ];
     }
 }
