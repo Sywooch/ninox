@@ -338,7 +338,16 @@ $this->registerJs($js);
 					<img src="/img/site/privat24-icon.png">
 				</div>
 				<div class="socialNetworks">
-
+					<?=SocialButtonWidget::widget([
+													  'items' => [
+														  ['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
+														  ['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
+														  ['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
+														  ['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
+														  ['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
+													  ]
+												  ])?>
+				</div>
 				</div>
 			</div>
 		</div>
