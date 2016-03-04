@@ -59,7 +59,7 @@ foreach($good->photos as $photo){
         'class' =>  'file-preview-image'
     ]);
     $photos[] = [
-        'caption'   =>  $photo->ico,
+        'caption'   =>  'http://krasota-style.com.ua/img/catalog/'.$photo->ico,
         'key'       =>  $photo->id, //TODO: Заменить на другое значение ключа
         'extra'     =>  [
             'order' =>  $photo->order
