@@ -11,14 +11,6 @@ namespace common\helpers;
 
 class Formatter{
 	public static function getFormattedPrice($number, $sign = false){
-		return ($sign && $number > 0 ? '+' : '').number_format($number * \Yii::$app->params['domainInfo']['currencyExchange'], \Yii::$app->params['domainInfo']['coins'] ? 2 : 0, '.', ' ');
-	}
-
-	public static function getPriceInteger($number){
-		return explode('.', self::getFormattedPrice($number))[0];
-	}
-
-	public static function getPriceFraction($number){
-		return explode('.', self::getFormattedPrice($number))[1];
+		return ($sign && $number > 0 ? '+' : '').number_format($number * \Yii::$app->params['domainInfo']['currencyExchange'], \Yii::$app->params['domainInfo']['coins'] ? 2 : 0, '.', ' ').' '.\Yii::$app->params['domainInfo']['currencyShortName'];
 	}
 } 

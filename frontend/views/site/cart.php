@@ -2,19 +2,16 @@
 use common\helpers\Formatter;
 use yii\helpers\Html;
 
-$currency = \Yii::$app->params['domainInfo']['currencyShortName'];
-
 echo Html::tag('div',
 	Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
 		'class' =>  'cart-message cart-message-empty semi-bold'
 	]).
 	Html::tag('div',
-		\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} {currency} до опта', [
+		\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} до опта', [
 			'wholesaleRemind'   =>  Html::tag('span',
 					Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm), [
 						'class' =>  'amount-remind'
-					]),
-			'currency'          =>  $currency
+					])
 		]), [
 		'class' =>  'cart-message cart-message-retail semi-bold'
 	]).
@@ -41,22 +38,20 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 	Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
-				\Yii::t('shop', 'Ваша скидка {discount} {currency}', [
+				\Yii::t('shop', 'Ваша скидка {discount}', [
 					'discount'   =>  Html::tag('span',
 							Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm), [
 								'class' =>  'amount-discount'
-							]),
-					'currency'          =>  $currency
+							])
 				]), [
 				'class' =>  'amount-cart-discount bold font-size-20px'
 			]).
 			Html::tag('div',
-				\Yii::t('shop', 'сумма заказа без скидки {realAmount} {currency}', [
+				\Yii::t('shop', 'сумма заказа без скидки {realAmount}', [
 					'realAmount'   =>  Html::tag('span',
 							Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount), [
 								'class' =>  'amount-real'
-							]),
-					'currency'          =>  $currency
+							])
 				]), [
 				'class' =>  'amount-cart-real font-size-13px'
 			]), [
@@ -72,7 +67,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 				\Yii::t('shop', 'Предварительная сумма к оплате'), [
 				'class' =>  'amount-cart-text font-size-13px'
 			]).
-			Html::tag('div', Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm).' '.$currency, [
+			Html::tag('div', Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm), [
 				'class' =>  'amount-cart bold font-size-28px'
 			]), [
 			'class' =>  'right'

@@ -56,7 +56,7 @@ class Good extends \common\models\Good{
                 break;
         }
 
-	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
+	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : '';
 	    $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
     }
 

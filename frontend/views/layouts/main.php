@@ -58,7 +58,7 @@ $js = <<<SCRIPT
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus:not(.prohibited), .counter .plus:not(.prohibited), .remove-item', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.prohibited), .item-counter .plus:not(.prohibited), .remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		changeItemCount($(e.currentTarget));

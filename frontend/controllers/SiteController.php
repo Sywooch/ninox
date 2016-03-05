@@ -198,18 +198,29 @@ class SiteController extends Controller
 	    $items = [];
 	    foreach(\Yii::$app->cart->goods as $good){
 			if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){
+                $discount = '-';
+                switch($good->discountType){
+                    case 1:
+                        $discount .= Formatter::getFormattedPrice($good->discountSize);
+                        break;
+                    case 2:
+                        $discount .= $good->discountSize.'%';
+                        break;
+                    default:
+                        break;
+                }
 				$items[$good->ID] = [
-					'retail'      =>  Formatter::getFormattedPrice($good->retail_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
-					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
-					'discount'    =>  $good->discountSize ? '-'.$good->discountSize.($good->discountType == 1 ? \Yii::$app->params['domainInfo']['currencyShortName'] : ($good->discountType == 2 ? '%' : '')) : 0,
-					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+					'retail'      =>  Formatter::getFormattedPrice($good->retail_price),
+					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price),
+					'discount'    =>  $discount,
+					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart),
 				];
 			}
 	    }
 	    return [
 		    'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
 			'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),
-	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm),
 		    'remind'        =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
 		    'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
 		    'wholesale'     =>  \Yii::$app->cart->wholesale,

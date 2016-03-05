@@ -8,6 +8,7 @@ body{
 	min-height: 100%;
 	position: relative;
 	font-family: OpenSans;
+	color: #75868f;
 }
 
 p{
@@ -167,75 +168,48 @@ h2{
     font-style: normal;
     font-weight: normal;
 }
-@font-face {
-	font-family: 'shop-star';
-	src: url('../fonts/shop-star.eot?47776960');
-	src: url('../fonts/shop-star.eot?47776960#iefix') format('embedded-opentype'),
-	url('../fonts/shop-star.woff?47776960') format('woff'),
-	url('../fonts/shop-star.ttf?47776960') format('truetype'),
-	url('../fonts/shop-star.svg?47776960#shop-star') format('svg');
-	font-weight: normal;
+
+[class^="icon-"], [class*=" icon-"] {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'shop' !important;
+	speak: none;
 	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
-/* End font loading */
-/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
-/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
-/*
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family: 'shop';
-    src: url('../fonts/shop.svg?3153255#shop') format('svg');
-  }
+
+.icon-note:before{content: "\e800";}
+.icon-your-discont:before{content: "\e801";}
+.icon-box:before{content: "\e802";}
+.icon-delivery-car:before{content: "\e803";}
+.icon-money-pig:before{content: "\e804";}
+.icon-print:before{content: "\e805";}
+.icon-spin6:before{content: "\e806";}
+.icon-arrow:before{content: "\e807";}
+.icon-exit:before{content: "\e808";}
+.icon-heart:before{content: "\e900";}
+.icon-youtube .path1:before{
+	content: "\e901";
+	color: rgb(224, 47, 47);
 }
-*/ [class^="shop-"]:before, [class*=" shop-"]:before {
-	   font-family: "shop-star";
-	   font-style: normal;
-	   font-weight: normal;
-	   speak: none;
-
-	   display: inline-block;
-	   text-decoration: inherit;
-	   width: 1em;
-	   margin-right: .2em;
-	   text-align: center;
-	   /* opacity: .8; */
-
-	   /* For safety - reset parent styles, that can break glyph codes*/
-	   font-variant: normal;
-	   text-transform: none;
-
-	   /* fix buttons height, for twitter bootstrap */
-	   line-height: 1em;
-
-	   /* Animation center compensation - margins should be symmetric */
-	   /* remove if not needed */
-	   margin-left: .2em;
-
-	   /* you can be more comfortable with increased icons size */
-	   /* font-size: 120%; */
-
-	   /* Font smoothing. That was taken from TWBS */
-	   -webkit-font-smoothing: antialiased;
-	   -moz-osx-font-smoothing: grayscale;
-
-	   /* Uncomment for 3D effect */
-	   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
-   }
+.icon-youtube .path2:before{
+	content: "\e902";
+	margin-left: -1em;
+	color: rgb(255, 255, 255);
+}
+.icon-bubble:before{content: "\e903";}
+.icon-star:before{content: "\e904";}
 
 .shop-star-half-1:before { content: '\e801'; } /* '' */
 .shop-star-half-alt:before { content: '\e802'; } /* '' */
 .shop-star:before { content: '\e803'; } /* '' */
 .shop-star-empty:before { content: '\e804'; } /* '' */
-
-.icon-note:before { content: '\e800'; }
-.icon-your-discont:before { content: '\e801'; }
-.icon-box:before { content: '\e802'; }
-.icon-delivery-car:before { content: '\e803'; }
-.icon-money-pig:before { content: '\e804'; }
-.icon-print:before { content: '\e805'; }
-.icon-spin6:before { content: '\e806'; }
-.icon-arrow:before { content: '\e807'; }
-.icon-exit:before { content: '\e808'; }
 .shop-circle-empty:before { content: '\e800'; }
 /*.shop-star:before { content: '\e000'; }*/
 .shop-search-8:before { content: '\e802'; }
@@ -456,11 +430,19 @@ h2{
 }
 
 .red{
-	color: #ce0f0f;
+	color: #dd5b5b;
+}
+
+.green{
+	color: #81bb72;
 }
 
 .orange{
 	color: #f60;
+}
+
+.gray{
+	color: #49565d;
 }
 
 .semi-bold{
@@ -481,6 +463,22 @@ h2{
 
 .disabled{
 	display: none;
+}
+
+.float-left{
+	float: left;
+}
+
+.float-right{
+	float: right;
+}
+
+.text-left{
+	text-align: left;
+}
+
+.text-right{
+	text-align: right;
 }
 
 .advantagesCenter, .footerCenter, .info-center{
@@ -831,10 +829,6 @@ h2{
 	top: -1px;
 }
 
-.hovered:hover .item .inner-main{
-	border-bottom: 1px solid #e5e5e5;
-}
-
 .hovered:hover .item .inner-sub{
 	display: block;
 }
@@ -936,87 +930,54 @@ h2{
 	right: 8px;
 }
 
-.item .buy-block{
+.item .price-block{
 	position: absolute;
 	bottom: 10px;
 	width: 100%;
 	display: table;
 	padding: 0 10px;
+	text-transform: uppercase;
 }
 
-.item .pricelist{
+.item .price-block > div{
 	display: table-cell;
 	vertical-align: middle;
+}
+
+.item .price-list{
 	text-align: left;
 }
 
-.item .can-buy{
-	display: table-cell;
-	vertical-align: middle;
-	max-width: 100px;
+.item .button-block{
 	text-align: right;
 }
 
-.item .expected-arrival{
-	text-align: center;
-	color: #4f4f4f;
+.item .wholesale-price{
+	font-size: 18px;
+	font-family: OpenSans-Bold;
 }
 
-.buy-block .wholesale-price{
-	font-size: 24px;
+.item .retail-price{
+	font-size: 13px;
 }
 
-.buy-block .wholesale-price .currency{
-	font-size: 20px;
-}
-
-.buy-block .retail-price{
-	font-size: 12px;
-	color: #4f4f4f;
-}
-
-.buy-block .sale-price{
-	font-size: 22px;
-}
-
-.buy-block .old-wholesale-price{
+.item .old-wholesale-price{
 	position: relative;
-	font-size: 14px;
-	color: #8c8c8c;
+	font-size: 13px;
+	display: inline-block;
 }
 
-.buy-block .old-wholesale-price:after{
-	width: 85%;
-	height: 2px;
-	display: block;
-	background: #ce0f0f;
+.item .old-wholesale-price:after{
+	width: 120%;
+	height: 1px;
+	background: #dd5b5b;
 	content: "";
 	position: absolute;
-	bottom: 10px;
-	transform: rotate(6deg);
+	bottom: 9px;
+	left: -6px;
 }
 
-.item .inner-sub > div > span{
-	font-size: 12px;
-	color: #4f4f4f;
-}
-
-.item .inner-sub .counter{
-	width: auto;
-	position: absolute;
-	top: -10px;
-	background: #fff;
-	right: 0;
-	padding: 0 20px 0 10px;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
-.counter div{
+.item-counter div{
 	width: 15px;
 	height: 15px;
 	display: inline-block;
@@ -1030,7 +991,7 @@ h2{
 	user-select: none;
 }
 
-.counter .count{
+.item-counter .count{
 	width: 30px;
 	height: 30px;
 	border: 1px solid #bfced6;
@@ -1039,19 +1000,23 @@ h2{
 	background: transparent;
 }
 
-.counter .prohibited{
+.item-counter .prohibited{
 	cursor: default;
 	color: #c3d1d9;
 }
 
-.item .outerSpan{
-	font-size: 12px;
-	color: #4f4f4f;
-	line-height: 28px;
+.item .item-counter-info{
+	display: table;
+	width: 100%;
 }
 
-.item .innerSpan{
-	padding-left: 5px;
+.item .item-count-info, .item .item-counter{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.item .item-counter{
+	text-align: right;
 }
 
 .item .heart{
@@ -1060,75 +1025,28 @@ h2{
 	height: 90px;
 }
 
-[class^="shop-star"], [class*="shop-star"]{
-	width: 18px;
-	height: 20px;
-	float: right;
-	color: transparent;
-	cursor: pointer;
-	font-family: shop-star;
-}
-
-.rating .currentRating, .rating .rateCount{
-	color: transparent;
-	position: absolute;
-	z-index: -10;
-}
-
-
-.rating > div:before{
-	color: #aeaeae;
-}
-
-.rating > .current:before,
-.rating > .current ~ div:before{
-	color: #f9bc2d;
-}
-
-.rating > div:hover:before,
-.rating > div:hover ~ div:before{
-	color: #f9bc2d;
-}
-
-.item .item-info{
-	font-size: 12px;
-	text-align: center;
-}
-
-.count-in-store-green{
-	color: #4fab22;
-}
-
-.count-in-store-red{
-	color: #e65a5a;
-}
-
-.count-in-store-brown{
-	color: brown;
-}
-
 .bg-capt-green{
-	background: #3fa858;
+	background: #81bb72;
 }
 
 .bg-capt-green:after{
-	border: 11px solid #3fa858;
+	border: 11px solid #81bb72;
 }
 
 .bg-capt-purple{
-	background: #8f1dd0;
+	background: #c35bdd;
 }
 
 .bg-capt-purple:after{
-	border: 11px solid #8f1dd0;
+	border: 11px solid #c35bdd;
 }
 
 .bg-capt-red{
-	background: #d11818;
+	background: #dd5b5b;
 }
 
 .bg-capt-red:after{
-	border: 11px solid #d11818;
+	border: 11px solid #dd5b5b;
 }
 
 .capt-flags{
