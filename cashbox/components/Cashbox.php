@@ -741,6 +741,8 @@ class Cashbox extends Component{
                 'category'      =>  Category::find()->select("Code")->where(['ID' => $good->GroupID])->scalar(),
                 'name'          =>  $good->Name,
                 'originalPrice' =>  $this->priceType == 1 ? $good->PriceOut1 : $good->PriceOut2,
+                'discountType'  =>  $good->discountType,
+                'discountSize'  =>  $good->discountSize,
             ]);
 
             if($this->cashboxOrder->promoCode){
