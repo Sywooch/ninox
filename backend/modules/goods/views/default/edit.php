@@ -39,7 +39,7 @@ $this->registerJs($js);
                 ],[
                     'label'     =>  'Аттрибуты',
                     'content'   =>  $this->render('_goodEdit/params', [
-                        'model' =>  $goodMainForm
+                        'options' =>  $good->options
                     ])
                 ],[
                     'label'     =>  'Изображения',

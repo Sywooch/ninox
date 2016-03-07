@@ -10,9 +10,15 @@ namespace backend\models;
 
 
 use common\models\Category;
+use common\models\GoodOptions;
+use common\models\GoodOptionsValue;
+use common\models\GoodOptionsVariant;
+use yii\db\Query;
 use yii\web\NotFoundHttpException;
 
 class Good extends \common\models\Good{
+
+    private $_options = [];
 
     public static function changeTrashState($id){
         $a = self::findOne(['ID' => $id]);
@@ -32,6 +38,28 @@ class Good extends \common\models\Good{
      */
     public function getPhotos(){
         return GoodPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+    }
+
+    public function getOptions(){
+        if(!empty($this->_options)){
+            return $this->_options;
+        }
+
+        $options = [];
+
+        $query = Query::create(new Query())
+            ->select([
+                'goodsoptions.name as option',
+                'goodsoptions.id as optionID',
+                'goodsoptions_variants.value as value',
+                'goodsoptions_variants.id as valueID'
+            ])
+            ->from(GoodOptionsValue::tableName().' goodsoptions_values')
+            ->leftJoin(GoodOptionsVariant::tableName().' goodsoptions_variants', 'goodsoptions_values.value = goodsoptions_variants.id')
+            ->leftJoin(GoodOptions::tableName().' goodsoptions', 'goodsoptions_values.option = goodsoptions.id')
+            ->where(['goodsoptions_values.good' => $this->ID]);
+
+        return $this->_options = $query->all();
     }
 
     /**

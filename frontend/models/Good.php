@@ -34,17 +34,17 @@ class Good extends \common\models\Good{
     private $_options = [];
 
     public function afterFind(){
-	    parent::afterFind();
+        parent::afterFind();
 
         //на товар работает отлично
         //на категорию - суммарно очень большой запрос получается :с
-/*        foreach(Message::getGoodTranslate($this->ID) as $key => $value){
-            $this->$key = $value;
-        }*/
+        /*        foreach(Message::getGoodTranslate($this->ID) as $key => $value){
+                    $this->$key = $value;
+                }*/
 
-	    $this->wholesale_real_price = $this->PriceOut1;
-	    $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
-	    $this->num_opt = preg_replace('/D+/', '', $this->num_opt);
+        $this->wholesale_real_price = $this->PriceOut1;
+        $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
+        $this->num_opt = preg_replace('/D+/', '', $this->num_opt);
 
         switch($this->discountType){
             case 1:
@@ -63,8 +63,8 @@ class Good extends \common\models\Good{
                 break;
         }
 
-	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
-	    $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
+        $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
+        $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
     }
 
     public function getOptions(){
