@@ -3440,7 +3440,7 @@ footer{
 	background: #eaa51e;
 }
 
-.icon-sale{
+.icon-sale:before{
 	content: url("/img/site/icon-sale.svg");
 }
 
@@ -3626,6 +3626,28 @@ footer{
 	margin: auto;
 	padding-left: 10px;
 	padding-right: 10px;
+	padding-bottom: 40px;
+}
+
+.about-main-title{
+	font-size: 22px;
+	color: #7d8d95;
+	padding-bottom: 10px;
+	display: block;
+}
+
+.about-main-content{
+	font-size: 13px;
+	color: #828282;
+	display: block;
+}
+
+.about-main-content-open{
+	font-size: 14px;
+	text-decoration: underline;
+	color: #29a1e0;
+	cursor: pointer;
+	float: right;
 }
 
 /*========* END MAIN  *=========*/
@@ -3741,7 +3763,7 @@ footer{
 }
 
 .feedback-block .socialNetworks{
-
+	float: right;
 }
 
 .feedback-block{
