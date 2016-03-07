@@ -244,13 +244,41 @@ class DefaultController extends Controller
         }
 
         return $this->render('order', [
-            'order'             =>  $order,
-            'items'             =>  $sborkaItems,
-            'itemsDataProvider' =>  $itemsDataProvider,
-            'priceRules'        =>  Pricerule::find()->orderBy('priority')->all(),
+            'order'                 =>  $order,
+            'items'                 =>  $sborkaItems,
+            'itemsDataProvider'     =>  $itemsDataProvider,
+            'priceRules'            =>  Pricerule::find()->orderBy('priority')->all(),
             'goodsAdditionalInfo'   =>  $goodsAdditionalInfo,
-            'customer'          =>  $customer
+            'customer'              =>  $customer
         ]);
+    }
+
+    public function actionShowlist($context = false, $ordersSource = false){
+        if(!\Yii::$app->request->isAjax && !$context){
+            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+        }
+
+        if(!$context){
+            $context = !empty(\Yii::$app->request->get("context")) ? true : false;
+        }
+
+        $historySearch = new HistorySearch();
+
+        $return = $this->renderPartial('_ordersList', [
+            'searchModel'       =>  $historySearch,
+            'orderSource'       =>  $ordersSource,
+            'orders'            =>  $historySearch->search(
+                $ordersSource == 'search' ? [] :
+                    $ordersSource != false ? ['ordersSource' => $ordersSource] : \Yii::$app->request->get())
+        ]);
+
+        if($context == true){
+            return $return;
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        return $return;
     }
 
     public function actionGetorderpreview(){

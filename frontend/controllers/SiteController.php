@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
 use common\models\GoodsComment;
 use frontend\models\Cart;
@@ -154,7 +155,7 @@ class SiteController extends Controller
 
         if(\Yii::$app->cart->itemsCount < 1){
             return $this->render('emptyCart');
-        }else if(\Yii::$app->cart->cartSumm < \Yii::$app->params['domainInfo']['minimalOrderSum']){
+        }else if(\Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum']){
             return $this->render('buyMore');
         }
 
@@ -166,17 +167,16 @@ class SiteController extends Controller
             $customer = \Yii::$app->user->identity;
         }
 
-        if(!$customer){
-            throw new ErrorException("Клиент не найден!");
+        if($customer){
+	        Cart::updateAll(['customerID' => $customer->ID], '`cartCode` = \''.\Yii::$app->cart->cartCode.'\'');
+	        $order->loadCustomer($customer);
         }
 
-        Cart::updateAll(['customerID' => $customer->ID], '`cartCode` = \''.\Yii::$app->cart->cartCode.'\'');
+
 
         if(\Yii::$app->request->post("OrderForm")){
             $order->load(\Yii::$app->request->post());
         }
-
-        $order->loadCustomer($customer);
 
         if(\Yii::$app->request->post("OrderForm")){
             if($order->validate() && $order->create()){
@@ -191,8 +191,9 @@ class SiteController extends Controller
 	    $domainConfiguration = DomainDeliveryPayment::getConfigArray();
 
         return $this->render('order2', [
-            'model'             =>  $order,
-			'domainConfiguration'      =>  $domainConfiguration
+            'model'                 =>  $order,
+			'domainConfiguration'   =>  $domainConfiguration,
+	        'customer'              =>  $customer
         ]);
     }
 
@@ -200,35 +201,30 @@ class SiteController extends Controller
         \Yii::$app->response->format = 'json';
 	    $itemID = \Yii::$app->request->post("itemID");
         $count = \Yii::$app->request->post("count");
+	    $wholesaleBefore = \Yii::$app->cart->wholesale;
 		$item = $count == 0 ? \Yii::$app->cart->remove($itemID) : \Yii::$app->cart->put($itemID, $count);
-	    $goods = [];
+	    $items = [];
 	    foreach(\Yii::$app->cart->goods as $good){
-			if($good->priceModified){
-				$goods[] = [
-					'priceRuleID'  =>  $good->priceRuleID,
-					'priceModified'  =>  $good->priceModified,
-					'price'  =>  $good->retail_price,
+			if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){
+				$items[$good->ID] = [
+					'retail'      =>  Formatter::getFormattedPrice($good->retail_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+					'discount'    =>  $good->discountSize ? '-'.$good->discountSize.($good->discountType == 1 ? \Yii::$app->params['domainInfo']['currencyShortName'] : ($good->discountType == 2 ? '%' : '')) : 0,
+					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
 				];
 			}
 	    }
 	    return [
-		    'cartSumm'      =>  \Yii::$app->cart->cartSumm,
-		    'cartRealSumm'  =>  \Yii::$app->cart->cartRealSumm,
-		    'inCart'        =>  $count == 0 ? 0 : $item->count,
-		    'goods'         =>  $goods,
+		    'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
+			'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),
+	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+		    'remind'        =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
+		    'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
+		    'wholesale'     =>  \Yii::$app->cart->wholesale,
+		    'count'         =>  \Yii::$app->cart->itemsCount,
+		    'items'         =>  $items,
 	    ];
     }
-
-	public function actionGetcart(){
-		return $this->renderAjax('cart', [
-			'dataProvider'	=>	new ActiveDataProvider([
-				'query'         =>  \Yii::$app->cart->goodsQuery(),
-				'pagination'    =>  [
-					'pageSize'  =>  0
-				]
-			])
-		]);
-	}
 
     public function actionSuccess($order = []){
         if(!empty($order)){

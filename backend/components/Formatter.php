@@ -8,9 +8,7 @@
 
 namespace backend\components;
 
-use yii\helpers\Json;
-
-class Formatter extends \yii\i18n\Formatter{
+class Formatter extends \common\components\Formatter{
 
     public function asPhone($string){
         $string = preg_replace('/\D+/', '', $string);

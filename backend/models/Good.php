@@ -10,7 +10,6 @@ namespace backend\models;
 
 
 use common\models\Category;
-use common\models\GoodOptions;
 use yii\web\NotFoundHttpException;
 
 class Good extends \common\models\Good{

@@ -44,6 +44,10 @@ class SubDomain extends \yii\db\ActiveRecord
     }
 
     public function afterFind(){
+        if(empty($this->autologinParams)){
+            $this->autologinParams = '[]';
+        }
+
         $this->autologinParams = Json::decode($this->autologinParams);
 
         return parent::afterFind();

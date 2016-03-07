@@ -45,7 +45,12 @@ class DefaultController extends Controller
             'pagination'    =>  [
                 'pageSize'  =>  0
             ]
+        ]);
 
+        $sborkaItems->setSort([
+            'defaultOrder'  =>  [
+                'added' =>  SORT_ASC
+            ]
         ]);
 
         $itemIDs = $goods = [];

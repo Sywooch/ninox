@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $description
  * @property integer $enabled
+ * @property integer $modifyLabel
  */
 class PaymentType extends \yii\db\ActiveRecord
 {
@@ -27,7 +28,7 @@ class PaymentType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['enabled'], 'integer'],
+            [['enabled', 'modifyLabel'], 'integer'],
             [['description'], 'string', 'max' => 255],
         ];
     }
@@ -41,6 +42,7 @@ class PaymentType extends \yii\db\ActiveRecord
             'id' => Yii::t('shop', 'ID'),
             'description' => Yii::t('shop', 'Description'),
             'enabled' => Yii::t('shop', 'Enabled'),
+            'modifyLabel' => Yii::t('shop', 'Modify Label'),
         ];
     }
 }
