@@ -1,14 +1,15 @@
 <?php
+use yii\bootstrap\Html;
 use yii\bootstrap\Modal;
 use bobroid\remodal\Remodal;
 
 $reviewModal = new Remodal([
-                               'cancelButton'		=>	false,
-                               'confirmButton'		=>	false,
-                               'closeButton'		=>	true,
-                               'addRandomToID'		=>	false,
-                               'content'			=>	$this->render('_write_review'),
-                           ]);
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	true,
+    'addRandomToID'		=>	false,
+    'content'			=>	$this->render('_write_review'),
+]);
 
 ?>
 <head>
@@ -25,37 +26,14 @@ $reviewModal = new Remodal([
 </head>
 <div class="product-characteristics">
     <span class="tabTitle semi-bold">
-        <?=_("Характеристика товара")?>
+        <?=\Yii::t('shop', 'Характеристики товара')?>
     </span>
     <div class="details">
-        <div class="characteristics">
-            <div class="characteristic">
-                <span>
-                    <?=!empty($good->num_opt) ? _("Количество в упаковке:") : ''?>
-                </span>
-            </div>
-            <div>
-                <span>
-                    <?=$good->num_opt.' '.$good->Measure1?>
-                </span>
-            </div>
-        </div>
-        <div class="characteristics">
-            <div class="characteristic">
-                <?=_("Материал:")?>
-            </div>
-            <div>
-                Ткань тканьевая
-            </div>
-        </div>
-        <div class="characteristics">
-            <div class="characteristic">
-                <?=!empty($good->gabarity) ? _("Размеры:") : ''?>
-            </div>
-            <div>
-                <?=$good->gabarity?>
-            </div>
-        </div>
+        <?php foreach($good->options as $option => $value){
+            echo Html::tag('div', Html::tag('div', $option, ['class' => 'characteristic']).Html::tag('div', $value),[
+                'class' =>  'characteristics'
+            ]);
+        }?>
     </div>
     <!--<div class="properties" itemprop="description"><?/*=$good->Description*/?></div>-->
 </div>

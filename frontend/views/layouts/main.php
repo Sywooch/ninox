@@ -26,21 +26,19 @@ if(empty($userCart)){
 	$userCart = new \common\models\Cart();
 }
 
-$cartItemsDataProvider = new \yii\data\ActiveDataProvider([
-	'query' =>  \Yii::$app->cart->goodsQuery()
-]);
-
 $cartModal = new \bobroid\remodal\Remodal([
 	'cancelButton'		=>	false,
 	'confirmButton'		=>	false,
 	'closeButton'		=>	false,
-	'content'			=>	$this->render('../site/cart', [
-		'dataProvider'	=>	$cartItemsDataProvider
-	]),
-	'id'	=>	'modalCart',
+	'content'			=>	$this->render('../site/cart', []),
+	'options'           =>  [
+		'id'            =>  'modal-cart',
+		'class'         =>  \Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'wholesale' : 'retail') : 'empty'
+	],
+	'id'	            =>	'modalCart',
 	'addRandomToID'		=>	false,
 	'events'			=>	[
-		'opening'	=>	new \yii\web\JsExpression("getCart(e)")
+		'opening'	    =>	new \yii\web\JsExpression("getCart()")
 	]
 ]);
 
@@ -61,10 +59,42 @@ $js = <<<SCRIPT
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus, .counter .plus, .remove-item', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus:not(.prohibited), .counter .plus:not(.prohibited), .remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
-		changeItemCount(e.currentTarget);
+		changeItemCount($(e.currentTarget));
+	});
+
+	$('body').on('keydown', '.count', function(e){
+        // Allow: backspace, delete, tab, escape, enter and .
+        if($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)){
+	            if(keysdown[e.keyCode]){
+	                return;
+	            }
+                keysdown[e.keyCode] = true;
+                return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)){
+            e.preventDefault();
+        }else{
+            if(keysdown[e.keyCode]){
+                e.preventDefault();
+                return;
+            }
+            keysdown[e.keyCode] = true;
+        }
+	});
+
+	$('body').on('keyup', '.count', function(e){
+		if(keysdown[e.keyCode]){
+			delete keysdown[e.keyCode];
+			changeItemCount($(e.currentTarget));
+        }
 	});
 
 	$('body').on(hasTouch ? 'touchend' : 'click', '.yellow-button.buy', function(e){
@@ -79,11 +109,20 @@ $js = <<<SCRIPT
 		openCart();
 	});
 
+	$(document).on('pjax:complete', function(){
+		cartScroll();
+	});
 
+	cartScroll();
 SCRIPT;
 
 $this->registerJs($js);
 
+
+$this->registerJsFile('/perfect-scrollbar/js/perfect-scrollbar.jquery.js', [
+	'depends'   =>  'yii\web\JqueryAsset'
+]);
+$this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 ?>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="/js/jquery.sticky.js"></script>
@@ -94,10 +133,10 @@ $this->registerJs($js);
 	</script>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<html lang="<?=Yii::$app->language?>">
 	<head>
-	    <?= Html::csrfMetaTags() ?>
-	    <title><?= Html::encode($this->title) ?></title>
+	    <?=Html::csrfMetaTags()?>
+	    <title><?=Html::encode($this->title)?></title>
 	    <?php $this->head() ?>
 	</head>
 	<body>

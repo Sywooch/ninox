@@ -21,5 +21,4 @@ class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
             $this->pricerules = array_merge(\Yii::$app->user->identity->getPriceRules(), $this->pricerules);
         }
     }
-
 }

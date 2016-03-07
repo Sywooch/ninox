@@ -14,7 +14,6 @@ use kartik\base\AssetBundle;
 class CashboxAsset extends AssetBundle{
 
     public $js = [
-        ''
     ];
 
     public $css = [

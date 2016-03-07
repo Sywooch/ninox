@@ -8,8 +8,6 @@
 
 namespace cashbox\models;
 
-
-use common\models\Siteuser;
 use yii\web\IdentityInterface;
 
 class User extends Siteuser implements IdentityInterface{

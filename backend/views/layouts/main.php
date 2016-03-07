@@ -85,7 +85,7 @@ $(".showChat").on('click', function(e){
 });
 SCRIPT;
 
-$newOrderAlert = <<<'SCRIPT'
+$newOrderAlert = <<<'JS'
 var lastOrder = 0,
     newOrder = function(){
 
@@ -138,9 +138,9 @@ var lastOrder = 0,
 newOrder();
 
 setInterval(newOrder, 2000);
-SCRIPT;
+JS;
 
-$css = <<<'STYLE'
+$css = <<<'CSS'
 .chatDropDown{
     display: inline-block;
     height: 200px;
@@ -166,46 +166,12 @@ i.large{
     display: none;
 }
 
-span.twitter-typeahead div.tt-menu{
-    margin-top: -1px;
-    border-radius: 0px;
-    border-left: 0px none;
-    border-right: 0px none;
-}
-
-.tt-scrollable-menu .tt-menu{
-    max-height: none;
-    overflow-y: none;
-}
-
-.tt-menu .typeahead-list-item{
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 11px;
-}
-
-.tt-menu .typeahead-list-item .name{
-    font-size: 13px;
-}
-
-.tt-menu .typeahead-list-item .category{
-    color: rgba(0, 0, 0, 0.4);
-}
-
-.tt-suggestions > *{
-    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-}
-
-.tt-suggestions > *:last-child{
-    border-bottom: 0px;
-}
-
 .afterMenu{
     margin-top: -5px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     height: 30px;
     font-size: 12px;
     width: 100%;
-    //max-width: 1140px;
     white-space: nowrap;
 }
 
@@ -278,7 +244,101 @@ and (max-device-width: 1600px){
         width: 30px !important;
     }
 }
-STYLE;
+CSS;
+
+$typeaheadStyles = <<<'CSS'
+
+span.twitter-typeahead div.tt-menu{
+    margin-top: 18px;
+    margin-left: -20px;
+    border-radius: 0px;
+    border-left: 0px none;
+    border-right: 0px none;
+    width: 400px;
+ }
+
+.tt-scrollable-menu .tt-menu{
+    max-height: none;
+}
+
+.tt-menu .typeahead-list-item{
+    font-size: 11px;
+}
+
+.tt-menu *{
+    color: #000 !important;
+    font-family: "Open Sans"
+}
+
+.tt-menu h4.media-heading{
+    font-size: 13px;
+    white-space: nowrap;
+    margin-bottom: 0;
+}
+
+.tt-menu .typeahead-list-item .name{
+    color: #000 !important;
+    font-size: 13px;
+}
+
+.tt-menu .typeahead-list-item .category{
+
+}
+
+.tt-menu .media-left{
+    width: 60px !important;
+    height: 40px !important;
+    overflow: hidden;
+}
+
+.tt-menu .media-left img{
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.tt-menu{
+    border-radius: 5px !important;
+    border: 1px solid #fff;
+}
+
+.tt-menu .tt-suggestion{
+    border-bottom: none;
+    padding: 2px;
+    height: 56px;
+    cursor: pointer !important;
+}
+
+.tt-menu .tt-suggestion .item-code{
+    text-align: right;
+    position: absolute;
+    display: block;
+    right: 7px;
+    top: 0;
+    font-size: 10px;
+    color: #888 !important;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,0+100;White+to+Transparent */
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,1+20,1+100 */
+    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+    padding-left: 30px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    line-height: 14px;
+}
+
+.tt-menu .tt-suggestion:hover .item-code{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f5f5f5+0,f5f5f5+100&0+0,1+20,1+100 */
+    background: -moz-linear-gradient(left, rgba(245,245,245,0) 0%, rgba(245,245,245,1) 20%, rgba(245,245,245,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(245,245,245,0) 0%,rgba(245,245,245,1) 20%,rgba(245,245,245,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(245,245,245,0) 0%,rgba(245,245,245,1) 20%,rgba(245,245,245,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00f5f5f5', endColorstr='#f5f5f5',GradientType=1 ); /* IE6-9 */
+}
+
+CSS;
+
+$this->registerCss($typeaheadStyles);
 
 \Yii::$app->params['sideTabs'][] = [
     'position'  =>  'right',
@@ -321,31 +381,11 @@ $this->beginPage() ?>
         <?php $this->head() ?>
     </head>
 <body>
+
 <?php $this->beginBody() ?>
 <div class="wrap">
     <?php
     Yamm::begin([
-        'typeaheadSearch'   =>  true,
-        'typeaheadConfig'   =>  [
-            'name' => 'country_1',
-            'options' => ['placeholder' => 'Начните вводить текст для поиска...'],
-            'scrollable' => true,
-            'pluginOptions' => ['highlight'=>true],
-            'dataset' => [
-                [
-                    'remote' => [
-                        'url' => Url::to(['/goods/searchgoods']) . '?string=%QUERY',
-                        'wildcard' => '%QUERY'
-                    ],
-                    'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
-                    'display' => 'value',
-                    'templates' => [
-                        'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
-                        'suggestion' => new JsExpression('Handlebars.compile(\'<a class="typeahead-list-item" href="/goods/showgood/{{ID}}"><div class="row"><div class="col-xs-12 name">{{Name}}</div><div class="col-xs-12 category"><span class="pull-right ">{{categoryname}}</span></div><div class="col-xs-12 code">Код товара: {{Code}}</div></div></a>\')')
-                    ]
-                ]
-            ]
-        ],
         'options' => [
             'headerOptions'   =>  [
                 'class'   =>  'gray'
@@ -353,10 +393,10 @@ $this->beginPage() ?>
         ],
         'theme' =>  'gray',
         'items' => [
-            [
+            /*[
                 'label'     =>  FA::icon('home')->size(FA::SIZE_2X),
                 'url'       =>  \Yii::$app->params['frontend'].'?serviceMenu=true&currentUser='.\Yii::$app->user->identity->id.'&secretKey=lazyPenguinsEatsMoreIceCreams'
-            ],
+            ],*/
             [
                 'label'     => FA::icon('check-circle-o')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Заказы</span>',
                 'url'       => Url::home(),
@@ -367,7 +407,7 @@ $this->beginPage() ?>
             ],
             [
                 'label'     => FA::icon('list-alt')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Товары</span>',
-                'url'       => Url::toRoute('/goods/index'),
+                'url'       => Url::toRoute('/categories'),
                 'options'   =>  [
                     'class' =>  'bordered'
                 ]
@@ -384,7 +424,7 @@ $this->beginPage() ?>
                 ]
             ],
             [
-                'label' => FA::icon('bars'),
+                'label' => FA::icon('bars')->size(FA::SIZE_2X),
                 'url' => ['#'],
                 'items' =>  [
                     [
@@ -595,7 +635,7 @@ $this->beginPage() ?>
                                 'url'   =>  '#'
                             ],
                             [
-                                'label' =>  'Импорт excel',
+                                'label' =>  'Импорт прайслистов',
                                 'url'   =>  Url::toRoute('/goods/import')
                             ],
                             [
@@ -641,6 +681,35 @@ $this->beginPage() ?>
                 ],
             ],
             [
+                'type'          =>  'search',
+                'pluginOptions' =>  [
+                    'name'          => 'menuSearch',
+                    'options'       => ['placeholder' => 'Поиск'],
+                    'scrollable'    => true,
+                    'pluginOptions' => [
+                        'limit'         =>  '10',
+                        'highlight'     =>  true
+                    ],
+                    'dataset' => [
+                        [
+                            'remote' => [
+                                'url' => Url::to(['/goods/searchgoods']).'?string=%QUERY',
+                                'wildcard' => '%QUERY'
+                            ],
+                            'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+                            'display'   => 'value',
+                            'templates' => [
+                                'notFound'      => $this->render('search/notFound'),
+                                'suggestion'    => new JsExpression("Handlebars.compile('".$this->render('search/suggestion')."')")
+                            ]
+                        ]
+                    ]
+                ],
+                'options'  =>   [
+                    'class' =>  'inline-search-container'
+                ]
+            ],
+            [
                 'label'     =>  'Сообщения',
                 'options'   =>  [
                     'class'   =>  'showChat'
@@ -650,7 +719,7 @@ $this->beginPage() ?>
             [
                 'label'     =>  'Задания',
                 'url'       =>  Url::toRoute('/tasks/index')
-            ],
+            ]
             /*[
                 'label' =>  '<i class="glyphicon glyphicon-usd large" id="currency-icon" data-target="#currencyModal" data-toggle="modal"></i><span class="visible-xs-inline">&nbsp;Курс</span>'
             ],

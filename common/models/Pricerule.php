@@ -17,47 +17,60 @@ class Pricerule extends \yii\db\ActiveRecord
 {
 
     public $customerRule = 0;
+	public $_terms = [];
+	public $_actions = [];
+	protected $termTypes = ['=', '>=', '<=', '!='];
+
+	public function __get($name){
+		switch($name){
+			case 'terms':
+				if(!empty($this->_terms)){
+					return $this->_terms;
+				}
+
+				$this->asArray();
+
+				return $this->_terms;
+				break;
+			case 'actions':
+				if(!empty($this->_actions)){
+					return $this->_actions;
+				}
+
+				$this->asArray();
+
+				return $this->_actions;
+				break;
+		}
+
+		return parent::__get($name);
+	}
 
 	public function asArray(){
-		$parts = explode(' THEN ', $this->Formula);
-		$terms = $parts['0'];
-		$action = $parts['1'];
+		$termPattern = '/'.implode('|', $this->termTypes).'/';
+		$parts = explode('THEN', preg_replace('/\s/', '', $this->Formula));
+		$terms = $parts[0];
+		$actions = $parts[1];
 		$terms = preg_replace('/IF/', '', $terms);
-		$terms = explode(' AND ', $terms);
-		foreach($terms as $key => $termt){
-			$termt = explode(' OR ', $termt);
+		$terms = explode('AND', $terms);
+		foreach($terms as $termt){
+			$termt = explode('OR', $termt);
 			foreach($termt as $term){
-				$term = preg_replace(array('/\(/', '/\)/', '/^\s/'), '', $term);
-				$tTerm = explode(' = ', $term);
-				if(!empty($tTerm['1'])){
-					$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '=');
-				}else{
-					$tTerm = explode(' >= ', $term);
-					if(!empty($tTerm['1'])){
-						$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '>=');
-					}else{
-						$tTerm = explode(' <= ', $term);
-						if(!empty($tTerm['1'])){
-							$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '<=');
-						}else{
-							$tTerm = explode(' != ', $term);
-							if(!empty($tTerm['1'])){
-								$rArray['terms'][$key][$tTerm['0']][] = array('term' => $tTerm['1'], 'type' => '!=');
-							}
-						}
+				$term = preg_replace('/\(|\)/', '', $term);
+				preg_match($termPattern, $term, $matches);
+				if(!empty($matches)){
+					$tTerm = explode($matches[0], $term);
+					if(!empty($tTerm[1])){
+						$this->_terms[$tTerm[0]][] = array('term' => $tTerm[1], 'type' => $matches[0]);
 					}
 				}
 			}
 		}
-		$actions = explode(' AND ', $action);
+		$actions = explode('AND', $actions);
 		foreach($actions as $action){
 			$action = explode('=', $action);
-			foreach($action as $key => $row){
-				$action[$key] = trim($row);
-			}
-			$rArray['actions'][$action['0']] = $action['1'];
+			$this->_actions[$action[0]] = $action[1];
 		}
-		return $rArray;
 	}
 
     /**

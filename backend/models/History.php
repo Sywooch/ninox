@@ -29,9 +29,35 @@ class History extends \common\models\History
     public static $status_10    =   'Ожидает отправки';
 
     public function afterFind(){
-        parent::afterFind();
-
         $this->getStatus();
+
+        return parent::afterFind();
+    }
+
+    public function beforeSave($insert){
+        if($this->isAttributeChanged('confirmed') && $this->confirmed == 1){
+            //$this->confirmDate = date('Y-m-d H:i:s');
+        }
+
+        $this->hasChanges = 1;
+
+        return parent::beforeSave($insert);
+    }
+
+    public function behaviors(){
+        if(!$this->isNewRecord){
+            return [
+                'LoggableBehavior' => [
+                    'class' => 'sammaye\audittrail\LoggableBehavior',
+                    'ignored' => [
+                        'Name2',
+                        'added'
+                    ],
+                ]
+            ];
+        }else{
+            return [];
+        }
     }
 
     public static function ordersQuery($options = []){
@@ -77,30 +103,32 @@ class History extends \common\models\History
     public function recalculatePrices($priceType = 'opt'){
         switch($priceType){
             case 'opt':
+            case 'wholesale':
+            case '1':
                 $priceType = 'PriceOut1';
                 break;
             case 'rozn':
+            case 'retail':
+            case '0':
                 $priceType = 'PriceOut2';
                 break;
         }
 
-        $sborkaItems = SborkaItem::findAll(['orderID' => $this->id]);
+        $assemblyItems = SborkaItem::findAll(['orderID' => $this->id]);
 
-        $items = $ggoods = [];
+        $itemsIDs = $goods = [];
 
-        foreach($sborkaItems as $item){
-            $items[] = $item->itemID;
+        foreach($assemblyItems as $item){
+            $itemsIDs[] = $item->itemID;
         }
 
-        $goods = Good::find()->where(['in', 'ID', $items])->all();
-
-        foreach($goods as $good){
-            $ggoods[$good->ID] = $good;
+        foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
+            $goods[$good->ID] = $good;
         }
 
-        foreach($sborkaItems as $item){
-            if(isset($ggoods[$item->itemID])){
-                $item->originalPrice = $ggoods[$item->itemID]->$priceType;
+        foreach($assemblyItems as $item){
+            if(isset($goods[$item->itemID])){
+                $item->originalPrice = $goods[$item->itemID]->$priceType;
                 $item->save(false);
             }
         }
@@ -272,26 +300,4 @@ class History extends \common\models\History
         return $r;
     }
 
-    public function beforeSave($insert){
-        if($this->isAttributeChanged('confirmed') && $this->confirmed == 1){
-            //$this->confirmDate = date('Y-m-d H:i:s');
-        }
-
-        $this->hasChanges = 1;
-
-        return parent::beforeSave($insert);
-    }
-
-    public function behaviors()
-    {
-        return [
-            'LoggableBehavior' => [
-                'class' => 'sammaye\audittrail\LoggableBehavior',
-                'ignored' => [
-                    'Name2',
-                    'displayorder'
-                ],
-            ]
-        ];
-    }
 }

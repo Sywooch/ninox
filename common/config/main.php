@@ -4,8 +4,16 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
 	'timeZone'	=>	'UTC',
     'components' => [
+		'formatter' =>  [
+			'class' =>  'common\components\Formatter'
+		],
 		'request'	=>	[
 			'class'	=>	'common\components\Request'
+		],
+		'db'	=>	[
+			'enableSchemaCache'	=>	true,
+			'schemaCacheDuration' => 3600,
+			'schemaCache' => 'cache',
 		],
 		'i18n' => [
 			'translations' => [
@@ -26,6 +34,9 @@ return [
 					],
 				],
 			],
+		],
+		'log'	=>	[
+			'flushInterval'	=>	'1000',
 		],
 	    'cache' => [
             'class' => 'yii\caching\FileCache',

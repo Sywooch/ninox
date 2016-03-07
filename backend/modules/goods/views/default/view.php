@@ -2,9 +2,6 @@
 use yii\helpers\Html;
 use yii\widgets\ListView;
 
-foreach($breadcrumbs as $b){
-    $this->params['breadcrumbs'][] = $b;
-}
 
 $css = <<<'STYLE'
 
@@ -202,7 +199,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Категория:
                                 </td>
                                 <td>
-                                    <a href="/goods/showcategory/<?=$nowCategory->ID?>"><?=$nowCategory->Name?></a>
+                                    <a href="/categories/view/<?=$nowCategory->ID?>"><?=$nowCategory->Name?></a>
                                 </td>
                             </tr>
                             <tr>
@@ -255,7 +252,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Количество в упаковке:
                                 </td>
                                 <td>
-                                    <?=$good->num_opt == "0" || $good->num_opt == "" ? "Неизвестно" : $good->num_opt.' '.$good->Measure1?>
+                                    <?=$good->num_opt == "0" || $good->num_opt == "" ? "Неизвестно" : $good->num_opt.' '.$good->measure?>
                                 </td>
                             </tr>
                             <tr>
@@ -263,7 +260,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Размеры:
                                 </td>
                                 <td>
-                                    <?=$good->gabarity?>
+                                    <?=$good->dimensions?>
                                 </td>
                             </tr>
                             <tr>
@@ -271,7 +268,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Ширина (см):
                                 </td>
                                 <td>
-                                    <?=$good->shyryna?>
+                                    <?=$good->width?>
                                 </td>
                             </tr>
                             <tr>
@@ -279,7 +276,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Высота (см):
                                 </td>
                                 <td>
-                                    <?=$good->vysota?>
+                                    <?=$good->height?>
                                 </td>
                             </tr>
                             <tr>
@@ -287,7 +284,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Длина (см):
                                 </td>
                                 <td>
-                                    <?=$good->dovgyna?>
+                                    <?=$good->length?>
                                 </td>
                             </tr>
                             <tr>
@@ -295,7 +292,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Диаметр (см):
                                 </td>
                                 <td>
-                                    <?=$good->dyametr?>
+                                    <?=$good->diameter?>
                                 </td>
                             </tr>
                             <tr>

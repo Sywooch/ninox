@@ -2,7 +2,9 @@
 
 namespace cashbox\models;
 
+use common\models\SborkaItem;
 use Yii;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "cashboxItems".
@@ -18,6 +20,7 @@ use Yii;
  * @property string $category
  * @property integer $customerRule
  * @property integer $deleted
+ * @property integer $added
  */
 class CashboxItem extends \yii\db\ActiveRecord
 {
@@ -25,9 +28,28 @@ class CashboxItem extends \yii\db\ActiveRecord
     public $price = 0;
     public $changedValue = 0;
     public $return = false;
+    public $priceModified = false;
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'cashboxItems';
+    }
 
     public function afterFind(){
-        $this->price = $this->originalPrice;
+        switch($this->discountType){
+            case '1':
+                $this->price = $this->originalPrice - $this->discountSize;
+                break;
+            case '2':
+                $this->price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
+                break;
+            default:
+                $this->price = $this->originalPrice;
+                break;
+        }
 
         return parent::afterFind();
     }
@@ -42,13 +64,28 @@ class CashboxItem extends \yii\db\ActiveRecord
         return parent::__set($name, $value);
     }
 
+    public function loadAssemblyItem($assemblyItem, $orderID){
+        if($assemblyItem instanceof SborkaItem == false){
+            throw new BadRequestHttpException();
+        }
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'cashboxItems';
+        $attributes = [
+            'category',
+            'count',
+            'customerRule',
+            'discountSize',
+            'discountType',
+            'itemID',
+            'name',
+            'originalPrice',
+            'priceRuleID'
+        ];
+
+        foreach($attributes as $attribute){
+            $this->$attribute = $assemblyItem->$attribute;
+        }
+
+        $this->orderID = $orderID;
     }
 
     /**
@@ -58,7 +95,7 @@ class CashboxItem extends \yii\db\ActiveRecord
     {
         return [
             [['itemID', 'orderID'], 'required'],
-            [['itemID', 'orderID', 'count', 'discountType', 'discountSize', 'priceRuleID', 'customerRule', 'deleted'], 'integer'],
+            [['itemID', 'orderID', 'added', 'count', 'discountType', 'discountSize', 'priceRuleID', 'customerRule', 'deleted'], 'integer'],
             [['originalPrice'], 'number'],
             [['name', 'category'], 'string', 'max' => 255],
         ];
@@ -81,6 +118,7 @@ class CashboxItem extends \yii\db\ActiveRecord
             'category' => Yii::t('common', 'Category'),
             'customerRule' => Yii::t('common', 'Customer Rule'),
             'deleted' => Yii::t('common', 'Deleted'),
+            'added' =>  \Yii::t('common', 'Added'),
         ];
     }
 
@@ -94,11 +132,18 @@ class CashboxItem extends \yii\db\ActiveRecord
                 $good->save(false);
             }
         }
+
+        return parent::afterDelete();
     }
 
     public function beforeSave($insert){
         if($this->isNewRecord && empty($this->orderID)){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
+        }
+
+        if($this->isNewRecord || $this->isAttributeChanged('count')){
+            $this->added = date('Y-m-d H:i:s');
+            \Yii::trace($this->added);
         }
 
         $this->price = $this->originalPrice;

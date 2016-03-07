@@ -33,8 +33,8 @@ class CartItemsCounterWidget extends Widget{
 		if(empty($this->itemID)){
 			throw new InvalidConfigException('ID товара не может быть пустым');
 		}
-		return Html::tag('div', '', [
-			'class'         =>  'minus',
+		return Html::tag('div', '-', [
+			'class'         =>  'minus bold font-size-15px'.($this->value <= 1 ? ' prohibited' : ''),
 			'data-itemId'   =>  $this->itemID,
 			'data-count'    =>  -1,
 		]);
@@ -44,21 +44,10 @@ class CartItemsCounterWidget extends Widget{
 		if(empty($this->itemID)){
 			throw new InvalidConfigException('ID товара не может быть пустым');
 		}
-		return Html::tag('div', '', [
-			'class'         =>  'plus',
+		return Html::tag('div', '+', [
+			'class'         =>  'plus bold font-size-15px'.($this->value >= $this->store ? ' prohibited' : ''),
 			'data-itemId'   =>  $this->itemID,
 			'data-count'    =>  1,
-		]);
-	}
-
-	public function renderDelete(){
-		if(empty($this->itemID)){
-			throw new InvalidConfigException('ID товара не может быть пустым');
-		}
-		return Html::button(\Yii::t('shop', 'Удалить'), [
-			'class'         =>  'remove-item',
-			'data-itemId'   =>  $this->itemID,
-			'data-count'    =>  0,
 		]);
 	}
 
@@ -68,14 +57,14 @@ class CartItemsCounterWidget extends Widget{
 		}
 		return Html::tag('input', '', [
 			'value'         =>  $this->value,
-			'readonly'      =>  'readonly',
 			'name'          =>  'count',
 			'class'         =>  'count',
 			'type'          =>  'text',
 			'data-itemId'   =>  $this->itemID,
 			'data-store'    =>  $this->store,
 			'data-inCart'   =>  $this->inCart,
-
+			'data-value'    =>  $this->value,
+			'autocomplete'  =>  'off'
 		]);
 	}
 

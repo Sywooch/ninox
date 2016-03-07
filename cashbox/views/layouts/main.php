@@ -40,8 +40,25 @@ $js = <<<'JS'
                 if($('#cashboxGrid-pjax').length > 0){
                     $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                    $('.toPay')[0].innerHTML = data.orderToPay;
-                    $('.summ')[0].innerHTML = data.orderSum;
+                    if(data.sum !== undefined){
+                        $(".summ")[0].innerHTML = data.sum;
+                    }
+
+                    if(data.sumToPay !== undefined){
+                        $(".toPay")[0].innerHTML = data.sumToPay;
+                    }
+
+                    if(data.wholesaleSum !== undefined){
+                        $(".wholesale-sum")[0].innerHTML = data.wholesaleSum;
+                    }
+
+                    if(data.discountSum !== undefined){
+                        $(".discount")[0].innerHTML = data.discountSum;
+                    }
+
+                    if(data.itemsCount !== undefined){
+                        $(".itemsCount")[0].innerHTML = data.itemsCount;
+                    }
                 }
 
                 swal.close();

@@ -8,8 +8,13 @@
 
 namespace frontend\models;
 
-use common\helpers\GoodHelper;
+use common\helpers\Formatter;
+use common\models\GoodOptions;
+use common\models\GoodOptionsValue;
+use common\models\GoodOptionsVariant;
+/*use common\helpers\GoodHelper;*/
 use common\models\GoodsPhoto;
+use yii\db\Query;
 
 class Good extends \common\models\Good{
 
@@ -26,8 +31,9 @@ class Good extends \common\models\Good{
     public $canBuy = true;
 	public $customerRule = 0;               //Персональное правило
 
-    public function afterFind()
-    {
+    private $_options = [];
+
+    public function afterFind(){
 	    parent::afterFind();
 
         //на товар работает отлично
@@ -36,48 +42,82 @@ class Good extends \common\models\Good{
             $this->$key = $value;
         }*/
 
-        if(!\Yii::$app->user->isGuest && isset(\Yii::$app->user->identity['PriceGroup'])){
-            switch(\Yii::$app->user->identity['PriceGroup']){
-                case '2':
-                    $wholesale_price = 'PriceOut3';
-                    $retail_price = 'PriceOut4';
-                    break;
-                case '1':
-                default:
-                    $wholesale_price = 'PriceOut1';
-                    $retail_price = 'PriceOut2';
-                    break;
-            }
-        }else{
-            $wholesale_price = 'PriceOut1';
-            $retail_price = 'PriceOut2';
-        }
-
-	    $this->wholesale_real_price = $this->$wholesale_price;
-	    $this->retail_real_price = $this->$retail_price;
-
+	    $this->wholesale_real_price = $this->PriceOut1;
+	    $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
 	    $this->num_opt = preg_replace('/D+/', '', $this->num_opt);
 
         switch($this->discountType){
             case 1:
                 //Размер скидки в деньгах
-                $this->wholesale_price = $this->$wholesale_price - $this->discountSize;
-                $this->retail_price = $this->$retail_price - $this->discountSize;
+                $this->wholesale_price = $this->wholesale_real_price - $this->discountSize;
+                $this->retail_price = $this->retail_real_price - $this->discountSize;
                 break;
             case 2:
                 //Размер скидки в процентах
-                $this->wholesale_price = round($this->$wholesale_price - ($this->$wholesale_price / 100 * $this->discountSize), 2);
-                $this->retail_price = round($this->$retail_price - ($this->$retail_price / 100 * $this->discountSize), 2);
+                $this->wholesale_price = round($this->wholesale_real_price - ($this->wholesale_real_price / 100 * $this->discountSize), 2);
+                $this->retail_price = round($this->retail_real_price - ($this->retail_real_price / 100 * $this->discountSize), 2);
                 break;
             default:
-                $this->wholesale_price = $this->$wholesale_price;
-                $this->retail_price = $this->$retail_price;
+                $this->wholesale_price = $this->wholesale_real_price;
+                $this->retail_price = $this->retail_real_price;
                 break;
         }
 
-	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? GoodHelper::getPriceFormat(($this->wholesale_price/$this->num_opt)) : 0;
+	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
 	    $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
+    }
 
+    public function getOptions(){
+        if(!empty($this->_options)){
+            return $this->_options;
+        }
+
+        $options = [];
+
+        $options = array_merge($options, $this->getDefaultOptions());
+
+        $query = Query::create(new Query())
+            ->select(['goodsoptions.name as option', 'goodsoptions_variants.value as value'])
+            ->from(GoodOptionsValue::tableName().' goodsoptions_values')
+            ->leftJoin(GoodOptionsVariant::tableName().' goodsoptions_variants', 'goodsoptions_values.value = goodsoptions_variants.id')
+            ->leftJoin(GoodOptions::tableName().' goodsoptions', 'goodsoptions_values.option = goodsoptions.id')
+            ->where(['goodsoptions_values.good' => $this->ID]);
+
+        foreach($query->each() as $option){
+            $options[$option['option']] = $option['value'];
+        }
+
+        return $this->_options = $options;
+    }
+
+    protected function getDefaultOptions(){
+        $options = [];
+
+        if(!empty($this->num_opt)){
+            $options[\Yii::t('shop', 'Количество в упаковке')] = $this->num_opt.' '.\Yii::t('shop', $this->measure);
+        }
+
+        if(!empty($this->dimensions)){
+            $options[\Yii::t('shop', 'Размеры')] = $this->dimensions;
+        }
+
+        if(!empty($this->height)){
+            $options[\Yii::t('shop', 'Высота')] = $this->height;
+        }
+
+        if(!empty($this->width)){
+            $options[\Yii::t('shop', 'Ширина')] = $this->width;
+        }
+
+        if(!empty($this->length)){
+            $options[\Yii::t('shop', 'Длина')] = $this->length;
+        }
+
+        if(!empty($this->diameter)){
+            $options[\Yii::t('shop', 'Диаметр')] = $this->diameter;
+        }
+
+        return $options;
     }
 
 	public static function find(){
