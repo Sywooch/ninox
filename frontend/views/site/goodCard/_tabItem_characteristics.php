@@ -1,41 +1,23 @@
+<?php
+use yii\bootstrap\Html;
+?>
 <div class="product-characteristics">
     <span class="tabTitle semi-bold">
-        <?=_("Характеристика товара")?>
+        <?=\Yii::t('shop', 'Характеристики товара')?>
     </span>
     <div class="details">
-        <div class="characteristics">
-            <div class="characteristic">
-                <span>
-                    <?=!empty($good->num_opt) ? _("Количество в упаковке:") : ''?>
-                </span>
-            </div>
-            <div>
-                <span>
-                    <?=$good->num_opt.' '.$good->Measure1?>
-                </span>
-            </div>
-        </div>
-        <div class="characteristics">
-            <div class="characteristic">
-                <?=_("Материал:")?>
-            </div>
-            <div>Ткань тканьевая</div>
-        </div>
-        <div class="characteristics">
-            <div class="characteristic">
-                <?=!empty($good->gabarity) ? _("Размеры:") : ''?>
-            </div>
-            <div>
-                <?=$good->gabarity?>
-            </div>
-        </div>
+        <?php foreach($good->options as $option => $value){
+            echo Html::tag('div', Html::tag('div', $option, ['class' => 'characteristic']).Html::tag('div', $value),[
+                'class' =>  'characteristics'
+            ]);
+        }?>
     </div>
     <!--<div class="properties" itemprop="description"><?/*php$good->Description*/?></div>-->
 </div>
 <div class="item-detail">
-    <span class="tabTitle semi-bold"><?=_("Описание товара")?></span>
+    <span class="tabTitle semi-bold"><?=\Yii::t('shop', 'Описание товара')?></span>
     <div class="details">
-        <?=!empty($good->Description) ? $good->Description : 'Нет описания'?>
+        <?=!empty($good->Description) ? $good->Description : \Yii::t('shop', 'Нет описания')?>
     </div>
 </div>
 
