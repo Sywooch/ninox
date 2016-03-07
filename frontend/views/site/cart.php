@@ -44,7 +44,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 								'class' =>  'amount-discount'
 							])
 				]), [
-				'class' =>  'amount-cart-discount bold font-size-20px'
+				'class' =>  'amount-cart-discount'
 			]).
 			Html::tag('div',
 				\Yii::t('shop', 'сумма заказа без скидки {realAmount}', [
@@ -53,7 +53,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 								'class' =>  'amount-real'
 							])
 				]), [
-				'class' =>  'amount-cart-real font-size-13px'
+				'class' =>  'amount-cart-real'
 			]), [
 			'class' =>  'left'
 		]).
@@ -65,10 +65,10 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 					'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
 				]).
 				\Yii::t('shop', 'Предварительная сумма к оплате'), [
-				'class' =>  'amount-cart-text font-size-13px'
+				'class' =>  'amount-cart-text'
 			]).
 			Html::tag('div', Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm), [
-				'class' =>  'amount-cart bold font-size-28px'
+				'class' =>  'amount-cart'
 			]), [
 			'class' =>  'right'
 		]), [

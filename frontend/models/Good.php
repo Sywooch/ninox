@@ -37,7 +37,7 @@ class Good extends \common\models\Good{
 
 	    $this->wholesale_real_price = $this->PriceOut1;
 	    $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
-	    $this->num_opt = preg_replace('/D+/', '', $this->num_opt);
+	    $this->num_opt = filter_var($this->num_opt, FILTER_SANITIZE_NUMBER_INT);
 
         switch($this->discountType){
             case 1:
@@ -56,7 +56,8 @@ class Good extends \common\models\Good{
                 break;
         }
 
-	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : '';
+	    $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ?
+		    Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
 	    $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
     }
 

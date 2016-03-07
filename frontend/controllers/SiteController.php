@@ -198,13 +198,13 @@ class SiteController extends Controller
 	    $items = [];
 	    foreach(\Yii::$app->cart->goods as $good){
 			if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){
-                $discount = '-';
+                $discount = 0;
                 switch($good->discountType){
                     case 1:
-                        $discount .= Formatter::getFormattedPrice($good->discountSize);
+                        $discount = '-'.Formatter::getFormattedPrice($good->discountSize);
                         break;
                     case 2:
-                        $discount .= $good->discountSize.'%';
+                        $discount = '-'.$good->discountSize.'%';
                         break;
                     default:
                         break;
