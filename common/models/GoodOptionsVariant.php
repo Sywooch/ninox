@@ -33,6 +33,16 @@ class GoodOptionsVariant extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getList($option){
+        $list = [];
+
+        foreach(self::find()->where(['option' => $option])->each() as $item){
+            $list[$item->id] = $item->value;
+        }
+
+        return $list;
+    }
+
     /**
      * @inheritdoc
      */
