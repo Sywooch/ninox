@@ -10,6 +10,33 @@ use yii\helpers\Url;
 
 $js = <<<'JS'
     $('#goodAttributesList').addInputArea();
+
+    var addEvents = function(element){
+        selectOptions = {"allowClear":true,"options":{"name_format":"GoodOption[%d][option]"},"theme":"krajee","width":"100%","language":"ru"},
+        counter = ($(element[0].parentNode).find(" > *").length - 1),
+        depDropOptions = {"depends":["good_attribute_" + counter],"url":"\/goods\/filters?act=getattributes","params":["good_attribute"]},
+        select2options = {"allowClear":false,"theme":"krajee","width":"100%","placeholder":"Выбрать...","language":"ru"},
+        select2options2 = {"themeCss":".select2-container--krajee","sizeCss":"input-sm","doReset":true,"doToggle":false,"doOrder":false};
+
+        if ($('#good_attribute_' + counter).data('select2')) { $('#good_attribute_' + counter).select2('destroy'); }
+        $.when($('#good_attribute_' + counter).select2(selectOptions)).done(initS2Loading('good_attribute_' + counter,'select2options2'));
+
+        if ($('#good_attribute_option_' + counter).data('depdrop')) { $('#good_attribute_option_' + counter).depdrop('destroy'); }
+        $('#good_attribute_option_' + counter).depdrop(depDropOptions);
+
+        if ($('#good_attribute_option_' + counter).data('select2')) { $('#good_attribute_option_' + counter).select2('destroy'); }
+        $.when($('#good_attribute_option_' + counter).select2(select2options)).done(initS2Loading('good_attribute_option_' + counter,'select2options2'));
+
+        $(element[0].parentNode).find(".kv-plugin-loading").remove();
+    }
+
+    $("#goodAttributesList").on('inputArea.added', function(event, element) {
+        addEvents(element);
+    });
+
+    $("#goodAttributesList").on('inputArea.removed', function(event, element) {
+        console.log(element);
+    });
 JS;
 
 $css = <<<'CSS'
@@ -212,7 +239,11 @@ foreach($options as $key => $option){
         ]);
 }
 
-$form = new \kartik\form\ActiveForm();
+$form = new \kartik\form\ActiveForm([
+    'options'   =>  [
+        'class' =>  'goodEditForm'
+    ]
+]);
 $form->begin();
 
 echo Html::tag('ol', implode('', $goodOptions), ['id' => 'goodAttributesList']),

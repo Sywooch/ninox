@@ -12,6 +12,8 @@ use common\models\Category;
 use common\models\CategorySearch;
 use common\models\CategoryUk;
 use backend\models\Good;
+use common\models\GoodOptions;
+use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use common\models\GoodSearch;
 use common\models\GoodUk;
@@ -522,41 +524,14 @@ class DefaultController extends Controller
      */
     public function actionView($param){
         $good = Good::findOne($param);
-        $request = \Yii::$app->request;
 
         if(!$good){
-            throw new NotFoundHttpException("Товар с ID ".$param." не найден!");
+            throw new NotFoundHttpException("Товар с идентификатором {$param} не найден!");
         }
 
-        //Начало хлебных крошек
-        $category = Category::findOne($good->GroupID);
-        $parents = Category::getParentCategories($category->Code);
+        $request = \Yii::$app->request;
 
-        $this->getView()->params['breadcrumbs'][] = [
-            'label' =>  'Категории',
-            'url'   =>  '/categories'
-        ];
-
-        if (sizeof($parents) >= 1) {
-            $parents = array_reverse($parents);
-
-            foreach ($parents as $parentCategory) {
-                if ($parentCategory != '') {
-                    $this->getView()->params['breadcrumbs'][] = [
-                        'label' => $parentCategory->Name,
-                        'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
-                    ];
-                }
-            }
-        }
-
-        $this->getView()->params['breadcrumbs'][] = [
-            'label' =>  $category->Name,
-            'url'   => Url::toRoute(['/categories', 'category' => $category->Code])
-        ];
-
-        $this->getView()->params['breadcrumbs'][] = $good->Name;
-        //Конец хлебных крошек
+        $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good);
 
         $goodMainForm = new GoodMainForm();
         $goodAttributesForm = new GoodAttributesForm();
@@ -571,20 +546,53 @@ class DefaultController extends Controller
                 $goodMainForm->save();
             }
 
+            if($request->post("GoodOption")){
+                $options = $deleteOptions = [];
+
+                foreach($request->post("GoodOption") as $optionArray){
+                    $options[$optionArray['option']] = $optionArray['value'];
+                }
+
+                foreach($good->options as $optionArray){
+                    if(!isset($options[$optionArray['optionID']])){
+                        $deleteOptions[] = $optionArray['optionID'];
+                    }
+                }
+
+                foreach($options as $option => $value){
+                    $tOption = GoodOptionsValue::findOne(['good' => $good->ID, 'option' => $option]);
+
+                    if(!$tOption){
+                        $tOption = new GoodOptionsValue([
+                            'good'      =>  $good->ID,
+                            'option'    =>  $option,
+                            'value'     =>  $value
+                        ]);
+                    }else{
+                        $tOption->value = $value;
+                    }
+
+                    $tOption->save(false);
+
+                    unset($options[$option]);
+                }
+
+                foreach($options as $option){
+                    $deleteOptions[] = $option;
+                }
+
+                GoodOptionsValue::deleteAll(['and', ['in', 'option', $deleteOptions], ['good' => $good->ID]]);
+
+                $good->getOptions(true);
+            }
+
             return $this->render('edit', [
                 'good'              =>  $good,
                 //'goodUk'          =>  $goodUK,
                 'goodMainForm'      =>  $goodMainForm,
                 'goodAttributesForm'=>  $goodAttributesForm,
                 'goodExportForm'    =>  $goodExportForm,
-                'nowCategory'       =>  $category,
-                'uploadPhoto'       =>  new UploadPhoto(),
-                'additionalPhotos'  =>  new ActiveDataProvider([
-                    'query' =>  GoodPhoto::find()->where(['ItemId' => $good->ID]),
-                    'pagination'    =>  [
-                        'pageSize'  =>  0
-                    ]
-                ])
+                'nowCategory'       =>  $good->category,
             ]);
         }
 
@@ -597,6 +605,44 @@ class DefaultController extends Controller
                 'models'    =>  $good->photos
             ])
         ]);
+    }
+
+    /**
+     * Делает хлебные крошки
+     *
+     * @param Good $good Модель товара
+     *
+     * @return array Хлебные крошки
+     */
+    public function buildBreadcrumbs($good){
+        $breadcrumbs = [];
+
+        $breadcrumbs[] = [
+            'label' =>  'Категории',
+            'url'   =>  '/categories'
+        ];
+
+        if (sizeof($good->category->parents) >= 1) {
+            $parents = array_reverse($good->category->parents);
+
+            foreach ($parents as $parentCategory) {
+                if ($parentCategory != '') {
+                    $breadcrumbs[] = [
+                        'label' => $parentCategory->Name,
+                        'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
+                    ];
+                }
+            }
+        }
+
+        $breadcrumbs[] = [
+            'label' =>  $good->category->Name,
+            'url'   => Url::toRoute(['/categories', 'category' => $good->category->Code])
+        ];
+
+        $breadcrumbs[] = $good->Name;
+
+        return $breadcrumbs;
     }
 
     public function actionFilters(){
