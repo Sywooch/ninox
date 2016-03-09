@@ -25,7 +25,7 @@ class m160229_144843_good_edit extends Migration
 
         foreach($goods->each() as $good){
             $photo = new \common\models\GoodsPhoto([
-                'itemid'    =>  $good->id,
+                'itemid'    =>  $good->ID,
                 'ico'       =>  $good->ico,
                 'order'     =>  '1',
             ]);

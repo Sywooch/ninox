@@ -472,7 +472,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @param Good $good
+     * @param Good|static $good
      * @param int $order
      *
      * @return bool
@@ -483,7 +483,7 @@ class DefaultController extends Controller
 
     /**
      * @param mixed $file
-     * @param Good $good
+     * @param Good|static $good
      *
      * @return mixed
      */
@@ -495,7 +495,7 @@ class DefaultController extends Controller
 
     /**
      * @param int[] $newOrder
-     * @param Good $good
+     * @param Good|static $good
      *
      * @return bool
      */
@@ -577,10 +577,6 @@ class DefaultController extends Controller
                     unset($options[$option]);
                 }
 
-                foreach($options as $option){
-                    $deleteOptions[] = $option;
-                }
-
                 GoodOptionsValue::deleteAll(['and', ['in', 'option', $deleteOptions], ['good' => $good->ID]]);
 
                 $good->getOptions(true);
@@ -610,7 +606,7 @@ class DefaultController extends Controller
     /**
      * Делает хлебные крошки
      *
-     * @param Good $good Модель товара
+     * @param Good|static $good Модель товара
      *
      * @return array Хлебные крошки
      */
