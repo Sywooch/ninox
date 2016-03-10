@@ -298,12 +298,20 @@ class DefaultController extends Controller
     }
 
     public function actionLog(){
-        $query = AuditTrail::find()->where([
-           'model'  =>  Good::className()
-        ]);
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод возможен только через ajax!");
+        }
 
         $dataProvider = new ActiveDataProvider([
-            'query' =>  $query->orderBy('id desc')
+            'query' =>  AuditTrail::find()->where([
+                'model'  =>  Good::className()
+            ])
+        ]);
+
+        $dataProvider->setSort([
+            'default'   =>  [
+                'id'    =>  SORT_DESC
+            ]
         ]);
 
         return $this->render('log', [
@@ -604,6 +612,74 @@ class DefaultController extends Controller
     }
 
     /**
+     * Меняет bool значения товара
+     *
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionToggle(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод возможен только через ajax!");
+        }
+
+        $good = Good::findOne(\Yii::$app->request->post("goodID"));
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        if(!isset($good->$attribute)){
+            throw new NotFoundHttpException("У товара {$good->ID} не найден аттрибут {$attribute}!");
+        }
+
+        $good->$attribute = $good->$attribute == 1 ? 0 : 1;
+
+        \Yii::$app->response->format = 'json';
+
+        if($good->validate([$attribute]) &&  $good->save(false)){
+            return $good->$attribute;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Меняет не bool значения товара
+     *
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionChangevalue(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод возможен только через ajax!");
+        }
+
+        $good = Good::findOne(\Yii::$app->request->post("goodID"));
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        if(!isset($good->$attribute)){
+            throw new NotFoundHttpException("У товара {$good->ID} не найден аттрибут {$attribute}!");
+        }
+
+        $good->$attribute = \Yii::$app->request->post("value");
+
+        if($good->validate($attribute)){
+            return $good->save(false);
+        }
+
+        return false;
+    }
+
+    /**
      * Делает хлебные крошки
      *
      * @param Good|static $good Модель товара
@@ -641,6 +717,12 @@ class DefaultController extends Controller
         return $breadcrumbs;
     }
 
+    /**
+     * Ajax метод для работы с фильтрами
+     *
+     * @return array
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionFilters(){
         if(!\Yii::$app->request->isAjax){
             throw new BadRequestHttpException();

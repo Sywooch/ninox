@@ -1,5 +1,6 @@
 <?php
 use kartik\file\FileInput;
+use yii\bootstrap\Html;
 use yii\helpers\Url;
 
 \kartik\sortable\SortableAsset::register($this);
@@ -55,14 +56,13 @@ $this->registerCss($css);
 $photos = $previewPhotos = [];
 
 foreach($good->photos as $photo){
-    $previewPhotos[] = \yii\bootstrap\Html::img('/img/catalog/'.$photo->ico, [
+    $previewPhotos[] = \yii\bootstrap\Html::img('http://krasota-style.com.ua/img/catalog/'.$photo->ico, [
         'class'         =>  'file-preview-image',
         'data-itemID'   =>  $good->ID,
         'data-order'    =>  $photo->order
     ]);
     $photos[] = [
         'caption'   =>  'http://krasota-style.com.ua/img/catalog/'.$photo->ico,
-        'caption'   =>  $photo->ico,
         'key'       =>  $photo->itemid,
         'extra'     =>  [
             'order' =>  $photo->order

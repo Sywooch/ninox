@@ -22,19 +22,6 @@ class Good extends \common\models\Good{
     private $_photos = [];
     private $_category = false;
 
-    public static function changeTrashState($id){
-        $a = self::findOne(['ID' => $id]);
-
-        if($a){
-            $a->Deleted = $a->Deleted == "1" ? "0" : "1";
-            $a->save(false);
-
-            return $a->Deleted;
-        }
-
-        return false;
-    }
-
     /**
      * @return GoodPhoto[]
      */

@@ -71,6 +71,7 @@ class User extends Customer implements IdentityInterface {
 		if(empty($this->_pricerules)){
 			$this->_pricerules = CustomerPricerule::find()->where(['customerID' => $this->ID, 'Enabled' => 1])->orderBy('`Priority`')->all();
 		}
+
 		return $this->_pricerules;
 	}
 
