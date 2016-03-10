@@ -10,9 +10,17 @@ namespace backend\models;
 
 
 use common\models\Category;
+use common\models\GoodOptions;
+use common\models\GoodOptionsValue;
+use common\models\GoodOptionsVariant;
+use yii\db\Query;
 use yii\web\NotFoundHttpException;
 
 class Good extends \common\models\Good{
+
+    private $_options = [];
+    private $_photos = [];
+    private $_category = false;
 
     public static function changeTrashState($id){
         $a = self::findOne(['ID' => $id]);
@@ -31,7 +39,31 @@ class Good extends \common\models\Good{
      * @return GoodPhoto[]
      */
     public function getPhotos(){
-        return GoodPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+        if(!empty($this->_photos)){
+            return $this->_photos;
+        }
+
+        return $this->_photos = GoodPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+    }
+
+    public function getOptions($updateCache = false){
+        if(!empty($this->_options) && !$updateCache){
+            return $this->_options;
+        }
+
+        $query = Query::create(new Query())
+            ->select([
+                'goodsoptions.name as option',
+                'goodsoptions.id as optionID',
+                'goodsoptions_variants.value as value',
+                'goodsoptions_variants.id as valueID'
+            ])
+            ->from(GoodOptionsValue::tableName().' goodsoptions_values')
+            ->leftJoin(GoodOptionsVariant::tableName().' goodsoptions_variants', 'goodsoptions_values.value = goodsoptions_variants.id')
+            ->leftJoin(GoodOptions::tableName().' goodsoptions', 'goodsoptions_values.option = goodsoptions.id')
+            ->where(['goodsoptions_values.good' => $this->ID]);
+
+        return $this->_options = $query->all();
     }
 
     /**
@@ -85,7 +117,11 @@ class Good extends \common\models\Good{
      * @return Category
      */
     public function getCategory(){
-        return Category::findOne($this->GroupID);
+        if(!empty($this->_category)){
+            return $this->_category;
+        }
+
+        return $this->_category = Category::findOne($this->GroupID);
     }
 
 }

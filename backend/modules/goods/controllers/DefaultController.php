@@ -12,6 +12,9 @@ use common\models\Category;
 use common\models\CategorySearch;
 use common\models\CategoryUk;
 use backend\models\Good;
+use common\models\GoodOptions;
+use common\models\GoodOptionsValue;
+use common\models\GoodOptionsVariant;
 use common\models\GoodSearch;
 use common\models\GoodUk;
 use backend\models\History;
@@ -308,6 +311,11 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * @deprecated
+     * @return array
+     * @throws \yii\web\MethodNotAllowedHttpException
+     */
     public function actionSearchgoods(){
         return $this->actionSearch();
     }
@@ -426,57 +434,13 @@ class DefaultController extends Controller
 
     }
 
-    public function actionShowcategory($param){
-        $c = Category::findOne(['ID' => $param]);
-
-        if(empty($c)){
-            return $this->run('site/error');
-        }
-
-        $b = Category::getParentCategories($c->Code);
-        $breadcrumbs = [];
-
-        if(!empty($b)){
-            foreach($b as $bb){
-                $breadcrumbs[] = [
-                    'label' =>  $bb->Name,
-                    'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
-                ];
-            }
-        }
-
-        if(\Yii::$app->request->post("Category") && \Yii::$app->request->get("act") == "edit"){
-            $r = \Yii::$app->request;
-            $c = Category::findOne(['ID' => $param]);
-
-            if(isset($r->post("Category")['keywords'])){
-                $r->post("Category")['keywords'] = implode(", ", $r->post("Category")['keywords']);
-            }
-
-            foreach($r->post("Category") as $k => $v){
-                if($k == 'keywords'){
-                    $k = 'keyword';
-                    $v = implode(', ', $v);
-                }
-                if(isset($c->$k) && (!empty($v) || $v == "0")){
-                    $c->$k = $v;
-                }else{
-                    $c->$k = " ";
-                }
-            }
-
-            $c->save(false);
-        }
-
-        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editcategory' : 'showcategory', [
-            'category'      =>  $c,
-            'breadcrumbs'   =>  $breadcrumbs,
-            'subCats'       =>  Category::getSubCategories($c->Code),
-            'parentCategory'=>  Category::getParentCategory($c->Code),
-            'categoryUk'    =>  CategoryUk::findOne(['ID' => $c->ID])
-        ]);
-    }
-
+    /**
+     * Операции с фотографиями для товаров
+     *
+     * @return bool|mixed|null
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionPhoto(){
         if(!\Yii::$app->request->isAjax){
             throw new BadRequestHttpException("Данный метод доступен только через ajax!");
@@ -508,8 +472,8 @@ class DefaultController extends Controller
     }
 
     /**
-     * @param $good
-     * @param $order
+     * @param Good|static $good
+     * @param int $order
      *
      * @return bool
      */
@@ -517,12 +481,24 @@ class DefaultController extends Controller
         return $good->deletePhoto($order);
     }
 
+    /**
+     * @param mixed $file
+     * @param Good|static $good
+     *
+     * @return mixed
+     */
     public function addPhoto($file, $good){
         $file = UploadHelper::__upload($file);
 
         return $good->addPhoto($file);
     }
 
+    /**
+     * @param int[] $newOrder
+     * @param Good|static $good
+     *
+     * @return bool
+     */
     public function reorderPhotos($newOrder, $good){
         $photos = [];
 
@@ -540,43 +516,22 @@ class DefaultController extends Controller
         return true;
     }
 
+    /**
+     * @param $param
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionView($param){
         $good = Good::findOne($param);
-        $request = \Yii::$app->request;
 
         if(!$good){
-            throw new NotFoundHttpException("Товар с ID ".$param." не найден!");
+            throw new NotFoundHttpException("Товар с идентификатором {$param} не найден!");
         }
 
-        //Начало хлебных крошек
-        $category = Category::findOne($good->GroupID);
-        $parents = Category::getParentCategories($category->Code);
+        $request = \Yii::$app->request;
 
-        $this->getView()->params['breadcrumbs'][] = [
-            'label' =>  'Категории',
-            'url'   =>  '/goods'
-        ];
-
-        if (sizeof($parents) >= 1) {
-            $parents = array_reverse($parents);
-
-            foreach ($parents as $parentCategory) {
-                if ($parentCategory != '') {
-                    $this->getView()->params['breadcrumbs'][] = [
-                        'label' => $parentCategory->Name,
-                        'url'   => Url::toRoute(['/goods', 'category' => $parentCategory->Code])
-                    ];
-                }
-            }
-        }
-
-        $this->getView()->params['breadcrumbs'][] = [
-            'label' =>  $category->Name,
-            'url'   => Url::toRoute(['/goods', 'category' => $category->Code])
-        ];
-
-        $this->getView()->params['breadcrumbs'][] = $good->Name;
-        //Конец хлебных крошек
+        $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good);
 
         $goodMainForm = new GoodMainForm();
         $goodAttributesForm = new GoodAttributesForm();
@@ -591,20 +546,49 @@ class DefaultController extends Controller
                 $goodMainForm->save();
             }
 
+            if($request->post("GoodOption")){
+                $options = $deleteOptions = [];
+
+                foreach($request->post("GoodOption") as $optionArray){
+                    $options[$optionArray['option']] = $optionArray['value'];
+                }
+
+                foreach($good->options as $optionArray){
+                    if(!isset($options[$optionArray['optionID']])){
+                        $deleteOptions[] = $optionArray['optionID'];
+                    }
+                }
+
+                foreach($options as $option => $value){
+                    $tOption = GoodOptionsValue::findOne(['good' => $good->ID, 'option' => $option]);
+
+                    if(!$tOption){
+                        $tOption = new GoodOptionsValue([
+                            'good'      =>  $good->ID,
+                            'option'    =>  $option,
+                            'value'     =>  $value
+                        ]);
+                    }else{
+                        $tOption->value = $value;
+                    }
+
+                    $tOption->save(false);
+
+                    unset($options[$option]);
+                }
+
+                GoodOptionsValue::deleteAll(['and', ['in', 'option', $deleteOptions], ['good' => $good->ID]]);
+
+                $good->getOptions(true);
+            }
+
             return $this->render('edit', [
                 'good'              =>  $good,
                 //'goodUk'          =>  $goodUK,
                 'goodMainForm'      =>  $goodMainForm,
                 'goodAttributesForm'=>  $goodAttributesForm,
                 'goodExportForm'    =>  $goodExportForm,
-                'nowCategory'       =>  $category,
-                'uploadPhoto'       =>  new UploadPhoto(),
-                'additionalPhotos'  =>  new ActiveDataProvider([
-                    'query' =>  GoodPhoto::find()->where(['ItemId' => $good->ID]),
-                    'pagination'    =>  [
-                        'pageSize'  =>  0
-                    ]
-                ])
+                'nowCategory'       =>  $good->category,
             ]);
         }
 
@@ -619,167 +603,65 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function actionShowgood($param){
-        if(!filter_var($param, FILTER_VALIDATE_INT)){
-            return $this->run('site/error');
-        }
-
-        $good = Good::findOne(['ID' => $param]);
-        $goodUK = GoodUk::findOne(['ID' => $param]);
-
-        if(empty($good)){
-            throw new NotFoundHttpException("Такой товар не найден!");
-        }
-
-        //Начало хлебных крошек
-        $a = Category::findOne(['ID' => $good->GroupID]);
-        $p = Category::getParentCategories($a->Code);
-
+    /**
+     * Делает хлебные крошки
+     *
+     * @param Good|static $good Модель товара
+     *
+     * @return array Хлебные крошки
+     */
+    public function buildBreadcrumbs($good){
         $breadcrumbs = [];
 
         $breadcrumbs[] = [
             'label' =>  'Категории',
-            'url'   =>  '/goods'
+            'url'   =>  '/categories'
         ];
 
-        if (sizeof($p) >= 1) {
-            $p = array_reverse($p);
+        if (sizeof($good->category->parents) >= 1) {
+            $parents = array_reverse($good->category->parents);
 
-            foreach ($p as $c) {
-                if ($c != '') {
+            foreach ($parents as $parentCategory) {
+                if ($parentCategory != '') {
                     $breadcrumbs[] = [
-                        'label' => $c->Name,
-                        'url' => Url::toRoute(['/goods', 'category' => $c->Code])
+                        'label' => $parentCategory->Name,
+                        'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
                     ];
                 }
             }
         }
 
         $breadcrumbs[] = [
-            'label' =>  $a->Name,
-            'url' => Url::toRoute(['/goods', 'category' => $a->Code])
+            'label' =>  $good->category->Name,
+            'url'   => Url::toRoute(['/categories', 'category' => $good->category->Code])
         ];
 
         $breadcrumbs[] = $good->Name;
-        //Конец хлебных крошек
 
-        if(\Yii::$app->request->get("act") == "edit"){
-            $post = \Yii::$app->request->post();
-
-            if(\Yii::$app->request->isAjax && isset($post['validate']) && $post['validate']){
-                $good = new Good;
-                $good->load($post['Good']);
-                \Yii::$app->response->format = Response::FORMAT_JSON;
-                return ActiveForm::validate($good);
-            }
-
-            if(!empty($post)){
-                if(empty($goodUK)){
-                    $goodUK = new GoodUk;
-                    $goodUK->ID = $param;
-                }
-
-                $goodUK->Name = $post['GoodUk']['Name'];
-                $goodUK->Name2 = $post['GoodUk']['Name'];
-                $goodUK->Description = $post['GoodUk']['Description'];
-
-                $goodUK->save(false);
-
-                $good->attributes = $post['Good'];
-
-                if($good->save(false)){
-
-                    //Модель успешно сохранена
-                }else{
-                    //Произошла ошибка валидации
-                }
-                //TODO: добавить сообщение об успешном обновлении инфо о товаре, или о ошибке
-            }
-        }
-
-        $gp = GoodPhoto::find()->where(['ItemId' => $good->ID]);
-
-        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'editgood' : 'view', [
-            'breadcrumbs' => $breadcrumbs,
-            'good'       => $good,
-            'goodUk'     => $goodUK,
-            'nowCategory' => $a,
-            'uploadPhoto'  =>  new UploadPhoto(),
-            'additionalPhotos'  =>  new ActiveDataProvider([
-                'query' =>  $gp,
-                'pagination'    =>  [
-                    'pageSize'  =>  0
-                ]
-            ])
-        ]);
+        return $breadcrumbs;
     }
 
-    public function actionUploadadditionalphoto(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = 'json';
-            if(isset($_FILES['GoodPhoto'])){
-                $m = Good::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
-
-                $f = UploadHelper::__upload($_FILES['GoodPhoto'], [
-                    'filename'  =>  $m ? TranslitHelper::to($m->Name).'-'.rand(0, 1000000) : ''
-                ]);
-                if(!empty($f)) {
-                    $m = new GoodPhoto();
-                    $m->ico = $f;
-                    $m->itemid = \Yii::$app->request->post("ItemId");
-                    if($m->save()){
-                        return [
-                            'link'  =>  $m->ico,
-                            'id'    =>  $m->getPrimaryKey()
-                        ];
-                    }
-                }
-            }
-            return 0;
-        }else{
-            return $this->run('site/error');
-        }
-    }
-
-    public function actionRemoveadditionalphoto(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = 'json';
-            $m = GoodPhoto::findOne([
-                'ID'    =>  \Yii::$app->request->post("additionalPhotoID")
-            ]);
-
-            return $m->delete() ? 1 : 0;
+    public function actionFilters(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException();
         }
 
-        return $this->run('site/error');
-    }
+        \Yii::$app->response->format = 'json';
 
+        switch(\Yii::$app->request->get("act")){
+            case 'getattributes':
+                $variants = [];
 
-    public function actionUploadgoodphoto(){
-        if(\Yii::$app->request->isAjax){
-            \Yii::$app->response->format = 'json';
-            $m = Good::findOne(['ID' => \Yii::$app->request->post("ItemId")]);
-
-            if($m){
-                $f = UploadHelper::__upload($_FILES['GoodPhoto'], [
-                    'filename'  =>  TranslitHelper::to($m->Name).'-'.rand(0, 1000000)
-                ]);
-                if($f){
-                    $m->ico = $f;
-                    if($m->save(false)){ //TODO: потом поровнять так, чтобы было норм, с валидацией, ёпта
-                        return [
-                            'link'  =>  $f
-                        ];
-                    }
+                foreach(GoodOptionsVariant::getList(\Yii::$app->request->post("depdrop_parents")) as $id => $value){
+                    $variants[] = [
+                        'id'    =>  $id,
+                        'name'  =>  $value
+                    ];
                 }
-            }
 
-
-            return [
-                'state' =>  0
-            ];
-        }else{
-            return $this->run('site/error');
+                return ['output' => $variants, 'selected' => \Yii::$app->request->post("selected")];
+                break;
+            //case ''
         }
     }
 
