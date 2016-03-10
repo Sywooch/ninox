@@ -604,6 +604,72 @@ class DefaultController extends Controller
     }
 
     /**
+     * Меняет bool значения товара
+     *
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionToggle(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод возможен только через ajax!");
+        }
+
+        $good = Good::findOne(\Yii::$app->request->post("goodID"));
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        if(!isset($good->$attribute)){
+            throw new NotFoundHttpException("У товара {$good->ID} не найден аттрибут {$attribute}!");
+        }
+
+        $good->$attribute = $good->$attribute == 1 ? 0 : 1;
+
+        if($good->validate($attribute)){
+            return $good->save(false);
+        }
+
+        return false;
+    }
+
+    /**
+     * Меняет не bool значения товара
+     *
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionChangevalue(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод возможен только через ajax!");
+        }
+
+        $good = Good::findOne(\Yii::$app->request->post("goodID"));
+
+        if(!$good){
+            throw new NotFoundHttpException("Такой товар не найден!");
+        }
+
+        $attribute = \Yii::$app->request->post("attribute");
+
+        if(!isset($good->$attribute)){
+            throw new NotFoundHttpException("У товара {$good->ID} не найден аттрибут {$attribute}!");
+        }
+
+        $good->$attribute = \Yii::$app->request->post("value");
+
+        if($good->validate($attribute)){
+            return $good->save(false);
+        }
+
+        return false;
+    }
+
+    /**
      * Делает хлебные крошки
      *
      * @param Good|static $good Модель товара
@@ -641,6 +707,12 @@ class DefaultController extends Controller
         return $breadcrumbs;
     }
 
+    /**
+     * Ajax метод для работы с фильтрами
+     *
+     * @return array
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionFilters(){
         if(!\Yii::$app->request->isAjax){
             throw new BadRequestHttpException();

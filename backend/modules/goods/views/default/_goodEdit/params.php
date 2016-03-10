@@ -25,17 +25,16 @@ $js = <<<'JS'
         $('#good_attribute_option_' + counter).depdrop(depDropOptions);
 
         if ($('#good_attribute_option_' + counter).data('select2')) { $('#good_attribute_option_' + counter).select2('destroy'); }
-        $.when($('#good_attribute_option_' + counter).select2(select2options)).done(initS2Loading('good_attribute_option_' + counter,'select2options2'));
+        $.when($('#good_attribute_option_' + counter).select2(select2options)).done(function(){
+            initS2Loading('good_attribute_option_' + counter,'select2options2');
+            $("#good_attribute_option_" + counter)[0].disabled = true;
+        });
 
         $(element[0].parentNode).find(".kv-plugin-loading").remove();
     }
 
     $("#goodAttributesList").on('inputArea.added', function(event, element) {
         addEvents(element);
-    });
-
-    $("#goodAttributesList").on('inputArea.removed', function(event, element) {
-        console.log(element);
     });
 JS;
 
@@ -59,84 +58,6 @@ CSS;
 $this->registerCss($css);
 
 $this->registerJs($js);
-
-/*
-$form = new ActiveForm();
-
-$form->begin();
-
-foreach($options as $key => $option){
-    echo Html::tag('div', Html::tag('div', Select2::widget([
-            'name'  =>  'good_attribute['.$key.']',
-            'id'    =>  'good_attribute_'.$key,
-            'pluginOptions' =>  [
-                'allowClear'    =>  true
-            ],
-            'size'  =>  'sm',
-            'value' =>  $option['optionID'],
-            'data'  =>  \common\models\GoodOptions::getList(),
-        ]), ['class' => 'col-xs-6']).
-        Html::tag('div', DepDrop::widget([
-            'type'      =>  DepDrop::TYPE_SELECT2,
-            'name'      =>  'good_attribute_option['.$key.']',
-            'options'   =>  [
-                'id'            =>  'good_attribute_option'.$key,
-                'placeholder'   =>  'Select ...'
-            ],
-            'value' =>  $option['valueID'],
-            'data'  =>  GoodOptionsVariant::getList($option['optionID']),
-            'select2Options'    =>  [
-                'size'  =>  'sm',
-                'pluginOptions' =>  ['allowClear'=>false]],
-            'pluginOptions' =>[
-                'depends'       =>  [
-                    'good_attribute_'.$key
-                ],
-                'url'           =>  Url::to(['/goods/filters', 'act' => 'getattributes', 'selected' => $option['valueID']]),
-                'params'        =>  [
-                    'good_attribute',
-                ]
-            ]
-        ]), ['class' => 'col-xs-6']),
-        [
-            'class' =>  'row',
-            'style' =>  'padding: 2px 0'
-        ]);
-}
-
-echo Html::tag('div', Html::tag('div', Select2::widget([
-        'name'  =>  'good_attribute',
-        'id'    =>  'good_attribute',
-        'pluginOptions' =>  [
-            'allowClear'    =>  true
-        ],
-        'data'  =>  \common\models\GoodOptions::getList()
-    ]), ['class' => 'col-xs-6']).
-    Html::tag('div', DepDrop::widget([
-        'type'      =>  DepDrop::TYPE_SELECT2,
-        'name'      =>  'good_attribute_option',
-        'options'   =>  [
-            'id'            =>  'good_attribute_option',
-            'placeholder'   =>  'Select ...'
-        ],
-        'select2Options'    =>  [
-            'pluginOptions' =>  ['allowClear'=>false]],
-        'pluginOptions' =>[
-            'depends'       =>  [
-                'good_attribute'
-            ],
-            'url'           =>  Url::to(['/goods/filters', 'act' => 'getattributes']),
-            'params'        =>  [
-                'good_attribute'
-            ]
-        ]
-    ]), ['class' => 'col-xs-6']),
-    [
-        'class' =>  'row'
-    ]);
-
-$form->end();
-*/
 
 $goodOptions = [];
 

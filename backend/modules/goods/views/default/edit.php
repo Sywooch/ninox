@@ -54,7 +54,7 @@ $this->registerJs($js);
                 ],[
                     'label'     =>  'Склад',
                     'content'   =>  $this->render('_goodEdit/store', [
-                        'model' =>  $goodMainForm
+                        'good'  =>  $good
                     ])
                 ],
             ]
