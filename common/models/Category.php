@@ -328,7 +328,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
 	public static function getMenu(){
-		$cats = self::find()->select(['ID', 'Name', 'Code', 'link', 'listorder', 'menu_show'])->orderBy('Code')->all();
+		$cats = self::find()->select(['ID', 'Name', 'Code', 'link', 'listorder', 'menu_show', 'imgSrc'])->orderBy('Code')->all();
 		return self::buildTree($cats);
 	}
 }
