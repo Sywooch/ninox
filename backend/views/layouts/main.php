@@ -693,7 +693,7 @@ $this->beginPage() ?>
                     'dataset' => [
                         [
                             'remote' => [
-                                'url' => Url::to(['/goods/searchgoods']).'?string=%QUERY',
+                                'url' => Url::to(['/goods/search']).'?string=%QUERY',
                                 'wildcard' => '%QUERY'
                             ],
                             'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",

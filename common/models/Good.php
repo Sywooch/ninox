@@ -78,6 +78,10 @@ use Yii;
  */
 class Good extends \yii\db\ActiveRecord
 {
+
+    const STATE_ENABLED = 1;
+    const STATE_DISABLED = 0;
+
     public $wholesale_price;
     public $wholesale_real_price;
     public $retail_price;
@@ -165,13 +169,12 @@ class Good extends \yii\db\ActiveRecord
     {
         return [
             [['dimensions', 'width', 'height', 'length', 'diameter', 'listorder', 'otkl_time', 'vkl_time', 'tovdate', 'tovupdate', 'photodate', 'otgruzka', 'otgruzka_time', 'p_photo', 'link', 'rate', 'originalGood', 'video'], 'required'],
-            [['listorder', 'otgruzka', 'otgruzka2', 'discountType', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
+            [['listorder', 'otgruzka', 'show_img', 'otgruzka2', 'discountType', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
             [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2'], 'safe'],
             [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'discountSize', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
             [['link'], 'string'],
             [['Code', 'BarCode1', 'BarCode2', 'BarCode3', 'Catalog1', 'Catalog2', 'Catalog3', 'Name', 'Name2', 'dimensions', 'measure', 'Measure2', 'anotherCurrencyTag', 'video'], 'string', 'max' => 255],
             [['width', 'height', 'length', 'diameter'], 'string', 'max' => 20],
-            [['show_img'], 'string', 'max' => 1],
             [['num_opt'], 'string', 'max' => 50],
             [['Description'], 'string', 'max' => 2550],
             [['p_photo'], 'string', 'max' => 55],

@@ -298,12 +298,20 @@ class DefaultController extends Controller
     }
 
     public function actionLog(){
-        $query = AuditTrail::find()->where([
-           'model'  =>  Good::className()
-        ]);
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод возможен только через ajax!");
+        }
 
         $dataProvider = new ActiveDataProvider([
-            'query' =>  $query->orderBy('id desc')
+            'query' =>  AuditTrail::find()->where([
+                'model'  =>  Good::className()
+            ])
+        ]);
+
+        $dataProvider->setSort([
+            'default'   =>  [
+                'id'    =>  SORT_DESC
+            ]
         ]);
 
         return $this->render('log', [
@@ -629,11 +637,13 @@ class DefaultController extends Controller
 
         $good->$attribute = $good->$attribute == 1 ? 0 : 1;
 
-        if($good->validate($attribute)){
-            return $good->save(false);
+        \Yii::$app->response->format = 'json';
+
+        if($good->validate([$attribute]) &&  $good->save(false)){
+            return $good->$attribute;
         }
 
-        return false;
+        return 0;
     }
 
     /**
