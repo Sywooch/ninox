@@ -110,7 +110,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 					'type'	    =>	'submit',
 					'name'	    =>	'orderType',
 					'value'	    =>	'0',
-					'class'	    =>	'yellow-button cart-button form-order',
+					'class'	    =>	'button yellow-button cart-button form-order',
 					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
 				]).
 				Html::button(\Yii::t('site', 'Заказать в 1 клик'), [
