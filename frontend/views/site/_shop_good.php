@@ -57,7 +57,7 @@ $buyBlock = function($model){
 		'value'         =>  $model->count > 0 || $model->isUnlimited ?
 			($model->inCart ?
 				\Yii::t('shop', 'В корзине!') : \Yii::t('shop', 'Купить!')
-			) : \Yii::t('shop', "Нет\r\nв наличии"),
+			) : \Yii::t('shop', 'Нет\r\nв наличии'),
 		'class'         =>  'button '.($model->count > 0 || $model->isUnlimited ?
 			($model->inCart ?
 				'green-button open-cart' : 'yellow-button buy'

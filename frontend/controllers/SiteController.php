@@ -272,7 +272,7 @@ class SiteController extends Controller
                 ]);
             }
 
-            $wish->price = \frontend\models\Good::findOne($itemID)->wholesale_price;
+            $wish->price = Good::findOne($itemID)->wholesale_price;
             $wish->date = date('Y-m-d H:i:s');
 
             $wish->save(false);
