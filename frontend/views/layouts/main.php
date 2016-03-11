@@ -58,6 +58,18 @@ $js = <<<SCRIPT
 		});
 	}
 
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item .icon-heart', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		addToWishlist($(e.currentTarget));
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.rating .icon-star', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		setItemRate($(e.currentTarget));
+	});
+
 	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.prohibited), .item-counter .plus:not(.prohibited), .remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();

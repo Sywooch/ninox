@@ -57,8 +57,8 @@ $buyBlock = function($model){
 		'value'         =>  $model->count > 0 || $model->isUnlimited ?
 			($model->inCart ?
 				\Yii::t('shop', 'В корзине!') : \Yii::t('shop', 'Купить!')
-			) : \Yii::t('shop', 'Нет в наличии'),
-		'class'         =>  ($model->count > 0 || $model->isUnlimited ?
+			) : \Yii::t('shop', "Нет\r\nв наличии"),
+		'class'         =>  'button '.($model->count > 0 || $model->isUnlimited ?
 			($model->inCart ?
 				'green-button open-cart' : 'yellow-button buy'
 			) : 'gray-button out-of-stock').' small-button',
@@ -130,55 +130,73 @@ $onePriceBlock = function($model){
 		) : '';
 };
 
-$itemRating = function($model){
+$createStar = function($rate) use ($model){
+	$options = [
+		'class'         => 'icon-star'.($rate <= $model->rate && $model->rate < $rate + 1 ? ' current' : ''),
+		'data-itemId'   => $model->ID,
+		'data-rate'     => $rate,
+		'content'       => $rate
+	];
+	switch($rate){
+		case 5;
+			$options = array_merge($options, [
+				'itemprop' => 'bestRating',
+				'title' => \Yii::t('shop', 'Отлично')
+			]);
+			break;
+		case 4;
+			$options = array_merge($options, [
+				'title' => \Yii::t('shop', 'Хорошо')
+			]);
+			break;
+		case 3;
+			$options = array_merge($options, [
+				'title' => \Yii::t('shop', 'Средне')
+			]);
+			break;
+		case 2;
+			$options = array_merge($options, [
+				'title' => \Yii::t('shop', 'Приемлемо')
+			]);
+			break;
+		case 1;
+			$options = array_merge($options, [
+				'itemprop' => 'worstRating',
+				'title' => \Yii::t('shop', 'Плохо')
+			]);
+			break;
+		default:
+			break;
+
+	}
+	return Html::tag('span', '', $options);
+};
+
+$itemRating = function($model) use ($link, $createStar){
 	return Html::tag('span',
 		Html::tag('span',
-			Yii::t('shop', '{n, plural, one{отзыв} few{отзыва} many{отзывов} other{отзывов}}',
-				['n' =>  $model->reviewsCount]
-			), ['class' => 'review-count-text blue']
-		).
-		Html::tag('span', $model->reviewsCount, [
-			'class' => 'review-count icon-bubble blue',
-			'itemprop' => 'reviewCount'
+			Html::tag('span',
+				Yii::t('shop', '{n, plural, one{отзыв} few{отзыва} many{отзывов} other{отзывов}}',
+					['n' =>  $model->reviewsCount]
+				), ['class' => 'review-count-text blue']
+			).
+			Html::tag('span', $model->reviewsCount, [
+				'class' => 'review-count icon-bubble blue',
+				'itemprop' => 'reviewCount'
+			]), [
+			'class'     =>  'link-hide',
+			'data-href' =>  $link.'#tab-comments'
 		]).
-		Html::tag('span', 5, [
-			'class' => 'icon-star'.($model->rate == 5 ? ' current' : ''),
-			'itemprop' => 'bestRating',
-			'title' => \Yii::t('shop', 'Отлично'),
-			'data-itemId' => $model->ID,
-			'data-rate' => 5
-		]).
-		Html::tag('span', 4, [
-			'class' => 'icon-star'.(4 <= $model->rate && $model->rate < 5 ? ' current' : ''),
-			'title' => \Yii::t('shop', 'Хорошо'),
-			'data-itemId' => $model->ID,
-			'data-rate' => 4
-		]).
-		Html::tag('span', 3, [
-			'class' => 'icon-star'.(3 <= $model->rate && $model->rate < 4 ? ' current' : ''),
-			'title' => \Yii::t('shop', 'Средне'),
-			'data-itemId' => $model->ID,
-			'data-rate' => 3
-		]).
-		Html::tag('span', 2, [
-			'class' => 'icon-star'.(2 <= $model->rate && $model->rate < 3 ? ' current' : ''),
-			'title' => \Yii::t('shop', 'Приемлемо'),
-			'data-itemId' => $model->ID,
-			'data-rate' => 2
-		]).
-		Html::tag('span', 1, [
-			'class' => 'icon-star'.(1 <= $model->rate && $model->rate < 2 ? ' current' : ''),
-			'itemprop' => 'worstRating',
-			'title' => \Yii::t('shop', 'Плохо'),
-			'data-itemId' => $model->ID,
-			'data-rate' => 1
-		]).
+		$createStar(5).
+		$createStar(4).
+		$createStar(3).
+		$createStar(2).
+		$createStar(1).
 		Html::tag('span', $model->rate ? $model->rate : 5, [
 			'class' => 'rate-count',
 			'itemprop' => 'ratingValue'
 		]), [
 			'class' => 'rating',
-			'itemprop' => 'aggregateRating',
 			'itemscope' => '',
 			'itemtype' => 'http://schema.org/AggregateRating'
 		]);
@@ -199,7 +217,13 @@ $itemDopInfoBlock = function($model) use ($link, $itemRating){
 echo Html::tag('div',
 	Html::tag('div',
 		Html::tag('div',
-			Html::tag('span', '', ['class' => 'icon-heart']).
+			Html::tag('span', '', [
+				'class'         =>  'icon-heart'.
+					(\Yii::$app->user->isGuest ? ' is-guest' : '').
+					(\Yii::$app->user->isGuest ?
+						'' : (\Yii::$app->user->identity->hasInWishlist($model->ID) ? ' green' : '')),
+				'data-itemId'   =>  $model->ID
+			]).
 			Html::tag('span', \Yii::t('shop', 'в избранное'), ['class' => 'item-wish-text']).
 			Html::tag('span', $model->Code, ['class' => 'item-code']),
 			['class' => 'item-head']).

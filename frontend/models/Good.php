@@ -9,6 +9,7 @@
 namespace frontend\models;
 
 use common\helpers\Formatter;
+use common\models\GoodsComment;
 use common\models\GoodsPhoto;
 
 class Good extends \common\models\Good{
@@ -20,11 +21,19 @@ class Good extends \common\models\Good{
 	public $category = '';                  //Код категории
 	public $priceRuleID = 0;                //ID примененного ценового правила
 	public $priceForOneItem = 0;            //Цена за единицу товара
-	public $reviewsCount = 0;               //Количество отзывов
+	//public $reviewsCount = 0;               //Количество отзывов
 	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
 	public $isNew = false;                  //Флаг-новинка
     public $canBuy = true;
 	public $customerRule = 0;               //Персональное правило
+
+	public function getReviewsCount(){
+		return GoodsComment::find()->where(['goodID' => $this->ID])->count();
+	}
+
+	public function getReviews(){
+		return GoodsComment::find()->where(['goodID' => $this->ID])->all();
+	}
 
     public function afterFind(){
 	    parent::afterFind();

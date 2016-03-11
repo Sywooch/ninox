@@ -109,28 +109,6 @@ class Good extends \yii\db\ActiveRecord{
         return $query->asArray()->all();
     }
 
-    public function behaviors()
-    {
-        return [
-            'LoggableBehavior' => [
-                'class' => 'sammaye\audittrail\LoggableBehavior',
-                'ignored' => [
-                    'Name2',
-                    'ID'
-                ],
-            ]
-        ];
-    }
-
-    public function afterFind(){
-        $this->wholesale_price = $this->PriceOut1;
-        $this->wholesale_real_price = $this->PriceOut1;
-        $this->retail_price = $this->PriceOut2;
-        $this->retail_real_price = $this->PriceOut2;
-
-        return parent::afterFind();
-    }
-
     public function beforeSave($insert){
         if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name){
             $this->link = TranslitHelper::to($this->Name);

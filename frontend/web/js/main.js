@@ -177,3 +177,38 @@ function updateCart(data){
 		}
 	}
 }
+
+function setItemRate(item){
+	$.ajax({
+		type: 'POST',
+		url: '/setitemrate',
+		data: {
+			'itemID': item.data('itemid'),
+			'rate': item.data('rate')
+		},
+		success: function(data){
+			$(item.parent().find('.icon-star').get().reverse()).removeClass('current').addClass(function(index){
+				return index + 1 <= data && data < index + 2 ? 'current' : '';
+			});
+		}
+	});
+}
+
+function addToWishlist(item){
+	if(item.hasClass('is-guest')){
+		document.location = document.location.href.replace(/#.*/, '') + '#login';
+		return false;
+	}
+	$.ajax({
+		type: 'POST',
+		url: '/addtowishlist',
+		data: {
+			'itemID': item.data('itemid')
+		},
+		success: function(data){
+			if(data == true){
+				item.addClass('green');
+			}
+		}
+	});
+}

@@ -24,4 +24,16 @@ class Good extends \common\models\Good{
         return false;
     }
 
+    public function behaviors(){
+        return [
+            'LoggableBehavior' => [
+                'class' => 'sammaye\audittrail\LoggableBehavior',
+                'ignored' => [
+                    'Name2',
+                    'ID'
+                ],
+            ]
+        ];
+    }
+
 }

@@ -5,6 +5,8 @@ use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
 use frontend\models\Cart;
 use frontend\models\Customer;
+use frontend\models\CustomerWishlist;
+use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use Yii;
 use common\models\Domain;
@@ -227,6 +229,57 @@ class SiteController extends Controller
 		    'count'         =>  \Yii::$app->cart->itemsCount,
 		    'items'         =>  $items,
 	    ];
+    }
+
+    public function actionSetitemrate(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        $rate = \Yii::$app->request->post("rate");
+        if($itemID && $rate){
+            $itemRate = ItemRate::findOne([
+                'itemID'        =>  $itemID,
+                'ip'            =>  sprintf('%u', ip2long(\Yii::$app->request->getUserIP())),
+                'customerID'    =>  \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->id
+            ]);
+            if(!$itemRate){
+                $itemRate = new ItemRate([
+                    'itemID'        =>  $itemID,
+                    'ip'            =>  sprintf('%u', ip2long(\Yii::$app->request->getUserIP())),
+                    'customerID'    =>  \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->id,
+                ]);
+            }
+
+            $itemRate->rate = $rate;
+            $itemRate->date = date('Y-m-d H:i:s');
+
+            $itemRate->save(false);
+            return $itemRate->average;
+        }
+    }
+
+    public function actionAddtowishlist(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        if($itemID && !\Yii::$app->user->isGuest){
+            $wish = CustomerWishlist::findOne([
+                'itemID'        =>  $itemID,
+                'customerID'    =>  \Yii::$app->user->id
+            ]);
+            if(!$wish){
+                $wish = new CustomerWishlist([
+                    'itemID'        =>  $itemID,
+                    'customerID'    =>  \Yii::$app->user->id,
+                ]);
+            }
+
+            $wish->price = \frontend\models\Good::findOne($itemID)->wholesale_price;
+            $wish->date = date('Y-m-d H:i:s');
+
+            $wish->save(false);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function actionSuccess($order = []){
