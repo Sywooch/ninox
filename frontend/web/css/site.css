@@ -4048,19 +4048,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 3px;
 }
 
-.underline{
+.footer-menu{
 	width: 1175px;
 	margin: auto;
 	padding-top: 30px;
 	overflow: auto;
 }
 
-.underline .goods-item{
+.footer-menu .goods-item{
 	border: none;
 	box-shadow: none;
 }
 
-.underline .link-hide{
+.footer-menu .link-hide{
 	cursor: pointer;
 	line-height: normal;
 	text-decoration: none;
@@ -4073,7 +4073,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: max-content;
 }
 
-.underline .feedback-link .link-hide{
+.footer-menu .feedback-link .link-hide{
 	text-decoration: underline;
 }
 

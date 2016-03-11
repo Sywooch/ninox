@@ -292,7 +292,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				])?>
 			</div>
 		</div>
-		<div class="underline">
+		<div class="footer-menu">
 			<div class="goods-item">
 				<?=Html::tag('span', \Yii::t('shop', 'О компании'), [
 					'class'		=>	'link-hide',
