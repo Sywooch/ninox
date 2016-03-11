@@ -3544,7 +3544,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 /*========*  MAIN  *=========*/
 
 .main-content{
-	padding-bottom: 450px;
+	padding-bottom: 430px;
 }
 
 .main-content-items{
