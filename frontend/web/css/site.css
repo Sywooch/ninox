@@ -3543,6 +3543,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 /*========*  MAIN  *=========*/
 
+.main-content{
+	padding-bottom: 450px;
+}
+
 .main-content-items{
 	background: #f3f3f3;
 }
@@ -3555,6 +3559,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	position: absolute;
 	left: 50%;
 	margin: -27px 0 0 -30px;
+	cursor: pointer;
+}
+
+.main-content .arrow-bottom:before{
+	content: url("/img/site/white-arrow.png");
+	text-align: center;
+	display: block;
+	padding-top: 23px;
 }
 
 .goods-content{
@@ -3627,15 +3639,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-right: 10px;
 }
 
+.goods-item .short-description{
+	text-align: center;
+}
+
 .right-item{
 	height: 450px;
 }
 
 .right-item .price{
 	display: block;
-	position: relative;
-	top: 380px;
+	position: absolute;
 	margin-left: 28px;
+	margin-top: -65px
 }
 
 .goods-item .price{
@@ -3689,6 +3705,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 10px;
 }
 
+.main-icons:hover span:after{
+	content: url("/img/site/down.svg");
+	display: block;
+	text-align: center;
+	padding-top: 8px;
+}
+
 .main-icon{
 	height: 40px;
 	width: 40px;
@@ -3701,7 +3724,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .icon-best:before{
-	content: url("/img/site/icon-best.svg");
+	content: url("/img/site/ring.svg");
+	display: block;
+	text-align: center;
+	padding-top: 7px;
+}
+
+.icon-best + span:after{
+	color: red;
 }
 
 .icon-news{
@@ -3709,19 +3739,33 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .icon-news:before{
-	content: url("/img/site/icon-news.svg");
+	content: url("/img/site/diamond.svg");
+	display: block;
+	text-align: center;
+	padding-top: 11px;
+}
+
+.icon-news + span:after{
+	color: green;
 }
 
 .icon-sale{
 	background: #eaa51e;
 }
 
-.icon-sale{
-	content: url("/img/site/icon-sale.svg");
+.icon-sale:before{
+	content: url("/img/site/shopping-bag.svg");
+	display: block;
+	text-align: center;
+	padding-top: 7px;
+}
+
+.icon-sale + span:after{
+	color: black;
 }
 
 .goods-content-all{
-	height: 365px;
+	overflow: auto;
 }
 
 .goods-content-all .goods-item{
@@ -3741,7 +3785,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .goods-content-all .item-id:before{
-	content: url("/img/site/favorites.png");
+	content: url("/img/site/favorite.png");
 	float: left;
 	margin-top: 4px;
 }
@@ -3771,13 +3815,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 40px;
 }
 
+.goods-item img{
+	width: 100%;
+}
+
 .price-and-order{
 	padding-top: 15px;
 	padding-bottom: 25px;
 }
 
 .price-and-order span{
-	width: 50%;
 }
 
 .price-and-order .semi-bold{
@@ -3902,6 +3949,29 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: auto;
 	padding-left: 10px;
 	padding-right: 10px;
+	padding-bottom: 50px;
+}
+
+.about-main-title{
+	font-size: 22px;
+	color: #7d8d95;
+	display: block;
+	padding-bottom: 10px;
+}
+
+.about-main-content{
+	font-size: 13px;
+	color: #ced3d6;
+	display: block;
+}
+
+.about-main-content-open{
+	font-size: 14px;
+	float: right;
+	color: #29a1e0;
+	display: block;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 /*========* END MAIN  *=========*/
@@ -3912,7 +3982,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .footer{
 	width: 100%;
 	bottom: 0;
-	z-index: 4;
+	/*z-index: 4;*/
+	position: absolute;
 }
 
 .footer .blue-line{
@@ -4017,7 +4088,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .feedback-block .socialNetworks{
-
+	float: right;
 }
 
 .feedback-block{

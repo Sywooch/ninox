@@ -162,7 +162,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 		<div class="sticky-on-scroll">
 			<div class="under-menu">
 				<div class="under-menu-content">
-					<div class="logo"></div>
+					<a href="/"><div class="logo"></div></a>
 					<div class="input-style-main">
 						<label class="icon-search" for=""></label>
 						<input type="text" placeholder="Поиск..."/>
@@ -389,10 +389,10 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				</div>
 				</div>
 			</div>
-		</div>
-		<div class="footer-content">
-			<span class="left">© Интернет-магазин «krasota-style™» 2011–2015</span>
-			<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
+			<div class="footer-content">
+				<span class="left">© Интернет-магазин «krasota-style™» 2011–2015</span>
+				<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
+			</div>
 		</div>
 	</div>
 	<!--<footer>
