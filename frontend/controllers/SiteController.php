@@ -3,7 +3,6 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
-use common\models\GoodsComment;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\OrderForm;
@@ -55,8 +54,7 @@ class SiteController extends Controller
     }
 
     public function actionShowtovar($link){
-        $id = preg_replace('/[^g(.)]+\D+/', '', $link);
-        $id = preg_replace('/\D+/', '', $id);
+        $id = preg_replace('/\D+/', '', preg_replace('/[^g(.)]+\D+/', '', $link));
 
         $good = Good::findOne(['`goods`.`ID`' => $id]);
 
@@ -64,18 +62,12 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
-        /*$goodComment = GoodsComment::findOne(['`goodscomments`.`goodID`' => $id]);
-
-        if(!$goodComment){
-            return \Yii::$app->runAction('site/error');
-        }*/
-
-        $category = Category::findOne(['ID' => $good->GroupID]);
+        $category = Category::findOne($good->GroupID);
 
         $mainCategory = null;
 
-        if(strlen($category->Code) != 3){
-            foreach($category->getParents() as $parent){
+        if(strlen($good->category->Code) != 3){
+            foreach($good->category->getParents() as $parent){
                 if(empty($mainCategory)){
                     $mainCategory = $parent;
                 }
@@ -100,7 +92,6 @@ class SiteController extends Controller
             'mainCategory'  =>  $mainCategory,
             'good'          =>  $good,
             'category'      =>  $category,
-            /*'goodComment'   =>  $goodComment*/
         ]);
     }
 
@@ -308,10 +299,28 @@ class SiteController extends Controller
 
             return $this->goBack();
         } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('login', [
+                    'model' =>  $model
+                ]);
+            }else{
+                return $this->render('login', [
+                    'model' => $model,
+                ]);
+            }
         }
+    }
+
+    public function actionSearch(){
+        $goods = Good::find()->limit(10)->all();
+
+        if(\Yii::$app->request->isAjax){
+
+        }
+
+        return $this->render('searchResults', [
+            'goods' =>  $goods
+        ]);
     }
 
     /**

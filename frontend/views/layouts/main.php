@@ -49,40 +49,12 @@ $loginModal = new \bobroid\remodal\Remodal([
 	'confirmButton'		=>	false,
 	'closeButton'		=>	false,
 	'addRandomToID'		=>	false,
-	'content'			=>	$this->render('../site/login'),
+	'content'			=>	$this->render('parts/_login_modal'),
 	'id'				=>	'loginModal',
 ]);
 
 
 $js = <<<JS
-	$('img.svg').each(function(){
-    	var img = jQuery(this),
-    		imgID = img.attr('id'),
-    		imgClass = img.attr('class'),
-    		imgURL = img.attr('src');
-
-    	$.get(imgURL, function(data) {
-    	    // Get the SVG tag, ignore the rest
-    	    var svg = jQuery(data).find('svg');
-
-    	    // Add replaced image's ID to the new SVG
-    	    if(typeof imgID !== 'undefined') {
-    	        svg = svg.attr('id', imgID);
-    	    }
-    	    // Add replaced image's classes to the new SVG
-    	    if(typeof imgClass !== 'undefined') {
-    	        svg = svg.attr('class', imgClass+' replaced-svg');
-    	    }
-
-    	    // Remove any invalid XML tags as per http://validator.w3.org
-    	    svg = svg.removeAttr('xmlns:a');
-
-    	    // Replace image with new SVG
-    	    img.replaceWith(svg);
-
-    	}, 'xml');
-    });
-
 	if(hasTouch){
 		$('body').on('touchmove', function(e){
 			e.target.isTouchMoved = true;
@@ -148,20 +120,10 @@ JS;
 
 $this->registerJs($js);
 
+\frontend\assets\PerfectScrollbarAsset::register($this);
 
-$this->registerJsFile('/perfect-scrollbar/js/perfect-scrollbar.jquery.js', [
-	'depends'   =>  'yii\web\JqueryAsset'
-]);
-$this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
+$this->beginPage();
 ?>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/jquery.sticky.js"></script>
-	<script>
-		$(document).ready(function(){
-			$(".sticky-on-scroll").sticky({ topSpacing: 0, className:"sticky" });
-		});
-	</script>
-<?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?=Yii::$app->language?>">
 	<head>
@@ -185,7 +147,13 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				<div class="items currency-rate">1 USD - 24.2 UAH</div>
 				<div class="personal-account">
 					<div class="items">РУС</div>
-					<div class="items account-icon">Личный кабинет</div>
+					<?php if(\Yii::$app->user->isGuest){
+						echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
+					}else{
+						echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('account')).Html::a('Выйти', Url::to('/logout'), [
+								'data-method'   =>  'post'
+							]), ['class' => 'items account-icon']);
+					} ?>
 				</div>
 			</div>
 		</div>
@@ -254,7 +222,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				</div>-->
 			<!--	<ul class="right">
 					<li id="loginRegistration">
-					<?php if(\Yii::$app->user->isGuest){ ?>
+					<?php /*if(\Yii::$app->user->isGuest){ ?>
 						<span id="login">
 						<?=\bobroid\remodal\Remodal::widget([
 							'confirmButton'	=>	false,
@@ -284,7 +252,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 						<span>Здравствуйте, <?=Html::a(\Yii::$app->user->identity->Company, '/account')?>! <?=Html::a('Выйти', Url::to('/logout'), [
 								'data-method'   =>  'post'
 							])?></span>
-					<?php }	?>
+					<?php }*/	?>
 					</li>
 					<li id="lang">РУС<span class="arrow"></span>
 						<ul>

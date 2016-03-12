@@ -28,13 +28,6 @@ class Good extends \common\models\Good{
     }
 
     /**
-     * @return GoodPhoto[]
-     */
-    public function getPhotos(){
-        return GoodPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
-    }
-
-    /**
      * Добавляет фото
      *
      * @param string $photo ссылка на фото
@@ -78,14 +71,6 @@ class Good extends \common\models\Good{
         }
 
         return $photo->delete();
-    }
-
-    /**
-     *
-     * @return Category
-     */
-    public function getCategory(){
-        return Category::findOne($this->GroupID);
     }
 
 }

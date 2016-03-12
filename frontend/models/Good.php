@@ -22,7 +22,7 @@ class Good extends \common\models\Good{
     public $retail_price = 0;               //Розничная цена текущая
 	public $wholesale_real_price = 0;       //Оптовая цена без скидки
 	public $retail_real_price = 0;          //Розничная цена без скидки
-	public $category = '';                  //Код категории
+	//public $category = '';                //Код категории //Выпилено: Николай Гилко. Для получения кода категории используйте $categorycode
 	public $priceRuleID = 0;                //ID примененного ценового правила
 	public $priceForOneItem = 0;            //Цена за единицу товара
 	public $reviewsCount = 0;               //Количество отзывов
@@ -118,6 +118,10 @@ class Good extends \common\models\Good{
         }
 
         return $options;
+    }
+
+    public function getCategorycode(){
+        return $this->category->Code;
     }
 
 	public static function find(){

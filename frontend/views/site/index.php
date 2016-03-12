@@ -2,8 +2,6 @@
 use evgeniyrru\yii2slick\Slick;
 use frontend\models\Good;
 use yii\helpers\Html;
-
-
 $mainGalleryHtml = [];
 
 if($reviews){
@@ -18,31 +16,6 @@ if($questions){
 }
 
 ?>
-<!--<script type="text/javascript">
-	$(document).ready(function() {
-		$('img[src$=".svg"]').each(function() {
-			var $img = jQuery(this);
-			var imgURL = $img.attr('src');
-			var attributes = $img.prop("attributes");
-
-			$.get(imgURL, function(data) {
-				// Get the SVG tag, ignore the rest
-				var $svg = jQuery(data).find('svg');
-
-				// Remove any invalid XML tags
-				$svg = $svg.removeAttr('xmlns:a');
-
-				// Loop through IMG attributes and apply on SVG
-				$.each(attributes, function() {
-					$svg.attr(this.name, this.value);
-				});
-
-				// Replace IMG with SVG
-				$img.replaceWith($svg);
-			}, 'xml');
-		});
-	});
-</script>-->
 <div class="main-content">
 	<div class="main-content-slider">
 		<?=!empty($items) ? Slick::widget([
@@ -53,42 +26,45 @@ if($questions){
 				'items' =>  '',
 				'clientOptions' => [
 					'arrohow'   => 1,
-					'slidesToSws\'         => false,
-					\'fade\'           => true,
-					\'slidesToScroll' => 1,
-					'asNavFor'       => '#sliderNav',
+					'slidesToSws'	=> false,
+					'fade'          => true,
+					'slidesToScroll'=> 1,
+					'asNavFor'      => '#sliderNav',
 				]
 		]) : '<div style="height: 370px;"></div>'
 		?>
 	</div>
-	<div class="arrow-bottom">
-	</div>
+	<div class="arrow-bottom"></div>
 	<div class="main-content-items">
 		<div class="goods-content">
 			<div class="goods-content-main">
 				<div class="main-slider goods-items">
 					<?=\yii\widgets\ListView::widget([
-														 'dataProvider'	=>	new \yii\data\ArrayDataProvider(['models'	=>	[
-															 Good::findOne(16),
-
-														 ]]),
-														 'itemView'	=>	function($model){
-															 return $this->render('index/main-slider', ['good' =>
-																 $model]);
-														 },
-														 'itemOptions'	=>	[
-															 'class'	=>	''
-														 ],
-														 'summary'	=>	false
-													 ])?>
+						 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
+							 'models'	=>	[
+							 	Good::findOne(16),
+						 	]
+						 ]),
+						 'itemView'	=>	function($model){
+							 return $this->render('index/main-slider', [
+								 'good' => $model
+							 ]);
+						 },
+						 'itemOptions'	=>	[
+							 'class'	=>	''
+						 ],
+						 'summary'	=>	false
+					])?>
 				</div>
 				<div class="goods-items">
 					<div class="two-items content-items">
 						<?=\yii\widgets\ListView::widget([
-							 'dataProvider'	=>	new \yii\data\ArrayDataProvider(['models'	=>	[
-								 Good::findOne(16),
-								 Good::findOne(16),
-							]]),
+							 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
+								 'models'	=>	[
+								 	Good::findOne(16),
+								 	Good::findOne(16),
+								]
+							 ]),
 							 'itemView'	=>	function($model){
 								 return $this->render('index/banner', ['good' => $model]);
 							 },
@@ -111,23 +87,16 @@ if($questions){
 				echo $this->render('index/banner4');
 				?>
 			</div>
-			<div class="goods-content-icons">
-				<div class="main-icons">
-					<div class="main-icon icon-best">
-					</div>
-					<span>Лучшее</span>
-				</div>
-				<div class="main-icons">
-					<div class="main-icon icon-news">
-					</div>
-					<span>Новинки</span>
-				</div>
-				<div class="main-icons">
-					<div class="main-icon icon-sale">
-					</div>
-					<span>Распродажа</span>
-				</div>
-			</div>
+			<?=Html::tag('div',
+				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-best']).
+					Html::tag('span', \Yii::t('shop', 'Лучшее')), ['class' => 'main-icons']).
+				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-news']).
+					Html::tag('span', \Yii::t('shop', 'Новинки')), ['class' => 'main-icons']).
+				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-sale']).
+					Html::tag('span', \Yii::t('shop', 'Распродажа')), ['class' => 'main-icons']),
+				[
+					'class' => 'goods-content-icons'
+				])?>
 			<div class="goods-content-all">
 				<?=\yii\widgets\ListView::widget([
 					'dataProvider'	=>	new \yii\data\ArrayDataProvider([
@@ -150,7 +119,7 @@ if($questions){
 					    'summary'	=>	false
 					])?>
 				<div class="goods-item goods-item-style">
-					<span>СМОТРЕТЬ ВСЕ ТОВАРЫ</span>
+					<span><?=\Yii::t('shop', 'СМОТРЕТЬ ВСЕ ТОВАРЫ')?></span>
 				</div>
 			</div>
 		</div>
