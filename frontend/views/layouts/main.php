@@ -3,8 +3,8 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use frontend\models\Category;
 use frontend\assets\RuLangAsset;
-use bobroid\yamm\Yamm;
 use common\components\SocialButtonWidget;
 use frontend\widgets\CartWidget;
 use yii\helpers\Html;
@@ -18,8 +18,10 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width; 
 $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
-$menu = \common\models\Category::getMenu();
 
+/*
+ * это нужно?
+ */
 $userCart = \common\models\Cart::findOne(['cartCode' => \Yii::$app->request->cookies->get('cartCode')]);
 
 if(empty($userCart)){
@@ -52,7 +54,35 @@ $loginModal = new \bobroid\remodal\Remodal([
 ]);
 
 
-$js = <<<SCRIPT
+$js = <<<JS
+	$('img.svg').each(function(){
+    	var img = jQuery(this),
+    		imgID = img.attr('id'),
+    		imgClass = img.attr('class'),
+    		imgURL = img.attr('src');
+
+    	$.get(imgURL, function(data) {
+    	    // Get the SVG tag, ignore the rest
+    	    var svg = jQuery(data).find('svg');
+
+    	    // Add replaced image's ID to the new SVG
+    	    if(typeof imgID !== 'undefined') {
+    	        svg = svg.attr('id', imgID);
+    	    }
+    	    // Add replaced image's classes to the new SVG
+    	    if(typeof imgClass !== 'undefined') {
+    	        svg = svg.attr('class', imgClass+' replaced-svg');
+    	    }
+
+    	    // Remove any invalid XML tags as per http://validator.w3.org
+    	    svg = svg.removeAttr('xmlns:a');
+
+    	    // Replace image with new SVG
+    	    img.replaceWith(svg);
+
+    	}, 'xml');
+    });
+
 	if(hasTouch){
 		$('body').on('touchmove', function(e){
 			e.target.isTouchMoved = true;
@@ -114,7 +144,7 @@ $js = <<<SCRIPT
 	});
 
 	cartScroll();
-SCRIPT;
+JS;
 
 $this->registerJs($js);
 
@@ -268,7 +298,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				</ul>-->
 			</div>
 		<?=\frontend\widgets\MainMenuWidget::widget([
-			'items'	=>	$menu
+			'items'	=>	Category::getMenu()
 		])?>
 		</div>
 	</div>
