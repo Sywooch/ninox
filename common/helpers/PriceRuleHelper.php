@@ -8,6 +8,8 @@
 
 namespace common\helpers;
 
+use common\models\Good;
+use common\models\Pricerule;
 use DateTime;
 use yii\base\Component;
 
@@ -38,25 +40,33 @@ class PriceRuleHelper extends Component{
 		return $this->recalcItem($model, $rule, false);
 	}
 
-	protected function recalcItem(&$model, $rule, $category){
+	/**
+	 * @param Good $model модель товара для пересчёта
+	 * @param Pricerule $rule ценовое правило
+	 * @param bool $categoryGrid вёрстка для сетки товаров
+	 *
+	 * @return bool
+	 */
+	protected function recalcItem(&$model, $rule, $categoryGrid){
 		$termsCount = 0;
 		$discount = 0;
+
 		foreach($rule->terms as $keyTerm => $term){
 			if($discount == $termsCount){
 				switch($keyTerm){
 					case 'GoodGroup':
-						$this->checkCategory($term, $model->category, $termsCount, $discount);
+						$this->checkCategory($term, $model->category->Code, $termsCount, $discount);
 						break;
 					case 'Date':
 						$this->checkDate($term, $termsCount, $discount);
 						break;
 					case 'WithoutBlyamba':
-						if($category && !empty($term[0]['term'])){
+						if($categoryGrid && !empty($term[0]['term'])){
 							$termsCount++;
 						}
 						break;
 					case 'DocumentSum':
-						if(!$category){
+						if(!$categoryGrid){
 							$this->checkDocumentSumm($term, $termsCount, $discount);
 						}
 						break;
