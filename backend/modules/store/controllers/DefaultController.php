@@ -44,8 +44,8 @@ class DefaultController extends Controller
             ]);
         }
 
-        return $this->render('shop', array_merge([
-            'model' =>  $shop,
-        ], $params));
+        $params['model'] = $shop;
+
+        return $this->render('shop', $params);
     }
 }

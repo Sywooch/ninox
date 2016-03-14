@@ -91,14 +91,7 @@ STYLE;
 $this->registerCss($css);
 $this->registerJs($js);
 
-if(!empty($nowCategory)){
-  $this->params['breadcrumbs'][] = [
-      'label' =>  'Категории',
-      'url'   =>  Url::toRoute(['/goods', 'smartfilter' => \Yii::$app->request->get("smartfilter")])
-  ];
-}else{
-  $this->params['breadcrumbs'][] = $this->title;
-}
+$this->params['breadcrumbs'][] = $this->title;
 
 foreach($breadcrumbs as $b){
   $this->params['breadcrumbs'][] = $b;
