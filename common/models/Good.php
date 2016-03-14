@@ -87,6 +87,13 @@ class Good extends \yii\db\ActiveRecord
     public $retail_price;
     public $retail_real_price;
 
+    private $_photos = [];
+
+    /**
+     * @type Category
+     */
+    private $_category = null;
+
     public static function searchGoods($string, $params = []){
         if(empty($params) || $string == ''){
             return [];
@@ -113,11 +120,30 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function getIco(){
-        return GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID, 'order' => '1'])->scalar();
+        return GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID])->orderBy('order')->limit(1)->scalar();
     }
 
+    /**
+     * @return GoodsPhoto[]
+     */
     public function getPhotos(){
-        return GoodsPhoto::find()->where(['itemid' => $this->ID])->all();
+        if(!empty($this->_photos)){
+            return $this->_photos;
+        }
+
+        return $this->_photos = GoodsPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+    }
+
+    /**
+     *
+     * @return Category
+     */
+    public function getCategory(){
+        if(empty($this->_category)){
+            $this->_category = Category::findOne($this->GroupID);
+        }
+
+        return $this->_category;
     }
 
     public function behaviors()

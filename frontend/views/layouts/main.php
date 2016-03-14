@@ -3,8 +3,8 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use frontend\models\Category;
 use frontend\assets\RuLangAsset;
-use bobroid\yamm\Yamm;
 use common\components\SocialButtonWidget;
 use frontend\widgets\CartWidget;
 use yii\helpers\Html;
@@ -18,8 +18,10 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width; 
 $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
-$menu = \common\models\Category::getMenu();
 
+/*
+ * это нужно?
+ */
 $userCart = \common\models\Cart::findOne(['cartCode' => \Yii::$app->request->cookies->get('cartCode')]);
 
 if(empty($userCart)){
@@ -47,12 +49,12 @@ $loginModal = new \bobroid\remodal\Remodal([
 	'confirmButton'		=>	false,
 	'closeButton'		=>	false,
 	'addRandomToID'		=>	false,
-	'content'			=>	$this->render('../site/login'),
+	'content'			=>	$this->render('parts/_login_modal'),
 	'id'				=>	'loginModal',
 ]);
 
 
-$js = <<<SCRIPT
+$js = <<<JS
 	if(hasTouch){
 		$('body').on('touchmove', function(e){
 			e.target.isTouchMoved = true;
@@ -114,24 +116,14 @@ $js = <<<SCRIPT
 	});
 
 	cartScroll();
-SCRIPT;
+JS;
 
 $this->registerJs($js);
 
+\frontend\assets\PerfectScrollbarAsset::register($this);
 
-$this->registerJsFile('/perfect-scrollbar/js/perfect-scrollbar.jquery.js', [
-	'depends'   =>  'yii\web\JqueryAsset'
-]);
-$this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
+$this->beginPage();
 ?>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/jquery.sticky.js"></script>
-	<script>
-		$(document).ready(function(){
-			$(".sticky-on-scroll").sticky({ topSpacing: 0, className:"sticky" });
-		});
-	</script>
-<?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?=Yii::$app->language?>">
 	<head>
@@ -155,14 +147,20 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				<div class="items currency-rate">1 USD - 24.2 UAH</div>
 				<div class="personal-account">
 					<div class="items">РУС</div>
-					<div class="items account-icon">Личный кабинет</div>
+					<?php if(\Yii::$app->user->isGuest){
+						echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
+					}else{
+						echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('account')).Html::a('Выйти', Url::to('/logout'), [
+								'data-method'   =>  'post'
+							]), ['class' => 'items account-icon']);
+					} ?>
 				</div>
 			</div>
 		</div>
 		<div class="sticky-on-scroll">
 			<div class="under-menu">
 				<div class="under-menu-content">
-					<div class="logo"></div>
+					<a href="/"><div class="logo"></div></a>
 					<div class="input-style-main">
 						<label class="icon-search" for=""></label>
 						<input type="text" placeholder="Поиск..."/>
@@ -224,7 +222,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				</div>-->
 			<!--	<ul class="right">
 					<li id="loginRegistration">
-					<?php if(\Yii::$app->user->isGuest){ ?>
+					<?php /*if(\Yii::$app->user->isGuest){ ?>
 						<span id="login">
 						<?=\bobroid\remodal\Remodal::widget([
 							'confirmButton'	=>	false,
@@ -254,7 +252,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 						<span>Здравствуйте, <?=Html::a(\Yii::$app->user->identity->Company, '/account')?>! <?=Html::a('Выйти', Url::to('/logout'), [
 								'data-method'   =>  'post'
 							])?></span>
-					<?php }	?>
+					<?php }*/	?>
 					</li>
 					<li id="lang">РУС<span class="arrow"></span>
 						<ul>
@@ -268,7 +266,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				</ul>-->
 			</div>
 		<?=\frontend\widgets\MainMenuWidget::widget([
-			'items'	=>	$menu
+			'items'	=>	Category::getMenu()
 		])?>
 		</div>
 	</div>
@@ -292,7 +290,7 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				])?>
 			</div>
 		</div>
-		<div class="underline">
+		<div class="footer-menu">
 			<div class="goods-item">
 				<?=Html::tag('span', \Yii::t('shop', 'О компании'), [
 					'class'		=>	'link-hide',
@@ -389,10 +387,10 @@ $this->registerCssFile('/perfect-scrollbar/css/perfect-scrollbar.css');
 				</div>
 				</div>
 			</div>
-		</div>
-		<div class="footer-content">
-			<span class="left">© Интернет-магазин «krasota-style™» 2011–2015</span>
-			<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
+			<div class="footer-content">
+				<span class="left">© Интернет-магазин «krasota-style™» 2011–2015</span>
+				<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
+			</div>
 		</div>
 	</div>
 	<!--<footer>

@@ -20,7 +20,6 @@ class Good extends \common\models\Good{
 
     private $_options = [];
     private $_photos = [];
-    private $_category = false;
 
     /**
      * @return GoodPhoto[]
@@ -97,18 +96,6 @@ class Good extends \common\models\Good{
         }
 
         return $photo->delete();
-    }
-
-    /**
-     *
-     * @return Category
-     */
-    public function getCategory(){
-        if(!empty($this->_category)){
-            return $this->_category;
-        }
-
-        return $this->_category = Category::findOne($this->GroupID);
     }
 
 }

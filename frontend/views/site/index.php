@@ -1,8 +1,7 @@
 <?php
 use evgeniyrru\yii2slick\Slick;
+use frontend\models\Good;
 use yii\helpers\Html;
-
-
 $mainGalleryHtml = [];
 
 if($reviews){
@@ -26,137 +25,101 @@ if($questions){
 				],
 				'items' =>  '',
 				'clientOptions' => [
-					'arrows'         => false,
-					'fade'           => true,
-					'slidesToShow'   => 1,
-					'slidesToScroll' => 1,
-					'asNavFor'       => '#sliderNav',
+					'arrohow'   => 1,
+					'slidesToSws'	=> false,
+					'fade'          => true,
+					'slidesToScroll'=> 1,
+					'asNavFor'      => '#sliderNav',
 				]
 		]) : '<div style="height: 370px;"></div>'
 		?>
 	</div>
-	<div class="arrow-bottom">
-	</div>
+	<div class="arrow-bottom"></div>
 	<div class="main-content-items">
 		<div class="goods-content">
 			<div class="goods-content-main">
-				<?=!empty($items) ? Slick::widget([
-													  'containerOptions' => [
-														  'id'    => 'sliderFor',
-														  'class' => 'first'
-													  ],
-													  'items' =>  '',
-													  'clientOptions' => [
-														  'arrows'         => false,
-														  'fade'           => true,
-														  'slidesToShow'   => 1,
-														  'slidesToScroll' => 1,
-														  'asNavFor'       => '#sliderNav',
-													  ]
-												  ]) : '<div style="height: 450px;
-																	width: 450px;
-																	border-left: 1px solid rgb(236, 236, 236);
-																	box-shadow: 0px 1px 0px rgb(236, 236, 236);
-																	border-bottom: 1px solid rgb(222, 222, 222);
-																	border-right: 1px solid rgb(236, 236, 236);
-																	background: white;
-																	border-radius: 4px;
-																	float: left;
-																	margin-right: 10px;
-																	margin-left: 10px;">
-														</div>'
-				?>
+				<div class="main-slider goods-items">
+					<?=\yii\widgets\ListView::widget([
+						 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
+							 'models'	=>	[
+							 	Good::findOne(16),
+						 	]
+						 ]),
+						 'itemView'	=>	function($model){
+							 return $this->render('index/main-slider', [
+								 'good' => $model
+							 ]);
+						 },
+						 'itemOptions'	=>	[
+							 'class'	=>	''
+						 ],
+						 'summary'	=>	false
+					])?>
+				</div>
 				<div class="goods-items">
 					<div class="two-items content-items">
-						<div class="goods-item">
-							<div>
-								<span class="icons-fav-bask"></span>
-								<span>СЕРЬГИ</span>
-								<span class="price">17 грн </span>
-							</div>
-							<div></div>
-						</div>
-						<div class="goods-item">
-							<div>
-								<span class="icons-fav-bask"></span>
-								<span>СЕРЬГИ</span>
-								<span class="price">17 грн </span>
-							</div>
-							<div></div>
-						</div>
+						<?=\yii\widgets\ListView::widget([
+							 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
+								 'models'	=>	[
+								 	Good::findOne(16),
+								 	Good::findOne(16),
+								]
+							 ]),
+							 'itemView'	=>	function($model){
+								 return $this->render('index/banner', ['good' => $model]);
+							 },
+							 'itemOptions'	=>	[
+								 'class'	=>	'goods-item'
+							 ],
+							 'summary'	=>	false
+						 ])?>
 					</div>
 					<div class="two-items content-banners">
-						<div class="goods-item goods-item-style">
-							<span>ЯРМАРКА МАСТЕРОВ</span>
-						</div>
-						<div class="goods-item" style="background: url('/img/site/pram.png');">
-						</div>
+						<?php
+						echo $this->render('index/banner2');
+						?>
+						<?php
+						echo $this->render('index/banner3');
+						?>
 					</div>
 				</div>
-				<div class="goods-item right-item">
-						<span class="price icons-fav-bask">4500 грн</span>
-				</div>
+				<?php
+				echo $this->render('index/banner4');
+				?>
 			</div>
-			<div class="goods-content-icons">
-				<div class="main-icons">
-					<div class="main-icon icon-best">
-					</div>
-					<span>Лучшее</span>
-				</div>
-				<div class="main-icons">
-					<div class="main-icon icon-news">
-					</div>
-					<span>Новинки</span>
-				</div>
-				<div class="main-icons">
-					<div class="main-icon icon-sale">
-					</div>
-					<span>Распродажа</span>
-				</div>
-			</div>
+			<?=Html::tag('div',
+				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-best']).
+					Html::tag('span', \Yii::t('shop', 'Лучшее')), ['class' => 'main-icons']).
+				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-news']).
+					Html::tag('span', \Yii::t('shop', 'Новинки')), ['class' => 'main-icons']).
+				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-sale']).
+					Html::tag('span', \Yii::t('shop', 'Распродажа')), ['class' => 'main-icons']),
+				[
+					'class' => 'goods-content-icons'
+				])?>
 			<div class="goods-content-all">
-				<div class="goods-item">
-						<span class="item-id">2018074</span>
-					<div class="item-image"></div>
-					<span>Ножницы маникюрные, блистер (9041), 1 шт.</span>
-					<div class="price-and-order">
-						<span class="wholesale-price semi-bold">51.5 ГРН</span>
-						<span class="retail-prce">66 ГРН</span>
-						<div class="goods-basket"></div>
-					</div>
-				</div>
-				<div class="goods-item">
-					<span class="item-id">2018074</span>
-					<div class="item-image"></div>
-					<span>Ножницы маникюрные, блистер (9041), 1 шт.</span>
-					<div class="price-and-order">
-						<span class="wholesale-price semi-bold">51.5 ГРН</span>
-						<span class="retail-prce">66 ГРН</span>
-						<div class="goods-basket"></div>
-					</div>
-				</div>
-				<div class="goods-item">
-					<span class="item-id">2018074</span>
-					<div class="item-image"></div>
-					<span>Ножницы маникюрные, блистер (9041), 1 шт.</span>
-					<div class="price-and-order">
-						<span class="wholesale-price semi-bold">51.5 ГРН</span>
-						<span class="retail-prce">66 ГРН</span>
-						<div class="goods-basket"></div>
-					</div>
-				</div>
-				<div class="goods-item">
-					<span class="item-id">2018074</span>
-					<div class="item-image"></div>
-					<span>Ножницы маникюрные, блистер (9041), 1 шт.</span>
-					<div class="price-and-order">
-						<span class="wholesale-price semi-bold">51.5 ГРН</span>
-						<span class="retail-prce">66 ГРН</span>
-						<div class="goods-basket"></div>
-					</div>
-				</div>
+				<?=\yii\widgets\ListView::widget([
+					'dataProvider'	=>	new \yii\data\ArrayDataProvider([
+						'models'	=>	[
+							Good::findOne(16),
+							Good::findOne(16),
+							Good::findOne(16),
+							Good::findOne(16),
+							Good::findOne(16),
+							Good::findOne(16),
+							Good::findOne(16),
+							Good::findOne(16),
+						]]),
+						'itemView'	=>	function($model){
+							 return $this->render('index/good_card', ['good' => $model]);
+						},
+						'itemOptions'	=>	[
+							'class'	=>	'goods-item'
+						],
+					    'summary'	=>	false
+					])?>
 				<div class="goods-item goods-item-style">
-					<span>СМОТРЕТЬ ВСЕ ТОВАРЫ</span>
+					<span><?=\Yii::t('shop', 'СМОТРЕТЬ ВСЕ ТОВАРЫ')?></span>
 				</div>
 			</div>
 		</div>
