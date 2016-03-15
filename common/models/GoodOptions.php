@@ -22,6 +22,16 @@ class GoodOptions extends \yii\db\ActiveRecord
         return 'goodsoptions';
     }
 
+    public static function getList(){
+        $list = [];
+
+        foreach(self::find()->each() as $item){
+            $list[$item['id']] = $item['name'];
+        }
+
+        return $list;
+    }
+
     /**
      * @inheritdoc
      */
