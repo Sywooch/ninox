@@ -3242,6 +3242,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .top-menu-content .currency-rate:after{
 	content: url("/img/site/red-arrow-top-menu.png");
+	margin-top: -4px;
+	cursor: pointer;
 }
 
 .top-menu-content span{
@@ -3267,7 +3269,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .personal-account .items{
 	padding-right: 0px;
-	padding-left: 45px;
+	margin-left: 45px;
+	cursor: pointer;
 }
 
 .personal-account .account-icon:before{
@@ -3277,6 +3280,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .personal-account .items:after{
 	content: url("/img/site/arrow-bot-menu.png");
+	margin-top: -2px;
+	cursor: pointer;
 }
 
 .top-menu-content .personal-account{
