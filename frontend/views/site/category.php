@@ -1,9 +1,10 @@
 <?php
 
 use frontend\helpers\PriceRuleHelper;
+use yii\bootstrap\Html;
 
-$this->title = '';
-\Yii::$app->params['breadcrumbs'][] = [
+$this->title = $category->Name;
+$this->params['breadcrumbs'][] = [
     'label' =>  $category->Name
 ];
 
@@ -15,7 +16,7 @@ $helper = new PriceRuleHelper();
         <div class="leftMenu">
             <span class="catTitle">
                 <?=''//UpLeftMenuBanners?>
-                <a href="/<?=$category->link?>" title="<?=$category->Name?>"><?=$category->Name?></a>
+                <?=Html::a($category->Name, $category->link)?>
                 <?=''//Filters?>
                 <?=''//LeftMenu?>
                 <?=''//LeftMenuBanners?>
@@ -23,9 +24,12 @@ $helper = new PriceRuleHelper();
         </div>
         <div class="catalog">
             <?=\yii\widgets\Breadcrumbs::widget([
-                'activeItemTemplate'    =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
-                'itemTemplate'  =>  '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span><span class="arrowBreadcrumbs"></span>',
-                'links'         =>  \Yii::$app->params['breadcrumbs']
+                'activeItemTemplate'    =>  '<span class="item-name" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
+                'itemTemplate'          =>  '
+                <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
+                <span class="fa fa-long-arrow-right fa-fw"></span>
+            ',
+                'links'                 =>  $this->params['breadcrumbs']
             ])?>
             <div class="label">
                 <a href = "<?=''//$_SESSION['linkRoot']?>">

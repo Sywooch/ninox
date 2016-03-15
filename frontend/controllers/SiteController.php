@@ -73,7 +73,7 @@ class SiteController extends Controller
                     $mainCategory = $parent;
                 }
 
-                \Yii::$app->params['breadcrumbs'][] = [
+                $this->getView()->params['breadcrumbs'][] = [
                     'url'   =>  '/'.$parent->link,
                     'label' =>  $parent->Name
                 ];
@@ -84,7 +84,7 @@ class SiteController extends Controller
             $mainCategory = $category;
         }
 
-        \Yii::$app->params['breadcrumbs'][] = [
+        $this->getView()->params['breadcrumbs'][] = [
             'url'   =>  '/'.$category->link,
             'label' =>  $category->Name
         ];
@@ -241,7 +241,7 @@ class SiteController extends Controller
 
         if(strlen($category->Code) != 3){
             foreach($category->getParents() as $parent){
-                \Yii::$app->params['breadcrumbs'][] = [
+                $this->getView()->params['breadcrumbs'][] = [
                     'url'   =>  '/'.$parent->link,
                     'label' =>  $parent->Name
                 ];
@@ -318,7 +318,8 @@ class SiteController extends Controller
         $goodsQuery = Good::find()
             ->where(['like', '`goods`.`Name`', $suggestion])
             ->orWhere(['like', '`goods`.`Code`', $suggestion])
-            ->orWhere(['like', '`goods`.`BarCode2`', $suggestion]);
+            ->orWhere(['like', '`goods`.`BarCode2`', $suggestion])
+            ->orWhere(['like', '`goodsgroups`.`name`', $suggestion]);
 
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';

@@ -4,6 +4,8 @@ use frontend\models\Good;
 use yii\helpers\Html;
 $mainGalleryHtml = [];
 
+$this->title = \Yii::t('shop', 'Главная');
+
 if($reviews){
 	$mainGalleryHtml[] = $this->render('_review_item', [
 		'reviews' =>  $reviews

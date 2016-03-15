@@ -34,7 +34,7 @@ $this->registerCssFile('/css/goodCard.css');
 $this->registerCssFile('/css/img.css');
 $this->registerCssFile('/css/base64.css');
 
-\Yii::$app->params['breadcrumbs'][] = [
+$this->params['breadcrumbs'][] = [
     'label' =>  $good->Name
 ];
 
@@ -92,6 +92,8 @@ foreach($good->dopPhoto as $photo){
                            ['width'=>'105px', 'height'=>'80px']);
 }
 
+$this->title = $good->Name;
+
 ?>
 <script type="text/javascript">(function(w,doc) {
         if (!w.__utlWdgt ) {
@@ -111,7 +113,7 @@ foreach($good->dopPhoto as $photo){
                 <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
                 <span class="fa fa-long-arrow-right fa-fw"></span>
             ',
-            'links'                 =>  \Yii::$app->params['breadcrumbs']
+            'links'                 =>  $this->params['breadcrumbs']
         ])?>
     </div>
     <div class="goodsCard" itemscope itemtype="http://schema.org/Product">
