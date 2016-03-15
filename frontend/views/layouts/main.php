@@ -9,6 +9,7 @@ use common\components\SocialButtonWidget;
 use frontend\widgets\CartWidget;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
 $this->registerMetaTag(['name' => 'description', 'content' => '']);
@@ -119,6 +120,91 @@ $js = <<<JS
 JS;
 
 $this->registerJs($js);
+$typeaheadStyles = <<<'CSS'
+
+
+.tt-scrollable-menu .tt-menu{
+    max-height: none;
+}
+
+.tt-menu .typeahead-list-item{
+    font-size: 11px;
+}
+
+.tt-menu *{
+    color: #000 !important;
+    font-family: "Open Sans"
+}
+
+.tt-menu h4.media-heading{
+    font-size: 13px;
+    white-space: nowrap;
+    margin-bottom: 0;
+}
+
+.tt-menu .typeahead-list-item .name{
+    color: #000 !important;
+    font-size: 13px;
+}
+
+.tt-menu .typeahead-list-item .category{
+
+}
+
+.tt-menu .media-left{
+    width: 60px !important;
+    height: 40px !important;
+    overflow: hidden;
+}
+
+.tt-menu .media-left img{
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.tt-menu{
+    border-radius: 5px !important;
+    border: 1px solid #fff;
+}
+
+.tt-menu .tt-suggestion{
+    border-bottom: none;
+    padding: 2px;
+    height: 56px;
+    cursor: pointer !important;
+}
+
+.tt-menu .tt-suggestion .item-code{
+    text-align: right;
+    position: absolute;
+    display: block;
+    right: 7px;
+    top: 0;
+    font-size: 10px;
+    color: #888 !important;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,0+100;White+to+Transparent */
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,1+20,1+100 */
+    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+    padding-left: 30px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    line-height: 14px;
+}
+
+.tt-menu .tt-suggestion:hover .item-code{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f5f5f5+0,f5f5f5+100&0+0,1+20,1+100 */
+    background: -moz-linear-gradient(left, rgba(245,245,245,0) 0%, rgba(245,245,245,1) 20%, rgba(245,245,245,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(245,245,245,0) 0%,rgba(245,245,245,1) 20%,rgba(245,245,245,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(245,245,245,0) 0%,rgba(245,245,245,1) 20%,rgba(245,245,245,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00f5f5f5', endColorstr='#f5f5f5',GradientType=1 ); /* IE6-9 */
+}
+
+CSS;
+
+$this->registerCss($typeaheadStyles);
 
 \frontend\assets\PerfectScrollbarAsset::register($this);
 
@@ -162,13 +248,51 @@ $this->beginPage();
 				<div class="under-menu-content">
 					<a href="/"><div class="logo"></div></a>
 					<div class="input-style-main">
-						<label class="icon-search" for=""></label>
-						<input type="text" placeholder="Поиск..."/>
-						<?=\yii\helpers\Html::button('Найти', [
+						<?php
+						$form = new \kartik\form\ActiveForm([
+							'action'	=>	Url::to(['/search']),
+							'method'	=>	'get'
+						]);
+
+						$form->begin();
+
+						echo Html::tag('label', '', ['class' => 'icon-search']),
+							\kartik\typeahead\Typeahead::widget([
+								'name'          => 'string',
+								'options'       => ['placeholder' => 'Поиск'],
+								'container'	=>	[
+									'style'	=>	'display: inline-block'
+								],
+								'value'	=>	\Yii::$app->request->get("string"),
+								'scrollable'    => true,
+								'pluginOptions' => [
+									'highlight'     =>  true
+								],
+								'dataset' => [
+									[
+										'remote' => [
+											'url' => Url::to(['/search']).'?string=%QUERY',
+											'wildcard' => '%QUERY'
+										],
+										'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+										'display'   => 	'value',
+										'limit'		=>	'10',
+										'templates' => [
+											'notFound'      => $this->render('search/notFound'),
+											'footer'		=> new JsExpression("Handlebars.compile('".$this->render('search/footer')."')"),
+											'suggestion'    => new JsExpression("Handlebars.compile('".$this->render('search/suggestion')."')")
+										]
+									]
+								]
+							]),
+						\yii\helpers\Html::button('Найти', [
 							'type'  =>  'submit',
 							'class' =>  'blue-button small-button ',
 							'id'    =>  'submit'
-						])?>
+						]);
+
+						$form->end();
+						?>
 					</div>
 					<div class="phone-number">
 						<div class="phone"></div>

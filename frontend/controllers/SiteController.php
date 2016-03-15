@@ -25,6 +25,7 @@ use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -312,14 +313,47 @@ class SiteController extends Controller
     }
 
     public function actionSearch(){
-        $goods = Good::find()->limit(10)->all();
+        $suggestion = \Yii::$app->request->get("string");
+
+        $goodsQuery = Good::find()
+            ->where(['like', '`goods`.`Name`', $suggestion])
+            ->orWhere(['like', '`goods`.`Code`', $suggestion])
+            ->orWhere(['like', '`goods`.`BarCode2`', $suggestion]);
 
         if(\Yii::$app->request->isAjax){
+            \Yii::$app->response->format = 'json';
 
+            $goods = [];
+
+            foreach($goodsQuery->limit(10)->each() as $good){
+                $goodInfo = [
+                    'ID'        =>  $good->ID,
+                    'code'      =>  $good->Code,
+                    'price'     =>  $good->wholesale_price,
+                    'price2'    =>  $good->retail_price,
+                    'link'      =>  $good->link,
+                    'name'      =>  $good->Name,
+                    'photo'     =>  $good->ico
+                ];
+
+                if(!empty($good->category)){
+                    $goodInfo['category'] = $good->category->Name;
+                }
+
+                if(!empty($good->BarCode2)){
+                    $goodInfo['vendorCode'] = $good->BarCode2;
+                }
+
+                $goods[] = $goodInfo;
+            }
+
+            return $goods;
         }
 
         return $this->render('searchResults', [
-            'goods' =>  $goods
+            'goods' =>  new ActiveDataProvider([
+                'query' =>  $goodsQuery
+            ])
         ]);
     }
 
