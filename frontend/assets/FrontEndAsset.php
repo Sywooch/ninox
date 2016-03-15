@@ -22,7 +22,6 @@ class FrontEndAsset extends AssetBundle
 		'css/maskedphone.css',
 		'css/outdatedbrowser.min.css',
 		'css/site.css',
-		'css/menu.css',
 	];
 	public $js = [
 		'js/main.js',

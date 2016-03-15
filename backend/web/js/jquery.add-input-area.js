@@ -130,6 +130,8 @@
                 }
                 // 追加後の処理があれば実行する
                 if (typeof self.option.after_add == 'function') self.option.after_add();
+
+                $(self.elem).trigger('inputArea.added', [new_list]);
             });
         },
 
@@ -142,8 +144,10 @@
             $(self.elem).on('click', self.option.btn_del, function(ev) {
                 ev.preventDefault();
                 // 品目入力欄を削除
-                var idx = $(self.elem).find(self.option.btn_del).index(ev.target);
-                $(self.elem).find(self.option.area_var).eq(idx).remove();
+                var idx = $(self.elem).find(self.option.btn_del).index(ev.target),
+                    target = $(self.elem).find(self.option.area_var).eq(idx);
+
+                target.remove();
 
                 // 削除ボタンの表示状態を決定する
                 self._setDelBtnVisibility();
@@ -158,6 +162,8 @@
                 ) {
                     $(self.option.btn_add).show();
                 }
+
+                $(self.elem).trigger('inputArea.removed', [target]);
             });
         },
 

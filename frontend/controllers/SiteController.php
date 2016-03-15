@@ -3,7 +3,6 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
-use common\models\GoodsComment;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\OrderForm;
@@ -26,6 +25,7 @@ use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -55,8 +55,7 @@ class SiteController extends Controller
     }
 
     public function actionShowtovar($link){
-        $id = preg_replace('/[^g(.)]+\D+/', '', $link);
-        $id = preg_replace('/\D+/', '', $id);
+        $id = preg_replace('/\D+/', '', preg_replace('/[^g(.)]+\D+/', '', $link));
 
         $good = Good::findOne(['`goods`.`ID`' => $id]);
 
@@ -64,18 +63,12 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
-        /*$goodComment = GoodsComment::findOne(['`goodscomments`.`goodID`' => $id]);
-
-        if(!$goodComment){
-            return \Yii::$app->runAction('site/error');
-        }*/
-
-        $category = Category::findOne(['ID' => $good->GroupID]);
+        $category = Category::findOne($good->GroupID);
 
         $mainCategory = null;
 
-        if(strlen($category->Code) != 3){
-            foreach($category->getParents() as $parent){
+        if(strlen($good->category->Code) != 3){
+            foreach($good->category->getParents() as $parent){
                 if(empty($mainCategory)){
                     $mainCategory = $parent;
                 }
@@ -100,7 +93,6 @@ class SiteController extends Controller
             'mainCategory'  =>  $mainCategory,
             'good'          =>  $good,
             'category'      =>  $category,
-            /*'goodComment'   =>  $goodComment*/
         ]);
     }
 
@@ -308,10 +300,61 @@ class SiteController extends Controller
 
             return $this->goBack();
         } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('login', [
+                    'model' =>  $model
+                ]);
+            }else{
+                return $this->render('login', [
+                    'model' => $model,
+                ]);
+            }
         }
+    }
+
+    public function actionSearch(){
+        $suggestion = \Yii::$app->request->get("string");
+
+        $goodsQuery = Good::find()
+            ->where(['like', '`goods`.`Name`', $suggestion])
+            ->orWhere(['like', '`goods`.`Code`', $suggestion])
+            ->orWhere(['like', '`goods`.`BarCode2`', $suggestion]);
+
+        if(\Yii::$app->request->isAjax){
+            \Yii::$app->response->format = 'json';
+
+            $goods = [];
+
+            foreach($goodsQuery->limit(10)->each() as $good){
+                $goodInfo = [
+                    'ID'        =>  $good->ID,
+                    'code'      =>  $good->Code,
+                    'price'     =>  $good->wholesale_price,
+                    'price2'    =>  $good->retail_price,
+                    'link'      =>  $good->link,
+                    'name'      =>  $good->Name,
+                    'photo'     =>  $good->ico
+                ];
+
+                if(!empty($good->category)){
+                    $goodInfo['category'] = $good->category->Name;
+                }
+
+                if(!empty($good->BarCode2)){
+                    $goodInfo['vendorCode'] = $good->BarCode2;
+                }
+
+                $goods[] = $goodInfo;
+            }
+
+            return $goods;
+        }
+
+        return $this->render('searchResults', [
+            'goods' =>  new ActiveDataProvider([
+                'query' =>  $goodsQuery
+            ])
+        ]);
     }
 
     /**

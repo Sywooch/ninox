@@ -23,6 +23,7 @@ echo \kartik\grid\GridView::widget([
 	'pjax'          =>  true,
 	'bordered'      =>  false,
 	'striped'       =>  false,
+	'export'		=>	false,
 	'columns'       =>  [
 		[
 			'format'        =>  'raw',

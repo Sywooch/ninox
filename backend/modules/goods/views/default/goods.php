@@ -1,5 +1,6 @@
 <?php
 use kartik\dropdown\DropdownX;
+use yii\bootstrap\Html;
 use yii\widgets\ListView;
 
 $this->title = "Товары";
@@ -45,8 +46,92 @@ img.good-sale{
 }
 STYLE;
 
-$js = <<<'SCRIPT'
-var good = {
+$js = <<<JS
+(function( $ ){
+    $.fn.goods = function(options) {
+        if(options == undefined || options == null){
+            options = {};
+        }
+
+        var defaultOptions = {
+                stateButtonSelector: '.changeState-btn',
+                deleteButtonSelector: '.delete-btn',
+                pickUpButtonSelector: '.'
+            },
+            items = this;
+
+        options = $.extend(defaultOptions, options);
+
+        var trashState = function(item, button){
+            $.ajax({
+                type: 'POST',
+                url: '/goods/toggle',
+                data: {
+                    goodID: item.getAttribute('data-key'),
+                    attribute: 'Deleted'
+                },
+                success: function(data){
+                    var deleted = data == 1,
+                        thumb = $(item).find('.thumbnail');
+
+                    if(deleted){
+                        thumb.addClass('bg-very-danger');
+                        thumb[0].setAttribute('data-attribute-deleted', true);
+                    }else{
+                        if(thumb[0].getAttribute('data-attribute-deleted') !== null)
+                            thumb[0].removeAttribute('data-attribute-deleted');
+
+                        thumb.toggleClass('bg-very-danger');
+                    }
+
+                    button.innerHTML = deleted ? 'Восстановить' : 'Удалить';
+                }
+            });
+        }, changeState = function(item, button){
+            $.ajax({
+                type: 'POST',
+                url: '/goods/toggle',
+                data: {
+                    goodID: item.getAttribute('data-key'),
+                    attribute: 'show_img'
+                },
+                success: function(data){
+                    var enabled = data == 1,
+                        thumb = $(item).find('.thumbnail');
+
+                    if(item.getAttribute('data-attribute-deleted') !== null){
+                        thumb.setAttribute('oldClass', item.getAttribute('class'));
+                        thumb.addClass('bg-very-danger');
+                    }else{
+                        thumb.toggleClass(enabled ? 'bg-danger' : 'bg-success');
+                        thumb.addClass(enabled ? 'bg-success' : 'bg-danger');
+                    }
+
+                    button.innerHTML = enabled ? 'Выключить' : 'Включить';
+                }
+            });
+        }, pickUp = function(item){
+
+        },setEvents = function(item){
+            $(item).find(options.stateButtonSelector).on('click', function(){
+                changeState(item, this);
+            });
+
+            $(item).find(options.deleteButtonSelector).on('click', function(){
+                trashState(item, this);
+            });
+        }
+
+        items.toArray().forEach(function(item, i){
+            setEvents(item);
+        });
+    };
+})( jQuery );
+
+$("#goodsList .item").goods();
+
+
+/*var good = {
     'changeState': function(e){
         var target = e.currentTarget;
         $.ajax({
@@ -110,18 +195,7 @@ var changeCategoryState = function(e){
 			}
 		}
 	});
-}, changeCategoryCanBuy = function(e){
-    $.ajax({
-		type: 'POST',
-		url: '/goods/changecategorycanbuy',
-		data: {
-		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
-		},
-		success: function(data){
-			e.target.innerHTML = data == 1 ? "Не продавать" : "Продавать";
-		}
-	});
-}
+};
 
 $(".changeState-btn").on('click', function(e){
     good.changeState(e);
@@ -137,9 +211,8 @@ $(".categoryActions .canBuy").on('click', function(e){
 
 $(".categoryActions .shutdown").on('click', function(e){
     changeCategoryState(e);
-});
-
-SCRIPT;
+});*/
+JS;
 
 $this->registerJs($js);
 
@@ -169,7 +242,7 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
             'items' =>  [
                 [
                     'label'     =>  'Просмотреть',
-                    'url'       =>  '/goods/showcategory/'.$nowCategory->ID
+                    'url'       =>  \yii\helpers\Url::to(['/categories/view/'.$nowCategory->ID])
                 ],
                 [
                     'label'     =>  'Просмотреть на сайте',
@@ -177,27 +250,27 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
                 ],
                 [
                     'label'     =>  'Редактировать',
-                    'url'       =>  '/goods/showcategory/'.$nowCategory->ID.'?act=edit'
+                    'url'       =>  \yii\helpers\Url::to(['/categories/view/'.$nowCategory->ID, 'act' => 'edit'])
                 ],
                 [
                     'label'     =>  'Добавить',
                     'items'     =>  [
                         [
                             'label'     =>  'Товар',
-                            'url'       =>  '/goods/addgood?category='.$nowCategory->ID
+                            'url'       =>  \yii\helpers\Url::to(['add', 'category' => $nowCategory->ID])
                         ],
                         [
                             'label'     =>  'Несколько товаров',
-                            'url'       =>  '/goods/addgood?category='.$nowCategory->ID.'?mode=lot'
+                            'url'       =>  \yii\helpers\Url::to(['add', 'category' => $nowCategory->ID, 'mode' => 'lot'])
                         ],
-                        '<li class="divider"></li>',
+                        Html::tag('li', '', ['class' => 'divider']),
                         [
                             'label'     =>  'Категорию',
-                            'url'       =>  '/goods/addcategory?category='.$nowCategory->ID
+                            'url'       =>  \yii\helpers\Url::to(['/categories/add', 'category' => $nowCategory->ID])
                         ],
                     ]
                 ],
-                '<li class="divider"></li>',
+                Html::tag('li', '', ['class' => 'divider']),
                 [
                     'label' =>  $nowCategory->menu_show == "1" ? "Выключить" : "Включить",
                     'options'   =>  [
@@ -221,18 +294,24 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
 <div class="row">
     <br>
     <?php
-    \yii\widgets\Pjax::begin([
-
-    ]);
+    \yii\widgets\Pjax::begin();
 
     echo ListView::widget([
-       'dataProvider'  => $goods,
-       'itemOptions'   => [
-           'class' => 'item'
-       ],
-       'layout'        =>  '<div class="row"><div class="col-xs-12">{summary}</div><div class="col-xs-12">{items}</div><div class="col-xs-12"><center>{pager}</center></div></div>',
-       'summary'       =>  '<span style="margin-left: 15px">Показаны товары {begin}-{end}, всего товаров {totalCount}</span><br><br>',
-       'itemView'  => '_goods_oneItem',
+        'dataProvider'  => $goods,
+        'id'            =>  'goodsList',
+        'itemOptions'   => [
+            'class' => 'item col-sm-4 col-md-3',
+            'style' =>  'min-height: 500px'
+        ],
+        'layout'        =>  Html::tag('div',
+            Html::tag('div', '{summary}', ['class' => 'col-xs-12']).
+            Html::tag('div', '{items}', ['class' => 'col-xs-12']).
+            Html::tag('div', '{pager}', ['class' => 'col-xs-12', 'align' => 'center']),
+            [
+                'class' =>  'row'
+            ]),
+        'summary'        =>  Html::tag('span', 'Показаны товары {begin}-{end}, всего товаров {totalCount}', ['style' => 'margin-left: 15px']),
+        'itemView'       =>  'goods/oneItem',
     ]);
 
     \yii\widgets\Pjax::end();

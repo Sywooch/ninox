@@ -86,8 +86,7 @@ $form->field($model, 'code', [
     'addon' => ['prepend' => ['content' => FA::i('key')]],
     'hintType' => ActiveField::HINT_SPECIAL,
     'hintSettings' => ['placement' => 'left', 'onLabelClick' => true, 'onLabelHover' => false]
-])
-    ->hint('Код является очень важной частью системы, поэтому редактировать его нежелательно!'),
+]),
 $form->field($model, 'category')->widget(\kartik\select2\Select2::className(), [
     'data' => Category::getList(),
     'options' => [

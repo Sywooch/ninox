@@ -12,6 +12,7 @@ use Yii;
  * @property string $Formula
  * @property integer $Enabled
  * @property integer $Priority
+ * @property array $terms
  */
 class Pricerule extends \yii\db\ActiveRecord
 {
@@ -21,29 +22,24 @@ class Pricerule extends \yii\db\ActiveRecord
 	public $_actions = [];
 	protected $termTypes = ['=', '>=', '<=', '!='];
 
-	public function __get($name){
-		switch($name){
-			case 'terms':
-				if(!empty($this->_terms)){
-					return $this->_terms;
-				}
-
-				$this->asArray();
-
-				return $this->_terms;
-				break;
-			case 'actions':
-				if(!empty($this->_actions)){
-					return $this->_actions;
-				}
-
-				$this->asArray();
-
-				return $this->_actions;
-				break;
+	public function getTerms(){
+		if(!empty($this->_terms)){
+			return $this->_terms;
 		}
 
-		return parent::__get($name);
+		$this->asArray();
+
+		return $this->_terms;
+	}
+
+	public function getActions(){
+		if(!empty($this->_actions)){
+			return $this->_actions;
+		}
+
+		$this->asArray();
+
+		return $this->_actions;
 	}
 
 	public function asArray(){

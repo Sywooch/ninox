@@ -19,4 +19,9 @@ class Category extends \common\models\Category{
         return $goods;
     }
 
+	public static function getMenu(){
+		$cats = self::find()->select(['ID', 'Name', 'Code', 'link', 'listorder', 'menu_show', 'imgSrc'])->orderBy('Code')->all();
+		return self::buildTree($cats);
+	}
+
 }
