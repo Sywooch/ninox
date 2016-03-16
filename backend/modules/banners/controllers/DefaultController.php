@@ -6,6 +6,7 @@ use common\models\Banner;
 use common\models\BannerType;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\web\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
@@ -62,7 +63,12 @@ class DefaultController extends Controller
     }
 
     public function actionShowbanners($param){
-        $bannersCategory = BannerType::findOne(['id' => $param]);
+        $bannersCategory = BannerType::findOne(['alias' => $param]);
+
+        if(!$bannersCategory){
+            throw new NotFoundHttpException("Такая категория баннеров не найдена!");
+        }
+
         $banners = Banner::find()->where(['bannerTypeId' => $bannersCategory->id])->orderBy('bannerOrder DESC')->all();
 
         if($bannersCategory){
