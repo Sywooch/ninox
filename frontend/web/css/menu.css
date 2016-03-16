@@ -82,17 +82,28 @@
     /*min-width: 120px; изменения на 12.06.16, еси ничего не поедет так и оставить*/
     /*изменения на 12.03.16*/
     height: 35px;
-    margin-top: 10px;
     /*конец изменений*/
 }
 
-.header-menu-items:hover .header-menu-item-image{
-    margin-top: 7px;/*изменения на 12.03.16*/
+.svg path {
+    fill: red ;
+}
+svg {width: 100%; height: 100%;}
+svg path {fill: red !important;}
+
+
+#layer1{
+    fill: ;
+}
+
+.sticky .header-menu-item-image{
+    height: 40px;
+    margin-top: 0px;
 }
 
 .header-menu-item-image > *{
     transform: scale(1);
-    max-height: 40px;
+    max-height: 35px;
 }
 
 .header-menu-item-content{

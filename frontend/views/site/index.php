@@ -16,7 +16,7 @@ if($questions){
 }
 
 ?>
-<div class="main-content">
+<div>
 	<div class="main-content-slider">
 		<?=!empty($items) ? Slick::widget([
 				'containerOptions' => [

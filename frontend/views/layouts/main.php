@@ -270,7 +270,7 @@ $this->beginPage();
 		])?>
 		</div>
 	</div>
-	<?=$content?>
+	<div class="main-content"><?=$content?></div>
 	<div class="footer">
 		<div class="blue-line">
 			<div class="footer-content">

@@ -8,8 +8,7 @@ $('img.svg').each(function(){
         // Get the SVG tag, ignore the rest
         var svg = jQuery(data).find('svg'),
             width = '40',
-            height = '35',
-            margin = 'auto';
+            height = '35';
 
         // Add replaced image's ID to the new SVG
         if(typeof imgID !== 'undefined') {
@@ -27,7 +26,7 @@ $('img.svg').each(function(){
         svg.attr('height', height);
 
         svg.attr('preserveAspectRatio', 'xMinYMin meet');//preserveAspectRatio="xMinYMin meet"
-        svg.attr('viewBox', '0 0 ' + (width * 20) + ' ' + (height * 20));
+        svg.attr('viewBox', '0 0 ' + (width * 40) + ' ' + (height * 10));
 
 
         // Replace image with new SVG
