@@ -19,6 +19,8 @@ $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
 
+$this->title = $this->title.' - '.\Yii::t('shop', 'Krasota-Style Бижутерия по украине оптом и в розницу');
+
 /*
  * это нужно?
  */

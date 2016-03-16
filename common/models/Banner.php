@@ -23,6 +23,11 @@ use yii\base\InvalidConfigException;
  */
 class Banner extends \yii\db\ActiveRecord
 {
+
+    const TYPE_IMAGE = 1;
+    const TYPE_HTML = 2;
+    const TYPE_GOOD = 3;
+
     /**
      * @inheritdoc
      */

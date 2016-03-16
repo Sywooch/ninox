@@ -4,6 +4,8 @@ use frontend\models\Good;
 use yii\helpers\Html;
 $mainGalleryHtml = [];
 
+$this->title = \Yii::t('shop', 'Главная');
+
 if($reviews){
 	$mainGalleryHtml[] = $this->render('_review_item', [
 		'reviews' =>  $reviews
@@ -15,15 +17,17 @@ if($questions){
 	]);
 }
 
+$sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
+
 ?>
 <div>
 	<div class="main-content-slider">
-		<?=!empty($items) ? Slick::widget([
+		<?=!empty($sliderBanners) ? Slick::widget([
 				'containerOptions' => [
 					'id'    => 'sliderFor',
 					'class' => 'first'
 				],
-				'items' =>  '',
+				'items' =>  $sliderBanners,
 				'clientOptions' => [
 					'arrohow'   => 1,
 					'slidesToSws'	=> false,
