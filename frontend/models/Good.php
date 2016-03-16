@@ -120,10 +120,6 @@ class Good extends \common\models\Good{
         return $options;
     }
 
-    public function getCategorycode(){
-        return $this->category->Code;
-    }
-
 	public static function find(){
 		return parent::find()->
 			select('`goods`.*, `goodsgroups`.`Code` AS `category`')->

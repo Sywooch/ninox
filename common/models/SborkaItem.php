@@ -81,7 +81,7 @@ class SborkaItem extends \yii\db\ActiveRecord
     {
         return [
             [['itemID', 'orderID', 'count', 'added', 'nalichie', 'zamena', 'nezakaz', 'vzakaz', 'realyCount', 'originalCount', 'discountSize', 'discountType'], 'integer'],
-            [['name'], 'string'],
+            [['name', 'categoryCode'], 'string'],
             [['name', 'count', 'originalPrice'], 'required'],
             [['originalPrice'], 'number']
         ];
@@ -108,6 +108,7 @@ class SborkaItem extends \yii\db\ActiveRecord
             'originalPrice' => 'Полная цена',
             'discountSize' => 'Размер скидки',
             'discountType' => 'Тип скидки',
+            'categoryCode' => 'Код категории',
         ];
     }
 }

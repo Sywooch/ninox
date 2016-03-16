@@ -29,7 +29,7 @@ class AssemblyItem extends \common\models\SborkaItem{
             'discountSize'  =>  $cashboxItem->discountSize,
             'discountType'  =>  $cashboxItem->discountType,
             'priceRuleID'   =>  $cashboxItem->priceRuleID,
-            'category'      =>  $cashboxItem->category,
+            'categoryCode'  =>  $cashboxItem->categoryCode,
             'customerRule'  =>  $cashboxItem->customerRule
         ], false);
     }

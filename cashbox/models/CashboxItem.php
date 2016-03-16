@@ -17,7 +17,7 @@ use yii\web\BadRequestHttpException;
  * @property integer $discountType
  * @property integer $discountSize
  * @property integer $priceRuleID
- * @property string $category
+ * @property string $categoryCode
  * @property integer $customerRule
  * @property integer $deleted
  * @property integer $added
@@ -70,7 +70,7 @@ class CashboxItem extends \yii\db\ActiveRecord
         }
 
         $attributes = [
-            'category',
+            'categoryCode',
             'count',
             'customerRule',
             'discountSize',
@@ -81,8 +81,12 @@ class CashboxItem extends \yii\db\ActiveRecord
             'priceRuleID'
         ];
 
-        foreach($attributes as $attribute){
-            $this->$attribute = $assemblyItem->$attribute;
+        foreach($attributes as $key => $attribute){
+            if(isset($this->$key)){
+                $this->$key = $assemblyItem->$attribute;
+            }else{
+                $this->$attribute = $assemblyItem->$attribute;
+            }
         }
 
         $this->orderID = $orderID;
@@ -97,7 +101,7 @@ class CashboxItem extends \yii\db\ActiveRecord
             [['itemID', 'orderID'], 'required'],
             [['itemID', 'orderID', 'added', 'count', 'discountType', 'discountSize', 'priceRuleID', 'customerRule', 'deleted'], 'integer'],
             [['originalPrice'], 'number'],
-            [['name', 'category'], 'string', 'max' => 255],
+            [['name', 'categoryCode'], 'string', 'max' => 255],
         ];
     }
 
@@ -115,7 +119,7 @@ class CashboxItem extends \yii\db\ActiveRecord
             'discountType' => Yii::t('common', 'Discount Type'),
             'discountSize' => Yii::t('common', 'Discount Size'),
             'priceRuleID' => Yii::t('common', 'Price Rule ID'),
-            'category' => Yii::t('common', 'Category'),
+            'categoryCode' => Yii::t('common', 'Category Code'),
             'customerRule' => Yii::t('common', 'Customer Rule'),
             'deleted' => Yii::t('common', 'Deleted'),
             'added' =>  \Yii::t('common', 'Added'),

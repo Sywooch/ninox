@@ -123,6 +123,10 @@ class Good extends \yii\db\ActiveRecord
         return GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID])->orderBy('order')->limit(1)->scalar();
     }
 
+    public function getCategorycode(){
+        return $this->category->Code;
+    }
+
     /**
      * @return GoodsPhoto[]
      */
