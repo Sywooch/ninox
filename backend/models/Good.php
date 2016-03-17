@@ -98,4 +98,16 @@ class Good extends \common\models\Good{
         return $photo->delete();
     }
 
+    public function behaviors(){
+        return [
+            'LoggableBehavior' => [
+                'class' => 'sammaye\audittrail\LoggableBehavior',
+                'ignored' => [
+                    'Name2',
+                    'ID'
+                ],
+            ]
+        ];
+    }
+
 }

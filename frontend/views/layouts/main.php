@@ -64,7 +64,19 @@ $js = <<<JS
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.counter .minus:not(.prohibited), .counter .plus:not(.prohibited), .remove-item', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item .icon-heart', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		addToWishlist($(e.currentTarget));
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.rating .icon-star', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		setItemRate($(e.currentTarget));
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.inhibit), .item-counter .plus:not(.inhibit), .remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		changeItemCount($(e.currentTarget));
@@ -102,13 +114,13 @@ $js = <<<JS
         }
 	});
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.yellow-button.buy', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.button.buy', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		addToCart(e.currentTarget);
 	});
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.green-button.open-cart', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.button.open-cart', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		openCart();
@@ -396,12 +408,12 @@ $this->beginPage();
 		])?>
 		</div>
 	</div>
-	<?=$content?>
+	<?=Html::tag('div', $content, ['class' => 'main-content'])?>
 	<div class="footer">
 		<div class="blue-line">
 			<div class="footer-content">
 				<span class="phone-numbers">044 123 45 67 • 067 123 45 67</span>
-				<div class="hours">
+				<div class="hours"> 
 					<span>
 						Время работы call-центра:
 					</span>

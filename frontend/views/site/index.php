@@ -17,19 +17,32 @@ if($questions){
 	]);
 }
 
+$sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
+
+$js = <<<'JS'
+$(".arrow-bottom").on('click', function(){
+	$('html, body').animate({
+        scrollTop: $('.arrow-bottom').offset().top - 100
+    }, 1000);
+});
+JS;
+
+$this->registerJs($js);
+
 ?>
-<div class="main-content">
+<div>
 	<div class="main-content-slider">
-		<?=!empty($items) ? Slick::widget([
+		<?=!empty($sliderBanners) ? Slick::widget([
 				'containerOptions' => [
 					'id'    => 'sliderFor',
 					'class' => 'first'
 				],
-				'items' =>  '',
+				'items' =>  $sliderBanners,
 				'clientOptions' => [
 					'arrohow'   => 1,
-					'slidesToSws'	=> false,
+					'slidesToSws'	=> true,
 					'fade'          => true,
+					'arrows'		=> true,
 					'slidesToScroll'=> 1,
 					'asNavFor'      => '#sliderNav',
 				]
