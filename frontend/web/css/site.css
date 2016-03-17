@@ -675,6 +675,12 @@ h2{
 
 /*==============* ITEM STYLE *================*/
 
+.items-grid:after{
+	content: '';
+	display: table;
+	clear: both;
+}
+
 .hovered{
 	width: 270px;
 	max-height: 370px;
@@ -704,7 +710,7 @@ h2{
 	display: block;
 }
 
-.hovered:not(:nth-child(3n - 2)){
+.hovered:not(:nth-child(3n - 3)){
 	margin-right: 30px;
 }
 
