@@ -243,7 +243,7 @@ class OrderForm extends Model{
                     'discountSize'  =>  $good->discountSize,
                     'discountType'  =>  $good->discountType,
                     'priceRuleID'   =>  $good->priceRuleID,
-                    'category'      =>  $good->category,
+                    'categoryCode'  =>  $good->categoryCode,
                     'customerRule'  =>  $good->customerRule,
                 ]);
                 if($orderItem->save()){

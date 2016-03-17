@@ -11,6 +11,7 @@ namespace frontend\components;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\Good;
 use yii\base\Component;
+use yii\db\ActiveQuery;
 use yii\web\Cookie;
 
 class Cart extends Component{
@@ -70,14 +71,25 @@ class Cart extends Component{
 	    $this->recalcCart();
     }
 
+    /**
+     * @param string $length
+     *
+     * @return string
+     */
     public function createCartCode($length = '11'){
         return \Yii::$app->security->generateRandomString($length);
     }
 
+    /**
+     * @return \frontend\models\Cart
+     */
     public function itemsQuery(){
         return \frontend\models\Cart::find()->where(['cartCode' => $this->cartCode])->orderBy('date DESC');
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function goodsQuery(){
         $items = [];
 
@@ -101,10 +113,20 @@ class Cart extends Component{
         $this->goods = \Yii::$app->cache->get('cart-'.$this->cartCode.'/goods');
     }
 
+    /**
+     * @param $itemID
+     *
+     * @return int
+     */
     public function has($itemID){
         return isset($this->items[$itemID]) ? $this->items[$itemID]->count : 0;
     }
 
+    /**
+     * @param int $itemID
+     *
+     * @return bool
+     */
 	public function remove($itemID){
 		unset($this->items[$itemID]);
 		unset($this->goods[$itemID]);
@@ -118,6 +140,12 @@ class Cart extends Component{
 		return true;
 	}
 
+    /**
+     * @param int $itemID
+     * @param int $count
+     *
+     * @return mixed
+     */
     public function put($itemID, $count = 1){
         if(empty($this->items) && empty($this->cartCode)){
 
