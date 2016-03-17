@@ -108,7 +108,7 @@ $onePriceBlock = function($model){
 	return $model->priceForOneItem ?
 		Html::tag('div',\Yii::t('shop', 'Цена за единицу:').
 			Html::tag('span',
-				$model->priceForOneItem.' ('.$model->num_opt.' '.$model->Measure1.'/'.\Yii::t('shop', 'уп').')',
+				$model->priceForOneItem.' ('.$model->num_opt.' '.$model->measure.'/'.\Yii::t('shop', 'уп').')',
 				['class' => 'item-price-for-one']
 			), ['class' => 'item-price-for-one-text']
 		) : '';
