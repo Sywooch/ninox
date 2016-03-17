@@ -18,27 +18,12 @@ class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
         $this->cartSumm = isset($this->cartSumm) ?
             $this->cartSumm : (isset(\Yii::$app->cashbox) ? \Yii::$app->cashbox->sum : 0);
     }
+    
+    public function recalc(&$model, $category = false)
+    {
+        parent::recalc($model, $category);
 
-    public function recalc(&$model, $category = false){
-        if($model->discountType == 0 || $model->priceRuleID != 0){
-            foreach($this->pricerules as $rule){
-                if(parent::recalcItem($model, $rule, false)){
-                    return true;
-                }
-            }
-            if($model->priceRuleID != 0){
-                $model->priceModified = true;
-                $model->priceRuleID = 0;
-                $model->discountType = 0;
-                $model->discountSize = 0;
-                $model->customerRule = 0;
-
-                return false;
-            }
-        }
-        $model->priceModified = false;
-
-        return false;
+        return $model->priceModified;
     }
 
     /**
