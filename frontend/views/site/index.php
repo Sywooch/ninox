@@ -19,6 +19,16 @@ if($questions){
 
 $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 
+$js = <<<'JS'
+$(".arrow-bottom").on('click', function(){
+	$('html, body').animate({
+        scrollTop: $('.arrow-bottom').offset().top - 100
+    }, 1000);
+});
+JS;
+
+$this->registerJs($js);
+
 ?>
 <div>
 	<div class="main-content-slider">

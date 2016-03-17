@@ -5,6 +5,8 @@ use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
 use frontend\models\Cart;
 use frontend\models\Customer;
+use frontend\models\CustomerWishlist;
+use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use Yii;
 use common\models\Domain;
@@ -25,6 +27,7 @@ use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -197,24 +200,86 @@ class SiteController extends Controller
 	    $items = [];
 	    foreach(\Yii::$app->cart->goods as $good){
 			if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){
+                $discount = 0;
+                switch($good->discountType){
+                    case 1:
+                        $discount = '-'.Formatter::getFormattedPrice($good->discountSize);
+                        break;
+                    case 2:
+                        $discount = '-'.$good->discountSize.'%';
+                        break;
+                    default:
+                        break;
+                }
 				$items[$good->ID] = [
-					'retail'      =>  Formatter::getFormattedPrice($good->retail_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
-					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
-					'discount'    =>  $good->discountSize ? '-'.$good->discountSize.($good->discountType == 1 ? \Yii::$app->params['domainInfo']['currencyShortName'] : ($good->discountType == 2 ? '%' : '')) : 0,
-					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+					'retail'      =>  Formatter::getFormattedPrice($good->retail_price),
+					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price),
+					'discount'    =>  $discount,
+					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart),
 				];
 			}
 	    }
 	    return [
 		    'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
 			'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),
-	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm),
 		    'remind'        =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
 		    'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
 		    'wholesale'     =>  \Yii::$app->cart->wholesale,
 		    'count'         =>  \Yii::$app->cart->itemsCount,
 		    'items'         =>  $items,
 	    ];
+    }
+
+    public function actionSetitemrate(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        $rate = \Yii::$app->request->post("rate");
+        if($itemID && $rate){
+            $itemRate = ItemRate::findOne([
+                'itemID'        =>  $itemID,
+                'ip'            =>  sprintf('%u', ip2long(\Yii::$app->request->getUserIP())),
+                'customerID'    =>  \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->id
+            ]);
+            if(!$itemRate){
+                $itemRate = new ItemRate([
+                    'itemID'        =>  $itemID,
+                    'ip'            =>  sprintf('%u', ip2long(\Yii::$app->request->getUserIP())),
+                    'customerID'    =>  \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->id,
+                ]);
+            }
+
+            $itemRate->rate = $rate;
+            $itemRate->date = date('Y-m-d H:i:s');
+
+            $itemRate->save(false);
+            return $itemRate->average;
+        }
+    }
+
+    public function actionAddtowishlist(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        if($itemID && !\Yii::$app->user->isGuest){
+            $wish = CustomerWishlist::findOne([
+                'itemID'        =>  $itemID,
+                'customerID'    =>  \Yii::$app->user->id
+            ]);
+            if(!$wish){
+                $wish = new CustomerWishlist([
+                    'itemID'        =>  $itemID,
+                    'customerID'    =>  \Yii::$app->user->id,
+                ]);
+            }
+
+            $wish->price = Good::findOne($itemID)->wholesale_price;
+            $wish->date = date('Y-m-d H:i:s');
+
+            $wish->save(false);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function actionSuccess($order = []){
@@ -321,11 +386,39 @@ class SiteController extends Controller
             ->orWhere(['like', '`goodsgroups`.`name`', $suggestion]);
 
         if(\Yii::$app->request->isAjax){
+            \Yii::$app->response->format = 'json';
 
+            $goods = [];
+
+            foreach($goodsQuery->limit(10)->each() as $good){
+                $goodInfo = [
+                    'ID'        =>  $good->ID,
+                    'code'      =>  $good->Code,
+                    'price'     =>  $good->wholesale_price,
+                    'price2'    =>  $good->retail_price,
+                    'link'      =>  $good->link,
+                    'name'      =>  $good->Name,
+                    'photo'     =>  $good->ico
+                ];
+
+                if(!empty($good->category)){
+                    $goodInfo['category'] = $good->category->Name;
+                }
+
+                if(!empty($good->BarCode2)){
+                    $goodInfo['vendorCode'] = $good->BarCode2;
+                }
+
+                $goods[] = $goodInfo;
+            }
+
+            return $goods;
         }
 
         return $this->render('searchResults', [
-            'goods' =>  $goods
+            'goods' =>  new ActiveDataProvider([
+                'query' =>  $goodsQuery
+            ])
         ]);
     }
 

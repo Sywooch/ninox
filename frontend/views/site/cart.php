@@ -2,19 +2,16 @@
 use common\helpers\Formatter;
 use yii\helpers\Html;
 
-$currency = \Yii::$app->params['domainInfo']['currencyShortName'];
-
 echo Html::tag('div',
 	Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
 		'class' =>  'cart-message cart-message-empty semi-bold'
 	]).
 	Html::tag('div',
-		\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} {currency} до опта', [
+		\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} до опта', [
 			'wholesaleRemind'   =>  Html::tag('span',
 					Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm), [
 						'class' =>  'amount-remind'
-					]),
-			'currency'          =>  $currency
+					])
 		]), [
 		'class' =>  'cart-message cart-message-retail semi-bold'
 	]).
@@ -41,24 +38,22 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 	Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
-				\Yii::t('shop', 'Ваша скидка {discount} {currency}', [
+				\Yii::t('shop', 'Ваша скидка {discount}', [
 					'discount'   =>  Html::tag('span',
 							Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm), [
 								'class' =>  'amount-discount'
-							]),
-					'currency'          =>  $currency
+							])
 				]), [
-				'class' =>  'amount-cart-discount bold font-size-20px'
+				'class' =>  'amount-cart-discount'
 			]).
 			Html::tag('div',
-				\Yii::t('shop', 'сумма заказа без скидки {realAmount} {currency}', [
+				\Yii::t('shop', 'сумма заказа без скидки {realAmount}', [
 					'realAmount'   =>  Html::tag('span',
 							Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount), [
 								'class' =>  'amount-real'
-							]),
-					'currency'          =>  $currency
+							])
 				]), [
-				'class' =>  'amount-cart-real font-size-13px'
+				'class' =>  'amount-cart-real'
 			]), [
 			'class' =>  'left'
 		]).
@@ -70,10 +65,10 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 					'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
 				]).
 				\Yii::t('shop', 'Предварительная сумма к оплате'), [
-				'class' =>  'amount-cart-text font-size-13px'
+				'class' =>  'amount-cart-text'
 			]).
-			Html::tag('div', Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm).' '.$currency, [
-				'class' =>  'amount-cart bold font-size-28px'
+			Html::tag('div', Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm), [
+				'class' =>  'amount-cart'
 			]), [
 			'class' =>  'right'
 		]), [
@@ -115,7 +110,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 					'type'	    =>	'submit',
 					'name'	    =>	'orderType',
 					'value'	    =>	'0',
-					'class'	    =>	'yellow-button cart-button form-order',
+					'class'	    =>	'button yellow-button cart-button form-order',
 					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
 				]).
 				Html::button(\Yii::t('site', 'Заказать в 1 клик'), [
