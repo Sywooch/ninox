@@ -396,7 +396,7 @@ $this->beginPage();
 		])?>
 		</div>
 	</div>
-	<?=$content?>
+	<?=Html::tag('div', $content, ['class' => 'main-content'])?>
 	<div class="footer">
 		<div class="blue-line">
 			<div class="footer-content">
