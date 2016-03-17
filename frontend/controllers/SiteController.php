@@ -25,6 +25,7 @@ use frontend\models\SignupForm;
 use yii\base\ErrorException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -47,12 +48,46 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if(\Yii::$app->request->isAjax){
+            switch(\Yii::$app->request->get("act")){
+                case 'goodsRow':
+                    return $this->renderGoodsRow(\Yii::$app->request->get("type"));
+                    break;
+            }
+        }
+
         return $this->render('index', [
             'leftBanner'        =>  Banner::getByAlias('main_left_banner', false),
             'rightBanner'       =>  Banner::getByAlias('main_right_banner', false),
             'centralBanners'    =>  Banner::getByAlias('slider_v3'),
             'reviews'           =>  Review::getReviews(),
+            'goodsDataProvider' =>  new ArrayDataProvider([
+                'models' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC')->limit('4')->all(),
+                'pagination'    =>  [
+                    'pageSize'  =>  4
+                ]
+            ]),
             'questions'         =>  Question::getQuestions(),
+        ]);
+    }
+
+    public function renderGoodsRow($type){
+        $query = Good::find()->where(['Deleted' => 0]);
+
+        switch($type){
+            case 'sale':
+                $query->andWhere('discountType != 0');
+                break;
+            case 'new':
+            default:
+                $query->orderBy('vkl_time DESC');
+                break;
+        }
+
+        return $this->renderAjax('index/goods_row', [
+            'dataProvider'  =>  new ArrayDataProvider([
+                'models'    =>  $query->limit(4)->all()
+            ])
         ]);
     }
 
