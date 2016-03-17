@@ -376,14 +376,55 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * Формирует и возвращает набор слов для поиска
+     *
+     * @param       $string
+     * @internal   	param $getSearchStatement
+     * @return      array|bool
+     * @author     	Дмитрий Панченко <alanwolf88@gmail.com>
+     * @version   	1.0
+     */
+    function getSearchStatement($string){
+        $vowels = array(
+            'ru' => '[аеиоуыэюяьъй]',
+            'uk' => '[аеиіоуєюяїьй]'
+        );
+        $pattern = $vowels[\Yii::$app->language];
+        $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';
+        $return = '';
+        $r1 = '';
+        $r2 = '';
+        $string = mb_strtolower($string, 'UTF-8');
+        //$string = preg_replace('/\w/', '', $string); allow latin symbols
+        $string = preg_replace('/[.,;\'*"]/', ' ', $string);
+        $words = explode(' ', $string);
+        foreach($words as $word){
+            $word = trim($word, ' ');
+            if(mb_strlen($word, 'UTF-8') > 3 || (filter_var($word, FILTER_VALIDATE_INT) && mb_strlen($word, 'UTF-8') > 2)){
+                $r1 .= '+'.$word.' ';
+                $word = preg_replace($pattern, '', $word);
+                $r2 .= '+'.$word.'* ';
+            }
+        }
+        $return = (($r1 != '') ? '>('.$r1.')' : '').' '.(($r2 != '') ? '<('.$r2.')' : '');
+        return $return;
+    }
+
     public function actionSearch(){
         $suggestion = \Yii::$app->request->get("string");
 
+        $name = $this->getSearchStatement($suggestion);
+
         $goodsQuery = Good::find()
-            ->where(['like', '`goods`.`Name`', $suggestion])
+            ->select("`goods`.*, (MATCH(`goods`.`Name`) AGAINST('{$name}' IN BOOLEAN MODE)) AS `relevant`")
+            ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+            ->where("MATCH(`goods`.`Name`) AGAINST('{$name}' IN BOOLEAN MODE)")
             ->orWhere(['like', '`goods`.`Code`', $suggestion])
             ->orWhere(['like', '`goods`.`BarCode2`', $suggestion])
-            ->orWhere(['like', '`goodsgroups`.`name`', $suggestion]);
+            ->orWhere(['like', '`goodsgroups`.`Name`', $suggestion])
+            ->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+            ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC');
 
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
@@ -417,7 +458,10 @@ class SiteController extends Controller
 
         return $this->render('searchResults', [
             'goods' =>  new ActiveDataProvider([
-                'query' =>  $goodsQuery
+                'query' =>  $goodsQuery,
+                'pagination'    =>  [
+                    'pageSize'  =>  '15'
+                ]
             ])
         ]);
     }
