@@ -94,11 +94,11 @@ $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 			</div>
 			<?=Html::tag('div',
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-best']).
-					Html::tag('span', \Yii::t('shop', 'Лучшее')), ['class' => 'main-icons']).
+					Html::tag('span', \Yii::t('shop', 'Лучшее'), ['class' => 'icon-down']), ['class' => 'main-icons']).
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-news']).
-					Html::tag('span', \Yii::t('shop', 'Новинки')), ['class' => 'main-icons']).
+					Html::tag('span', \Yii::t('shop', 'Новинки'), ['class' => 'icon-down']), ['class' => 'main-icons']).
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-sale']).
-					Html::tag('span', \Yii::t('shop', 'Распродажа')), ['class' => 'main-icons']),
+					Html::tag('span', \Yii::t('shop', 'Распродажа'), ['class' => 'icon-down']), ['class' => 'main-icons']),
 				[
 					'class' => 'goods-content-icons'
 				])?>
