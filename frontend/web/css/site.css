@@ -3319,7 +3319,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.basket .count{
+.desire-basket .count{
 	background: #e9a218;
 	color: white;
 	float: right;
