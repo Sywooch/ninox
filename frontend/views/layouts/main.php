@@ -413,7 +413,7 @@ $this->beginPage();
 		<div class="blue-line">
 			<div class="footer-content">
 				<span class="phone-numbers">044 123 45 67 • 067 123 45 67</span>
-				<div class="hours">
+				<div class="hours"> 
 					<span>
 						Время работы call-центра:
 					</span>
