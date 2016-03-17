@@ -69,7 +69,7 @@ class SiteController extends Controller
 
         $mainCategory = null;
 
-        if(strlen($good->category->Code) != 3){
+        if(strlen($good->categoryCode) != 3){
             foreach($good->category->getParents() as $parent){
                 if(empty($mainCategory)){
                     $mainCategory = $parent;
