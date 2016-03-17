@@ -70,7 +70,7 @@ $js = <<<SCRIPT
 		setItemRate($(e.currentTarget));
 	});
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.prohibited), .item-counter .plus:not(.inhibit), .remove-item', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.inhibit), .item-counter .plus:not(.inhibit), .remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		changeItemCount($(e.currentTarget));
