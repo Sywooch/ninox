@@ -7,7 +7,7 @@ return [
         ''                  =>  'site/index',
         'tovar/<link>'      =>  'site/showtovar',
         '<module(autopricelist)>/<id>'   =>  '<module>/default/index',
-        '<action:((modify|get)cart|order|search)>' => 'site/<action>',
+        '<action:((modify|get)cart|order|search|setitemrate|addtowishlist)>' => 'site/<action>',
         '<action:(log(in|out)|register|request-password-reset|captcha(.*))>'   =>  'site/<action>',
         '<action:(reset-password)>/<token>'      =>   'site/<action>',
         '<module(account)>'          =>  '<module>/default/index',

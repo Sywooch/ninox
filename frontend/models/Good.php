@@ -12,7 +12,7 @@ use common\helpers\Formatter;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
-/*use common\helpers\GoodHelper;*/
+use common\models\GoodsComment;
 use common\models\GoodsPhoto;
 use yii\db\Query;
 
@@ -25,7 +25,7 @@ class Good extends \common\models\Good{
 	//public $category = '';                //Код категории //Выпилено: Николай Гилко. Для получения кода категории используйте $categorycode
 	public $priceRuleID = 0;                //ID примененного ценового правила
 	public $priceForOneItem = 0;            //Цена за единицу товара
-	public $reviewsCount = 0;               //Количество отзывов
+	//public $reviewsCount = 0;               //Количество отзывов
 	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
 	public $isNew = false;                  //Флаг-новинка
     public $canBuy = true;
@@ -33,18 +33,20 @@ class Good extends \common\models\Good{
 
     private $_options = [];
 
+	public function getReviewsCount(){
+		return GoodsComment::find()->where(['goodID' => $this->ID])->count();
+	}
+
+	public function getReviews(){
+		return GoodsComment::find()->where(['goodID' => $this->ID])->all();
+	}
+
     public function afterFind(){
         parent::afterFind();
 
-        //на товар работает отлично
-        //на категорию - суммарно очень большой запрос получается :с
-        /*        foreach(Message::getGoodTranslate($this->ID) as $key => $value){
-                    $this->$key = $value;
-                }*/
-
-        $this->wholesale_real_price = $this->PriceOut1;
-        $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
-        $this->num_opt = preg_replace('/D+/', '', $this->num_opt);
+	    $this->wholesale_real_price = $this->PriceOut1;
+	    $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
+	    $this->num_opt = filter_var($this->num_opt, FILTER_SANITIZE_NUMBER_INT);
 
         switch($this->discountType){
             case 1:
