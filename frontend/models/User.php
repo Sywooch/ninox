@@ -14,6 +14,7 @@ use yii\web\IdentityInterface;
 class User extends Customer implements IdentityInterface {
 
 	private $_pricerules = [];
+	private $_wishlist = [];
 
     public static function findIdentity($id){
         return static::findOne($id);
@@ -74,5 +75,12 @@ class User extends Customer implements IdentityInterface {
 
 		return $this->_pricerules;
 	}
+
+    public function hasInWishlist($id){
+        if(empty($this->_wishlist)){
+            $this->_wishlist = array_column(CustomerWishlist::find()->where(['customerID' => $this->ID])->asArray()->all(), 'itemID');
+        }
+        return in_array($id, $this->_wishlist);
+    }
 
 }

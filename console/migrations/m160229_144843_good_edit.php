@@ -21,25 +21,29 @@ class m160229_144843_good_edit extends Migration
 
         echo "    > updating goods photos: find ".$goodsCount.' photos...';
 
+        $photos = [];
+
         $i = 0;
 
-        foreach($goods->each() as $good){
-            $photo = new \common\models\GoodsPhoto([
-                'itemid'    =>  $good->ID,
-                'ico'       =>  $good->ico,
-                'order'     =>  '1',
-            ]);
+        foreach($goods->each(100) as $good){
+            $photos[] = [
+                $good->ID,
+                $good->ico,
+                '1',
+            ];
 
             $i++;
 
-            echo "\r\n    > saving photo {$i} of {$goodsCount}...";
-
-            if($photo->save(false)){
-                echo ' saved!';
-            }else{
-                echo ' problems...';
-            }
+            echo "\r\n    > prepare photo {$i} of {$goodsCount}...";
         }
+
+        $this->batchInsert(\common\models\GoodsPhoto::tableName(), [
+            'itemid',
+            'ico',
+            'order'
+        ],
+            $photos
+        );
 
         $this->dropColumn('goods', 'ico');
     }

@@ -9,70 +9,69 @@
 namespace app\widgets;
 
 
+use frontend\models\Good;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\Html;
 
 class CartItemsCounterWidget extends Widget{
 
-	public $itemID;
 	public $value;
 	public $store;
-	public $inCart;
+	public $model;
 
-	public function init(){}
+	public function init(){
+		if(!empty($this->model)){
+			$this->loadModel();
+		}
+	}
 
-	public function setOptions($options){
-		$this->itemID = $options['itemID'];
-		$this->value = $options['value'];
-		$this->store = $options['store'];
-		$this->inCart = $options['inCart'];
+	public function loadModel(){
+		if($this->model instanceof Good == false){
+			throw new InvalidConfigException('Модель должна быть \frontend\Good');
+		}
+		if($this->model->isNewRecord){
+			throw new InvalidConfigException('ID товара не может быть пустым');
+		}
+		$this->value    =  $this->model->inCart ? $this->model->inCart : 1;
+		$this->store    =  $this->model->isUnlimited ? 1000 : $this->model->count;
 	}
 
 	public function renderMinus(){
-		if(empty($this->itemID)){
-			throw new InvalidConfigException('ID товара не может быть пустым');
-		}
 		return Html::tag('div', '-', [
-			'class'         =>  'minus bold font-size-15px'.($this->value <= 1 ? ' prohibited' : ''),
-			'data-itemId'   =>  $this->itemID,
-			'data-count'    =>  -1,
+			'class'         =>  'minus'.($this->value <= 1 ? ' inhibit' : ''),
+			'data-itemId'   =>  $this->model->ID,
 		]);
 	}
 
 	public function renderPlus(){
-		if(empty($this->itemID)){
-			throw new InvalidConfigException('ID товара не может быть пустым');
-		}
 		return Html::tag('div', '+', [
-			'class'         =>  'plus bold font-size-15px'.($this->value >= $this->store ? ' prohibited' : ''),
-			'data-itemId'   =>  $this->itemID,
-			'data-count'    =>  1,
+			'class'         =>  'plus'.($this->value >= $this->store ? ' inhibit' : ''),
+			'data-itemId'   =>  $this->model->ID,
 		]);
 	}
 
 	public function renderInput(){
-		if(empty($this->itemID)){
-			throw new InvalidConfigException('ID товара не может быть пустым');
-		}
 		return Html::tag('input', '', [
 			'value'         =>  $this->value,
 			'name'          =>  'count',
 			'class'         =>  'count',
 			'type'          =>  'text',
-			'data-itemId'   =>  $this->itemID,
+			'data-itemId'   =>  $this->model->ID,
 			'data-store'    =>  $this->store,
-			'data-inCart'   =>  $this->inCart,
+			'data-inCart'   =>  $this->model->inCart,
 			'data-value'    =>  $this->value,
 			'autocomplete'  =>  'off'
 		]);
 	}
 
 	public function run(){
-		return Html::tag('div', $this->renderMinus().$this->renderInput().$this->renderPlus(),
-			[
-				'class' => 'counter'
-			]);
+		return $this->model->count > 0 || $this->model->isUnlimited ?
+			Html::tag('div',
+				$this->renderMinus().$this->renderInput().$this->renderPlus(),
+				[
+					'class' => 'item-counter'
+				]
+			) : '';
 	}
-
 } 
