@@ -258,7 +258,9 @@ class Cashbox extends Component{
         $helper->cartSumm = $this->sum;
 
         foreach($this->items as $item){
-            $helper->recalc($item);
+            if($helper->recalc($item)){
+                $item->save(false);
+            }
         }
 
         return true;

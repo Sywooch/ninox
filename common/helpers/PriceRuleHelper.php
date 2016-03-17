@@ -16,6 +16,11 @@ use yii\base\Component;
 class PriceRuleHelper extends Component{
 
 	public $cartSumm;
+	public $pricerules = [];
+
+	public function init(){
+		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
+	}
 
 	public function recalc(&$model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
@@ -36,6 +41,12 @@ class PriceRuleHelper extends Component{
 		$model->priceModified = false;
 	}
 
+	/**
+	 * @param $model
+	 * @param $rule
+	 * @return bool
+	 * @deprecated
+	 */
 	public function recalcSborkaItem($model, $rule){
 		return $this->recalcItem($model, $rule, false);
 	}
@@ -147,6 +158,7 @@ class PriceRuleHelper extends Component{
 			}
 			$cartInfo[$key]['flag'] = true;*/
 		}
+
 		if($discount == $termsCount && $termsCount != 0){
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;
@@ -211,9 +223,8 @@ class PriceRuleHelper extends Component{
 
 	protected function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
-		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartWholesaleRealSumm;
 		foreach($term as $ds){
-			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
+			if(($this->cartSumm == $ds['term'] && $ds['type'] == '=') || ($this->cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($this->cartSumm <= $ds['term'] && $ds['type'] == '<=')){
 				$discount += 1;
 				break;
 			}

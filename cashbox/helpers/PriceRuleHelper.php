@@ -12,19 +12,17 @@ use common\models\Pricerule;
 
 class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
 
-    protected $pricerules = [];
 
     public function init(){
-        if(empty($this->pricerules)){
-            $this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
-        }
+        parent::init();
+        $this->cartSumm = isset($this->cartSumm) ?
+            $this->cartSumm : (isset(\Yii::$app->cashbox) ? \Yii::$app->cashbox->sum : 0);
     }
 
-    public function recalc(&$model, $category = false)
-    {
+    public function recalc(&$model, $category = false){
         if($model->discountType == 0 || $model->priceRuleID != 0){
             foreach($this->pricerules as $rule){
-                if($this->recalcItem($model, $rule, false)){
+                if(parent::recalcItem($model, $rule, false)){
                     return true;
                 }
             }
@@ -43,21 +41,15 @@ class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
         return false;
     }
 
-    protected function checkDocumentSumm($term, &$termsCount, &$discount){
-        $termsCount++;
-
-        $cartSum = isset($this->cartSumm) ? $this->cartSumm : \Yii::$app->cashbox->sum;
-        foreach($term as $ds){
-            if(($cartSum == $ds['term'] && $ds['type'] == '=') || ($cartSum >= $ds['term'] && $ds['type'] == '>=') || ($cartSum <= $ds['term'] && $ds['type'] == '<=')){
-                $discount += 1;
-                break;
-            }
-        }
-    }
-
+    /**
+     * @param \common\models\Good $model
+     * @param Pricerule $rule
+     * @param bool $category
+     * @return \common\models\Good
+     * @deprecated
+     */
     protected function recalcItem(&$model, $rule, $category = false){
         parent::recalcItem($model, $rule, $category);
         return $model;
     }
-
 }
