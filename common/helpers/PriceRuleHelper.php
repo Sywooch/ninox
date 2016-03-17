@@ -8,6 +8,7 @@
 
 namespace common\helpers;
 
+use common\models\Pricerule;
 use DateTime;
 use yii\base\Component;
 
