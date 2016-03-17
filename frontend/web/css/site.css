@@ -167,58 +167,6 @@ h2{
     font-weight: normal;
 }
 
-/*@font-face {
-	font-family: "shop-star";
-	src: url("../fonts/flaticon.eot");
-	src: url("../fonts/flaticon.eot#iefix") format("embedded-opentype"),
-	url("../fonts/flaticon.woff") format("woff"),
-	url("../fonts/flaticon.ttf") format("truetype"),
-	url("../fonts/flaticon.svg") format("svg");
-	font-weight: normal;
-	font-style: normal;
-}*/
-@font-face {
-	font-family: 'shop-star';
-	src: url('../fonts/shop-star.eot');
-	src: url('../fonts/shop-star.eot') format('embedded-opentype'),
-	url('../fonts/shop-star.woff') format('woff'),
-	url('../fonts/shop-star.ttf') format('truetype'),
-	url('../fonts/shop-star.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-/* End font loading */
-/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
-/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
-/*
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family: 'shop';
-    src: url('../fonts/shop.svg?3153255#shop') format('svg');
-  }
-}
-*/
-[class^="shop-"]:before, [class*=" shop-"]:before {
-	font-family: "shop-star";
-	font-style: normal;
-	font-weight: normal;
-	speak: none;
-
-	display: inline-block;
-	text-decoration: inherit;
-	width: 1em;
-	margin-right: .2em;
-	text-align: center;
-	/* opacity: .8; */
-
-	/* For safety - reset parent styles, that can break glyph codes*/
-	font-variant: normal;
-	text-transform: none;
-
-	/* fix buttons height, for twitter bootstrap */
-	line-height: 1em;
-}
-
 [class^="icon-"], [class*=" icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
 	font-family: 'shop' !important;
@@ -257,66 +205,6 @@ h2{
 .icon-star:before{content: "\e904";}
 .icon-quick-view:after{content: "\e905";}
 .icon-origin:before{content: "\e906";}
-
-.shop-star-half:before { content: '\e801'; }
-.shop-star-half-1:before { content: '\e801'; } /* '' */
-.shop-star-half-alt:before { content: '\e802'; }
-.shop-star:before { content: '\e803'; }
-.shop-star-empty:before { content: '\e804'; }
-.icon-note:before { content: '\e800'; }
-.icon-your-discont:before { content: '\e801'; }
-.icon-box:before { content: '\e802'; }
-.icon-delivery-car:before { content: '\e803'; }
-.icon-money-pig:before { content: '\e804'; }
-.icon-print:before { content: '\e805'; }
-.icon-spin6:before { content: '\e806'; }
-.icon-arrow:before { content: '\e807'; }
-.icon-exit:before { content: '\e808'; }
-
-.shop-circle-empty:before { content: '\e800'; }
-/*.shop-star:before { content: '\e000'; }*/
-.shop-search-8:before { content: '\e802'; }
-.shop-cog-4:before { content: '\e803'; }
-.shop-heart-8:before { content: '\e804'; }
-.shop-help-circled-3:before { content: '\e805'; }
-.shop-menu:before { content: '\e806'; }
-/*.shop-star-empty-3:before { content: '\e000'; }*/
-.shop-zoom-in-2:before { content: '\e808'; }
-.shop-googleplus:before { content: '\e809'; }
-.shop-plus-circle:before { content: '\e80a'; }
-.shop-facebook:before { content: '\e80b'; }
-.shop-twitter:before { content: '\e80c'; }
-.shop-vkontakte:before { content: '\e80d'; }
-.shop-youtube-play:before { content: '\e80e'; }
-/*.shop-star-half-1:before { content: '\e80f'; }*/
-.shop-odnoklassniki:before { content: '\e810'; }
-.shop-clock-8:before { content: '\e811'; }
-.shop-left-circle:before { content: '\e812'; }
-.shop-right-circle:before { content: '\e813'; }
-/*.shop-star-half-alt:before { content: '\e814'; }*/
-.shop-chat-2:before { content: '\e815'; }
-.shop-menu-2:before { content: '\e816'; }
-.shop-cancel-7:before { content: '\e817'; }
-.shop-cancel-1:before { content: '\e818'; }
-.shop-vkontakte-1:before { content: '\e819'; }
-.shop-facebook-1:before { content: '\e81a'; }
-.shop-gplus:before { content: '\e81b'; }
-.shop-comment-empty:before {
-	content: '\e800';
-	color: #aeaeae;
-	text-decoration: none;
-	/*padding: 0px 15px 0px 7px;*/
-}
-.shop-help-circled-alt:before { content: '\e81d'; }
-.shop-phone-3:before { content: '\e820'; }
-.shop-cw-5:before { content: '\e823'; }
-.shop-minus-circle:before { content: '\e824'; }
-.shop-odnoklassniki-rect:before { content: '\e81e'; }
-.shop-twitter-squared:before { content: '\e81f'; }
-.shop-arrows-ccw:before { content: '\e821'; }
-.shop-comment:before { content: '\e822'; }
-.shop-skype:before { content: '\e825'; }
-
 
 .button{
 	text-transform: uppercase;
@@ -442,30 +330,6 @@ h2{
 	height: 40px;
 }
 
-.font-size-13px{
-	font-size: 13px;
-}
-
-.font-size-15px{
-	font-size: 15px;
-}
-
-.font-size-20px{
-	font-size: 20px;
-}
-
-.font-size-28px{
-	font-size: 28px;
-}
-
-.italic{
-	font-family: OpenSans-Italic;
-}
-
-.uppercase{
-	text-transform: uppercase;
-}
-
 .blue{
 	color: #29a1e0;
 	/*color: #3e77aa;*/
@@ -487,22 +351,6 @@ h2{
 	color: #49565d;
 }
 
-.semi-bold{
-	font-family: OpenSans-Semibold;
-}
-
-.bold{
-    font-family: OpenSans-Bold;
-}
-
-.myriad{
-    font-family: MyriadProRegular;
-}
-
-.center{
-	text-align: center;
-}
-
 .disabled{
 	display: none;
 }
@@ -513,14 +361,6 @@ h2{
 
 .float-right{
 	float: right;
-}
-
-.text-left{
-	text-align: left;
-}
-
-.text-right{
-	text-align: right;
 }
 
 .advantagesCenter, .footerCenter, .info-center{
@@ -1181,9 +1021,6 @@ h2{
 
 .item .discount .middle{
 	font-size: 18px;
-}
-
-.item .discount .bottom{
 }
 
 /*============* AND ITEM STYLE *==============*/
