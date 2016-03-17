@@ -3552,6 +3552,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-bottom: 430px;
 }
 
+.main-content-slider .slick-slide img{
+	margin: auto;
+}
+
 .main-content-items{
 	background: #f3f3f3;
 }

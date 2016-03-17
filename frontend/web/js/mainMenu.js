@@ -25,9 +25,8 @@ $('img.svg').each(function(){
         svg.attr('width', width);
         svg.attr('height', height);
 
-        svg.attr('preserveAspectRatio', 'xMinYMin meet');//preserveAspectRatio="xMinYMin meet"
-        svg.attr('viewBox', '0 0 ' + (width * 40) + ' ' + (height * 10));
-
+        svg.attr('preserveAspectRatio', 'alignment [meet | slice]');
+        svg.attr('viewBox', '0 0 ' + (width * 10) + ' ' + (height * 10));
 
         // Replace image with new SVG
         img.replaceWith(svg);

@@ -24,6 +24,7 @@
     height: 50px; /* высота пункта */
     padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
     vertical-align: bottom;
+    cursor: pointer;
 }
 
 .header-menu-item:hover{
@@ -86,10 +87,13 @@
 }
 
 .svg path {
-    fill: red ;
+    fill: #ffffff ;
 }
-svg {width: 100%; height: 100%;}
-svg path {fill: red !important;}
+.header-menu-item:hover .svg path {
+    fill: #3cace7 ;
+}
+/*svg {width: 100%; height: 100%;}
+svg path {fill: red !important;}*/
 
 
 #layer1{

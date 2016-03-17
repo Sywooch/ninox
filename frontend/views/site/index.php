@@ -30,8 +30,9 @@ $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 				'items' =>  $sliderBanners,
 				'clientOptions' => [
 					'arrohow'   => 1,
-					'slidesToSws'	=> false,
+					'slidesToSws'	=> true,
 					'fade'          => true,
+					'arrows'		=> true,
 					'slidesToScroll'=> 1,
 					'asNavFor'      => '#sliderNav',
 				]
