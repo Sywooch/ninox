@@ -332,7 +332,6 @@ h2{
 
 .blue{
 	color: #29a1e0;
-	/*color: #3e77aa;*/
 }
 
 .red{
@@ -353,14 +352,6 @@ h2{
 
 .disabled{
 	display: none;
-}
-
-.float-left{
-	float: left;
-}
-
-.float-right{
-	float: right;
 }
 
 .advantagesCenter, .footerCenter, .info-center{
@@ -3322,7 +3313,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.count{
+.basket .count{
 	background: #e9a218;
 	color: white;
 	float: right;
