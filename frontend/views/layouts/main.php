@@ -70,7 +70,7 @@ $js = <<<SCRIPT
 		setItemRate($(e.currentTarget));
 	});
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.prohibited), .item-counter .plus:not(.prohibited), .remove-item', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.prohibited), .item-counter .plus:not(.inhibit), .remove-item', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		changeItemCount($(e.currentTarget));
@@ -108,13 +108,13 @@ $js = <<<SCRIPT
         }
 	});
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.yellow-button.buy', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.button.buy', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		addToCart(e.currentTarget);
 	});
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.green-button.open-cart', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.button.open-cart', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		openCart();

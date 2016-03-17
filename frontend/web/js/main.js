@@ -125,8 +125,8 @@ function changeItemCount(item){
 			.val(itemsCount)
 			.data('value', itemsCount)
 			.data('incart', incart ? itemsCount : incart);
-		$('.plus[data-itemId='+ itemId +']').toggleClass('prohibited', maxItemsCount == itemsCount);
-		$('.minus[data-itemId='+ itemId +']').toggleClass('prohibited', itemsCount == 1);
+		$('.plus[data-itemId='+ itemId +']').toggleClass('inhibit', maxItemsCount == itemsCount);
+		$('.minus[data-itemId='+ itemId +']').toggleClass('inhibit', itemsCount == 1);
 	}
 }
 

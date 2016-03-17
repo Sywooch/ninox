@@ -7,47 +7,31 @@ $link = '/tovar/'.$model->link.'-g'.$model->ID;
 $photo = \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->ico;
 $flags = [];
 
-$createFlag = function($name, $background){
-	return Html::tag('div', $name, [
-		'class' =>  'capt-flag '.$background
-	]);
-};
-
 if($model->isNew){
-    $flags[] = $createFlag(\Yii::t('shop', 'Новинка'), 'bg-capt-green');
+    $flags[] = ['name' => \Yii::t('shop', 'Новинка'), 'options' => ['class' => 'icon-new']];
 }
 if($model->originalGood){
-    $flags[] = $createFlag(\Yii::t('shop', 'Оригинал'), 'bg-capt-purple');
+    $flags[] = ['name' => \Yii::t('shop', 'Оригинал'), 'options' => ['class' => 'icon-origin']];
 }
 if($model->discountType > 0 && $model->priceRuleID == 0){
-    $flags[] = $createFlag(\Yii::t('shop', 'Распродажа'), 'bg-capt-red');
+    $flags[] = ['name' => \Yii::t('shop', 'Распродажа'), 'options' => ['class' => 'icon-sale']];
 }
 
-$flags = $flags ? Html::tag('div', implode('',$flags), ['class' => 'capt-flags']) : '';
+$flags = $flags ?
+	Html::ul($flags, [
+		'item' => function($item){
+			return Html::tag('li',
+				Html::tag('span', $item['name'], []),
+				$item['options']);
+		},
+		'class' => 'item-labels'
+	]) : '';
 
 $discountBlock = function($model){
-	switch($model->discountType){
-		case 1:
-			$dimension = ' '.\Yii::$app->params['domainInfo']['currencyShortName'];
-			break;
-		case 2:
-			$dimension = '%';
-			break;
-		default:
-			$dimension = '';
-			break;
-	}
-
 	return $model->priceRuleID ? Html::tag('div',
-		Html::tag('div',
-			Html::tag('div', $model->customerRule ? \Yii::t('shop', 'Опт') : \Yii::t('shop', 'Акция')).
-			Html::tag('div', '-'.$model->discountSize.$dimension),
-			['class' => 'top']).
-		Html::tag('div',
-			Html::tag('div', Formatter::getFormattedPrice($model->wholesale_price), ['class' => 'semi-bold']).
-			Html::tag('div', \Yii::$app->params['domainInfo']['currencyShortName']),
-			['class' =>  'bottom']
-		),
+		Html::tag('div', $model->customerRule ? \Yii::t('shop', 'Опт') : \Yii::t('shop', 'Акция'), ['class' => 'top']).
+		Html::tag('div', Formatter::getFormattedPrice($model->wholesale_price, false, false), ['class' => 'middle']).
+		Html::tag('div', \Yii::$app->params['domainInfo']['currencyShortName'], ['class' => 'bottom']),
 		['class' => 'discount']
 	) : '';
 };
@@ -57,7 +41,7 @@ $buyBlock = function($model){
 		'value'         =>  $model->count > 0 || $model->isUnlimited ?
 			($model->inCart ?
 				\Yii::t('shop', 'В корзине!') : \Yii::t('shop', 'Купить!')
-			) : \Yii::t('shop', 'Нет\r\nв наличии'),
+			) : \Yii::t('shop', "Нет\r\nв наличии"),
 		'class'         =>  'button '.($model->count > 0 || $model->isUnlimited ?
 			($model->inCart ?
 				'green-button open-cart' : 'yellow-button buy'
@@ -233,6 +217,11 @@ echo Html::tag('div',
 				'height' => 180,
 				'width' => 230
 			]).
+			Html::tag('div',
+				Html::tag('span', \Yii::t('shop', 'Быстрый просмотр')),
+				[
+					'class' => 'icon-quick-view'
+				]).
 			$discountBlock($model).
 			$flags.
 			Html::tag('div', $model->Name, [

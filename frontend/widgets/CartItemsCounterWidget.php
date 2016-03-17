@@ -39,14 +39,14 @@ class CartItemsCounterWidget extends Widget{
 
 	public function renderMinus(){
 		return Html::tag('div', '-', [
-			'class'         =>  'minus'.($this->value <= 1 ? ' prohibited' : ''),
+			'class'         =>  'minus'.($this->value <= 1 ? ' inhibit' : ''),
 			'data-itemId'   =>  $this->model->ID,
 		]);
 	}
 
 	public function renderPlus(){
 		return Html::tag('div', '+', [
-			'class'         =>  'plus'.($this->value >= $this->store ? ' prohibited' : ''),
+			'class'         =>  'plus'.($this->value >= $this->store ? ' inhibit' : ''),
 			'data-itemId'   =>  $this->model->ID,
 		]);
 	}
