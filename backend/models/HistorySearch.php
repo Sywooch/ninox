@@ -88,7 +88,9 @@ class HistorySearch extends History{
 			    default:
 				    break;
 		    }
-	    }elseif(empty($params['HistorySearch'])){
+	    }
+
+        if(!empty($params["showDates"]) || empty($params['HistorySearch'])){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
             $params['showDates'] = empty($params['showDates']) ? 'today' : $params['showDates'];

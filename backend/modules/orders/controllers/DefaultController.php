@@ -26,41 +26,6 @@ class DefaultController extends Controller
 {
 
     public function actionIndex(){
-        //Нихуясебе что я тут за хуйню написал
-        //Нужно переместить в HistorySearch почти всё что здесь
-
-
-        /*
-        $queryParts = [];
-
-        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
-
-        $timeFrom = $timeTo = null;
-
-        switch(\Yii::$app->request->get("ordersSource")){
-            case 'all':
-                break;
-            case 'market':
-                $queryParts[] = 'deliveryType = 5 AND paymentType = 6';
-                break;
-            case 'deleted':
-                $queryParts[] = 'deleted != 0';
-                break;
-            case 'shop':
-            default:
-                $queryParts[] = 'deliveryType != 5 AND paymentType != 6';
-                break;
-        }
-
-        if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
-            $queryParts[] = 'deleted = 0';
-        }
-
-        if(\Yii::$app->request->get("responsibleUser")){
-            $queryParts[] = 'responsibleUserID = '.\Yii::$app->request->get("responsibleUser");
-        }
-
-         */
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
         $timeFrom = $timeTo = null;
@@ -94,9 +59,6 @@ class DefaultController extends Controller
             'ordersSumm'        =>  0
         ];
 
-	    //TODO: очень много памяти и процессорного времени жрет этот форич, особенно когда записей много. Надо как-то по другому придумать как собрать данную статистику.
-        //TODO: наче получилось уменьшить объем памяти и сократить время выполнения скрипта примерно в 5 раз. Теперь рашбери не должен лагать.
-	    //Подсмотренно вот тут https://github.com/yiisoft/yii2/blob/master/docs/guide/tutorial-performance-tuning.md
 	    foreach($orders->asArray()->each() as $order){
             $ordersStats['totalOrders']++;
             $ordersStats['completedOrders'] += $order['done'];

@@ -46,10 +46,11 @@ class OrderForm extends Model{
 
     public $deliveryType = 1;
     public $deliveryParam = 1;
-    public $deliveryInfo;
+    public $deliveryInfo = '';
 
     public $paymentType = 1;
     public $paymentParam = 0;
+    public $paymentInfo = '';
 
     /**
      * @var $customerComment - комментарий клиента к заказу
@@ -75,6 +76,7 @@ class OrderForm extends Model{
         return [
             //[['id', 'nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
             [['anotherReceiver', 'anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'safe'],
+            [['deliveryParam', 'paymentParam'], 'integer'],
             [['customerID', 'customerName', 'customerSurname', 'customerFathername', 'customerEmail', 'customerPhone', 'deliveryCountry', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryType', 'deliveryInfo', 'paymentType', 'paymentInfo', 'customerComment', 'promoCode', 'canChangeItems'], 'safe'],
             [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
             [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
@@ -217,12 +219,12 @@ class OrderForm extends Model{
             'deliveryCity'      =>  $customerReceiver->city,
             'deliveryType'      =>  $customerReceiver->shippingType,
             'deliveryParam'     =>  $customerReceiver->shippingParam,
-            'deliveryInfo'      =>  $customerReceiver->shippingAddress,
+            'deliveryInfo'      =>  $this->deliveryInfo,
             'customerComment'   =>  $this->customerComment,
             'customerID'        =>  $customer->ID,
             'coupon'            =>  $this->promoCode,
-            'paymentType'       =>  $customerReceiver->paymentType,
-            'paymentParam'       =>  $customerReceiver->paymentParam,
+            'paymentType'       =>  $this->paymentType,
+            'paymentParam'      =>  $this->paymentParam,
             'canChangeItems'    =>  $this->canChangeItems,
             'originalSum'       =>  \Yii::$app->cart->cartRealSumm,
         ]);
@@ -252,6 +254,8 @@ class OrderForm extends Model{
             }
 
             return true;
+        }else{
+            \Yii::trace($order->getErrors());
         }
 
         $this->addError('order', Json::encode($order->getErrors()));

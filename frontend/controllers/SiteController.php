@@ -209,10 +209,12 @@ class SiteController extends Controller
 
         if(\Yii::$app->request->post("OrderForm")){
             if($order->validate() && $order->create()){
+                \Yii::trace('created order');
                 return $this->render('order_success', [
                     'model' =>  $order
                 ]);
             }
+            \Yii::trace($order->getErrors());
         }
 
         $this->layout = 'order';
