@@ -19,6 +19,12 @@ echo \kartik\grid\GridView::widget([
 	'showHeader'    =>  false,
 	'summary'       =>  false,
 	'pjax'          =>  true,
+	'pjaxSettings'	=>	[
+		'options'	=>	[
+			'enablePushState'	=>	false,
+			'enableReplaceState'=>	false
+		]
+	],
 	'bordered'      =>  false,
 	'striped'       =>  false,
 	'export'		=>	false,
