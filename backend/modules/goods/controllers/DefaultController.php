@@ -694,23 +694,27 @@ class DefaultController extends Controller
             'url'   =>  '/categories'
         ];
 
-        if (sizeof($good->category->parents) >= 1) {
-            $parents = array_reverse($good->category->parents);
 
-            foreach ($parents as $parentCategory) {
-                if ($parentCategory != '') {
-                    $breadcrumbs[] = [
-                        'label' => $parentCategory->Name,
-                        'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
-                    ];
+
+        if(is_object($good->category)){
+            if (sizeof($good->category->parents) >= 1) {
+                $parents = array_reverse($good->category->parents);
+
+                foreach ($parents as $parentCategory) {
+                    if ($parentCategory != '') {
+                        $breadcrumbs[] = [
+                            'label' => $parentCategory->Name,
+                            'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
+                        ];
+                    }
                 }
             }
-        }
 
-        $breadcrumbs[] = [
-            'label' =>  $good->category->Name,
-            'url'   => Url::toRoute(['/categories', 'category' => $good->category->Code])
-        ];
+            $breadcrumbs[] = [
+                'label' =>  $good->category->Name,
+                'url'   => Url::toRoute(['/categories', 'category' => $good->category->Code])
+            ];
+        }
 
         $breadcrumbs[] = $good->Name;
 
