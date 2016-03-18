@@ -57,7 +57,7 @@ class PriceRuleHelper extends Component{
 			if($discount == $termsCount){
 				switch($keyTerm){
 					case 'GoodGroup':
-						$this->checkCategory($term, (is_object($model->category) ? $model->category->Code : $model->categoryCode), $termsCount, $discount);
+						$this->checkCategory($term, (isset($model->category) ? $model->category->Code : $model->categoryCode), $termsCount, $discount);
 						break;
 					case 'Date':
 						$this->checkDate($term, $termsCount, $discount);
