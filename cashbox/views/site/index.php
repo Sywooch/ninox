@@ -80,7 +80,7 @@ $js = <<<JS
             data: {
                 'itemID': e.currentTarget.getAttribute('data-key'),
                 'count': e.currentTarget.value
-            },
+            }, 
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
