@@ -226,6 +226,14 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionGetcart(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException();
+        }
+
+        return $this->renderAjax('_cart_items');
+    }
+
     public function actionModifycart(){
         \Yii::$app->response->format = 'json';
 	    $itemID = \Yii::$app->request->post("itemID");

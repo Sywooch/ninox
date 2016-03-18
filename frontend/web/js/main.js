@@ -135,7 +135,7 @@ function openCart(){
 }
 
 function getCart(){
-	$.pjax.reload({container: '#cart-gridview-pjax'});
+	$.pjax.reload({container: '#cart-gridview-pjax', url: '/getcart'});
 }
 
 function cartScroll(){
