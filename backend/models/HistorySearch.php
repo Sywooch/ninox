@@ -103,6 +103,7 @@ class HistorySearch extends History{
                     $query->andWhere('added >= '.($date - (date("N") - 1) * 86400));
                     break;
                 case 'thismonth':
+                    \Yii::trace($date);
                     $query->andWhere('added >= '.($date - (date("j") - 1) * 86400));
                     break;
                 case 'alltime':

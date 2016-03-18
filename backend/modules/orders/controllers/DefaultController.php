@@ -231,7 +231,7 @@ class DefaultController extends Controller
             'orderSource'       =>  $ordersSource,
             'orders'            =>  $historySearch->search(
                 $ordersSource == 'search' ? [] :
-                    $ordersSource != false ? ['ordersSource' => $ordersSource] : \Yii::$app->request->get())
+                    $ordersSource != false ? array_merge(['ordersSource' => $ordersSource], \Yii::$app->request->get()) : \Yii::$app->request->get())
         ]);
 
         if($context == true){
