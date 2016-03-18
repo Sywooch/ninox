@@ -13,12 +13,12 @@ use frontend\models\Pricerule;
 
 class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
 
-    public $pricerules;
-
     public function init(){
-        $this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
+        parent::init();
         if(!\Yii::$app->user->isGuest){
             $this->pricerules = array_merge(\Yii::$app->user->identity->getPriceRules(), $this->pricerules);
         }
+        $this->cartSumm = !empty($this->cartSumm) ?
+            $this->cartSumm : (isset(\Yii::$app->cart) ? \Yii::$app->cart->cartWholesaleRealSumm : 0);
     }
 }
