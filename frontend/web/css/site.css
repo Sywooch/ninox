@@ -158,14 +158,163 @@ h2{
     font-weight: normal;
 }
 @font-face {
-    font-family: 'MyriadProSemiBold';
-    src: url('../fonts/MyriadProSemiBold.eot');
-    src: url('../fonts/MyriadProSemiBold.eot?#iefix')format('embedded-opentype'),
-    url('../fonts/MyriadProSemiBold.woff') format('woff'),
-    url('../fonts/MyriadProSemiBold.ttf') format('truetype');
-    font-style: normal;
-    font-weight: normal;
+	font-family: 'shop-star';
+	src: url('../fonts/shop-star.eot');
+	src: url('../fonts/shop-star.eot') format('embedded-opentype'),
+	url('../fonts/shop-star.woff') format('woff'),
+	url('../fonts/shop-star.ttf') format('truetype'),
+	url('../fonts/shop-star.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
+@font-face {
+	font-family: 'arrow-down';
+	src: url('../fonts/arrow-down.eot?41651202');
+	src: url('../fonts/arrow-down.eot?41651202#iefix') format('embedded-opentype'),
+	url('../fonts/arrow-down.woff2?41651202') format('woff2'),
+	url('../fonts/arrow-down.woff?41651202') format('woff'),
+	url('../fonts/arrow-down.ttf?41651202') format('truetype'),
+	url('../fonts/arrow-down.svg?41651202#arrow-down') format('svg');
+	font-weight: normal;
+}
+/* End font loading */
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'shop';
+    src: url('../fonts/shop.svg?3153255#shop') format('svg');
+  }
+}
+*/ [class^="shop-"]:before, [class*=" shop-"]:before {
+	   font-family: "shop-star";
+	   font-style: normal;
+	   font-weight: normal;
+	   speak: none;
+
+	   display: inline-block;
+	   text-decoration: inherit;
+	   width: 1em;
+	   margin-right: .2em;
+	   text-align: center;
+	   /* opacity: .8; */
+
+	   /* For safety - reset parent styles, that can break glyph codes*/
+	   font-variant: normal;
+	   text-transform: none;
+
+	   /* fix buttons height, for twitter bootstrap */
+	   line-height: 1em;
+
+	   /* Animation center compensation - margins should be symmetric */
+	   /* remove if not needed */
+	   margin-left: .2em;
+
+	   /* you can be more comfortable with increased icons size */
+	   /* font-size: 120%; */
+
+	   /* Font smoothing. That was taken from TWBS */
+	   -webkit-font-smoothing: antialiased;
+	   -moz-osx-font-smoothing: grayscale;
+
+	   /* Uncomment for 3D effect */
+	   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+   }
+[class^="icon-down"]:after, [class*=" icon-down"]:after {
+	font-family: "arrow-down";
+	font-size: 10px;
+	font-style: normal;
+	font-weight: normal;
+	speak: none;
+
+	/*display: inline-block;
+	text-decoration: inherit;
+	width: 1em;
+	margin-right: .2em;
+	text-align: center;
+	/* opacity: .8; */
+
+	/* For safety - reset parent styles, that can break glyph codes*/
+	font-variant: normal;
+	text-transform: none;
+
+	/* fix buttons height, for twitter bootstrap */
+	/*line-height: 1em;
+
+	/* Animation center compensation - margins should be symmetric */
+	/* remove if not needed */
+	/*margin-left: .2em;
+
+	/* you can be more comfortable with increased icons size */
+	/* font-size: 120%; */
+
+	/* Font smoothing. That was taken from TWBS */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	/* Uncomment for 3D effect */
+	/* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.shop-star-half:before { content: '\e801'; }
+.shop-star-half-alt:before { content: '\e802'; }
+.shop-star:before { content: '\e803'; }
+.shop-star-empty:before { content: '\e804'; }
+.icon-note:before { content: '\e800'; }
+.icon-your-discont:before { content: '\e801'; }
+.icon-box:before { content: '\e802'; }
+.icon-delivery-car:before { content: '\e803'; }
+.icon-money-pig:before { content: '\e804'; }
+.icon-print:before { content: '\e805'; }
+.icon-spin6:before { content: '\e806'; }
+.icon-arrow:before { content: '\e807'; }
+.icon-exit:before { content: '\e808'; }
+.shop-circle-empty:before { content: '\e800'; }
+/*.shop-star:before { content: '\e000'; }*/
+.shop-search-8:before { content: '\e802'; }
+.shop-cog-4:before { content: '\e803'; }
+.shop-heart-8:before { content: '\e804'; }
+.shop-help-circled-3:before { content: '\e805'; }
+.shop-menu:before { content: '\e806'; }
+/*.shop-star-empty-3:before { content: '\e000'; }*/
+.shop-zoom-in-2:before { content: '\e808'; }
+.shop-googleplus:before { content: '\e809'; }
+.shop-plus-circle:before { content: '\e80a'; }
+.shop-facebook:before { content: '\e80b'; }
+.shop-twitter:before { content: '\e80c'; }
+.shop-vkontakte:before { content: '\e80d'; }
+.shop-youtube-play:before { content: '\e80e'; }
+/*.shop-star-half-1:before { content: '\e80f'; }*/
+.shop-odnoklassniki:before { content: '\e810'; }
+.shop-clock-8:before { content: '\e811'; }
+.shop-left-circle:before { content: '\e812'; }
+.shop-right-circle:before { content: '\e813'; }
+/*.shop-star-half-alt:before { content: '\e814'; }*/
+.shop-chat-2:before { content: '\e815'; }
+.shop-menu-2:before { content: '\e816'; }
+.shop-cancel-7:before { content: '\e817'; }
+.shop-cancel-1:before { content: '\e818'; }
+.shop-vkontakte-1:before { content: '\e819'; }
+.shop-facebook-1:before { content: '\e81a'; }
+.shop-gplus:before { content: '\e81b'; }
+.shop-comment-empty:before {
+	content: '\e800';
+	color: #aeaeae;
+	text-decoration: none;
+	/*padding: 0px 15px 0px 7px;*/
+}
+.shop-help-circled-alt:before { content: '\e81d'; }
+.shop-phone-3:before { content: '\e820'; }
+.shop-cw-5:before { content: '\e823'; }
+.shop-minus-circle:before { content: '\e824'; }
+.shop-odnoklassniki-rect:before { content: '\e81e'; }
+.shop-twitter-squared:before { content: '\e81f'; }
+.shop-arrows-ccw:before { content: '\e821'; }
+.shop-comment:before { content: '\e822'; }
+.shop-skype:before { content: '\e825'; }
+.main-icons:hover .icon-down:after { content: '\e800'; }
+=======
 
 [class^="icon-"], [class*=" icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
@@ -176,6 +325,7 @@ h2{
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
+>>>>>>> e74869572cdd7e3ef21ae82563ca800288b85bee
 
 	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;
@@ -3204,6 +3354,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 6px;
 }
 
+.tt-scrollable-menu{
+	float: left;
+}
+
 .input-style-main input[type='text'] {
 	background: url("/img/site/search.png") no-repeat 10px 7px;
 	width: 305px;
@@ -3250,6 +3404,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	-webkit-box-shadow: inset 0px 0px 5px 0px white;
 	box-shadow: inset 0px 1px 5px 0px white;
 	background: #29a1e0;
+	margin-top: 18px;
 }
 
 .sticky .blue-button{
@@ -3280,6 +3435,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	 padding-left: 5px;
 	 top: -4px;
 	 position: relative;
+	cursor: pointer;
 }
 
 .header .desire-basket{
@@ -3288,15 +3444,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-top: 6px;
 }
 
-.desire{
+.desire-basket .desire{
 	border-right: 1px solid #afafaf;
 	padding-right: 20px;
 	float: left;
 	height: 54px;
 }
 
-.basket{
-	padding-left: 25px;
+.desire-basket .basket{
+	margin-left: 25px;
 	float: left;
 	text-decoration: none;
 }
@@ -3345,17 +3501,20 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .sticky .basket-icon{
 	margin-top: 3px;
-	margin-left: 55px;
 	cursor: pointer;
 }
 
 .sticky .desire-basket{
-	float: left;
+	float: right;
 	padding: 0px;
 }
 
 .sticky .desire{
 	display: none;
+}
+
+.sticky .basket{
+	margin-right: 50px;
 }
 
 .sticky .basket span{
@@ -3482,6 +3641,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .content-items .icons-fav-bask:before{
+	margin-right: 10px;
 }
 
 .content-banners .goods-item-style{
@@ -3512,6 +3672,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .goods-item .short-description{
 	text-align: center;
+	height: 85px;
+	vertical-align: middle;
+	display: table-cell;
 }
 
 .right-item{
@@ -3534,6 +3697,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .icons-fav-bask:before{
 	content: url("/img/site/favor.svg");
+	cursor: pointer;
 }
 
 .right-item .icons-fav-bask:before{
@@ -3543,7 +3707,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .icons-fav-bask:after{
-	content: url("/img/site/basket.svg");
+	content: url("/img/site/grey-basket.png");
+	cursor: pointer;
 }
 
 .right-item .icons-fav-bask:after{
@@ -3576,8 +3741,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 10px;
 }
 
-.main-icons:hover span:after{
-	content: url("/img/site/down.svg");
+.main-icons:hover  span:after{
+	content: '\e800';
 	display: block;
 	text-align: center;
 	padding-top: 8px;
@@ -3590,49 +3755,49 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: auto;
 }
 
-.icon-best{
+.goods-content-icons .icon-best{
 	background: #8acc5e;
 }
 
-.icon-best:before{
+.goods-content-icons .icon-best:before{
 	content: url("/img/site/ring.svg");
 	display: block;
 	text-align: center;
 	padding-top: 7px;
 }
 
-.icon-best + span:after{
-	color: red;
+.goods-content-icons .icon-best + span:after{
+	color: #8acc5e;
 }
 
-.icon-news{
+.goods-content-icons .icon-news{
 	background: #45b1ea;
 }
 
-.icon-news:before{
+.goods-content-icons .icon-news:before{
 	content: url("/img/site/diamond.svg");
 	display: block;
 	text-align: center;
 	padding-top: 11px;
 }
 
-.icon-news + span:after{
-	color: green;
+.goods-content-icons .icon-news + span:after{
+	color: #45b1ea;
 }
 
-.icon-sale{
+.goods-content-icons .icon-sale{
 	background: #eaa51e;
 }
 
-.icon-sale:before{
+.goods-content-icons .icon-sale:before{
 	content: url("/img/site/shopping-bag.svg");
 	display: block;
 	text-align: center;
 	padding-top: 7px;
 }
 
-.icon-sale + span:after{
-	color: black;
+.goods-content-icons .icon-sale + span:after{
+	color: #eaa51e;
 }
 
 .goods-content-all{
@@ -3646,6 +3811,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .goods-content-all .goods-item span{
 	color: #7d8d95;
 	font-size: 15px;
+}
+
+.price-and-order span{
 	display: block;
 }
 
@@ -3659,6 +3827,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	content: url("/img/site/favorite.png");
 	float: left;
 	margin-top: 4px;
+	cursor: pointer;
+}
+
+.goods-content-all .item-id:hover{
+	content: url("/img/site/favorites.png");/*Допилить*/
 }
 
 .goods-content-all .goods-item .item-id{
@@ -3675,6 +3848,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 24px !important;
 	margin: auto;
 	width: -moz-min-content;
+	width: -webkit-min-content;
+	width: min-content;
 	top: 35%;
 	position: relative;
 	display: block;
@@ -3682,8 +3857,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .item-image{
 	background: url("/img/site/scissors.png") no-repeat;
-	height: 160px;
+	height: 140px;
 	margin-top: 40px;
+}
+
+.item-image img{
+	height: 100%;
+	margin: auto;
+	display: block;
 }
 
 .goods-item img{
@@ -3691,8 +3872,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .price-and-order{
-	padding-top: 15px;
-	padding-bottom: 25px;
+
 }
 
 .price-and-order span{
@@ -3713,7 +3893,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .goods-basket:before{
-	content: url("/img/site/basket.svg");
+	content: url("/img/site/white-basket.png");
 	display: block;
 	text-align: center;
 	margin-top: 12px;
@@ -3917,6 +4097,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 43px;
 	float: right;
 	margin-top: 3px;
+}
+
+.footer-content .yellow-button{
+	background: #fcc82d;
+	border: 1px solid #ffec9a;
+	border-radius: 3px;
+	-moz-box-shadow: inset 0 0 9px #ffec9a;
+	-webkit-box-shadow: inset 0 0 9px #ffec9a;
+	box-shadow: inset 0 0 9px #ffec9a;
 }
 
 .footer-menu{

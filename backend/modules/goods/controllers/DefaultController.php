@@ -2,35 +2,29 @@
 
 namespace backend\modules\goods\controllers;
 
-use backend\models\GoodPhoto;
+use backend\controllers\SiteController as Controller;
+use backend\models\Good;
+use backend\models\History;
+use backend\models\SborkaItem;
 use backend\modules\goods\models\GoodAttributesForm;
 use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
 use common\helpers\UploadHelper;
-use common\helpers\TranslitHelper;
 use common\models\Category;
 use common\models\CategorySearch;
-use common\models\CategoryUk;
-use backend\models\Good;
-use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use common\models\GoodSearch;
 use common\models\GoodUk;
-use backend\models\History;
-use backend\models\SborkaItem;
 use common\models\PriceListImport;
 use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
-use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
-use backend\controllers\SiteController as Controller;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
 class DefaultController extends Controller
 {
@@ -297,6 +291,10 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionLog(){
         if(!\Yii::$app->request->isAjax){
             throw new BadRequestHttpException("Данный метод возможен только через ajax!");
@@ -694,23 +692,27 @@ class DefaultController extends Controller
             'url'   =>  '/categories'
         ];
 
-        if (sizeof($good->category->parents) >= 1) {
-            $parents = array_reverse($good->category->parents);
 
-            foreach ($parents as $parentCategory) {
-                if ($parentCategory != '') {
-                    $breadcrumbs[] = [
-                        'label' => $parentCategory->Name,
-                        'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
-                    ];
+
+        if(is_object($good->category)){
+            if (sizeof($good->category->parents) >= 1) {
+                $parents = array_reverse($good->category->parents);
+
+                foreach ($parents as $parentCategory) {
+                    if ($parentCategory != '') {
+                        $breadcrumbs[] = [
+                            'label' => $parentCategory->Name,
+                            'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
+                        ];
+                    }
                 }
             }
-        }
 
-        $breadcrumbs[] = [
-            'label' =>  $good->category->Name,
-            'url'   => Url::toRoute(['/categories', 'category' => $good->category->Code])
-        ];
+            $breadcrumbs[] = [
+                'label' =>  $good->category->Name,
+                'url'   => Url::toRoute(['/categories', 'category' => $good->category->Code])
+            ];
+        }
 
         $breadcrumbs[] = $good->Name;
 
