@@ -40,17 +40,15 @@ $this->registerJs($js);
 	<div class="main-content-slider">
 		<?=!empty($sliderBanners) ? Slick::widget([
 				'containerOptions' => [
-					'id'    => 'sliderFor',
-					'class' => 'first'
+					'class' => 'main-slider'
 				],
 				'items' =>  $sliderBanners,
 				'clientOptions' => [
-					'arrohow'   => 1,
+					'arrow'   => 1,
 					'slidesToSws'	=> true,
 					'fade'          => true,
 					'arrows'		=> true,
 					'slidesToScroll'=> 1,
-					'asNavFor'      => '#sliderNav',
 				]
 		]) : '<div style="height: 370px;"></div>'
 		?>
@@ -110,11 +108,12 @@ $this->registerJs($js);
 			</div>
 			<?=Html::tag('div',
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-best']).
-					Html::tag('span', \Yii::t('shop', 'Лучшее')), ['class' => 'main-icons', 'data-attribute-tab' => 'best']).
+					Html::tag('span', \Yii::t('shop', 'Лучшее'), ['class' => 'icon-down']), ['class' => 'main-icons']).
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-news']).
-					Html::tag('span', \Yii::t('shop', 'Новинки')), ['class' => 'main-icons', 'data-attribute-tab' => 'new']).
+					Html::tag('span', \Yii::t('shop', 'Новинки'), ['class' => 'icon-down']), ['class' => 'main-icons']).
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-sale']).
-					Html::tag('span', \Yii::t('shop', 'Распродажа')), ['class' => 'main-icons', 'data-attribute-tab' => 'sale']),
+					Html::tag('span', \Yii::t('shop', 'Распродажа'), ['class' => 'icon-down']), ['class' => 'main-icons']),
+
 				[
 					'class' => 'goods-content-icons'
 				]);
