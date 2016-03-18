@@ -2,17 +2,37 @@
 
 namespace frontend\modules\account\controllers;
 
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 
 class DefaultController extends Controller
 {
-    public function beforeAction($action){
-        if(\Yii::$app->user->isGuest){
-            \Yii::$app->response->redirect('/login');
-        }
-
-        return parent::beforeAction($action);
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'roles' =>  ['?'],
+                        'allow' => true,
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
     }
 
     public function actionIndex()
