@@ -3348,6 +3348,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 6px;
 }
 
+.tt-scrollable-menu{
+	float: left;
+}
+
 .input-style-main input[type='text'] {
 	background: url("/img/site/search.png") no-repeat 10px 7px;
 	width: 305px;
@@ -3394,6 +3398,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	-webkit-box-shadow: inset 0px 0px 5px 0px white;
 	box-shadow: inset 0px 1px 5px 0px white;
 	background: #29a1e0;
+	margin-top: 18px;
 }
 
 .sticky .blue-button{
@@ -3464,7 +3469,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.basket .count{
+.desire-basket .count{
 	background: #e9a218;
 	color: white;
 	float: right;
@@ -3627,6 +3632,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .content-items .icons-fav-bask:before{
+	margin-right: 10px;
 }
 
 .content-banners .goods-item-style{
@@ -3679,6 +3685,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .icons-fav-bask:before{
 	content: url("/img/site/favor.svg");
+	cursor: pointer;
 }
 
 .right-item .icons-fav-bask:before{
@@ -3688,7 +3695,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .icons-fav-bask:after{
-	content: url("/img/site/basket.svg");
+	content: url("/img/site/grey-basket.png");
+	cursor: pointer;
 }
 
 .right-item .icons-fav-bask:after{
@@ -3735,48 +3743,48 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: auto;
 }
 
-.icon-best{
+.goods-content-icons .icon-best{
 	background: #8acc5e;
 }
 
-.icon-best:before{
+.goods-content-icons .icon-best:before{
 	content: url("/img/site/ring.svg");
 	display: block;
 	text-align: center;
 	padding-top: 7px;
 }
 
-.icon-best + span:after{
+.goods-content-icons .icon-best + span:after{
 	color: #8acc5e;
 }
 
-.icon-news{
+.goods-content-icons .icon-news{
 	background: #45b1ea;
 }
 
-.icon-news:before{
+.goods-content-icons .icon-news:before{
 	content: url("/img/site/diamond.svg");
 	display: block;
 	text-align: center;
 	padding-top: 11px;
 }
 
-.icon-news + span:after{
+.goods-content-icons .icon-news + span:after{
 	color: #45b1ea;
 }
 
-.icon-sale{
+.goods-content-icons .icon-sale{
 	background: #eaa51e;
 }
 
-.icon-sale:before{
+.goods-content-icons .icon-sale:before{
 	content: url("/img/site/shopping-bag.svg");
 	display: block;
 	text-align: center;
 	padding-top: 7px;
 }
 
-.icon-sale + span:after{
+.goods-content-icons .icon-sale + span:after{
 	color: #eaa51e;
 }
 
@@ -3804,6 +3812,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	content: url("/img/site/favorite.png");
 	float: left;
 	margin-top: 4px;
+	cursor: pointer;
+}
+
+.goods-content-all .item-id:hover{
+	content: url("/img/site/favorites.png");/*Допилить*/
 }
 
 .goods-content-all .goods-item .item-id{
@@ -3860,7 +3873,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .goods-basket:before{
-	content: url("/img/site/basket.svg");
+	content: url("/img/site/white-basket.png");
 	display: block;
 	text-align: center;
 	margin-top: 12px;

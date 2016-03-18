@@ -34,17 +34,15 @@ $this->registerJs($js);
 	<div class="main-content-slider">
 		<?=!empty($sliderBanners) ? Slick::widget([
 				'containerOptions' => [
-					'id'    => 'sliderFor',
-					'class' => 'first'
+					'class' => 'main-slider'
 				],
 				'items' =>  $sliderBanners,
 				'clientOptions' => [
-					'arrohow'   => 1,
+					'arrow'   => 1,
 					'slidesToSws'	=> true,
 					'fade'          => true,
 					'arrows'		=> true,
 					'slidesToScroll'=> 1,
-					'asNavFor'      => '#sliderNav',
 				]
 		]) : '<div style="height: 370px;"></div>'
 		?>
