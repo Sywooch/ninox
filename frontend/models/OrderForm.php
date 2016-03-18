@@ -81,9 +81,14 @@ class OrderForm extends Model{
             ['deliveryInfo', 'required', 'when' => function(){
                 return in_array($this->deliveryType, [1, 2]);
             }],
-            [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required', 'when' => function(){
-                return $this->anotherReceiver != 0;
-            }]
+            [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required',
+                'when' => function(){
+                    return $this->anotherReceiver != 0;
+                },
+                'whenClient' => "function(attribute, value){
+                    return $(attribute.input).parents('.tab-pane.active').length;
+                }"
+            ]
             //[['customerComment'], 'string'],
             //[['amountDeductedOrder', 'originalSum'], 'number'],
             //[['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
