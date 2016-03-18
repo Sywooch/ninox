@@ -6,6 +6,7 @@
  * Time: 3:12 PM
  */
 
+use app\widgets\CartItemsCounterWidget;
 use common\helpers\Formatter;
 use yii\helpers\Html;
 
@@ -18,6 +19,12 @@ echo \kartik\grid\GridView::widget([
 	'showHeader'    =>  false,
 	'summary'       =>  false,
 	'pjax'          =>  true,
+	'pjaxSettings'	=>	[
+		'options'	=>	[
+			'enablePushState'	=>	false,
+			'enableReplaceState'=>	false
+		]
+	],
 	'bordered'      =>  false,
 	'striped'       =>  false,
 	'export'		=>	false,
@@ -52,7 +59,7 @@ echo \kartik\grid\GridView::widget([
 					default:
 						break;
 				}
-				return Html::tag('div', $model->Name, ['class'  =>  'item-name blue']).
+				return Html::tag('div', $model->Name, ['class' => 'item-name blue']).
 				Html::tag('div',
 					Html::tag('span',
 						Formatter::getFormattedPrice($model->retail_price),
@@ -72,7 +79,7 @@ echo \kartik\grid\GridView::widget([
 		[
 			'format'        =>  'raw',
 			'value'         =>  function($model){
-				return \app\widgets\CartItemsCounterWidget::widget(['model' => $model]);
+				return CartItemsCounterWidget::widget(['model' => $model]);
 			},
 		],
 		[
