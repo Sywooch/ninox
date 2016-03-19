@@ -10,7 +10,7 @@ $content = Html::tag('div',
             [
                 'style' =>  'max-width: 40px; overflow: hidden'
             ]),
-            [
+        [
             'class' =>  'media-left',
         ]).
     Html::tag('div',
