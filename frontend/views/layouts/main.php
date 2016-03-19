@@ -309,8 +309,28 @@ $this->beginPage();
 						?>
 					</div>
 					<div class="phone-number">
-						<div class="phone"></div>
 						<span class="number">(044)257-45-54</span>
+						<div class="call-back">
+							<div class="">
+								<div class="blue-white-phone"></div>
+								<span>0 800 508 208</span>
+								<span>бесплатно со стационарных</span>
+							</div>
+							<span>
+								Время работы call-центра:
+							</span>
+							<span>
+								вт.-вс: с 9.00 до 18.00
+							</span>
+							<span>
+								пн: с 9.00 до 15.00
+							</span>
+							<?=\yii\helpers\Html::button('Перезвоните мне', [
+								'type'  =>  'submit',
+								'class' =>  'yellow-button middle-button',
+								'id'    =>  'submit'
+							])?>
+						</div>
 					</div>
 					<div class="desire-basket">
 						<div class="desire">
