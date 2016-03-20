@@ -30,6 +30,13 @@ $content = Html::tag('div',
     ]
 );
 
-echo Html::a($content, '/goods/view/{{ID}}', [
-    'class' =>  'typeahead-list-item'
-]);
+if(!isset($toOrder)){
+    echo Html::a($content, '/goods/view/{{ID}}', ['class' =>  'typeahead-list-item']);
+}else{
+
+
+    echo Html::tag('div', $content, [
+        'class' =>  'typeahead-list-item itemToOrder',
+        'data-attribute-itemID' =>  '{{ID}}',
+    ]);
+}

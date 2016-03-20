@@ -17,9 +17,15 @@ if($customer){
     $customerOrdersSummary = $customer->getOrdersSummary();
 }
 
-$typeaheadTemplate = $this->render('order/_typeahead_template', [
-    'order' =>  $order
-]);
+$typeaheadTemplate = $this->render(
+    DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+    .DIRECTORY_SEPARATOR.'layouts'
+    .DIRECTORY_SEPARATOR.'search'
+    .DIRECTORY_SEPARATOR.'suggestion',
+    [
+        'toOrder'   =>  true
+    ]
+);
 
 $customerOrders = [];
 
@@ -103,18 +109,19 @@ $css = <<<'STYLE'
     }
 STYLE;
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
     addItemToOrder = function(order, item){
         swal({
           title: "Добавить товар в заказ",
-          text: "сколько добавить товара в заказ?:",
-          type: "input",
+          html: 'Сколько добавить товара в заказ?<br><input class="input" id="addItems-countInput">',
           showCancelButton: true,
           closeOnConfirm: false,
           animation: "slide-from-top",
           inputPlaceholder: "1"
         },
-        function(inputValue){
+        function(){
+            var inputValue = $("#addItems-countInput").val();
+
             if (inputValue === false) return false;
 
             if (inputValue === "") {
@@ -124,44 +131,63 @@ $js = <<<'SCRIPT'
 
             $.ajax({
                 type: 'POST',
-                url: '/goods/additemtoorder',
+                url: '/goods/addtoorder',
                 data: {
-                    'OrderID': order,
-                    'itemID':  item,
-                    'ItemsCount': inputValue
+                    'orderID': order,
+                    'goodID':  item,
+                    'itemsCount': inputValue
                 },
-                success: function(data){
-                    if(data == -1){
+                success: function(resp){
+                    if(resp.status == true){
                         $.pjax.reload({container: '#orderItems-pjax'});
+
+                        $("#addItemToOrder-input").typeahead('val', '');
+
+                        swal({
+                            type: 'success',
+                            title: 'Товар успешно добавлен!',
+                            text: 'Товар успешно добавлен к заказу!',
+                            timer: 2000
+                        })
                     }else{
                         swal({
-                            title: "Столько нету",
-                            text: "На складе нет такого колличества товара. Добавить сколько есть, или игнорировать?",
+                            title:"Столько нету",
+                            html: "Такого товара на складе осталось <b>" + resp.data.have + " шт.</b>. Добавить сколько есть, или игнорировать?",
                             type: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#DD6B55",
                             cancelButtonColor: "#449D44",
                             confirmButtonText: "Игнорировать!",
                             cancelButtonText: "Добавить сколько есть",
-                            closeOnConfirm: false
+                            closeOnConfirm: true
                         },
                         function(isConfirm){
                             var ignoreCount = "false";
+
                             if(isConfirm){
                                 ignoreCount = "true";
                             }
 
                             $.ajax({
                                 type: 'POST',
-                                url: '/goods/additemtoorder',
+                                url: '/goods/addtoorder',
                                 data: {
-                                    'OrderID': order,
-                                    'itemID':  item,
-                                    'ItemsCount': inputValue,
-                                    'IgnoreMaxCount': ignoreCount
+                                    'orderID': order,
+                                    'goodID':  item,
+                                    'itemsCount': inputValue,
+                                    'ignoreMaxCount': ignoreCount
                                 },
-                                success: function(data){
+                                success: function(){
                                     $.pjax.reload({container: '#orderItems-pjax'});
+
+                                    swal({
+                                        type: 'success',
+                                        title: 'Товар успешно добавлен!',
+                                        text: 'Товар успешно добавлен к заказу!',
+                                        timer: 2000
+                                    })
+
+                                    $("#addItemToOrder-input").typeahead('val', '');
                                 }
                             });
                         });
@@ -169,6 +195,8 @@ $js = <<<'SCRIPT'
                 }
           });
         });
+
+        $("#addItemToOrder-input").typeahead('val', '');
     }, changePrices = function(id, type){
         var oType = '';
         switch(type){
@@ -229,7 +257,11 @@ $js = <<<'SCRIPT'
     $(".oneOrderItem input:checkbox").change(function(){
         setTimeout(getSelectedGoods, 100);
     });
-SCRIPT;
+
+    $('body').on('click', ".itemToOrder", function(e){
+        addItemToOrder($("#orderInfo")[0].getAttribute('data-attribute-orderID'), e.currentTarget.getAttribute("data-attribute-itemID"));
+    })
+JS;
 
 $this->registerCss($css);
 $this->registerJs($js);
@@ -239,8 +271,8 @@ $this->registerJsFile('/js/bootbox.min.js', [
     ]
 ]);
 \bobroid\sweetalert\SweetalertAsset::register($this);
-?>
-<?php if($order->deliveryType == 2){
+
+if($order->deliveryType == 2){
 
     $novaPoshtaModal = new Remodal([
         'cancelButton'		=>	false,
@@ -255,7 +287,14 @@ $this->registerJsFile('/js/bootbox.min.js', [
 
     echo $novaPoshtaModal->renderModal();
 
-} ?>
+}
+
+echo Html::tag('div', '', [
+    'style'                 =>  'display: none',
+    'data-attribute-orderID'=>  $order->id,
+    'id'                    =>  'orderInfo'
+])
+?>
 <div class="row">
     <div class="col-xs-4">
         <div>
@@ -381,6 +420,7 @@ $this->registerJsFile('/js/bootbox.min.js', [
                             <div class="col-xs-7" style="margin-top: 8px">
                                 <?=Typeahead::widget([
                                     'name' => 'search',
+                                    'id'    =>  'addItemToOrder-input',
                                     'options' => [
                                         'placeholder'   =>  'Код или название',
                                     ],
@@ -390,13 +430,13 @@ $this->registerJsFile('/js/bootbox.min.js', [
                                     'dataset' => [
                                         [
                                             'remote'    =>  [
-                                                'url'       =>  '/goods/searchgoods?string=QUERY',
+                                                'url'       =>  '/goods/search?string=QUERY',
                                                 'wildcard'  =>  'QUERY'
                                             ],
                                             'limit'     => 10,
                                             'templates' => [
                                                 'empty' => Html::tag('div', 'Ничего не найдено', ['class' => 'text-error']),
-                                                'suggestion' => new JsExpression("Handlebars.compile('".$typeaheadTemplate."')")
+                                                'suggestion' => new JsExpression("Handlebars.compile('{$typeaheadTemplate}')")
                                             ]
                                         ]
                                     ]

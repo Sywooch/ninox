@@ -750,6 +750,7 @@ class DefaultController extends Controller
     }
 
     /**
+     * @deprecated
      * @author Nikolai Gilko <n.gilko@gmail.com>
      * @return SborkaItem                       -   модель товара в заказе
      * @throws MethodNotAllowedHttpException    -   если запрос не через ajax
@@ -807,6 +808,56 @@ class DefaultController extends Controller
         }
 
         return -1;
+    }
+
+    /**
+     * @return bool
+     * @throws \yii\web\MethodNotAllowedHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionAddtoorder(){
+        $request = \Yii::$app->request;
+
+        if(!$request->isAjax){
+            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
+        }
+
+        $order = History::findOne($request->post("orderID"));
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$request->post("orderID")} не найден!");
+        }
+
+        $good = Good::findOne($request->post("goodID"));
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар с идентификатором {$request->post("goodID")} не найден!");
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        $addedCount = 0;
+
+        if($good->count >= $request->post("itemsCount") || ($good->count < $request->post("itemsCount") && $request->post("ignoreMaxCount") == "true")){
+            $addedCount = $request->post("itemsCount");
+        }elseif($good->count > 0 && \Yii::$app->request->post("ignoreMaxCount") == "false"){
+            $addedCount = $good->count;
+        }
+
+        if($addedCount != 0){
+            $return = [
+                'status'    =>  $good->addToOrder($order, $addedCount)
+            ];
+        }else{
+            $return = [
+                'status'    =>  'notEnough',
+                'data'      =>  [
+                    'have'  =>  $good->count
+                ]
+            ];
+        }
+
+        return $return;
     }
 
     /**
