@@ -44,7 +44,7 @@ class OrderForm extends Model{
     public $deliveryRegion;
     public $deliveryAddress;
 
-    public $deliveryType = 1;
+    public $deliveryType = 2;
     public $deliveryParam = 1;
     public $deliveryInfo = '';
 
