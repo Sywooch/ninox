@@ -20,7 +20,7 @@ var deliveryType = function(element){
         $(this).attr('disabled', 'disabled');
     });
     $.each($(element).data('payment-params'), function(index, value){
-        $('.payment-param-' + index).removeAttr('disabled').data('commission-static', value.commissionStatic).data('commission-percent', value.commissionPercent);
+        $('.payment-param-' + index).removeAttr('disabled').data('commission-static', value.static).data('commission-percent', value.percent);
 	});
 	$(element).data('payment-types').forEach(function(index, value){
 		$('.payment-type-' + index).removeAttr('disabled');
@@ -42,11 +42,11 @@ var deliveryType = function(element){
 	var amount = parseFloat($('.amount').text().replace(/[^\d\.]+/g, ''));
 	var actionDiscount = parseFloat($('.action-discount-amount').text().replace(/[^\d\.]+/g, ''));
 	var cardDiscount = parseFloat($('.card-discount-amount').text().replace(/[^\d\.]+/g, ''));
-	var cst = parseFloat($(element).data('commission-static'));
-	var cpc = parseFloat($(element).data('commission-percent'));
-	$('.commission-percent').toggleClass('disabled', !(cpc > 0)).text(cpc + '% ');
-	$('.commission-static').toggleClass('disabled', !(cst > 0)).text('+ ' + cst);
-	var commission = ((amount - actionDiscount - cardDiscount) / 100 * cpc) + cst;
+	var stc = parseFloat($(element).data('commission-static'));
+	var pct = parseFloat($(element).data('commission-percent'));
+	$('.commission-percent').toggleClass('disabled', !(pct > 0)).text(pct + '% ');
+	$('.commission-static').toggleClass('disabled', !(stc > 0)).text('+ ' + stc);
+	var commission = ((amount - actionDiscount - cardDiscount) / 100 * pct) + stc;
 	$('.commission-amount').text('+' + commission.toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
 	$('.total-amount').text((amount - actionDiscount - cardDiscount + commission).toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
 };
@@ -106,47 +106,42 @@ $('input:radio[name="OrderForm[anotherReceiver]"]:checked + label').each(functio
 		}
 	}
 });
+
 JS;
+
 $this->registerJs($js);
 
 $tabItems = [];
 
-function buildContent($blocks){
-	$return = '';
-	if(!empty($blocks)){
-		foreach($blocks as $block){
-			$return .= (is_object($block) && $block->tag ? Html::tag($block->tag, (is_object($block->content) || is_array($block->content) ? buildContent($block->content) : $block->content), $block->options) : (is_object($block) && $block->content ? $block->content : $block));
-		}
-	}
-	return $return;
-}
 ?>
 <div class="content-data-body-delivery-type">
 <?=$form->field($model, 'deliveryType', [
-    ])->radioList($domainConfiguration['deliveryTypes'], [
+    ])->radioList($domainConfiguration['deliveryTypes'],[
+		'unselect'  => null,
         'item' => function($index, $label, $name, $checked, $value) use (&$tabItems, $form, $model, $domainConfiguration){
 		    $subTabItems = [];
 	        $tabItems[] = [
 		        'content'   =>  $form->field($model, 'deliveryParam', (sizeof($label['params']) > 1 ? [] : (['options' => ['style' => 'display: none']]))
 			        )->radioList($label['params'],[
-					        'item' => function($index, $label, $name, $checked, $value) use (&$subTabItems){
-							        $subTabItems[] = [
-								        'content'   =>  buildContent($label['options']->block),
-								        'label'     =>  $label['name'],
-								        'id'        =>  ''
-							        ];
-							        return Html::tag('div', Html::radio($name, $checked, [
-								        'value'     =>      $value,
-								        'id'        =>      'tab-'.Tabs::$counter.$index,
-									    'data-payment-types'    =>  '["'.implode('", "', $label['paymentTypes']).'"]',
-									    'data-payment-params'   =>  \yii\helpers\Json::encode($label['paymentParams'], JSON_FORCE_OBJECT)
-							        ]).
-							        Html::tag('label', !empty($label['options']->label) ? buildContent($label['options']->label) : $label['name'],[
-								        'class' =>  'tabsLabels',
-								        'data-target'   =>  '#w'.Tabs::$counter.'-tab'.$index,
-								        'for'   =>  'tab-'.Tabs::$counter.$index,
-							        ]), ['class' =>  'tab']);
-						        }
+				        'unselect'  => null,
+				        'item' => function($index, $label, $name, $checked, $value) use (&$subTabItems){
+						        $subTabItems[] = [
+							        'content'   =>  $label['content'],
+							        'label'     =>  $label['name'],
+							        'id'        =>  ''
+						        ];
+						        return Html::tag('div', Html::radio($name, $checked, [
+							        'value'     =>      $value,
+							        'id'        =>      'tab-'.Tabs::$counter.$index,
+								    'data-payment-types'    =>  '["'.implode('", "', $label['paymentTypes']).'"]',
+								    'data-payment-params'   =>  \yii\helpers\Json::encode($label['paymentParams'], JSON_FORCE_OBJECT)
+						        ]).
+						        Html::tag('label', $label['label'],[
+							        'class' =>  'tabsLabels',
+							        'data-target'   =>  '#w'.Tabs::$counter.'-tab'.$index,
+							        'for'   =>  'tab-'.Tabs::$counter.$index,
+						        ]), ['class' =>  'tab']);
+					        }
 				        ])->label(false).
 			        Tabs::widget([
 				        'headerOptions' =>  [
@@ -184,6 +179,7 @@ function buildContent($blocks){
     '1' =>  'Будет получать другой человек',
     ],
     [
+	    'unselect'  => null,
         'item'  =>  function ($index, $label, $name, $checked, $value) {
                 return Html::radio($name, $checked, [
                         'value' => $value,
@@ -222,8 +218,9 @@ Tabs::widget([
 ])?>
 </div>
 <div class="payment-type">Способ оплаты</div>
-<?=$form->field($model, 'paymentType', [])->radioList($domainConfiguration['paymentTypes'], [
-    'item' => function ($index, $label, $name, $checked, $value) use ($form, $model, $domainConfiguration){
+<?=$form->field($model, 'paymentType')->radioList($domainConfiguration['paymentTypes'], [
+	'unselect'  => null,
+    'item' => function ($index, $label, $name, $checked, $value) use ($form, $model){
         return Html::radio($name, $checked, [
 	            'value'     =>  $value,
 	            'id'        =>  'payment-type-'.$value,
@@ -239,7 +236,8 @@ Tabs::widget([
 
 			]).
 			$form->field($model, 'paymentParam', ['options' => ['class' => 'payment-type-'.$value], 'template' => Html::tag('div', '{input}{label}', (sizeof($label['params']) > 1 ? [] : ['class' => 'payment-params-none']))])->radioList($label['params'], [
-			    'item' => function ($index, $label, $name, $checked, $value){
+				'unselect'  => null,
+				'item' => function ($index, $label, $name, $checked, $value){
 					    return Html::radio($name, $checked, [
 						    'value'     =>  $value,
 						    'id'        =>  'payment-param-'.$value,
