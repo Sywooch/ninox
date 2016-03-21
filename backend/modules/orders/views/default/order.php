@@ -113,15 +113,14 @@ $js = <<<'JS'
     addItemToOrder = function(order, item){
         swal({
           title: "Добавить товар в заказ",
-          html: 'Сколько добавить товара в заказ?<br><input class="input" id="addItems-countInput">',
+          text: 'Сколько добавить товара в заказ?',
+          type: 'input',
           showCancelButton: true,
           closeOnConfirm: false,
           animation: "slide-from-top",
           inputPlaceholder: "1"
         },
-        function(){
-            var inputValue = $("#addItems-countInput").val();
-
+        function(inputValue){
             if (inputValue === false) return false;
 
             if (inputValue === "") {
@@ -141,8 +140,6 @@ $js = <<<'JS'
                     if(resp.status == true){
                         $.pjax.reload({container: '#orderItems-pjax'});
 
-                        $("#addItemToOrder-input").typeahead('val', '');
-
                         swal({
                             type: 'success',
                             title: 'Товар успешно добавлен!',
@@ -152,8 +149,9 @@ $js = <<<'JS'
                     }else{
                         swal({
                             title:"Столько нету",
-                            html: "Такого товара на складе осталось <b>" + resp.data.have + " шт.</b>. Добавить сколько есть, или игнорировать?",
+                            text: "Такого товара на складе осталось <b>" + resp.data.have + " шт.</b>. Добавить сколько есть, или игнорировать?",
                             type: "warning",
+                            html: true,
                             showCancelButton: true,
                             confirmButtonColor: "#DD6B55",
                             cancelButtonColor: "#449D44",
@@ -179,21 +177,12 @@ $js = <<<'JS'
                                 },
                                 success: function(){
                                     $.pjax.reload({container: '#orderItems-pjax'});
-
-                                    swal({
-                                        type: 'success',
-                                        title: 'Товар успешно добавлен!',
-                                        text: 'Товар успешно добавлен к заказу!',
-                                        timer: 2000
-                                    })
-
-                                    $("#addItemToOrder-input").typeahead('val', '');
                                 }
                             });
                         });
                     }
                 }
-          });
+            });
         });
 
         $("#addItemToOrder-input").typeahead('val', '');
@@ -207,8 +196,12 @@ $js = <<<'JS'
                 oType = 'розничным';
                 break;
         }
-        bootbox.confirm("Пересчитать заказ по " + oType + " ценам?", function(result){
-            if(result){
+
+        swal({
+            title: 'Пересчёт заказа',
+            text: 'Пересчитать заказ по ' + oType + ' ценам?'
+        }, function(isConfirm){
+            if(isConfirm){
                 $.ajax({
                     type: 'POST',
                     url: '/orders/updateorderprices',
@@ -216,7 +209,7 @@ $js = <<<'JS'
                         'OrderID': id,
                         'type': type
                     },
-                    success: function(data){
+                    success: function(){
                         $.pjax.reload({container: '#orderItems-pjax'});
                     }
                 });

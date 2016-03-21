@@ -5,14 +5,17 @@ use yii\helpers\Html;
 
 $js = <<<'JS'
     changeCashboxType = function(){
-        swal({
-            title: "Пересчитываем заказ...",
-            allowEscapeKey: false,
-            showConfirmButton: false
-        });
+
         $.ajax({
             url:    '/changecashboxtype',
             type:   'post',
+            beforeSend: function(){
+                swal({
+                    title: "Пересчитываем заказ...",
+                    allowEscapeKey: false,
+                    showConfirmButton: false
+                });
+            },
             success: function(data){
                 var summary = $('.header .summary'),
                     button = $('#changeCashboxType');
@@ -59,9 +62,9 @@ $js = <<<'JS'
                     if(data.itemsCount !== undefined){
                         $(".itemsCount")[0].innerHTML = data.itemsCount;
                     }
-                }
 
-                swal.close();
+                    swal.close();
+                }
             }
         });
     };
