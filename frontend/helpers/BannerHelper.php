@@ -16,19 +16,24 @@ use yii\bootstrap\Html;
 class BannerHelper extends Component
 {
 
+    /*const LAYOUT_2X2 = 'banner2x2';
+    const LAYOUT_1X2 = 'banner1x2';
+    const LAYOUT_1X1 = 'banner1x1';*/
+
     /**
      * @param Banner[] $models
+     * @param bool $asArray
      *
-     * @return array
+     * @return array|string
      */
-    public static function renderItems($models){
+    public static function renderItems($models, $asArray = true){
         $items = [];
 
         foreach($models as $model){
             $items[] = self::renderItem($model);
         }
 
-        return $items;
+        return $asArray ? $items : implode('', $items);
     }
 
     /**
@@ -37,7 +42,7 @@ class BannerHelper extends Component
      * @return string
      */
     public static function renderItem($model){
-        switch($model->format){
+        switch($model->type){
             case $model::TYPE_IMAGE:
                 return self::renderImageBanner($model);
                 break;
@@ -60,7 +65,7 @@ class BannerHelper extends Component
      * @return string
      */
     public static function renderImageBanner($banner){
-        return Html::img('http://krasota-style.com.ua/'.$banner->banner_ru);
+        return Html::img('http://krasota-style.com.ua/'.$banner->banner->value);
     }
 
 

@@ -28,7 +28,6 @@ $(".arrow-bottom").on('click', function(){
 JS;
 
 $this->registerJs($js);
-
 ?>
 <div>
 	<div class="main-content-slider">
@@ -54,25 +53,12 @@ $this->registerJs($js);
 		<div class="goods-content">
 			<div class="goods-content-main">
 				<div class="main-slider goods-items">
-					<?=\yii\widgets\ListView::widget([
-						 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
-							 'models'	=>	[
-							 	Good::findOne(16),
-						 	]
-						 ]),
-						 'itemView'	=>	function($model){
-							 return $this->render('index/main-slider', [
-								 'good' => $model
-							 ]);
-						 },
-						 'itemOptions'	=>	[
-							 'class'	=>	''
-						 ],
-						 'summary'	=>	false
+					<?=$this->render('index/main-slider', [
+						'good' => Good::findOne(16)
 					])?>
 				</div>
 				<div class="goods-items">
-					<div class="two-items content-items">
+					<div class="two-items content-items">'
 						<?=\yii\widgets\ListView::widget([
 							 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
 								 'models'	=>	[
@@ -81,7 +67,9 @@ $this->registerJs($js);
 								]
 							 ]),
 							 'itemView'	=>	function($model){
-								 return $this->render('index/banner', ['good' => $model]);
+								 return $this->render('index/banner', [
+									 'good' => $model
+								 ]);
 							 },
 							 'itemOptions'	=>	[
 								 'class'	=>	'goods-item'
@@ -92,8 +80,6 @@ $this->registerJs($js);
 					<div class="two-items content-banners">
 						<?php
 						echo $this->render('index/banner2');
-						?>
-						<?php
 						echo $this->render('index/banner3');
 						?>
 					</div>

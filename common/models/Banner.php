@@ -3,23 +3,20 @@
 namespace common\models;
 
 use Yii;
-use yii\base\InvalidConfigException;
 
 /**
  * This is the model class for table "banners".
  *
- * @property integer $id
- * @property integer $bannerTypeId
- * @property string $banner
- * @property string $link
- * @property string $type
- * @property string $date
- * @property integer $state
- * @property string $categoryCode
- * @property string $bg
- * @property integer $bannerOrder
- * @property string $dateStart
- * @property string $dateEnd
+ * @property integer $ID
+ * @property integer $category
+ * @property integer $type
+ * @property string $added
+ * @property integer $order
+ * @property string $dateFrom
+ * @property string $dateTo
+ * @property integer $deleted
+ *
+ * @property BannersTranslations $iD
  */
 class Banner extends \yii\db\ActiveRecord
 {
@@ -42,13 +39,10 @@ class Banner extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bannerTypeId', 'banner', 'link', 'type', 'date', 'categoryCode', 'bg', 'dateStart', 'dateEnd'], 'required'],
-            [['bannerTypeId', 'state', 'bannerOrder'], 'integer'],
-            [['banner', 'link'], 'string'],
-            [['date', 'dateStart', 'dateEnd'], 'safe'],
-            [['type'], 'string', 'max' => 255],
-            [['categoryCode'], 'string', 'max' => 50],
-            [['bg'], 'string', 'max' => 30]
+            [['category', 'added'], 'required'],
+            [['category', 'type', 'order', 'deleted'], 'integer'],
+            [['added', 'dateFrom', 'dateTo'], 'safe'],
+            [['ID'], 'exist', 'skipOnError' => true, 'targetClass' => BannerTranslation::className(), 'targetAttribute' => ['ID' => 'ID']],
         ];
     }
 
@@ -58,18 +52,22 @@ class Banner extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'            => 'ID',
-            'bannerTypeId'  => 'Категория',
-            'banner'        => 'Баннер',
-            'link'          => 'Ссылка',
-            'type'          => 'Тип',
-            'date'          => 'Дата',
-            'state'         => 'Включен',
-            'categoryCode'  => 'Код категории',
-            'bg'            => 'Фон',
-            'bannerOrder'   => 'Порядок сортировки',
-            'dateStart'     => 'Показывать с',
-            'dateEnd'       => 'Показывать до',
+            'ID' => 'ID',
+            'category' => 'Category',
+            'type' => 'Type',
+            'added' => 'Added',
+            'order' => 'Order',
+            'dateFrom' => 'Date From',
+            'dateTo' => 'Date To',
+            'deleted' => 'Deleted',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBanner()
+    {
+        return $this->hasOne(BannerTranslation::className(), ['ID' => 'ID'])->where(['language' => \Yii::$app->language]);
     }
 }
