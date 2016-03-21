@@ -189,8 +189,9 @@ echo \kartik\grid\GridView::widget([
                     return Html::a('Содержимое', Url::toRoute([
                         '/orders/showorder/'.$model->id
                     ]), [
-                        'class' =>  'btn btn-default',
-                        'style' =>  'margin-top: 1px'
+                        'class'     =>  'btn btn-default',
+                        'style'     =>  'margin-top: 1px',
+                        'data-pjax' =>  0
                     ]);
                 },
                 'print'  =>  function($url, $model, $key){
@@ -198,7 +199,8 @@ echo \kartik\grid\GridView::widget([
                         '/printer/order/'.$model->id
                     ]), [
                         'target'    =>  '_blank',
-                        'class'     =>  'btn btn-default glyphicon glyphicon-print'
+                        'class'     =>  'btn btn-default glyphicon glyphicon-print',
+                        'data-pjax' =>  0
                     ]);
                 },
                 'done'  =>  function($url, $model, $key){
@@ -250,9 +252,6 @@ echo \kartik\grid\GridView::widget([
             },
             'detailRowCssClass' =>  GridView::TYPE_DEFAULT,
             'detailUrl' =>  '/orders/getorderpreview',
-            'onDetailLoaded'    =>  'function(){
-                //TODO: вешать на кнопки eventListener\'ы
-            }'
         ],
     ],
     'export'    =>  false

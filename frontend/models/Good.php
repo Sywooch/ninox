@@ -122,12 +122,6 @@ class Good extends \common\models\Good{
         return $options;
     }
 
-	public static function find(){
-		return parent::find()->
-			select('`goods`.*, `goodsgroups`.`Code` AS `category`')->
-			leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`', []);
-	}
-
     public function __get($name){
 	    switch($name){
 		    case 'inCart':

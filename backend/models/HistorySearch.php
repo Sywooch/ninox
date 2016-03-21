@@ -88,7 +88,9 @@ class HistorySearch extends History{
 			    default:
 				    break;
 		    }
-	    }elseif(empty($params['HistorySearch'])){
+	    }
+
+        if(!empty($params["showDates"]) || empty($params['HistorySearch'])){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
             $params['showDates'] = empty($params['showDates']) ? 'today' : $params['showDates'];
@@ -101,6 +103,7 @@ class HistorySearch extends History{
                     $query->andWhere('added >= '.($date - (date("N") - 1) * 86400));
                     break;
                 case 'thismonth':
+                    \Yii::trace($date);
                     $query->andWhere('added >= '.($date - (date("j") - 1) * 86400));
                     break;
                 case 'alltime':

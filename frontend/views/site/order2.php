@@ -4,49 +4,39 @@ use common\helpers\Formatter;
 use yii\jui\Accordion;
 use yii\bootstrap\Html;
 
-$js = <<<'SCRIPT'
+$js = <<<JS
+
+var page = 0;
+
 $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
-
-    var page = e.currentTarget.getAttribute('data-page');
-
-    if(page == 1 && goToPage1() == 'not validated'){
-        return false;
-    }
-
-	$('#accordion').accordion('option', 'active', parseInt(e.currentTarget.getAttribute('data-page')));
+    page = parseInt(e.currentTarget.getAttribute('data-page'));
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-customername');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-customersurname');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-deliverycity');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-deliveryregion');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-customeremail');
 });
 
-var goToPage1 = function(){
-    //TODO: насчёт валидации формы
-
-    $('#orderForm').data('yiiActiveForm').submitting = true;
-
-    $('#orderForm').yiiActiveForm('validate')
-
-    $('#orderForm').data('yiiActiveForm').submitting = false;
-
-    setTimeout(200);
-
-    if($('#orderForm .content-data-body-first').find('.has-error').length > 0) {
-        return 'validated';
+$('#orderForm').on('afterValidateAttribute', function(e, attr){
+    if(attr.id == 'orderform-customeremail'){
+        if(page == 1 && $('#orderForm .content-data-body-first').find('.has-error').length > 0){
+            return false;
+        }
+        $('#accordion').accordion('option', 'active', page);
     }
+});
 
-    return 'not validated';
-}
+$('#orderForm').on('beforeSubmit', function(){
+    $('.load').append('<img src="img/site/jquery-preloader.gif" alt=Загрузка..." id="loading">');
+});
 
-SCRIPT;
+JS;
 
 $this->registerJs($js);
 
-$form = \yii\bootstrap\ActiveForm::begin([
-    'id'            =>  'orderForm',
-    'fieldConfig' => [
-        'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
-    ],
-]);
 ?>
 <head>
-    <script src="//api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"> </script>
+    <script src="//api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 </head>
 <script type="text/javascript">
@@ -101,36 +91,15 @@ $form = \yii\bootstrap\ActiveForm::begin([
     });
     //TODO: что это за скрипт?
 </script>
-<script type="text/javascript">
-$(function() {
-$('#submit').click(function() {
-//Добавляем нашу картинку в <div  id="container">
-    $('.load').append('<img src="img/site/jquery-preloader.gif" alt=Загрузка..." id="loading" />');
-    //Передаем данные в файл ajax.php
-
-    var customerName = $('#customerName').val();
-    var customerSurname = $('#customerSurname').val();
-    var deliveryCity = $('#deliveryCity').val();
-
-    $.ajax({
-    url: 'ajax.php',
-    type: 'POST',
-    data: '&customerName=' + customerName + '&customerSurname=' + customerSurname + '&deliveryCity=' + deliveryCity,
-
-    success: function() {
-
-    $('.load').animate({opacity:0.5},  function() {
-        $('.load').css('', '');
-
-    });
-    }
-    });
-    return false;
-    });
-    });
-
-//TODO: что это за скрипт?
-    </script>
+<?php
+$form = \yii\bootstrap\ActiveForm::begin([
+    'id'            =>  'orderForm',
+    'fieldConfig'   => [
+        'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
+    ],
+    'enableAjaxValidation' => false,
+]);
+?>
 <div class="content">
     <div id="modal_form"><!-- Сaмo oкнo -->
         <span id="modal_close">
@@ -265,11 +234,9 @@ $('#submit').click(function() {
                         </div>
                         <div class="ordering-body-order-confirm-button">
                             <?php
-                                echo \yii\helpers\Html::button('Оформить заказ', [
-                                     'type'  =>  'submit',
-                                     'class' =>  'yellow-button large-button',
-                                     'id'    =>  'submit'
-                                        ]);
+                                echo Html::submitButton('Оформить заказ', [
+                                    'class' =>  'button yellow-button large-button'
+                                ]);
                             ?>
                         </div>
                         <div class="Terms-of-use">

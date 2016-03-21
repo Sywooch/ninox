@@ -44,12 +44,13 @@ class OrderForm extends Model{
     public $deliveryRegion;
     public $deliveryAddress;
 
-    public $deliveryType = 1;
+    public $deliveryType = 2;
     public $deliveryParam = 1;
-    public $deliveryInfo;
+    public $deliveryInfo = '';
 
     public $paymentType = 1;
     public $paymentParam = 0;
+    public $paymentInfo = '';
 
     /**
      * @var $customerComment - комментарий клиента к заказу
@@ -75,15 +76,21 @@ class OrderForm extends Model{
         return [
             //[['id', 'nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
             [['anotherReceiver', 'anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'safe'],
+            [['deliveryParam', 'paymentParam'], 'integer'],
             [['customerID', 'customerName', 'customerSurname', 'customerFathername', 'customerEmail', 'customerPhone', 'deliveryCountry', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryType', 'deliveryInfo', 'paymentType', 'paymentInfo', 'customerComment', 'promoCode', 'canChangeItems'], 'safe'],
             [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
             [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
             ['deliveryInfo', 'required', 'when' => function(){
                 return in_array($this->deliveryType, [1, 2]);
             }],
-            [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required', 'when' => function(){
-                return $this->anotherReceiver != 0;
-            }]
+            [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required',
+                'when' => function(){
+                    return $this->anotherReceiver != 0;
+                },
+                'whenClient' => "function(attribute, value){
+                    return $(attribute.input).parents('.tab-pane.active').length;
+                }"
+            ]
             //[['customerComment'], 'string'],
             //[['amountDeductedOrder', 'originalSum'], 'number'],
             //[['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
@@ -217,12 +224,12 @@ class OrderForm extends Model{
             'deliveryCity'      =>  $customerReceiver->city,
             'deliveryType'      =>  $customerReceiver->shippingType,
             'deliveryParam'     =>  $customerReceiver->shippingParam,
-            'deliveryInfo'      =>  $customerReceiver->shippingAddress,
+            'deliveryInfo'      =>  $this->deliveryInfo,
             'customerComment'   =>  $this->customerComment,
             'customerID'        =>  $customer->ID,
             'coupon'            =>  $this->promoCode,
-            'paymentType'       =>  $customerReceiver->paymentType,
-            'paymentParam'       =>  $customerReceiver->paymentParam,
+            'paymentType'       =>  $this->paymentType,
+            'paymentParam'      =>  $this->paymentParam,
             'canChangeItems'    =>  $this->canChangeItems,
             'originalSum'       =>  \Yii::$app->cart->cartRealSumm,
         ]);
@@ -239,7 +246,7 @@ class OrderForm extends Model{
                     'itemID'        =>  $good->ID,
                     'name'          =>  $good->Name,
                     'count'         =>  \Yii::$app->cart->has($good->ID),
-                    'originalPrice' =>  \Yii::$app->cart->isWholesale() ? $good->wholesale_price : $good->retail_price,
+                    'originalPrice' =>  \Yii::$app->cart->isWholesale() ? $good->wholesale_real_price : $good->retail_real_price,
                     'discountSize'  =>  $good->discountSize,
                     'discountType'  =>  $good->discountType,
                     'priceRuleID'   =>  $good->priceRuleID,
@@ -252,6 +259,8 @@ class OrderForm extends Model{
             }
 
             return true;
+        }else{
+            \Yii::trace($order->getErrors());
         }
 
         $this->addError('order', Json::encode($order->getErrors()));
