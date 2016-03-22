@@ -12,10 +12,13 @@ use yii\data\ActiveDataProvider;
 class History extends \common\models\History
 {
 
-    private $isOpt;
     private $real_summ;
     private $items;
+    private $isWholesale;
     public $summ;
+
+
+    public $sum;
 
     public static $status_1     =   'Не звонили';
     public static $status_2     =   'Подготовка заказа';
@@ -32,6 +35,10 @@ class History extends \common\models\History
         $this->getStatus();
 
         return parent::afterFind();
+    }
+
+    public function getID(){
+        return $this->id;
     }
 
     public function beforeSave($insert){
@@ -136,24 +143,41 @@ class History extends \common\models\History
         return true;
     }
 
+    /**
+     * @deprecated
+     * @return bool
+     */
     public function isOpt(){
-        if(!empty($this->isOpt)){
-            return $this->isOpt;
-        }
-
-        $this->isOpt = ($this->orderSumm() >= 800);
-
-        return $this->isOpt;
+        return $this->isWholesale();
     }
 
-    public function orderSumm(){
-        if(!empty($this->summ)){
-            return $this->summ;
+    /**
+     * Возвращает, оптовый-ли заказ
+     *
+     * @return bool
+     */
+    public function isWholesale(){
+        if(empty($this->isWholesale)){
+           $this->isWholesale = ($this->orderSum >= 800);
         }
 
-        $this->summ = SborkaItem::find()->select("SUM((`originalPrice` * `originalCount`))")->where(['orderID' => $this->id])->scalar();
+        return $this->isWholesale;
+    }
 
-        return $this->summ;
+    public function getOrderSum(){
+        if(empty($this->sum)){
+            $this->sum = SborkaItem::find()->select("SUM((`originalPrice` * `originalCount`))")->where(['orderID' => $this->id])->scalar();
+        }
+
+        return $this->sum;
+    }
+
+    /**
+     * @deprecated
+     * @return double
+     */
+    public function orderSumm(){
+        return $this->orderSum;
     }
 
     public function orderRealSumm(){

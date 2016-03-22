@@ -123,6 +123,10 @@ class Good extends \yii\db\ActiveRecord
         return GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID])->orderBy('order')->limit(1)->scalar();
     }
 
+    public function getCategorycode(){
+        return $this->category->Code;
+    }
+
     /**
      * @return GoodsPhoto[]
      */
@@ -146,19 +150,6 @@ class Good extends \yii\db\ActiveRecord
         return $this->_category;
     }
 
-    public function behaviors()
-    {
-        return [
-            'LoggableBehavior' => [
-                'class' => 'sammaye\audittrail\LoggableBehavior',
-                'ignored' => [
-                    'Name2',
-                    'ID'
-                ],
-            ]
-        ];
-    }
-
     public function afterFind(){
         $this->wholesale_price = $this->PriceOut1;
         $this->wholesale_real_price = $this->PriceOut1;
@@ -171,10 +162,6 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function beforeSave($insert){
-        if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name){
-            $this->link = TranslitHelper::to($this->Name);
-        }
-
         $this->Description = htmlspecialchars($this->Description);
 
         return parent::beforeSave($insert);

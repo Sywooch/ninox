@@ -239,12 +239,31 @@ class Cashbox extends Component{
             }
         }
 
+        $this->recalculate();
+
+        $this->calcDiscount();
+
+        $this->recalculate();
+
         $cashboxOrder = CashboxOrder::findOne($this->orderID);
 
         if($cashboxOrder){
             $this->cashboxOrder = $cashboxOrder;
             $this->loadCashboxOrder($this->cashboxOrder);
         }
+    }
+
+    public function calcDiscount(){
+        $helper = new PriceRuleHelper();
+        $helper->cartSumm = $this->sum;
+
+        foreach($this->items as $item){
+            if($helper->recalc($item)){
+                $item->save(false);
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -439,6 +458,8 @@ class Cashbox extends Component{
 
         $this->save();
         $this->recalculate();
+        $this->calcDiscount();
+        $this->recalculate();
 
         return true;
     }
@@ -504,6 +525,10 @@ class Cashbox extends Component{
         foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
             $this->goods[$good->ID] = $good;
         }
+
+        $this->recalculate();
+
+        $this->calcDiscount();
 
         $this->recalculate();
 
@@ -738,7 +763,7 @@ class Cashbox extends Component{
             $this->items[$itemID] = new CashboxItem([
                 'orderID'       =>  $this->cashboxOrder->id,
                 'itemID'        =>  $good->ID,
-                'category'      =>  Category::find()->select("Code")->where(['ID' => $good->GroupID])->scalar(),
+                'categoryCode'  =>  $good->categoryCode,
                 'name'          =>  $good->Name,
                 'originalPrice' =>  $this->priceType == 1 ? $good->PriceOut1 : $good->PriceOut2,
                 'discountType'  =>  $good->discountType,
@@ -757,6 +782,8 @@ class Cashbox extends Component{
         if($this->items[$itemID]->save(false)){
             $this->goods[$itemID] = $good;
         }
+
+        $this->calcDiscount();
 
         $this->recalculate();
 

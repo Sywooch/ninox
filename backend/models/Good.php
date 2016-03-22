@@ -9,7 +9,7 @@
 namespace backend\models;
 
 
-use common\models\Category;
+use common\helpers\TranslitHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
@@ -96,6 +96,60 @@ class Good extends \common\models\Good{
         }
 
         return $photo->delete();
+    }
+
+    public function beforeSave($insert)
+    {
+        if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name){
+            $this->link = TranslitHelper::to($this->Name);
+        }
+
+        if(empty($this->link)){
+            $this->link = '-';
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * Добавляет товар в заказ
+     * @param $order History Модель заказа
+     * @param $count integer Колличество
+     *
+     * @return bool Добавлен-ли товар в заказ
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function addToOrder($order, $count = 1){
+        if(empty($order)){
+            throw new \BadFunctionCallException("Невозможно пользоваться данным методом, не передав заказ!");
+        }
+
+        $item = SborkaItem::findOne(['orderID' => $order->ID, 'itemID' => $this->ID]);
+
+        if(!$item){
+            $item = new SborkaItem([
+                'itemID'        =>  $this->ID,
+                'orderID'       =>  $order->ID,
+                'name'          =>  $this->Name,
+                'originalPrice' =>  $order->isWholesale() ? $this->wholesale_price : $this->retail_price
+            ]);
+        }
+
+        $item->count += $count;
+
+        return $item->save(false);
+    }
+
+    public function behaviors(){
+        return [
+            'LoggableBehavior' => [
+                'class' => 'sammaye\audittrail\LoggableBehavior',
+                'ignored' => [
+                    'Name2',
+                    'ID'
+                ],
+            ]
+        ];
     }
 
 }

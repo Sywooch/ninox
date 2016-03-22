@@ -19,21 +19,36 @@ if($questions){
 
 $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 
+$js = <<<'JS'
+$(".arrow-bottom").on('click', function(){
+	$('html, body').animate({
+        scrollTop: $('.arrow-bottom').offset().top - 100
+    }, 1000);
+});
+
+$(".goods-content-icons .main-icons").on('click', function(e){
+	var url = '/?act=goodsRow&type=' + this.getAttribute('data-attribute-tab');
+
+	$.pjax({url: url, container: '#goods_tabs', push: false, replace: false, timeout: 10000,scrollTo: true});
+});
+JS;
+
+$this->registerJs($js);
+
 ?>
-<div class="main-content">
+<div>
 	<div class="main-content-slider">
 		<?=!empty($sliderBanners) ? Slick::widget([
 				'containerOptions' => [
-					'id'    => 'sliderFor',
-					'class' => 'first'
+					'class' => 'main-slider'
 				],
 				'items' =>  $sliderBanners,
 				'clientOptions' => [
-					'arrohow'   => 1,
-					'slidesToSws'	=> false,
+					'arrow'   => 1,
+					'slidesToSws'	=> true,
 					'fade'          => true,
+					'arrows'		=> true,
 					'slidesToScroll'=> 1,
-					'asNavFor'      => '#sliderNav',
 				]
 		]) : '<div style="height: 370px;"></div>'
 		?>
@@ -93,39 +108,27 @@ $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 			</div>
 			<?=Html::tag('div',
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-best']).
-					Html::tag('span', \Yii::t('shop', 'Лучшее')), ['class' => 'main-icons']).
+					Html::tag('span', \Yii::t('shop', 'Лучшее'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'best']).
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-news']).
-					Html::tag('span', \Yii::t('shop', 'Новинки')), ['class' => 'main-icons']).
+					Html::tag('span', \Yii::t('shop', 'Новинки'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'new']).
 				Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-sale']).
-					Html::tag('span', \Yii::t('shop', 'Распродажа')), ['class' => 'main-icons']),
+					Html::tag('span', \Yii::t('shop', 'Распродажа'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'sale']),
+
 				[
 					'class' => 'goods-content-icons'
-				])?>
-			<div class="goods-content-all">
-				<?=\yii\widgets\ListView::widget([
-					'dataProvider'	=>	new \yii\data\ArrayDataProvider([
-						'models'	=>	[
-							Good::findOne(16),
-							Good::findOne(16),
-							Good::findOne(16),
-							Good::findOne(16),
-							Good::findOne(16),
-							Good::findOne(16),
-							Good::findOne(16),
-							Good::findOne(16),
-						]]),
-						'itemView'	=>	function($model){
-							 return $this->render('index/good_card', ['good' => $model]);
-						},
-						'itemOptions'	=>	[
-							'class'	=>	'goods-item'
-						],
-					    'summary'	=>	false
-					])?>
-				<div class="goods-item goods-item-style">
-					<span><?=\Yii::t('shop', 'СМОТРЕТЬ ВСЕ ТОВАРЫ')?></span>
-				</div>
-			</div>
+				]);
+
+			\yii\widgets\Pjax::begin([
+				'id'	=>	'goods_tabs'
+			]);
+
+			echo $this->render('index/goods_row', [
+				'dataProvider'	=>	$goodsDataProvider
+			]);
+
+			\yii\widgets\Pjax::end();
+
+			?>
 		</div>
 	</div>
 	<!--30 px gradiend -->

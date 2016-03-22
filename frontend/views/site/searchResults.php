@@ -26,7 +26,7 @@ echo Html::tag('div', \yii\widgets\Breadcrumbs::widget([
     ])).
     ListView::widget([
         'dataProvider'  =>  $goods,
-        'summary'   =>  \Yii::t('shop', 'Найдено {totalCount} товаров'),
+        'summary'       =>  Html::tag('div', \Yii::t('shop', 'Найдено {totalCount} товаров'), ['class' => 'summary']),
         'itemView'      =>  function($model, $param2, $param3, $widget) use (&$helper){
             $helper->recalc($model, true);
 
@@ -34,6 +34,9 @@ echo Html::tag('div', \yii\widgets\Breadcrumbs::widget([
                 'model' =>  $model
             ]);
         },
+        'layout' => '{summary}'.
+            Html::tag('div', '{items}', ['class' => 'items-grid']).
+            '{pager}',
         'itemOptions'   =>  [
             'class'     =>  'hovered'
         ],

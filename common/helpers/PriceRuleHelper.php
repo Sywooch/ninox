@@ -8,7 +8,6 @@
 
 namespace common\helpers;
 
-use common\models\Good;
 use common\models\Pricerule;
 use DateTime;
 use yii\base\Component;
@@ -16,6 +15,11 @@ use yii\base\Component;
 class PriceRuleHelper extends Component{
 
 	public $cartSumm;
+	public $pricerules = [];
+
+	public function init(){
+		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
+	}
 
 	public function recalc(&$model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
@@ -36,37 +40,35 @@ class PriceRuleHelper extends Component{
 		$model->priceModified = false;
 	}
 
+	/**
+	 * @param $model
+	 * @param $rule
+	 * @return bool
+	 * @deprecated
+	 */
 	public function recalcSborkaItem($model, $rule){
 		return $this->recalcItem($model, $rule, false);
 	}
 
-	/**
-	 * @param Good $model модель товара для пересчёта
-	 * @param Pricerule $rule ценовое правило
-	 * @param bool $categoryGrid вёрстка для сетки товаров
-	 *
-	 * @return bool
-	 */
-	protected function recalcItem(&$model, $rule, $categoryGrid){
+	protected function recalcItem(&$model, $rule, $category){
 		$termsCount = 0;
 		$discount = 0;
-
 		foreach($rule->terms as $keyTerm => $term){
 			if($discount == $termsCount){
 				switch($keyTerm){
 					case 'GoodGroup':
-						$this->checkCategory($term, $model->category->Code, $termsCount, $discount);
+						$this->checkCategory($term, $model->categoryCode, $termsCount, $discount);
 						break;
 					case 'Date':
 						$this->checkDate($term, $termsCount, $discount);
 						break;
 					case 'WithoutBlyamba':
-						if($categoryGrid && !empty($term[0]['term'])){
+						if($category && !empty($term[0]['term'])){
 							$termsCount++;
 						}
 						break;
 					case 'DocumentSum':
-						if(!$categoryGrid){
+						if(!$category){
 							$this->checkDocumentSumm($term, $termsCount, $discount);
 						}
 						break;
@@ -147,6 +149,7 @@ class PriceRuleHelper extends Component{
 			}
 			$cartInfo[$key]['flag'] = true;*/
 		}
+
 		if($discount == $termsCount && $termsCount != 0){
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;
@@ -211,9 +214,8 @@ class PriceRuleHelper extends Component{
 
 	protected function checkDocumentSumm($term, &$termsCount, &$discount){
 		$termsCount++;
-		$cartSumm = !empty($this->cartSumm) ? $this->cartSumm : \Yii::$app->cart->cartWholesaleRealSumm;
 		foreach($term as $ds){
-			if(($cartSumm == $ds['term'] && $ds['type'] == '=') || ($cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($cartSumm <= $ds['term'] && $ds['type'] == '<=')){
+			if(($this->cartSumm == $ds['term'] && $ds['type'] == '=') || ($this->cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($this->cartSumm <= $ds['term'] && $ds['type'] == '<=')){
 				$discount += 1;
 				break;
 			}

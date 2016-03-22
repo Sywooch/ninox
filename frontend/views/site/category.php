@@ -2,6 +2,7 @@
 
 use frontend\helpers\PriceRuleHelper;
 use yii\bootstrap\Html;
+use yii\widgets\ListView;
 
 $this->title = $category->Name;
 $this->params['breadcrumbs'][] = [
@@ -82,13 +83,18 @@ $helper = new PriceRuleHelper();
             <div class="subCategories">
 
             </div>
-            <?=\yii\widgets\ListView::widget([
+            <?=ListView::widget([
                 'dataProvider'  =>  $goods,
-                'itemView'      =>  function($model, $param2, $param3, $widget) use (&$helper){$helper->recalc($model, true);
+                'itemView'      =>  function($model, $param2, $param3, $widget) use (&$helper){
+                    $helper->recalc($model, true);
+
                     return $this->render('_shop_good', [
                         'model' =>  $model
                     ]);
                 },
+                'layout' => '{summary}'.
+                    Html::tag('div', '{items}', ['class' => 'items-grid']).
+                    '{pager}',
 	            'itemOptions'   =>  [
 		            'class'     =>  'hovered'
 	            ],

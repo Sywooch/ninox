@@ -5,6 +5,8 @@ use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
 use frontend\models\Cart;
 use frontend\models\Customer;
+use frontend\models\CustomerWishlist;
+use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use Yii;
 use common\models\Domain;
@@ -23,6 +25,7 @@ use frontend\models\SignupForm;
 use yii\base\ErrorException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -45,12 +48,46 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if(\Yii::$app->request->isAjax){
+            switch(\Yii::$app->request->get("act")){
+                case 'goodsRow':
+                    return $this->renderGoodsRow(\Yii::$app->request->get("type"));
+                    break;
+            }
+        }
+
         return $this->render('index', [
             'leftBanner'        =>  Banner::getByAlias('main_left_banner', false),
             'rightBanner'       =>  Banner::getByAlias('main_right_banner', false),
             'centralBanners'    =>  Banner::getByAlias('slider_v3'),
             'reviews'           =>  Review::getReviews(),
+            'goodsDataProvider' =>  new ArrayDataProvider([
+                'models' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC')->limit('4')->all(),
+                'pagination'    =>  [
+                    'pageSize'  =>  4
+                ]
+            ]),
             'questions'         =>  Question::getQuestions(),
+        ]);
+    }
+
+    public function renderGoodsRow($type){
+        $query = Good::find()->where(['Deleted' => 0]);
+
+        switch($type){
+            case 'sale':
+                $query->andWhere('discountType != 0');
+                break;
+            case 'new':
+            default:
+                $query->orderBy('vkl_time DESC');
+                break;
+        }
+
+        return $this->renderAjax('index/goods_row', [
+            'dataProvider'  =>  new ArrayDataProvider([
+                'models'    =>  $query->limit(4)->all()
+            ])
         ]);
     }
 
@@ -67,7 +104,7 @@ class SiteController extends Controller
 
         $mainCategory = null;
 
-        if(strlen($good->category->Code) != 3){
+        if(strlen($good->categoryCode) != 3){
             foreach($good->category->getParents() as $parent){
                 if(empty($mainCategory)){
                     $mainCategory = $parent;
@@ -172,10 +209,12 @@ class SiteController extends Controller
 
         if(\Yii::$app->request->post("OrderForm")){
             if($order->validate() && $order->create()){
+                \Yii::trace('created order');
                 return $this->render('order_success', [
                     'model' =>  $order
                 ]);
             }
+            \Yii::trace($order->getErrors());
         }
 
         $this->layout = 'order';
@@ -189,6 +228,14 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionGetcart(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException();
+        }
+
+        return $this->renderAjax('_cart_items');
+    }
+
     public function actionModifycart(){
         \Yii::$app->response->format = 'json';
 	    $itemID = \Yii::$app->request->post("itemID");
@@ -198,24 +245,86 @@ class SiteController extends Controller
 	    $items = [];
 	    foreach(\Yii::$app->cart->goods as $good){
 			if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){
+                $discount = 0;
+                switch($good->discountType){
+                    case 1:
+                        $discount = '-'.Formatter::getFormattedPrice($good->discountSize);
+                        break;
+                    case 2:
+                        $discount = '-'.$good->discountSize.'%';
+                        break;
+                    default:
+                        break;
+                }
 				$items[$good->ID] = [
-					'retail'      =>  Formatter::getFormattedPrice($good->retail_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
-					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
-					'discount'    =>  $good->discountSize ? '-'.$good->discountSize.($good->discountType == 1 ? \Yii::$app->params['domainInfo']['currencyShortName'] : ($good->discountType == 2 ? '%' : '')) : 0,
-					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+					'retail'      =>  Formatter::getFormattedPrice($good->retail_price),
+					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price),
+					'discount'    =>  $discount,
+					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart),
 				];
 			}
 	    }
 	    return [
 		    'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
 			'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),
-	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm).' '.\Yii::$app->params['domainInfo']['currencyShortName'],
+	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm),
 		    'remind'        =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
 		    'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
 		    'wholesale'     =>  \Yii::$app->cart->wholesale,
 		    'count'         =>  \Yii::$app->cart->itemsCount,
 		    'items'         =>  $items,
 	    ];
+    }
+
+    public function actionSetitemrate(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        $rate = \Yii::$app->request->post("rate");
+        if($itemID && $rate){
+            $itemRate = ItemRate::findOne([
+                'itemID'        =>  $itemID,
+                'ip'            =>  sprintf('%u', ip2long(\Yii::$app->request->getUserIP())),
+                'customerID'    =>  \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->id
+            ]);
+            if(!$itemRate){
+                $itemRate = new ItemRate([
+                    'itemID'        =>  $itemID,
+                    'ip'            =>  sprintf('%u', ip2long(\Yii::$app->request->getUserIP())),
+                    'customerID'    =>  \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->id,
+                ]);
+            }
+
+            $itemRate->rate = $rate;
+            $itemRate->date = date('Y-m-d H:i:s');
+
+            $itemRate->save(false);
+            return $itemRate->average;
+        }
+    }
+
+    public function actionAddtowishlist(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        if($itemID && !\Yii::$app->user->isGuest){
+            $wish = CustomerWishlist::findOne([
+                'itemID'        =>  $itemID,
+                'customerID'    =>  \Yii::$app->user->id
+            ]);
+            if(!$wish){
+                $wish = new CustomerWishlist([
+                    'itemID'        =>  $itemID,
+                    'customerID'    =>  \Yii::$app->user->id,
+                ]);
+            }
+
+            $wish->price = Good::findOne($itemID)->wholesale_price;
+            $wish->date = date('Y-m-d H:i:s');
+
+            $wish->save(false);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function actionSuccess($order = []){
@@ -288,7 +397,7 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->goBack();
         }
 
         $model = new LoginForm();
@@ -312,14 +421,55 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * Формирует и возвращает набор слов для поиска
+     *
+     * @param       $string
+     * @internal   	param $getSearchStatement
+     * @return      array|bool
+     * @author     	Дмитрий Панченко <alanwolf88@gmail.com>
+     * @version   	1.0
+     */
+    function getSearchStatement($string){
+        $vowels = array(
+            'ru' => '[аеиоуыэюяьъй]',
+            'uk' => '[аеиіоуєюяїьй]'
+        );
+        $pattern = $vowels[\Yii::$app->language];
+        $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';
+        $return = '';
+        $r1 = '';
+        $r2 = '';
+        $string = mb_strtolower($string, 'UTF-8');
+        //$string = preg_replace('/\w/', '', $string); allow latin symbols
+        $string = preg_replace('/[.,;\'*"]/', ' ', $string);
+        $words = explode(' ', $string);
+        foreach($words as $word){
+            $word = trim($word, ' ');
+            if(mb_strlen($word, 'UTF-8') > 3 || (filter_var($word, FILTER_VALIDATE_INT) && mb_strlen($word, 'UTF-8') > 2)){
+                $r1 .= '+'.$word.' ';
+                $word = preg_replace($pattern, '', $word);
+                $r2 .= '+'.$word.'* ';
+            }
+        }
+        $return = (($r1 != '') ? '>('.$r1.')' : '').' '.(($r2 != '') ? '<('.$r2.')' : '');
+        return $return;
+    }
+
     public function actionSearch(){
         $suggestion = \Yii::$app->request->get("string");
 
+        $name = $this->getSearchStatement($suggestion);
+
         $goodsQuery = Good::find()
-            ->where(['like', '`goods`.`Name`', $suggestion])
+            ->select("`goods`.*, (MATCH(`goods`.`Name`) AGAINST('{$name}' IN BOOLEAN MODE)) AS `relevant`")
+            ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+            ->where("MATCH(`goods`.`Name`) AGAINST('{$name}' IN BOOLEAN MODE)")
             ->orWhere(['like', '`goods`.`Code`', $suggestion])
             ->orWhere(['like', '`goods`.`BarCode2`', $suggestion])
-            ->orWhere(['like', '`goodsgroups`.`name`', $suggestion]);
+            ->orWhere(['like', '`goodsgroups`.`Name`', $suggestion])
+            ->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+            ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC');
 
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
@@ -353,7 +503,10 @@ class SiteController extends Controller
 
         return $this->render('searchResults', [
             'goods' =>  new ActiveDataProvider([
-                'query' =>  $goodsQuery
+                'query' =>  $goodsQuery,
+                'pagination'    =>  [
+                    'pageSize'  =>  '15'
+                ]
             ])
         ]);
     }
