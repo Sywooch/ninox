@@ -535,8 +535,51 @@ Html::tag('div', OrdersSearchWidget::widget([
                 }).on(\'pjax:send\', function(){
                     $(selector + "-container").addClass(\'kv-grid-loading\')
                 }).off(\'pjax:complete\').on(\'pjax:complete\', function(){
+                    kvExpandRow({
+                        "gridId": selector.substr(1),
+                        "hiddenFromExport":true,
+                        "detailUrl":"/orders/getorderpreview",
+                        "expandTitle":"Развернуть",
+                        "collapseTitle":"Свернуть",
+                        "expandAllTitle":"Развернуть все",
+                        "collapseAllTitle":"Свернуть все",
+                        "rowCssClass":"default",
+                        "animationDuration":"slow",
+                        "expandOneOnly":false,
+                        "enableRowClick":false,
+                        "enableCache":true,
+                        "rowClickExcludedTags":["A","BUTTON","INPUT"],
+                        "collapseAll":false,
+                        "expandAll":false,
+                        "extraData":[]
+                    });
                     $(selector + "-container").removeClass(\'kv-grid-loading\');
                 });
+
+                if($(selector)[0].getAttribute(\'settedListeners\') == null){
+                    kvExpandRow({
+                        "gridId": selector.substr(1),
+                        "hiddenFromExport":true,
+                        "detailUrl":"/orders/getorderpreview",
+                        "expandTitle":"Развернуть",
+                        "collapseTitle":"Свернуть",
+                        "expandAllTitle":"Развернуть все",
+                        "collapseAllTitle":"Свернуть все",
+                        "rowCssClass":"default",
+                        "animationDuration":"slow",
+                        "expandOneOnly":false,
+                        "enableRowClick":false,
+                        "enableCache":true,
+                        "rowClickExcludedTags":["A","BUTTON","INPUT"],
+                        "collapseAll":false,
+                        "expandAll":false,
+                        "extraData":[]
+                    });
+
+                    $(selector)[0].setAttribute(\'settedListeners\', \'true\');
+                }
+
+                console.log(selector.substr(1));
             }
 
             if($("#ordersGridView_internet-pjax").length > 0){

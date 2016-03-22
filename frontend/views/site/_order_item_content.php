@@ -23,7 +23,6 @@
             'class'     =>  'button yellow-button middle-button goToPage',
             'type'      =>  'button',
 	        'data-page' =>  1,
-
         ]);
         ?>
     </div>

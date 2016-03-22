@@ -44,7 +44,7 @@ class OrderForm extends Model{
     public $deliveryRegion;
     public $deliveryAddress;
 
-    public $deliveryType = 1;
+    public $deliveryType = 2;
     public $deliveryParam = 1;
     public $deliveryInfo = '';
 
@@ -246,7 +246,7 @@ class OrderForm extends Model{
                     'itemID'        =>  $good->ID,
                     'name'          =>  $good->Name,
                     'count'         =>  \Yii::$app->cart->has($good->ID),
-                    'originalPrice' =>  \Yii::$app->cart->isWholesale() ? $good->wholesale_price : $good->retail_price,
+                    'originalPrice' =>  \Yii::$app->cart->isWholesale() ? $good->wholesale_real_price : $good->retail_real_price,
                     'discountSize'  =>  $good->discountSize,
                     'discountType'  =>  $good->discountType,
                     'priceRuleID'   =>  $good->priceRuleID,
