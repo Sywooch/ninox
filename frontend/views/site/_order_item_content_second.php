@@ -119,12 +119,48 @@ $tabItems = [];
     ])->radioList($domainConfiguration['deliveryTypes'],[
 		'unselect'  => null,
         'item' => function($index, $label, $name, $checked, $value) use (&$tabItems, $form, $model, $domainConfiguration){
+	        $deliveryType = $value;
 		    $subTabItems = [];
 	        $tabItems[] = [
 		        'content'   =>  $form->field($model, 'deliveryParam', (sizeof($label['params']) > 1 ? [] : (['options' => ['style' => 'display: none']]))
 			        )->radioList($label['params'],[
 				        'unselect'  => null,
-				        'item' => function($index, $label, $name, $checked, $value) use (&$subTabItems){
+				        'item' => function($index, $label, $name, $checked, $value) use (&$subTabItems, $form, $model, $deliveryType){
+						        switch($label['content']){
+							        case 'address':
+								        $label['content'] = Html::tag('div',
+									        $form->field($model, 'deliveryInfo['.$deliveryType.']['.$value.']')->label(\Yii::t('shop', 'Мои адреса:')),
+									        ['class' => 'clear-fix content-data-body-'.$label['content']]);
+								        break;
+							        case 'department':
+								        $label['content'] = Html::tag('div',
+									        $form->field($model, 'deliveryInfo['.$deliveryType.']['.$value.']')->label(\Yii::t('shop', 'Отделение:')).
+									        Html::tag('span',
+										        \Yii::t('shop', 'См. на карте'), [
+											        'id' => 'go-department',
+											        'class' => 'map-icon'
+										        ]
+									        ),
+									        ['class' => 'clear-fix content-data-body-'.$label['content']]);
+								        break;
+							        case 'stock':
+								        $label['content'] = Html::tag('div',
+									        Html::tag('div',
+										        \Yii::t('shop', 'Наш склад находится по адресу:'),
+										        ['class' => 'semi-bold']
+									        ).
+									        \Yii::t('shop', 'г. Киев, ул. Электротехническая, 2:').
+									        Html::tag('span',
+										        \Yii::t('shop', 'См. на карте'), [
+											        'id' => 'go-stock',
+											        'class' => 'map-icon'
+										        ]
+									        ).
+									        Html::tag('div', \Yii::t('shop', 'Время работы с 9:00 до 17:00'), ['class' => 'work-time']).
+									        Html::tag('div', \Yii::t('shop', 'все дни кроме понедельника'), ['class' => 'work-time']),
+									        ['class' => 'content-data-body-'.$label['content']]);
+								        break;
+						        };
 						        $subTabItems[] = [
 							        'content'   =>  $label['content'],
 							        'label'     =>  $label['name'],
@@ -232,7 +268,7 @@ Tabs::widget([
 			Html::tag('span', '?', [
 				'class'         =>  'question-round-button',
 				'data-toggle'   =>  'tooltip',
-				'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
+				'title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
 
 			]).
 			$form->field($model, 'paymentParam', ['options' => ['class' => 'payment-type-'.$value], 'template' => Html::tag('div', '{input}{label}', (sizeof($label['params']) > 1 ? [] : ['class' => 'payment-params-none']))])->radioList($label['params'], [

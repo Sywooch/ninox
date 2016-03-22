@@ -46,7 +46,7 @@ class OrderForm extends Model{
 
     public $deliveryType = 2;
     public $deliveryParam = 1;
-    public $deliveryInfo = '';
+    public $_deliveryInfo = '';
 
     public $paymentType = 1;
     public $paymentParam = 0;
@@ -71,6 +71,14 @@ class OrderForm extends Model{
         parent::init();
     }
 
+    public function getDeliveryInfo(){
+        return $this->_deliveryInfo;
+    }
+
+    public function setDeliveryInfo($val){
+        $this->_deliveryInfo = $val[$this->deliveryType][$this->deliveryParam];
+    }
+
     public function rules()
     {
         return [
@@ -82,12 +90,16 @@ class OrderForm extends Model{
             [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
             ['deliveryInfo', 'required', 'when' => function(){
                 return in_array($this->deliveryType, [1, 2]);
-            }],
+            },
+                'whenClient' => "function(attribute, value){
+                    console.log(attribute);
+                    return $(attribute.input).parents('.tab-pane.active').length > 1;
+                }"],
             [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required',
                 'when' => function(){
                     return $this->anotherReceiver != 0;
                 },
-                'whenClient' => "function(attribute, value){
+                'whenClient' => "function(attribute, value){console.log(attribute);
                     return $(attribute.input).parents('.tab-pane.active').length;
                 }"
             ]
@@ -108,6 +120,7 @@ class OrderForm extends Model{
             'customerEmail'          =>  \Yii::t('shop', 'Эл. почта'),
             'deliveryCity'           =>  \Yii::t('shop', 'Город'),
             'deliveryRegion'         =>  \Yii::t('shop', 'Регион'),
+            'deliveryInfo'           =>  \Yii::t('shop', 'Данные о доставке'),
             'anotherReceiverName'    =>  \Yii::t('shop', 'Имя'),
             'anotherReceiverSurname' =>  \Yii::t('shop', 'Фамилия'),
             'anotherReceiverPhone'   =>  \Yii::t('shop', 'Телефон*'),

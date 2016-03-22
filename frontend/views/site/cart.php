@@ -62,9 +62,9 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 				Html::tag('span', '?', [
 					'class'         =>  'question-round-button',
 					'data-toggle'   =>  'tooltip',
-					'data-title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
+					'title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
 				]).
-				\Yii::t('shop', 'Предварительная сумма к оплате'), [
+				Html::tag('div', \Yii::t('shop', 'Предварительная сумма к оплате'), ['class' => 'text']), [
 				'class' =>  'amount-cart-text'
 			]).
 			Html::tag('div', Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm), [
