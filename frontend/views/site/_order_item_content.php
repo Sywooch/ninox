@@ -8,7 +8,18 @@
     $form->field($model, 'deliveryRegion'),
     $form->field($model, 'customerEmail')?>
     <div class="next-button">
-        <?=\yii\helpers\Html::button('Далее', [
+        <?php
+        /*$form = ActiveForm::begin([
+            'id' => '',
+            'enableClientValidation'=> true,
+            'validateOnSubmit' => true, // this is redundant because it's true by default
+        ]);
+
+        /*$form = $this->beginWidget('CActiveForm', [
+            'clientOptions' => [
+                'afterValidate' => 'js:function(form, data, hasError) {if(!hasError){$('.[type=>submit].').removeAttr('.disabled.') } }'  ]]);*/
+
+        echo \yii\helpers\Html::button('Далее', [
             'class'     =>  'button yellow-button middle-button goToPage',
             'type'      =>  'button',
 	        'data-page' =>  1,

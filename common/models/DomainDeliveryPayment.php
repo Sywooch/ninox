@@ -108,13 +108,13 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 					case 'address':
 						$content = Html::tag('div',
 							\Yii::t('shop', 'Мои адреса:').
-							Html::input('text', 'OrderForm[deliveryInfo]'),
+							Html::input('text', 'OrderForm[deliveryInfo]['.$config->deliveryType.']'),
 							['class' => 'content-data-body-'.$options->content]);
 						break;
 					case 'department':
 						$content = Html::tag('div',
 							\Yii::t('shop', 'Отделение:').
-							Html::input('text', 'OrderForm[deliveryInfo]').
+							Html::input('text', 'OrderForm[deliveryInfo]['.$config->deliveryType.']').
 							Html::tag('span',
 								\Yii::t('shop', 'См. на карте'), [
 									'id' => 'go',
