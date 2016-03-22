@@ -212,7 +212,7 @@ Tabs::widget([
             'content'   =>  Html::tag('div', $form->field($model, 'anotherReceiverName').
 		            $form->field($model, 'anotherReceiverSurname').
 		            $form->field($model, 'anotherReceiverPhone'),
-		            ['class' => 'content-data-body-first']),
+		            ['class' => 'content-data-body-second']),
             'label'     =>  '',
             'id'        =>  '2'
 

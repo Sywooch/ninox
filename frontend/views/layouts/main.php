@@ -313,16 +313,16 @@ $this->beginPage();
 						<div class="call-back">
 							<div class="">
 								<div class="blue-white-phone"></div>
-								<span>0 800 508 208</span>
-								<span>бесплатно со стационарных</span>
+								<span class="">0 800 508 208</span>
+								<span class="">бесплатно со стационарных</span>
 							</div>
-							<span>
+							<span class="">
 								Время работы call-центра:
 							</span>
-							<span>
+							<span class="">
 								вт.-вс: с 9.00 до 18.00
 							</span>
-							<span>
+							<span class="">
 								пн: с 9.00 до 15.00
 							</span>
 							<?=\yii\helpers\Html::button('Перезвоните мне', [

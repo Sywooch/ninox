@@ -95,7 +95,7 @@ $this->registerJs($js);
 
 $this->title = 'Товар "'.$good->Name.'"';
 ?>
-<h1><?=$good->Name?> <small><?=$nowCategory->Name?></small></h1>
+<h1><?=$good->Name?> <small><?=isset($good->category) ? $good->category->Name : ''?></small></h1>
 <div class="panel panel-info">
     <div class="panel-heading">
         <?=$this->render('_showgood_heading', [
@@ -194,14 +194,21 @@ $this->title = 'Товар "'.$good->Name.'"';
                             'encodeLabels'  =>  'false'
                         ]);?>
                         <table class="table good-table">
+                            <?php
+                            if(is_object($good->category)){
+                            ?>
                             <tr>
                                 <td>
                                     Категория:
                                 </td>
                                 <td>
-                                    <a href="/categories/view/<?=$nowCategory->ID?>"><?=$nowCategory->Name?></a>
+                                    <a href="/categories/view/<?=$good->category->ID?>"><?=$good->category->Name?></a>
                                 </td>
                             </tr>
+                            <?php
+                            }
+
+                            ?>
                             <tr>
                                 <td>
                                     Количество:
