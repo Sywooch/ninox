@@ -6,13 +6,11 @@
  * Time: 11:49
  */
 use common\helpers\Formatter;
+use yii\bootstrap\Html;
 
-?>
-<div>
-    <span class="icons-fav-bask"></span>
-    <span><?=$good->Name?></span>
-    <span class="price"><?=Formatter::getFormattedPrice($good->wholesale_price).' '
-        .\Yii::$app->params['domainInfo']['currencyShortName']?>
-    </span>
-</div>
-<div><img src="http://krasota-style.com.ua/img/catalog/<?=$good->ico?>"></div>
+echo Html::tag('div',
+        Html::tag('span', '', ['class' => 'icons-fav-bask']).
+        Html::tag('span', $good->Name).
+        Html::tag('span', Formatter::getFormattedPrice($good->wholesale_price), ['class' => 'price'])
+).
+    Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico));
