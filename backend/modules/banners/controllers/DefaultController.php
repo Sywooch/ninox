@@ -3,6 +3,7 @@
 namespace backend\modules\banners\controllers;
 
 use common\models\Banner;
+use backend\models\BannersCategory;
 use common\models\BannerType;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
@@ -63,22 +64,16 @@ class DefaultController extends Controller
     }
 
     public function actionShowbanners($param){
-        $bannersCategory = BannerType::findOne(['alias' => $param]);
+        $bannersCategory = BannersCategory::findOne(['alias' => $param]);
 
         if(!$bannersCategory){
             throw new NotFoundHttpException("Такая категория баннеров не найдена!");
         }
 
-        $banners = Banner::find()->where(['bannerTypeId' => $bannersCategory->id])->orderBy('bannerOrder DESC')->all();
-
-        if($bannersCategory){
-            return $this->render('bannersList', [
-                'banners'   =>  $banners,
-                'bannersCategory'   =>  $bannersCategory
-            ]);
-        }else{
-
-        }
+        return $this->render('bannersList', [
+            'banners'   =>  $bannersCategory->banners,
+            'bannersCategory'   =>  $bannersCategory
+        ]);
     }
 
     public function actionChangebannerstate(){

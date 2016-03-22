@@ -1,5 +1,7 @@
 <?php
 use evgeniyrru\yii2slick\Slick;
+use frontend\helpers\BannerHelper;
+use frontend\models\BannersCategory;
 use frontend\models\Good;
 use yii\helpers\Html;
 $mainGalleryHtml = [];
@@ -34,7 +36,6 @@ $(".goods-content-icons .main-icons").on('click', function(e){
 JS;
 
 $this->registerJs($js);
-
 ?>
 <div>
 	<div class="main-content-slider">
@@ -58,52 +59,48 @@ $this->registerJs($js);
 		<div class="goods-content">
 			<div class="goods-content-main">
 				<div class="main-slider goods-items">
-					<?=\yii\widgets\ListView::widget([
-						 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
-							 'models'	=>	[
-							 	Good::findOne(16),
-						 	]
-						 ]),
-						 'itemView'	=>	function($model){
-							 return $this->render('index/main-slider', [
-								 'good' => $model
-							 ]);
-						 },
-						 'itemOptions'	=>	[
-							 'class'	=>	''
-						 ],
-						 'summary'	=>	false
+					<?=$this->render('index/main-slider', [
+						'items' => BannerHelper::renderItems(BannersCategory::findOne(['alias' => '2x2'])->banners)
 					])?>
 				</div>
 				<div class="goods-items">
 					<div class="two-items content-items">
-						<?=\yii\widgets\ListView::widget([
-							 'dataProvider'	=>	new \yii\data\ArrayDataProvider([
-								 'models'	=>	[
-								 	Good::findOne(16),
-								 	Good::findOne(16),
-								]
-							 ]),
-							 'itemView'	=>	function($model){
-								 return $this->render('index/banner', ['good' => $model]);
-							 },
-							 'itemOptions'	=>	[
-								 'class'	=>	'goods-item'
-							 ],
-							 'summary'	=>	false
-						 ])?>
+                        <?php
+                        if(!empty(BannersCategory::findOne(['alias' => '1x1.1'])->banners)){
+                            echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.1'])->banners[0]);
+                        }else{
+                            echo $this->render('index/banner');
+                        }
+
+                        if(!empty(BannersCategory::findOne(['alias' => '1x1.2'])->banners)){
+                            echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.2'])->banners[0]);
+                        }else{
+                            echo $this->render('index/banner');
+                        }
+                        ?>
 					</div>
 					<div class="two-items content-banners">
 						<?php
-						echo $this->render('index/banner2');
-						?>
-						<?php
-						echo $this->render('index/banner3');
+						if(!empty(BannersCategory::findOne(['alias' => '1x1.3'])->banners)){
+                            echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.3'])->banners[0]);
+                        }else{
+							echo $this->render('index/banner2');
+						}
+
+						if(!empty(BannersCategory::findOne(['alias' => '1x1.4'])->banners)){
+                            echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.4'])->banners[0]);
+                        }else{
+							echo $this->render('index/banner3');
+						}
 						?>
 					</div>
 				</div>
 				<?php
-				echo $this->render('index/banner4');
+                if(!empty(BannersCategory::findOne(['alias' => '1x2'])->banners)){
+                    echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x2'])->banners[0]);
+                }else{
+                    echo $this->render('index/banner4');
+                }
 				?>
 			</div>
 			<?=Html::tag('div',
