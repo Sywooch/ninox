@@ -309,22 +309,42 @@ $this->beginPage();
 						?>
 					</div>
 					<div class="phone-number">
-						<span class="number">(044)257-45-54</span>
+						<span class="number">(044) 257-45-54</span>
 						<div class="call-back">
-							<div class="">
+							<div>
 								<div class="blue-white-phone"></div>
-								<span class="">0 800 508 208</span>
-								<span class="">бесплатно со стационарных</span>
+								<span class="semibold">0 800 508 208</span>
+								<span class="free-call">бесплатно со стационарных</span>
 							</div>
-							<span class="">
-								Время работы call-центра:
-							</span>
-							<span class="">
-								вт.-вс: с 9.00 до 18.00
-							</span>
-							<span class="">
-								пн: с 9.00 до 15.00
-							</span>
+							<!--<ul class="city-number">
+								<li>Колонка 1</li>
+								<li>044 232 82 20</li>
+								<li>Колонка 1</li>
+								<li>048 735 10 80</li>
+							</ul>-->
+							<div class="city-number">
+								<span class="city">Киев</span>
+								<span>044 232 82 20</span>
+								<span class="city">Одесса</span>
+								<span>048 735 10 80</span>
+								<span class="city">моб. МТС</span>
+								<span>050 677 54 56</span>
+								<span class="city">моб. Киевстар</span>
+								<span>067 507 87 73</span>
+								<span class="city">моб. Life</span>
+								<span>063 334 49 15</span>
+							</div>
+							<div class="work-time">
+								<span class="">
+									Время работы call-центра:
+								</span>
+								<span class="">
+									вт.-вс: с 9.00 до 18.00
+								</span>
+								<span class="">
+									пн: с 9.00 до 15.00
+								</span>
+							</div>
 							<?=\yii\helpers\Html::button('Перезвоните мне', [
 								'type'  =>  'submit',
 								'class' =>  'yellow-button middle-button',
@@ -337,6 +357,17 @@ $this->beginPage();
 							<div class="desire-icon"></div>
 							<div class="count">5</div>
 							<span>Желания</span>
+							<div class="in-basket">
+								<span>Николай, в Вашей корзине 30 товаров</span>
+								<span>на сумму 17 500 грн.</span>
+								<span class="price-info">Вы покупаете по оптовым ценам</span>
+								<?=\yii\helpers\Html::button('Оформить заказ', [
+									'type'  =>  'submit',
+									'class' =>  'yellow-button middle-button',
+									'id'    =>  'submit'
+								])?>
+								<a href="">Перейти в корзину</a>
+							</div>
 						</div>
 						<?=CartWidget::widget(['remodalInstance' => $cartModal])?>
 					</div>

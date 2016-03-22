@@ -2080,7 +2080,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .question-round-button{
-	width: 16px;
+	/*width: 16px;
 	height: 16px;
 	font-size: 13px;
 	background: #29A1E0 none repeat scroll 0% 0%;
@@ -2088,6 +2088,17 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	color: #FFF;
 	cursor: pointer;
 	display: inline-block;
+	text-align: center;*/
+	width: 16px;
+	height: 16px;
+	font-size: 14px;
+	background: #29A1E0 none repeat scroll 0% 0%;
+	border-radius: 50%;
+	color: #FFF;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	line-height: 14px;
 }
 
 /*========* END ORDER *=========*/
@@ -3435,7 +3446,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-top: 3px;
 }
 
-.header .phone-number span{
+.header .phone-number .number{
 	padding-left: 5px;
 	vertical-align: middle;
 	font-size: 18px;
@@ -3444,30 +3455,97 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header .phone-number .call-back{
-	height: 330px;
+	/*height: 330px;*/
 	width: 285px;
 	position: absolute;
 	background: #ffffff;
 	border-radius: 3px;
-	box-shadow: 0px 1px 3px -1px #000000;
-	margin-top: 15px;
+	box-shadow: 0px 1px 3px -1px rgba(0, 0, 0, 0.5);
+	margin-top: 14px;
 	margin-left: 10px;
 	display: none;
-	z-index: 5;
+	z-index: 115;
 	padding: 25px;
 }
 
 .call-back .yellow-button{
 	border-bottom: 3px solid rgb(233, 202, 111);
+	margin: auto;
+	display: block;
 }
 
 .call-back .blue-white-phone{
 	width: 40px;
 	height: 40px;
-	color: #1b99db;
+	float: left;
+	border-radius: 50%;
+	margin-right: 13px;
+	text-align: initial;
+	background: #1b99db url("/img/site/white-phone.png") no-repeat center;
+	cursor: pointer;
 }
 
-.header .phone-number .call-back:before, .header .phone-number .call-back:after{
+.call-back .semibold{
+	font-size: 24px;
+	font-family: OpenSans-Semibold;
+	color: #4f4f4f;
+	margin-top: -5px;
+	height: 26px;
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+.call-back .free-call{
+	font-size: 12px;
+}
+
+.call-back .city-number{
+	overflow: auto;
+	margin-top: 15px;
+	margin-left: 5px;
+}
+
+.call-back .city{
+	float: left;
+	width: 130px;
+	font-family: OpenSans !important;
+}
+
+.call-back .city-number span{
+	font-family: OpenSans-Semibold;
+	font-size: 14px;
+	color: #4f4f4f;
+	height: 15px;
+	line-height: 15px;
+	display: inline-block;
+	overflow: auto;
+}
+
+.call-back .work-time span{
+	display: block;
+	text-align: center;
+}
+
+.call-back .work-time{
+	margin-bottom: 15px;
+	margin-top: 10px;
+}
+
+/*.call-back .city-number li{
+	display: block;
+	float: left;
+	width: 45%;
+	font-size: 14px;
+	color: #4f4f4f;
+}
+
+.call-back .city-number{
+	overflow: auto;
+	margin-top: 25px;
+	margin-left: 5px;
+}*/
+
+/*.header .phone-number .call-back:before, .header .phone-number .call-back:after{
 	content: '';
 	position: absolute;
 	display: inline-block;
@@ -3495,7 +3573,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	-o-transform: rotate(45deg);
 	transform: rotate(45deg);
 	margin-left: 2px;
-}
+}*/
 
 .header .number:before{
 	content: url("/img/site/phone.png");
@@ -3530,6 +3608,44 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: 25px;
 	float: left;
 	text-decoration: none;
+}
+
+.in-basket{
+	/*height: 180px;*/
+	width: 355px;
+	position: absolute;
+	background: #ffffff;
+	border-radius: 3px;
+	box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.5);
+	margin-left: -145px;
+	display: none;
+	z-index: 120;
+	padding: 25px;
+}
+
+.header .desire-basket .in-basket span{
+	color: #4f4f4f;
+	font-size: 14px;
+	margin: 0px;
+	font-family: OpenSans-Semibold;
+	top:0px;
+	cursor: auto;
+	margin-bottom: 10px;
+}
+
+.header  .in-basket .yellow-button{
+
+}
+
+.header .desire-basket  .in-basket .price-info{
+	color: #b2b2b2;
+	font-family: unset;
+}
+
+.in-basket a{
+	color: #4f4f4f;
+	float: right;
+	margin-top: 10px;
 }
 
 .header .desire-basket span{
