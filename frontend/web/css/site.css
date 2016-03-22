@@ -4250,7 +4250,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 /*========* END FOOTER  *=========*/
 
 
-
+.block-2x2-placeholder{
+	height: 450px;
+	width: 450px;
+	border-left: 1px solid rgb(236, 236, 236);
+	box-shadow: 0 1px 0 rgb(236, 236, 236);
+	border-bottom: 1px solid rgb(222, 222, 222);
+	border-right: 1px solid rgb(236, 236, 236);
+	background: white;
+	border-radius: 4px;
+	float: left;
+	margin-right: 10px;
+	margin-left: 10px;
+}
 
 
 

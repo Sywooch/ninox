@@ -2,15 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: bobroid
- * Date: 21.03.16
- * Time: 18:27
+ * Date: 22.03.16
+ * Time: 18:00
  */
 
-namespace frontend\models;
+namespace backend\models;
+
+
+use common\models\Banner;
 
 class BannersCategory extends \common\models\BannersCategory
 {
-
     private $_banners = [];
 
     /**

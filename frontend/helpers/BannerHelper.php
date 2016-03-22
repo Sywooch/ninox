@@ -9,16 +9,16 @@
 namespace frontend\helpers;
 
 
+use common\helpers\Formatter;
 use frontend\models\Banner;
+use frontend\models\Good;
 use yii\base\Component;
 use yii\bootstrap\Html;
+use yii\helpers\Json;
+use yii\web\NotFoundHttpException;
 
 class BannerHelper extends Component
 {
-
-    /*const LAYOUT_2X2 = 'banner2x2';
-    const LAYOUT_1X2 = 'banner1x2';
-    const LAYOUT_1X1 = 'banner1x1';*/
 
     /**
      * @param Banner[] $models
@@ -39,24 +39,94 @@ class BannerHelper extends Component
     /**
      * @param Banner $model
      *
-     * @return string
+     * @return string|null
      */
     public static function renderItem($model){
+        if(empty($model)){
+            return;
+        }
+
+        $banner = '';
+
         switch($model->type){
             case $model::TYPE_IMAGE:
-                return self::renderImageBanner($model);
+                $banner = self::renderImageBanner($model);
                 break;
             case $model::TYPE_HTML:
-                return self::renderHTMLBanner($model);
+                $banner = self::renderHTMLBanner($model);
+                break;
+            case $model::TYPE_GOOD:
+                $banner = self::renderGoodBanner($model);
+                break;
+            case $model::TYPE_GOOD_IMAGE:
+                $banner = self::renderGoodImage($model);
                 break;
         }
+
+        return $banner;
+    }
+
+    /**
+     * @param $banner Banner
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public static function renderGoodBanner($banner){
+        $good = Good::findOne($banner->banner->value);
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар с идентификатором {$banner->banner->value} не найден!");
+        }
+
+        return Html::tag('div', Html::tag('div',
+                Html::tag('span', '', ['class' => 'icons-fav-bask']).
+                Html::tag('span', $good->Name).
+                Html::tag('span', Formatter::getFormattedPrice($good->wholesale_price), ['class' => 'price'])
+            ).
+            Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico)), [
+            'class' =>  'goods-item'
+        ]);
+    }
+
+    /**
+     * @param $banner Banner
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public static function renderGoodImage($banner){
+        $bannerValue = Json::decode($banner->banner->value);
+
+        $good = Good::findOne($bannerValue['goodID']);
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар с идентификатором {$bannerValue['goodID']} не найден!");
+        }
+
+        return
+            Html::tag('div',
+                Html::img('/img/site/'.$bannerValue['image']).
+                Html::tag('span', Formatter::getFormattedPrice($good->wholesale_price), ['class' => 'price icons-fav-bask']), [
+                'class' => 'goods-item'
+            ]);
     }
 
     /**
      * @param Banner $banner
+     *
+     * @return string
      */
     public static function renderHTMLBanner($banner){
+        $content = $banner->banner->value;
 
+        if(!empty($banner->banner->link)){
+            $content = Html::a($content, $banner->banner->link);
+        }
+
+        return Html::tag('div', $content, [
+            'class'	=>	'goods-item goods-item-style'
+        ]);
     }
 
     /**
@@ -65,7 +135,9 @@ class BannerHelper extends Component
      * @return string
      */
     public static function renderImageBanner($banner){
-        return Html::img('http://krasota-style.com.ua/'.$banner->banner->value);
+        $data = Html::img(preg_match('/http/', $banner->banner->value) ? $banner->banner->value : 'http://krasota-style.com.ua/'.$banner->banner->value);
+
+        return !empty($banner->banner->link) ? Html::a($data, $banner->banner->link) : $data;
     }
 
 

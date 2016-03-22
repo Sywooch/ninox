@@ -11,6 +11,7 @@ use Yii;
  * @property integer $type
  * @property integer $bg
  * @property string $category
+ * @property integer $maxDisplayed
  */
 class BannersCategory extends \yii\db\ActiveRecord
 {
@@ -31,7 +32,7 @@ class BannersCategory extends \yii\db\ActiveRecord
         return [
             [['description', 'alias', 'category'], 'required'],
             [['description'], 'string'],
-            [['sort', 'type', 'bg'], 'integer'],
+            [['sort', 'type', 'bg', 'maxDisplayed'], 'integer'],
             [['alias'], 'string', 'max' => 30],
             [['category'], 'string', 'max' => 10]
         ];
@@ -50,6 +51,7 @@ class BannersCategory extends \yii\db\ActiveRecord
             'type' => 'Типы баннеров (image, html etc.) ',
             'bg' => 'Фон баннера',
             'category' => 'Категории',
+            'maxDisplayed'  =>  'Max Displayed',
         ];
     }
 }
