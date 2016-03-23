@@ -28,7 +28,7 @@ class CategoryDropdownWidget extends Widget{
             'items' =>  [
                 [
                     'label'     =>  'Просмотреть',
-                    'url'       =>  Url::toRoute(['showcategory/'.$this->category->ID])
+                    'url'       =>  Url::toRoute(['view/'.$this->category->ID])
                 ],
                 [
                     'label'     =>  'Просмотреть на сайте',
@@ -36,23 +36,27 @@ class CategoryDropdownWidget extends Widget{
                 ],
                 [
                     'label'     =>  'Редактировать',
-                    'url'       =>  Url::toRoute(['showcategory/'.$this->category->ID, 'act' => 'edit'])
+                    'url'       =>  Url::toRoute(['view/'.$this->category->ID, 'act' => 'edit'])
+                ],
+                [
+                    'label'     =>  'Товары этой категории',
+                    'url'       =>  Url::toRoute(['/goods', 'category' => $this->category->Code])
                 ],
                 [
                     'label'     =>  'Добавить',
                     'items'     =>  [
                         [
                             'label'     =>  'Товар',
-                            'url'       =>  Url::toRoute(['addgood', 'category' => $this->category->ID])
+                            'url'       =>  Url::toRoute(['/goods/add', 'category' => $this->category->ID])
                         ],
                         [
                             'label'     =>  'Несколько товаров',
-                            'url'       =>  Url::toRoute(['addgood', 'category' => $this->category->ID, 'mode' => 'lot'])
+                            'url'       =>  Url::toRoute(['/goods/add', 'category' => $this->category->ID, 'mode' => 'lot'])
                         ],
                         '<li class="divider"></li>',
                         [
                             'label'     =>  'Категорию',
-                            'url'       =>  Url::toRoute(['addcategory', 'category' => $this->category->ID])
+                            'url'       =>  Url::toRoute(['add', 'category' => $this->category->ID])
                         ],
                     ],
                 ],

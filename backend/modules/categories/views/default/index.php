@@ -98,7 +98,49 @@ $this->registerJs($js);
 $items = [];
 
 
-echo Html::tag('h1', 'Категории '.(!$nowCategory->isNewRecord ? Html::tag('small', $nowCategory->Name) : ''));
+echo Html::tag('h1', 'Категории '.(!$nowCategory->isNewRecord ? Html::tag('small', $nowCategory->Name) : '')),
+\backend\widgets\SmartFiltersWidget::widget([
+    'items' =>  [
+        [
+            'label'         =>  'Всего товаров: ',
+            'counterValue'  =>  $goodsCount['all']['enabled'] + $goodsCount['all']['disabled'],
+            'labelClass'    =>  'label-info',
+            'filter'        =>  ''
+        ],
+        [
+            'label'         =>  'Отключеных: ',
+            'counterValue'  =>  $goodsCount['all']['disabled'],
+            'labelClass'    =>  'label-danger',
+            'filter'        =>  'disabled'
+        ],
+        [
+            'label'         =>  'Включеных: ',
+            'counterValue'  =>  $goodsCount['all']['enabled'],
+            'labelClass'    =>  'label-success',
+            'filter'        =>  'enabled'
+        ],
+        [
+            'label'         =>  'Другие',
+            'labelClass'    =>  'label-success',
+            'items'         =>  [
+                [
+                    'label'         =>  'Без фотографий',
+                    'filter'        =>  'withoutPhoto'
+                ],
+                [
+                    'label'         =>  'Без аттрибутов',
+                    'filter'        =>  'withoutAttributes'
+                ],
+                [
+                    'label'         =>  'На распродаже',
+                    'filter'        =>  'onSale'
+                ],
+            ]
+        ],
+    ]
+]),
+Html::tag('br', '', ['style' => '']),
+Html::tag('div', '', ['class' => 'clearfix']);
 
 if(!$nowCategory->isNewRecord){
     echo $this->render('_category_actions', [
