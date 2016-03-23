@@ -12,6 +12,9 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'assetManager'  =>  [
+            'linkAssets'    =>  true
+        ],
         'cache' =>  [
             'class' =>  'yii\caching\FileCache'
         ],

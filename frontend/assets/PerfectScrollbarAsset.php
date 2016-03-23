@@ -13,10 +13,7 @@ use yii\web\AssetBundle;
 
 class PerfectScrollbarAsset extends AssetBundle
 {
-
-    public $publishOptions = [
-        'forceCopy' => true
-    ];
+    public $sourcePath = "@web";
 
     public $js = [
         'js/perfect-scrollbar.jquery.min.js'

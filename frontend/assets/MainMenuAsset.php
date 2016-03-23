@@ -14,9 +14,7 @@ use yii\web\AssetBundle;
 class MainMenuAsset extends AssetBundle
 {
 
-    public $publishOptions = [
-        'forceCopy' => true
-    ];
+    public $sourcePath = '@web';
 
     public $js = [
         'js/mainMenu.js'
