@@ -731,7 +731,7 @@ h2{
 	float: left;
 }
 
-.item{
+.hovered .item{
 	width: 100%;
 	height: auto;
 	background: #fff;
@@ -900,6 +900,9 @@ h2{
 .item .item-counter-info{
 	display: table;
 	width: 100%;
+}
+
+.hovered .item-counter-info{
 	padding: 15px 0 20px;
 }
 
@@ -908,22 +911,16 @@ h2{
 	vertical-align: middle;
 }
 
-.rating .currentRating, .rating .rateCount{
-	color: transparent;
-	position: absolute;
-	z-index: -10;
-}
-
-.rating > div:before {
-	color: #aeaeae;
-}
-
 .item .item-count-info, .item .item-price-for-one-text, .item .item-wish-text, .item .retail-price{
 	font-size: 13px;
 }
 
 .item .item-price-for-one-text{
 	padding-bottom: 20px;
+}
+
+.item .item-count-info{
+	text-align: left;
 }
 
 .item .item-counter{
@@ -945,7 +942,7 @@ h2{
 	display: table-cell;
 }
 
-.item .rating{
+.hovered .rating{
 	display: table-cell;
 }
 
@@ -1087,12 +1084,11 @@ h2{
 	clear: both;
 }
 
-.rating .review-count, .rating .review-count-text{
+.rating .reviews{
 	float: right;
-	line-height: 1.25em;
 }
 
-.rating .review-count{
+.rating .reviews-count{
 	margin-right: 5px;
 }
 
@@ -2526,7 +2522,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     padding-top: 8px;
 }
 
-.reviews{
+.user-data-content .reviews{
     width: 100%;
     height: 305px;
     float: left;
@@ -2537,7 +2533,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 }
 
-.reviews .text{
+.user-data-content .reviews .text{
     padding-left: 40px;
     padding-top: 35px;
 }

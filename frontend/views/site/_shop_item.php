@@ -30,7 +30,7 @@ $flags = $flags ?
 $discountBlock = function($model){
 	return $model->priceRuleID ? Html::tag('div',
 		Html::tag('div', $model->customerRule ? \Yii::t('shop', 'Опт') : \Yii::t('shop', 'Акция'), ['class' => 'top']).
-		Html::tag('div', Formatter::getFormattedPrice($model->wholesale_price, false, false), ['class' => 'middle']).
+		Html::tag('div', Formatter::getFormattedPrice($model->wholesalePrice, false, false), ['class' => 'middle']).
 		Html::tag('div', \Yii::$app->params['domainInfo']['currencyShortName'], ['class' => 'bottom']),
 		['class' => 'discount']
 	) : '';
@@ -52,16 +52,15 @@ $buyBlock = function($model){
 	return Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
-				Formatter::getFormattedPrice($model->discountType > 0 && $model->priceRuleID == 0 ?
-					$model->wholesale_real_price : $model->wholesale_real_price),
+				Formatter::getFormattedPrice($model->realWholesalePrice),
 				[
 					'class' => ($model->discountType > 0 && $model->priceRuleID == 0 ?
 							'old-wholesale-price' : 'wholesale-price').' gray'
 				]
 			).
-			(($model->wholesale_price != $model->retail_price || ($model->discountType > 0 && $model->priceRuleID == 0)) ?
+			(($model->wholesalePrice != $model->retailPrice || ($model->discountType > 0 && $model->priceRuleID == 0)) ?
 				Html::tag('div',
-					Formatter::getFormattedPrice($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesale_price : $model->retail_real_price),
+					Formatter::getFormattedPrice($model->discountType > 0 && $model->priceRuleID == 0 ? $model->wholesalePrice : $model->realRetailPrice),
 					[
 						'class' => ($model->discountType > 0 && $model->priceRuleID == 0 ? 'wholesale-price red' : 'retail-price gray')
 					]
@@ -76,34 +75,6 @@ $buyBlock = function($model){
 	);
 };
 
-$countBlock = function($model){
-	if($model->isUnlimited || $model->count > 9){
-		$name = \Yii::t('shop', 'достаточно');
-		$class = 'green';
-	}else{
-		if($model->count > 1){
-			$name = \Yii::t('shop', 'заканчивается');
-			$class = 'red';
-		}else if($model->count <= 0){
-			$name = \Yii::t('shop', 'нет в наличии');
-			$class = 'gray';
-		}else{
-			$name = \Yii::t('shop', 'последний');
-			$class = 'gray bold';
-		}
-	}
-
-	return Html::tag('div',
-		Html::tag('div',
-			Html::tag('div', \Yii::t('shop', 'Остаток на складе:'), []).
-			Html::tag('div', $name, ['class' => $class]),
-			['class' => 'item-count-info']
-		).
-		\app\widgets\CartItemsCounterWidget::widget(['model' => $model]),
-		['class' => 'item-counter-info']
-	);
-};
-
 $onePriceBlock = function($model){
 	return $model->priceForOneItem ?
 		Html::tag('div',\Yii::t('shop', 'Цена за единицу:').
@@ -114,79 +85,7 @@ $onePriceBlock = function($model){
 		) : '';
 };
 
-$createStar = function($rate) use ($model){
-	$options = [
-		'class'         => 'icon-star'.($rate <= $model->rate && $model->rate < $rate + 1 ? ' current' : ''),
-		'data-itemId'   => $model->ID,
-		'data-rate'     => $rate,
-		'content'       => $rate
-	];
-	switch($rate){
-		case 5;
-			$options = array_merge($options, [
-				'itemprop' => 'bestRating',
-				'title' => \Yii::t('shop', 'Отлично')
-			]);
-			break;
-		case 4;
-			$options = array_merge($options, [
-				'title' => \Yii::t('shop', 'Хорошо')
-			]);
-			break;
-		case 3;
-			$options = array_merge($options, [
-				'title' => \Yii::t('shop', 'Средне')
-			]);
-			break;
-		case 2;
-			$options = array_merge($options, [
-				'title' => \Yii::t('shop', 'Приемлемо')
-			]);
-			break;
-		case 1;
-			$options = array_merge($options, [
-				'itemprop' => 'worstRating',
-				'title' => \Yii::t('shop', 'Плохо')
-			]);
-			break;
-		default:
-			break;
-
-	}
-	return Html::tag('span', '', $options);
-};
-
-$itemRating = function($model) use ($link, $createStar){
-	return Html::tag('span',
-		Html::tag('span',
-			Html::tag('span',
-				Yii::t('shop', '{n, plural, one{отзыв} few{отзыва} many{отзывов} other{отзывов}}',
-					['n' =>  $model->reviewsCount]
-				), ['class' => 'review-count-text blue']
-			).
-			Html::tag('span', $model->reviewsCount, [
-				'class' => 'review-count icon-bubble blue',
-				'itemprop' => 'reviewCount'
-			]), [
-			'class'     =>  'link-hide',
-			'data-href' =>  $link.'#tab-comments'
-		]).
-		$createStar(5).
-		$createStar(4).
-		$createStar(3).
-		$createStar(2).
-		$createStar(1).
-		Html::tag('span', $model->rate ? $model->rate : 5, [
-			'class' => 'rate-count',
-			'itemprop' => 'ratingValue'
-		]), [
-			'class' => 'rating',
-			'itemscope' => '',
-			'itemtype' => 'http://schema.org/AggregateRating'
-		]);
-};
-
-$itemDopInfoBlock = function($model) use ($link, $itemRating){
+$itemDopInfoBlock = function($model) use ($link){
 	return Html::tag('div',
 		(!empty($model->video) ?
 			Html::tag('span', '', [
@@ -194,7 +93,7 @@ $itemDopInfoBlock = function($model) use ($link, $itemRating){
 				'data-href' =>  $link.'#tab-video'
 			]) : ''
 		).
-		$itemRating($model),
+		$this->render('_shop_item/_shop_item_rate', ['model' => $model, 'link' => $link]),
 		['class' => 'item-dop-info']);
 };
 
@@ -234,7 +133,7 @@ echo Html::tag('div',
 		['class' => 'inner-main']
 	).
 	Html::tag('div',
-		$countBlock($model).
+		$this->render('_shop_item/_shop_item_counter', ['model' => $model]).
 		$onePriceBlock($model).
 		$itemDopInfoBlock($model),
 		['class' => 'inner-sub']),
