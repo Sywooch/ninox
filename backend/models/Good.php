@@ -8,7 +8,6 @@
 
 namespace backend\models;
 
-
 use common\helpers\TranslitHelper;
 use common\models\Category;
 use common\models\GoodOptions;
@@ -16,6 +15,7 @@ use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use yii\db\Query;
 use yii\web\NotFoundHttpException;
+
 
 class Good extends \common\models\Good{
 

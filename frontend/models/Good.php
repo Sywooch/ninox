@@ -9,6 +9,7 @@
 namespace frontend\models;
 
 use common\helpers\Formatter;
+use common\helpers\PriceHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
@@ -18,9 +19,25 @@ use yii\db\Query;
 
 class Good extends \common\models\Good{
 
+    use PriceHelper;
+    /**
+     * @deprecated use wholesalePrice
+     */
     public $wholesale_price = 0;            //Оптовая цена текущая
+
+    /**
+     * @deprecated use retailPrice
+     */
     public $retail_price = 0;               //Розничная цена текущая
+
+    /**
+     * @deprecated use wholesaleRealPrice
+     */
 	public $wholesale_real_price = 0;       //Оптовая цена без скидки
+
+    /**
+     * @deprecated use retailRealPrice
+     */
 	public $retail_real_price = 0;          //Розничная цена без скидки
 	//public $category = '';                //Код категории //Выпилено: Николай Гилко. Для получения кода категории используйте $categorycode
 	public $priceRuleID = 0;                //ID примененного ценового правила
@@ -41,31 +58,17 @@ class Good extends \common\models\Good{
 		return GoodsComment::find()->where(['goodID' => $this->ID])->all();
 	}
 
+    public function getRealRetailPrice()
+    {
+        return $this->priceRuleID == 0 && $this->discountType > 0 ? parent::getRealWholesalePrice() : parent::getRealRetailPrice();
+    }
+
     public function afterFind(){
         parent::afterFind();
 
-	    $this->wholesale_real_price = $this->PriceOut1;
-	    $this->retail_real_price = (($this->priceRuleID == 0 && $this->discountType > 0) ? $this->PriceOut1 : $this->PriceOut2);
 	    $this->num_opt = filter_var($this->num_opt, FILTER_SANITIZE_NUMBER_INT);
 
-        switch($this->discountType){
-            case 1:
-                //Размер скидки в деньгах
-                $this->wholesale_price = $this->wholesale_real_price - $this->discountSize;
-                $this->retail_price = $this->retail_real_price - $this->discountSize;
-                break;
-            case 2:
-                //Размер скидки в процентах
-                $this->wholesale_price = round($this->wholesale_real_price - ($this->wholesale_real_price / 100 * $this->discountSize), 2);
-                $this->retail_price = round($this->retail_real_price - ($this->retail_real_price / 100 * $this->discountSize), 2);
-                break;
-            default:
-                $this->wholesale_price = $this->wholesale_real_price;
-                $this->retail_price = $this->retail_real_price;
-                break;
-        }
-
-        $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesale_price/$this->num_opt)) : 0;
+        $this->priceForOneItem = (!empty($this->num_opt) && $this->num_opt > 1) ? Formatter::getFormattedPrice(($this->wholesalePrice/$this->num_opt)) : 0;
         $this->isNew = (time() - strtotime($this->photodate)) <= (86400 * 10);
     }
 
