@@ -27,7 +27,7 @@ class m160321_152113_change_banners_table extends Migration
 
         $bannersCount = \common\models\Banner::find()->count();
 
-        echo "    > Updating banner->type. Seem {$bannersCount} banners...";
+        echo "    > Updating banner->type. Seem {$bannersCount} banners...\r\n";
 
         $i = 1;
 
@@ -35,11 +35,10 @@ class m160321_152113_change_banners_table extends Migration
             if(!filter_var($banner->type, FILTER_VALIDATE_INT)){
                 $banner->type = $banner->type == 'html' ? Banner::TYPE_HTML : ($banner->type == 'image' ? Banner::TYPE_IMAGE : Banner::TYPE_GOOD);
 
-                echo "\r\n";
                 echo "    > Saving banner {$i} from {$bannersCount}...";
 
                 if($banner->save(false)){
-                    echo " Saved!";
+                    echo " Saved!\r\n";
                 }
             }
 
@@ -49,7 +48,7 @@ class m160321_152113_change_banners_table extends Migration
                     'state'     =>  $banner->state,
                     'value'     =>  $banner->banner_ru,
                     'link'      =>  $banner->link_ru,
-                    'language'  =>  'ru'
+                    'language'  =>  'ru_RU'
                 ]);
 
                 $bannerTranslate->save(false);
@@ -82,7 +81,7 @@ class m160321_152113_change_banners_table extends Migration
             $i++;
         }
 
-        echo "     > removing bad banners... ";
+        echo "     > removing bad banners...\r\n";
 
         foreach(Banner::find()->where(['banner_ru' => '', 'link_ru' => '', 'banner_uk' => '', 'link_uk' => '', 'banner_be' => '', 'link_be' => ''])->each() as $badBanner){
             $badBanner->delete();

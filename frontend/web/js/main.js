@@ -196,7 +196,7 @@ function setItemRate(item){
 
 function addToWishlist(item){
 	if(item.hasClass('is-guest')){
-		document.location = document.location.href.replace(/#.*/, '') + '#login';
+		document.location = document.location.href.replace(/#.*/, '') + '#loginModal';
 		return false;
 	}
 	$.ajax({

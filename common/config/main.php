@@ -1,6 +1,6 @@
 <?php
 return [
-    'language'  =>  'ru',
+    'language'  =>  'ru_RU',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
 	'timeZone'	=>	'UTC',
     'components' => [
@@ -28,7 +28,7 @@ return [
 				'*' => [
 					'class' => 'yii\i18n\PhpMessageSource',
 					'basePath' => '@common/messages', // if advanced application, set @frontend/messages
-					'sourceLanguage' => 'ru',
+					'sourceLanguage' => 'ru_RU',
 					'fileMap' => [
 						//'main' => 'main.php',
 					],
