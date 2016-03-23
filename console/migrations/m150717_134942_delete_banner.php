@@ -7,14 +7,14 @@ class m150717_134942_delete_banner extends Migration
 {
     public function up()
     {
-        $this->execute("ALTER TABLE `banners` ADD COLUMN `deleted` INT(1) DEFAULT 0");
+        $this->addColumn('banners', 'deleted', Schema::TYPE_SMALLINT.' UNSIGNED NOT NULL DEFAULT 0');
     }
 
     public function down()
     {
-        echo "m150717_134942_delete_banner cannot be reverted.\n";
-
-        return false;
+        $this->dropColumn('banners', 'deleted');
+        echo "m150717_134942_delete_banner was successfully reverted.\n";
+        return true;
     }
     
     /*
