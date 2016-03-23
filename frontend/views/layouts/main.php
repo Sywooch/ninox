@@ -10,6 +10,7 @@ use frontend\widgets\CartWidget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use kartik\popover\PopoverX;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
 $this->registerMetaTag(['name' => 'description', 'content' => '']);
@@ -309,8 +310,52 @@ $this->beginPage();
 						?>
 					</div>
 					<div class="phone-number">
-						<span class="number">(044) 257-45-54</span>
-						<div class="call-back">
+
+						<!--<span class="number">(044) 257-45-54</span>-->
+
+						<?php echo PopoverX::widget([
+						'class' => \kop\y2sp\ScrollPager::className(),
+						'header' => '',
+						'placement' => PopoverX::ALIGN_BOTTOM,
+						'content' => '
+										<div class="call-back">
+											<div>
+												<div class="blue-white-phone"></div>
+												<span class="semibold">0 800 508 208</span>
+												<span class="free-call">бесплатно со стационарных</span>
+											</div>
+											<div class="city-number">
+												<span class="city">Киев</span>
+												<span>044 232 82 20</span>
+												<span class="city">Одесса</span>
+												<span>048 735 10 80</span>
+												<span class="city">моб. МТС</span>
+												<span>050 677 54 56</span>
+												<span class="city">моб. Киевстар</span>
+												<span>067 507 87 73</span>
+												<span class="city">моб. Life</span>
+												<span>063 334 49 15</span>
+											</div>
+											<div class="work-time">
+												<span class="">
+													Время работы call-центра:
+												</span>
+												<span class="">
+													вт.-вс: с 9.00 до 18.00
+												</span>
+												<span class="">
+													пн: с 9.00 до 15.00
+												</span>
+											</div>
+										</div>
+									',
+						'footer' => Html::button('Перезвоните мне', ['class'=>'btn btn-sm yellow-button']),
+						'toggleButton' => ['label'=>'(044) 257-45-54', 'class'=>'number', ],
+
+						]);
+
+?>
+						<!--<div class="call-back">
 							<div>
 								<div class="blue-white-phone"></div>
 								<span class="semibold">0 800 508 208</span>
@@ -322,7 +367,7 @@ $this->beginPage();
 								<li>Колонка 1</li>
 								<li>048 735 10 80</li>
 							</ul>-->
-							<div class="city-number">
+							<!--<div class="city-number">
 								<span class="city">Киев</span>
 								<span>044 232 82 20</span>
 								<span class="city">Одесса</span>
@@ -350,26 +395,26 @@ $this->beginPage();
 								'class' =>  'yellow-button middle-button',
 								'id'    =>  'submit'
 							])?>
-						</div>
+						</div>-->
 					</div>
 					<div class="desire-basket">
 						<div class="desire">
 							<div class="desire-icon"></div>
 							<div class="count">5</div>
 							<span>Желания</span>
-							<div class="in-basket">
-								<span>Николай, в Вашей корзине 30 товаров</span>
-								<span>на сумму 17 500 грн.</span>
-								<span class="price-info">Вы покупаете по оптовым ценам</span>
-								<?=\yii\helpers\Html::button('Оформить заказ', [
-									'type'  =>  'submit',
-									'class' =>  'yellow-button middle-button',
-									'id'    =>  'submit'
-								])?>
-								<a href="">Перейти в корзину</a>
-							</div>
 						</div>
 						<?=CartWidget::widget(['remodalInstance' => $cartModal])?>
+						<div class="in-basket">
+							<span>Николай, в Вашей корзине 30 товаров</span>
+							<span>на сумму 17 500 грн.</span>
+							<span class="price-info">Вы покупаете по оптовым ценам</span>
+							<?=\yii\helpers\Html::button('Оформить заказ', [
+								'type'  =>  'submit',
+								'class' =>  'yellow-button middle-button',
+								'id'    =>  'submit'
+							])?>
+							<a href="">Перейти в корзину</a>
+						</div>
 					</div>
 				</div>
 				<!--<ul class="left">
