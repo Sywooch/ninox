@@ -12,10 +12,10 @@ $js = <<<'JS'
     $('#goodAttributesList').addInputArea();
 
     var addEvents = function(element){
-        selectOptions = {"allowClear":true,"options":{"name_format":"GoodOption[%d][option]"},"theme":"krajee","width":"100%","language":"ru"},
+        selectOptions = {"allowClear":true,"options":{"name_format":"GoodOption[%d][option]"},"theme":"krajee","width":"100%","language":{"noResults": function(){ return 'Такого параметра нет. <span class="addOption newAttribute">Добавить?</span>'; }}},
         counter = ($(element[0].parentNode).find(" > *").length - 1),
         depDropOptions = {"depends":["good_attribute_" + counter],"url":"\/goods\/filters?act=getattributes","params":["good_attribute"]},
-        select2options = {"allowClear":false,"theme":"krajee","width":"100%","placeholder":"Выбрать...","language":"ru"},
+        select2options = {"allowClear":false,"theme":"krajee","width":"100%","placeholder":"Выбрать...","language":{"noResults": function(){ return 'Такого параметра нет. <span class="addAttribute newAttribute">Добавить?</span>'; }}},
         select2options2 = {"themeCss":".select2-container--krajee","sizeCss":"input-sm","doReset":true,"doToggle":false,"doOrder":false};
 
         if ($('#good_attribute_' + counter).data('select2')) { $('#good_attribute_' + counter).select2('destroy'); }
@@ -36,6 +36,27 @@ $js = <<<'JS'
     $("#goodAttributesList").on('inputArea.added', function(event, element) {
         addEvents(element);
     });
+
+    $("body").on('click', '.addOption', function(){
+        console.log('clicked .addOption');
+
+        console.log(this.parentNode.parentNode.getAttribute('ID'));
+
+        $.ajax({
+            data: {
+                value: this.parentNode.parentNode.parentNode.parentNode.querySelector("input").value
+            },
+            method: 'POST',
+            url: '/goods/filters?act=newOption',
+            success: function(data){
+                console.log(data);
+            }
+        });
+    });
+
+    $("body").on('click', '.addAttribute', function(){
+        console.log('clicked .addAttribute');
+    });
 JS;
 
 $css = <<<'CSS'
@@ -53,6 +74,11 @@ $css = <<<'CSS'
 #goodAttributesList li button{
     margin-top: -2px;
 }
+
+.newAttribute:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
 CSS;
 
 $this->registerCss($css);
@@ -66,8 +92,13 @@ if(empty($options)){
             'name'      =>  'GoodOption[0][option]',
             'id'        =>  'good_attribute_0',
             'pluginOptions'     =>  [
+                'language'              =>  [
+                    'noResults' =>  new \yii\web\JsExpression("function(){ console.log(); return 'Такого параметра нет. <span class=\"addOption newAttribute\">Добавить?</span>'; }")
+                ],
+                'escapeMarkup'  =>  new \yii\web\JsExpression("function(markup){return markup;}"),
                 'allowClear'    =>  true,
                 'options'   =>  [
+                    'class' =>  'goodOption',
                     'name_format'   =>  "GoodOption[%d][option]"
                 ],
             ],
@@ -81,13 +112,25 @@ if(empty($options)){
             'type'      =>  DepDrop::TYPE_SELECT2,
             'name'      =>  'GoodOption[0][value]',
             'options'   =>  [
+                'class'         =>  'goodAttribute',
                 'id'            =>  'good_attribute_option_0',
                 'placeholder'   =>  'Выбрать...',
                 'name_format'   =>  'GoodOption[%d][value]'
             ],
             'select2Options'    =>  [
                 'size'  =>  'sm',
-                'pluginOptions' =>  ['allowClear'=>false]],
+                'pluginOptions' =>  [
+                    'language'              =>  [
+                        'noResults' =>  new \yii\web\JsExpression("function(){ return 'Такого значения нет. <span class=\"addAttribute newAttribute\">Добавить?</span>'; }")
+                    ],
+                    'options'   =>  [
+                        'class' =>  'goodOption',
+                    ],
+                    'escapeMarkup'  =>  new \yii\web\JsExpression("function(markup){return markup;}"),
+                    'allowClear'            =>  false,
+                    'createSearchChoice'    =>  new \yii\web\JsExpression("function(term, data){return {id: term, text: term}}")
+                ]
+            ],
             'pluginOptions' =>[
                 'depends'       =>  [
                     'good_attribute_0'
@@ -115,7 +158,12 @@ foreach($options as $key => $option){
             'id'        =>  'good_attribute_'.$key,
             'pluginOptions'     =>  [
                 'allowClear'    =>  true,
+                'language'              =>  [
+                    'noResults' =>  new \yii\web\JsExpression("function(){ return 'Такого значения нет. <span class=\"addOption newAttribute\">Добавить?</span>'; }")
+                ],
+                'escapeMarkup'  =>  new \yii\web\JsExpression("function(markup){return markup;}"),
                 'options'   =>  [
+                    'class' =>  'goodAttribute',
                     'name_format'   =>  "GoodOption[%d][option]"
                 ],
             ],
@@ -138,7 +186,17 @@ foreach($options as $key => $option){
             'data'      =>  GoodOptionsVariant::getList($option['optionID']),
             'select2Options'    =>  [
                 'size'  =>  'sm',
-                'pluginOptions' =>  ['allowClear'=>false]],
+                'pluginOptions' =>  [
+                    'allowClear'=>false,
+                    'language'              =>  [
+                        'noResults' =>  new \yii\web\JsExpression("function(){ return 'Такого значения нет. <span class=\"addAttribute newAttribute\">Добавить?</span>'; }")
+                    ],
+                    'options'   =>  [
+                        'class' =>  'goodOption',
+                    ],
+                    'escapeMarkup'  =>  new \yii\web\JsExpression("function(markup){return markup;}"),
+                ]
+            ],
             'pluginOptions' =>[
                 'depends'       =>  [
                     'good_attribute_'.$key

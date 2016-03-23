@@ -12,6 +12,7 @@ use backend\modules\goods\models\GoodMainForm;
 use common\helpers\UploadHelper;
 use common\models\Category;
 use common\models\CategorySearch;
+use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use common\models\GoodSearch;
@@ -745,7 +746,15 @@ class DefaultController extends Controller
 
                 return ['output' => $variants, 'selected' => \Yii::$app->request->post("selected")];
                 break;
-            //case ''
+            case 'newOption':
+                $option = new GoodOptions([
+                    'name'  =>  \Yii::$app->request->post("value")
+                ]);
+
+                $option->save(false);
+
+                return [$option->id => $option->name];
+                break;
         }
     }
 
