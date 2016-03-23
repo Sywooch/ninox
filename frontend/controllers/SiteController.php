@@ -433,8 +433,8 @@ class SiteController extends Controller
      */
     function getSearchStatement($string){
         $vowels = array(
-            'ru' => '[аеиоуыэюяьъй]',
-            'uk' => '[аеиіоуєюяїьй]'
+            'ru_RU' => '[аеиоуыэюяьъй]',
+            'uk_UA' => '[аеиіоуєюяїьй]'
         );
         $pattern = $vowels[\Yii::$app->language];
         $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';

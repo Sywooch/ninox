@@ -34,15 +34,14 @@ trait PriceHelper
                 return round($price - ($price / 100 * $this->discountSize), 2);
                 break;
             case $this->_discountTypeSize:
-                return $this->realWholesalePrice - $this->discountSize;
+                return $price - $this->discountSize;
                 break;
             case $this->_discountTypeSetPrice:
                 return $this->discountSize;
                 break;
             default:
-                return $this->realWholesalePrice;
+                return $price;
                 break;
         }
     }
-
 }
