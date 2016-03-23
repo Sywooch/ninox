@@ -467,7 +467,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 </div>
             </div>
             <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
-                <p style="font-size: 14px;">Сумма: <span class="summ"><?=\Yii::$app->cashbox->sum?></span> грн. Скидка: <span class="discount"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
+                <p style="font-size: 14px;">Сумма: <?=Html::tag('span', \Yii::$app->cashbox->sum, ['class' => 'summ'])?> грн. Скидка: <span class="discount"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
                 <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=\Yii::$app->cashbox->toPay?></span> грн.</h2>
                 <p class="wholesale-block">Сумма по опту: <span class="wholesale-sum" style="display: inline"><?=\Yii::$app->cashbox->wholesaleSum?></span></p>
                 <p>Количество товаров: <span class="itemsCount"><?=\Yii::$app->cashbox->itemsCount?></span></p>
@@ -520,7 +520,8 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'width' =>  '120px'
                 ],
                 [
-                    'attribute' =>  'name'
+                    'attribute' =>  'name',
+                    'header'    =>  'Наименование товара'
                 ],
                 [
                     'header'    =>  'Кол-во',

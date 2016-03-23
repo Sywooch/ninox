@@ -9,9 +9,12 @@
 namespace cashbox\models;
 
 
+use common\helpers\PriceHelper;
 use common\models\ShopGood;
 
 class Good extends \common\models\Good{
+
+    use PriceHelper;
 
     public $storeCount;
     public $previousStoreCount;
@@ -29,7 +32,6 @@ class Good extends \common\models\Good{
 
             if($good){
                 $good->count -= $this->changedCount;
-                \Yii::trace($this->changedCount);
                 $good->save(false);
             }
         }

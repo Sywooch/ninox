@@ -94,11 +94,8 @@ $this->registerCss($css);
 $this->registerJs($js);
 
 $this->title = 'Товар "'.$good->Name.'"';
-
-echo $good->wholesalePrice;
-
 ?>
-<h1><?=$good->Name?> <small><?=isset($good->category) ? $good->category->Name : ''?></small></h1>
+<h1><?=$good->Name?> <?=isset($good->category) ? Html::tag('small', $good->category->Name) : ''?></h1>
 <div class="panel panel-info">
     <div class="panel-heading">
         <?=$this->render('_showgood_heading', [
