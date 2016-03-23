@@ -18,9 +18,9 @@ if(!empty($banners)){
                 'model' =>  $banner
             ]),
             'options'   =>  [
-                'data-banner-id' => $banner->id,
+                'data-banner-id' => $banner->ID,
                 'height'         => '200px',
-                'class'          => 'list-group-item'.($banner->state != '1' ? ' list-group-item-warning' : '').($banner->deleted == 1 ? ' list-group-item-danger' : '')
+                'class'          => 'list-group-item'.($banner->banner->state != '1' ? ' list-group-item-warning' : '').($banner->deleted == 1 ? ' list-group-item-danger' : '')
             ]
         ];
     }
@@ -125,13 +125,13 @@ $this->registerJs($js);
 ?>
 <h1><?=$this->title?> <small>Баннеры</small></h1>
 <div class="btn-group">
-    <?=\backend\widgets\AddBannerWidget::widget([
+    <?=''/*\backend\widgets\AddBannerWidget::widget([
         'defaultCategory'   =>  $bannersCategory->id
-    ])?>
-    <?=\backend\widgets\AddBannerGroupWidget::widget([
+    ]).
+    \backend\widgets\AddBannerGroupWidget::widget([
         'model'         =>  $bannersCategory,
         'buttonLabel'   =>  '<i class="glyphicon glyphicon-pencil"></i>&nbsp;Редактировать эту категорию'
-    ])?>
+    ])*/?>
 </div>
     <br><br>
 <?=Sortable::widget([

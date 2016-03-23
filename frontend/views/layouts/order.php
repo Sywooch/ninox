@@ -18,7 +18,7 @@ $js = <<< 'SCRIPT'
 /* To initialize BS3 tooltips set this below */
 $(function () {
     $("[data-toggle='tooltip']").tooltip();
-});;
+});
 /* To initialize BS3 popovers set this below */
 $(function () {
     $("[data-toggle='popover']").popover();
@@ -27,17 +27,14 @@ SCRIPT;
 // Register tooltip/popover initialization javascript
 $this->registerJs($js);
 
-
-$cartItemsDataProvider = new \yii\data\ActiveDataProvider([
-    'query' =>  \Yii::$app->cart->goodsQuery()
-]);
-
 $cartModal = new \bobroid\remodal\Remodal([
     'cancelButton'		=>	false,
     'confirmButton'		=>	false,
     'closeButton'		=>	false,
     'content'			=>	$this->render('../site/cart', [
-        'dataProvider'	=>	$cartItemsDataProvider
+        'dataProvider'	=>	new \yii\data\ActiveDataProvider([
+		        'query' =>  \Yii::$app->cart->goodsQuery()
+	        ])
     ]),
     'id'	=>	'modalCart',
     'addRandomToID'		=>	false,

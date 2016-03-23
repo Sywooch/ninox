@@ -17,14 +17,8 @@ class DefaultController extends Controller
 {
 
     public function beforeAction($action){
-        if(isset($_SERVER['HTTP_REFERER'])){
-            preg_match('/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n]+)/', $_SERVER['HTTP_REFERER'], $referer);
-
-            $referer = $referer[0];
-
-            if($referer == \Yii::$app->params['cashbox']){
-                return true;
-            }
+        if(\Yii::$app->request->get("secret") == "secretKeyForPrinter"){
+            return true;
         }
 
         return parent::beforeAction($action);
@@ -51,7 +45,12 @@ class DefaultController extends Controller
             'pagination'    =>  [
                 'pageSize'  =>  0
             ]
+        ]);
 
+        $sborkaItems->setSort([
+            'defaultOrder'  =>  [
+                'added' =>  SORT_ASC
+            ]
         ]);
 
         $itemIDs = $goods = [];

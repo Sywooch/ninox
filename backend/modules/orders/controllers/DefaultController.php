@@ -26,41 +26,6 @@ class DefaultController extends Controller
 {
 
     public function actionIndex(){
-        //Нихуясебе что я тут за хуйню написал
-        //Нужно переместить в HistorySearch почти всё что здесь
-
-
-        /*
-        $queryParts = [];
-
-        $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
-
-        $timeFrom = $timeTo = null;
-
-        switch(\Yii::$app->request->get("ordersSource")){
-            case 'all':
-                break;
-            case 'market':
-                $queryParts[] = 'deliveryType = 5 AND paymentType = 6';
-                break;
-            case 'deleted':
-                $queryParts[] = 'deleted != 0';
-                break;
-            case 'shop':
-            default:
-                $queryParts[] = 'deliveryType != 5 AND paymentType != 6';
-                break;
-        }
-
-        if(!\Yii::$app->request->get("showDeleted") && \Yii::$app->request->get("ordersSource") != 'deleted'){
-            $queryParts[] = 'deleted = 0';
-        }
-
-        if(\Yii::$app->request->get("responsibleUser")){
-            $queryParts[] = 'responsibleUserID = '.\Yii::$app->request->get("responsibleUser");
-        }
-
-         */
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
         $timeFrom = $timeTo = null;
@@ -94,9 +59,6 @@ class DefaultController extends Controller
             'ordersSumm'        =>  0
         ];
 
-	    //TODO: очень много памяти и процессорного времени жрет этот форич, особенно когда записей много. Надо как-то по другому придумать как собрать данную статистику.
-        //TODO: наче получилось уменьшить объем памяти и сократить время выполнения скрипта примерно в 5 раз. Теперь рашбери не должен лагать.
-	    //Подсмотренно вот тут https://github.com/yiisoft/yii2/blob/master/docs/guide/tutorial-performance-tuning.md
 	    foreach($orders->asArray()->each() as $order){
             $ordersStats['totalOrders']++;
             $ordersStats['completedOrders'] += $order['done'];
@@ -244,13 +206,41 @@ class DefaultController extends Controller
         }
 
         return $this->render('order', [
-            'order'             =>  $order,
-            'items'             =>  $sborkaItems,
-            'itemsDataProvider' =>  $itemsDataProvider,
-            'priceRules'        =>  Pricerule::find()->orderBy('priority')->all(),
+            'order'                 =>  $order,
+            'items'                 =>  $sborkaItems,
+            'itemsDataProvider'     =>  $itemsDataProvider,
+            'priceRules'            =>  Pricerule::find()->orderBy('priority')->all(),
             'goodsAdditionalInfo'   =>  $goodsAdditionalInfo,
-            'customer'          =>  $customer
+            'customer'              =>  $customer
         ]);
+    }
+
+    public function actionShowlist($context = false, $ordersSource = false){
+        if(!\Yii::$app->request->isAjax && !$context){
+            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+        }
+
+        if(!$context){
+            $context = !empty(\Yii::$app->request->get("context")) ? true : false;
+        }
+
+        $historySearch = new HistorySearch();
+
+        $return = $this->renderPartial('_ordersList', [
+            'searchModel'       =>  $historySearch,
+            'orderSource'       =>  $ordersSource,
+            'orders'            =>  $historySearch->search(
+                $ordersSource == 'search' ? [] :
+                    $ordersSource != false ? array_merge(['ordersSource' => $ordersSource], \Yii::$app->request->get()) : \Yii::$app->request->get())
+        ]);
+
+        if($context == true){
+            return $return;
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        return $return;
     }
 
     public function actionGetorderpreview(){

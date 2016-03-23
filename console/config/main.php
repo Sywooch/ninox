@@ -15,6 +15,9 @@ return [
         'websocket' => 'morozovsk\yii2websocket\console\controllers\WebsocketController'
     ],
     'components' => [
+        'request'	=>	[
+            'class'	=>	'yii\console\Request'
+        ],
         'log' => [
             'targets' => [
                 [

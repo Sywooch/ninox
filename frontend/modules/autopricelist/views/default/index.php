@@ -42,13 +42,13 @@ echo \yii\widgets\ListView::widget([
         }
 
         $offer = [
-            Html::tag('url', 'http://krasota-style.com.ua/tovar/'.$model->link.'-g'.$model->ID),
+            Html::tag('url', 'http://krasota-style.com.ua/tovar/'.preg_replace('/\&/', '', $model->link).'-g'.$model->ID),
             Html::tag('price', $model->PriceOut2),
             Html::tag('currencyId', 'UAH'),
             Html::tag('categoryId', $model->GroupID),
             Html::tag('market_category', $categories[$model->GroupID]->yandexName),
             Html::tag('picture', 'http://krasota-style.com.ua/img/catalog/'.$model->ico),
-            Html::tag('description', preg_replace('/&\S+;/m', '', $model->Description)),
+            Html::tag('description', preg_replace('/\&/', '', strip_tags($model->Description))),
             Html::tag('manufacturer_warranty', 'true'),
             Html::tag('seller_warranty', 'P1Y')
         ];
@@ -57,12 +57,20 @@ echo \yii\widgets\ListView::widget([
             $offer[] = Html::tag('picture', $addPhoto->value);
         }*/
 
+        if(!empty($model->BarCode1)){
+            $offer[] = Html::tag('barcode', $model->BarCode1);
+        }
+
+        if(!empty($model->BarCode2)){
+            $offer[] = Html::tag('vendorCode', preg_replace('/\&/', '', strip_tags($model->BarCode2)));
+        }
+
         if($vendorModel){
             $offer[] = Html::tag('typePrefix');
             $offer[] = Html::tag('vendor');
             $offer[] = Html::tag('model');
         }else{
-            $offer[] = Html::tag('name', $model->Name);
+            $offer[] = Html::tag('name', preg_replace('/\&/', '', strip_tags($model->Name)));
         }
 
         if(!empty($model->country)){

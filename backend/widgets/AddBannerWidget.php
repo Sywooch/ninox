@@ -61,7 +61,7 @@ STYLE;
         $items = [
             [
                 'label'     =>  'HTML',
-                'content'   =>  $form->field($this->model, 'banner').$form->field($this->model, 'link'),
+                'content'   =>  $form->field($this->model, 'banner_ru').$form->field($this->model, 'link_ru'),
                 'active'    =>  $this->model->type == 'html'
             ],
             [

@@ -15,7 +15,7 @@ use Yii;
  * @property integer $discountType
  * @property integer $discountSize
  * @property integer $priceRuleID
- * @property string $category
+ * @property string $categoryCode
  * @property integer $customerRule
  * @property integer $deleted
  */
@@ -60,7 +60,7 @@ class CashboxItem extends \yii\db\ActiveRecord
             [['itemID', 'orderID'], 'required'],
             [['itemID', 'orderID', 'count', 'discountType', 'discountSize', 'priceRuleID', 'customerRule', 'deleted'], 'integer'],
             [['originalPrice'], 'number'],
-            [['name', 'category'], 'string', 'max' => 255],
+            [['name', 'categoryCode'], 'string', 'max' => 255],
         ];
     }
 
@@ -94,6 +94,8 @@ class CashboxItem extends \yii\db\ActiveRecord
                 $good->save(false);
             }
         }
+
+        return parent::afterDelete();
     }
 
     public function beforeSave($insert){

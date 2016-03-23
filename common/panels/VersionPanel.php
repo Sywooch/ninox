@@ -4,6 +4,7 @@ namespace common\panels;
 use yii\base\Event;
 use yii\base\View;
 use yii\base\ViewEvent;
+use yii\bootstrap\Html;
 use yii\debug\Panel;
 
 
@@ -47,7 +48,7 @@ class VersionPanel extends Panel
      */
     public function getSummary()
     {
-        return "<div class=\"yii-debug-toolbar-block\"><a href=\"".$this->getUrl()."\">Version <span class=\"label\">".$this->getVersion()."</span></a></div>";
+        return Html::tag('div', Html::a('Version '.Html::tag('span', $this->getVersion(), ['class' => 'yii-debug-toolbar__label'])), ['class' => 'yii-debug-toolbar__block']);
     }
 
     /**

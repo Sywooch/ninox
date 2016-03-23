@@ -4,6 +4,7 @@ namespace common\panels;
 use yii\base\Event;
 use yii\base\View;
 use yii\base\ViewEvent;
+use yii\bootstrap\Html;
 use yii\debug\Panel;
 
 
@@ -34,8 +35,8 @@ class ViewsPanel extends Panel
     public function getSummary()
     {
         $url = $this->getUrl();
-        $count = count($this->data);
-        return "<div class=\"yii-debug-toolbar-block\"><a href=\"$url\">Views <span class=\"label\">$count</span></a></div>";
+
+        return Html::tag('div', Html::a('Views '.Html::tag('span', count($this->data), ['class' => 'yii-debug-toolbar__label']), $url), ['class' => 'yii-debug-toolbar__block']);
     }
 
     /**
