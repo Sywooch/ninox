@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
+use frontend\models\BannersCategory;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\CustomerWishlist;
@@ -57,9 +58,9 @@ class SiteController extends Controller
         }
 
         return $this->render('index', [
-            'leftBanner'        =>  Banner::getByAlias('main_left_banner', false),
-            'rightBanner'       =>  Banner::getByAlias('main_right_banner', false),
-            'centralBanners'    =>  Banner::getByAlias('slider_v3'),
+            'leftBanner'        =>  BannersCategory::findOne(['alias' => 'main_left_banner'])->banners[0],//Banner::getByAlias('main_left_banner', false),
+            'rightBanner'       =>  BannersCategory::findOne(['alias' => 'main_right_banner'])->banners[0],//Banner::getByAlias('main_right_banner', false),
+            'centralBanners'    =>  BannersCategory::findOne(['alias' => 'slider_v3'])->banners,
             'reviews'           =>  Review::getReviews(),
             'goodsDataProvider' =>  new ArrayDataProvider([
                 'models' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC')->limit('4')->all(),
@@ -432,8 +433,8 @@ class SiteController extends Controller
      */
     function getSearchStatement($string){
         $vowels = array(
-            'ru' => '[аеиоуыэюяьъй]',
-            'uk' => '[аеиіоуєюяїьй]'
+            'ru_RU' => '[аеиоуыэюяьъй]',
+            'uk_UA' => '[аеиіоуєюяїьй]'
         );
         $pattern = $vowels[\Yii::$app->language];
         $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';

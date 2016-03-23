@@ -100,8 +100,8 @@ $this->registerCss($css);
 ?>
 <h1>Баннеры</h1>
 <div class="btn-group">
-    <?=\backend\widgets\AddBannerGroupWidget::widget([])?>
-    <?=\backend\widgets\AddBannerWidget::widget([])?>
+    <?=''//\backend\widgets\AddBannerGroupWidget::widget([])?>
+    <?=''//\backend\widgets\AddBannerWidget::widget([])?>
 
     <a href="/banners/stats" class="btn btn-default"><i class="glyphicon glyphicon-stats"></i>&nbsp;Статистика баннеров</a>
 </div>

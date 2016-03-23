@@ -214,17 +214,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         </div>
                         <div class="ordering-body-items-price">
                             <div class="ordering-body-items-price-sum">Предварительная сумма к оплате</div>
-                            <div class="question">
-                                <div class="round-button">
-                                    <div class="content-data-title-img">
-                                        <?=Html::tag('a', '?', [
-                                            'data-toggle'   =>  'tooltip',
-                                            'data-title'    =>  'Эта сумма может измениться, в случае если вдруг не будет товаров на складе',
-                                            'class'         =>  'round-button',
-                                        ])?>
-                                    </div>
-                                </div>
-                            </div>
+                            <?=Html::tag('span', '?', [
+                                'data-toggle'       =>  'tooltip',
+                                'title'             =>  'Эта сумма может измениться, в случае если вдруг не будет товаров на складе',
+                                'class'             =>  'question-round-button',
+                            ])?>
                             <div class="semi-bold">
                                 <span class="total-amount"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                             </div>
@@ -239,32 +233,21 @@ $form = \yii\bootstrap\ActiveForm::begin([
                                 ]);
                             ?>
                         </div>
-                        <div class="Terms-of-use">
-                            <div class="text">
-                                Подтверждая заказ, я принимаю условия
-                                <a>пользовательского соглашение</a>
-                            </div>
+                        <div class="terms-of-use">
+                            Подтверждая заказ, я принимаю условия
+                            <a>пользовательского соглашение</a>
                         </div>
-                            <div class="text-align-center"><a href="#modalCart">Редактировать заказ</a></div>
-                            <div class="text-align-center">
-                                <div class="promotional-code">
-                                    <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
-                                        'valueIfNull'   =>  'Ввести промокод'
-                                    ])->label(false)?>
-                                    <div class="question">
-                                        <div class="round-button">
-                                            <div class="content-data-title-img">
-                                                <?=Html::tag('a', '?', [
-                                                    'data-toggle'   =>  'popover',
-                                                    'data-content'  =>  'Если у вас есть промокод от нас (обычно его можно получить в спаме на почту), вы можете ввести его здесь, и получить скидку. Скидка не суммируется с другими скидками.',
-                                                    'data-title'    =>  'Промокод',
-                                                    'class'         =>  'round-button',
-                                                ])?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div class="edit-order"><a href="#modalCart">Редактировать заказ</a></div>
+                            <div class="promotional-code">
+                                <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
+                                    'valueIfNull'   =>  'Ввести промокод'
+                                ])->label(false).
+                                Html::tag('span', '?', [
+                                    'data-toggle'   =>  'popover',
+                                    'data-content'  =>  'Если у вас есть промокод от нас (обычно его можно получить в спаме на почту), вы можете ввести его здесь, и получить скидку. Скидка не суммируется с другими скидками.',
+                                    'data-title'    =>  'Промокод',
+                                    'class'         =>  'question-round-button',
+                                ])?>
                             </div>
                         </div>
                     </div>

@@ -512,7 +512,10 @@ class SiteController extends Controller
             return $this->cashbox->getSummary();
         }
 
-        $good = Good::find()->where(['or', "`BarCode2` = '{$itemID}'", "`BarCode1` = '{$itemID}'", "`Code` = '{$itemID}'", "`ID` = '{$itemID}'"])->one();
+        $good = Good::find()
+            ->where(['or', "`BarCode2` = '{$itemID}'", "`BarCode1` = '{$itemID}'", "`Code` = '{$itemID}'", "`ID` = '{$itemID}'"])
+            ->orderBy('`Barcode2` DESC')
+            ->one();
 
         if(!$good){
             throw new NotFoundHttpException("Товар с идентификатором `".$itemID."` не найден!");

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\models\GoodPhoto;
 use common\helpers\TranslitHelper;
 use Yii;
 
@@ -75,6 +76,10 @@ use Yii;
  * @property string $video
  * @property integer $count
  * @property integer $isUnlimited
+ * @property float realWholesalePrice
+ * @property float realRetailPrice
+ * @property float wholesalePrice
+ * @property float retailPrice
  */
 class Good extends \yii\db\ActiveRecord
 {
@@ -82,11 +87,29 @@ class Good extends \yii\db\ActiveRecord
     const STATE_ENABLED = 1;
     const STATE_DISABLED = 0;
 
+    /**
+     * @deprecated use wholesalePrice
+     */
     public $wholesale_price;
+
+    /**
+     * @deprecated use wholesaleRealPrice
+     */
     public $wholesale_real_price;
+
+    /**
+     * @deprecated use retailPrice
+     */
     public $retail_price;
+
+    /**
+     * @deprecated use retailRealPrice
+     */
     public $retail_real_price;
 
+    /**
+     * @type GoodPhoto array
+     */
     private $_photos = [];
 
     /**
@@ -94,6 +117,93 @@ class Good extends \yii\db\ActiveRecord
      */
     private $_category = null;
 
+    private $_photo = '';
+
+
+    /**
+     * Возвращает оптовую цену товара
+     *
+     * @return float
+     */
+    public function getRealWholesalePrice(){
+        return $this->PriceOut1;
+    }
+
+    /**
+     * Возвращает розничную цену товара
+     *
+     * @return float
+     */
+    public function getRealRetailPrice(){
+        return $this->PriceOut2;
+    }
+
+    /**
+     * Возвращает фото товара
+     *
+     * @deprecated
+     * @return string
+     */
+    public function getIco(){
+        return $this->getPhoto();
+    }
+
+    /**
+     * Возвращает главную фотографию товара
+     *
+     * @return string
+     */
+    public function getPhoto(){
+        if(!empty($this->_photo)){
+            return $this->_photo;
+        }
+
+        return $this->_photo = GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID])->orderBy('order')->limit(1)->scalar();
+
+    }
+
+    /**
+     * Возвращает массив объектов фотографий товара
+     *
+     * @return GoodsPhoto[]
+     */
+    public function getPhotos(){
+        if(!empty($this->_photos)){
+            return $this->_photos;
+        }
+
+        return $this->_photos = GoodsPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+    }
+
+    /**
+     * Возвращает объект категории товара
+     *
+     * @return Category
+     */
+    public function getCategory(){
+        if(empty($this->_category)){
+            $this->_category = Category::findOne($this->GroupID);
+        }
+
+        return $this->_category;
+    }
+
+    /**
+     * Возвращает код категории товара
+     *
+     * @return string
+     */
+    public function getCategorycode(){
+        return $this->category->Code;
+    }
+
+    /**
+     * @param $string
+     * @param array $params
+     * @deprecated Проверить на использование и удалить
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public static function searchGoods($string, $params = []){
         if(empty($params) || $string == ''){
             return [];
@@ -117,37 +227,6 @@ class Good extends \yii\db\ActiveRecord
         $query->limit(10);
 
         return $query->asArray()->all();
-    }
-
-    public function getIco(){
-        return GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID])->orderBy('order')->limit(1)->scalar();
-    }
-
-    public function getCategorycode(){
-        return $this->category->Code;
-    }
-
-    /**
-     * @return GoodsPhoto[]
-     */
-    public function getPhotos(){
-        if(!empty($this->_photos)){
-            return $this->_photos;
-        }
-
-        return $this->_photos = GoodsPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
-    }
-
-    /**
-     *
-     * @return Category
-     */
-    public function getCategory(){
-        if(empty($this->_category)){
-            $this->_category = Category::findOne($this->GroupID);
-        }
-
-        return $this->_category;
     }
 
     public function afterFind(){

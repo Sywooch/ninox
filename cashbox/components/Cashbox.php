@@ -15,7 +15,7 @@ use cashbox\models\CashboxItem;
 use cashbox\models\Order;
 use cashbox\helpers\PriceRuleHelper;
 use common\models\CashboxMoney;
-use common\models\Good;
+use cashbox\models\Good;
 use common\models\Category;
 use common\models\Pricerule;
 use common\models\Promocode;
@@ -338,8 +338,8 @@ class Cashbox extends Component{
         $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = 0;
 
         foreach($this->items as $item){
-            $this->retailSum += ($this->goods[$item->itemID]->PriceOut2 * $item->count);
-            $this->wholesaleSum += ($this->goods[$item->itemID]->PriceOut1 * $item->count);
+            $this->retailSum += ($this->goods[$item->itemID]->retailPrice * $item->count);
+            $this->wholesaleSum += ($this->goods[$item->itemID]->wholesalePrice * $item->count);
             $this->sum += ($item->originalPrice * $item->count);
             $this->toPay += ($item->price * $item->count);
         }
@@ -765,7 +765,7 @@ class Cashbox extends Component{
                 'itemID'        =>  $good->ID,
                 'categoryCode'  =>  $good->categoryCode,
                 'name'          =>  $good->Name,
-                'originalPrice' =>  $this->priceType == 1 ? $good->PriceOut1 : $good->PriceOut2,
+                'originalPrice' =>  $this->priceType == 1 ? $good->realWholesalePrice : $good->realRetailPrice,
                 'discountType'  =>  $good->discountType,
                 'discountSize'  =>  $good->discountSize,
             ]);

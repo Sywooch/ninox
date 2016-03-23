@@ -1,13 +1,12 @@
 <?php
 use common\helpers\Formatter;
-?>
-<span class="item-id"><?=$good->Code?></span>
-<div class="item-image"><img src="http://krasota-style.com.ua/img/catalog/<?=$good->ico?>"></div>
-<span class="short-description"><?=$good->Name?></span>
-<div class="price-and-order">
-        <span class="wholesale-price semi-bold"><?=Formatter::getFormattedPrice($good->wholesale_price).' '
-            .\Yii::$app->params['domainInfo']['currencyShortName']?></span>
-        <span class="retail-price"><?=Formatter::getFormattedPrice($good->retail_price).' '
-            .\Yii::$app->params['domainInfo']['currencyShortName']?></span>
-    <div class="goods-basket"></div>
-</div>
+use yii\bootstrap\Html;
+
+echo Html::tag('span', $good->Code, ['class' => 'item-id']),
+    Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico), ['class' => 'item-image']),
+    Html::tag('span', $good->Name, ['class' => 'short-description']),
+    Html::tag('div', Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'wholesale-price semi-bold']).
+        Html::tag('span', Formatter::getFormattedPrice($good->retailPrice), ['class' => 'retail-price']).
+        Html::tag('div', '', ['class' => 'goods-basket']), [
+        'class' =>  'price-and-order'
+    ]);
