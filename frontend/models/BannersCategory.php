@@ -32,6 +32,7 @@ class BannersCategory extends \common\models\BannersCategory
                 'date'  =>  date('Y-m-d H:i:s')
             ])->leftJoin(BannerTranslation::tableName(), BannerTranslation::tableName().'.ID = '.Banner::tableName().'.ID')
             ->andWhere(BannerTranslation::tableName().'.state = 1')
+            ->andWhere(BannerTranslation::tableName().'.language = \''.\Yii::$app->language.'\'')
             ->orderBy('order ASC');
 
         if(!empty($this->maxDisplayed)){
