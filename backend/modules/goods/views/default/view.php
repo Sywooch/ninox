@@ -94,9 +94,6 @@ $this->registerCss($css);
 $this->registerJs($js);
 
 $this->title = 'Товар "'.$good->Name.'"';
-
-echo $good->wholesalePrice;
-
 ?>
 <h1><?=$good->Name?> <small><?=isset($good->category) ? $good->category->Name : ''?></small></h1>
 <div class="panel panel-info">
