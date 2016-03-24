@@ -557,7 +557,9 @@ class DefaultController extends Controller
                 $options = $deleteOptions = [];
 
                 foreach($request->post("GoodOption") as $optionArray){
-                    $options[$optionArray['option']] = $optionArray['value'];
+                    if(!empty($optionArray['value'])){
+                        $options[$optionArray['option']] = $optionArray['value'];
+                    }
                 }
 
                 foreach($good->options as $optionArray){
@@ -753,7 +755,17 @@ class DefaultController extends Controller
 
                 $option->save(false);
 
-                return [$option->id => $option->name];
+                return ['id' => $option->id, 'name' => $option->name];
+                break;
+            case 'newAttributeOption':
+                $option = new GoodOptionsVariant([
+                    'option'    =>  \Yii::$app->request->post("option"),
+                    'value'     =>  \Yii::$app->request->post("value")
+                ]);
+
+                $option->save(false);
+
+                return ['id' => $option->id, 'name' => $option->value];
                 break;
         }
     }

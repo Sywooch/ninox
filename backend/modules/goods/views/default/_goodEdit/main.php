@@ -58,6 +58,12 @@ $js = <<<'JS'
             elem.removeAttribute('disabled');
         }
     });
+
+    $(".wholesalePrice input").on('keyup', function(){
+        var retailPrice = (parseInt($(this).val()) + parseInt(($(this).val() / 100 * 20)));
+
+        $(".retailPrice input").val(retailPrice);
+    })
 JS;
 
 $this->registerJs($js);
@@ -116,8 +122,8 @@ $form->field($model, 'description')->widget(\bobroid\imperavi\Widget::className(
         'table',
     ]
 ]),
-$form->field($model, 'wholesalePrice', ['addon' => ['prepend' => ['content' => '₴']]]),
-$form->field($model, 'retailPrice', ['addon' => ['prepend' => ['content' => '₴']]]),
+$form->field($model, 'wholesalePrice', ['options' => ['class' => 'form-group wholesalePrice'],'addon' => ['prepend' => ['content' => '₴']]]),
+$form->field($model, 'retailPrice', ['options' => ['class' => 'form-group retailPrice'],'addon' => ['prepend' => ['content' => '₴']]]),
 $form->field($model, 'inPackageAmount', [
     'template'      =>  '{label}'.Html::tag('div', '{input}'.$form
                 ->field($model, 'undefinedPackageAmount', ['options' => ['class' => 'col-xs-3']])
