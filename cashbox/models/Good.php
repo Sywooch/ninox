@@ -27,7 +27,7 @@ class Good extends \common\models\Good{
     }
 
     public function afterSave($insert, $changedAttributes){
-        if(isset($changedAttributes['count'])){
+        if(isset($changedAttributes['count']) && !empty(\Yii::$app->params['configuration'])){
             $good = ShopGood::findOne(['shopID' => \Yii::$app->params['configuration']->store, 'itemID' => $this->ID]);
 
             if($good){
@@ -40,8 +40,10 @@ class Good extends \common\models\Good{
     }
 
     public function afterFind(){
-        $this->storeCount = ShopGood::find()->select('count')->where(['shopID' => \Yii::$app->params['configuration']->store]);
-        $this->previousStoreCount = $this->storeCount;
+        if(!empty(\Yii::$app->params['configuration'])){
+            $this->storeCount = ShopGood::find()->select('count')->where(['shopID' => \Yii::$app->params['configuration']->store]);
+            $this->previousStoreCount = $this->storeCount;
+        }
 
         return parent::afterFind();
     }
