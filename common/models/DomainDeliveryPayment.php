@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use frontend\models\OrderForm;
 use Yii;
 use yii\bootstrap\Html;
 use yii\helpers\Json;
@@ -103,45 +104,7 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 						$config->deliveryParams[0]->description : Html::img($config->deliveryParams[0]->options);
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentTypes'][$config->paymentType] = $config->paymentType;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentParams'][$config->paymentParam] = $options->commissions;
-				$content = '';
-				switch($options->content){
-					case 'address':
-						$content = Html::tag('div',
-							\Yii::t('shop', 'Мои адреса:').
-							Html::input('text', 'OrderForm[deliveryInfo]['.$config->deliveryType.']'),
-							['class' => 'content-data-body-'.$options->content]);
-						break;
-					case 'department':
-						$content = Html::tag('div',
-							\Yii::t('shop', 'Отделение:').
-							Html::input('text', 'OrderForm[deliveryInfo]['.$config->deliveryType.']').
-							Html::tag('span',
-								\Yii::t('shop', 'См. на карте'), [
-									'id' => 'go',
-									'class' => 'map-icon'
-								]
-							),
-							['class' => 'content-data-body-'.$options->content]);
-						break;
-					case 'stock':
-						$content = Html::tag('div',
-							Html::tag('div',
-								\Yii::t('shop', 'Наш склад находится по адресу:'),
-								['class' => 'semi-bold']
-							).
-							\Yii::t('shop', 'г. Киев, ул. Электротехническая, 2:').
-							Html::tag('span',
-								\Yii::t('shop', 'См. на карте'), [
-									'id' => 'go',
-									'class' => 'map-icon'
-								]
-							).
-							Html::tag('div', \Yii::t('shop', 'Время работы с 9:00 до 17:00'), ['class' => 'work-time']).
-							Html::tag('div', \Yii::t('shop', 'все дни кроме понедельника'), ['class' => 'work-time']),
-							['class' => 'content-data-body-'.$options->content]);
-						break;
-				}
-				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['content'] = $content;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['content'] = $options->content;
 
 				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes[0]->description;
 				$array['paymentTypes'][$config->paymentType]['value'] = $config->paymentTypes[0]->id;
