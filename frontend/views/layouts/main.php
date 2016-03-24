@@ -441,7 +441,7 @@ $this->beginPage();
 								'class' =>  'yellow-button middle-button',
 								'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
 							])?>
-							<a href="">Перейти в корзину</a>
+							<a href="#modalCart">Перейти в корзину</a>
 						</div>
 					</div>
 				</div>
