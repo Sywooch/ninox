@@ -3296,6 +3296,24 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-top: 20px;
 }
 
+.header .phone-number .popover.bottom{
+	margin-left: 55px;
+}
+
+.header .phone-number .popover.bottom > .arrow{
+	margin-left: 20px;
+}
+
+.header .phone-number .popover.bottom > .arrow::after{
+	margin-left: -11px;
+	border-bottom-color: #fff;
+	border-top-width: 0;
+}
+
+.header .phone-number .popover > .arrow::after{
+	border-width: 11px;
+}
+
 .sticky .phone-number{
 	padding-top: 3px;
 }
@@ -3339,6 +3357,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .header .phone-number .popover-footer{
 	background: no-repeat;
 	border: none;
+	margin-bottom: 10px;
 }
 
 
@@ -3387,12 +3406,12 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .call-back .city-number span{
 	font-family: OpenSans-Semibold;
-	font-size: 14px;
 	color: #4f4f4f;
+	/*font-size: 14px;
 	height: 15px;
 	line-height: 15px;
 	display: inline-block;
-	overflow: auto;
+	overflow: auto;*/
 }
 
 .call-back .work-time span{
@@ -3401,7 +3420,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .call-back .work-time{
-	margin-bottom: 15px;
 	margin-top: 10px;
 }
 
@@ -3491,10 +3509,43 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #ffffff;
 	border-radius: 3px;
 	box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.5);
-	margin-left: -145px;
+	margin-left: -140px;
 	display: none;
 	z-index: 120;
 	padding: 25px;
+	margin-top: 60px;
+}
+
+.header .desire-basket .in-basket .arrow{
+	margin-left: 63px;
+}
+
+.sticky .desire-basket .in-basket .arrow{
+	margin-left: -8px;
+}
+
+.header .desire-basket .in-basket .items-count{
+	text-decoration: underline;
+	display: inline-block;
+	margin: 0px;
+}
+
+.header .desire-basket .in-basket .all-price{
+	display: inline-block;
+	font-size: 24px;
+	margin: 0px;
+}
+
+.sticky .in-basket{
+	margin-top: 40px;
+}
+
+.basket:hover + .in-basket{
+	display: block;
+}
+
+.in-basket:hover{
+	display: block;
 }
 
 .header .desire-basket .in-basket span{
@@ -4239,6 +4290,53 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 /*========* END FOOTER  *=========*/
 
+/*========* POPOVER-ARROW *=========*/
+
+.popover-arrow.bottom .arrow {
+	top: -11px;
+	left: 50%;
+	margin-left: -11px;
+	border-bottom-color: #999;
+	border-bottom-color: rgba(0, 0, 0, 0.25);
+	border-top-width: 0;
+}
+
+.popover-arrow .arrow {
+	border-width: 11px;
+}
+
+.popover-arrow .arrow, .popover .arrow::after {
+	position: absolute;
+	display: block;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+}
+
+.popover-arrow.bottom .arrow::after {
+	top: 1px;
+	margin-left: -11px;
+	border-bottom-color: #fff;
+	border-top-width: 0;
+	content: " ";
+}
+
+.popover-arrow .arrow::after {
+	border-width: 11px;
+	content: "";
+}
+
+.popover-arrow .arrow, .popover-arrow .arrow::after {
+	position: absolute;
+	display: block;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+}
+
+/*========* POPOVER-ARROW END *=========*/
 
 .block-2x2-placeholder{
 	height: 450px;

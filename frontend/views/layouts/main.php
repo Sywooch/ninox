@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use common\helpers\Formatter;
 use frontend\models\Category;
 use frontend\assets\RuLangAsset;
 use common\components\SocialButtonWidget;
@@ -413,14 +414,32 @@ $this->beginPage();
 							<span>Желания</span>
 						</div>
 						<?=CartWidget::widget(['remodalInstance' => $cartModal])?>
-						<div class="in-basket">
-							<span>Николай, в Вашей корзине 30 товаров</span>
-							<span>на сумму 17 500 грн.</span>
+						<div class="in-basket popover-arrow bottom">
+							<div class="arrow"></div>
+							<span>
+								<?=\Yii::t('shop', '{username}в Вашей корзине ', [
+									'username' => !\Yii::$app->user->isGuest ? \Yii::$app->user->identity->Company.', '
+								: ''
+								]).Html::tag('span', \Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
+								товара}	many{# товаров} other{# товар}}', [
+									'n'	=>	\Yii::$app->cart->itemsCount
+								]), [
+									'class' =>  'items-count'
+								])
+								?>
+							</span>
+							<span>на сумму <?=Html::tag('span', Formatter::getFormattedPrice
+								(\Yii::$app->cart->cartSumm), [
+															'class' =>  'all-price'
+														])?>
+							</span>
 							<span class="price-info">Вы покупаете по оптовым ценам</span>
 							<?=\yii\helpers\Html::button('Оформить заказ', [
 								'type'  =>  'submit',
+								'name'	    =>	'orderType',
+								'value'	    =>	'0',
 								'class' =>  'yellow-button middle-button',
-								'id'    =>  'submit'
+								'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
 							])?>
 							<a href="">Перейти в корзину</a>
 						</div>
