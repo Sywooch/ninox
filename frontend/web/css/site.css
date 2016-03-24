@@ -4336,10 +4336,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border-style: solid;
 }
 
-<<<<<<< HEAD
 /*========* POPOVER-ARROW END *=========*/
 
-=======
 .block-2x2-placeholder{
 	height: 450px;
 	width: 450px;
@@ -4353,7 +4351,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-right: 10px;
 	margin-left: 10px;
 }
->>>>>>> 6582901f419c3022c8301f732b2b4e0e52258044
 
 
 
