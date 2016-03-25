@@ -3347,6 +3347,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .header .phone-number .yellow-button{
 	margin: auto;
 	display: block;
+	box-shadow: 0px 2px 2px -1px rgb(233, 202, 111);
 }
 
 .header .phone-number .popover-title{
@@ -3512,8 +3513,25 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: -140px;
 	display: none;
 	z-index: 120;
-	padding: 25px;
 	margin-top: 60px;
+	padding: 18px;
+	padding-right: 30px;
+}
+
+.in-basket .yellow-button{
+	background: #fcc82d;
+	background: -webkit-linear-gradient(#fee040, #f9b519);
+	background: -o-linear-gradient(#fee040, #f9b519);
+	background: -moz-linear-gradient(#fee040, #f9b519);
+	background: linear-gradient(#fee040, #f9b519);
+	font-size: 15px;
+	font-weight: bold;
+	border-radius: 5px;
+	border-top: 1px solid #fdff27 !important;
+	border: none;
+	box-shadow: 0 4px 2px -2px #a1a1a1;
+	height: 45px;
+
 }
 
 .header .desire-basket .in-basket .arrow{
@@ -3556,6 +3574,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	top:0px;
 	cursor: auto;
 	margin-bottom: 10px;
+	padding-left: 10px;
 }
 
 .header  .in-basket .yellow-button{
@@ -3571,6 +3590,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	color: #4f4f4f;
 	float: right;
 	margin-top: 10px;
+	font-family: OpenSans-Semibold;
+	text-decoration: underline;
 }
 
 .header .desire-basket span{
