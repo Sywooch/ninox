@@ -39,33 +39,28 @@
     padding-left: 5px;
 }
 
-.itemPhotos{
+.item-photos{
     width: 45%;
     float: left;
     padding-right: 40px;
+    position: relative;
 }
 
-.itemPhotos .slick-slide{
+.item-photos .slick-slide{
     height: auto;
 }
 
-.about-order{
+.item-info{
     width: 55%;
     float: left;
 }
 
-.photo-and-order{
-    min-height: 500px;
-}
-
-.itemDopInfo{
+.item-dop-info{
     float: right;
 }
 
-.about-order .code{
+.item-info .code{
     font-size: 12px;
-    float: left;
-    margin-right: 15px;
 }
 
 .pricelist{
@@ -81,10 +76,8 @@
 }
 
 .pricelist-warning{
-    padding-top: 20px;
-    padding-left: 10px;
+    padding: 20px 10px 0;
     font-size: 13px;
-    padding-right: 10px;
 }
 
 .pricelist-warning span{
@@ -194,40 +187,18 @@
     line-height: 25px;
 }
 
-.itemContent{
+.item-card .item-сontent{
     padding-top: 15px;
 }
 
-.title h1{
+.item-card .title{
     font-size: 20px;
     color: #414141;
-    padding: 0px 0px 10px;
-    margin: 0px;
 }
 
-.novelty{
-    color: white;
-    background: #81bb72;
-    font-size: 11px;
-    padding-left: 10px;
-    padding-right: 10px;
-    width: -moz-min-content;
-    float: left;
-}
-
-.code-novelty{
-    height: 15px;
-}
-
-.deliv{
+.item-card .deliv{
     padding-top: 12px;
     padding-bottom: 33px;
-}
-
-.canBuy .yellow-button{
-    font-family: arial, serif;
-    font-size: 15px;
-    font-weight: bold;
 }
 
 .how-much-left{
@@ -243,48 +214,21 @@
     padding-left: 35px;
 }
 
-.minihead{
+.item-card .minihead{
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 10px;
 }
 
-.deliveryType{
-    padding-bottom: 25px;
-}
-
-.payType{
-    padding-bottom: 25px;
-}
-
-.purchase-returns{
-    padding-bottom: 25px;
-}
-
-.guarantee{
-    padding-bottom: 25px;
-}
-
-.minihead:before{
+.item-card .minihead:before{
     display: inline-block;
     vertical-align: middle;
     padding-right: 12px;
     width: 45px;
 }
 
-.deliveryType .minihead:before{
-    vertical-align: middle;
-}
-
-.payType .minihead:before{
-    height: 21px;
-}
-
-.purchase-returns .minihead:before{
-    height: 19px;
-}
-
-.guarantee .minihead:before{
+.item-card .item-dop-info > div{
+    padding-bottom: 25px;
 }
 
 .shareToFriends{

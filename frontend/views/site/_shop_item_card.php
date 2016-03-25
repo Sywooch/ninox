@@ -11,7 +11,7 @@ $reviewModal = new Remodal([
                                                'confirmButton'		=>	false,
                                                'closeButton'		=>	false,
                                                'addRandomToID'		=>	false,
-                                               'content'			=>	$this->render('goodCard/_write_review'),
+                                               'content'			=>	$this->render('_shop_item/_item_tabs/_write_review'),
                                                'id'				=>	'reviewModal',
                                            ]);
 
@@ -38,24 +38,22 @@ $this->params['breadcrumbs'][] = [
     'label' =>  $good->Name
 ];
 
-$captFlags = [];
-
 $tabsItems = [
     [
         'label'     =>  \Yii::t('shop', 'Основное'),
-        'content'   =>  $this->render('goodCard/_tabItem_main', [
+        'content'   =>  $this->render('_shop_item/_item_tabs/_tabItem_main', [
             'good'  =>  $good
         ])
     ],
     [
         'label'     =>  \Yii::t('shop', 'Характеристики'),
-        'content'   =>  $this->render('goodCard/_tabItem_characteristics', [
+        'content'   =>  $this->render('_shop_item/_item_tabs/_tabItem_characteristics', [
             'good'  =>  $good
         ])
     ],
     [
         'label'     =>  \Yii::t('shop', 'Отзывы'),
-        'content'   =>  $this->render('goodCard/_tabItem_reviews', [
+        'content'   =>  $this->render('_shop_item/_item_tabs/_tabItem_reviews', [
             'good'  =>  $good
         ])
     ]
@@ -64,23 +62,11 @@ $tabsItems = [
 if($good->video){
     $tabsItems[] = [
         'label'     =>  \Yii::t('shop', 'Видео'),
-        'content'   =>  $this->render('goodCard/_tabItem_video', [
+        'content'   =>  $this->render('_shop_item/_item_tabs/_tabItem_video', [
             'good'  =>  $good
         ])
     ];
 }
-
-if($good->isNew || true){
-    $captFlags[] = '<div class="capt-flag bg-capt-green">'.\Yii::t('shop', 'Новинка').'</div>';
-};
-
-if($good->originalGood || true){
-    $captFlags[] = '<div class="capt-flag bg-capt-purple">'.\Yii::t('shop', 'Оригинал').'</div>';
-};
-
-if(isset($good->PrOut3)){
-    $captFlags[] = '<div class="capt-flag bg-capt-red">'.\Yii::t('shop', 'Распродажа').'</div>';
-};
 
 $items = [];
 $itemsNav = [];
@@ -117,60 +103,45 @@ $this->title = $good->Name;
         ])?>
     </div>
     <div class="item item-card" itemscope itemtype="http://schema.org/Product">
-        <div class="photo-and-order">
-            <div class="itemPhotos">
-                <!--<img itemprop="image" data-modal-index="0"
-                      src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->ico?>" width=""
-                      height="" alt="<?=$good->Name?>">-->
-                    <?=!empty($items) ? Slick::widget([
-                        'containerOptions' => [
-                            'id'    => 'sliderFor',
-                            'class' => 'first'
-                        ],
-                        'items' =>  $items,
-                        'clientOptions' => [
-                                'arrows'         => false,
-                                'fade'           => true,
-                                'slidesToShow'   => 1,
-                                'slidesToScroll' => 1,
-                                'asNavFor'       => '#sliderNav',
-                            ]
-                    ]) : '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link']
-                    .'/img/catalog/sm/'.$good->ico.'"
-                    width="475px" height="355px" alt="'.$good->Name.'">',
-                    !empty($itemsNav) ? Slick::widget([
-                        'containerOptions' => [
-                            'id'    => 'sliderNav',
-                            'class' => 'second'
-                        ],
-                        'items' =>  $itemsNav,
-                        'clientOptions' => [
-                                'arrows'         => false,
-                                'focusOnSelect'  => true,
-                                'infinite'       => true,
-                                'slidesToShow'   => 4,
-                                'slidesToScroll' => 1,
-                                'asNavFor'       => '#sliderFor',
-                                'cssEase'        => 'linear',
-                        ]
-                    ]) : ''?>
-                <?=Html::tag('div', implode('', $captFlags), [
-                    'class' =>  'capt-flags'
-                ])?>
-            </div>
-            <div class="about-order">
-                <div class="title">
-                    <h1 itemprop="name"><?=$good->Name?></h1>
-                </div>
-                <div class="code-novelty">
-                    <div class="code blue">
-                        <?=\Yii::t('shop', 'Код')?>: <?=$good->Code?>
-                    </div>
-                    <div class="novelty">
-                        НОВИНКА
-                    </div>
-                </div>
-            <div class="itemContent" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <div class="item-photos">
+            <?=(!empty($items) ? Slick::widget([
+                'containerOptions' => [
+                    'id'    => 'sliderFor',
+                    'class' => 'first'
+                ],
+                'items' =>  $items,
+                'clientOptions' => [
+                        'arrows'         => false,
+                        'fade'           => true,
+                        'slidesToShow'   => 1,
+                        'slidesToScroll' => 1,
+                        'asNavFor'       => '#sliderNav',
+                    ]
+            ]) : '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link']
+            .\Yii::$app->params['img-path'].$good->photo.'"
+            width="475px" height="355px" alt="'.$good->Name.'">').
+            (!empty($itemsNav) ? Slick::widget([
+                'containerOptions' => [
+                    'id'    => 'sliderNav',
+                    'class' => 'second'
+                ],
+                'items' =>  $itemsNav,
+                'clientOptions' => [
+                        'arrows'         => false,
+                        'focusOnSelect'  => true,
+                        'infinite'       => true,
+                        'slidesToShow'   => 4,
+                        'slidesToScroll' => 1,
+                        'asNavFor'       => '#sliderFor',
+                        'cssEase'        => 'linear',
+                ]
+            ]) : '').
+            $this->render('_shop_item/_shop_item_labels', ['model' => $good])?>
+        </div>
+        <div class="item-info">
+            <h1 class="title" itemprop="name"><?=$good->Name?></h1>
+            <div class="code blue"><?=\Yii::t('shop', 'Код:').$good->Code?></div>
+            <div class="item-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <div class="pricelist">
                     <div class="pricelist-content">
                         <div class="pricelist-content-available">
@@ -230,134 +201,107 @@ $this->title = $good->Name;
                                 </span>
                             </div>
                         </div>
-                        <div class="counterWrapper-discount">
-                            <div class="retail-price">
-                                <span>
-                                    старая цена:<i>
+                            <div class="counterWrapper-discount">
+                                <div class="retail-price">
+                                    <span>
+                                        старая цена:<i>
 
-                                        <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
-                                            </i>
-                                    <span class="question-round-button">?</span>
-                                </span>
-                            </div>
-                            <div class="price">
-                                <span><?=$good->wholesalePrice?></span>
-                            </div>
-                            <span class="saving"><?=\Yii::t('shop', '(Экономия: {economy} {currency})', [
-                                    'economy'       => $good->realWholesalePrice - $good->wholesalePrice,
-                                    'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']
-                                ])?></span>
-                        </div>
-                        <div class="progress">
-                            <?php if($good->count < 1){ ?>
-                                <div class="deliv">
-                                    <span>Доставка: 1 - 4 дня</span>
+                                            <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
+                                                </i>
+                                        <span class="question-round-button">?</span>
+                                    </span>
                                 </div>
-                            <?php }else{
-                                echo $this->render('_shop_item/_shop_item_counter', ['model' => $good]);
-                            }
-                                $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
-                                    ($good->inCart ? 'В корзине!' : 'КУПИТЬ')), [
-                                    'class'         =>  ($good->inCart ? 'green-button openCart' :
-                                            'yellow-button buy')
-                                        .' large-button',
-                                    'data-itemId'   =>  $good->Code,
-                                    'data-count'    =>  '1'
-                                ]) : \Yii::t('shop', 'Нет в наличии');
-
-                                echo Html::tag('div', $divContent, [
-                                    'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
-                                ])?>
-                    <div class="reserve-button">
-                                <?php
-                                $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
-                                    ($good->inCart ? 'В корзине!' : 'Резервировать')), [
-                                                                              'class'         =>  ($good->inCart ? 'green-button openCart' :
-                                                                                      'yellow-button buy')
-                                                                                  .' large-button',
-                                                                              'data-itemId'   =>  $good->Code,
-                                                                              'data-count'    =>  '1'
-                                                                          ]) : \Yii::t('shop', 'Нет в наличии');
-
-                                echo Html::tag('div', $divContent, [
-                                    'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
-                                ])?>
-                    </div>
-                    <div class="about-price">
-                        <a class="reserve">Нашли дешевлее?</a>
-                        <a class="about-price-available">Узнать о снижении цены</a>
-                        <a class="about-price-not-available">Узнать когда появиться</a>
-                        <a class="favorites">в избранное</a>
-                    </div>
-                </div>
-                <?=$this->render('_shop_item/_shop_item_rate', ['model' => $good, 'link' => $link]);?>
-                <div class="line"></div>
-                <?php if($good->garantyShow == '1'){
-                    if($good->anotherCurrencyPeg == '1'){
-                        echo Html::tag('div', Html::tag('span', \Yii::t('shop', 'Внимание!'), [
-                            'class' =>  'semi-bold blue'
-                        ]).' '.\Yii::t('shop', 'Цена действительна при отправке или оплате заказа {date} до
-                        23:59', [
-                               'date'  =>  date('d.m.Y')
-                            ]), [
-                            'class' =>  'underline'
-                        ]);
-                    }
-                    if(strstr($category->Code, 'AAIABF')){ ?>
-                        <div class="discount-text underline"><span class="semi-bold">Скидка 5%</span> при заказе от 5 тыс. грн.<span class="tooltip-question"></span>
-                            <div class="tooltip">
-                                <div class="discountTooltip">При заказе товаров из раздела <span class="link-hide blue" data-href="<?=$_SESSION['linkLang']?>/salonam-krasoty/tehnika-dlya-salonov">«Техника для салонов»</span>.</div>
+                                <div class="price">
+                                    <span><?=$good->wholesalePrice?></span>
+                                </div>
+                                <span class="saving"><?=\Yii::t('shop', '(Экономия: {economy} {currency})', [
+                                        'economy'       => $good->realWholesalePrice - $good->wholesalePrice,
+                                        'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']
+                                    ])?></span>
                             </div>
-                        </div>
-                    <?php }
-                } ?>
-                </div>
-                        </div>
-                    <div class="pricelist-warning">
-                        <span>Внимание!</span>
-                        Цена действительна при оплате заказа 03.11.14 до 21:00
+                            <div class="progress">
+                                <?php if($good->count < 1){ ?>
+                                    <div class="deliv">
+                                        <span>Доставка: 1 - 4 дня</span>
+                                    </div>
+                                <?php }else{
+                                    echo $this->render('_shop_item/_shop_item_counter', ['model' => $good]);
+                                }
+                                    echo $this->render('_shop_item/_shop_item_buy_button', ['model' => $good, 'class' => 'large-button']);
+                                ?>
+                        <div class="reserve-button">
+                                    <?php
+                                    $divContent = $good->canBuy ? Html::input('button', null, \Yii::t('shop',
+                                        ($good->inCart ? 'В корзине!' : 'Резервировать')), [
+                                                                                  'class'         =>  ($good->inCart ? 'green-button openCart' :
+                                                                                          'yellow-button buy')
+                                                                                      .' large-button',
+                                                                                  'data-itemId'   =>  $good->Code,
+                                                                                  'data-count'    =>  '1'
+                                                                              ]) : \Yii::t('shop', 'Нет в наличии');
 
+                                    echo Html::tag('div', $divContent, [
+                                        'class' =>  $good->canBuy ? 'canBuy' : 'expectedArrival semi-bold'
+                                    ])?>
+                        </div>
+                        <div class="about-price">
+                            <a class="reserve">Нашли дешевлее?</a>
+                            <a class="about-price-available">Узнать о снижении цены</a>
+                            <a class="about-price-not-available">Узнать когда появиться</a>
+                            <a class="favorites">в избранное</a>
+                        </div>
                     </div>
-            </div>
-            <div class="itemDopInfo">
+                    <?=$this->render('_shop_item/_shop_item_rate', ['model' => $good, 'link' => $link]);?>
+                    <div class="line"></div>
+                    <?php if($good->garantyShow == '1'){
+                        if($good->anotherCurrencyPeg == '1'){
+                            echo Html::tag('div', Html::tag('span', \Yii::t('shop', 'Внимание!'), [
+                                'class' =>  'semi-bold blue'
+                            ]).' '.\Yii::t('shop', 'Цена действительна при отправке или оплате заказа {date} до
+                            23:59', [
+                                   'date'  =>  date('d.m.Y')
+                                ]), [
+                                'class' =>  'underline'
+                            ]);
+                        }
+                        if(strstr($category->Code, 'AAIABF')){ ?>
+                            <div class="discount-text underline"><span class="semi-bold">Скидка 5%</span> при заказе от 5 тыс. грн.<span class="tooltip-question"></span>
+                                <div class="tooltip">
+                                    <div class="discountTooltip">При заказе товаров из раздела <span class="link-hide blue" data-href="<?=$_SESSION['linkLang']?>/salonam-krasoty/tehnika-dlya-salonov">«Техника для салонов»</span>.</div>
+                                </div>
+                            </div>
+                        <?php }
+                    } ?>
+                    </div>
+                            </div>
+                        <div class="pricelist-warning">
+                            <span>Внимание!</span>
+                            Цена действительна при оплате заказа 03.11.14 до 21:00
+
+                        </div>
+                </div>
+            <div class="item-dop-info">
                 <?php if($good->garantyShow == '1'){ ?>
                     <div class="warranty"><img src="/template/img/warranty.png" alt="<?=\Yii::t('shop', 'гарантия')?>" width="82" height="66"><div class="semi-bold"><?=\Yii::t('shop', '12 месяцев гарантии')?></div><?=\Yii::t('shop', 'Обмен/возврат товара в течение 14 дней')?></div>
                 <?php } ?>
-                <div class="deliveryType">
-                    <div class="minihead"><?=\Yii::t('shop', 'Доставка 2-4 дня')?><span class="tooltip-question"></span>
-                        <div class="tooltip">
-                            <div class="deliveryTooltip"><?=\Yii::t('shop', 'Доставка заказа по Украине осуществляется от 1 до 5 дней транспортной организацией')?> «<span class="link-hide" data-href="//novaposhta.ua/"><?=\Yii::t('shop', 'Новая Почта')?></span>».</div>
-                        </div>
-                    </div>
-                    <div>• <?=\Yii::t('shop', 'самовывоз из нашего магазина')?></div>
-                    <div>• <?=\Yii::t('shop', 'до склада Новой Почты')?></div>
+                <div class="delivery-type">
+                    <div class="minihead"><?=\Yii::t('shop', 'Доставка 2-4 дня')?></div>
+                    <div>• <?=\Yii::t('shop', 'Самовывоз из нашего магазина')?></div>
+                    <div>• <?=\Yii::t('shop', 'До склада Новой Почты')?></div>
+                    <div>• <?=\Yii::t('shop', 'Курьером Новая Почта')?></div>
                 </div>
-                <div class="payType">
-                    <div class="minihead"><?=\Yii::t('shop', 'Оплата')?><span class="tooltip-question"></span>
-                        <div class="tooltip">
-                            <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
-                        </div>
-                    </div>
-                    <span>• <?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></span>
+                <div class="pay-type">
+                    <div class="minihead"><?=\Yii::t('shop', 'Оплата')?></div>
+                    <div>• <?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></div>
                     <div>• Visa/MasterCard</div>
                 </div>
                 <div class="purchase-returns">
-                    <div class="minihead"><?=\Yii::t('shop', '14 дней на возврат')?><span
-                            class="tooltip-question"></span>
-                        <div class="tooltip">
-                            <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
-                        </div>
-                    </div>
+                    <div class="minihead"><?=\Yii::t('shop', '14 дней на возврат')?></div>
                     <div><?=\Yii::t('shop', 'Возврат и обмен товара согласно')?></div>
                     <div><?=\Yii::t('shop', 'законодательству Украины')?></div>
                 </div>
                 <div class="guarantee">
-                    <div class="minihead"><?=\Yii::t('shop', 'Гарантия 12 месяцев')?><span
-                            class="tooltip-question"></span>
-                        <div class="tooltip">
-                            <div class="payTooltip"><?=\Yii::t('shop', 'Возможна предоплата и оплата при получении.')?></div>
-                        </div>
-                    </div>
+                    <div class="minihead"><?=\Yii::t('shop', 'Гарантия 12 месяцев')?></div>
                     <div>Официальная гарантия от производителя</div>
                 </div>
             </div>

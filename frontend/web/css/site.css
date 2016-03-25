@@ -931,7 +931,7 @@ h2{
 	float: right;
 }
 
-.item .item-dop-info{
+.item .inner-sub .item-dop-info{
 	display: table;
 	width: 100%;
 }
@@ -942,7 +942,7 @@ h2{
 	display: table-cell;
 }
 
-.hovered .rating{
+.item .inner-sub .rating{
 	display: table-cell;
 }
 
@@ -2834,7 +2834,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     border-bottom: 1px dashed #e5e5e5;
 }
 
-.delivery-type{
+.delivery .delivery-type{
     width: 55%;
     float: left;
 }

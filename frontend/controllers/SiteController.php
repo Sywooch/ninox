@@ -127,7 +127,7 @@ class SiteController extends Controller
             'label' =>  $category->Name
         ];
 
-        return $this->render('goodCard', [
+        return $this->render('_shop_item_card', [
             'mainCategory'  =>  $mainCategory,
             'good'          =>  $good,
             'category'      =>  $category,

@@ -20,7 +20,6 @@ use yii\db\Query;
 class Good extends \common\models\Good{
 
     use PriceHelper;
-
 	//public $category = '';                //Код категории //Выпилено: Николай Гилко. Для получения кода категории используйте $categorycode
 	public $priceRuleID = 0;                //ID примененного ценового правила
 	public $priceForOneItem = 0;            //Цена за единицу товара

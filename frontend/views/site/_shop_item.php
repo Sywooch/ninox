@@ -5,50 +5,8 @@ use yii\helpers\Html;
 
 $link = '/tovar/'.$model->link.'-g'.$model->ID;
 $photo = \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->ico;
-$flags = [];
-
-if($model->isNew){
-    $flags[] = ['name' => \Yii::t('shop', 'Новинка'), 'options' => ['class' => 'icon-new']];
-}
-if($model->originalGood){
-    $flags[] = ['name' => \Yii::t('shop', 'Оригинал'), 'options' => ['class' => 'icon-origin']];
-}
-if($model->discountType > 0 && $model->priceRuleID == 0){
-    $flags[] = ['name' => \Yii::t('shop', 'Распродажа'), 'options' => ['class' => 'icon-sale']];
-}
-
-$flags = $flags ?
-	Html::ul($flags, [
-		'item' => function($item){
-			return Html::tag('li',
-				Html::tag('span', $item['name'], []),
-				$item['options']);
-		},
-		'class' => 'item-labels'
-	]) : '';
-
-$discountBlock = function($model){
-	return $model->priceRuleID ? Html::tag('div',
-		Html::tag('div', $model->customerRule ? \Yii::t('shop', 'Опт') : \Yii::t('shop', 'Акция'), ['class' => 'top']).
-		Html::tag('div', Formatter::getFormattedPrice($model->wholesalePrice, false, false), ['class' => 'middle']).
-		Html::tag('div', \Yii::$app->params['domainInfo']['currencyShortName'], ['class' => 'bottom']),
-		['class' => 'discount']
-	) : '';
-};
 
 $buyBlock = function($model){
-	$button = [
-		'value'         =>  $model->count > 0 || $model->isUnlimited ?
-			($model->inCart ?
-				\Yii::t('shop', 'В корзине!') : \Yii::t('shop', 'Купить!')
-			) : \Yii::t('shop', "Нет\r\nв наличии"),
-		'class'         =>  'button '.($model->count > 0 || $model->isUnlimited ?
-			($model->inCart ?
-				'green-button open-cart' : 'yellow-button buy'
-			) : 'gray-button out-of-stock').' small-button',
-		'data-itemId'   =>  $model->ID,
-		'data-count'    =>  '1',
-	];
 	return Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
@@ -68,7 +26,7 @@ $buyBlock = function($model){
 			['class' => 'price-list']
 		).
 		Html::tag('div',
-			Html::input('button', null, $button['value'], $button),
+			$this->render('_shop_item/_shop_item_buy_button', ['model' => $model, 'class' => 'small-button']),
 			['class' => 'button-block']
 		),
 		['class' => 'price-block']
@@ -121,8 +79,8 @@ echo Html::tag('div',
 				[
 					'class' => 'icon-quick-view'
 				]).
-			$discountBlock($model).
-			$flags.
+			$this->render('_shop_item/_shop_item_discount', ['model' => $model]).
+			$this->render('_shop_item/_shop_item_labels', ['model' => $model]).
 			Html::tag('div', $model->Name, [
 				'class' =>  'item-title '.($model->count > 0 || $model->isUnlimited ? 'blue' : 'gray'),
 			]),
