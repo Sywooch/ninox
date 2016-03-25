@@ -2,7 +2,7 @@
 use common\models\Category;
 use kartik\file\FileInput;
 use kartik\select2\Select2;
-use yii\bootstrap\ActiveForm;
+use kartik\form\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = $category->isNewRecord == "" ? "Новая категория" : "Категория \"".$category->Name.'"';
@@ -33,6 +33,39 @@ dl dt{
 }
 STYLE;
 
+$js = <<<'JS'
+$(".recalcCategoryPrices").on('click', function(){
+    $.ajax({
+        url: '/categories/recalc?act=retailPrice',
+        method: 'POST',
+        data: {
+            categoryID: $("#categoryID")[0].getAttribute("data-categoryID"),
+            size: $(this.parentNode).find("input").val()
+        }, success: function(){
+            Messenger().post({
+                        message: 'Цены на товары в категории пересчитаны!',
+                        type: 'info',
+                        showCloseButton: true,
+                        hideAfter: 300,
+                        actions: {
+                            expand: {
+                                label: 'к товарам',
+                                action: function(){
+                                    location.href = '/goods?category=' + data.categoryCode;
+                                }
+                            },
+                            close: {
+                                label: 'Закрыть'
+                            }
+                        }
+                    });
+        }
+    })
+})
+JS;
+
+$this->registerJs($js);
+
 $this->registerCss($css);
 
 $form = ActiveForm::begin([
@@ -50,7 +83,7 @@ $form = ActiveForm::begin([
     ]
 ]);
 ?>
-<h1><?=!$category->isNewRecord ? $category->Name : 'Новая категория'?>&nbsp;<small>Категория</small></h1>
+<h1 id="categoryID" data-categoryID="<?=$category->ID?>"><?=!$category->isNewRecord ? $category->Name : 'Новая категория'?>&nbsp;<small>Категория</small></h1>
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="btn-group pull-left">
@@ -150,14 +183,11 @@ $form = ActiveForm::begin([
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2"></td>
-                            </tr>
-                            <tr>
                                 <td>Состояние категории</td>
                                 <td>
                                     <?=$form->field($category, 'menu_show', [
-                                        'inline'    =>  true,
-                                        'enableLabel'   =>  false
+                                        //'inline'    =>  true,
+                                        //'enableLabel'   =>  false
                                     ])->radioList([
                                         '1' =>  'Включена',
                                         '0' =>  'Выключена'
@@ -174,11 +204,31 @@ $form = ActiveForm::begin([
                                 </td>
                             </tr>
                             <tr>
+                                <td>Розничная цена больше оптовой на</td>
+                                <td>
+                                    <?=$form->field($category, 'retailPercent', [
+                                        //'inline'    =>  true,
+                                        //'enableLabel'   =>  false,
+                                        'options'   =>  [
+                                            'class' =>  'col-xs-5',
+                                            'style' =>  'margin-left: -15px'
+                                        ],
+                                        'addon' =>  [
+                                            'append' => [
+                                                'content'   =>  '%'
+                                            ]
+                                        ]
+                                    ]),
+                                    Html::button('Пересчитать товары категории', ['class' => 'recalcCategoryPrices btn btn-default btn-sm', 'style' => 'margin-top: 2px'])?>
+
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Одна цена на категорию</td>
                                 <td>
                                     <?=$form->field($category, 'onePrice', [
-                                        'inline'    =>  true,
-                                        'enableLabel'   =>  false
+                                        //'inline'    =>  true,
+                                        //'enableLabel'   =>  false
                                     ])->radioList([
                                         '1' =>  'Включена',
                                         '0' =>  'Выключена'
@@ -198,8 +248,8 @@ $form = ActiveForm::begin([
                                 <td>Категория экспортируется в Яндекс.Каталог</td>
                                 <td>
                                     <?=$form->field($category, 'ymlExport', [
-                                        'inline'    =>  true,
-                                        'enableLabel'   =>  false
+                                        //'inline'    =>  true,
+                                        //'enableLabel'   =>  false
                                     ])->radioList([
                                         '1' =>  'Включена',
                                         '0' =>  'Выключена'
@@ -219,8 +269,8 @@ $form = ActiveForm::begin([
                                 <td>Товары из этой категории</td>
                                 <td>
                                     <?=$form->field($category, 'canBuy', [
-                                        'inline'    =>  true,
-                                        'enableLabel'   =>  false
+                                        //'inline'    =>  true,
+                                        //'enableLabel'   =>  false
                                     ])->radioList([
                                         '1' =>  'Продаются',
                                         '0' =>  'Не продаются'

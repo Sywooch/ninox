@@ -245,6 +245,7 @@ class Category extends \yii\db\ActiveRecord
             [['text2', 'descr', 'keyword', 'yandexName', 'h1asc', 'h1desc', 'h1new', 'h1'], 'string'],
             [['listorder', 'menu_show', 'pageType', 'ymlExport', 'canBuy', 'onePrice', 'hasFilter'], 'integer'],
             [['Name', 'Code', 'link', 'title', 'titlenew', 'titleasc', 'titledesc', 'catNameVinitelny2', 'catNameVinitelny'], 'string', 'max' => 255],
+            [['retailPercent'], 'number'],
             [['p_photo'], 'string', 'max' => 55],
             [['cat_img'], 'string', 'max' => 100]
         ];

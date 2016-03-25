@@ -353,4 +353,28 @@ class DefaultController extends Controller
         return $goodsCount;
     }
 
+    public function actionRecalc(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
+
+        $categoryID = \Yii::$app->request->post("categoryID");
+
+        switch(\Yii::$app->request->get("act")){
+            case 'retailPrice':
+                $category = Category::findOne($categoryID);
+
+                if(!$category){
+                    throw new NotFoundHttpException("Категория с идентификатором {$categoryID} не найдена!");
+                }
+
+                \Yii::$app->response->format = 'json';
+
+                $category->updatePrices(\Yii::$app->request->post("size"), 'retail');
+
+                return ['categoryCode' => $category->Code];
+                break;
+        }
+    }
+
 }

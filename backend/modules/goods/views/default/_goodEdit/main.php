@@ -60,7 +60,7 @@ $js = <<<'JS'
     });
 
     $(".wholesalePrice input").on('keyup', function(){
-        var retailPrice = (parseInt($(this).val()) + parseInt(($(this).val() / 100 * 20)));
+        var retailPrice = (parseInt($(this).val()) + parseInt(($(this).val() / 100 * $("#categoryPercent").val())));
 
         $(".retailPrice input").val(retailPrice);
     })
@@ -69,6 +69,8 @@ JS;
 $this->registerJs($js);
 
 $this->registerCss($css);
+
+echo Html::input('hidden', 'c', $category->retailPercent, ['id' => 'categoryPercent', 'style' => 'display: none']);
 
 $form = new ActiveForm([
     'options'   =>  [
