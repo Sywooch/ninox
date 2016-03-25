@@ -34,7 +34,8 @@ $this->registerJs($js);
                 [
                     'label'     =>  'Основное',
                     'content'   =>  $this->render('_goodEdit/main', [
-                        'model' =>  $goodMainForm
+                        'model'     =>  $goodMainForm,
+                        'category'  =>  $good->category
                     ])
                 ],[
                     'label'     =>  'Аттрибуты',
