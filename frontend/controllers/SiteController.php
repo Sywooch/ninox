@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
+use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\Cart;
 use frontend\models\Customer;
@@ -126,6 +127,8 @@ class SiteController extends Controller
             'url'   =>  '/'.$category->link,
             'label' =>  $category->Name
         ];
+
+        (new PriceRuleHelper())->recalc($good, true);
 
         return $this->render('_shop_item_card', [
             'mainCategory'  =>  $mainCategory,

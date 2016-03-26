@@ -61,6 +61,7 @@
 
 .item-info .code{
     font-size: 12px;
+    padding-bottom: 15px;
 }
 
 .pricelist{
@@ -88,6 +89,10 @@
 .item-card .rating{
     display: inline-block;
     padding: 10px 0;
+}
+
+.item-card .item-wish-text, .item-card .vip, .item-card .notification{
+    text-decoration: underline;
 }
 
 .availability{
@@ -172,19 +177,15 @@
     color: #6fad7e;
 }
 
-.about-price{
-    font-style: italic;
+.item-card .about-price{
     font-size: 13px;
-    height: 60px;
     padding-top: 15px;
 }
 
-.about-price a{
-    text-decoration: underline;
+.item-card .about-price > span{
+    display: block;
     cursor: pointer;
-    width: 100%;
-    float: left;
-    line-height: 25px;
+    margin-bottom: 5px;
 }
 
 .item-card .item-сontent{

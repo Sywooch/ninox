@@ -58,14 +58,7 @@ $itemDopInfoBlock = function($model) use ($link){
 echo Html::tag('div',
 	Html::tag('div',
 		Html::tag('div',
-			Html::tag('span', '', [
-				'class'         =>  'icon-heart'.
-					(\Yii::$app->user->isGuest ? ' is-guest' : '').
-					(\Yii::$app->user->isGuest ?
-						'' : (\Yii::$app->user->identity->hasInWishlist($model->ID) ? ' green' : '')),
-				'data-itemId'   =>  $model->ID
-			]).
-			Html::tag('span', \Yii::t('shop', 'в избранное'), ['class' => 'item-wish-text']).
+			$this->render('_shop_item/_shop_item_wish', ['model' => $model]).
 			Html::tag('span', $model->Code, ['class' => 'item-code']),
 			['class' => 'item-head']).
 		Html::a(Html::img($photo,[
