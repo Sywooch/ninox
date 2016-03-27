@@ -104,194 +104,183 @@ $this->title = $good->Name;
         ])?>
     </div>
     <div class="item item-card" itemscope itemtype="http://schema.org/Product">
-        <div class="item-photos">
-            <?=(!empty($items) ? Slick::widget([
-                'containerOptions' => [
-                    'id'    => 'sliderFor',
-                    'class' => 'first'
-                ],
-                'items' =>  $items,
-                'clientOptions' => [
-                        'arrows'         => false,
-                        'fade'           => true,
-                        'slidesToShow'   => 1,
-                        'slidesToScroll' => 1,
-                        'asNavFor'       => '#sliderNav',
+        <div class="item-main">
+            <div class="item-photos">
+                <?=(!empty($items) ? Slick::widget([
+                    'containerOptions' => [
+                        'id'    => 'sliderFor',
+                        'class' => 'first'
+                    ],
+                    'items' =>  $items,
+                    'clientOptions' => [
+                            'arrows'         => false,
+                            'fade'           => true,
+                            'slidesToShow'   => 1,
+                            'slidesToScroll' => 1,
+                            'asNavFor'       => '#sliderNav',
+                        ]
+                ]) : '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link']
+                .\Yii::$app->params['img-path'].$good->photo.'"
+                width="475px" height="355px" alt="'.$good->Name.'">').
+                (!empty($itemsNav) ? Slick::widget([
+                    'containerOptions' => [
+                        'id'    => 'sliderNav',
+                        'class' => 'second'
+                    ],
+                    'items' =>  $itemsNav,
+                    'clientOptions' => [
+                            'arrows'         => false,
+                            'focusOnSelect'  => true,
+                            'infinite'       => true,
+                            'slidesToShow'   => 4,
+                            'slidesToScroll' => 1,
+                            'asNavFor'       => '#sliderFor',
+                            'cssEase'        => 'linear',
                     ]
-            ]) : '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link']
-            .\Yii::$app->params['img-path'].$good->photo.'"
-            width="475px" height="355px" alt="'.$good->Name.'">').
-            (!empty($itemsNav) ? Slick::widget([
-                'containerOptions' => [
-                    'id'    => 'sliderNav',
-                    'class' => 'second'
-                ],
-                'items' =>  $itemsNav,
-                'clientOptions' => [
-                        'arrows'         => false,
-                        'focusOnSelect'  => true,
-                        'infinite'       => true,
-                        'slidesToShow'   => 4,
-                        'slidesToScroll' => 1,
-                        'asNavFor'       => '#sliderFor',
-                        'cssEase'        => 'linear',
-                ]
-            ]) : '').
-            $this->render('_shop_item/_shop_item_labels', ['model' => $good])?>
-        </div>
-        <div class="item-info">
-            <h1 class="title" itemprop="name"><?=$good->Name?></h1>
-            <div class="code blue"><?=\Yii::t('shop', 'Код:').$good->Code?></div>
-            <div class="item-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                <div class="pricelist">
-                    <div class="pricelist-content">
-                        <?=Html::tag('div',
-                            ($good->show_img == 1 ?
-                                ($good->count < 1 ?
-                                    \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии')) :
-                                \Yii::t('shop', 'Нет в наличии')),
-                            [
-                                'class'     =>  'availability',
-                                'itemprop'  =>  'availability',
-                                'href'      =>  'http://schema.org/InStock'
-                            ]
-                        ).
-                        Html::tag('div',
-                            ($good->discountType && !$good->customerRule ?
-                                Html::tag('div',
-                                    \Yii::t('shop', 'старая цена:').
-                                    Html::tag('div', Formatter::getFormattedPrice($good->realWholesalePrice),
-                                        ['class' => 'old-wholesale-price']
-                                    )
-                                ) : ''
-                            ).
-                            Html::tag('div', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'wholesale-price']).
-                            ($good->discountType && !$good->customerRule ?
-                                Html::tag('div',
-                                    \Yii::t('shop', '(Экономия: {economy})', [
-                                        'economy' => Formatter::getFormattedPrice($good->realWholesalePrice - $good->wholesalePrice)
-                                    ])
-                                ) : ''
-                            ),
-                            ['class' => 'price-list']
-                        )?>
-                        <div class="counterWrapper">
-                            <div class="price">
-                                 <span>
-                                    <?=$good->wholesalePrice?>
-                                    <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
-                                 </span>
-                            </div>
-                            <div class="retail-price">
-                                <span>
-                                    <?=\Yii::t('shop', 'розничная цена: {retailPrice} {currency}', [
-                                        'retailPrice' => $good->retailPrice,
-                                        'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']])
-                                    ?>
-                                </span>
-                                <span class="question-round-button">
-                                    ?
-                                </span>
-                            </div>
-                        </div>
-                        <div class="counterWrapper-vip">
-                            <div class="price">
-                                <span>
-                                    <?=$good->wholesalePrice?>
-                                    <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
-                                </span>
-                            </div>
-                            <div class="retail-price">
-                                <span>
-                                    <?=\Yii::t('shop', 'опт: {wholesalePrice} {currency}   розница:
-                                        {retailPrice} {currency}', [
-                                            'retailPrice'   => $good->retailPrice,
-                                            'wholesalePrice'   => $good->wholesalePrice,
-                                            'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']
-                                        ])
-                                    ?>
-                                </span>
-                                <span class="question-round-button">
-                                        ?
-                                </span>
-                            </div>
-                        </div>
-                        <div class="counterWrapper-discount">
-                            <div class="retail-price">
-                                <span>
-                                    старая цена:<i>
-
-                                        <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
-                                            </i>
-                                    <span class="question-round-button">?</span>
-                                </span>
-                            </div>
-                            <div class="price">
-                                <span><?=$good->wholesalePrice?></span>
-                            </div>
-                            <span class="saving"><?=\Yii::t('shop', '(Экономия: {economy} {currency})', [
-                                    'economy'       => $good->realWholesalePrice - $good->wholesalePrice,
-                                    'currency'      => \Yii::$app->params['domainInfo']['currencyShortName']
-                                ])?></span>
-                        </div>
-                        <?=$this->render('_shop_item/_shop_item_counter', ['model' => $good]).
-                        $this->render('_shop_item/_shop_item_buy_button', ['model' => $good, 'class' => 'large-button'])
-                        ?>
-                        <div class="about-price italic">
-                            <?=($good->customerRule ?
-                                Html::tag('span', \Yii::t('shop', 'Нашли дешевлее?'), ['class' => 'vip blue']) : ''
-                            ).
-                            Html::tag('span', $good->show_img == 1 ?
-                                \Yii::t('shop', 'Узнать о снижении цены') : \Yii::t('shop', 'Узнать когда появится'),
+                ]) : '').
+                $this->render('_shop_item/_shop_item_labels', ['model' => $good])?>
+            </div>
+            <div class="item-info">
+                <h1 class="title" itemprop="name"><?=$good->Name?></h1>
+                <div class="code blue"><?=\Yii::t('shop', 'Код:').$good->Code?></div>
+                <div class="item-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                    <div class="item-main-info">
+                        <div class="pricelist-content <?=($good->show_img ? 'available' : 'not-available').
+                        ($good->discountType && $good->customerRule ? ' vip' :
+                            ($good->discountType && !$good->customerRule ? ' discounted' : ''))?>">
+                            <?php
+                            $dopPrice = ($good->discountType && !$good->customerRule) * 1 +
+                                ($good->discountType && $good->customerRule) * 2 +
+                                (!$good->discountType && $good->realWholesalePrice != $good->realRetailPrice) * 3;
+                            switch($dopPrice){
+                                case 1:
+                                    $dopPrice = Html::tag('div',
+                                        \Yii::t('shop', '(Экономия: {economy})', [
+                                            'economy' => Formatter::getFormattedPrice($good->realWholesalePrice - $good->wholesalePrice)
+                                        ]),
+                                        ['class' => 'dop-price']
+                                    );
+                                    break;
+                                case 2:
+                                    $dopPrice = Html::tag('div',
+                                        \Yii::t('shop', 'опт: {realWholesalePrice}', [
+                                            'realWholesalePrice'   => Formatter::getFormattedPrice($good->realWholesalePrice)
+                                        ]).($good->realWholesalePrice == $good->realRetailPrice ? '' : '&nbsp;&nbsp;&nbsp;'.
+                                            \Yii::t('shop', 'розница: {realRetailPrice}', [
+                                                'realRetailPrice'   => Formatter::getFormattedPrice($good->realRetailPrice)
+                                            ])).
+                                        Html::tag('span', '?', [
+                                            'class'         =>  'question-round-button',
+                                            'data-toggle'   =>  'tooltip',
+                                            'title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
+                                        ]),
+                                        ['class' => 'dop-price']
+                                    );
+                                    break;
+                                case 3:
+                                    $dopPrice = Html::tag('div',
+                                        \Yii::t('shop', 'розничная цена: {realRetailPrice}', [
+                                            'realRetailPrice'   => Formatter::getFormattedPrice($good->realRetailPrice)
+                                        ]).
+                                        Html::tag('span', '?', [
+                                            'class'         =>  'question-round-button',
+                                            'data-toggle'   =>  'tooltip',
+                                            'title'    =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе')
+                                        ]),
+                                        ['class' => 'dop-price']
+                                    );
+                                    break;
+                                default:
+                                    $dopPrice = '';
+                                    break;
+                            }
+                            ?>
+                            <?=Html::tag('div',
+                                ($good->show_img ?
+                                    ($good->count < 1 ?
+                                        \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии')) :
+                                    \Yii::t('shop', 'Нет в наличии')),
                                 [
-                                    'class'     =>  'notification blue'
+                                    'class'     =>  'availability',
+                                    'itemprop'  =>  'availability',
+                                    'href'      =>  'http://schema.org/InStock'
                                 ]
                             ).
-                            $this->render('_shop_item/_shop_item_wish', ['model' => $good, 'color' => 'blue'])?>
+                            Html::tag('div',
+                                ($good->discountType && !$good->customerRule ?
+                                    Html::tag('div',
+                                        \Yii::t('shop', 'старая цена: {oldPrice}', [
+                                            'oldPrice' => Html::tag('div', Formatter::getFormattedPrice($good->realWholesalePrice),
+                                                ['class' => 'old-wholesale-price']
+                                            )
+                                        ]),
+                                        ['class' => 'old-price']
+                                    ) : ''
+                                ).
+                                Html::tag('div', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'wholesale-price']).
+                                $dopPrice,
+                                ['class' => 'price-list']
+                            ).
+                            $this->render('_shop_item/_shop_item_counter', ['model' => $good]).
+                            $this->render('_shop_item/_shop_item_buy_button', ['model' => $good, 'class' => 'large-button'])
+                            ?>
+                            <div class="about-price italic">
+                                <?=($good->customerRule ?
+                                    Html::tag('span', \Yii::t('shop', 'Нашли дешевлее?'), ['class' => 'cheaper blue']) : ''
+                                ).
+                                Html::tag('span', $good->show_img == 1 ?
+                                    \Yii::t('shop', 'Узнать о снижении цены') : \Yii::t('shop', 'Узнать когда появится'),
+                                    [
+                                        'class'     =>  'notification blue'
+                                    ]
+                                ).
+                                $this->render('_shop_item/_shop_item_wish', ['model' => $good, 'color' => 'blue'])?>
+                            </div>
+                            <?=Html::tag('div',
+                                $this->render('_shop_item/_shop_item_rate', ['model' => $good, 'link' => $link]),
+                                ['class' => 'item-rating']
+                            )?>
                         </div>
-                        <?=$this->render('_shop_item/_shop_item_rate', ['model' => $good, 'link' => $link]);?>
+                        <?=($good->garantyShow == '1' && $good->anotherCurrencyPeg == '1' ?
+                            Html::tag('div', Html::tag('span', \Yii::t('shop', 'Внимание!')).
+                                ' '.
+                                \Yii::t('shop', 'Цена действительна при оплате заказа {date} до 23:59', [
+                                    'date'  =>  date('d.m.Y')
+                                ]), [
+                                'class' => 'pricelist-warning'
+                            ]) : '')
+                        ?>
                     </div>
-                    <?=($good->garantyShow == '1' && $good->anotherCurrencyPeg == '1' ?
-                        Html::tag('div', Html::tag('span', \Yii::t('shop', 'Внимание!')).
-                            ' '.
-                            \Yii::t('shop', 'Цена действительна при оплате заказа {date} до 23:59', [
-                                'date'  =>  date('d.m.Y')
-                            ]), [
-                            'class' => 'pricelist-warning'
-                        ]) : '')
-                    ?>
-                </div>
-                <div class="item-dop-info">
-                    <div class="delivery-type">
-                        <div class="minihead"><?=\Yii::t('shop', 'Доставка 2-4 дня')?></div>
-                        <div>• <?=\Yii::t('shop', 'Самовывоз из нашего магазина')?></div>
-                        <div>• <?=\Yii::t('shop', 'До склада Новой Почты')?></div>
-                        <div>• <?=\Yii::t('shop', 'Курьером Новая Почта')?></div>
+                    <div class="item-dop-info">
+                        <div class="delivery-type">
+                            <div class="minihead"><?=\Yii::t('shop', 'Доставка 2-4 дня')?></div>
+                            <div>• <?=\Yii::t('shop', 'Самовывоз из нашего магазина')?></div>
+                            <div>• <?=\Yii::t('shop', 'До склада Новой Почты')?></div>
+                            <div>• <?=\Yii::t('shop', 'Курьером Новая Почта')?></div>
+                        </div>
+                        <div class="pay-type">
+                            <div class="minihead"><?=\Yii::t('shop', 'Оплата')?></div>
+                            <div>• <?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></div>
+                            <div>• Visa/MasterCard</div>
+                        </div>
+                        <div class="purchase-returns">
+                            <div class="minihead"><?=\Yii::t('shop', '14 дней на возврат')?></div>
+                            <div><?=\Yii::t('shop', 'Возврат и обмен товара согласно')?></div>
+                            <div><?=\Yii::t('shop', 'законодательству Украины')?></div>
+                        </div>
+                        <?php if($good->garantyShow == '1'){ ?>
+                        <div class="guarantee">
+                            <div class="minihead"><?=\Yii::t('shop', 'Гарантия 12 месяцев')?></div>
+                            <div>Официальная гарантия от производителя</div>
+                        </div>
+                        <?php } ?>
                     </div>
-                    <div class="pay-type">
-                        <div class="minihead"><?=\Yii::t('shop', 'Оплата')?></div>
-                        <div>• <?=\Yii::t('shop', 'Наличными')?>, <?=\Yii::t('shop', 'Безналичными')?></div>
-                        <div>• Visa/MasterCard</div>
-                    </div>
-                    <div class="purchase-returns">
-                        <div class="minihead"><?=\Yii::t('shop', '14 дней на возврат')?></div>
-                        <div><?=\Yii::t('shop', 'Возврат и обмен товара согласно')?></div>
-                        <div><?=\Yii::t('shop', 'законодательству Украины')?></div>
-                    </div>
-                    <?php if($good->garantyShow == '1'){ ?>
-                    <div class="guarantee">
-                        <div class="minihead"><?=\Yii::t('shop', 'Гарантия 12 месяцев')?></div>
-                        <div>Официальная гарантия от производителя</div>
-                    </div>
-                    <?php } ?>
                 </div>
             </div>
         </div>
-        <div class="socialItemInfo">
-            <div class="soc-item-share">
-                <div class="shareToFriends"><?=\Yii::t('shop', 'Рассказать друзьям')?></div>
-                <div data-background-alpha="0.0" data-buttons-color="#FFFFFF" data-counter-background-color="#ffffff" data-share-counter-size="12" data-top-button="false" data-share-counter-type="disable" data-share-style="1" data-mode="share" data-like-text-enable="false" data-mobile-view="true" data-icon-color="#ffffff" data-orientation="horizontal" data-text-color="#000000" data-share-shape="round-rectangle" data-sn-ids="fb.vk.tw.ok.gp.em." data-share-size="20" data-background-color="#ffffff" data-preview-mobile="false" data-mobile-sn-ids="fb.vk.tw.wh.ok.vb." data-pid="1479727" data-counter-background-alpha="1.0" data-following-enable="false" data-exclude-show-more="true" data-selection-enable="false" class="uptolike-buttons" ></div>
-            </div>
+        <div class="soc-item-share">
+            <span class="share-to-friends"><?=\Yii::t('shop', 'Рассказать друзьям')?></span>
+            <span data-background-alpha="0.0" data-buttons-color="#FFFFFF" data-counter-background-color="#ffffff" data-share-counter-size="12" data-top-button="false" data-share-counter-type="disable" data-share-style="1" data-mode="share" data-like-text-enable="false" data-mobile-view="true" data-icon-color="#ffffff" data-orientation="horizontal" data-text-color="#000000" data-share-shape="round-rectangle" data-sn-ids="fb.vk.tw.ok.gp.em." data-share-size="20" data-background-color="#ffffff" data-preview-mobile="false" data-mobile-sn-ids="fb.vk.tw.wh.ok.vb." data-pid="1479727" data-counter-background-alpha="1.0" data-following-enable="false" data-exclude-show-more="true" data-selection-enable="false" class="uptolike-buttons"></span>
         </div>
         <div class="about-item">
             <?=TabsX::widget([

@@ -731,7 +731,7 @@ h2{
 	float: left;
 }
 
-.hovered .item{
+.items-grid .item{
 	width: 100%;
 	height: auto;
 	background: #fff;
@@ -789,7 +789,7 @@ h2{
 	overflow: hidden;
 }
 
-.hovered .item-wish-text{
+.items-grid .item-wish-text{
 	width: 0;
 	-webkit-transition: all 0.3s ease-in-out 0s;
 	-moz-transition: all 0.3s ease-in-out 0s;
@@ -798,7 +798,7 @@ h2{
 	transition: all 0.3s ease-in-out 0s;
 }
 
-.hovered .item-wish:hover .item-wish-text{
+.items-grid .item-wish:hover .item-wish-text{
 	width: 150px;
 }
 
@@ -834,7 +834,7 @@ h2{
 	vertical-align: middle;
 }
 
-.item .price-list{
+.items-grid .price-list{
 	text-align: left;
 }
 
@@ -842,7 +842,7 @@ h2{
 	text-align: right;
 }
 
-.item .wholesale-price{
+.items-grid .wholesale-price{
 	font-size: 18px;
 	font-family: OpenSans-Bold;
 }
@@ -904,7 +904,7 @@ h2{
 	width: 100%;
 }
 
-.hovered .item-counter-info{
+.items-grid .item-counter-info{
 	padding: 15px 0 20px;
 }
 
