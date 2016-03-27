@@ -3556,8 +3556,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-bottom: 10px;
 }
 
-.header  .in-basket .yellow-button{
-
+.header .in-basket .button{
+	text-decoration: none;
 }
 
 .header .desire-basket  .in-basket .price-info{
@@ -3567,8 +3567,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .in-basket a{
 	color: #4f4f4f;
-	float: right;
-	margin-top: 10px;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 40px;
+	text-align: center;
 }
 
 .header .desire-basket span{

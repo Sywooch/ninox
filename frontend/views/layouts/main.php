@@ -420,10 +420,10 @@ $this->beginPage();
 								<?=\Yii::t('shop', '{username}в Вашей корзине ', [
 									'username' => !\Yii::$app->user->isGuest ? \Yii::$app->user->identity->Company.', '
 								: ''
-								]).Html::tag('span', \Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
+								]).Html::a(\Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
 								товара}	many{# товаров} other{# товар}}', [
 									'n'	=>	\Yii::$app->cart->itemsCount
-								]), [
+								]), '#modalCart', [
 									'class' =>  'items-count'
 								])
 								?>
@@ -434,14 +434,10 @@ $this->beginPage();
 														])?>
 							</span>
 							<span class="price-info">Вы покупаете по оптовым ценам</span>
-							<?=\yii\helpers\Html::button('Оформить заказ', [
-								'type'  =>  'submit',
-								'name'	    =>	'orderType',
-								'value'	    =>	'0',
-								'class' =>  'yellow-button middle-button',
-								'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+							<?=Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
+								'class' =>  'button yellow-button middle-button'
 							])?>
-							<a href="">Перейти в корзину</a>
+							<a onclick="this.parentNode.style.display = 'none'">Продолжить покупки</a>
 						</div>
 					</div>
 				</div>
