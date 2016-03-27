@@ -66,7 +66,7 @@ $js = <<<JS
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.item .icon-heart', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-wish', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		addToWishlist($(e.currentTarget));

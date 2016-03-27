@@ -30,7 +30,7 @@ echo Html::tag('div', \yii\widgets\Breadcrumbs::widget([
         'itemView'      =>  function($model, $param2, $param3, $widget) use (&$helper){
             $helper->recalc($model, true);
 
-            return $this->render('_shop_good', [
+            return $this->render('_shop_item', [
                 'model' =>  $model
             ]);
         },

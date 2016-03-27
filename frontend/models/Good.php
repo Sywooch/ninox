@@ -20,25 +20,6 @@ use yii\db\Query;
 class Good extends \common\models\Good{
 
     use PriceHelper;
-    /**
-     * @deprecated use wholesalePrice
-     */
-    public $wholesale_price = 0;            //Оптовая цена текущая
-
-    /**
-     * @deprecated use retailPrice
-     */
-    public $retail_price = 0;               //Розничная цена текущая
-
-    /**
-     * @deprecated use wholesaleRealPrice
-     */
-	public $wholesale_real_price = 0;       //Оптовая цена без скидки
-
-    /**
-     * @deprecated use retailRealPrice
-     */
-	public $retail_real_price = 0;          //Розничная цена без скидки
 	//public $category = '';                //Код категории //Выпилено: Николай Гилко. Для получения кода категории используйте $categorycode
 	public $priceRuleID = 0;                //ID примененного ценового правила
 	public $priceForOneItem = 0;            //Цена за единицу товара
