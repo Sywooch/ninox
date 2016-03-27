@@ -119,7 +119,7 @@ class OrderForm extends Model{
             'customerPhone'          =>  \Yii::t('shop', 'Телефон'),
             'customerEmail'          =>  \Yii::t('shop', 'Эл. почта'),
             'deliveryCity'           =>  \Yii::t('shop', 'Город'),
-            'deliveryRegion'         =>  \Yii::t('shop', 'Регион'),
+            'deliveryRegion'         =>  \Yii::t('shop', 'Область'),
             'deliveryInfo'           =>  \Yii::t('shop', 'Данные о доставке'),
             'anotherReceiverName'    =>  \Yii::t('shop', 'Имя'),
             'anotherReceiverSurname' =>  \Yii::t('shop', 'Фамилия'),
