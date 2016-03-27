@@ -5,23 +5,15 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $js = <<<'JS'
-$("a.deleteOrder").on('click', function(e){
+$("body").on('click', "a.deleteOrder", function(e){
     deleteOrder(e.currentTarget);
-});
-
-$("a.ordersChanges").on('click', function(e){
+}).on('click', "a.ordersChanges", function(e){
     ordersChanges(e.currentTarget);
-});
-
-$("a.restoreOrder").on('click', function(e){
+}).on('click', "a.restoreOrder", function(e){
     restoreOrder(e.currentTarget);
-});
-
-$("button.doneOrder").on('click', function(e){
+}).on('click', "button.doneOrder", function(e){
     doneOrder(e.currentTarget);
-});
-
-$("button.confirmCall").on('click', function(e){
+}).on('click', "button.confirmCall", function(e){
     confirmCall(e.currentTarget);
 });
 
@@ -578,8 +570,6 @@ Html::tag('div', OrdersSearchWidget::widget([
 
                     $(selector)[0].setAttribute(\'settedListeners\', \'true\');
                 }
-
-                console.log(selector.substr(1));
             }
 
             if($("#ordersGridView_internet-pjax").length > 0){
@@ -606,7 +596,6 @@ Html::tag('div', OrdersSearchWidget::widget([
             'options'   =>  [
                 'id'        =>  'source-internet',
             ],
-            'content'   =>  $this->context->runAction('showlist', ['context' => true, 'ordersSource' => 'internet']),
             'active'    =>  true,
             'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet'])]
         ],
@@ -634,6 +623,8 @@ Html::tag('div', OrdersSearchWidget::widget([
         ]
     ]
 ]);
+
+echo Html::tag('script', 'window.onload = function(){ setTimeout(100, $("#ordersSourcesTabs li.active a").click()); }'); //TODO: микрокостыль :D
 
 $modal = new \bobroid\remodal\Remodal([
     'id'            =>  'orderChanges',
