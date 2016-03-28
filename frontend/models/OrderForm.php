@@ -229,10 +229,10 @@ class OrderForm extends Model{
         //затем, создаём модель заказа
 
         $order = new History([
-            'customerEmail'     =>  $customer->email,       //TODO: $customerReceiver->email?
-            'customerName'      =>  $customerReceiver->name,
-            'customerSurname'   =>  $customerReceiver->surname,
-            'customerPhone'     =>  $customer->phone,       //TODO: $customerReceiver->phone?,
+            'customerEmail'     =>  $this->customerEmail,       //TODO: $customerReceiver->email?
+            'customerName'      =>  $this->customerName,
+            'customerSurname'   =>  $this->customerSurname,
+            'customerPhone'     =>  $this->customerPhone,       //TODO: $customerReceiver->phone?,
             'deliveryAddress'   =>  $customerReceiver->address,
             'deliveryRegion'    =>  $customerReceiver->region,
             'customerFathername'=>  $customerReceiver->fathername,
