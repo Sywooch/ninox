@@ -165,6 +165,10 @@ class History extends \yii\db\ActiveRecord
         }
     }
 
+    public function getItems(){
+        return SborkaItem::findAll(['orderID' => $this->id]);
+    }
+
     public function loadCustomer($customer){
         if($customer instanceof Customer == false){
             throw new ErrorException("Передана неверная модель клиента!");

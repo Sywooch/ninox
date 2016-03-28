@@ -9,12 +9,13 @@
 namespace common\components;
 
 
+use common\helpers\EsputnikAPI;
 use yii\base\Component;
 
 class Email extends Component{
 
-    public function send(){
-
+    public function send($data){
+        return EsputnikAPI::_sendRequest($data);
     }
 
 }

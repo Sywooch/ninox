@@ -8,6 +8,7 @@ use frontend\models\BannersCategory;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\CustomerWishlist;
+use frontend\models\History;
 use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use Yii;
@@ -213,12 +214,14 @@ class SiteController extends Controller
 
         if(\Yii::$app->request->post("OrderForm")){
             if($order->validate() && $order->create()){
-                \Yii::trace('created order');
+                $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
+
+                \Yii::trace($email);
+
                 return $this->render('order_success', [
                     'model' =>  $order
                 ]);
             }
-            \Yii::trace($order->getErrors());
         }
 
         $this->layout = 'order';

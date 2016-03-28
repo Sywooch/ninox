@@ -31,7 +31,31 @@ class SborkaItem extends \yii\db\ActiveRecord
         '1' =>  'Отнять сумму',
         '2' =>  'Отнять процент'
     ];
+
     public $price;
+
+    public $_category;
+    public $_photo;
+
+    public function getCategory(){
+        if(empty($this->_category)){
+            $this->_category = Category::findOne(['Code' => $this->categoryCode]);
+        }
+
+        return $this->_category;
+    }
+
+    public function getPhoto(){
+        if(empty($this->_photo)){
+            $this->_photo = GoodsPhoto::find()
+                ->select('ico')
+                ->where(['itemid' => $this->itemID])
+                ->orderBy('order DESC')
+                ->scalar();
+        }
+
+        return $this->_photo;
+    }
 
     public function afterFind(){
         parent::afterFind();
