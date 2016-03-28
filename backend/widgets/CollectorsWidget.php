@@ -26,29 +26,47 @@ class CollectorsWidget extends Widget{
             return;
         }
 
-        $css = <<<'STYLE'
-.collectors{
-        display: table;
+        $css = <<<'CSS'
+    .collectors{
         position: relative;
         width: 100%;
-        font-size: 13px;
-        font-family: "Open Sans";
+        font-size: 0.1px;
+        font-family: "Open Sans",serif;
         height: 30px;
-        margin: 15px 0;
+        line-height: 0;
+        zoom:1;
+        padding: 0;
+        margin: 30px 0;
+
+        display: -webkit-box; /* Android 4.3-, Safari без оптимизации */
+        -webkit-box-pack: justify; /* Android 4.3-, Safari без оптимизации */
+        display: -webkit-flex; /* оптимизация для Safari */
+        -webkit-justify-content: space-between; /* оптимизация для Safari */
+        display: flex;
+        justify-content: space-between;
+        text-align: justify; /* IE10-, Firefox 12-22 */
+        text-align-last: justify; /* IE10-, Firefox 12-22 */
+        /*text-justify: newspaper; /* IE7- */
+        /*zoom: 1; /* IE7- */
     }
 
     .collectors li{
-        display: table-cell;
+        display: inline-block;
+        text-align: left;
         list-style: none;
+        font-size: 13px;
+        line-height: 30px !important;
+        vertical-align: middle !important;
     }
 
-    .collectors li a, .collectors li span{
+    .collectors li a, .collectors li span.totalOrders{
         height: 30px;
         text-align: center;
         vertical-align: middle;
         line-height: 30px;
         font-size: 18px;
-        font-family: "Open Sans semibold";
+        font-family: "Open Sans",serif;
+        font-weight: 600;
     }
 
     .collectors li a{
@@ -66,6 +84,14 @@ class CollectorsWidget extends Widget{
     }
 
     .collectors li span{
+        display: inline-block;
+    }
+
+    .collectors li span.name{
+        margin-top: 3px;
+    }
+
+    .collectors li span.totalOrders{
         color: #b5b5b5;
     }
 
@@ -76,7 +102,7 @@ class CollectorsWidget extends Widget{
     .collectors li.bad a:hover{
         cursor: not-allowed;
     }
-STYLE;
+CSS;
 
     $this->getView()->registerCss($css);
 
@@ -98,16 +124,16 @@ STYLE;
             }
 
 
-            $items[] = Html::tag('li', $item['name'].': '.($this->showUnfinished ? Html::tag('a', isset($item['completedOrders']) ? $item['completedOrders'] : 0, [
+            $items[] = Html::tag('li', Html::tag('span', $item['name'].':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', isset($item['completedOrders']) ? $item['completedOrders'] : 0, [
                     'href'  =>  $link
-                ]) : '').' '.Html::tag('span', isset($item['totalOrders']) ? $item['totalOrders'] : 0), [
+                ]) : '').' '.Html::tag('span', isset($item['totalOrders']) ? $item['totalOrders'] : 0, ['class' => 'totalOrders']), [
                 'class' =>  (!isset($item['completedOrders']) || $item['completedOrders'] == 0 ? 'bad' : '')
             ]);
         }
 
         return Html::tag('ul', implode('', $items), [
             'class' =>  'collectors'
-        ]).'<div style="clear: both"></div>';
+        ]).Html::tag('div', '', ['class' => 'clearfix']);
     }
 
 }

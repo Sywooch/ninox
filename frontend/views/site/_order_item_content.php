@@ -1,30 +1,50 @@
 <?php
-        use yii\bootstrap\ActiveForm;
+$data = [
+    'Винницкая область' => \Yii::t('shop', 'Винницкая область'),
+    'Волынская область' => \Yii::t('shop', 'Волынская область'),
+    'Днепропетровская область' => \Yii::t('shop', 'Днепропетровская область'),
+    'Донецкая область' => \Yii::t('shop', 'Донецкая область'),
+    'Житомирская область' => \Yii::t('shop', 'Житомирская область'),
+    'Закарпатская область' => \Yii::t('shop', 'Закарпатская область'),
+    'Запорожская область' => \Yii::t('shop', 'Запорожская область'),
+    'Ивано-Франковская область' => \Yii::t('shop', 'Ивано-Франковская область'),
+    'Киевская область' => \Yii::t('shop', 'Киевская область'),
+    'Кировоградская область' => \Yii::t('shop', 'Кировоградская область'),
+    'Луганская область' => \Yii::t('shop', 'Луганская область'),
+    'Львовская область' => \Yii::t('shop', 'Львовская область'),
+    'Николаевская область' => \Yii::t('shop', 'Николаевская область'),
+    'Одесская область' => \Yii::t('shop', 'Одесская область'),
+    'Полтавская область' => \Yii::t('shop', 'Полтавская область'),
+    'Ровненская область' => \Yii::t('shop', 'Ровненская область'),
+    'Сумская область' => \Yii::t('shop', 'Сумская область'),
+    'Тернопольская область' => \Yii::t('shop', 'Тернопольская область'),
+    'Харьковская область' => \Yii::t('shop', 'Харьковская область'),
+    'Херсонская область' => \Yii::t('shop', 'Херсонская область'),
+    'Хмельницкая область' => \Yii::t('shop', 'Хмельницкая область'),
+    'Черкасская область' => \Yii::t('shop', 'Черкасская область'),
+    'Черниговская область' => \Yii::t('shop', 'Черниговская область'),
+    'Черновицкая область' => \Yii::t('shop', 'Черновицкая область'),
+    'Киев' => \Yii::t('shop', 'Киев')
+]
 ?>
 <div class="content-data-body-first">
     <?=$form->field($model, 'customerName'),
     $form->field($model, 'customerSurname'),
     $form->field($model, 'deliveryCity'),
-    $form->field($model, 'deliveryRegion'),
+    $form->field($model, 'deliveryRegion')->widget(\kartik\select2\Select2::className(), [
+        'data' => $data,
+        'language' => \Yii::$app->language,
+        'options' => ['placeholder' => \Yii::t('shop', 'Выберите область...')],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]),
     $form->field($model, 'customerEmail')?>
     <div class="next-button">
-        <?php
-        /*$form = ActiveForm::begin([
-            'id' => '',
-            'enableClientValidation'=> true,
-            'validateOnSubmit' => true, // this is redundant because it's true by default
-        ]);
-
-        /*$form = $this->beginWidget('CActiveForm', [
-            'clientOptions' => [
-                'afterValidate' => 'js:function(form, data, hasError) {if(!hasError){$('.[type=>submit].').removeAttr('.disabled.') } }'  ]]);*/
-
-        echo \yii\helpers\Html::button('Далее', [
-            'class'     =>  'yellow-button middle-button goToPage',
+        <?=\yii\helpers\Html::button('Далее', [
+            'class'     =>  'button yellow-button middle-button goToPage',
             'type'      =>  'button',
 	        'data-page' =>  1,
-
-        ]);
-        ?>
+        ]);?>
     </div>
 </div>

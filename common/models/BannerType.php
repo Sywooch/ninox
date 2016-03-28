@@ -4,6 +4,8 @@ use Yii;
 /**
  * This is the model class for table "banners_type".
  *
+ * @deprecated
+ *
  * @property integer $id
  * @property string $description
  * @property string $alias

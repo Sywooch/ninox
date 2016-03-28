@@ -11,6 +11,7 @@ namespace frontend\components;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\Good;
 use yii\base\Component;
+use yii\db\ActiveQuery;
 use yii\web\Cookie;
 
 class Cart extends Component{
@@ -22,10 +23,16 @@ class Cart extends Component{
     public $itemsCount = 0;
     public $cartWholesaleSumm = 0;
     public $cartWholesaleRealSumm = 0;
+	public $cartWholesaSumWithoutDiscount = 0;
+	public $cartWholesaSumNotDiscounted = 0;
     public $cartRetailSumm = 0;
     public $cartRetailRealSumm = 0;
+	public $cartRetailSumWithoutDiscount = 0;
+	public $cartRetailSumNotDiscounted = 0;
     public $cartSumm = 0;
     public $cartRealSumm = 0;
+	public $cartSumWithoutDiscount = 0;
+	public $cartSumNotDiscounted = 0;
     public $wholesale = false;
 
     public function init(){
@@ -38,18 +45,22 @@ class Cart extends Component{
         $this->load();
 
         if(!empty($this->cartCode)) {
-            $lastUpdate = $cache->exists('cart-'.$this->cartCode.'/lastUpdate') ? $cache->get('cart-'.$this->cartCode.'/lastUpdate') : time() + 1201;
+            $lastUpdate = time() + 12000;//$cache->exists('cart-'.$this->cartCode.'/lastUpdate') ? $cache->get('cart-'.$this->cartCode.'/lastUpdate') : time() + 1201;
 
             if(!$cache->exists('cart-'.$this->cartCode.'/items') || $lastUpdate > (time() + 1200)){
-                foreach($this->itemsQuery()->each() as $item){
+	            $this->items = [];
+	            foreach($this->itemsQuery()->each() as $item){
                     $this->items[$item->itemID] = $item;
                 }
+	            $this->save();
             }
 
             if(!$cache->exists('cart-'.$this->cartCode.'/goods') || $lastUpdate > (time() + 1200)){
-                foreach($this->goodsQuery()->each() as $good){
+	            $this->goods = [];
+	            foreach($this->goodsQuery()->each() as $good){
                     $this->goods[$good->ID] = $good;
                 }
+	            $this->save();
             }
 
             if($lastUpdate > (time() + 1200)){
@@ -57,17 +68,28 @@ class Cart extends Component{
             }
         }
 
-	    $this->calcCart();
+	    $this->recalcCart();
     }
 
+    /**
+     * @param string $length
+     *
+     * @return string
+     */
     public function createCartCode($length = '11'){
         return \Yii::$app->security->generateRandomString($length);
     }
 
+    /**
+     * @return \frontend\models\Cart
+     */
     public function itemsQuery(){
         return \frontend\models\Cart::find()->where(['cartCode' => $this->cartCode])->orderBy('date DESC');
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function goodsQuery(){
         $items = [];
 
@@ -91,10 +113,20 @@ class Cart extends Component{
         $this->goods = \Yii::$app->cache->get('cart-'.$this->cartCode.'/goods');
     }
 
+    /**
+     * @param $itemID
+     *
+     * @return int
+     */
     public function has($itemID){
         return isset($this->items[$itemID]) ? $this->items[$itemID]->count : 0;
     }
 
+    /**
+     * @param int $itemID
+     *
+     * @return bool
+     */
 	public function remove($itemID){
 		unset($this->items[$itemID]);
 		unset($this->goods[$itemID]);
@@ -108,6 +140,12 @@ class Cart extends Component{
 		return true;
 	}
 
+    /**
+     * @param int $itemID
+     * @param int $count
+     *
+     * @return mixed
+     */
     public function put($itemID, $count = 1){
         if(empty($this->items) && empty($this->cartCode)){
 
@@ -149,61 +187,38 @@ class Cart extends Component{
         return $this->cartWholesaleSumm >= $barrier;
     }
 
-	public function calcCart(){
-		$this->itemsCount = !empty($this->goods) ? sizeof($this->goods) : 0;
-		$this->cartWholesaleSumm = 0;
-		$this->cartWholesaleRealSumm = 0;
-		$this->cartRetailSumm = 0;
-		$this->cartRetailRealSumm = 0;
-		if(!empty($this->goods)){
-			foreach($this->goods as $good){
-				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
-				$this->cartWholesaleRealSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
-				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
-				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;
-			}
-			$this->cartSumm = $this->cartRetailSumm;
-			$this->cartRealSumm = $this->cartRetailRealSumm;
-		}
-
-		$this->wholesale = $this->cartWholesaleSumm >= \Yii::$app->params['domainInfo']['wholesaleThreshold'];
-
-		$this->cartSumm = $this->wholesale ? $this->cartWholesaleSumm : $this->cartRetailSumm;
-		$this->cartRealSumm = $this->wholesale ? $this->cartWholesaleRealSumm : $this->cartRetailRealSumm;
-	}
-
 	public function recalcCart(){
 		$this->itemsCount = !empty($this->goods) ? sizeof($this->goods) : 0;
 		$this->cartWholesaleSumm = 0;
 		$this->cartWholesaleRealSumm = 0;
+		$this->cartWholesaSumWithoutDiscount = 0;
 		$this->cartRetailSumm = 0;
 		$this->cartRetailRealSumm = 0;
+		$this->cartRetailSumWithoutDiscount = 0;
 		if(!empty($this->goods)){
-			foreach($this->goods as $good){
-				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
-				$this->cartWholesaleRealSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
-				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
-				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;
-			}
-			$this->cartSumm = $this->cartRetailSumm;
-			$this->cartRealSumm = $this->cartRetailRealSumm;
-			$this->cartWholesaleSumm = 0;
-			$this->cartWholesaleRealSumm = 0;
-			$this->cartRetailSumm = 0;
-			$this->cartRetailRealSumm = 0;
 			$helper = new PriceRuleHelper();
+			$helper->cartSumm = 0;
 			foreach($this->goods as $good){
-				$good = $helper->recalc($good);
-				$this->cartWholesaleSumm += $good->wholesale_price * $this->items[$good->ID]->count;
-				$this->cartWholesaleRealSumm += $good->wholesale_real_price * $this->items[$good->ID]->count;
-				$this->cartRetailSumm += $good->retail_price * $this->items[$good->ID]->count;
-				$this->cartRetailRealSumm += $good->retail_real_price * $this->items[$good->ID]->count;
+				$helper->cartSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesalePrice : $good->realWholesalePrice) * $this->items[$good->ID]->count;
+			}
+			foreach($this->goods as $good){
+				$helper->recalc($good);
+				$this->cartWholesaleSumm += $good->wholesalePrice * $this->items[$good->ID]->count;
+				$this->cartWholesaleRealSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesalePrice : $good->realWholesalePrice) * $this->items[$good->ID]->count;
+				$this->cartWholesaSumNotDiscounted += $good->discountType == 0 ? $good->realWholesalePrice * $this->items[$good->ID]->count : 0;
+				$this->cartWholesaSumWithoutDiscount += $good->realWholesalePrice * $this->items[$good->ID]->count;
+				$this->cartRetailSumm += $good->retailPrice * $this->items[$good->ID]->count;
+				$this->cartRetailRealSumm += $good->realRetailPrice * $this->items[$good->ID]->count;
+				$this->cartRetailSumNotDiscounted += $good->discountType == 0 ? $good->realRetailPrice * $this->items[$good->ID]->count : 0;
+				$this->cartRetailSumWithoutDiscount += $good->realRetailPrice * $this->items[$good->ID]->count;
 			}
 		}
 
-        $this->wholesale = $this->cartWholesaleSumm >= \Yii::$app->params['domainInfo']['wholesaleThreshold'];
+        $this->wholesale = $this->cartWholesaleRealSumm >= \Yii::$app->params['domainInfo']['wholesaleThreshold'];
 
 		$this->cartSumm = $this->wholesale ? $this->cartWholesaleSumm : $this->cartRetailSumm;
 		$this->cartRealSumm = $this->wholesale ? $this->cartWholesaleRealSumm : $this->cartRetailRealSumm;
+		$this->cartSumNotDiscounted = $this->wholesale ? $this->cartWholesaSumNotDiscounted : $this->cartRetailSumNotDiscounted;
+		$this->cartSumWithoutDiscount = $this->wholesale ? $this->cartWholesaSumWithoutDiscount : $this->cartRetailSumWithoutDiscount;
 	}
 }

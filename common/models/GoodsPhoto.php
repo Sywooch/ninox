@@ -10,28 +10,10 @@ use Yii;
  * @property integer $id
  * @property integer $itemid
  * @property string $ico
+ * @property integer $order
  */
 class GoodsPhoto extends \yii\db\ActiveRecord
 {
-    public function behaviors()
-    {
-        return [
-            'LoggableBehavior' => [
-                'class' => 'sammaye\audittrail\LoggableBehavior',
-                'options'   =>  [
-                    'alternateKey'      =>  'itemid',
-                    'discardSaveCreate' =>  true,
-                    'field'             =>  'additionalPhoto',
-                    'model'             =>  Good::className()
-                ],
-                'ignored' => [
-                    'itemid',
-                    'id',
-                    ''
-                ],
-            ]
-        ];
-    }
 
     /**
      * @inheritdoc
@@ -50,6 +32,7 @@ class GoodsPhoto extends \yii\db\ActiveRecord
             'id' => 'ID',
             'itemid' => 'Itemid',
             'ico' => 'Ico',
+            'order' =>  'Order'
         ];
     }
 }

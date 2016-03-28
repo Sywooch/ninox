@@ -1,6 +1,6 @@
 <?php
 use kartik\dropdown\DropdownX;
-use kartik\sortable\Sortable;
+use yii\bootstrap\Html;
 use yii\widgets\ListView;
 
 $this->title = "Товары";
@@ -46,8 +46,92 @@ img.good-sale{
 }
 STYLE;
 
-$js = <<<'SCRIPT'
-var good = {
+$js = <<<JS
+(function( $ ){
+    $.fn.goods = function(options) {
+        if(options == undefined || options == null){
+            options = {};
+        }
+
+        var defaultOptions = {
+                stateButtonSelector: '.changeState-btn',
+                deleteButtonSelector: '.delete-btn',
+                pickUpButtonSelector: '.'
+            },
+            items = this;
+
+        options = $.extend(defaultOptions, options);
+
+        var trashState = function(item, button){
+            $.ajax({
+                type: 'POST',
+                url: '/goods/toggle',
+                data: {
+                    goodID: item.getAttribute('data-key'),
+                    attribute: 'Deleted'
+                },
+                success: function(data){
+                    var deleted = data == 1,
+                        thumb = $(item).find('.thumbnail');
+
+                    if(deleted){
+                        thumb.addClass('bg-very-danger');
+                        thumb[0].setAttribute('data-attribute-deleted', true);
+                    }else{
+                        if(thumb[0].getAttribute('data-attribute-deleted') !== null)
+                            thumb[0].removeAttribute('data-attribute-deleted');
+
+                        thumb.toggleClass('bg-very-danger');
+                    }
+
+                    button.innerHTML = deleted ? 'Восстановить' : 'Удалить';
+                }
+            });
+        }, changeState = function(item, button){
+            $.ajax({
+                type: 'POST',
+                url: '/goods/toggle',
+                data: {
+                    goodID: item.getAttribute('data-key'),
+                    attribute: 'show_img'
+                },
+                success: function(data){
+                    var enabled = data == 1,
+                        thumb = $(item).find('.thumbnail');
+
+                    if(item.getAttribute('data-attribute-deleted') !== null){
+                        thumb.setAttribute('oldClass', item.getAttribute('class'));
+                        thumb.addClass('bg-very-danger');
+                    }else{
+                        thumb.toggleClass(enabled ? 'bg-danger' : 'bg-success');
+                        thumb.addClass(enabled ? 'bg-success' : 'bg-danger');
+                    }
+
+                    button.innerHTML = enabled ? 'Выключить' : 'Включить';
+                }
+            });
+        }, pickUp = function(item){
+
+        },setEvents = function(item){
+            $(item).find(options.stateButtonSelector).on('click', function(){
+                changeState(item, this);
+            });
+
+            $(item).find(options.deleteButtonSelector).on('click', function(){
+                trashState(item, this);
+            });
+        }
+
+        items.toArray().forEach(function(item, i){
+            setEvents(item);
+        });
+    };
+})( jQuery );
+
+$("#goodsList .item").goods();
+
+
+/*var good = {
     'changeState': function(e){
         var target = e.currentTarget;
         $.ajax({
@@ -111,157 +195,125 @@ var changeCategoryState = function(e){
 			}
 		}
 	});
-}, changeCategoryCanBuy = function(e){
-    $.ajax({
-		type: 'POST',
-		url: '/goods/changecategorycanbuy',
-		data: {
-		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
-		},
-		success: function(data){
-			e.target.innerHTML = data == 1 ? "Не продавать" : "Продавать";
-		}
-	});
-}
+};
 
-var a = document.querySelectorAll(".delete-btn");
-for(var i = 0; i < a.length; i++){
-    a[i].addEventListener('click', good.changeTrashState, false);
-}
+$(".changeState-btn").on('click', function(e){
+    good.changeState(e);
+});
 
-a = document.querySelectorAll(".changeState-btn");
-for(i = 0; i < a.length; i++){
-    a[i].addEventListener('click', good.changeState, false);
-}
+$(".delete-btn").on('click', function(e){
+    good.changeTrashState(e);
+});
 
+$(".categoryActions .canBuy").on('click', function(e){
+    changeCategoryCanBuy(e);
+});
 
-a = document.querySelectorAll(".categoryActions .shutdown");
-
-for(var i = 0; i < a.length; i++){
-    a[i].addEventListener('click', function(e){
-        changeCategoryState(e);
-    }, false);
-}
-
-a = document.querySelectorAll(".categoryActions .canBuy");
-
-for(var i = 0; i < a.length; i++){
-    a[i].addEventListener('click', function(e){
-        changeCategoryCanBuy(e);
-    }, false);
-}
-
-SCRIPT;
+$(".categoryActions .shutdown").on('click', function(e){
+    changeCategoryState(e);
+});*/
+JS;
 
 $this->registerJs($js);
 
 $this->registerCss($s);
 
+$sf = \Yii::$app->request->get("smartfilter");
+$enabled = isset($goodsCount[$nowCategory->Code]['enabled']) ? $goodsCount[$nowCategory->Code]['enabled'] : 0;
+$disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$nowCategory->Code]['disabled'] : 0;
 ?>
-    <h1><?=$this->title?><?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small><?php } ?></h1>
-    <?php if(!empty($goods)){
-    $sf = \Yii::$app->request->get("smartfilter");
-    $enabled = isset($goodsCount[$nowCategory->Code]['enabled']) ? $goodsCount[$nowCategory->Code]['enabled'] : 0;
-    $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$nowCategory->Code]['disabled'] : 0;
-        ?>
-    <ul class="nav nav-pills" style="margin-left: -15px;">
-        <li role="presentation"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>">Всего товаров: <span class="label label-info"><?=($enabled + $disabled)?></span></a></li>
-        <li role="presentation" class="<?=$sf == 'enabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=enabled">включено: <span class="label label-success"><?=$enabled?></span></a></li>
-        <li role="presentation" class="<?=$sf == 'disabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=disabled">выключено: <span class="label label-danger"><?=$disabled?></span></a></li>
-    </ul>
-    <div class="clearfix"></div>
-    <br style="margin-bottom: 0;">
-    <div class="dropdown">
-        <div class="btn-group" role="group" aria-label="Действия">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
-                Действия с категорией <span class="caret"></span>
-            </button>
-            <?=DropdownX::widget([
-                'options'   =>  [
-                    'class' =>  'categoryActions'
+<h1><?=$this->title?><?php if(!empty($nowCategory)){ ?>&nbsp;<small><?=$nowCategory->Name?></small><?php } ?></h1>
+<ul class="nav nav-pills" style="margin-left: -15px;">
+    <li role="presentation"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>">Всего товаров: <span class="label label-info"><?=($enabled + $disabled)?></span></a></li>
+    <li role="presentation" class="<?=$sf == 'enabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=enabled">включено: <span class="label label-success"><?=$enabled?></span></a></li>
+    <li role="presentation" class="<?=$sf == 'disabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=disabled">выключено: <span class="label label-danger"><?=$disabled?></span></a></li>
+</ul>
+<div class="clearfix"></div>
+<br style="margin-bottom: 0;">
+<div class="dropdown">
+    <div class="btn-group" role="group" aria-label="Действия">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
+            Действия с категорией <span class="caret"></span>
+        </button>
+        <?=DropdownX::widget([
+            'options'   =>  [
+                'class' =>  'categoryActions'
+            ],
+            'items' =>  [
+                [
+                    'label'     =>  'Просмотреть',
+                    'url'       =>  \yii\helpers\Url::to(['/categories/view/'.$nowCategory->ID])
                 ],
-                'items' =>  [
-                    [
-                        'label'     =>  'Просмотреть',
-                        'url'       =>  '/goods/showcategory/'.$nowCategory->ID
-                    ],
-                    [
-                        'label'     =>  'Просмотреть на сайте',
-                        'url'       =>  'https://krasota-style.com.ua/'.$nowCategory->link
-                    ],
-                    [
-                        'label'     =>  'Редактировать',
-                        'url'       =>  '/goods/showcategory/'.$nowCategory->ID.'?act=edit'
-                    ],
-                    [
-                        'label'     =>  'Добавить',
-                        'items'     =>  [
-                            [
-                                'label'     =>  'Товар',
-                                'url'       =>  '/goods/addgood?category='.$nowCategory->ID
-                            ],
-                            [
-                                'label'     =>  'Несколько товаров',
-                                'url'       =>  '/goods/addgood?category='.$nowCategory->ID.'?mode=lot'
-                            ],
-                            '<li class="divider"></li>',
-                            [
-                                'label'     =>  'Категорию',
-                                'url'       =>  '/goods/addcategory?category='.$nowCategory->ID
-                            ],
-                        ]
-                    ],
-                    '<li class="divider"></li>',
-                    [
-                        'label' =>  $nowCategory->menu_show == "1" ? "Выключить" : "Включить",
-                        'options'   =>  [
-                            'class' =>  'shutdown',
-                            'data-attribute-categoryID' =>  $nowCategory->ID
+                [
+                    'label'     =>  'Просмотреть на сайте',
+                    'url'       =>  'https://krasota-style.com.ua/'.$nowCategory->link
+                ],
+                [
+                    'label'     =>  'Редактировать',
+                    'url'       =>  \yii\helpers\Url::to(['/categories/view/'.$nowCategory->ID, 'act' => 'edit'])
+                ],
+                [
+                    'label'     =>  'Добавить',
+                    'items'     =>  [
+                        [
+                            'label'     =>  'Товар',
+                            'url'       =>  \yii\helpers\Url::to(['add', 'category' => $nowCategory->ID])
                         ],
-                        'url'   =>  '#'
-                    ],
-                    [
-                        'label' =>  $nowCategory->canBuy == "1" ? "Не продавать" : "Продавать",
-                        'options'   =>  [
-                            'class' =>  'canBuy',
-                            'data-attribute-categoryID' =>  $nowCategory->ID
+                        [
+                            'label'     =>  'Несколько товаров',
+                            'url'       =>  \yii\helpers\Url::to(['add', 'category' => $nowCategory->ID, 'mode' => 'lot'])
                         ],
-                        'url'   =>  '#'
+                        Html::tag('li', '', ['class' => 'divider']),
+                        [
+                            'label'     =>  'Категорию',
+                            'url'       =>  \yii\helpers\Url::to(['/categories/add', 'category' => $nowCategory->ID])
+                        ],
                     ]
+                ],
+                Html::tag('li', '', ['class' => 'divider']),
+                [
+                    'label' =>  $nowCategory->menu_show == "1" ? "Выключить" : "Включить",
+                    'options'   =>  [
+                        'class' =>  'shutdown',
+                        'data-attribute-categoryID' =>  $nowCategory->ID
+                    ],
+                    'url'   =>  '#'
+                ],
+                [
+                    'label' =>  $nowCategory->canBuy == "1" ? "Не продавать" : "Продавать",
+                    'options'   =>  [
+                        'class' =>  'canBuy',
+                        'data-attribute-categoryID' =>  $nowCategory->ID
+                    ],
+                    'url'   =>  '#'
                 ]
-            ])?>
-        </div>
+            ]
+        ])?>
     </div>
+</div>
 <div class="row">
     <br>
     <?php
-    \yii\widgets\Pjax::begin([
+    \yii\widgets\Pjax::begin();
 
-    ])?>
-        <?= ListView::widget([
-            'dataProvider' => $goods,
-            'itemOptions' => [
-                'class' => 'item'
-            ],
-            'layout'    =>  '<div class="row"><div class="col-xs-12">{summary}</div><div class="col-xs-12">{items}</div><div class="col-xs-12"><center>{pager}</center></div></div>',
-            'summary'   =>  '<span style="margin-left: 15px">Показаны товары {begin}-{end}, всего товаров {totalCount}</span><br><br>',
-            'pager' =>  [
-            ],
-            'itemView' => '_goods_oneItem',
-        ])?>
-    <?php
+    echo ListView::widget([
+        'dataProvider'  => $goods,
+        'id'            =>  'goodsList',
+        'itemOptions'   => [
+            'class' => 'item col-sm-4 col-md-3',
+            'style' =>  'min-height: 500px'
+        ],
+        'layout'        =>  Html::tag('div',
+            Html::tag('div', '{summary}', ['class' => 'col-xs-12']).
+            Html::tag('div', '{items}', ['class' => 'col-xs-12']).
+            Html::tag('div', '{pager}', ['class' => 'col-xs-12', 'align' => 'center']),
+            [
+                'class' =>  'row'
+            ]),
+        'summary'        =>  Html::tag('span', 'Показаны товары {begin}-{end}, всего товаров {totalCount}', ['style' => 'margin-left: 15px']),
+        'itemView'       =>  'goods/oneItem',
+    ]);
+
     \yii\widgets\Pjax::end();
     ?>
 </div>
-    <?php
-    }else{
-    ?>
-<div class="jumbotron well well-lg">
-    <div class="container">
-        <h1>Нет товаров</h1>
-        <p>Товары, в этой категории или в этом статусе, отстутствуют.</p>
-    </div>
-</div>
-    <?php
-    }
-    ?>

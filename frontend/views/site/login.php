@@ -1,25 +1,25 @@
+<?php
+use kartik\form\ActiveForm;
+?>
 <span class="close"></span>
-<div class="block">
-    <span class="label">Вход в личный кабинет:</span>
-    <div class="cap">
-        Пользователь с указанным e-mail или телефоном уже зарегистрирован. </div>
-    <div class="row">
-        <div class="phone">
-            <span class="title">Ваш телефон</span>
-            <span class="flag"></span>
-            <input placeholder="+_(___)___-____" class="input_phone" name="phone" value="" type="text">
-        </div>
-    </div>
-    <div class="row">
-        <div class="password">
-            <span class="title">Пароль</span><input id="input_password" name="passwd" type="password">
-        </div>
-    </div>
-    <div class="line"></div>
-    <div class="row">
-        <input class="yellowButton largeButton" disabled="" id="loginMeButton" value="Войти" name="login" type="button">
-    </div>
-    <div class="row center">
-        <span class="recovery link-hide blue" data-href="/cabinet/recovery">Восстановить пароль</span><span> | </span><span class="registration link-hide blue" data-href="/cabinet/registration">Регистрация</span>
-    </div>
+<?php
+
+$form = new ActiveForm([
+    'type'          => ActiveForm::TYPE_HORIZONTAL,
+    'formConfig'    => [
+        'labelSpan' => 3,
+        'deviceSize' => ActiveForm::SIZE_SMALL
+    ]
+]);
+
+echo $form->field($model, 'phone'),
+$form->field($model, 'password')->passwordInput();
+
+echo \yii\bootstrap\Html::button(\Yii::t('shop', 'Войти'), [
+    'class' =>  'yellowButton largeButton'
+])
+
+?>
+<div class="row center">
+    <span class="recovery link-hide blue" data-href="/cabinet/recovery">Восстановить пароль</span><span> | </span><span class="registration link-hide blue" data-href="/cabinet/registration">Регистрация</span>
 </div>

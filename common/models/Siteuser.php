@@ -29,6 +29,8 @@ class Siteuser extends \yii\db\ActiveRecord
 {
     public static $siteusers;
     public $user_role = null;
+    public $domain = false;
+    public $domains = [];
 
     public static $workStatuses = [
         '0' =>  'Свободен',
@@ -162,5 +164,34 @@ class Siteuser extends \yii\db\ActiveRecord
         }
 
         return parent::beforeSave($input);
+    }
+
+    public function afterSave($insert, $changedAttributes){
+        $domains = [];
+
+        if(!empty($this->domain)){
+            $this->domains[] = $this->domain;
+        }
+
+        if(!empty($this->domains)){
+            foreach($this->domains as $domain){
+                $findedDomain = SubDomainAccess::findOne(['userId'  =>  $this->id]);
+
+                if(!$findedDomain){
+                    $findedDomain = new SubDomainAccess([
+                        'userId'        =>  $this->id,
+                        'subDomainId'   =>  $domain
+                    ]);
+                }
+
+                $domains[] = $findedDomain;
+            }
+        }
+
+        foreach($domains as $domain){
+            $domain->save(false);
+        }
+
+        return parent::afterSave($insert, $changedAttributes);
     }
 }

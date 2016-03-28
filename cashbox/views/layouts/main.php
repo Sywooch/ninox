@@ -5,14 +5,17 @@ use yii\helpers\Html;
 
 $js = <<<'JS'
     changeCashboxType = function(){
-        swal({
-            title: "Пересчитываем заказ...",
-            allowEscapeKey: false,
-            showConfirmButton: false
-        });
+
         $.ajax({
             url:    '/changecashboxtype',
             type:   'post',
+            beforeSend: function(){
+                swal({
+                    title: "Пересчитываем заказ...",
+                    allowEscapeKey: false,
+                    showConfirmButton: false
+                });
+            },
             success: function(data){
                 var summary = $('.header .summary'),
                     button = $('#changeCashboxType');
@@ -40,11 +43,28 @@ $js = <<<'JS'
                 if($('#cashboxGrid-pjax').length > 0){
                     $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                    $('.toPay')[0].innerHTML = data.orderToPay;
-                    $('.summ')[0].innerHTML = data.orderSum;
-                }
+                    if(data.sum !== undefined){
+                        $(".summ")[0].innerHTML = data.sum;
+                    }
 
-                swal.close();
+                    if(data.sumToPay !== undefined){
+                        $(".toPay")[0].innerHTML = data.sumToPay;
+                    }
+
+                    if(data.wholesaleSum !== undefined){
+                        $(".wholesale-sum")[0].innerHTML = data.wholesaleSum;
+                    }
+
+                    if(data.discountSum !== undefined){
+                        $(".discount")[0].innerHTML = data.discountSum;
+                    }
+
+                    if(data.itemsCount !== undefined){
+                        $(".itemsCount")[0].innerHTML = data.itemsCount;
+                    }
+
+                    swal.close();
+                }
             }
         });
     };

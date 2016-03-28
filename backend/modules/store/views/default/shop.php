@@ -1,5 +1,6 @@
 <?php
 use backend\models\CashboxForm;
+use kartik\grid\GridView;
 
 $this->title = $model->name;
 
@@ -19,7 +20,23 @@ JS;
 <h1><?=$this->title?> <small><?=$model->type == $model::TYPE_WAREHOUSE ? 'склад' : 'магазин'?></small></h1>
 <h2 style="margin-bottom: 5px">Товары</h2>
 <div class="well well-sm">
-
+    <?=GridView::widget([
+        'dataProvider'  =>  new \yii\data\ActiveDataProvider([
+            'query' =>  \common\models\ShopGood::find()->where(['shopID' => $model->id])
+        ]),
+        'summary'   =>  false,
+        'bordered'  =>  false,
+        'columns'   =>  [
+            [
+                'attribute' =>  'itemID',
+                'label'     =>  'Товар',
+                'format'    =>  'html',
+            ],[
+                'attribute' =>  'count',
+                'label'     =>  'Колличество',
+            ]
+        ]
+    ])?>
 </div>
 
 <h2 style="margin-bottom: 5px">Пользователи</h2>

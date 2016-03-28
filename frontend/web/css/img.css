@@ -1,8 +1,8 @@
-.deliveryType .minihead:before{
+.delivery-type .minihead:before{
     content: url('/img/site/delivery-car.png');
 }
 
-.payType .minihead:before{
+.pay-type .minihead:before{
     content: url('/img/site/payment.png');
 }
 

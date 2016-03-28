@@ -22,8 +22,9 @@
     display: table-cell; /* эмуляция ячейки таблицы */
     text-align: center;
     height: 50px; /* высота пункта */
-    padding-left: 2px; /* визуальная граница между пунктами меню */
+    padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
     vertical-align: bottom;
+    cursor: pointer;
 }
 
 .header-menu-item:hover{
@@ -35,7 +36,7 @@
     display: table-cell; /* эмуляция ячейки таблицы */
     text-align: center;
     height: 77px; /* высота пункта */
-    padding-left: 2px; /* визуальная граница между пунктами меню */
+    padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
     vertical-align: bottom;
 }
 
@@ -44,12 +45,17 @@
     display: table-cell; /* без этого тоже никак */
     vertical-align: middle; /* вертикальное выравнивание текста */
     font-size: 13px;
-    height: 38px;
+    /*height: 38px;
+    >что было до изменений<
+    padding-bottom: 10px;*/
     color: white;
     padding: 5px;
     line-height: 12px;
-    padding-bottom: 10px;
     text-decoration: none;
+    /*изменения на 12.03.16*/
+    height: 32px;
+    padding-top: 0px;
+    /*конец изменений, если ничего не поедет в дальнейшем оптимизировать паддинги*/
 }
 
 .header-menu-item:hover a{
@@ -71,14 +77,37 @@
 }
 
 .header-menu-item-image{
-    height: 30px;
+    /*height: 30px;*/
     background-size: cover;
     max-width: 1000px;
-    min-width: 120px;
+    /*min-width: 120px; изменения на 12.06.16, еси ничего не поедет так и оставить*/
+    /*изменения на 12.03.16*/
+    height: 35px;
+    /*конец изменений*/
 }
 
-.header-menu-item-image img{
+.svg path {
+    fill: #ffffff ;
+}
+.header-menu-item:hover .svg path {
+    fill: #3cace7 ;
+}
+/*svg {width: 100%; height: 100%;}
+svg path {fill: red !important;}*/
+
+
+#layer1{
+    fill: ;
+}
+
+.sticky .header-menu-item-image{
+    height: 40px;
+    margin-top: 0px;
+}
+
+.header-menu-item-image > *{
     transform: scale(1);
+    max-height: 35px;
 }
 
 .header-menu-item-content{

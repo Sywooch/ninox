@@ -9,6 +9,7 @@
 namespace frontend\widgets;
 
 
+use frontend\assets\MainMenuAsset;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 
@@ -25,11 +26,11 @@ class MainMenuWidget extends Widget{
             ],
         ]
     ];
-    /*private $defaultItemParams = [
-        'slider'    =>  false
-    ];*/
+    
     public $items = [];
+    
     public $options = [];
+    
     private $defaultOptions = [
         'firstLevelUlClass' =>  'header-menu-items',
         'firstLevelDivClass'=>  'header-menu-item-content',
@@ -42,6 +43,7 @@ class MainMenuWidget extends Widget{
         'menuClassDiv'      =>  'header-menu-content',
         'sliderClassDiv'    =>  'header-menu-item-content-slider',
         'sliderClassImage'  =>  'img',
+        'sticky'            =>  true
     ];
 
     public function init(){
@@ -51,6 +53,16 @@ class MainMenuWidget extends Widget{
     public function run(){
         foreach($this->items as $item){
             $items[] = $this->renderItem(array_merge($this->defaultItemParams, $item));
+        }
+
+        MainMenuAsset::register($this->getView());
+
+        if($this->options['sticky']){
+            $this->getView()->registerJsFile('/js/jquery.sticky.js', [
+                'depends'   =>  'yii\web\JqueryAsset'
+            ]);
+
+            $this->getView()->registerJs('$(".sticky-on-scroll").sticky({ topSpacing: 0, className:"sticky" })');
         }
 
         return Html::tag('div', Html::tag('div', Html::tag('ul', implode('', $items), [
@@ -66,9 +78,14 @@ class MainMenuWidget extends Widget{
         $menu = $submenu = '';
 
         if(!$subitem && !empty($item['imgSrc'])){
-            $menu .= Html::tag('div', Html::img($item['imgSrc']), [
+            $menu .= Html::tag('div', Html::img($item['imgSrc'], ['class' => 'svg']), [
                 'class' =>  $this->options['headerImageClass']
             ]);
+        }
+
+        if(!$subitem){// && !empty($item['badge'])){
+            $menu .= Html::tag('span', '',//$item['badge']
+            []);
         }
 
         $menu .= Html::a($item['label'], '/'.$item['url']);

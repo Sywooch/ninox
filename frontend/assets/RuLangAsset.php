@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
 class RuLangAsset extends AssetBundle
 {
 	public $basePath = '@webroot';
-	public $baseUrl = '@web';
+	public $sourcePath = '@web';
 	public $css = [
 		'css/translations/ru_RU.css',
 	];

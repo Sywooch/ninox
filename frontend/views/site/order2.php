@@ -1,55 +1,43 @@
 <?php
 
+use common\helpers\Formatter;
 use yii\jui\Accordion;
 use yii\bootstrap\Html;
 
-//$this->registerCss($css);
+$js = <<<JS
 
-$js = <<<'SCRIPT'
+var page = 0;
+
 $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
-
-    var page = e.currentTarget.getAttribute('data-page');
-
-    if(page == 1 && goToPage1() == 'not validated'){
-        return false;
-    }
-
-	$('#accordion').accordion('option', 'active', parseInt(e.currentTarget.getAttribute('data-page')));
+    page = parseInt(e.currentTarget.getAttribute('data-page'));
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-customername');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-customersurname');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-deliverycity');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-deliveryregion');
+    $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-customeremail');
 });
 
-var goToPage1 = function(){
-    //TODO: насчёт валидации формы
-
-    $('#orderForm').data('yiiActiveForm').submitting = true;
-
-    $('#orderForm').yiiActiveForm('validate')
-
-    $('#orderForm').data('yiiActiveForm').submitting = false;
-
-    setTimeout(200);
-
-    if($('#orderForm .content-data-body-first').find('.has-error').length > 0) {
-        return 'validated';
+$('#orderForm').on('afterValidateAttribute', function(e, attr){
+    if(attr.id == 'orderform-customeremail'){
+        if(page == 1 && $('#orderForm .content-data-body-first').find('.has-error').length > 0){
+            return false;
+        }
+        $('#accordion').accordion('option', 'active', page);
     }
+});
 
-    return 'not validated';
-}
+$('#orderForm').on('beforeSubmit', function(){
+    $('.load').append('<img src="img/site/jquery-preloader.gif" alt=Загрузка..." id="loading">');
+});
 
-SCRIPT;
+JS;
 
 $this->registerJs($js);
 
-$form = \yii\bootstrap\ActiveForm::begin([
-    'id'            =>  'orderForm',
-    'fieldConfig' => [
-        'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
-    ],
-]);
 ?>
 <head>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"> </script>
+    <script src="//api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="http://code.jquery.com/jquery-latest.js"></script><!-- Прелоадер -->
 </head>
 <script type="text/javascript">
     var kyiv_map;
@@ -92,48 +80,26 @@ $form = \yii\bootstrap\ActiveForm::begin([
 <script type="text/javascript">
     $(document).ready(function () {
         var offset = $('.ordering').offset();
-        var topPadding = 0;
-        $(window).scroll(function() {
-            if ($(window).scrollTop() > offset.top) {
+        var topPadding = 10;
+        $(window).scroll(function(){
+            if($(window).scrollTop() > offset.top){
                 $('.ordering').stop().animate({marginTop: $(window).scrollTop() - offset.top + topPadding});
-            }
-            else {
+            }else{
                 $('.ordering').stop().animate({marginTop: 5});
             }
         });
     });
     //TODO: что это за скрипт?
 </script>
-<script type="text/javascript">
-$(function() {
-$('#submit').click(function() {
-//Добавляем нашу картинку в <div  id="container">
-    $('.load').append('<img src="img/site/jquery-preloader.gif" alt=Загрузка..." id="loading" />');
-    //Передаем данные в файл ajax.php
-
-    var customerName = $('#customerName').val();
-    var customerSurname = $('#customerSurname').val();
-    var deliveryCity = $('#deliveryCity').val();
-
-    $.ajax({
-    url: 'ajax.php',
-    type: 'POST',
-    data: '&customerName=' + customerName + '&customerSurname=' + customerSurname + '&deliveryCity=' + deliveryCity,
-
-    success: function() {
-
-    $('.load').animate({opacity:0.5},  function() {
-        $('.load').css('', '');
-
-    });
-    }
-    });
-    return false;
-    });
-    });
-
-//TODO: что это за скрипт?
-    </script>
+<?php
+$form = \yii\bootstrap\ActiveForm::begin([
+    'id'            =>  'orderForm',
+    'fieldConfig'   => [
+        'template' => "{label}\n<div class=\"inputField\">\n{input}\n{hint}\n{error}\n</div>",
+    ],
+    'enableAjaxValidation' => false,
+]);
+?>
 <div class="content">
     <div id="modal_form"><!-- Сaмo oкнo -->
         <span id="modal_close">
@@ -224,45 +190,37 @@ $('#submit').click(function() {
                             <div class="all-price">
                                 <?=\Yii::t('shop', '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}}', ['n' => \Yii::$app->cart->itemsCount])?> на сумму
                                 <div class="bold">
-                                    <div class="br">
-                                        <?=\Yii::$app->cart->cartRealSumm?> <?=\Yii::$app->params['domainInfo']['currencyShortName']?>
-                                    </div>
+                                    <span class="amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
                             </div>
-                            <div class="price">
-                                Скидка по карте
-                                <div class="bold">
-                                    -200 грн.
-                                </div>
-                            </div>
-                            <div class="price">
+                            <div class="price action-discount">
                                 Сумма скидки по акции
                                 <div class="bold">
-                                    -4000 грн.
+	                                <span class="action-discount-amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm - \Yii::$app->cart->cartSumWithoutDiscount, true)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
                             </div>
-                            <div class="price">
-                                Услуги банка (+1%)
+	                        <div class="price card-discount">
+		                        Скидка по карте (<span class="card-discount-percent"><?=((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : '-'.$customer->discount)?>%</span>)
+		                        <div class="bold">
+			                        <span class="card-discount-amount"><?=Formatter::getFormattedPrice(((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : -\Yii::$app->cart->cartSumNotDiscounted / 100 * $customer->discount), true)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
+		                        </div>
+	                        </div>
+                            <div class="price commission">
+                                Коммиссия (<span class="commission-percent"></span><span class="commission-static"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>)
                                 <div class="bold">
-                                    +13 грн.
+	                                <span class="commission-amount"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
                             </div>
                         </div>
                         <div class="ordering-body-items-price">
                             <div class="ordering-body-items-price-sum">Предварительная сумма к оплате</div>
-                            <div class="question">
-                                <div class="round-button">
-                                    <div class="content-data-title-img">
-                                        <?=Html::tag('a', '?', [
-                                            'data-toggle'   =>  'tooltip',
-                                            'data-title'    =>  'Эта сумма может измениться, в случае если вдруг не будет товаров на складе',
-                                            'class'         =>  'round-button',
-                                        ])?>
-                                    </div>
-                                </div>
-                            </div>
+                            <?=Html::tag('span', '?', [
+                                'data-toggle'       =>  'tooltip',
+                                'title'             =>  'Эта сумма может измениться, в случае если вдруг не будет товаров на складе',
+                                'class'             =>  'question-round-button',
+                            ])?>
                             <div class="semi-bold">
-                                21 500 грн.
+                                <span class="total-amount"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                             </div>
                         </div>
                         <div class="ordering-body-order-confirm">
@@ -270,50 +228,32 @@ $('#submit').click(function() {
                         </div>
                         <div class="ordering-body-order-confirm-button">
                             <?php
-                                echo \yii\helpers\Html::button('Оформить заказ', [
-                                     'type'  =>  'submit',
-                                     'class' =>  'yellow-button large-button',
-                                     'id'    =>  'submit'
-                                        ]);
+                                echo Html::submitButton('Оформить заказ', [
+                                    'class' =>  'button yellow-button large-button'
+                                ]);
                             ?>
                         </div>
-                        <div class="Terms-of-use">
-                            <div class="text">
-                                Подтверждая заказ, я принимаю условия
-                                <a>пользовательского соглашение</a>
+                        <div class="terms-of-use">
+                            Подтверждая заказ, я принимаю условия
+                            <a>пользовательского соглашение</a>
+                        </div>
+                            <div class="edit-order"><a href="#modalCart">Редактировать заказ</a></div>
+                            <div class="promotional-code">
+                                <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
+                                    'valueIfNull'   =>  'Ввести промокод'
+                                ])->label(false).
+                                Html::tag('span', '?', [
+                                    'data-toggle'   =>  'popover',
+                                    'data-content'  =>  'Если у вас есть промокод от нас (обычно его можно получить в спаме на почту), вы можете ввести его здесь, и получить скидку. Скидка не суммируется с другими скидками.',
+                                    'data-title'    =>  'Промокод',
+                                    'class'         =>  'question-round-button',
+                                ])?>
                             </div>
                         </div>
-                            <div class="text-align-center"><a href="#modalCart">Редактировать заказ</a>
-
-                            </div>
-                            <div class="text-align-center">
-                                <div class="promotional-code">
-                                    <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
-                                        'valueIfNull'   =>  'Ввести промокод'
-                                    ])->label(false)?>
-                                    <div class="question">
-                                        <div class="round-button">
-                                            <div class="content-data-title-img">
-                                                <?=Html::tag('a', '?', [
-                                                    'data-toggle'   =>  'popover',
-                                                    'data-content'  =>  'Если у вас есть промокод от нас (обычно его можно получить в спаме на почту), вы можете ввести его здесь, и получить скидку. Скидка не суммируется с другими скидками.',
-                                                    'data-title'    =>  'Промокод',
-                                                    'class'         =>  'round-button',
-                                                ])?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 <?php $form->end(); ?>

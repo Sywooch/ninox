@@ -11,7 +11,6 @@ if(!empty($nowCategory)){
 }
 
 $js = <<<'SCRIPT'
-
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -36,22 +35,6 @@ function updSort(){
 		    'category': getParameterByName('category')
 		}
 	});
-}
-
-var a = document.querySelectorAll(".categoryActions .shutdown");
-
-for(var i = 0; i < a.length; i++){
-    a[i].addEventListener('click', function(e){
-        changeCategoryState(e);
-    }, false);
-}
-
-a = document.querySelectorAll(".categoryActions .canBuy");
-
-for(var i = 0; i < a.length; i++){
-    a[i].addEventListener('click', function(e){
-        changeCategoryCanBuy(e);
-    }, false);
 }
 
 function changeCategoryState(e){
@@ -86,6 +69,13 @@ function changeCategoryCanBuy(e){
 	});
 }
 
+$(".categoryActions .shutdown").on('click', function(e){
+    changeCategoryState(e);
+});
+
+$(".categoryActions .canBuy").on('click', function(e){
+    changeCategoryCanBuy(e);
+});
 SCRIPT;
 
 $css = <<<'STYLE'
@@ -101,14 +91,7 @@ STYLE;
 $this->registerCss($css);
 $this->registerJs($js);
 
-if(!empty($nowCategory)){
-  $this->params['breadcrumbs'][] = [
-      'label' =>  'Категории',
-      'url'   =>  Url::toRoute(['/goods', 'smartfilter' => \Yii::$app->request->get("smartfilter")])
-  ];
-}else{
-  $this->params['breadcrumbs'][] = $this->title;
-}
+$this->params['breadcrumbs'][] = $this->title;
 
 foreach($breadcrumbs as $b){
   $this->params['breadcrumbs'][] = $b;

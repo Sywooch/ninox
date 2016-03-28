@@ -2,7 +2,9 @@
 
 namespace common\models;
 
+use frontend\models\OrderForm;
 use Yii;
+use yii\bootstrap\Html;
 use yii\helpers\Json;
 
 /**
@@ -70,30 +72,65 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 		return $this->hasMany(PaymentParam::className(), ['id' => 'paymentParam']);
 	}
 
-	public function getConfig(){
-		return DomainDeliveryPayment::find()->
-			joinWith('deliveryTypes')->
-			joinWith('deliveryParams')->
-			joinWith('paymentTypes')->
-			joinWith('paymentParams')->
-			where([DomainDeliveryPayment::tableName().'.domainId' => \Yii::$app->params['domainInfo']['id'], DomainDeliveryPayment::tableName().'.enabled' => 1, 'deliveryTypes.enabled' => 1])->
-			andWhere(['OR', ['deliveryParams.enabled' => 1], [DomainDeliveryPayment::tableName().'.deliveryParam' => 0]])->
-			andWhere(['paymentTypes.enabled' => 1])->
-			andWhere(['OR', ['paymentParams.enabled' => 1], [DomainDeliveryPayment::tableName().'.paymentParam' => 0]])->
-			all();
+	public static function getConfig(){
+		return self::find()
+			->joinWith('deliveryTypes')
+			->joinWith('deliveryParams')
+			->joinWith('paymentTypes')
+			->joinWith('paymentParams')
+			->where([
+				self::tableName().'.domainId' => \Yii::$app->params['domainInfo']['id'],
+				self::tableName().'.enabled' => 1,
+				'deliveryTypes.enabled' => 1
+			])
+			->andWhere(['OR', ['deliveryParams.enabled' => 1], [self::tableName().'.deliveryParam' => 0]])
+			->andWhere(['paymentTypes.enabled' => 1])
+			->andWhere(['OR', ['paymentParams.enabled' => 1], [self::tableName().'.paymentParam' => 0]])
+			->all();
 	}
 
-	public function getConfigArray(){
+	public static function getConfigArray(){
 		$configs = self::getConfig();
 		$array = [];
-		foreach($configs as $config){
-			$array[$config->deliveryType]['name'] = $config->deliveryTypes[0]->description;
-			$array[$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
-			$array[$config->deliveryType]['replaceDescription'] = $config->deliveryTypes[0]->replaceDescription;
-			$array[$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
-			$array[$config->deliveryType]['params'][$config->deliveryParam]['options'] = (object)array_merge((array)Json::decode($config->options, false), (array)Json::decode($config->deliveryParams[0]->options, false));
-		}
+		if(!empty($configs)){
+			foreach($configs as $config){
+				$options = Json::decode($config->options, false);
+				$array['deliveryTypes'][$config->deliveryType]['name'] = $config->deliveryTypes[0]->description;
+				$array['deliveryTypes'][$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
+				$array['deliveryTypes'][$config->deliveryType]['modifyLabel'] = $config->deliveryTypes[0]->modifyLabel;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['label'] =
+					empty($config->deliveryParams[0]->options) ?
+						$config->deliveryParams[0]->description : Html::img($config->deliveryParams[0]->options);
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentTypes'][$config->paymentType] = $config->paymentType;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentParams'][$config->paymentParam] = $options->commissions;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['content'] = $options->content;
 
+				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes[0]->description;
+				$array['paymentTypes'][$config->paymentType]['value'] = $config->paymentTypes[0]->id;
+				$array['paymentTypes'][$config->paymentType]['modifyLabel'] = $config->paymentTypes[0]->modifyLabel;
+				$array['paymentTypes'][$config->paymentType]['params'][$config->paymentParam]['name'] = !empty($config->paymentParams[0]) ? $config->paymentParams[0]->description : 'Default Param';
+			}
+
+			foreach($array as $type => $value){
+				foreach($value as $k => $v){
+					if(sizeof($v['params']) < 2){
+						switch($v['modifyLabel']){
+							case 1:
+								$array[$type][$k]['name'] = reset($v['params'])['name'];
+								break;
+							case 2:
+								$array[$type][$k]['name'] .= ' '.reset($v['params'])['name'];
+								break;
+							case 0:
+							default:
+								break;
+						}
+					}
+				}
+			}
+
+		}
 		return $array;
 	}
 }
