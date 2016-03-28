@@ -13,7 +13,7 @@ use Yii;
  * @property integer $Enabled
  * @property integer $Priority
  */
-class CustomerPricerule extends \yii\db\ActiveRecord
+class CustomerPricerule extends Pricerule
 {
     /**
      * @inheritdoc

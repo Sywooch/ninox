@@ -62,11 +62,11 @@ echo \kartik\grid\GridView::widget([
 				return Html::tag('div', $model->Name, ['class' => 'item-name blue']).
 				Html::tag('div',
 					Html::tag('span',
-						Formatter::getFormattedPrice($model->retail_price),
+						Formatter::getFormattedPrice($model->retailPrice),
 						['class' => 'item-price-retail semi-bold']
 					).
 					Html::tag('span',
-						Formatter::getFormattedPrice($model->wholesale_price),
+						Formatter::getFormattedPrice($model->wholesalePrice),
 						['class' => 'item-price-wholesale semi-bold']
 					).
 					Html::tag('sup',
@@ -87,7 +87,7 @@ echo \kartik\grid\GridView::widget([
 			'value'         =>  function($model){
 				return Html::tag('div',
 					Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ?
-							$model->wholesale_price : $model->retail_price) * $model->inCart),
+							$model->wholesalePrice : $model->retailPrice) * $model->inCart),
 					['class' => 'item-price-amount']
 				);
 			}
