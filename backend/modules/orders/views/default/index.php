@@ -119,8 +119,45 @@ var ordersChanges = function(e){
     });
 };
 
+$(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
+    event.preventDefault();
 
+    $.ajax({
+        type: "POST",
+        url: '/orders/saveorderpreview',
+        data: $(this).serialize(),
+        success: function(response){
+            if(response.length == 0 || response == false){
+                return false;
+            }
 
+            var tr = $('div[data-attribute-type="ordersGrid"] tr[data-key="' + response.id + '"]')[0],
+                responsibleUser = tr.querySelector('small.responsibleUser'),
+                actualAmount = tr.querySelector('span.actualAmount');
+
+            if(responsibleUser != null){
+                if(response.responsibleUserID != 0){
+                    responsibleUser.innerHTML = response.responsibleUserID;
+                }else{
+                    responsibleUser.remove();
+                }
+            }else if(response.responsibleUserID != 0){
+                var node = document.createElement('small');
+                node.innerHTML = response.responsibleUserID;
+                node.setAttribute('class', 'responsibleUser');
+                tr.querySelector('td[data-col-seq="7"]').appendChild(node);
+            }
+
+            actualAmount.innerHTML = response.actualAmount + ' грн.';
+        }
+    });
+
+    return false;
+});
+
+$(document).on('kvexprow.loaded', 'div[data-attribute-type=ordersGrid]', function(vind, key, extradata){
+    $(this).find("tr[data-key=" + extradata + "]").orderPreviewListeners();
+});
 JS;
 
 $css = <<<'CSS'

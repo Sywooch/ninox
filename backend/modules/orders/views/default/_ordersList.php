@@ -1,4 +1,8 @@
 <?php
+/**
+ * @property $orders ActiveDataProvider
+ * @property $model /backend/models/History
+ */
 use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -124,8 +128,7 @@ echo \kartik\grid\GridView::widget([
             'attribute' =>  'status',
             'value'     =>  function($model){
                 if(!empty($model->status)){
-                    $string = 'status_'.$model->status;
-                    $status1 = $model::$$string;
+                    $status1 = $model->statusDescription;
                 }else{
                     $status1 = '';
                 }
@@ -191,7 +194,8 @@ echo \kartik\grid\GridView::widget([
                     ]), [
                         'class'     =>  'btn btn-default',
                         'style'     =>  'margin-top: 1px',
-                        'data-pjax' =>  0
+                        'data-pjax' =>  0,
+                        'title'     =>  'Содержимое заказа'
                     ]);
                 },
                 'print'  =>  function($url, $model, $key){
@@ -200,25 +204,30 @@ echo \kartik\grid\GridView::widget([
                     ]), [
                         'target'    =>  '_blank',
                         'class'     =>  'btn btn-default glyphicon glyphicon-print',
-                        'data-pjax' =>  0
+                        'data-pjax' =>  0,
+                        'title'     =>  'Печатать заказ'
                     ]);
                 },
                 'done'  =>  function($url, $model, $key){
                     return Html::button('', [
                         'class' =>  'btn btn-default doneOrder glyphicon glyphicon-ok'.($model->done == 1 ? ' btn-success' : ''),
-                        ($model->confirmed == 1 ? '' : 'disabled')  =>  'disabled'
+                        ($model->confirmed == $model::CALLBACK_COMPLETED ? '' : 'disabled')  =>  'disabled',
+                        'title' =>  $model->done == 1 ? 'Заказ выполнен' : 'Заказ не выполнен'
                     ]);
                 },
                 'call'  =>  function($url, $model, $key){
                     switch($model->callback){
                         case '2':
                             $subclass = 'btn-danger';
+                            $title = 'Клиент не отвечает';
                             break;
                         case '1':
                             $subclass = 'btn-success';
+                            $title = 'Звонили';
                             break;
                         default:
                             $subclass = 'btn-default';
+                            $title = 'Не звонили';
                     }
 
                     if($model->callback == '0'){
@@ -226,7 +235,8 @@ echo \kartik\grid\GridView::widget([
                     }
 
                     return Html::button('', [
-                        'class' =>  'btn confirmCall glyphicon glyphicon-phone-alt '.$subclass
+                        'class' =>  'btn confirmCall glyphicon glyphicon-phone-alt '.$subclass,
+                        'title' =>  $title
                     ]);
                 },
                 'changes'   =>  function($url, $model, $key){
@@ -234,7 +244,8 @@ echo \kartik\grid\GridView::widget([
                         'class'                     =>  'ordersChanges btn btn-default glyphicon glyphicon-list-alt',
                         'data-attribute-orderID'    =>  $model->id,
                         ($model->hasChanges != 1 ? 'disabled' : 'enabled') => 'disabled',
-                        'onclick'   =>  ($model->hasChanges != 1 ? 'return false;' : '')
+                        'onclick'   =>  ($model->hasChanges != 1 ? 'return false;' : ''),
+                        'title' =>  $model->hasChanges == 1 ? 'Изменения по заказу' : 'Заказ ещё не редактировался'
                     ]);
                 },
             ],

@@ -8,7 +8,6 @@
 
 namespace backend\models;
 
-use common\models\History;
 use yii\data\ActiveDataProvider;
 
 class HistorySearch extends History{
@@ -131,7 +130,7 @@ class HistorySearch extends History{
         $this->addCondition($query, 'deliveryCity', true);
         $this->addCondition($query, 'nakladna', true);
         $this->addCondition($query, 'actualAmount');
-        $this->addCondition($query, 'responsibleUserID', true);
+        $this->addCondition($query, 'responsibleUserID');
 
         return $onlyQuery ? $query : $dataProvider;
     }
