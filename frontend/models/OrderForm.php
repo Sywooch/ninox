@@ -63,6 +63,8 @@ class OrderForm extends Model{
     public $anotherReceiver = 0;
     public $payment = 0;
 
+    public $createdOrder = null;
+
     public function init(){
         /*if(\Yii::$app->user->isGuest){
             $this->customerPhone = \Yii::$app->request->cookies->get("customerPhone");
@@ -248,6 +250,8 @@ class OrderForm extends Model{
         ]);
 
         if($order->save()){
+            $this->createdOrder = $order->id;
+
             foreach(\Yii::$app->cart->goods as $good){
                 if($customer->cardNumber > 0 && $good->discountSize == 0){
                     $good->discountSize = 2;
