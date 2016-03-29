@@ -3557,7 +3557,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 }
 
-.header .desire-basket .in-basket .arrow{
+ 	.arrow{
 	margin-left: 63px;
 }
 
@@ -3596,7 +3596,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	top:0px;
 	cursor: auto;
-	margin-bottom: 10px;
 	padding-left: 10px;
 }
 
@@ -3607,6 +3606,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .header .desire-basket  .in-basket .price-info{
 	color: #b2b2b2;
 	font-family: unset;
+	margin-bottom: 10px;
+	margin-top: 5px;
 }
 
 .in-basket a{
@@ -3738,6 +3739,23 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: auto;
 }
 
+.main-content-slider .main-slider{
+	width: 1170px;
+	margin: auto;
+}
+
+.main-content-slider .slick-prev::before{
+	content: url("/img/site/prev-arrow.png");
+}
+
+.main-content-slider .slick-next::before{
+	content: url("/img/site/next-arrow.png");
+}
+
+.main-content-slider .slick-prev, .slick-next{
+	height: 32px;
+}
+
 .main-content-items{
 	background: #f3f3f3;
 }
@@ -3789,7 +3807,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: ;
 	color: #7d8d95;
 	font-family: OpenSans-Semibold;
-
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .content-items .goods-item{
@@ -3806,11 +3826,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .content-banners .goods-item-style{
-	background: #eaa51e
+	background: #eaa51e;
+	cursor: pointer;
+
 }
 
 .content-banners .goods-item{
-	cursor: pointer;
+	/*cursor: pointer;*/
 }
 
 .goods-items .goods-item{
@@ -4014,6 +4036,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	top: 35%;
 	position: relative;
 	display: block;
+	white-space: unset;
+	overflow: unset;
+	text-overflow: unset;
 }
 
 .item-image{

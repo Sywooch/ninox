@@ -50,6 +50,11 @@ $this->registerJs($js);
 					'fade'          => true,
 					'arrows'		=> true,
 					'slidesToScroll'=> 1,
+					'autoplay' 		=> true,
+					'autoplaySpeed'	=> 2000,
+
+
+
 				]
 		]) : '<div style="height: 370px;"></div>'
 		?>
@@ -64,7 +69,7 @@ $this->registerJs($js);
 					])?>
 				</div>
 				<div class="goods-items">
-					<div class="two-items content-items">
+					<div class="two-items content-items content-banners">
                         <?php
                         if(!empty(BannersCategory::findOne(['alias' => '1x1.1'])->banners)){
                             echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.1'])->banners[0]);
@@ -79,7 +84,7 @@ $this->registerJs($js);
                         }
                         ?>
 					</div>
-					<div class="two-items content-banners">
+					<div class="two-items content-banners content-items">
 						<?php
 						if(!empty(BannersCategory::findOne(['alias' => '1x1.3'])->banners)){
                             echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.3'])->banners[0]);
