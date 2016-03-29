@@ -43,6 +43,9 @@ class Customer extends \yii\db\ActiveRecord
 
     private $orders;
 
+    private $_phones = [];
+    private $_emails = [];
+
     public function behaviors()
     {
         return [
@@ -50,6 +53,62 @@ class Customer extends \yii\db\ActiveRecord
                 'class' => 'sammaye\audittrail\LoggableBehavior',
             ]
         ];
+    }
+
+    public function getPhones(){
+        if(empty($this->_phones)){
+            $this->_phones = CustomerContacts::findAll(['partnerID' => $this->ID, 'type' => CustomerContacts::TYPE_PHONE]);
+        }
+
+        return $this->_phones;
+    }
+
+    public function getPrimaryPhone(){
+        foreach($this->phones as $phone){
+            if($phone->primary == 1){
+                return $phone;
+            }
+        }
+
+        return '';
+    }
+
+    public function getPhone(){
+        return $this->primaryPhone->value;
+    }
+
+    public function getEmails(){
+        if(empty($this->_emails)){
+            $this->_emails = CustomerContacts::findAll(['partnerID' => $this->ID, 'type' => CustomerContacts::TYPE_EMAIL]);
+        }
+
+        return $this->_emails;
+    }
+
+    public function getPrimaryEmail(){
+        foreach($this->emails as $email){
+            if($email->primary == 1){
+                return $email;
+            }
+        }
+
+        return '';
+    }
+
+    public function getEmail(){
+        return $this->primaryEmail->value;
+    }
+
+    public function getCity(){
+        $array = explode(', ', $this->City);
+
+        return isset($array[0]) ? $array[0] : '';
+    }
+
+    public function getRegion(){
+        $array = explode(', ', $this->City);
+
+        return isset($array[1]) ? $array[1] : '';
     }
 
     public function getOrdersStats(){

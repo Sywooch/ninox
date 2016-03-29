@@ -170,7 +170,6 @@ class SiteController extends Controller
                 $customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
 
                 if(\Yii::$app->request->cookies->getValue("customerPhone") != $customerPhone){
-                    \Yii::trace('phone was changed: from '.\Yii::$app->request->cookies->get("customerPhone").' to '.$customerPhone);
                     \Yii::$app->response->cookies->add(new Cookie([
                         'name'      =>  'customerPhone',
                         'value'     =>  $customerPhone
@@ -207,21 +206,14 @@ class SiteController extends Controller
         }
 
 
+        if(\Yii::$app->request->post("OrderForm") && $order->load(\Yii::$app->request->post()) && $order->validate() && $order->create()){
+            $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
 
-        if(\Yii::$app->request->post("OrderForm")){
-            $order->load(\Yii::$app->request->post());
-        }
+            \Yii::trace($email);
 
-        if(\Yii::$app->request->post("OrderForm")){
-            if($order->validate() && $order->create()){
-                $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
-
-                \Yii::trace($email);
-
-                return $this->render('order_success', [
-                    'model' =>  $order
-                ]);
-            }
+            return $this->render('order_success', [
+                'model' =>  $order
+            ]);
         }
 
         $this->layout = 'order';

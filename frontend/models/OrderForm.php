@@ -8,12 +8,10 @@
 
 namespace frontend\models;
 
-
 use common\models\SborkaItem;
 use yii\base\ErrorException;
 use yii\base\Model;
 use yii\helpers\Json;
-use yii\web\NotFoundHttpException;
 
 class OrderForm extends Model{
 
@@ -63,12 +61,34 @@ class OrderForm extends Model{
     public $anotherReceiver = 0;
     public $payment = 0;
 
+    /**
+     * @type integer - ID заказа после оформления
+     */
     public $createdOrder = null;
 
+    /**
+     * @type integer - ID клиента, который оформил заказ на другого человека
+     */
+    public $orderProvider = null;
+
     public function init(){
-        /*if(\Yii::$app->user->isGuest){
+        if(\Yii::$app->user->isGuest){
             $this->customerPhone = \Yii::$app->request->cookies->get("customerPhone");
-        }*/
+        }
+
+        if($this->anotherReceiver == 1){
+            $this->setAttributes([
+                'customerName'      =>  $this->anotherReceiverName,
+                'customerSurname'   =>  $this->anotherReceiverSurname
+            ]);
+
+            if(!empty($this->anotherReceiverPhone)){
+                $this->setAttributes([
+                    'orderProvider' =>  Customer::find()->select('ID')->where(['phone' => $this->customerPhone])->scalar(),
+                    'customerPhone' =>  $this->anotherReceiverPhone
+                ]);
+            }
+        }
 
         parent::init();
     }
@@ -90,13 +110,14 @@ class OrderForm extends Model{
             [['customerID', 'customerName', 'customerSurname', 'customerFathername', 'customerEmail', 'customerPhone', 'deliveryCountry', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryType', 'deliveryInfo', 'paymentType', 'paymentInfo', 'customerComment', 'promoCode', 'canChangeItems'], 'safe'],
             [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
             [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
-            ['deliveryInfo', 'required', 'when' => function(){
-                return in_array($this->deliveryType, [1, 2]);
-            },
+            ['deliveryInfo', 'required',
+                'when' => function(){
+                    return in_array($this->deliveryType, [1, 2]);
+                },
                 'whenClient' => "function(attribute, value){
-                    console.log(attribute);
                     return $(attribute.input).parents('.tab-pane.active').length > 1;
-                }"],
+                }"
+            ],
             [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required',
                 'when' => function(){
                     return $this->anotherReceiver != 0;
@@ -104,7 +125,7 @@ class OrderForm extends Model{
                 'whenClient' => "function(attribute, value){console.log(attribute);
                     return $(attribute.input).parents('.tab-pane.active').length;
                 }"
-            ]
+            ],
             //[['customerComment'], 'string'],
             //[['amountDeductedOrder', 'originalSum'], 'number'],
             //[['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
@@ -125,22 +146,64 @@ class OrderForm extends Model{
             'deliveryInfo'           =>  \Yii::t('shop', 'Данные о доставке'),
             'anotherReceiverName'    =>  \Yii::t('shop', 'Имя'),
             'anotherReceiverSurname' =>  \Yii::t('shop', 'Фамилия'),
-            'anotherReceiverPhone'   =>  \Yii::t('shop', 'Телефон*'),
+            'anotherReceiverPhone'   =>  \Yii::t('shop', 'Телефон'),
         ];
     }
 
+    public function getRegions(){
+        return [
+            'Винницкая область' => \Yii::t('shop', 'Винницкая область'),
+            'Волынская область' => \Yii::t('shop', 'Волынская область'),
+            'Днепропетровская область' => \Yii::t('shop', 'Днепропетровская область'),
+            'Донецкая область' => \Yii::t('shop', 'Донецкая область'),
+            'Житомирская область' => \Yii::t('shop', 'Житомирская область'),
+            'Закарпатская область' => \Yii::t('shop', 'Закарпатская область'),
+            'Запорожская область' => \Yii::t('shop', 'Запорожская область'),
+            'Ивано-Франковская область' => \Yii::t('shop', 'Ивано-Франковская область'),
+            'Киевская область' => \Yii::t('shop', 'Киевская область'),
+            'Кировоградская область' => \Yii::t('shop', 'Кировоградская область'),
+            'Луганская область' => \Yii::t('shop', 'Луганская область'),
+            'Львовская область' => \Yii::t('shop', 'Львовская область'),
+            'Николаевская область' => \Yii::t('shop', 'Николаевская область'),
+            'Одесская область' => \Yii::t('shop', 'Одесская область'),
+            'Полтавская область' => \Yii::t('shop', 'Полтавская область'),
+            'Ровненская область' => \Yii::t('shop', 'Ровненская область'),
+            'Сумская область' => \Yii::t('shop', 'Сумская область'),
+            'Тернопольская область' => \Yii::t('shop', 'Тернопольская область'),
+            'Харьковская область' => \Yii::t('shop', 'Харьковская область'),
+            'Херсонская область' => \Yii::t('shop', 'Херсонская область'),
+            'Хмельницкая область' => \Yii::t('shop', 'Хмельницкая область'),
+            'Черкасская область' => \Yii::t('shop', 'Черкасская область'),
+            'Черниговская область' => \Yii::t('shop', 'Черниговская область'),
+            'Черновицкая область' => \Yii::t('shop', 'Черновицкая область'),
+            'Киев' => \Yii::t('shop', 'Киев')
+        ];
+    }
+
+    /**
+     * @param $customer Customer
+     *
+     * @throws \yii\base\ErrorException
+     */
     public function loadCustomer($customer){
+        \Yii::trace('load customer');
+
         if($customer instanceof Customer == false){
             throw new ErrorException("Может быть передан только Customer!");
         }
 
-        $customerNameParts = explode(' ', $customer->Company);
+        $this->setAttributes([
+            'customerID'        =>  $customer->ID,
+            'customerName'      =>  $customer->name,
+            'customerSurname'   =>  $customer->surname,
+            'customerPhone'     =>  $customer->phone,
+            'customerEmail'     =>  $customer->email,
+            'deliveryCity'      =>  $customer->city,
+        ]);
 
-        $this->customerID = $customer->ID;
-        $this->customerName = $customerNameParts['0'];
-        $this->customerSurname = $customerNameParts['1'];
-        $this->customerPhone = $customer->phone;
-        $this->customerEmail = $customer->email;
+        if(isset($this->getRegions()[$customer->region])){
+            $this->deliveryRegion = $customer->region;
+        }
     }
 
     public function loadCustomerReceiver($receiver){
@@ -160,42 +223,37 @@ class OrderForm extends Model{
         $this->paymentParam = $receiver->paymentParam;
     }
 
+    /**
+     * @return bool оформлен-ли заказ
+     */
     public function create(){
-        //Сначала проверяем, гость-ли пользователь
-        //если гость - создаём нового партнёра
-        if(\Yii::$app->user->isGuest){
-            $customer = Customer::findOne(['phone' => $this->customerPhone]);
-
-            if(!$customer){
-                $customer = new User();
-                //$customer->name
-                //$customer->surname
-                $customer->Company = $this->customerName.' '.$this->customerSurname;
-                $customer->phone = $this->customerPhone;
-                $customer->email = $this->customerEmail;
-
-                $customer->save();
-
-                \Yii::$app->user->login($customer, 3600*24*30);
-            }
-        }else{
+        //Пользователь залогинен
+        if(!\Yii::$app->user->isGuest){
             $customer = \Yii::$app->user->identity;
         }
 
-        if(\Yii::$app->user->isGuest || $this->customerReceiverID == 0){
+        //Пользователь не залогинен, ищем по номеру телефона
+        if(empty($customer)){
+            $customer = Customer::findOne(['phone' => $this->customerPhone]);
+        }
+
+        //Нет пользователя с таким номером - добавляем нового, и логиним его
+        if(empty($customer)){
+            $customer = new User([
+                'name'      =>  $this->customerName,
+                'surname'   =>  $this->customerSurname,
+                'phone'     =>  $this->customerPhone,
+                'email'     =>  $this->customerEmail
+            ]);
+
+            $customer->save();
+
+            \Yii::$app->user->login($customer, 3600*24*30);
+        }
+
+        /*if(\Yii::$app->user->isGuest || $this->customerReceiverID == 0){
             $customerReceiver = new CustomerReceiver([
-                'name' => $this->customerName,
-                'surname' => $this->customerSurname,
-                'fathername' => $this->customerFathername,
-                'partnerID' => $customer->ID,
-                'country' => $this->deliveryCountry,
-                'city' => $this->deliveryCity,
-                'region' => $this->deliveryRegion,
-                'address' => $this->deliveryAddress,
-                'shippingType' => $this->deliveryType,
-                'shippingParam' => $this->deliveryParam,
-                'paymentType' => $this->paymentType,
-                'paymentParam' => $this->paymentParam,
+                'partnerID' =>  $customer->ID
             ]);
 
             if(\Yii::$app->user->isGuest || $this->customerReceiverIsDefault != 0){
@@ -207,38 +265,42 @@ class OrderForm extends Model{
             if(!$customerReceiver){
                 throw new NotFoundHttpException("Не смогли найти получателя");
             }
-
-            $customerReceiver->surname = $this->customerSurname;
-            $customerReceiver->name = $this->customerName;
-            $customerReceiver->fathername = $this->customerFathername;
-            $customerReceiver->country = $this->deliveryCountry;
-            $customerReceiver->city = $this->deliveryCity;
-            $customerReceiver->address = $this->deliveryAddress;
-            $customerReceiver->region = $this->deliveryRegion;
-            $customerReceiver->shippingType = $this->deliveryType;
-            $customerReceiver->shippingParam = $this->deliveryParam;
-            $customerReceiver->shippingAddress = $this->deliveryInfo;
-            $customerReceiver->paymentType = $this->paymentType;
-            $customerReceiver->paymentParam = $this->paymentParam;
         }
 
-        $customerReceiver->save();
+        $customerReceiver->setAttributes([
+            'surname'       =>  $this->customerSurname,
+            'name'          =>  $this->customerName,
+            'fathername'    =>  $this->customerFathername,
+            'country'       =>  $this->deliveryCountry,
+            'city'          =>  $this->deliveryCity,
+            'address'       =>  $this->deliveryAddress,
+            'region'        =>  $this->deliveryRegion,
+            'shippingType'  =>  $this->deliveryType,
+            'shippingParam' =>  $this->deliveryParam,
+            'shippingAddress'=> $this->deliveryInfo,
+            'paymentType'   =>  $this->paymentType,
+            'paymentParam'  =>  $this->paymentParam
+        ]);
+
+        $customerReceiver->save();*/
+
+
         //затем подхватываем контакт партнёра
         //если у партнёра нет контактов - создаём новый
         //если есть - выбираем один,
         //затем, создаём модель заказа
 
         $order = new History([
-            'customerEmail'     =>  $this->customerEmail,       //TODO: $customerReceiver->email?
+            'customerEmail'     =>  $this->customerEmail,
             'customerName'      =>  $this->customerName,
             'customerSurname'   =>  $this->customerSurname,
-            'customerPhone'     =>  $this->customerPhone,       //TODO: $customerReceiver->phone?,
-            'deliveryAddress'   =>  $customerReceiver->address,
-            'deliveryRegion'    =>  $customerReceiver->region,
-            'customerFathername'=>  $customerReceiver->fathername,
-            'deliveryCity'      =>  $customerReceiver->city,
-            'deliveryType'      =>  $customerReceiver->shippingType,
-            'deliveryParam'     =>  $customerReceiver->shippingParam,
+            'customerPhone'     =>  $this->customerPhone,
+            'deliveryAddress'   =>  $this->deliveryInfo,
+            'deliveryRegion'    =>  $this->deliveryRegion,
+            'customerFathername'=>  $this->customerFathername,
+            'deliveryCity'      =>  $this->deliveryCity,
+            'deliveryType'      =>  $this->deliveryType,
+            'deliveryParam'     =>  $this->deliveryParam,
             'deliveryInfo'      =>  $this->deliveryInfo,
             'customerComment'   =>  $this->customerComment,
             'customerID'        =>  $customer->ID,
@@ -254,8 +316,10 @@ class OrderForm extends Model{
 
             foreach(\Yii::$app->cart->goods as $good){
                 if($customer->cardNumber > 0 && $good->discountSize == 0){
-                    $good->discountSize = 2;
-                    $good->discountType = 2;
+                    $good->setAttributes([
+                        'discountSize'  =>  2,
+                        'discountType'  =>  2
+                    ]);
                 }
 
                 $orderItem = new SborkaItem([
@@ -270,10 +334,26 @@ class OrderForm extends Model{
                     'categoryCode'  =>  $good->categoryCode,
                     'customerRule'  =>  $good->customerRule,
                 ]);
+
                 if($orderItem->save()){
                     \Yii::$app->cart->remove($good->ID);
                 }
             }
+
+            $customer->setAttributes([
+                'name'          =>  $this->customerName,
+                'surname'       =>  $this->customerSurname,
+                'city'          =>  $this->deliveryCity,
+                'region'        =>  $this->deliveryRegion,
+                'deliveryType'  =>  $this->deliveryType,
+                'deliveryInfo'  =>  $this->deliveryInfo,
+                'deliveryParam' =>  $this->deliveryParam,
+                'paymentType'   =>  $this->paymentType,
+                'paymentParam'  =>  $this->paymentParam,
+                'paymentInfo'   =>  $this->paymentInfo
+            ]);
+
+            $customer->save(false);
 
             return true;
         }else{
