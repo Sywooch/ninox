@@ -24,8 +24,8 @@ use Yii;
  * @property integer $deleted
  * @property string $cardNumber
  * @property string $Note2
- * @property string $shippingType
- * @property string $PaymentType
+ * @property string $deliveryType
+ * @property string $paymentType
  * @property integer $blackList
  * @property string $blackListAddedTime
  * @property integer $money
@@ -191,11 +191,11 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shippingType', 'PaymentType', 'blackList'], 'safe'],
+            [['deliveryType', 'paymentType', 'blackList'], 'safe'],
             [['ID', 'priceGroup', 'type', 'groupID', 'deleted', 'blackList', 'money'], 'integer'],
             [['discount'], 'number'],
             [['registrationTime', 'blackListAddedTime', 'birthday'], 'safe'],
-            [['shippingType', 'PaymentType', 'password', 'lang'], 'string'],
+            [['deliveryType', 'paymentType', 'password', 'lang'], 'string'],
             [['Code', 'Company', 'City', 'City2', 'Address', 'phone', 'Phone2', 'email', 'cardNumber', 'Note2', 'recipientID', 'auth_key', 'password_reset_token'], 'string', 'max' => 255],
         ];
     }
@@ -223,8 +223,8 @@ class Customer extends \yii\db\ActiveRecord
             'deleted' => Yii::t('common', 'Deleted'),
             'cardNumber' => Yii::t('common', 'Card Number'),
             'Note2' => Yii::t('common', 'Note2'),
-            'shippingType' => Yii::t('common', 'Тип доставки'),
-            'PaymentType' => Yii::t('common', 'Тип оплаты'),
+            'deliveryType' => Yii::t('common', 'Тип доставки'),
+            'paymentType' => Yii::t('common', 'Тип оплаты'),
             'blackList' => Yii::t('common', 'Чёрный список'),
             'blackListAddedTime' => Yii::t('common', 'Black List Added Time'),
             'money' => Yii::t('common', 'Money'),
