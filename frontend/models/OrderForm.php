@@ -76,20 +76,6 @@ class OrderForm extends Model{
             $this->customerPhone = \Yii::$app->request->cookies->get("customerPhone");
         }
 
-        if($this->anotherReceiver == 1){
-            $this->setAttributes([
-                'customerName'      =>  $this->anotherReceiverName,
-                'customerSurname'   =>  $this->anotherReceiverSurname
-            ]);
-
-            if(!empty($this->anotherReceiverPhone)){
-                $this->setAttributes([
-                    'orderProvider' =>  Customer::find()->select('ID')->where(['phone' => $this->customerPhone])->scalar(),
-                    'customerPhone' =>  $this->anotherReceiverPhone
-                ]);
-            }
-        }
-
         parent::init();
     }
 
@@ -181,13 +167,13 @@ class OrderForm extends Model{
     }
 
     /**
+     * Загружает данные о клиенте в модель формы заказа
+     *
      * @param $customer Customer
      *
      * @throws \yii\base\ErrorException
      */
     public function loadCustomer($customer){
-        \Yii::trace('load customer');
-
         if($customer instanceof Customer == false){
             throw new ErrorException("Может быть передан только Customer!");
         }
@@ -199,6 +185,9 @@ class OrderForm extends Model{
             'customerPhone'     =>  $customer->phone,
             'customerEmail'     =>  $customer->email,
             'deliveryCity'      =>  $customer->city,
+            'paymentType'       =>  $customer->paymentType,
+            'paymentParam'      =>  $customer->paymentParam,
+            'paymentInfo'       =>  $customer->paymentInfo
         ]);
 
         if(isset($this->getRegions()[$customer->region])){
@@ -206,6 +195,12 @@ class OrderForm extends Model{
         }
     }
 
+    /**
+     * @param $receiver
+     * @deprecated
+     *
+     * @throws \yii\base\ErrorException
+     */
     public function loadCustomerReceiver($receiver){
         if($receiver instanceof CustomerReceiver == false){
             throw new ErrorException("Может быть передан только CustomerReceiver!");
@@ -227,8 +222,22 @@ class OrderForm extends Model{
      * @return bool оформлен-ли заказ
      */
     public function create(){
+        if($this->anotherReceiver == 1){
+            $this->setAttributes([
+                'customerName'      =>  $this->anotherReceiverName,
+                'customerSurname'   =>  $this->anotherReceiverSurname
+            ]);
+
+            if(!empty($this->anotherReceiverPhone)){
+                $this->setAttributes([
+                    'orderProvider' =>  Customer::find()->select('ID')->where(['phone' => $this->customerPhone])->scalar(),
+                    'customerPhone' =>  $this->anotherReceiverPhone
+                ]);
+            }
+        }
+
         //Пользователь залогинен
-        if(!\Yii::$app->user->isGuest){
+        if(!\Yii::$app->user->isGuest && $this->anotherReceiver == 0){
             $customer = \Yii::$app->user->identity;
         }
 
@@ -246,49 +255,10 @@ class OrderForm extends Model{
                 'email'     =>  $this->customerEmail
             ]);
 
-            $customer->save();
+            $customer->save(false);
 
             \Yii::$app->user->login($customer, 3600*24*30);
         }
-
-        /*if(\Yii::$app->user->isGuest || $this->customerReceiverID == 0){
-            $customerReceiver = new CustomerReceiver([
-                'partnerID' =>  $customer->ID
-            ]);
-
-            if(\Yii::$app->user->isGuest || $this->customerReceiverIsDefault != 0){
-                $customerReceiver->default = 1;
-            }
-        }else{
-            $customerReceiver = CustomerReceiver::findOne(['partnerID' => $customer->ID, 'ID' => $this->customerReceiverID]);
-
-            if(!$customerReceiver){
-                throw new NotFoundHttpException("Не смогли найти получателя");
-            }
-        }
-
-        $customerReceiver->setAttributes([
-            'surname'       =>  $this->customerSurname,
-            'name'          =>  $this->customerName,
-            'fathername'    =>  $this->customerFathername,
-            'country'       =>  $this->deliveryCountry,
-            'city'          =>  $this->deliveryCity,
-            'address'       =>  $this->deliveryAddress,
-            'region'        =>  $this->deliveryRegion,
-            'shippingType'  =>  $this->deliveryType,
-            'shippingParam' =>  $this->deliveryParam,
-            'shippingAddress'=> $this->deliveryInfo,
-            'paymentType'   =>  $this->paymentType,
-            'paymentParam'  =>  $this->paymentParam
-        ]);
-
-        $customerReceiver->save();*/
-
-
-        //затем подхватываем контакт партнёра
-        //если у партнёра нет контактов - создаём новый
-        //если есть - выбираем один,
-        //затем, создаём модель заказа
 
         $order = new History([
             'customerEmail'     =>  $this->customerEmail,
@@ -310,6 +280,10 @@ class OrderForm extends Model{
             'canChangeItems'    =>  $this->canChangeItems,
             'originalSum'       =>  \Yii::$app->cart->cartRealSumm,
         ]);
+
+        if(!empty($this->orderProvider)){
+            $order->sourceInfo = $this->orderProvider;
+        }
 
         if($order->save()){
             $this->createdOrder = $order->id;
@@ -356,8 +330,6 @@ class OrderForm extends Model{
             $customer->save(false);
 
             return true;
-        }else{
-            \Yii::trace($order->getErrors());
         }
 
         $this->addError('order', Json::encode($order->getErrors()));
