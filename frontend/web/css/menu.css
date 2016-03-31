@@ -105,10 +105,10 @@ svg path {fill: red !important;}*/
     margin-top: 0px;
 }
 
-.header-menu-item-image > *{
+/*.header-menu-item-image > *{
     transform: scale(1);
     max-height: 35px;
-}
+}*/
 
 .header-menu-item-content{
     background: #f1f1f1 none repeat scroll 0% 0%;

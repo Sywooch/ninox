@@ -4041,6 +4041,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-overflow: unset;
 }
 
+.goods-item-style a{
+	text-decoration: none;
+}
+
 .item-image{
 	background: url("/img/site/scissors.png") no-repeat;
 	height: 140px;
@@ -4286,7 +4290,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 3px;
 }
 
-.footer-content .call-back, .yellow-button{
+.footer-content .yellow-button{
+	background: #fcc82d;
+	border: 1px solid #ffec9a;
+	border-radius: 3px;
+	-moz-box-shadow: inset 0 0 9px #ffec9a;
+	-webkit-box-shadow: inset 0 0 9px #ffec9a;
+	box-shadow: inset 0 0 9px #ffec9a;
+}
+
+.phone-number .yellow-button{
 	background: #fcc82d;
 	border: 1px solid #ffec9a;
 	border-radius: 3px;

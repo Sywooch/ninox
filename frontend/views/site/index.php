@@ -51,7 +51,7 @@ $this->registerJs($js);
 					'arrows'		=> true,
 					'slidesToScroll'=> 1,
 					'autoplay' 		=> true,
-					'autoplaySpeed'	=> 2000,
+					'autoplaySpeed'	=> 3000,
 
 
 
