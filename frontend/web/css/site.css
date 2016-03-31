@@ -3737,10 +3737,12 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .main-content-slider .slick-slide img{
 	margin: auto;
+	width: 1170px;
+	height: 400px;
 }
 
 .main-content-slider .main-slider{
-	width: 1170px;
+	width: 1190px;
 	margin: auto;
 }
 
