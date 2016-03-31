@@ -359,9 +359,8 @@ $this->beginPage();
 											</div>
 										</div>
 									',
-						'footer' => Html::button('Перезвоните мне', ['class'=>'btn btn-sm yellow-button']),
-						'toggleButton' => ['label'=>'(044) 257-45-54', 'class'=>'number', ],
-
+						'footer' => Html::input('button', null, \Yii::t('shop', 'Перезвоните мне'), ['class'=>'button yellow-button middle-button']),
+						'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number']
 						]);
 
 ?>

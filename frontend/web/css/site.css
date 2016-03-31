@@ -3314,18 +3314,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .sticky .phone-number{
 	padding-top: 3px;
+
 }
 
 .header .phone-number .number{
-	padding-left: 5px;
-	vertical-align: middle;
 	font-size: 18px;
 	font-family: OpenSans-Semibold;
 	color: #3b3b39;
-	border: none;
-	background: none;
-	box-shadow: none;
-	text-shadow: none;
+	cursor: pointer;
 }
 
 .header .phone-number .call-back{
@@ -3474,11 +3470,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header .number:after{
-	 content: url("/img/site/arrow-bot.png");
-	 padding-left: 5px;
-	 top: -4px;
-	 position: relative;
-	cursor: pointer;
+	content: '';
+	background: url('/img/site/arrow-bot.png') no-repeat 50% 50%;
+	width: 20px;
+	height: 15px;
+	display: inline-block;
 }
 
 .header .desire-basket{
@@ -3546,10 +3542,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 }
 
-.header .desire-basket .in-basket span{
+.header .desire-basket .in-basket > span{
 	color: #4f4f4f;
 	font-size: 14px;
-	margin: 0px;
 	font-family: OpenSans-Semibold;
 	top:0px;
 	cursor: auto;
