@@ -8,8 +8,12 @@ use Yii;
  * This is the model class for table "partners".
  *
  * @property string $ID
- * @property string $Code
+ * @property integer $Code
  * @property string $Company
+ * @property string $name
+ * @property string $surname
+ * @property string $city
+ * @property string $region
  * @property string $City
  * @property string $City2
  * @property string $Address
@@ -24,8 +28,8 @@ use Yii;
  * @property integer $deleted
  * @property string $cardNumber
  * @property string $Note2
- * @property string $deliveryType
- * @property string $paymentType
+ * @property integer $deliveryType
+ * @property integer $paymentType
  * @property integer $blackList
  * @property string $blackListAddedTime
  * @property integer $money
@@ -35,26 +39,122 @@ use Yii;
  * @property string $recipientID
  * @property string $auth_key
  * @property string $password_reset_token
+ * @property string $giveFeedbackClosed
+ * @property integer $deliveryParam
+ * @property string $deliveryInfo
+ * @property integer $paymentParam
+ * @property string $paymentInfo
  */
 class Customer extends \yii\db\ActiveRecord
 {
-    public $name;
-    public $surname;
+    /**
+     * @type History[]
+     */
+    private $_orders = [];
 
-    private $orders;
-
+    /**
+     * @type CustomerContacts[]
+     */
     private $_phones = [];
+
+    /**
+     * @type CustomerContacts[]
+     */
     private $_emails = [];
 
-    public function behaviors()
-    {
-        return [
-            'LoggableBehavior' => [
-                'class' => 'sammaye\audittrail\LoggableBehavior',
-            ]
-        ];
+    /**
+     * Возвращает имя клиента
+     *
+     * @return string
+     */
+    public function getName(){
+        $array = explode(' ', $this->Company);
+
+        return isset($array[0]) ? $array[0] : '';
     }
 
+    /**
+     * Возвращает фамилию клиента
+     *
+     * @return string
+     */
+    public function getSurname(){
+        $array = explode(' ', $this->Company);
+
+        return isset($array[1]) ? $array[1] : '';
+    }
+
+    /**
+     * Возвращает город клиента
+     *
+     * @return string
+     */
+    public function getCity(){
+        $array = explode(', ', $this->City);
+
+        return isset($array[0]) ? $array[0] : '';
+    }
+
+    /**
+     * Возвращает регион клиента
+     *
+     * @return string
+     */
+    public function getRegion(){
+        $array = explode(', ', $this->City);
+
+        return isset($array[1]) ? $array[1] : '';
+    }
+
+    /**
+     * Сохраняет имя клиента
+     *
+     * @param $value string
+     */
+    public function setName($value){
+        $array = explode(' ', $this->Company);
+
+        $array[0] = $value;
+
+        $this->Company = implode(' ', $array);
+    }
+
+    /**
+     * @param $value string
+     */
+    public function setSurname($value){
+        $array = explode(' ', $this->Company);
+
+        $array[1] = $value;
+
+        $this->Company = implode(' ', $array);
+    }
+
+    /**
+     * @param $value string
+     */
+    public function setCity($value){
+        $array = explode(', ', $this->City);
+
+        $array[0] = $value;
+
+        $this->City = implode(', ', $array);
+    }
+
+    /**
+     * @param $value string
+     */
+    public function setRegion($value){
+        $array = explode(', ', $this->City);
+
+        $array[1] = $value;
+
+        $this->City = implode(', ', $array);
+    }
+
+    /**
+     * @return \common\models\CustomerContacts[]
+     */
     public function getPhones(){
         if(empty($this->_phones)){
             $this->_phones = CustomerContacts::findAll(['partnerID' => $this->ID, 'type' => CustomerContacts::TYPE_PHONE]);
@@ -63,6 +163,9 @@ class Customer extends \yii\db\ActiveRecord
         return $this->_phones;
     }
 
+    /**
+     * @return CustomerContacts|bool
+     */
     public function getPrimaryPhone(){
         foreach($this->phones as $phone){
             if($phone->primary == 1){
@@ -70,13 +173,19 @@ class Customer extends \yii\db\ActiveRecord
             }
         }
 
-        return '';
+        return false;
     }
 
+    /**
+     * @return string
+     */
     public function getPhone(){
-        return $this->primaryPhone->value;
+        return $this->primaryPhone ? $this->primaryPhone->value : '';
     }
 
+    /**
+     * @return \common\models\CustomerContacts[]
+     */
     public function getEmails(){
         if(empty($this->_emails)){
             $this->_emails = CustomerContacts::findAll(['partnerID' => $this->ID, 'type' => CustomerContacts::TYPE_EMAIL]);
@@ -85,6 +194,9 @@ class Customer extends \yii\db\ActiveRecord
         return $this->_emails;
     }
 
+    /**
+     * @return CustomerContacts|bool
+     */
     public function getPrimaryEmail(){
         foreach($this->emails as $email){
             if($email->primary == 1){
@@ -92,25 +204,33 @@ class Customer extends \yii\db\ActiveRecord
             }
         }
 
-        return '';
+        return false;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail(){
-        return $this->primaryEmail->value;
+        return $this->primaryEmail ? $this->primaryEmail->value : '';
+
     }
 
-    public function getCity(){
-        $array = explode(', ', $this->City);
+    /**
+     * @return History[]
+     */
+    public function getOrders(){
+        if(empty($this->_orders)){
+            $this->_orders = History::find()->where(['customerID' => $this->ID])->orderBy('added DESC')->all();
+        }
 
-        return isset($array[0]) ? $array[0] : '';
+        return $this->_orders;
     }
 
-    public function getRegion(){
-        $array = explode(', ', $this->City);
-
-        return isset($array[1]) ? $array[1] : '';
-    }
-
+    /**
+     * @todo пересмотреть использование этого метода, и актуальность его расположения здесь
+     *
+     * @return array|\yii\db\ActiveRecord
+     */
     public function getOrdersStats(){
         $b = [
             'count' =>  0,
@@ -126,23 +246,18 @@ class Customer extends \yii\db\ActiveRecord
         return empty($a['0']) ? $b : $a['0'];
     }
 
-    public function getOrders(){
-        if(!empty($this->orders)){
-            return $this->orders;
-        }
-
-        $this->orders = History::find()->where(['customerID' => $this->ID])->orderBy('added DESC')->all();
-
-        return $this->orders;
-    }
-
+    /**
+     * @todo пересмотреть использование этого метода, и актуальность его расположения здесь
+     *
+     * @return array
+     */
     public function getOrdersSummary(){
-        $count = $summ = $all = 0;
+        $count = $sum = $all = 0;
 
-        foreach($this->getOrders() as $order){
+        foreach($this->orders as $order){
             if($order->deleted == 0){
                 $count++;
-                $summ += $order->actualAmount;
+                $sum += $order->actualAmount;
             }
             $all++;
         }
@@ -150,7 +265,7 @@ class Customer extends \yii\db\ActiveRecord
         return [
             'all'   =>  $all,
             'count' =>  $count,
-            'summ'  =>  $summ
+            'summ'  =>  $sum
         ];
     }
 
@@ -161,20 +276,7 @@ class Customer extends \yii\db\ActiveRecord
             $this->registrationTime = date('Y-m-d H:i:s');
         }
 
-        if((!empty($this->name) && !empty($this->surname)) && $this->name.' '.$this->surname != $this->Company){
-            $this->Company = $this->name.' '.$this->surname;
-        }
-
         return parent::beforeSave($insert);
-    }
-
-    public function afterFind(){
-        $t = explode(' ', $this->Company);
-
-        $this->name = isset($t[0]) ? $t[0] : '';
-        $this->surname = isset($t[1]) ? $t[1] : '';
-
-        return parent::afterFind();
     }
 
     /**
@@ -191,12 +293,12 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['deliveryType', 'paymentType', 'blackList'], 'safe'],
-            [['ID', 'priceGroup', 'type', 'groupID', 'deleted', 'blackList', 'money'], 'integer'],
+            [['ID', 'blackList'], 'required'],
+            [['ID', 'Code', 'priceGroup', 'type', 'groupID', 'deleted', 'deliveryType', 'paymentType', 'blackList', 'money', 'deliveryParam', 'paymentParam'], 'integer'],
             [['discount'], 'number'],
-            [['registrationTime', 'blackListAddedTime', 'birthday'], 'safe'],
-            [['deliveryType', 'paymentType', 'password', 'lang'], 'string'],
-            [['Code', 'Company', 'City', 'City2', 'Address', 'phone', 'Phone2', 'email', 'cardNumber', 'Note2', 'recipientID', 'auth_key', 'password_reset_token'], 'string', 'max' => 255],
+            [['registrationTime', 'blackListAddedTime', 'birthday', 'giveFeedbackClosed'], 'safe'],
+            [['password', 'lang'], 'string'],
+            [['Company', 'City', 'City2', 'Address', 'phone', 'Phone2', 'email', 'cardNumber', 'Note2', 'recipientID', 'auth_key', 'password_reset_token', 'deliveryInfo', 'paymentInfo'], 'string', 'max' => 255],
         ];
     }
 
@@ -206,34 +308,39 @@ class Customer extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ID' => Yii::t('common', 'ID'),
-            'Code' => Yii::t('common', 'Code'),
-            'Company' => Yii::t('common', 'Company'),
-            'City' => Yii::t('common', 'City'),
-            'City2' => Yii::t('common', 'City2'),
-            'Address' => Yii::t('common', 'Address'),
-            'phone' => Yii::t('common', 'Phone'),
-            'Phone2' => Yii::t('common', 'Phone2'),
-            'email' => Yii::t('common', 'Email'),
-            'priceGroup' => Yii::t('common', 'Price Group'),
-            'discount' => Yii::t('common', 'Discount'),
-            'type' => Yii::t('common', 'Type'),
-            'groupID' => Yii::t('common', 'Group ID'),
-            'registrationTime' => Yii::t('common', 'Registration Time'),
-            'deleted' => Yii::t('common', 'Deleted'),
-            'cardNumber' => Yii::t('common', 'Card Number'),
-            'Note2' => Yii::t('common', 'Note2'),
-            'deliveryType' => Yii::t('common', 'Тип доставки'),
-            'paymentType' => Yii::t('common', 'Тип оплаты'),
-            'blackList' => Yii::t('common', 'Чёрный список'),
-            'blackListAddedTime' => Yii::t('common', 'Black List Added Time'),
-            'money' => Yii::t('common', 'Money'),
-            'birthday' => Yii::t('common', 'Birthday'),
-            'password' => Yii::t('common', 'Password'),
-            'lang' => Yii::t('common', 'Lang'),
-            'recipientID' => Yii::t('common', 'Recipient ID'),
-            'auth_key' => Yii::t('common', 'Auth Key'),
-            'password_reset_token' => Yii::t('common', 'Password Reset Token'),
+            'ID' => 'ID',
+            'Code' => 'Code',
+            'Company' => 'Company',
+            'City' => 'City',
+            'City2' => 'City2',
+            'Address' => 'Address',
+            'phone' => 'Phone',
+            'Phone2' => 'Phone2',
+            'email' => 'Email',
+            'priceGroup' => 'Price Group',
+            'discount' => 'Discount',
+            'type' => 'Type',
+            'groupID' => 'Group ID',
+            'registrationTime' => 'Registration Time',
+            'deleted' => 'Deleted',
+            'cardNumber' => 'Card Number',
+            'Note2' => 'Note2',
+            'deliveryType' => 'Delivery Type',
+            'paymentType' => 'Payment Type',
+            'blackList' => 'Чёрный список',
+            'blackListAddedTime' => 'Black List Added Time',
+            'money' => 'Money',
+            'birthday' => 'Birthday',
+            'password' => 'Password',
+            'lang' => 'Lang',
+            'recipientID' => 'Recipient ID',
+            'auth_key' => 'Auth Key',
+            'password_reset_token' => 'Password Reset Token',
+            'giveFeedbackClosed' => 'Give Feedback Closed',
+            'deliveryParam' => 'Delivery Param',
+            'deliveryInfo' => 'Delivery Info',
+            'paymentParam' => 'Payment Param',
+            'paymentInfo' => 'Payment Info',
         ];
     }
 }
