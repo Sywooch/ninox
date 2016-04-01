@@ -3530,8 +3530,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: none;
 	z-index: 1200;
 	margin-top: 60px;
-	padding: 18px;
-	padding-right: 30px;
+	padding: 20px;
 }
 
 .in-basket .yellow-button{
@@ -3541,12 +3540,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: -moz-linear-gradient(#fee040, #f9b519);
 	background: linear-gradient(#fee040, #f9b519);
 	font-size: 15px;
+    /*
 	font-weight: bold;
+    */
 	border-radius: 5px;
 	border-top: 1px solid #fdff27 !important;
 	border: none;
 	box-shadow: 0 4px 2px -2px #a1a1a1;
 	height: 45px;
+	text-transform: unset;
 
 }
 
@@ -3562,12 +3564,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-decoration: underline;
 	display: inline-block;
 	margin: 0px;
+	line-height: unset;
 }
 
 .header .desire-basket .in-basket .all-price{
 	display: inline-block;
 	font-size: 24px;
 	margin: 0px;
+	position: unset;
+	color: #4f4f4f;
 }
 
 .sticky .in-basket{
@@ -3588,11 +3593,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	top:0px;
 	cursor: auto;
+    /*
 	margin-bottom: 10px;
+    */
 }
 
 .header .in-basket .button{
 	text-decoration: none;
+	margin-right: 10px;
 }
 
 .header .desire-basket  .in-basket .price-info{
@@ -3600,7 +3608,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: unset;
 	margin-bottom: 10px;
 	margin-top: 5px;
-}
+}   
 
 .in-basket a{
 	color: #4f4f4f;
@@ -3617,7 +3625,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	top: -12px;
 	position: relative;
 	cursor: pointer;
+    /*
 	margin-top: 14px;
+    */
 }
 
 .desire-icon{
@@ -4103,6 +4113,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .goods-basket:before{
+	content: url("/img/site/white-basket.png");
+	display: block;
+	text-align: center;
+	margin-top: 12px;
+}
+
+.buy::before {
 	content: url("/img/site/white-basket.png");
 	display: block;
 	text-align: center;
