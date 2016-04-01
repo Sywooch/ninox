@@ -12,6 +12,7 @@ use backend\modules\goods\models\GoodMainForm;
 use common\helpers\UploadHelper;
 use common\models\Category;
 use common\models\CategorySearch;
+use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use common\models\GoodSearch;
@@ -556,7 +557,9 @@ class DefaultController extends Controller
                 $options = $deleteOptions = [];
 
                 foreach($request->post("GoodOption") as $optionArray){
-                    $options[$optionArray['option']] = $optionArray['value'];
+                    if(!empty($optionArray['value'])){
+                        $options[$optionArray['option']] = $optionArray['value'];
+                    }
                 }
 
                 foreach($good->options as $optionArray){
@@ -745,7 +748,25 @@ class DefaultController extends Controller
 
                 return ['output' => $variants, 'selected' => \Yii::$app->request->post("selected")];
                 break;
-            //case ''
+            case 'newOption':
+                $option = new GoodOptions([
+                    'name'  =>  \Yii::$app->request->post("value")
+                ]);
+
+                $option->save(false);
+
+                return ['id' => $option->id, 'name' => $option->name];
+                break;
+            case 'newAttributeOption':
+                $option = new GoodOptionsVariant([
+                    'option'    =>  \Yii::$app->request->post("option"),
+                    'value'     =>  \Yii::$app->request->post("value")
+                ]);
+
+                $option->save(false);
+
+                return ['id' => $option->id, 'name' => $option->value];
+                break;
         }
     }
 

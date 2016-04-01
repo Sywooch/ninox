@@ -3822,18 +3822,21 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .content-items .icons-fav-bask{
 	float: right;
 	width: auto;
+	padding: unset;
+	position: unset;
+	margin: 0px;
 }
 
-.content-items .icons-fav-bask:before{
+/*.content-items .icons-fav-bask{
 	margin-right: 10px;
 	padding: unset;
 	position: unset;
 }
 
-.content-items .icons-fav-bask:after{
+.content-items .icons-fav-bask{
 	padding: unset;
 	position: unset;
-}
+}*/
 
 .content-items .goods-item-style{
 	background: #eaa51e;
@@ -3888,27 +3891,41 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 }
 
-.icons-fav-bask:before{
+.icons-fav-bask .desire-ico:before{
 	content: url("/img/site/favor.svg");
 	cursor: pointer;
 }
 
-/*.right-item*/ .icons-fav-bask:before{
+.icons-fav-bask .ico{
+	float: left;
+	margin-left: 10px;
+}
+/*
+!*.right-item*! .icons-fav-bask:before{
 	padding-top: 32px;
 	position: absolute;
 	color: #7d8d95;
-}
+}*/
 
-.icons-fav-bask:after{
+.icons-fav-bask .basket-ico:after{
 	content: url("/img/site/grey-basket.png");
 	cursor: pointer;
 }
 
-/*.right-item */.icons-fav-bask:after{
+/*
+!*.right-item *!.icons-fav-bask:after{
 	padding-top: 32px;
 	position: absolute;
 	left: 22px;
 	color: #7d8d95;
+}
+*/
+
+.icons-fav-bask{
+	display: block;
+	position: absolute;
+	margin-left: 20px;
+	margin-top: -35px;
 }
 
 .goods-content-icons{

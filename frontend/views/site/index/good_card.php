@@ -10,3 +10,4 @@ echo Html::tag('span', $good->Code, ['class' => 'item-id']),
         Html::tag('div', '', ['class' => 'goods-basket']), [
         'class' =>  'price-and-order'
     ]);
+//$this->render('/site/_shop_item/_shop_item_wish', ['model' => $good])
