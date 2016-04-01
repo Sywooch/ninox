@@ -3,10 +3,12 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
+use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\CustomerWishlist;
+use frontend\models\History;
 use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use Yii;
@@ -127,7 +129,9 @@ class SiteController extends Controller
             'label' =>  $category->Name
         ];
 
-        return $this->render('goodCard', [
+        (new PriceRuleHelper())->recalc($good, true);
+
+        return $this->render('_shop_item_card', [
             'mainCategory'  =>  $mainCategory,
             'good'          =>  $good,
             'category'      =>  $category,
@@ -166,7 +170,6 @@ class SiteController extends Controller
                 $customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
 
                 if(\Yii::$app->request->cookies->getValue("customerPhone") != $customerPhone){
-                    \Yii::trace('phone was changed: from '.\Yii::$app->request->cookies->get("customerPhone").' to '.$customerPhone);
                     \Yii::$app->response->cookies->add(new Cookie([
                         'name'      =>  'customerPhone',
                         'value'     =>  $customerPhone
@@ -203,19 +206,14 @@ class SiteController extends Controller
         }
 
 
+        if(\Yii::$app->request->post("OrderForm") && $order->load(\Yii::$app->request->post()) && $order->validate() && $order->create()){
+            $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
 
-        if(\Yii::$app->request->post("OrderForm")){
-            $order->load(\Yii::$app->request->post());
-        }
+            \Yii::trace($email);
 
-        if(\Yii::$app->request->post("OrderForm")){
-            if($order->validate() && $order->create()){
-                \Yii::trace('created order');
-                return $this->render('order_success', [
-                    'model' =>  $order
-                ]);
-            }
-            \Yii::trace($order->getErrors());
+            return $this->render('order_success', [
+                'model' =>  $order
+            ]);
         }
 
         $this->layout = 'order';
@@ -258,10 +256,10 @@ class SiteController extends Controller
                         break;
                 }
 				$items[$good->ID] = [
-					'retail'      =>  Formatter::getFormattedPrice($good->retail_price),
-					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesale_price),
+					'retail'      =>  Formatter::getFormattedPrice($good->retailPrice),
+					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesalePrice),
 					'discount'    =>  $discount,
-					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesale_price : $good->retail_price) * $good->inCart),
+					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesalePrice : $good->retailPrice) * $good->inCart),
 				];
 			}
 	    }
@@ -318,7 +316,7 @@ class SiteController extends Controller
                 ]);
             }
 
-            $wish->price = Good::findOne($itemID)->wholesale_price;
+            $wish->price = Good::findOne($itemID)->wholesalePrice;
             $wish->date = date('Y-m-d H:i:s');
 
             $wish->save(false);
@@ -481,8 +479,8 @@ class SiteController extends Controller
                 $goodInfo = [
                     'ID'        =>  $good->ID,
                     'code'      =>  $good->Code,
-                    'price'     =>  $good->wholesale_price,
-                    'price2'    =>  $good->retail_price,
+                    'price'     =>  $good->wholesalePrice,
+                    'price2'    =>  $good->retailPrice,
                     'link'      =>  $good->link,
                     'name'      =>  $good->Name,
                     'photo'     =>  $good->ico

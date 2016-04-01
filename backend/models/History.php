@@ -20,16 +20,16 @@ class History extends \common\models\History
 
     public $sum;
 
-    public static $status_1     =   'Не звонили';
-    public static $status_2     =   'Подготовка заказа';
-    public static $status_3     =   'Абонент не отвечает';
-    public static $status_4     =   '<b>Ожидается оплата</b>';
-    public static $status_5     =   'Заказ отправлен';
-    public static $status_6     =   'Оплачено';
-    public static $status_7     =   'Возврат';
-    public static $status_8     =   '<small>Отправлен - оплачено</small>';
-    public static $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
-    public static $status_10    =   'Ожидает отправки';
+    public $status_1     =   'Не звонили';
+    public $status_2     =   'Подготовка заказа';
+    public $status_3     =   'Абонент не отвечает';
+    public $status_4     =   '<b>Ожидается оплата</b>';
+    public $status_5     =   'Заказ отправлен';
+    public $status_6     =   'Оплачено';
+    public $status_7     =   'Возврат';
+    public $status_8     =   '<small>Отправлен - оплачено</small>';
+    public $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
+    public $status_10    =   'Ожидает отправки';
 
     public function afterFind(){
         $this->getStatus();
@@ -39,6 +39,23 @@ class History extends \common\models\History
 
     public function getID(){
         return $this->id;
+    }
+
+    public function getStatusDescription(){
+        $statuses = [
+            'Не прозвонен',
+            'В обработке',
+            'Не оплачен',
+            'Ожидает доставку',
+            'Отправлен',
+            'Выполнен'
+        ];
+
+        if(!isset($statuses[$this->status])){
+            return '';
+        }
+
+        return $statuses[$this->status];
     }
 
     public function beforeSave($insert){

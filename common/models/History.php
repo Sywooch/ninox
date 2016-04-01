@@ -68,14 +68,21 @@ use Yii;
  */
 class History extends \yii\db\ActiveRecord
 {
-    const CALLBACK_NEW = 0;
-    const CALLBACK_UNANSWERED = 1;
-    const CALLBACK_COMPLETED = 2;
+    const CALLBACK_NEW = 0;         //Новый заказ (не звонили)
+    const CALLBACK_UNANSWERED = 2;  //Заказ без ответа
+    const CALLBACK_COMPLETED = 1;   //Прозвоненый заказ
 
-    const SOURCETYPE_INTERNET = 0;
-    const SOURCETYPE_SHOP = 1;
+    const SOURCETYPE_INTERNET = 0;  //Заказ из интернета
+    const SOURCETYPE_SHOP = 1;      //Заказ из магазина
 
-    public $status;
+    const STATUS_NOT_CALLED = 0;    //Не прозвонен
+    const STATUS_PROCESS = 1;       //В обработке
+    const STATUS_NOT_PAYED = 2;     //Не оплачен
+    const STATUS_WAIT_DELIVERY = 3; //Ожидает доставку
+    const STATUS_DELIVERED = 4;     //Отправлен
+    const STATUS_DONE = 5;          //Выполнен
+
+    //public $status;
 
     /**
      * @inheritdoc
@@ -95,7 +102,30 @@ class History extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
+    /**
+     * Возвращает идентификатор статуса заказа, в зависимости от того, на какой стадии заказ
+     *
+     * @return int идентификатор статуса
+     */
     public function getStatus(){
+        if($this->callback != self::CALLBACK_COMPLETED){
+            return self::STATUS_NOT_CALLED;
+        }
+
+        if($this->paymentType == 2 && $this->moneyConfirmed != 1){
+            return self::STATUS_NOT_PAYED;
+        }
+
+        $status = self::STATUS_WAIT_DELIVERY;
+
+        if(!empty(preg_replace('/-|\+|\s+/', '', $this->nakladna))){
+            $status = self::STATUS_DELIVERED;
+        }
+
+        return $status;
+    }
+
+    public function getOldStatus(){
         if($this->deleted == '4'){
             return $this->status = '7';
         }
@@ -133,6 +163,10 @@ class History extends \yii\db\ActiveRecord
         }else{
             $this->status = '2';
         }
+    }
+
+    public function getItems(){
+        return SborkaItem::findAll(['orderID' => $this->id]);
     }
 
     public function loadCustomer($customer){

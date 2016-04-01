@@ -14,6 +14,9 @@ use Yii;
  */
 class CustomerContacts extends \yii\db\ActiveRecord
 {
+    const TYPE_EMAIL = 1;
+    const TYPE_PHONE = 2;
+
     /**
      * @inheritdoc
      */

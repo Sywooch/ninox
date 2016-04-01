@@ -10,7 +10,7 @@ echo $form->field($customer, 'email');
     'addon' => ['append' => ['content' => '%']]
 ]);*/
 echo $form->field($customer, 'deleted')->checkbox();
-echo $form->field($customer, 'shippingType');
-echo $form->field($customer, 'PaymentType');
+echo $form->field($customer, 'deliveryType');
+echo $form->field($customer, 'paymentType');
 ?>
 <center><button class="btn btn-success btn-lg" type="submit" style="margin-left: 10px;">Сохранить</button> или <a href="/customers/showcustomer/<?=$customer->ID?>" class="btn btn-info">в режим просмотра</a></center>

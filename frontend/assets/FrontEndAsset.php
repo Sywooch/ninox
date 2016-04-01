@@ -12,8 +12,7 @@ use yii\web\AssetBundle;
 
 class FrontEndAsset extends AssetBundle
 {
-	public $basePath = '@webroot';
-	public $baseUrl = '@web';
+	public $sourcePath = '@web';
 	public $css = [
 		'css/normalize.css',
 		'css/ion.rangeSlider.css',

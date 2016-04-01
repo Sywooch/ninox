@@ -19,8 +19,11 @@ return [
         'formatter' =>  [
             'class' =>  'backend\components\Formatter'
         ],
-        'cashbox'   =>  [
-            'class' =>  'backend\components\Cashbox'
+        'sms' =>  [
+            'class' =>  'backend\components\Sms'
+        ],
+        'email' =>  [
+            'class' =>  'backend\components\Email'
         ],
         'i18n' => [
             'translations' => [

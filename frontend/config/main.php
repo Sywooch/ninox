@@ -12,11 +12,20 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'assetManager'  =>  [
+            'linkAssets'    =>  true
+        ],
         'cache' =>  [
             'class' =>  'yii\caching\FileCache'
         ],
         'cart'  =>  [
             'class' =>  'frontend\components\Cart'
+        ],
+        'email'  =>  [
+            'class' =>  'frontend\components\Email'
+        ],
+        'sms'  =>  [
+            'class' =>  'frontend\components\Sms'
         ],
         'i18n' => [
             'translations' => [

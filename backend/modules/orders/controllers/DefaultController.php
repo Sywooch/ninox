@@ -110,18 +110,18 @@ class DefaultController extends Controller
     }
 
     public function actionDoneorder(){
-        if(\Yii::$app->request->isAjax){
+        if(!\Yii::$app->request->isAjax){
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $o = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
 
-        if($o){
-            $o->done = $o->done == 1 ? 0 : 1;
-            $o->doneDate = $o->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
+        if($order){
+            $order->done = $order->done == 1 ? 0 : 1;
+            $order->doneDate = $order->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
 
-            $o->save(false);
-            return $o->done;
+            $order->save(false);
+            return $order->done;
         }
 
         return 0;
@@ -234,11 +234,9 @@ class DefaultController extends Controller
                     $ordersSource != false ? array_merge(['ordersSource' => $ordersSource], \Yii::$app->request->get()) : \Yii::$app->request->get())
         ]);
 
-        if($context == true){
-            return $return;
+        if(!$context){
+            \Yii::$app->response->format = 'json';
         }
-
-        \Yii::$app->response->format = 'json';
 
         return $return;
     }

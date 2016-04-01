@@ -11,6 +11,13 @@ namespace frontend\models;
 
 class Customer extends \common\models\Customer{
 
+    /*public function rules()
+    {
+        return array_merge(parent::rules(), [
+            [['name', 'surname', 'city', 'region', 'deliveryType', 'deliveryInfo', 'deliveryParam', 'paymentType', 'paymentParam', 'paymentInfo'], 'safe']
+        ]);
+    }*/
+
     public static function getList($options = []){
         $list = self::find();
 
