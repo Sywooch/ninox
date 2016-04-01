@@ -87,7 +87,7 @@ $form = ActiveForm::begin([
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="btn-group pull-left">
-            <?php if($category->menu_show != 0){ ?>
+            <?php if($category->enabled != 0){ ?>
                 <a href="https://krasota-style.com.ua/<?=$category->link?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
             <?=\backend\widgets\ChangesWidget::widget([
@@ -98,7 +98,7 @@ $form = ActiveForm::begin([
         <button class="btn btn-success pull-right" type="submit" style="margin-left: 10px;">Сохранить</button>
         <div class="btn-group pull-right" role="group" aria-label="...">
             <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->canBuy == "1" ? "Не продавать товары" : "Продавать товары"?></button>
-            <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->menu_show == "1" ? "Выключить" : "Включить"?></button>
+            <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->enabled == "1" ? "Выключить" : "Включить"?></button>
             <a href="/goods/showcategory/<?=$category->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
         </div>
         <div class="clearfix"></div>

@@ -37,6 +37,7 @@ use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Cookie;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -138,28 +139,75 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @param string $url
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionRenderpage($url){
         $category = Category::findOne(['link' => $url]);
 
         if(empty($category)){
-            return $this->runAction('error');
+            throw new NotFoundHttpException("Страница не найдена!");
         }
 
-        $pageType = Pagetype::findOne(['id' => $category->pageType]);
+        \Yii::trace($category->viewFile);
 
-        if($category->pageType == 0 || $category->pageType == -1 || $category->pageType == 13){
-            return $this->run('site/rendercategory', [
-                'category'  =>  $category,
-                'view'      =>  $pageType->page
-            ]);
-        }else{
-            //Переделать потом под все типы страниц
-            return $this->run('site/rendercategory', [
-                'category'  =>  $category,
-                'view'      =>  $pageType->page
-            ]);
+        switch($category->viewFile){
+            case '0':
+            case '-1':
+            case '13':
+            case 'category':
+                return $this->renderCategory($category);
+                break;
+            default:
+                return $this->renderStaticPage($category);
+                break;
+        }
+    }
+
+    /**
+     * Рендерит категорию
+     *
+     * @param Category $category
+     *
+     * @return string
+     */
+    public function renderCategory($category){
+        switch($category->viewFile){
+            case -1:
+            case 13:
+            case 0:
+            case 'category':
+            default:
+                $view = 'category';
+                break;
         }
 
+        if(strlen($category->Code) != 3){
+            foreach($category->parents as $parent){
+                $this->getView()->params['breadcrumbs'][] = [
+                    'url'   =>  '/'.$parent->link,
+                    'label' =>  $parent->Name
+                ];
+            }
+        }
+
+        return $this->render($view, [
+            'category'  =>  $category,
+            'showText'  =>  true,
+            'goods'     =>  new ActiveDataProvider([
+                'query'         =>  $category->goods(),
+                'pagination'    =>  [
+                    'pageSize'  =>  '15'
+                ]
+            ])
+        ]);
+    }
+
+    public function renderStaticPage($pageInfo){
+        return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
     }
 
     public function actionOrder(){
@@ -340,34 +388,6 @@ class SiteController extends Controller
 
     }
 
-    public function actionRendercategory($category = null, $view = null){
-        $view != null ? $view : 'category';
-
-        if(empty($category)){
-            return $this->run('site/error');
-        }
-
-        if(strlen($category->Code) != 3){
-            foreach($category->getParents() as $parent){
-                $this->getView()->params['breadcrumbs'][] = [
-                    'url'   =>  '/'.$parent->link,
-                    'label' =>  $parent->Name
-                ];
-            }
-        }
-
-        return $this->render($view, [
-            'category'  =>  $category,
-            'showText'  =>  true,
-            'goods'     =>  new ActiveDataProvider([
-                'query'         =>  $category->goods(),
-                'pagination'    =>  [
-                    'pageSize'  =>  '15'
-                ]
-            ])
-        ]);
-    }
-
     /**
      * @inheritdoc
      */
@@ -436,9 +456,7 @@ class SiteController extends Controller
         );
         $pattern = $vowels[\Yii::$app->language];
         $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';
-        $return = '';
-        $r1 = '';
-        $r2 = '';
+        $return = $r1 = $r2 = '';
         $string = mb_strtolower($string, 'UTF-8');
         //$string = preg_replace('/\w/', '', $string); allow latin symbols
         $string = preg_replace('/[.,;\'*"]/', ' ', $string);

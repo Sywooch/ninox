@@ -7,7 +7,7 @@ use yii\jui\Accordion;
  * Date: 08.02.16
  * Time: 14:07
  */
-   ?>
+?>
 
 <div class="content">
     <div class="left-side">

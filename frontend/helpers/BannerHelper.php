@@ -79,16 +79,18 @@ class BannerHelper extends Component
             throw new NotFoundHttpException("Товар с идентификатором {$banner->banner->value} не найден!");
         }
 
+        (new PriceRuleHelper())->recalc($good, true);
+
         return Html::tag('div', Html::tag('div',
                // Html::tag('span', '', ['class' => 'icons-fav-bask']).
 
                 Html::tag('div', html::tag('div', '', ['class' => 'desire-ico ico']).
                     html::tag('div', '', ['class' => 'basket-ico ico']),
                     ['class' => 'icons-fav-bask']).
-                Html::tag('span', $good->Name).
+                Html::a(Html::tag('span', $good->Name), '/tovar/'.$good->link.'-g'.$good->ID).
                 Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
             ).
-            Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico)), [
+            Html::tag('div', Html::a(Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico), '/tovar/'.$good->link.'-g'.$good->ID)), [
             'class' =>  'goods-item'
         ]);
     }
@@ -108,9 +110,11 @@ class BannerHelper extends Component
             throw new NotFoundHttpException("Товар с идентификатором {$bannerValue['goodID']} не найден!");
         }
 
+        (new PriceRuleHelper())->recalc($good, true);
+
         return
             Html::tag('div',
-                Html::img('/img/site/'.$bannerValue['image']).
+                Html::a(Html::img('/img/site/'.$bannerValue['image']), '/tovar/'.$good->link.'-g'.$good->ID).
 
                     Html::tag('div', html::tag('div', '', ['class' => 'desire-ico ico']).
                         html::tag('div', '', ['class' => 'basket-ico ico']),
