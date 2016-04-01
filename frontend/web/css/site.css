@@ -3608,7 +3608,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: unset;
 	margin-bottom: 10px;
 	margin-top: 5px;
-}
+} 
 
 .in-basket a{
 	color: #4f4f4f;
