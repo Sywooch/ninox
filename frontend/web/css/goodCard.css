@@ -16,18 +16,33 @@
     margin: auto;
 }
 
-.catalog-menu .breadcrumb{
+/*.catalog-menu .breadcrumb{
+    background: none;
+    padding: 25px 0px 0px;
+}*/
+
+.main-content .breadcrumb{
     background: none;
     padding: 25px 0px 0px;
 }
 
-.catalog-menu .breadcrumb span a{
+/*.catalog-menu .breadcrumb span a{
+    text-decoration: underline;
+    padding-right: 5px;
+    padding-left: 5px;
+}*/
+
+.main-content .breadcrumb span a {
     text-decoration: underline;
     padding-right: 5px;
     padding-left: 5px;
 }
 
-.catalog-menu .fa{
+/*.catalog-menu .fa{
+    font-size: 10px ;
+}*/
+
+.fa{
     font-size: 10px ;
 }
 

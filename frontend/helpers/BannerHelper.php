@@ -80,7 +80,11 @@ class BannerHelper extends Component
         }
 
         return Html::tag('div', Html::tag('div',
-                Html::tag('span', '', ['class' => 'icons-fav-bask']).
+               // Html::tag('span', '', ['class' => 'icons-fav-bask']).
+
+                Html::tag('div', html::tag('div', '', ['class' => 'desire-ico ico']).
+                    html::tag('div', '', ['class' => 'basket-ico ico']),
+                    ['class' => 'icons-fav-bask']).
                 Html::tag('span', $good->Name).
                 Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
             ).
@@ -107,7 +111,11 @@ class BannerHelper extends Component
         return
             Html::tag('div',
                 Html::img('/img/site/'.$bannerValue['image']).
-                Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price icons-fav-bask']), [
+
+                    Html::tag('div', html::tag('div', '', ['class' => 'desire-ico ico']).
+                        html::tag('div', '', ['class' => 'basket-ico ico']),
+                        ['class' => 'icons-fav-bask']).
+                    Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price']), [
                 'class' => 'goods-item'
             ]);
     }

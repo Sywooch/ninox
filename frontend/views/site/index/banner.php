@@ -9,7 +9,8 @@ use common\helpers\Formatter;
 use yii\bootstrap\Html;
 
 echo Html::tag('div',
-        Html::tag('span', '', ['class' => 'icons-fav-bask']).
+        Html::tag('div', html::tag('div', '', ['class' => 'desire-ico']),
+             ['class' => 'icons-fav-bask']).
         Html::tag('span', $good->Name).
         Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
 ).
