@@ -174,7 +174,7 @@ function updateCart(data){
 				$('#modal-cart .cart-' + i).attr('disabled', data[i]);
 				break;
 			default:
-				$('#modal-cart .amount-' + i).text(data[i]);
+				$('.amount-' + i).text(data[i]);
 				break;
 		}
 	}

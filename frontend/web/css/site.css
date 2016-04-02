@@ -3559,7 +3559,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	line-height: unset;
 }
 
-.header .desire-basket .in-basket .all-price{
+.header .desire-basket .in-basket .amount-cart{
 	display: inline-block;
 	font-size: 24px;
 	margin: 0px;

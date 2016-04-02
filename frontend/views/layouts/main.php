@@ -375,10 +375,10 @@ $this->beginPage();
 									])
 									?>
 								</span>
-								<span>на сумму <?=Html::tag('span', Formatter::getFormattedPrice
-									(\Yii::$app->cart->cartSumm), [
-																'class' =>  'all-price'
-															])?>
+								<span>на сумму <?=Html::tag('span',
+										Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm), [
+											'class' => 'amount-cart'
+										])?>
 								</span>
 								<span class="price-info">Вы покупаете по оптовым ценам</span>
 								<?=Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
