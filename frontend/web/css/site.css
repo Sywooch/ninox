@@ -3191,19 +3191,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	width: 1172px;
 	margin: auto;
+}
+
+.sticky-wrapper:not(.sticky) .under-menu-content{
 	padding-top: 10px;
 	height: 90px;
 }
 
-.under-menu-sticky{
-}
-
-.sticky  .under-menu-content{
+.sticky-wrapper.sticky .under-menu-content{
 	padding-top: 8px;
 	height: 50px;
-	display: block;
-	width: 1172px;
-	margin: auto;
 }
 
 .sticky-on-scroll{
@@ -3289,13 +3286,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header .phone-number{
-	float: left;
-	padding-left: 40px;
-	padding-top: 20px;
-}
-
-.header .phone-number .popover.bottom{
-	margin-left: 55px;
+	display: inline-block;
+	padding: 20px 0 0 50px;
 }
 
 .header .phone-number .popover.bottom > .arrow{
@@ -3463,10 +3455,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .header .number:before{
 	content: url("/img/site/phone.png");
-	top: 3px;
-	position: relative;
-	cursor: pointer;
-	margin-right: 13px;
+	height: 20px;
+	display: inline-block;
+	vertical-align: middle;
+	padding-right: 5px;
 }
 
 .header .number:after{
