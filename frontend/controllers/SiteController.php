@@ -319,6 +319,10 @@ class SiteController extends Controller
 		    'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
 		    'wholesale'     =>  \Yii::$app->cart->wholesale,
 		    'count'         =>  \Yii::$app->cart->itemsCount,
+		    'count-ext'     =>  \Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
+									товара}	many{# товаров} other{# товар}}', [
+                                    'n'	=>	\Yii::$app->cart->itemsCount
+                                ]),
 		    'items'         =>  $items,
 	    ];
     }

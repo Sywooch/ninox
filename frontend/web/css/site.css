@@ -3552,7 +3552,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: -8px;
 }
 
-.header .desire-basket .in-basket .items-count{
+.header .desire-basket .in-basket .items-count-ext{
 	text-decoration: underline;
 	display: inline-block;
 	margin: 0px;

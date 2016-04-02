@@ -28,7 +28,8 @@ use yii\helpers\Json;
  * @property boolean $onePrice
  * @property boolean $hasFilter
  * @property integer $enabled
- * @property integer $pageType
+ * @property string $viewFile
+ * @property string $viewOptions
  * @property string $yandexName
  * @property string $catNameVinitelny
  * @property string $h1asc
@@ -245,8 +246,8 @@ class Category extends \yii\db\ActiveRecord
         return [
             [['Name'], 'required'],
             [['text2', 'descr', 'keyword', 'yandexName', 'h1asc', 'h1desc', 'h1new', 'h1'], 'string'],
-            [['listorder', 'enabled', 'pageType', 'ymlExport', 'canBuy', 'onePrice', 'hasFilter'], 'integer'],
-            [['Name', 'Code', 'link', 'title', 'titlenew', 'titleasc', 'titledesc', 'catNameVinitelny2', 'catNameVinitelny'], 'string', 'max' => 255],
+            [['listorder', 'enabled', 'ymlExport', 'canBuy', 'onePrice', 'hasFilter'], 'integer'],
+            [['Name', 'Code', 'link', 'title', 'titlenew', 'titleasc', 'titledesc', 'catNameVinitelny2', 'catNameVinitelny', 'viewFile', 'viewOptions'], 'string', 'max' => 255],
             [['retailPercent'], 'number'],
             [['p_photo'], 'string', 'max' => 55],
             [['cat_img'], 'string', 'max' => 100]
@@ -277,7 +278,8 @@ class Category extends \yii\db\ActiveRecord
             'onePrice' => 'One Price',
             'hasFilter' => 'Has Filter',
             'enabled' => 'Menu Show',
-            'pageType' => 'Page Type',
+            'viewFile' => 'Page Type',
+            'viewOptions' => 'View Options',
             'yandexName' => 'Yandex Name',
             'catNameVinitelny' => 'Cat Name Vinitelny',
             'h1asc' => 'H1asc',

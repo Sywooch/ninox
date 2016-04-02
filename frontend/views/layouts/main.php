@@ -371,7 +371,7 @@ $this->beginPage();
 									товара}	many{# товаров} other{# товар}}', [
 										'n'	=>	\Yii::$app->cart->itemsCount
 									]), '#modalCart', [
-										'class' =>  'items-count'
+										'class' =>  'items-count-ext'
 									])
 									?>
 								</span>

@@ -152,7 +152,8 @@ function updateCart(data){
 				$('#modal-cart').toggleClass('empty', !data[i]).removeClass(function(){
 					return data[i] ? '' : 'wholesale retail';
 				});
-				$('.basket .count').val(data[i]);
+			case 'count-ext':
+				$('.desire-basket .items-' + i).text(data[i]);
 				break;
 			case 'items':
 				for(var j in data[i]){
