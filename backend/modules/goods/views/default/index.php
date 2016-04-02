@@ -167,7 +167,7 @@ $items = [];
                     ],
                     '<li class="divider"></li>',
                     [
-                        'label' =>  $nowCategory->menu_show == "1" ? "Выключить" : "Включить",
+                        'label' =>  $nowCategory->enabled == "1" ? "Выключить" : "Включить",
                         'options'   =>  [
                             'class' =>  'shutdown',
                             'data-attribute-categoryID' =>  $nowCategory->ID
@@ -204,7 +204,7 @@ foreach($categories as $c){
             'disabled'  =>  isset($goodsCount[$c->Code]['disabled']) ? $goodsCount[$c->Code]['disabled'] : 0
         ]),
         'options' =>  [
-            'class' =>  "category ".($c->menu_show == "1" ? "bg-success" : "bg-danger"),
+            'class' =>  "category ".($c->enabled == "1" ? "bg-success" : "bg-danger"),
             'data-category-id'    =>  $c->ID
         ]
     ];

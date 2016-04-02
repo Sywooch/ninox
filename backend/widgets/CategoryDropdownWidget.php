@@ -62,7 +62,7 @@ class CategoryDropdownWidget extends Widget{
                 ],
                 '<li class="divider"></li>',
                 [
-                    'label' =>  $this->category->menu_show == "1" ? "Выключить" : "Включить",
+                    'label' =>  $this->category->enabled == "1" ? "Выключить" : "Включить",
                     'options'   =>  [
                         'class' =>  'shutdown',
                         'data-attribute-categoryID' =>  $this->category->ID

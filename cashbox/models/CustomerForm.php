@@ -46,7 +46,7 @@ class CustomerForm extends Model{
             }
         }
 
-        if($this->validate() && $customer->save()){
+        if($this->validate() && $customer->save(false)){
             $this->id = $customer->ID;
 
             return true;

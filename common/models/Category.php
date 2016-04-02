@@ -5,6 +5,7 @@ namespace common\models;
 use app\helpers\TranslitHelper;
 use Yii;
 use yii\db\Query;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "goodsgroups".
@@ -26,7 +27,7 @@ use yii\db\Query;
  * @property boolean $canBuy
  * @property boolean $onePrice
  * @property boolean $hasFilter
- * @property integer $menu_show
+ * @property integer $enabled
  * @property integer $pageType
  * @property string $yandexName
  * @property string $catNameVinitelny
@@ -36,6 +37,7 @@ use yii\db\Query;
  * @property string $h1
  * @property string $catNameVinitelny2
  * @property integer $ymlExport
+ * @property Category[]|null $parents
  */
 class Category extends \yii\db\ActiveRecord
 {
@@ -243,7 +245,7 @@ class Category extends \yii\db\ActiveRecord
         return [
             [['Name'], 'required'],
             [['text2', 'descr', 'keyword', 'yandexName', 'h1asc', 'h1desc', 'h1new', 'h1'], 'string'],
-            [['listorder', 'menu_show', 'pageType', 'ymlExport', 'canBuy', 'onePrice', 'hasFilter'], 'integer'],
+            [['listorder', 'enabled', 'pageType', 'ymlExport', 'canBuy', 'onePrice', 'hasFilter'], 'integer'],
             [['Name', 'Code', 'link', 'title', 'titlenew', 'titleasc', 'titledesc', 'catNameVinitelny2', 'catNameVinitelny'], 'string', 'max' => 255],
             [['retailPercent'], 'number'],
             [['p_photo'], 'string', 'max' => 55],
@@ -274,7 +276,7 @@ class Category extends \yii\db\ActiveRecord
             'canBuy' => 'Can Buy',
             'onePrice' => 'One Price',
             'hasFilter' => 'Has Filter',
-            'menu_show' => 'Menu Show',
+            'enabled' => 'Menu Show',
             'pageType' => 'Page Type',
             'yandexName' => 'Yandex Name',
             'catNameVinitelny' => 'Cat Name Vinitelny',
@@ -299,7 +301,7 @@ class Category extends \yii\db\ActiveRecord
 
 		foreach($elements as $element){
 
-			if($element->menu_show == 1){
+			if($element->enabled == 1){
 				if(substr($element->Code, 0, -3) == $parentCode){
 					$branch[$element->Code]['label'] = $element->Name;
 					$branch[$element->Code]['url'] = $element->link;
@@ -324,6 +326,12 @@ class Category extends \yii\db\ActiveRecord
 
     public function afterFind(){
         $this->link = urldecode($this->link);
+
+        if(empty($this->viewOptions)){
+            $this->viewOptions = '{}';
+        }
+
+        $this->viewOptions = Json::decode($this->viewOptions);
 
         return parent::afterFind();
     }

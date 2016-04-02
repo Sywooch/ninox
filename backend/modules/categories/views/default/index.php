@@ -161,7 +161,7 @@ foreach($categories->getModels() as $child){
             'disabled'  =>  isset($goodsCount[$child->Code]['disabled']) ? $goodsCount[$child->Code]['disabled'] : 0
         ]),
         'options' =>  [
-            'class' =>  "category ".($child->menu_show == "1" ? "bg-success" : "bg-danger"),
+            'class' =>  "category ".($child->enabled == "1" ? "bg-success" : "bg-danger"),
             'data-category-id'    =>  $child->ID
         ]
     ];

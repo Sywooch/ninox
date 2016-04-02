@@ -12,6 +12,8 @@ switch($class){
 	case 'small-button':
 		$value = \Yii::t('shop', "Нет\r\nв наличии");
 		break;
+	case 'mini-button':
+		$value = '';
 	default:
 		$value = \Yii::t('shop', "Нет в наличии");
 		break;

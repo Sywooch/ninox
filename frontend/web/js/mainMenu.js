@@ -4,7 +4,7 @@ $('img.svg').each(function(){
         imgClass = img.attr('class'),
         imgURL = img.attr('src');
 
-    $.get(imgURL, function(data) {
+    $.get(imgURL, function(data){
         // Get the SVG tag, ignore the rest
         var svg = jQuery(data).find('svg'),
             width = '40',
@@ -26,7 +26,7 @@ $('img.svg').each(function(){
         svg.attr('height', height);
 
         svg.attr('preserveAspectRatio', 'alignment [meet | slice]');
-        svg.attr('viewBox', '0 0 ' + (width * 10) + ' ' + (height * 10));
+        svg.attr('viewBox', '0 0 ' + (img.width()) + ' ' + (img.height()));
 
         // Replace image with new SVG
         img.replaceWith(svg);
