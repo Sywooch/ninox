@@ -1,11 +1,11 @@
-<div class="goods-content-all">
+<div class="goods-content-all items-grid">
     <?=\yii\widgets\ListView::widget([
         'dataProvider'	=>	$dataProvider,
         'itemView'	=>	function($model){
             return $this->render('good_card', ['good' => $model]);
         },
         'itemOptions'	=>	[
-            'class'	=>	'goods-item'
+            'class'	=>	'goods-item item'
         ],
         'summary'	=>	false
     ])?>
