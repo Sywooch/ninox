@@ -3815,6 +3815,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-overflow: ellipsis;
 	position: unset;
 	margin: 0px;
+	font-size: 16px;
 }
 
 .content-items .goods-item{
@@ -3880,10 +3881,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }*/
 
 /*.right-item*/ .price{
-	display: block;
-	position: absolute;
-	margin-left: 28px;
-	margin-top: -65px
+/*	display: block;
+	position: absolute;*/
+	/*margin-left: 28px;
+	margin-top: -65px*/
 }
 
 .goods-item .price{
@@ -3927,7 +3928,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	position: absolute;
 	margin-left: 20px;
-	margin-top: -35px;
+	margin-top: -60px;
+}
+
+.banners-icons{
+	overflow: auto;
+
+}
+
+.banners-icons .ico{
+	margin: 0px 10px 0px 0px;
 }
 
 .goods-content-icons{
