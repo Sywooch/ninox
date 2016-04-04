@@ -9,7 +9,7 @@ use backend\models\CustomerAddresses;
 use backend\models\CustomerContacts;
 use backend\models\Good;
 use backend\models\History;
-use common\models\NovaPoshtaOrder;
+use backend\models\NovaPoshtaOrder;
 use common\models\Pricerule;
 use backend\models\SborkaItem;
 use common\models\Siteuser;

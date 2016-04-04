@@ -23,8 +23,6 @@ if(empty($invoice->Recipient) || $invoice->getErrors('Recipient')){
 
 if(empty($invoice->CityRecipient) || $invoice->getErrors('CityRecipient')){
     echo $form->field($invoice, 'CityRecipient', ['inputOptions' => []]);
-}else{
-    echo $form->field($invoice->recipientDelivery, 'city', ['inputOptions' => ['disabled' => true]]);
 }
 
 if(empty($invoice->RecipientAddress) || $invoice->getErrors('RecipientAddress')){
@@ -42,7 +40,7 @@ if(empty($invoice->ContactRecipient) || $invoice->getErrors('ContactRecipient'))
 echo $form->field($invoice, 'RecipientsPhone', ['inputOptions' => []]);
 
 echo $form->field($invoice, 'PaymentMethod', ['inputOptions' => []])->dropDownList(\Yii::$app->NovaPoshta->paymentMethods());
-echo $form->field($invoice, 'PayerType', ['inputOptions' => []])->dropDownList($invoice::$typesOfPayers);
+echo $form->field($invoice, 'PayerType', ['inputOptions' => []])->dropDownList($invoice->typesOfPayers);
 echo $form->field($invoice, 'Cost', ['inputOptions' => []]);
 echo $form->field($invoice, 'SeatsAmount', ['inputOptions' => []]);
 echo $form->field($invoice, 'Description', ['inputOptions' => []]);
@@ -51,7 +49,7 @@ echo '<button type="submit">Отправить</button>';
 
 
 if(empty($invoice->getErrors())){
-    echo Html::tag('div', 'Успех! Номер накладной: '.$invoice->orderData->nakladna, [
+    echo Html::tag('div', 'Успех! Номер накладной: '.$invoice->number, [
         'class' =>  'alert alert-success'
     ]);
 }

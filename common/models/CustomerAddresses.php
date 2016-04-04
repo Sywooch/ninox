@@ -51,6 +51,46 @@ class CustomerAddresses extends \yii\db\ActiveRecord
     }
 
     /**
+     * Костыли
+     * @todo: удалить
+     *
+     * @param $val
+     */
+    public function setShippingType($val){
+        $this->deliveryType = $val;
+    }
+
+    /**
+     * Костыли
+     * @todo: удалить
+     *
+     * @param $val
+     */
+    public function setShippingParam($val){
+        $this->deliveryParam = $val;
+    }
+
+    /**
+     * Костыли
+     * @todo: удалить
+     *
+     * @return string
+     */
+    public function getShippingType(){
+        return $this->deliveryType;
+    }
+
+    /**
+     * Костыли
+     * @todo: удалить
+     *
+     * @return string
+     */
+    public function getShippingParam(){
+        return $this->deliveryParam;
+    }
+
+    /**
      * @inheritdoc
      */
     public function attributeLabels()
