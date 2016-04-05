@@ -3701,6 +3701,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 45px;
 }
 
+.sticky .header-menu:after{
+	background: none;
+}
+
 .sticky .header-menu-item{
 	height: 45px;
 }
@@ -4309,7 +4313,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #29a1e0;
 	width: 100%;
 	height: 100px;
-	box-shadow: 0 20px 20px rgba(175,175,175,0.5);}
+    /*
+	box-shadow: 0 20px 20px rgba(175,175,175,0.5);
+    */
+}
+
+.footer .blue-line:after{
+	overflow: auto;
+	height: 38px;
+	content: "";
+	display: block;
+	background: url("/img/site/shadow_2.png") repeat;
+	width: 100%;
+}
 
 .footer-content{
 	width: 1175px;
@@ -4322,7 +4338,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .blue-line .footer-content{
 	padding-top: 27px;
-	padding-bottom: 27px;
+	padding-bottom: 23px;
 }
 
 .blue-line .footer-content:before{

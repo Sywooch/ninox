@@ -6,7 +6,19 @@
     background: -moz-linear-gradient(#5ec0f3, #018ad2); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#5ec0f3, #018ad2); /* Standard syntax */
     height: 77px;
-    box-shadow: 0 20px 20px rgba(175,175,175,0.5);}
+    /*
+    box-shadow: 0 20px 20px rgba(175,175,175,0.5);
+    */
+}
+
+.header-menu:after{
+    overflow: auto;
+    height: 38px;
+    content: "";
+    display: block;
+    background: url("/img/site/shadow_2.png") repeat;
+    width: 100%;
+}
 
 .header-menu-items{
     width: 100%;

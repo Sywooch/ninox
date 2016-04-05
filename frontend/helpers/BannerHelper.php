@@ -79,11 +79,17 @@ class BannerHelper extends Component
             throw new NotFoundHttpException("Товар с идентификатором {$banner->banner->value} не найден!");
         }
 
+        $color = empty($color) ? '' : ' '.$color;//без цвета наверное будет
+
         return Html::tag('div', Html::tag('div',
                // Html::tag('span', '', ['class' => 'icons-fav-bask']).
-
-                Html::tag('div', html::tag('span', '', ['class' => 'desire-ico ico']).
-                    html::tag('span', '', ['class' => 'basket-ico ico']),
+                Html::tag('div', html::tag('span', '',
+                    ['class' => 'item-wish desire-ico ico'.
+                        (\Yii::$app->user->isGuest ? ' is-guest' : '').
+                        (\Yii::$app->user->isGuest ?
+                        $color : (\Yii::$app->user->identity->hasInWishlist($good->ID) ? ' green' : $color)),
+                        'data-itemId'   =>  $good->ID]).
+                html::tag('span', '', ['class' => 'basket-ico ico']),
                     ['class' => 'icons-fav-bask']).
                 Html::tag('span', $good->Name).
                 Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
@@ -107,6 +113,8 @@ class BannerHelper extends Component
         if(!$good){
             throw new NotFoundHttpException("Товар с идентификатором {$bannerValue['goodID']} не найден!");
         }
+        
+        $color = empty($color) ? '' : ' '.$color;//без цвета наверное будет
 
         return
             Html::tag('div',
@@ -115,7 +123,12 @@ class BannerHelper extends Component
                     Html::tag('div', Html::tag('div', Formatter::getFormattedPrice($good->wholesalePrice), ['class'
                         => 'price']).
                         Html::tag('div',
-                        html::tag('span', '', ['class' => 'desire-ico ico']).
+                            Html::tag('span', '',
+                                ['class' => 'item-wish desire-ico ico'.
+                                    (\Yii::$app->user->isGuest ? ' is-guest' : '').
+                                    (\Yii::$app->user->isGuest ?
+                                        $color : (\Yii::$app->user->identity->hasInWishlist($good->ID) ? ' green' : $color)),
+                                    'data-itemId'   =>  $good->ID]).
                         html::tag('span', '', ['class' => 'basket-ico ico']),
                              ['class' => 'banners-icons']),
                         ['class' => 'icons-fav-bask']),
