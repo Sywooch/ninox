@@ -195,8 +195,8 @@ class History extends \yii\db\ActiveRecord
         return [
             [['id', 'deliveryInfo', 'nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
             [['id', 'number', 'added', 'deliveryType', 'deliveryParam', 'customerID', 'paymentType', 'paymentParam', 'callback', 'canChangeItems', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'callsCount', 'hasChanges', 'receiverID', 'return', 'orderSource', 'sourceType', 'sourceInfo'], 'integer'],
-            [['deliveryInfo', 'customerComment'], 'string'],
-            [['actualAmount', 'amountDeductedOrder', 'originalSum'], 'number'],
+            [['deliveryInfo', 'customerComment', 'deliveryReference', 'deliveryEstimatedDate'], 'string'],
+            [['actualAmount', 'amountDeductedOrder', 'originalSum', 'deliveryCost'], 'number'],
             [['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
             [['customerEmail', 'deliveryAddress', 'deliveryRegion', 'deliveryCity', 'coupon'], 'string', 'max' => 255],
             [['customerName', 'customerSurname', 'customerPhone', 'customerFathername'], 'string', 'max' => 64],

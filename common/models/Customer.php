@@ -300,6 +300,12 @@ class Customer extends \yii\db\ActiveRecord
             $this->registrationTime = date('Y-m-d H:i:s');
         }
 
+        $this->recipient->save(false);
+
+        return parent::beforeSave($insert);
+    }
+
+    public function afterFind(){
         if(empty($this->recipient)){
             $this->recipient = new CustomerAddresses([
                 'partnerID'     =>  $this->ID,
@@ -316,8 +322,6 @@ class Customer extends \yii\db\ActiveRecord
         }
 
         $this->recipient->save(false);
-
-        return parent::beforeSave($insert);
     }
 
     /**

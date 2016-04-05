@@ -228,6 +228,7 @@ $js = <<<'JS'
             }
         });
     }, runCreateInvoice = function(e, order){
+        e.currentTarget.innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
 
         $.ajax({
             type: 'POST',
@@ -254,6 +255,23 @@ $js = <<<'JS'
     $('body').on('click', ".itemToOrder", function(e){
         addItemToOrder($("#orderInfo")[0].getAttribute('data-attribute-orderID'), e.currentTarget.getAttribute("data-attribute-itemID"));
     })
+
+    $('body').on('submit', '#invoiceForm', function(e){
+        var container = $(this)[0].parentNode;
+
+        container.innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
+
+        $.ajax({
+            type: 'POST',
+            url: '/orders/createinvoice/' + $("#orderID")[0].getAttribute('data-orderID'),
+            data: $(this).serialize(),
+            success: function(data){
+                container.innerHTML = data;
+            }
+        });
+
+        e.preventDefault();
+    })
 JS;
 
 $this->registerCss($css);
@@ -271,7 +289,7 @@ if($order->deliveryType == 2){
         'cancelButton'		=>	false,
         'confirmButton'		=>	false,
         'addRandomToID'		=>	false,
-        'content'			=>	'',
+        'content'			=>	\rmrevin\yii\fontawesome\FA::i('refresh')->addCssClass('fa-spin'),
         'events'			=>	[
             'opening'	=>	new \yii\web\JsExpression("runCreateInvoice(e, ".$order->id.")")
         ],
@@ -291,7 +309,7 @@ echo Html::tag('div', '', [
 <div class="row">
     <div class="col-xs-4">
         <div>
-            <h1>№<?=$order->number?></h1>
+            <h1 id="orderID" data-orderID="<?=$order->id?>">№<?=$order->number?></h1>
         </div>
         <div>
             <h4><?=$order->orderSumm()?> грн. > <?=$deliveryType?></h4>
@@ -362,7 +380,7 @@ echo Html::tag('div', '', [
             <div class="btn-toolbar pull-right">
                 <?php
                 if($order->deliveryType == 2){
-                    echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#' : '#novaPoshtaModal'), ['class' => 'btn btn-default', (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true']);
+                    echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#novaPoshtaModal' : '#novaPoshtaModal'), ['class' => 'btn btn-default', /*(!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true'*/]);
                 }
                 echo Html::a('Накладная', \yii\helpers\Url::to(['/printer/invoice/'.$order->id]), [
                     'class' =>  'btn btn-default'

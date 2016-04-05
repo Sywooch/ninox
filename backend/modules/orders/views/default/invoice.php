@@ -13,43 +13,19 @@ echo Html::button('', [
     'data-remodal-action'   =>  'close'
 ]);
 
-$form = new \yii\widgets\ActiveForm();
 
-echo $form->field($invoice, 'ServiceType', ['inputOptions' => []])->dropDownList(\Yii::$app->NovaPoshta->serviceTypes());
+$form = new \yii\widgets\ActiveForm([
+    'id'    =>  'invoiceForm'
+]);
+$form->begin();
 
-if(empty($invoice->Recipient) || $invoice->getErrors('Recipient')){
-    echo $form->field($invoice, 'Recipient', ['inputOptions' => []]);
-}
+echo $form->field($invoice, 'ServiceType')->dropDownList(\Yii::$app->NovaPoshta->serviceTypes()),
+    $form->field($invoice, 'PaymentMethod')->dropDownList(\Yii::$app->NovaPoshta->paymentMethods()),
+    $form->field($invoice, 'PayerType')->dropDownList(\Yii::$app->NovaPoshta->typesOfPayers()),
+    $form->field($invoice, 'Cost'),
+    $form->field($invoice, 'SeatsAmount'),
+    $form->field($invoice, 'Description')->dropDownList(\Yii::$app->NovaPoshta->cargoTypes()),
+    $form->field($invoice, 'CargoDescription')->dropDownList(\Yii::$app->NovaPoshta->cargoDescriptionList()),
+    Html::button('Создать накладную', ['id' => 'createInvoice', 'type' => 'submit']);
 
-if(empty($invoice->CityRecipient) || $invoice->getErrors('CityRecipient')){
-    echo $form->field($invoice, 'CityRecipient', ['inputOptions' => []]);
-}
-
-if(empty($invoice->RecipientAddress) || $invoice->getErrors('RecipientAddress')){
-    echo $form->field($invoice, 'RecipientAddress', ['inputOptions' => []]);
-}else{
-    echo $form->field($invoice->recipientDelivery, 'shippingParam', ['inputOptions' => ['disabled' => true]]);
-}
-
-if(empty($invoice->ContactRecipient) || $invoice->getErrors('ContactRecipient')){
-    echo $form->field($invoice, 'ContactRecipient', ['inputOptions' => []]);
-}else{
-    echo $form->field($invoice->recipientData, 'Company', ['inputOptions' => ['disabled' => true]]);
-}
-
-echo $form->field($invoice, 'RecipientsPhone', ['inputOptions' => []]);
-
-echo $form->field($invoice, 'PaymentMethod', ['inputOptions' => []])->dropDownList(\Yii::$app->NovaPoshta->paymentMethods());
-echo $form->field($invoice, 'PayerType', ['inputOptions' => []])->dropDownList($invoice->typesOfPayers);
-echo $form->field($invoice, 'Cost', ['inputOptions' => []]);
-echo $form->field($invoice, 'SeatsAmount', ['inputOptions' => []]);
-echo $form->field($invoice, 'Description', ['inputOptions' => []]);
-echo $form->field($invoice, 'CargoDescription', ['inputOptions' => []]);
-echo '<button type="submit">Отправить</button>';
-
-
-if(empty($invoice->getErrors())){
-    echo Html::tag('div', 'Успех! Номер накладной: '.$invoice->number, [
-        'class' =>  'alert alert-success'
-    ]);
-}
+$form->end();

@@ -18,12 +18,4 @@ class NovaPoshtaModels extends Model
         return preg_match('/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/', $hash) ? true : false;
     }
 
-    public function getTypesOfPayers(){
-        return [
-            'Sender'        =>  'Отправитель',
-            'Recipient'     =>  'Получатель',
-            'ThirdPerson'   =>  'Третее лицо'
-        ];
-    }
-
 }

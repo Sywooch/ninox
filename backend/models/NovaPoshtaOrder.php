@@ -8,7 +8,9 @@
 
 namespace backend\models;
 
+use common\models\NovaPoshtaContactRecipient;
 use yii\base\InvalidParamException;
+use yii\helpers\Json;
 
 class NovaPoshtaOrder extends NovaPoshtaModels
 {
@@ -209,6 +211,16 @@ class NovaPoshtaOrder extends NovaPoshtaModels
     private $_number;
 
     /**
+     * @type integer - ID заказа, в системе Krasota-Style
+     */
+    private $orderID;
+
+    /**
+     * @type History
+     */
+    private $_order;
+
+    /**
      * @type array
      */
     public $BackwardDeliveryData = [];
@@ -219,6 +231,8 @@ class NovaPoshtaOrder extends NovaPoshtaModels
     private $recipientDelivery = [];*/
 
     private $notDefaultSender = false;
+
+
     /*private $citySenderData = [];
     private $cityRecipientData = [];
     private $senderAddressData = [];
@@ -227,7 +241,7 @@ class NovaPoshtaOrder extends NovaPoshtaModels
 
     public function rules(){
         return [
-            [['cargoDescription', 'number', 'RecipientContactName', 'recipientArea', 'recipientsPhone'], 'safe'],
+            [['CargoDescription', 'number', 'RecipientContactName', 'recipientArea', 'recipientsPhone', 'orderID', 'deliveryCost', 'deliveryReference', 'deliveryEstimatedDate'], 'safe'],
             [['DateTime', 'ServiceType', 'Sender', 'CitySender', 'SenderAddress', 'ContactSender',
                 'SendersPhone', 'Recipient', 'CityRecipient', 'RecipientAddress', 'ContactRecipient',
                 'RecipientsPhone', 'PaymentMethod', 'PayerType', 'Cost', 'SeatsAmount', 'Description',
@@ -248,7 +262,6 @@ class NovaPoshtaOrder extends NovaPoshtaModels
         }
 
         if(empty($order->customer->recipientID)){
-            \Yii::trace('empty customerReceip');
             $orderRecipient = new NovaPoshtaRecipient([
                 'FirstName' =>  $order->customerName,
                 'LastName'  =>  $order->customerSurname,
@@ -259,42 +272,49 @@ class NovaPoshtaOrder extends NovaPoshtaModels
             ]);
 
             if($orderRecipient->save()){
+                $order->customer->recipientID = $orderRecipient->recipient['Ref'];
 
-                \Yii::trace($orderRecipient, __METHOD__);
-                $order->customer->recipientID = $orderRecipient['Ref'];
-
-                /*$order->customer->recipient->setAttributes([
-                    'contactID' =>  $orderRecipient['']
-                ]);*/
-
-                \Yii::trace($orderRecipient, __METHOD__);
+                $order->customer->recipient->contactID = $orderRecipient->recipient['ContactPerson']['data'][0]['Ref'];
             }
         }
 
-        /*if(empty($order->customer->recipientCityID)){
-            $orderRecipient = new NovaPoshtaRecipient([]);
+        if(empty($order->customer->recipient->contactID)){
+            $contact = new NovaPoshtaContactRecipient([
+                'CounterpartyRef'   =>  $order->customer->recipientID,
+                'FirstName'         =>  $order->customerName,
+                'LastName'          =>  $order->customerSurname,
+                'MiddleName'        =>  $order->customerFathername,
+                'Phone'             =>  $order->customerPhone
+            ]);
+
+            $contact = $contact->save();
+
+            if($contact){
+                $order->customer->recipient->contactID = $contact['Ref'];
+            }
         }
 
-        if(empty($order->customer->recipientAddressID)){
-            $orderRecipient = new NovaPoshtaRecipient([]);
-        }*/
+        if(empty($order->customer->recipient->recipientAddress)){
+            $department = \Yii::$app->NovaPoshta->department($order->deliveryInfo, $order->customer->recipient->cityID);
 
-        //$order->customer->save(false);
+            if(!($department)){
+                $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
+            }else{
+                $order->customer->recipient->recipientAddress = $department['Ref'];
+            }
+        }
+
+        $order->customer->save(false);
 
         $this->setAttributes([
             'number'                =>  $order->nakladna,
-            'Cost'                  =>  $order->actualAmount,
-            //'RecipientContactName'  =>  trim($order->customerSurname.' '.$order->customerName.' '.$order->customerFathername),
+            'Cost'                  =>  empty($order->actualAmount) ? $order->originalSum : $order->actualAmount,
             'Recipient'             =>  $order->customer->recipientID,
-            'CityRecipient'         =>  $order->customer->cityCode,
+            'CityRecipient'         =>  $order->customer->recipient->cityID,
             'RecipientAddress'      =>  $order->customer->recipient->recipientAddress,
-            //'RecipientArea'         =>  $order->deliveryRegion,
+            'ContactRecipient'      =>  $order->customer->recipient->contactID,
             'RecipientsPhone'       =>  $order->customerPhone,
-
-            /*'FirstName' =>  $d$orderata->customerName,
-            'MiddleName'=>  $order->customerFathername,
-            'LastName'  =>  $order->customerSurname,
-            'Phone'     =>  $order->customerPhone*/
+            'orderID'               =>  $order->id
         ]);
     }
 
@@ -302,21 +322,29 @@ class NovaPoshtaOrder extends NovaPoshtaModels
         if($data instanceof \common\models\Customer == false){
             throw new InvalidParamException("переменная recipientData должна быть \\common\\models\\Customer!");
         }
-        \Yii::trace($data);
+
     }
 
     public function setRecipientContacts($data){
         if($data instanceof \common\models\CustomerContacts == false){
             throw new InvalidParamException("переменная recipientContacts должна быть \\common\\models\\CustomerContacts!");
         }
-        \Yii::trace($data);
+
     }
 
     public function setRecipientDelivery($data){
         if($data instanceof \common\models\CustomerAddresses == false){
             throw new InvalidParamException("переменная recipientDelivery должна быть \\common\\models\\CustomerAddresses!");
         }
-        \Yii::trace($data);
+
+    }
+
+    public function setOrderID($val){
+        $this->orderID = $val;
+    }
+
+    public function getOrderID(){
+        return $this->orderID;
     }
 
     public function getNumber(){
@@ -325,6 +353,57 @@ class NovaPoshtaOrder extends NovaPoshtaModels
 
     public function setNumber($value){
         $this->_number = $value;
+
+        if($this->order){
+            $this->order->nakladna = $value;
+
+            $this->order->save(false);
+        }
+    }
+
+    public function getOrder(){
+        if(empty($this->_order) && !empty($this->orderID)){
+            $this->_order = History::findOne($this->orderID);
+        }
+
+        return $this->_order;
+    }
+
+    public function setDeliveryReference($value){
+        if($this->order){
+            $this->order->deliveryReference = $value;
+
+            $this->order->save(false);
+        }
+    }
+
+    public function setDeliveryCost($value){
+        if($this->order){
+            $this->order->deliveryCost = $value;
+
+            $this->order->save(false);
+        }
+    }
+
+    public function setDeliveryEstimatedDate($value){
+        if($this->order){
+            $this->order->deliveryEstimatedDate = $value;
+
+            $this->order->save(false);
+        }
+    }
+
+    public function getDeliveryReference(){
+        return $this->order->deliveryRefrence;
+    }
+
+
+    public function getDeliveryCost(){
+        return $this->order->deliveryCost;
+    }
+
+    public function getDeliveryEstimatedDate(){
+        return $this->order->deliveryEstimatedDate;
     }
 
     public function find($id){
@@ -332,8 +411,8 @@ class NovaPoshtaOrder extends NovaPoshtaModels
     }
 
     public function save(){
-
         empty($this->DateTime) ? $this->DateTime = date('d.m.Y') : null;
+
         return \Yii::$app->NovaPoshta->createOrder($this);
     }
 

@@ -72,6 +72,10 @@ class NovaPoshtaRecipient extends NovaPoshtaModels
         }
     }
 
+    public function getRecipient(){
+        return $this->recipient;
+    }
+
     /**
      * @return bool
      */
