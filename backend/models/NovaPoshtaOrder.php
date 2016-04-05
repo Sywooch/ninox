@@ -318,27 +318,6 @@ class NovaPoshtaOrder extends NovaPoshtaModels
         ]);
     }
 
-    public function setRecipientData($data){
-        if($data instanceof \common\models\Customer == false){
-            throw new InvalidParamException("переменная recipientData должна быть \\common\\models\\Customer!");
-        }
-
-    }
-
-    public function setRecipientContacts($data){
-        if($data instanceof \common\models\CustomerContacts == false){
-            throw new InvalidParamException("переменная recipientContacts должна быть \\common\\models\\CustomerContacts!");
-        }
-
-    }
-
-    public function setRecipientDelivery($data){
-        if($data instanceof \common\models\CustomerAddresses == false){
-            throw new InvalidParamException("переменная recipientDelivery должна быть \\common\\models\\CustomerAddresses!");
-        }
-
-    }
-
     public function setOrderID($val){
         $this->orderID = $val;
     }
@@ -394,7 +373,7 @@ class NovaPoshtaOrder extends NovaPoshtaModels
     }
 
     public function getDeliveryReference(){
-        return $this->order->deliveryRefrence;
+        return $this->order->deliveryReference;
     }
 
 
