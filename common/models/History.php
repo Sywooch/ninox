@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\base\ErrorException;
 
 /**
  * This is the model class for table "history".
@@ -28,7 +29,7 @@ use Yii;
  * @property integer $paymentParam
  * @property integer $callback
  * @property integer $canChangeItems
- * @property double $actualAmount
+ * @property integer $actualAmount
  * @property double $amountDeductedOrder
  * @property integer $moneyCollectorUserId
  * @property string $nakladna
@@ -54,6 +55,9 @@ use Yii;
  * @property integer $isNew
  * @property string $deleteDate
  * @property integer $transactionSended
+ * @property integer $domainId
+ * @property double $currencyExchange
+ * @property string $currencyCode
  * @property string $confirmedDate
  * @property string $smsSendDate
  * @property integer $callsCount
@@ -65,9 +69,13 @@ use Yii;
  * @property integer $orderSource
  * @property integer $sourceType
  * @property integer $sourceInfo
+ * @property double $deliveryCost
+ * @property string $deliveryReference
+ * @property string $deliveryEstimatedDate
  */
 class History extends \yii\db\ActiveRecord
 {
+
     const CALLBACK_NEW = 0;         //Новый заказ (не звонили)
     const CALLBACK_UNANSWERED = 2;  //Заказ без ответа
     const CALLBACK_COMPLETED = 1;   //Прозвоненый заказ
@@ -81,16 +89,6 @@ class History extends \yii\db\ActiveRecord
     const STATUS_WAIT_DELIVERY = 3; //Ожидает доставку
     const STATUS_DELIVERED = 4;     //Отправлен
     const STATUS_DONE = 5;          //Выполнен
-
-    //public $status;
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'history';
-    }
 
     public function beforeSave($insert){
         if($this->isNewRecord){
@@ -125,7 +123,7 @@ class History extends \yii\db\ActiveRecord
         return $status;
     }
 
-    public function getOldStatus(){
+    /*public function getOldStatus(){
         if($this->deleted == '4'){
             return $this->status = '7';
         }
@@ -163,7 +161,7 @@ class History extends \yii\db\ActiveRecord
         }else{
             $this->status = '2';
         }
-    }
+    }*/
 
     public function getItems(){
         return SborkaItem::findAll(['orderID' => $this->id]);
@@ -183,8 +181,12 @@ class History extends \yii\db\ActiveRecord
         $this->customerPhone = $customer->phone;
     }
 
-    public function loadRecipient($recipient){
-
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'history';
     }
 
     /**
@@ -193,14 +195,15 @@ class History extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'deliveryInfo', 'nakladna', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
-            [['id', 'number', 'added', 'deliveryType', 'deliveryParam', 'customerID', 'paymentType', 'paymentParam', 'callback', 'canChangeItems', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'callsCount', 'hasChanges', 'receiverID', 'return', 'orderSource', 'sourceType', 'sourceInfo'], 'integer'],
-            [['deliveryInfo', 'customerComment', 'deliveryReference', 'deliveryEstimatedDate'], 'string'],
-            [['actualAmount', 'amountDeductedOrder', 'originalSum', 'deliveryCost'], 'number'],
+            [['id', 'deliveryInfo', 'nakladna', 'moneyConfirmedDate', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
+            [['id', 'number', 'added', 'deliveryType', 'deliveryParam', 'customerID', 'paymentType', 'paymentParam', 'callback', 'canChangeItems', 'actualAmount', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'domainId', 'callsCount', 'hasChanges', 'receiverID', 'return', 'orderSource', 'sourceType', 'sourceInfo'], 'integer'],
+            [['deliveryInfo', 'customerComment'], 'string'],
+            [['amountDeductedOrder', 'currencyExchange', 'originalSum', 'deliveryCost'], 'number'],
             [['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate'], 'safe'],
-            [['customerEmail', 'deliveryAddress', 'deliveryRegion', 'deliveryCity', 'coupon'], 'string', 'max' => 255],
+            [['customerEmail', 'deliveryAddress', 'deliveryRegion', 'deliveryCity', 'coupon', 'deliveryReference', 'deliveryEstimatedDate'], 'string', 'max' => 255],
             [['customerName', 'customerSurname', 'customerPhone', 'customerFathername'], 'string', 'max' => 64],
             [['nakladna'], 'string', 'max' => 50],
+            [['currencyCode'], 'string', 'max' => 3],
         ];
     }
 
@@ -257,6 +260,9 @@ class History extends \yii\db\ActiveRecord
             'isNew' => 'Is New',
             'deleteDate' => 'Delete Date',
             'transactionSended' => 'Transaction Sended',
+            'domainId' => 'Domain ID',
+            'currencyExchange' => 'Currency Exchange',
+            'currencyCode' => 'Currency Code',
             'confirmedDate' => 'Confirmed Date',
             'smsSendDate' => 'Sms Send Date',
             'callsCount' => 'Calls Count',
@@ -268,6 +274,9 @@ class History extends \yii\db\ActiveRecord
             'orderSource' => 'Order Source',
             'sourceType' => 'Source Type',
             'sourceInfo' => 'Source Info',
+            'deliveryCost' => 'Delivery Cost',
+            'deliveryReference' => 'Delivery Reference',
+            'deliveryEstimatedDate' => 'Delivery Estimated Date',
         ];
     }
 }
