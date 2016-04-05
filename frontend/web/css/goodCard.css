@@ -114,7 +114,7 @@
     padding: 10px 0;
 }
 
-.item-card .item-wish-text, .item-card .cheaper, .item-card .notification{
+.item-card .item-wish, .item-card .cheaper, .item-card .notification{
     text-decoration: underline;
 }
 

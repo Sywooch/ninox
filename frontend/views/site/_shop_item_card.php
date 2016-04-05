@@ -1,6 +1,7 @@
 <?php
 use bobroid\remodal\Remodal;
 use common\helpers\Formatter;
+use frontend\widgets\BreadcrumbsWidget;
 use kartik\tabs\TabsX;
 use yii\helpers\Html;
 use evgeniyrru\yii2slick\Slick;
@@ -30,14 +31,8 @@ JS;
 
 $this->registerJs($js);
 
-\rmrevin\yii\fontawesome\AssetBundle::register($this);
-
 $this->registerCssFile('/css/goodCard.css');
 $this->registerCssFile('/css/img.css');
-
-$this->params['breadcrumbs'][] = [
-    'label' =>  $good->Name
-];
 
 $tabsItems = [
     [
@@ -94,14 +89,7 @@ $this->title = $good->Name;
 </script>
 <div class="catalog">
     <div class="catalog-menu">
-        <?=\yii\widgets\Breadcrumbs::widget([
-            'activeItemTemplate'    =>  '<span class="item-name" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
-            'itemTemplate'          =>  '
-                <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
-                <span class="fa fa-long-arrow-right fa-fw"></span>
-            ',
-            'links'                 =>  $this->params['breadcrumbs']
-        ])?>
+        <?=BreadcrumbsWidget::widget(['links' => $this->params['breadcrumbs']])?>
     </div>
     <div class="item item-card" itemscope itemtype="http://schema.org/Product">
         <div class="item-main">
