@@ -19,6 +19,7 @@ class ShopPager extends LinkPager{
         $options = ['class' => $class === '' ? null : $class];
         if ($active) {
             Html::addCssClass($options, $this->activePageCssClass);
+            return Html::tag('li', Html::tag('span', $label), $options);
         }
         if ($disabled) {
             Html::addCssClass($options, $this->disabledPageCssClass);
@@ -28,7 +29,7 @@ class ShopPager extends LinkPager{
         $linkOptions = $this->linkOptions;
         $linkOptions['data-page'] = $page;
 
-        return Html::tag('li', Html::a($label, $this->pagination->createUrl($page), $linkOptions), $options);
+        return Html::tag('li', Html::a($label, urldecode($this->pagination->createUrl($page)), $linkOptions), $options);
     }
 
 }

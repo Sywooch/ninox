@@ -11,6 +11,7 @@ use frontend\models\CustomerWishlist;
 use frontend\models\History;
 use frontend\models\ItemRate;
 use frontend\models\OrderForm;
+use Prophecy\Exception\Doubler\ClassNotFoundException;
 use Yii;
 use common\models\Domain;
 use common\models\Pagetype;
@@ -26,6 +27,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 
 use yii\base\ErrorException;
+use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
@@ -95,6 +97,11 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @param $link
+     * @return int|mixed|string
+     */
+
     public function actionShowtovar($link){
         $id = preg_replace('/\D+/', '', preg_replace('/[^g(.)]+\D+/', '', $link));
 
@@ -104,38 +111,12 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
-        $category = Category::findOne($good->GroupID);
-
-        $mainCategory = null;
-
-        if(strlen($good->categoryCode) != 3){
-            foreach($good->category->getParents() as $parent){
-                if(empty($mainCategory)){
-                    $mainCategory = $parent;
-                }
-
-                $this->getView()->params['breadcrumbs'][] = [
-                    'url'   =>  '/'.$parent->link,
-                    'label' =>  $parent->Name
-                ];
-            }
-        }
-
-        if(empty($mainCategory)){
-            $mainCategory = $category;
-        }
-
-        $this->getView()->params['breadcrumbs'][] = [
-            'url'   =>  '/'.$category->link,
-            'label' =>  $category->Name
-        ];
+        $this->getBreadcrumbsLinks($good);
 
         (new PriceRuleHelper())->recalc($good, true);
 
         return $this->render('_shop_item_card', [
-            'mainCategory'  =>  $mainCategory,
-            'good'          =>  $good,
-            'category'      =>  $category,
+            'good'  =>  $good
         ]);
     }
 
@@ -185,6 +166,54 @@ class SiteController extends Controller
                 break;
         }
 
+        $this->getBreadcrumbsLinks($category);
+
+        return $this->render($view, [
+            'category'          =>  $category,
+            'showText'          =>  true,
+            'goods'             =>  new ActiveDataProvider([
+                'query'         =>  $category->goods(),
+                'pagination'    =>  [
+                    'pageSize'          =>  '15',
+                    'forcePageParam'    =>  false,
+                    'pageSizeParam'     =>  false
+                ]
+            ])
+        ]);
+    }
+
+    public function renderStaticPage($pageInfo){
+        return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
+    }
+
+    public function getBreadcrumbsLinks($object){
+        $class = get_parent_class($object);
+        $this->getView()->params['breadcrumbs'] = [];
+        $temp = [];
+        switch($class){
+            case 'common\models\Category':
+                $category = $object;
+                $temp = [
+                    'label' =>  $object->Name
+                ];
+                break;
+            case 'common\models\Good':
+                $category = Category::findOne($object->GroupID);
+                $temp = [
+                    [
+                        'url'   =>  '/'.$category->link,
+                        'label' =>  $category->Name
+                    ],
+                    [
+                        'label' =>  $object->Name
+                    ]
+                ];
+                break;
+            default:
+                throw new InvalidConfigException("Класс {$class} не имеет хлебных крошек!");
+                break;
+        }
+
         if(strlen($category->Code) != 3){
             foreach($category->parents as $parent){
                 $this->getView()->params['breadcrumbs'][] = [
@@ -194,20 +223,7 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render($view, [
-            'category'  =>  $category,
-            'showText'  =>  true,
-            'goods'     =>  new ActiveDataProvider([
-                'query'         =>  $category->goods(),
-                'pagination'    =>  [
-                    'pageSize'  =>  '15'
-                ]
-            ])
-        ]);
-    }
-
-    public function renderStaticPage($pageInfo){
-        return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
+        $this->getView()->params['breadcrumbs'] = array_merge($this->getView()->params['breadcrumbs'], $temp);
     }
 
     public function actionOrder(){
