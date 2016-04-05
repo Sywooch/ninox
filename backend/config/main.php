@@ -14,7 +14,7 @@ return [
     'modules' => require(__DIR__.'/modules.php'),
     'components' => [
         'NovaPoshta'    =>  [
-            'class' =>  'common\components\NovaPoshta'
+            'class' =>  'backend\components\NovaPoshta'
         ],
         'formatter' =>  [
             'class' =>  'backend\components\Formatter'

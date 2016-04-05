@@ -6,7 +6,7 @@
  * Time: 12:44
  */
 
-namespace common\components;
+namespace backend\components;
 
 
 use linslin\yii2\curl\Curl;
@@ -15,12 +15,33 @@ use yii\helpers\Json;
 
 class NovaPoshta extends Component{
 
-    private $url = 'https://api.novaposhta.ua/v2.0/json/';
-    private $apiKey = '1898fef2714a3b954d05eba062715493';
+    private $url = 'http://testapi.novaposhta.ua/v2.0/';
+    private $format = 'json';
+    private $apiKey = '5fdddf77cb55decfcbe289063799c67e';
     private $cities;
 
     public $serviceTypes;
     public $paymentMethods;
+
+    /**
+     * @param string|array $method - метод
+     * @param array $addons - добавочные куски
+     *
+     * @return string
+     */
+    public function getUrl($method, $addons = []){
+        if(is_array($method)){
+            $method = implode('/', $method);
+        }
+
+        if(empty($addons)){
+            $addons = '';
+        }elseif(is_array($addons)){
+            $addons = implode('/', $addons).'/';
+        }
+
+        return $this->url.$method.'/'.$this->format.'/'.$addons;
+    }
 
     public function paymentMethods(){
         if(\Yii::$app->cache->exists('novaPoshta/paymentMethods')){
@@ -34,7 +55,7 @@ class NovaPoshta extends Component{
             'language'      =>  'ru'
         ];
 
-        $request = $this->sendRequest($request)->response;
+        $request = $this->sendRequest($request, ['common', 'getPaymentForms'])->response;
 
         if(empty($request)){
             return [];
@@ -49,29 +70,23 @@ class NovaPoshta extends Component{
         }
 
         \Yii::$app->cache->set('novaPoshta/paymentMethods', $types, 86400);
-        \Yii::trace('added NovaPoshta paymentMethods to cache');
 
         $this->paymentMethods = $types;
 
         return $types;
     }
 
-    private function sendRequest($request){
+    private function sendRequest($request, $method, $addons = []){
         $request['apiKey'] = $this->apiKey;
         $request = Json::encode($request);
 
         $result = new Curl();
-
-        \Yii::trace('Sending request...');
-        \Yii::trace($request);
-
-        $result->setOption(CURLOPT_POSTFIELDS, $request)->post($this->url);
-
-        \Yii::trace('Obtaining result...');
-        \Yii::trace(Json::encode($result));
+        $result
+            ->setOption(CURLINFO_CONTENT_TYPE, 'application/json')
+            ->setOption(CURLOPT_POSTFIELDS, $request)
+            ->post($this->getUrl($method, $addons));
 
         return $result;
-
     }
 
     public function city($city, $area = null){
@@ -81,7 +96,7 @@ class NovaPoshta extends Component{
             'methodProperties'  =>  [
                 'FindByString'  =>  $city
             ]
-        ])->response);
+        ], 'address/getCities')->response);
 
         $response = $response['data'];
 
@@ -89,9 +104,12 @@ class NovaPoshta extends Component{
             return false;
         }
 
+        return $response['0']['Ref'];
+
         if(sizeof($response) >= 1 && $area != null){
             foreach($response as $city){
                 if($city['Area'] == $area){
+                    \Yii::trace($city, __METHOD__);
                     return $city;
                 }
             }
@@ -107,7 +125,7 @@ class NovaPoshta extends Component{
             'methodProperties'  =>  [
                 'CityRef'   =>  $city
             ]
-        ])->response);
+        ], 'address', ['getWarehouses'])->response);
 
         if(empty($response)){
             return false;
@@ -137,7 +155,9 @@ class NovaPoshta extends Component{
             'modelName'         =>  'InternetDocument',
             'calledMethod'      =>  'save',
             'methodProperties'  =>  $order
-        ]);
+        ], 'en/save');
+
+        \Yii::trace($request->response);
 
         $response = Json::decode($request->response);
 
@@ -166,8 +186,12 @@ class NovaPoshta extends Component{
                 }
             }
         }else{
-            $order->orderData->nakladna = $response['data']['0']['IntDocNumber'];
-            $order->orderData->save();
+            $order->setAttributes([
+                'number'                =>  $response['data']['0']['IntDocNumber'],
+                'deliveryCost'          =>  $response['data']['0']['CostOnSite'],
+                'deliveryReference'     =>  $response['data']['0']['Ref'],
+                'deliveryEstimatedDate' =>  $response['data']['0']['EstimatedDeliveryDate'],
+            ]);
         }
 
 
@@ -179,7 +203,7 @@ class NovaPoshta extends Component{
             'modelName'         =>  'Counterparty',
             'calledMethod'      =>  'save',
             'methodProperties'  =>  $recipient
-        ])->response);
+        ], 'counterparty', ['save'])->response);
 
         return isset($response['data']) && isset($response['data']['0']) ? $response['data']['0'] : false;
     }
@@ -189,9 +213,59 @@ class NovaPoshta extends Component{
             'modelName'         =>  'ContactPerson',
             'calledMethod'      =>  'save',
             'methodProperties'  =>  $contact
-        ])->response);
+        ], 'counterparty', ['ContactPerson', 'save'])->response);
 
         return isset($response['data']) && isset($response['data']['0']) ? $response['data']['0'] : false;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function typesOfPayers(){
+        return [
+            'Sender'        =>  'Отправитель',
+            'Recipient'     =>  'Получатель',
+            'ThirdPerson'   =>  'Третее лицо'
+        ];
+    }
+
+    public function cargoTypes(){
+        if(!\Yii::$app->cache->exists('novaPoshta/cargoTypes')){
+            $response = $this
+                ->sendRequest(['modelName' =>  'Common', 'calledMethod' => 'getCargoTypes', 'language' => 'ru'], ['common', 'getCargoTypes'])
+                ->response;
+            $response = Json::decode($response);
+
+            if($response['success']){
+                foreach($response['data'] as $cargoDescription){
+                    $data[$cargoDescription['Ref']] = $cargoDescription['Description'];
+                }
+
+                \Yii::$app->cache->set('novaPoshta/cargoTypes', $data, 3600);
+            }
+        }
+
+        return \Yii::$app->cache->get('novaPoshta/cargoTypes');
+    }
+
+    public function cargoDescriptionList(){
+        if(!\Yii::$app->cache->exists('novaPoshta/cargoDescriptionList')){
+            $response = $this
+                ->sendRequest(['modelName' =>  'Common', 'calledMethod' => 'getCargoDescriptionList', 'language' => 'ru'], ['common', 'getCargoDescriptionList'])
+                ->response;
+
+            $response = Json::decode($response);
+
+            if($response['success']){
+                foreach($response['data'] as $cargoDescription){
+                    $data[$cargoDescription['Ref']] = $cargoDescription['DescriptionRu'];
+                }
+
+                \Yii::$app->cache->set('novaPoshta/cargoDescriptionList', $data, 3600);
+            }
+        }
+
+        return \Yii::$app->cache->get('novaPoshta/cargoDescriptionList');
     }
 
     public function serviceTypes(){
@@ -206,7 +280,7 @@ class NovaPoshta extends Component{
             'language'      =>  'ru'
         ];
 
-        $request = $this->sendRequest($request)->response;
+        $request = $this->sendRequest($request, 'common/getServiceTypes')->response;
 
         if(empty($request)){
             return [];
@@ -221,7 +295,6 @@ class NovaPoshta extends Component{
         }
 
         \Yii::$app->cache->set('novaPoshta/serviceTypes', $types, 86400);
-        \Yii::trace('added NovaPoshta serviceTypes to cache');
 
         $this->serviceTypes = $types;
 

@@ -206,6 +206,7 @@ class OrderForm extends Model{
             throw new ErrorException("Может быть передан только CustomerReceiver!");
         }
 
+
         $this->customerSurname = $receiver->surname;
         $this->customerFathername = $receiver->fathername;
         $this->deliveryCountry = $receiver->country;

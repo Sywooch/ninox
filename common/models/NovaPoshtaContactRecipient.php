@@ -10,6 +10,7 @@ namespace common\models;
 
 
 use yii\base\Model;
+use yii\helpers\Json;
 
 class NovaPoshtaContactRecipient extends Model{
 
@@ -18,6 +19,12 @@ class NovaPoshtaContactRecipient extends Model{
     public $LastName;
     public $MiddleName;
     public $Phone;
+
+    private $_response;
+
+    public function getResponse(){
+        return $this->_response;
+    }
 
     public function save(){
         return \Yii::$app->NovaPoshta->createRecipientContact($this);

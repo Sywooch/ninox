@@ -9,7 +9,7 @@ use backend\models\CustomerAddresses;
 use backend\models\CustomerContacts;
 use backend\models\Good;
 use backend\models\History;
-use common\models\NovaPoshtaOrder;
+use backend\models\NovaPoshtaOrder;
 use common\models\Pricerule;
 use backend\models\SborkaItem;
 use common\models\Siteuser;
@@ -389,23 +389,22 @@ class DefaultController extends Controller
 
     public function actionCreateinvoice($param){
         $order = $param;
-        if(!is_object($order)){
-            $order = History::findOne(['id' => $order]);
-        }
 
-        $customer = Customer::findOne(['id' => $order->customerID]);
+        if(!is_object($order)){
+            $order = History::findOne($order);
+        }
 
         $invoice = new NovaPoshtaOrder([
             'orderData'         =>  $order,
-            'ServiceType'       =>  '',
-            'recipientData'     =>  $customer,
-            'recipientContacts' =>  CustomerContacts::find()->where(['partnerID' => $customer->ID, 'type' => '2'])->orderBy('ID DESC')->one(),
-            'recipientDelivery' =>  CustomerAddresses::find()->where(['partnerID' => $customer->ID])->orderBy('ID DESC')->one(),
         ]);
 
-        if(\Yii::$app->request->post()){
-            $invoice->attributes = \Yii::$app->request->post("NovaPoshtaOrder");
+        if(!empty($invoice->deliveryReference)){
+            return $this->renderAjax('print/novaPoshta_invoice', [
+                'invoice'   =>  $invoice
+            ]);
+        }
 
+        if(\Yii::$app->request->post("NovaPoshtaOrder") && $invoice->load(\Yii::$app->request->post())){
             $invoice->save();
         }
 

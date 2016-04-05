@@ -8,7 +8,14 @@ use common\models\Category;
 use common\models\DeliveryType;
 use common\models\PaymentType;
 use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
 
+/**
+ * Class History
+ * @package backend\models
+ * @author  Nikolai Gilko   <n.gilko@gmail.com>
+ * @property Customer $customer
+ */
 class History extends \common\models\History
 {
 
@@ -31,6 +38,8 @@ class History extends \common\models\History
     public $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
     public $status_10    =   'Ожидает отправки';
 
+    private $_customer;
+
     public function afterFind(){
         $this->getStatus();
 
@@ -39,6 +48,20 @@ class History extends \common\models\History
 
     public function getID(){
         return $this->id;
+    }
+
+    public function getCustomer(){
+        if(empty($this->_customer)){
+            $customer = Customer::findOne($this->customerID);
+
+            if(!$customer){
+                throw new NotFoundHttpException("Клиент с идентификатором '{$this->customerID}' не найден!");
+            }
+
+            $this->_customer = $customer;
+        }
+
+        return $this->_customer;
     }
 
     public function getStatusDescription(){
