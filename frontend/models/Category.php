@@ -28,4 +28,8 @@ class Category extends \common\models\Category{
 		return self::buildTree($cats);
 	}
 
+	public function getFilters(){
+
+	}
+
 }

@@ -4,9 +4,6 @@ namespace backend\models;
 
 use common\models\SborkaItem;
 use Yii;
-use common\models\Category;
-use common\models\DeliveryType;
-use common\models\PaymentType;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 
