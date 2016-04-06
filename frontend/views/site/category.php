@@ -2,7 +2,7 @@
 
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\Category;
-use frontend\widgets\BreadcrumbsWidget;
+use frontend\widgets\Breadcrumbs;
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
 
@@ -12,7 +12,8 @@ $helper = new PriceRuleHelper();
 
 echo Html::tag('div',
     Html::tag('div',
-        Html::tag('span', $category->Name, ['class' => 'category-title']),
+        Html::tag('span', $category->Name, ['class' => 'category-title']).
+        $this->render('_category/_category_filters'),
         ['class' => 'left-menu']
     ).
     ListView::widget([
@@ -24,7 +25,7 @@ echo Html::tag('div',
                 'model' =>  $model
             ]);
         },
-        'summary'       =>  BreadcrumbsWidget::widget(['links' => $this->params['breadcrumbs']]).
+        'summary'       =>  Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]).
             Html::tag('div',
                 Html::tag('h1', $category->Name).
                 Html::tag('span',
@@ -35,7 +36,7 @@ echo Html::tag('div',
                     ['class' => 'category-items-count']),
                 ['class' => 'category-label']
             ).
-            Html::ul(Category::getSubCategories($category->Code), [
+            Html::ul($category->subCategories, [
                 'item'      =>  function($item){
                     return Html::tag('li', Html::a($item->Name, '/'.$item->link));
                 },

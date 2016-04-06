@@ -178,13 +178,22 @@ class SiteController extends Controller
                     'forcePageParam'    =>  false,
                     'pageSizeParam'     =>  false
                 ]
-            ])
+            ]),
+            'filters'           =>  $category->filters
         ]);
     }
 
     public function renderStaticPage($pageInfo){
         return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
     }
+
+    /**
+     * Собирает линки для хлебных крошек в зависимости от
+     * переданного объекта категории или товара
+     *
+     * @param $object
+     * @throws InvalidConfigException
+     */
 
     public function getBreadcrumbsLinks($object){
         $class = get_parent_class($object);
@@ -210,7 +219,7 @@ class SiteController extends Controller
                 ];
                 break;
             default:
-                throw new InvalidConfigException("Класс {$class} не имеет хлебных крошек!");
+                throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
                 break;
         }
 

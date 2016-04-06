@@ -132,7 +132,7 @@ class DefaultController extends Controller
 
         return $this->render(\Yii::$app->request->get("act") == "edit" ? 'edit' : 'view', [
             'category'      =>  $category,
-            'subCats'       =>  Category::getSubCategories($category->Code),
+            'subCats'       =>  $category->subCategories,
             'parentCategory'=>  Category::getParentCategory($category->Code),
             'categoryUk'    =>  CategoryUk::findOne(['ID' => $category->ID])
         ]);

@@ -198,9 +198,9 @@ class Category extends \yii\db\ActiveRecord
         return Category::change($id, 'onePrice');
     }
 
-    public static function getSubCategories($code){
-        $s = strlen($code) + 3;
-        return Category::find()->where(['like', 'Code', $code.'%', false])->andWhere(['LENGTH(`Code`)' => $s])->all();
+    public function getSubCategories(){
+        $s = strlen($this->Code) + 3;
+        return Category::find()->where(['like', 'Code', $this->Code.'%', false])->andWhere(['LENGTH(`Code`)' => $s])->all();
     }
 
     public static function getParentCategory($identifier){
