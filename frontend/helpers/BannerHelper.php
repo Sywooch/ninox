@@ -117,7 +117,7 @@ class BannerHelper extends Component
         }
 
         $color = empty($color) ? '' : ' '.$color;//без цвета наверное будет
-        
+
         (new PriceRuleHelper())->recalc($good, true);
 
         return
