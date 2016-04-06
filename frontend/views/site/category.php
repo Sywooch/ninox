@@ -10,7 +10,7 @@ $this->title = $category->Name;
 $helper = new PriceRuleHelper();
 
 \yii\widgets\Pjax::begin([
-    'linkSelector'  =>  'li a'
+    'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a'
 ]);
 
 echo Html::tag('div',
