@@ -60,7 +60,7 @@ echo Html::tag('div',
 		Html::tag('div',
 			$this->render('_shop_item/_shop_item_wish', ['model' => $model]).
 			Html::tag('span', $model->Code, ['class' => 'item-code']),
-			['class' => 'item-head']).
+			['class' => 'item-head clear-fix']).
 		Html::a(Html::img($photo,[
 				'class' => 'item-img',
 				'alt' => $model->Name,

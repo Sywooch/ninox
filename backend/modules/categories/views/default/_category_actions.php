@@ -42,7 +42,7 @@ use yii\helpers\Url;
                 ],
                 '<li class="divider"></li>',
                 [
-                    'label' =>  $nowCategory->menu_show == "1" ? "Выключить" : "Включить",
+                    'label' =>  $nowCategory->enabled == "1" ? "Выключить" : "Включить",
                     'options'   =>  [
                         'class' =>  'shutdown',
                         'data-attribute-categoryID' =>  $nowCategory->ID

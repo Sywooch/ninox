@@ -62,7 +62,7 @@ class MainMenuWidget extends Widget{
                 'depends'   =>  'yii\web\JqueryAsset'
             ]);
 
-            $this->getView()->registerJs('$(".sticky-on-scroll").sticky({ topSpacing: 0, className:"sticky" })');
+            $this->getView()->registerJs('$(".sticky-on-scroll").sticky({topSpacing: 0, className: "sticky"})');
         }
 
         return Html::tag('div', Html::tag('div', Html::tag('ul', implode('', $items), [

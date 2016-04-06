@@ -33,7 +33,7 @@ class CartWidget extends Widget{
         $return = '';
 
         $return .= Html::tag('div', '', ['class' => 'basket-icon']);
-        $return .= Html::tag('div', \Yii::$app->cart->itemsCount, ['class' => 'count']);
+        $return .= Html::tag('div', \Yii::$app->cart->itemsCount, ['class' => 'count items-count']);
         $return .= Html::tag('span', 'Корзина');
 
         return Html::tag('a', $return, ['class' => 'basket', 'href' => '#modalCart']);

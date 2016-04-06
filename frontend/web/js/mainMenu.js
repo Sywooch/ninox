@@ -1,35 +1,42 @@
 $('img.svg').each(function(){
-    var img = jQuery(this),
+    var img = $(this),
         imgID = img.attr('id'),
         imgClass = img.attr('class'),
         imgURL = img.attr('src');
 
-    $.get(imgURL, function(data){
-        // Get the SVG tag, ignore the rest
-        var svg = jQuery(data).find('svg'),
-            width = '40',
-            height = '35';
+    $("<img/>") // Make in memory copy of image to avoid css issues
+        .attr("src", $(img).attr("src"))
+        .load(function(){
+            var real_width = this.width,
+                real_height = this.height;
 
-        // Add replaced image's ID to the new SVG
-        if(typeof imgID !== 'undefined') {
-            svg = svg.attr('id', imgID);
-        }
-        // Add replaced image's classes to the new SVG
-        if(typeof imgClass !== 'undefined') {
-            svg = svg.attr('class', imgClass+' replaced-svg');
-        }
+            $.get(imgURL, function(data){
+                // Get the SVG tag, ignore the rest
+                var svg = $(data).find('svg'),
+                    width = '40',
+                    height = '35';
 
-        // Remove any invalid XML tags as per http://validator.w3.org
-        svg = svg.removeAttr('xmlns:a');
+                // Add replaced image's ID to the new SVG
+                if(typeof imgID !== 'undefined') {
+                    svg = svg.attr('id', imgID);
+                }
+                // Add replaced image's classes to the new SVG
+                if(typeof imgClass !== 'undefined') {
+                    svg = svg.attr('class', imgClass + ' replaced-svg');
+                }
 
-        svg.attr('width', width);
-        svg.attr('height', height);
+                // Remove any invalid XML tags as per http://validator.w3.org
+                svg = svg.removeAttr('xmlns:a');
 
-        svg.attr('preserveAspectRatio', 'alignment [meet | slice]');
-        svg.attr('viewBox', '0 0 ' + (img.width()) + ' ' + (img.height()));
+                svg.attr('width', width);
+                svg.attr('height', height);
 
-        // Replace image with new SVG
-        img.replaceWith(svg);
+                svg.attr('preserveAspectRatio', 'alignment [meet | slice]');
+                svg.attr('viewBox', '0 0 ' + real_width + ' ' + real_height);
 
-    }, 'xml');
+                // Replace image with new SVG
+                img.replaceWith(svg);
+
+            }, 'xml');
+        });
 });

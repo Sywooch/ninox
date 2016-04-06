@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use frontend\models\CustomerReceiver;
 use Yii;
 
 /**
@@ -61,6 +62,11 @@ class Customer extends \yii\db\ActiveRecord
      * @type CustomerContacts[]
      */
     private $_emails = [];
+
+    /**
+     * @type CustomerAddresses
+     */
+    private $_recipient = null;
 
     /**
      * Возвращает имя клиента
@@ -269,6 +275,24 @@ class Customer extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getRecipient($recipientID = null){
+        $query = CustomerAddresses::find()->where(['partnerID' => $this->ID]);
+
+        if($recipientID != null){
+            return $query->andWhere(['ID' => $recipientID])->one();
+        }
+
+        if(!empty($this->_recipient)){
+            return $this->_recipient;
+        }
+
+        return $this->_recipient = $query->andWhere(['default' => 1])->one();
+    }
+
+    public function setRecipient($customerRecipient){
+        $this->_recipient = $customerRecipient;
+    }
+
     public function beforeSave($insert){
         if($this->isNewRecord){
             $this->ID = hexdec(uniqid());
@@ -276,7 +300,28 @@ class Customer extends \yii\db\ActiveRecord
             $this->registrationTime = date('Y-m-d H:i:s');
         }
 
+        $this->recipient->save(false);
+
         return parent::beforeSave($insert);
+    }
+
+    public function afterFind(){
+        if(empty($this->recipient)){
+            $this->recipient = new CustomerAddresses([
+                'partnerID'     =>  $this->ID,
+                'region'        =>  $this->region,
+                'city'          =>  $this->city,
+                'deliveryType'  =>  $this->deliveryType,
+                'deliveryParam' =>  $this->deliveryParam,
+                'deliveryInfo'  =>  $this->deliveryInfo,
+                'paymentType'   =>  $this->paymentType,
+                'paymentParam'  =>  $this->paymentParam,
+                'paymentInfo'   =>  $this->paymentInfo,
+                'default'       =>  1
+            ]);
+        }
+
+        $this->recipient->save(false);
     }
 
     /**
@@ -308,39 +353,39 @@ class Customer extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ID' => 'ID',
-            'Code' => 'Code',
-            'Company' => 'Company',
-            'City' => 'City',
-            'City2' => 'City2',
-            'Address' => 'Address',
-            'phone' => 'Phone',
-            'Phone2' => 'Phone2',
-            'email' => 'Email',
-            'priceGroup' => 'Price Group',
-            'discount' => 'Discount',
-            'type' => 'Type',
-            'groupID' => 'Group ID',
-            'registrationTime' => 'Registration Time',
-            'deleted' => 'Deleted',
-            'cardNumber' => 'Card Number',
-            'Note2' => 'Note2',
-            'deliveryType' => 'Delivery Type',
-            'paymentType' => 'Payment Type',
+            'ID'        => 'ID',
+            'Code'      => 'Code',
+            'Company'   => 'Company',
+            'City'      => 'City',
+            'City2'     => 'City2',
+            'Address'   => 'Address',
+            'phone'     => 'Phone',
+            'Phone2'    => 'Phone2',
+            'email'     => 'Email',
+            'priceGroup'=> 'Price Group',
+            'discount'  => 'Discount',
+            'type'      => 'Type',
+            'groupID'   => 'Group ID',
+            'deleted'   => 'Deleted',
+            'cardNumber'=> 'Card Number',
+            'Note2'     => 'Note2',
             'blackList' => 'Чёрный список',
+            'money'     => 'Money',
+            'birthday'  => 'Birthday',
+            'password'  => 'Password',
+            'lang'      => 'Lang',
+            'auth_key'  => 'Auth Key',
+            'deliveryType'  => 'Delivery Type',
+            'deliveryParam' => 'Delivery Param',
+            'deliveryInfo'  => 'Delivery Info',
+            'paymentType'   => 'Payment Type',
+            'paymentParam'  => 'Payment Param',
+            'paymentInfo'   => 'Payment Info',
+            'recipientID'   => 'Recipient ID',
+            'registrationTime' => 'Registration Time',
             'blackListAddedTime' => 'Black List Added Time',
-            'money' => 'Money',
-            'birthday' => 'Birthday',
-            'password' => 'Password',
-            'lang' => 'Lang',
-            'recipientID' => 'Recipient ID',
-            'auth_key' => 'Auth Key',
             'password_reset_token' => 'Password Reset Token',
             'giveFeedbackClosed' => 'Give Feedback Closed',
-            'deliveryParam' => 'Delivery Param',
-            'deliveryInfo' => 'Delivery Info',
-            'paymentParam' => 'Payment Param',
-            'paymentInfo' => 'Payment Info',
         ];
     }
 }

@@ -11,6 +11,7 @@ use frontend\models\CustomerWishlist;
 use frontend\models\History;
 use frontend\models\ItemRate;
 use frontend\models\OrderForm;
+use Prophecy\Exception\Doubler\ClassNotFoundException;
 use Yii;
 use common\models\Domain;
 use common\models\Pagetype;
@@ -26,6 +27,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 
 use yii\base\ErrorException;
+use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
@@ -37,6 +39,7 @@ use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Cookie;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -94,6 +97,11 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @param $link
+     * @return int|mixed|string
+     */
+
     public function actionShowtovar($link){
         $id = preg_replace('/\D+/', '', preg_replace('/[^g(.)]+\D+/', '', $link));
 
@@ -103,16 +111,111 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
-        $category = Category::findOne($good->GroupID);
+        $this->getBreadcrumbsLinks($good);
 
-        $mainCategory = null;
+        (new PriceRuleHelper())->recalc($good, true);
 
-        if(strlen($good->categoryCode) != 3){
-            foreach($good->category->getParents() as $parent){
-                if(empty($mainCategory)){
-                    $mainCategory = $parent;
-                }
+        return $this->render('_shop_item_card', [
+            'good'  =>  $good
+        ]);
+    }
 
+    /**
+     * @param string $url
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionRenderpage($url){
+        $category = Category::findOne(['link' => $url]);
+
+        if(empty($category)){
+            throw new NotFoundHttpException("Страница не найдена!");
+        }
+
+        \Yii::trace($category->viewFile);
+
+        switch($category->viewFile){
+            case '0':
+            case '-1':
+            case '13':
+            case 'category':
+                return $this->renderCategory($category);
+                break;
+            default:
+                return $this->renderStaticPage($category);
+                break;
+        }
+    }
+
+    /**
+     * Рендерит категорию
+     *
+     * @param Category $category
+     *
+     * @return string
+     */
+    public function renderCategory($category){
+        switch($category->viewFile){
+            case -1:
+            case 13:
+            case 0:
+            case 'category':
+            default:
+                $view = 'category';
+                break;
+        }
+
+        $this->getBreadcrumbsLinks($category);
+
+        return $this->render($view, [
+            'category'          =>  $category,
+            'showText'          =>  true,
+            'goods'             =>  new ActiveDataProvider([
+                'query'         =>  $category->goods(),
+                'pagination'    =>  [
+                    'pageSize'          =>  '15',
+                    'forcePageParam'    =>  false,
+                    'pageSizeParam'     =>  false
+                ]
+            ])
+        ]);
+    }
+
+    public function renderStaticPage($pageInfo){
+        return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
+    }
+
+    public function getBreadcrumbsLinks($object){
+        $class = get_parent_class($object);
+        $this->getView()->params['breadcrumbs'] = [];
+        $temp = [];
+        switch($class){
+            case 'common\models\Category':
+                $category = $object;
+                $temp = [
+                    'label' =>  $object->Name
+                ];
+                break;
+            case 'common\models\Good':
+                $category = Category::findOne($object->GroupID);
+                $temp = [
+                    [
+                        'url'   =>  '/'.$category->link,
+                        'label' =>  $category->Name
+                    ],
+                    [
+                        'label' =>  $object->Name
+                    ]
+                ];
+                break;
+            default:
+                throw new InvalidConfigException("Класс {$class} не имеет хлебных крошек!");
+                break;
+        }
+
+        if(strlen($category->Code) != 3){
+            foreach($category->parents as $parent){
                 $this->getView()->params['breadcrumbs'][] = [
                     'url'   =>  '/'.$parent->link,
                     'label' =>  $parent->Name
@@ -120,46 +223,7 @@ class SiteController extends Controller
             }
         }
 
-        if(empty($mainCategory)){
-            $mainCategory = $category;
-        }
-
-        $this->getView()->params['breadcrumbs'][] = [
-            'url'   =>  '/'.$category->link,
-            'label' =>  $category->Name
-        ];
-
-        (new PriceRuleHelper())->recalc($good, true);
-
-        return $this->render('_shop_item_card', [
-            'mainCategory'  =>  $mainCategory,
-            'good'          =>  $good,
-            'category'      =>  $category,
-        ]);
-    }
-
-    public function actionRenderpage($url){
-        $category = Category::findOne(['link' => $url]);
-
-        if(empty($category)){
-            return $this->runAction('error');
-        }
-
-        $pageType = Pagetype::findOne(['id' => $category->pageType]);
-
-        if($category->pageType == 0 || $category->pageType == -1 || $category->pageType == 13){
-            return $this->run('site/rendercategory', [
-                'category'  =>  $category,
-                'view'      =>  $pageType->page
-            ]);
-        }else{
-            //Переделать потом под все типы страниц
-            return $this->run('site/rendercategory', [
-                'category'  =>  $category,
-                'view'      =>  $pageType->page
-            ]);
-        }
-
+        $this->getView()->params['breadcrumbs'] = array_merge($this->getView()->params['breadcrumbs'], $temp);
     }
 
     public function actionOrder(){
@@ -271,6 +335,10 @@ class SiteController extends Controller
 		    'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
 		    'wholesale'     =>  \Yii::$app->cart->wholesale,
 		    'count'         =>  \Yii::$app->cart->itemsCount,
+		    'count-ext'     =>  \Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
+									товара}	many{# товаров} other{# товар}}', [
+                                    'n'	=>	\Yii::$app->cart->itemsCount
+                                ]),
 		    'items'         =>  $items,
 	    ];
     }
@@ -338,34 +406,6 @@ class SiteController extends Controller
 
     public function actionRendersomepage($category = null, $view = null){
 
-    }
-
-    public function actionRendercategory($category = null, $view = null){
-        $view != null ? $view : 'category';
-
-        if(empty($category)){
-            return $this->run('site/error');
-        }
-
-        if(strlen($category->Code) != 3){
-            foreach($category->getParents() as $parent){
-                $this->getView()->params['breadcrumbs'][] = [
-                    'url'   =>  '/'.$parent->link,
-                    'label' =>  $parent->Name
-                ];
-            }
-        }
-
-        return $this->render($view, [
-            'category'  =>  $category,
-            'showText'  =>  true,
-            'goods'     =>  new ActiveDataProvider([
-                'query'         =>  $category->goods(),
-                'pagination'    =>  [
-                    'pageSize'  =>  '15'
-                ]
-            ])
-        ]);
     }
 
     /**
@@ -436,9 +476,7 @@ class SiteController extends Controller
         );
         $pattern = $vowels[\Yii::$app->language];
         $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';
-        $return = '';
-        $r1 = '';
-        $r2 = '';
+        $return = $r1 = $r2 = '';
         $string = mb_strtolower($string, 'UTF-8');
         //$string = preg_replace('/\w/', '', $string); allow latin symbols
         $string = preg_replace('/[.,;\'*"]/', ' ', $string);

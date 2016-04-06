@@ -46,7 +46,7 @@ $this->registerCss($css);
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="btn-group pull-left">
-            <?php if($category->menu_show != 0){ ?>
+            <?php if($category->enabled != 0){ ?>
                 <a href="https://krasota-style.com.ua/<?=$category->link?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
             <?=\yii\helpers\Html::a('<i class="glyphicon glyphicon-th-large"></i> Товары категории', \yii\helpers\Url::toRoute(['/categories', 'category' => $category->Code, 'onlyGoods' => true]), ['class' => 'btn btn-default'])?>
@@ -57,7 +57,7 @@ $this->registerCss($css);
         </div>
         <div class="btn-group pull-right" role="group" aria-label="...">
             <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->canBuy == "1" ? "Не продавать товары" : "Продавать товары"?></button>
-            <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->menu_show == "1" ? "Выключить" : "Включить"?></button>
+            <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->enabled == "1" ? "Выключить" : "Включить"?></button>
             <a href="?act=edit" type="button" class="btn btn-info">Редактировать</a>
         </div>
         <div class="clearfix"></div>
@@ -83,7 +83,7 @@ $this->registerCss($css);
                         </div>
                         <div class="panel-body">
                             <?php foreach($subCats as $sc){ ?>
-                            <a class="list-group-item <?=$sc->menu_show == "1" ? "list-group-item-success" : "list-group-item-danger"?>" href="/category/view/<?=$sc->ID?>"><?=$sc->Name?></a>
+                            <a class="list-group-item <?=$sc->enabled == "1" ? "list-group-item-success" : "list-group-item-danger"?>" href="/category/view/<?=$sc->ID?>"><?=$sc->Name?></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -126,7 +126,7 @@ $this->registerCss($css);
                             ?>
                             <tr>
                                 <td>Состояние категории</td>
-                                <td><?=$category->menu_show == "1" ? "Включена" : "Выключена"?>, товары категории <?=$category->canBuy == "1" ? "продаются" : "не продаются"?></td>
+                                <td><?=$category->enabled == "1" ? "Включена" : "Выключена"?>, товары категории <?=$category->canBuy == "1" ? "продаются" : "не продаются"?></td>
                             </tr>
                             <tr>
                                 <td>Дополнительно</td>
