@@ -1,7 +1,6 @@
 <?php
 
 use frontend\helpers\PriceRuleHelper;
-use frontend\models\Category;
 use frontend\widgets\Breadcrumbs;
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
@@ -9,6 +8,10 @@ use yii\widgets\ListView;
 $this->title = $category->Name;
 
 $helper = new PriceRuleHelper();
+
+\yii\widgets\Pjax::begin([
+    'linkSelector'  =>  'li a'
+]);
 
 echo Html::tag('div',
     Html::tag('div',
@@ -67,3 +70,5 @@ echo Html::tag('div',
     ]),
     ['class' => $category->viewFile.' clear-fix']
 );
+
+\yii\widgets\Pjax::end();
