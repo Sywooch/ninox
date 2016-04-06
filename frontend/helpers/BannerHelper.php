@@ -113,7 +113,7 @@ class BannerHelper extends Component
         if(!$good){
             throw new NotFoundHttpException("Товар с идентификатором {$bannerValue['goodID']} не найден!");
         }
-        
+
         $color = empty($color) ? '' : ' '.$color;//без цвета наверное будет
 
         return
