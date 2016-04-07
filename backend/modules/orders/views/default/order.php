@@ -274,6 +274,33 @@ $js = <<<'JS'
     })
 JS;
 
+$npJS = <<<'JS'
+    var openWindow = function(url){
+        var myWindow = window.open(url, 'window', 'menubar=no,toolbar=no,status=no,scrollbars=no', true);
+
+        myWindow.onload = function(){
+            var script = document.createElement('script');
+
+            script.innerHTML = 'window.print()';
+
+            myWindow.document.appendChild(script);
+        }
+
+    }
+
+    $("body").on('click', '.printMark', function(){
+        openWindow('https://my.novaposhta.ua/orders/printMarkings/orders[]/' + $(this)[0].getAttribute('ref') + '/type/html/apiKey/5fdddf77cb55decfcbe289063799c67e');
+    });
+
+    $("body").on('click', '.printEN', function(){
+        openWindow('https://my.novaposhta.ua/orders/printDocument/orders[]/' + $(this)[0].getAttribute('ref') + '/type/html/apiKey/5fdddf77cb55decfcbe289063799c67e');
+    });
+JS;
+
+if($order->deliveryType == 2){
+    $this->registerJs($npJS);
+}
+
 $this->registerCss($css);
 $this->registerJs($js);
 $this->registerJsFile('/js/bootbox.min.js', [

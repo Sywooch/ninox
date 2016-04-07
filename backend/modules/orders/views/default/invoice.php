@@ -24,8 +24,7 @@ echo $form->field($invoice, 'ServiceType')->dropDownList(\Yii::$app->NovaPoshta-
     $form->field($invoice, 'PayerType')->dropDownList(\Yii::$app->NovaPoshta->typesOfPayers()),
     $form->field($invoice, 'Cost'),
     $form->field($invoice, 'SeatsAmount'),
-    $form->field($invoice, 'Description')->dropDownList(\Yii::$app->NovaPoshta->cargoTypes()),
-    $form->field($invoice, 'CargoDescription')->dropDownList(\Yii::$app->NovaPoshta->cargoDescriptionList()),
+    $form->field($invoice, 'Description'),
     Html::button('Создать накладную', ['id' => 'createInvoice', 'type' => 'submit']);
 
 $form->end();
