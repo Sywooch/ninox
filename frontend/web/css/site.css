@@ -1274,8 +1274,8 @@ footer{
 .main-content .content{
 	max-width: 1170px;
 	overflow: auto;
-	margin-top: 30px;
-	/* на 19.03.16*/
+	margin-top: 40px;
+	/* на 06.04.16*/
 }
 
 .content{
@@ -2929,9 +2929,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 /*========* O-NAS *=========*/
 
 .left-side{
-	float: left;
+/*	float: left;
 	width: 285px;
-	margin-left: 35px;
+	margin-left: 35px;*/ /*было и стало*/
+	float: left;
+	width: 245px;
 }
 
 .left-side-menu{
@@ -2949,18 +2951,34 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border-left: 1px slolid #ebebeb;
 	border-right: 1px slolid #ebebeb;
 	margin-bottom: 1px;
-	padding-left: 32px;
+	padding-left: 25px;
 	padding-top: 16px;
+	background: #f1f1f1;
+	cursor: pointer;
 }
 
 .about{
-	float: left;
-	width: 810px;
+/*	float: left;
+	width: 810px;*/
+	float: right;
+	width: 880px;
 }
 
 .about-header{
-	border-bottom: 1px dotted #8c8c8c;
+/*	border-bottom: 1px dotted #8c8c8c;
 	font-size: 22px;
+	color: #282828;*/
+	border-bottom: 1px dashed #8c8c8c;
+	font-size: 22px;
+	margin-bottom: 30px;
+	vertical-align: super;
+	font-family: OpenSans-Semibold;
+}
+
+.about-header a{
+	vertical-align: super;
+	font-size: 22px;
+	font-family: OpenSans-Semibold;
 	color: #282828;
 }
 
@@ -2975,13 +2993,25 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-as-center{
+/*	text-align: center;
+	margin: auto;*/
 	text-align: center;
 	margin: auto;
+	margin-bottom: 25px;
+	font-size: 16px;
+	font-weight: bold;
+	color: black;
 }
 
 .about-as-price{
+/*	height: 115px;
+	background: #eaf6f9;*/
 	height: 115px;
 	background: #eaf6f9;
+	padding-top: 15px;
+	padding-left: 33px;
+	padding-right: 33px;
+	border-radius: 3px;
 }
 
 .about-as-price-rules{
@@ -2991,28 +3021,66 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-as-price-rules-img{
 	float: left;
+    /*
 	padding-right: 33px;
+    */
 }
 
 .wholesale-prices{
+    /*
 	content: url("/img/site/wholesale-prices.png");
+    */
+	background: url("/img/site/wholesale-prices.png") no-repeat;
+	width: 84px;
+	height: 84px;
+	overflow: auto;
 }
 
 .retail-prices{
+    /*
 	content: url("/img/site/retail-prices.png");
+    */
+	background: url("/img/site/retail-prices.png");
+	width: 84px;
+	height: 84px;
 }
 
 .about-as-price-rules-text{
+/*	float: left;
+	font-size: 14px;*/
 	float: left;
 	font-size: 14px;
+	margin-left: 20px;
+	margin-top: 20px;
+	color: #282828;
 }
 
 .about-as-price-rules-text span{
+    /*
 	font-size: 18px;
+    */
+	font-size: 18px;
+	display: block;
+	font-weight: bold;
 }
 
 .about-as-order-head{
+    /*
 	font-size: 16px;
+    */
+	font-size: 16px;
+	padding: 40px;
+	text-align: center;
+	font-weight: bold;
+	color: #282828;
+}
+
+.about-as-order-infogramma{
+	margin: auto auto 40px;
+	overflow: auto;
+	display: block;
+	text-align: center;
+	width: -moz-fit-content;
 }
 
 .about-as-order-infogramma-item{
@@ -3020,33 +3088,69 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .decor{
+    /*
 	content: url("/img/site/decor.png");
+    */
+	background: url("/img/site/decor.png");
+	height: 84px;
+	width: 84px;
+	display: block;
+	margin: auto;
 }
 
 .assembly-of-goods{
+    /*
 	content: url("/img/site/assembly-of-goods.png");
+    */
+	background: url("/img/site/assembly-of-goods.png");
+	height: 84px;
+	width: 84px;
+	display: block;
+	margin: auto;
 }
 
 .order-shipping{
+    /*
 	content: url("/img/site/order-shipping.png");
+    */
+	background: url("/img/site/order-shipping.png");
+	height: 84px;
+	width: 84px;
+	display: block;
+	margin: auto;
 }
 
-.arrow-rght{
+.arrow-right{
+/*	float: left;
+	content: url("/img/site/arrow-right.png");*/
+	width: 150px;
 	float: left;
-	content: url("/img/site/arrow-right.png");
-
+	background: transparent url("/img/site/arrow-right.png") no-repeat scroll 0% 0%;
+	height: 55px;
+	margin-top: 15px;
 }
 
 .about-as-order-infogramma-item-text{
+    /*
 	font-size: 10px;
+    */
+	font-size: 10px;
+	padding-top: 20px;
+	color: #282828;
 }
 
 .about-as-order-infogramma-item-text span{
+    /*
 	font-size: 14px;
+    */
+	font-size: 14px;
+	display: block;
+	font-weight: bold;
 }
 
 .about-as-order-text{
 	font-size: 14px;
+	color: #282828;
 }
 
 .about-delivery-header{
@@ -3059,33 +3163,63 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	content: url("/img/site/car.png");
 }
 
+.about-delivery-content{
+	overflow: auto;
+}
+
 .about-delivery-content-img{
-	float: left;
+/*	float: left;
 	width: 350px;
 	content: url("/img/site/map.png");
-	padding-left: 15px;
+	padding-left: 15px;*/
+	float: left;
+	width: 350px;
+	background: url("/img/site/map.png") no-repeat;
+	margin-left: 15px;
+	height: 220px;
 }
 
 .about-delivery-content-info{
+    /*
 	float: left;
+    */
+	float: left;
+	width: 510px;
 }
 
 .about-delivery-content-info-delivery{
+    /*
 	height: 70px;
+    */
+	letter-spacing: -1px;
+	font-stretch: condensed;
+	overflow: auto;
 }
 
 .about-delivery-content-info-delivery-time{
+/*	float: left;
+	font-size: 16px;*/
 	float: left;
-	font-size: 16px;
+	font-size: 11px;
+	width: 50%;
+	font-weight: bold;
 }
 
 .about-delivery-content-info-delivery-time span{
+/*	font-size: 38px;
+	color: #008ad2;*/
 	font-size: 38px;
 	color: #008ad2;
+	float: left;
+	letter-spacing: -1px;
+	display: block;
+	vertical-align: middle;
+	font-stretch: condensed;
 }
 
 .about-delivery-content-info-text{
 	font-size: 14px;
+	color: #282828;
 }
 
 .about-payment-header{
@@ -3094,30 +3228,57 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	color: #282828;	*/
 }
 
+.about-payment{
+	color: #282828;
+}
+
 .about-payment-header:before{
 	content: url("/img/site/payment-card.png");
 }
 
 .about-payment .bold{
+    /*
 	font-size: 18px;
+    */
+	font-size: 18px;
+	FONT-weight: bold;
+    /*
+	margin-bottom: 20px;
+    */
 }
 
 .about-payment span{
 	font-size: 14px;
+	display: block;
+	padding-bottom: 15px;
 }
 
 .about-inform{
-	height: 100px;
-	background: #f6f6f6;`
+/*	height: 100px;
+	background: #f6f6f6;*/
+	background: #f6f6f6;
+	padding: 30px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	overflow: auto;
 }
 
 .about-inform span{
+    /*
 	font-size: 16px;
+    */
+	font-size: 16px;
+	width: 60%;
+	float: left;
 }
 
 .about-payment-inform{
 	/*height: 100px;
 	background: #f6f6f6;*/
+}
+
+.about-payment-inform-button{
+	float: right;
 }
 
 .about-return-header{

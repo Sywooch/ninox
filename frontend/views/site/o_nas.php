@@ -135,9 +135,9 @@ use yii\jui\Accordion;
                     Для того, чтобы Ваш заказ был отправлен как можно скорее,
                     перезвоните нам или заполните форму после перевода денег.
                 </span>
-                <div class="about-payment-inform-button yellow-button">
+                <button class="about-payment-inform-button yellow-button large-button">
                     Сообщить об оплате
-                </div>
+                </button>
             </div>
             <span>
                 При оплате на карту взымается комиссия в размере 1% от суммы заказа (она уже входит в стоимость, указанную в смс).
@@ -158,7 +158,7 @@ use yii\jui\Accordion;
         </div>
         <div class="about-return">
             <div class="about-return-header about-header semi-bold">
-                <a name="about-return-header">Возврат</a>
+                <a name="about-return-header">Гарантия и возврат</a>
             </div>
             <span>
                 Товары, приобретенные в интернет-магазине krasota-style.ua, можно вернуть в течении 14 дней с момента получения заказа.
