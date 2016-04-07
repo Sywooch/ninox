@@ -135,7 +135,7 @@ use yii\jui\Accordion;
                     Для того, чтобы Ваш заказ был отправлен как можно скорее,
                     перезвоните нам или заполните форму после перевода денег.
                 </span>
-                <button class="about-payment-inform-button yellow-button large-button">
+                <button class="about-inform-button yellow-button large-button">
                     Сообщить об оплате
                 </button>
             </div>
@@ -192,17 +192,16 @@ use yii\jui\Accordion;
                     После того как Вы отправили нам посылку, для того, чтобы
                     оформить возврат, необходимо заполнить форму возврата.
                 </span>
-                <div class="about-return-inform-button yellow-button">
+                <button class="about-inform-button yellow-button large-button">
                     Оформить возврат
-                </div>
+                </button>
             </div>
             <div class="about-return-accordion">
                 <?=Accordion::widget([
                     'items' => [
                     [
                     'header'    => Html::tag('div', Html::tag('span', 'Гарантийные обязательства (техника)'),
-                    ['class' =>  'content-data-first_1']
-                    ),
+                    ['class' =>  'content-data-first_1']),
                     'content' =>'о технике',
                     'headerOptions' => [
                     'tag'   =>  'div',
@@ -211,13 +210,9 @@ use yii\jui\Accordion;
                     ],
                     [
                     'header' => Html::tag('div', Html::tag('span', 'Гарантийные обязательства (бижутерия)'), [
-                    'class' =>  'content-data-first_1',
+                    'class' =>  'content-data-first_1']),
 
-                    ]),
-
-                    'headerOptions' => ['tag' => 'div',
-
-                    ],
+                    'headerOptions' => ['tag' => 'div'],
                     'content' => 'о бижутерии',
                     'options' => ['tag' => 'div'],
                     ],
@@ -292,6 +287,85 @@ use yii\jui\Accordion;
                 куки или анонимных идентификаторов. Мы также используем куки и анонимные идентификаторы, когда вы взаимодействуете с услугами,
                 предложенными нашими партнерами, такими как рекламные услуги, например, которые могут появиться на других сайтах.
             </span>
+        </div>
+        <div class="about-contacts">
+            <span class="about-header semi-bold">
+                Контакты
+            </span>
+            <div class="contacts-inform">
+                <div class="inform">
+                    <span>
+                        02217, Украина, г. Киев
+                        ул.Электротехническая, 2
+                    </span>
+                    <span>
+                        Электронная почта:
+                        info@krasota-style.ua
+                    </span>
+                </div>
+                <div class="inform numbers">
+                    <div>
+                        <span>
+                            0 800 508 208
+                        </span>
+                        по Украине со
+                        стационарных бесплатно
+                        <span>
+                        044 232 82 20
+                        </span>
+                    </div>
+                    <!--<span>
+                        044 232 82 20
+                    </span>-->
+                </div>
+                <div class="inform">
+                    <div>
+                        <span class="operator">
+                            Vodafone
+                        </span>
+                        <span class="right">
+                            050 677 54 56
+                        </span>
+                    </div>
+                    <div>
+                        <span class="operator">
+                            Киевстар
+                        </span>
+                        <span class="right">
+                            067 507 87 73
+                        </span>
+                    </div>
+                    <div>
+                        <span class="operator">
+                            Lifecell
+                        </span>
+                        <span class="right">
+                            063 334 49 15
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div>
+            </div>
+            <div class="your-wish">
+                <div class="name">
+                    <span>Ваше имя</span>
+                    <input type="text">
+                </div>
+                <div class="email">
+                    <span>Электронная почта</span>
+                    <input type="text">
+                </div>
+                <div class="wish">
+                    <span>Что Вас интересует?</span>
+                    <textarea type="text"></textarea>
+                </div>
+                <?=\yii\helpers\Html::button('Отправить', [
+                    'type'  =>  'submit',
+                    'class' =>  'yellow-button large-button',
+                    'id'    =>  'submit'
+                ])?>
+            </div>
         </div>
     </div>
 </div>

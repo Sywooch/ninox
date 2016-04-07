@@ -3270,6 +3270,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 16px;
 	width: 60%;
 	float: left;
+	padding: 0px !important;
 }
 
 .about-payment-inform{
@@ -3277,7 +3278,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #f6f6f6;*/
 }
 
-.about-payment-inform-button{
+.about-inform-button{
 	float: right;
 }
 
@@ -3296,12 +3297,143 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #f6f6f6;*/
 }
 
+.about-return span{
+	font-size: 14px;
+	color: #282828;
+	display: block;
+	padding-bottom: 20px;
+}
+
+.about-return .bold{
+	font-weight: bold;
+}
+
+.about-return-accordion span{
+	font-size: 22px;
+}
+
 .about-TermsOfUse span{
 	font-size: 14px;
+	color: #282828;
+	display: block;
+	padding-bottom: 35px;
 }
 
 .about-TermsOfUse .bold{
 	font-size: 16px;
+	font-weight: bold;
+	padding-bottom: 20px;
+}
+
+.about-contacts{
+	color: #282828;
+}
+
+.about-contacts .about-header{
+	border-bottom: none;
+}
+
+.contacts-inform{
+	overflow: auto;
+}
+
+.contacts-inform .inform{
+	width: 33%;
+	float: left;
+}
+
+.contacts-inform .inform div{
+	overflow: auto;
+}
+
+.contacts-inform .inform .right{
+	float: right;
+}
+
+.contacts-inform .inform span{
+	display: block;
+	padding-top: 20px;
+	font-size: 18px;
+	float: left;
+}
+
+.contacts-inform .inform .operator{
+	padding-left: 55px;
+}
+
+.contacts-inform .numbers span{
+	font-size: 24px;
+}
+
+.contacts-inform .numbers div{
+	font-size: 12px;
+	width: 165px;
+	margin: auto;
+}
+
+.about-contacts .your-wish{
+	width: 880px;
+	height: 350px;
+	background: #f3f8fc;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	border: 3px solid #d0e9f9;
+	padding: 30px;
+	margin-top: 35px;
+	margin-bottom: 35px;
+}
+
+.about-contacts .your-wish span{
+	display: block;
+	font-size: 16px;
+	color: #515152;
+	padding-bottom: 5px;
+}
+
+.about-contacts .your-wish input, textarea{
+	border: 1px solid #e4e4e4;
+	border-radius: 3px;
+	background: #ffffff;
+	padding: 5px;
+	color: #000;
+	box-shadow: inset 0 0 3px #e4e4e4;
+	color: #8b8b8b;
+}
+
+.your-wish .name{
+	float: left;
+	display: block;
+}
+
+.your-wish .email{
+	float: right;
+	display: block;
+}
+
+.your-wish .wish{
+	display: block;
+	margin-top: 90px;
+}
+
+.your-wish .name input{
+	height: 40px;
+	width: 450px;
+}
+
+.your-wish .email input{
+	height: 40px;
+	width: 310px;
+}
+
+.your-wish .wish textarea{
+	width: 100%;
+	height: 100px;
+}
+
+.your-wish button{
+	display: block;
+	margin: 25px auto auto;
 }
 
 /*========* END O-NAS *=========*/
