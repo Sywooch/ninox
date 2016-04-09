@@ -235,6 +235,7 @@ $js = <<<'JS'
             url: '/orders/createinvoice/' + order,
             success: function(data){
                 e.currentTarget.innerHTML = data;
+                $("#novaPoshtaModal #seats").addInputArea();
             }
         });
     }, getSelectedGoods = function(){
@@ -267,6 +268,7 @@ $js = <<<'JS'
             data: $(this).serialize(),
             success: function(data){
                 container.innerHTML = data;
+                $("#novaPoshtaModal #seats").addInputArea();
             }
         });
 
@@ -297,10 +299,6 @@ $npJS = <<<'JS'
     });
 JS;
 
-if($order->deliveryType == 2){
-    $this->registerJs($npJS);
-}
-
 $this->registerCss($css);
 $this->registerJs($js);
 $this->registerJsFile('/js/bootbox.min.js', [
@@ -311,6 +309,9 @@ $this->registerJsFile('/js/bootbox.min.js', [
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
 if($order->deliveryType == 2){
+    \backend\assets\InputAreaAsset::register($this);
+
+    $this->registerJs($npJS);
 
     $novaPoshtaModal = new Remodal([
         'cancelButton'		=>	false,
@@ -319,6 +320,9 @@ if($order->deliveryType == 2){
         'content'			=>	\rmrevin\yii\fontawesome\FA::i('refresh')->addCssClass('fa-spin'),
         'events'			=>	[
             'opening'	=>	new \yii\web\JsExpression("runCreateInvoice(e, ".$order->id.")")
+        ],
+        'options'           =>  [
+            'id'    =>  'novaPoshtaModal'
         ],
         'id'				=>	'novaPoshtaModal',
     ]);

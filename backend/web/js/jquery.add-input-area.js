@@ -247,7 +247,7 @@
                             break;
                     }
                 } catch(e) {
-                    alert(e);
+                    console.log(e);
                 }
             }
             $(obj).attr(type, changed);
