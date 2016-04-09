@@ -548,4 +548,20 @@ class DefaultController extends Controller
 
         return true;
     }
+
+    public function actionSms(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Этот запрос возможен только через ajax!");
+        }
+
+        $orderID = \Yii::$app->request->post("orderID");
+
+        $order = History::findOne($orderID);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
+
+        return $order->sendMessage(\Yii::$app->request->post("type"));
+    }
 }

@@ -1,4 +1,4 @@
-<?php use kop\y2sp\ScrollPager;
+<?php use bobroid\y2sp\ScrollPager;
 
 \rmrevin\yii\fontawesome\cdn\AssetBundle::register($this);
 use yii\bootstrap\Html; ?>

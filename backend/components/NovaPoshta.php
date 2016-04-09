@@ -157,6 +157,8 @@ class NovaPoshta extends Component{
             'methodProperties'  =>  $order
         ], 'en/save');
 
+        \Yii::trace($order);
+
         $response = Json::decode($request->response);
 
         if($response['success'] != 1){
