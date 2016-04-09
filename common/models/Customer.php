@@ -45,6 +45,7 @@ use Yii;
  * @property string $deliveryInfo
  * @property integer $paymentParam
  * @property string $paymentInfo
+ * @property CustomerAddresses $recipient
  */
 class Customer extends \yii\db\ActiveRecord
 {

@@ -10,6 +10,7 @@ namespace backend\models;
 
 use common\models\NovaPoshtaContactRecipient;
 use yii\base\InvalidParamException;
+use yii\base\Object;
 use yii\helpers\Json;
 
 class NovaPoshtaOrder extends NovaPoshtaModels
@@ -257,7 +258,7 @@ class NovaPoshtaOrder extends NovaPoshtaModels
             throw new InvalidParamException("переменная orderData должна быть \\common\\models\\History!");
         }
 
-        if(empty($order->customer->cityCode)){
+        if(empty($order->customer->recipient->cityID)){
             $order->customer->recipient->cityID = \Yii::$app->NovaPoshta->city($order->deliveryCity);
         }
 
@@ -294,14 +295,12 @@ class NovaPoshtaOrder extends NovaPoshtaModels
             }
         }
 
-        if(empty($order->customer->recipient->recipientAddress)){
-            $department = \Yii::$app->NovaPoshta->department($order->deliveryInfo, $order->customer->recipient->cityID);
+        $department = \Yii::$app->NovaPoshta->department($order->deliveryInfo, $order->customer->recipient->cityID);
 
-            if(!($department)){
-                $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
-            }else{
-                $order->customer->recipient->recipientAddress = $department['Ref'];
-            }
+        if(!($department)){
+            $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
+        }else{
+            $order->customer->recipient->recipientAddress = $department['Ref'];
         }
 
         $order->customer->save(false);
@@ -316,6 +315,18 @@ class NovaPoshtaOrder extends NovaPoshtaModels
             'RecipientsPhone'       =>  $order->customerPhone,
             'orderID'               =>  $order->id
         ]);
+
+        if($order->paymentType == 1){
+            $backwardDelivery = new \stdClass();
+
+            $backwardDelivery->PayerType = 'Recipient';
+            $backwardDelivery->CargoType = 'Money';
+            $backwardDelivery->RedeliveryString = $this->Cost;
+
+            $this->BackwardDeliveryData = [
+                $backwardDelivery
+            ];
+        }
     }
 
     public function setOrderID($val){

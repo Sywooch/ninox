@@ -67,12 +67,19 @@ class SiteController extends Controller
             'rightBanner'       =>  BannersCategory::findOne(['alias' => 'main_right_banner'])->banners[0],//Banner::getByAlias('main_right_banner', false),
             'centralBanners'    =>  BannersCategory::findOne(['alias' => 'slider_v3'])->banners,
             'reviews'           =>  Review::getReviews(),
-            'goodsDataProvider' =>  new ArrayDataProvider([
-                'models' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC')->limit('4')->all(),
+            'goodsDataProvider' =>  new ActiveDataProvider([
+                'query' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC'),
+                'pagination'    =>  [
+                    'pageSize'  =>  (!empty(\Yii::$app->request->get("page")) && \Yii::$app->request->get("page") != 1) ? 5 : 4
+                ]
+            ]),
+            /*'goodsDataProvider' =>  new ArrayDataProvider([
+                'models' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC')->limit(40)->all(),
                 'pagination'    =>  [
                     'pageSize'  =>  4
                 ]
-            ]),
+            ]),*/
+
             'questions'         =>  Question::getQuestions(),
         ]);
     }
@@ -91,9 +98,15 @@ class SiteController extends Controller
         }
 
         return $this->renderAjax('index/goods_row', [
-            'dataProvider'  =>  new ArrayDataProvider([
+            'dataProvider'  =>  new ActiveDataProvider([
+                'query' =>  $query,
+                'pagination'    =>  [
+                    'pageSize'  =>  !empty(\Yii::$app->request->get("page")) && \Yii::$app->request->get("page") != 1 ? 5 : 4
+                ]
+            ]),
+            /*'dataProvider'  =>  new ArrayDataProvider([
                 'models'    =>  $query->limit(4)->all()
-            ])
+            ])*/
         ]);
     }
 
