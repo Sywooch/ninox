@@ -8,7 +8,7 @@
 
 use yii\helpers\Html;
 
-echo Html::tag('div',
+echo Html::beginTag('div', ['class' => 'filters']).
 	Html::tag('div',
 		Html::tag('div', \Yii::t('shop', 'Цена'), ['class' => 'filter-head']).
 		Html::tag('div',
@@ -27,6 +27,20 @@ echo Html::tag('div',
 			['class' => 'filter-rows']
 		),
 		['class' => 'filter-block']
-	),
-	['class' => 'filters']
-);
+	);
+	foreach($filters as $key => $filter){
+		echo Html::tag('div',
+			Html::tag('div', $filter['name'], ['class' => 'filter-head']).
+			Html::checkboxList($filter['name'], '', $filter['options'], [
+				'class' =>  'filter-rows',
+				'item'  =>  function($index, $data, $name, $checked, $value){
+					return Html::checkbox($name, $checked, [
+						'value' => $value,
+						'label' => $data['label'].'('.$data['count'].')',
+					]);
+				}
+			]),
+			['class' => 'filter-block']
+		);
+	}
+echo Html::endTag('div');

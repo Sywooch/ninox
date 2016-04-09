@@ -35,9 +35,9 @@ class m151127_091749_GUID_using_in_users extends Migration
 	    $this->alterColumn('handmade_services', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->renameColumn('handmade_transactions', 'partner_id', 'customerID');
 	    $this->alterColumn('handmade_transactions', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
-	    echo 'drop trigger `InsertRate`...';
+	    echo "    > drop trigger `InsertRate`...\r\n";
 	    $this->execute("DROP TRIGGER IF EXISTS `InsertRate`");
-	    echo 'drop trigger `UpdateRate`...';
+	    echo "    > drop trigger `UpdateRate`...\r\n";
 	    $this->execute("DROP TRIGGER IF EXISTS `UpdateRate`");
 	    $this->renameColumn('items_rate', 'userID', 'customerID');
 	    $this->alterColumn('items_rate', 'customerID', Schema::TYPE_BIGINT.' UNSIGNED NOT NULL DEFAULT 0');
@@ -46,27 +46,27 @@ class m151127_091749_GUID_using_in_users extends Migration
 	    $this->renameTable('users_pricerules', 'partnersPricerules');
 	    $this->renameColumn('partnersPricerules', 'UserGUID', 'customerID');
 	    $this->createIndex('customerID', 'partnersPricerules', 'customerID');
-	    foreach(\common\models\Customer::find()->each(100) as $customer){
+	    foreach(\common\models\oldCustomer::find()->each(100) as $customer){
 		    $customer->Code = $customer->ID;
 		    $customer->ID = hexdec(uniqid());
 		    if($customer->save(false)){
-				echo 'update history table...';
+				echo "    > update history table for {$customer->Code}... \r\n";
 			    \common\models\History::updateAll(['customerID' => $customer->ID, 'customerEmail' => $customer->eMail], ['customerID' => $customer->Code]);
-				echo 'update cart table...';
+				echo "    > update cart table for {$customer->Code}...\r\n";
 			    \common\models\Cart::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'update GoodsComment table...';
+				echo "    > update GoodsComment table for {$customer->Code}...\r\n";
 			    \common\models\GoodsComment::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'update HandmadeCustomer table...';
+				echo "    > update HandmadeCustomer table for {$customer->Code}...\r\n";
 			    \common\models\HandmadeCustomer::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'updateHandmadeItem table...';
+				echo "    > updateHandmadeItem table for {$customer->Code}...\r\n";
 			    \common\models\HandmadeItem::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'update HandmadeService table...';
+				echo "    > update HandmadeService table for {$customer->Code}...\r\n";
 			    \common\models\HandmadeService::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'update HandmadeTransaction table...';
+				echo "    > update HandmadeTransaction table for {$customer->Code}...\r\n";
 			    \common\models\HandmadeTransaction::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'update ItemRate table...';
+				echo "    > update ItemRate table for {$customer->Code}...\r\n";
 				\common\models\ItemRate::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
-				echo 'update SocialProfile table...';
+				echo "    > update SocialProfile table for {$customer->Code}...\r\n";
 				\common\models\SocialProfile::updateAll(['customerID' => $customer->ID], ['customerID' => $customer->Code]);
 		    }
 	    }
@@ -75,7 +75,7 @@ class m151127_091749_GUID_using_in_users extends Migration
     public function down()
     {
         echo "m151127_091749_GUID_using_in_users cannot be reverted.\n";
-        return false;
+        return true;
     }
 
     /*

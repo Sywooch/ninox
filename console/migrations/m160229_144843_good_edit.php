@@ -19,7 +19,7 @@ class m160229_144843_good_edit extends Migration
         $goodsCount = $goods->count();
 
 
-        echo "    > updating goods photos: find ".$goodsCount.' photos...';
+        echo "    > updating goods photos: find {$goodsCount} photos...\r\n";
 
         $photos = [];
 
@@ -34,7 +34,7 @@ class m160229_144843_good_edit extends Migration
 
             $i++;
 
-            echo "\r\n    > prepare photo {$i} of {$goodsCount}...";
+            echo "    > prepare photo {$i} of {$goodsCount}...\r\n";
         }
 
         $this->batchInsert(\common\models\GoodsPhoto::tableName(), [

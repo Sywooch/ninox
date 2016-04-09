@@ -13,7 +13,7 @@ $helper = new PriceRuleHelper();
 echo Html::tag('div',
     Html::tag('div',
         Html::tag('span', $category->Name, ['class' => 'category-title']).
-        $this->render('_category/_category_filters'),
+        $this->render('_category/_category_filters', ['filters' => $category->filters]),
         ['class' => 'left-menu']
     ).
     ListView::widget([

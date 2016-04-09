@@ -1104,6 +1104,10 @@ h2{
 	text-align: center;
 }
 
+.filters .filter-rows label{
+	display: block;
+}
+
 /*============* END CATEGORY STYLE *==============*/
 
 /*============* RATING STYLE *==============*/

@@ -178,8 +178,7 @@ class SiteController extends Controller
                     'forcePageParam'    =>  false,
                     'pageSizeParam'     =>  false
                 ]
-            ]),
-            'filters'           =>  $category->filters
+            ])
         ]);
     }
 

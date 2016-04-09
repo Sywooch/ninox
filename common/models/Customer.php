@@ -8,7 +8,7 @@ use Yii;
 /**
  * This is the model class for table "partners".
  *
- * @property string $ID
+ * @property integer $ID
  * @property integer $Code
  * @property string $Company
  * @property string $name
@@ -300,7 +300,10 @@ class Customer extends \yii\db\ActiveRecord
             $this->registrationTime = date('Y-m-d H:i:s');
         }
 
-        $this->recipient->save(false);
+        if($this->recipient){
+            $this->recipient->save(false); //TODO: в миграции m160131_110736_default_cashboxes вывалилась ошибка при
+            // создании дефолтных оптового и розничного покупателей, что метод save вызывается не на объекте
+        }
 
         return parent::beforeSave($insert);
     }
