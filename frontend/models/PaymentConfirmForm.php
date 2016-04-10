@@ -33,12 +33,14 @@ class PaymentConfirmForm extends Model
     }
 
     public function save(){
-        $customerOrderPayment = new CustomerOrderPayment([
+        $customerOrderPayment = new CustomerOrderPayment();
+
+        $customerOrderPayment->setAttributes([
             'nomer_id'      =>  $this->orderNumber,
             'summ'          =>  $this->sum,
             'data_oplaty'   =>  $this->paymentDate,
             'sposoboplaty'  =>  $this->paymentType
-        ]);
+        ], false);
 
         $customerOrderPayment->save(false);
     }

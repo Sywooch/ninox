@@ -44,10 +44,10 @@ class Cost extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'date' => 'Date',
+            'date' => 'Дата',
             'costId' => 'Cost ID',
-            'costSumm' => 'Cost Summ',
-            'costComment' => 'Cost Comment',
+            'costSumm' => 'Сумма',
+            'costComment' => 'Коментарий',
         ];
     }
 }

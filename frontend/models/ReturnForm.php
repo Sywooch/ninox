@@ -80,7 +80,9 @@ class ReturnForm extends Model
 
 
     public function save(){
-        $return = new OrderReturn([
+        $return = new OrderReturn();
+
+        $return->setAttributes([
             'orderNumber'   =>  $this->orderNumber,
             'sendDate'      =>  $this->sendDate,
             'ttn'           =>  $this->nakladna,
@@ -92,7 +94,7 @@ class ReturnForm extends Model
             'comment'       =>  $this->comment,
             'bank_cart'     =>  $this->cardNumber,
             'bank_pib'      =>  $this->cardHolder
-        ]);
+        ], false);
 
         $return->save(false);
     }

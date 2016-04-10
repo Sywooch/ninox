@@ -3,6 +3,7 @@
 namespace backend\modules\costs\controllers;
 
 use backend\modules\costs\models\CostFilter;
+use backend\modules\costs\models\CostForm;
 use common\models\CostsType;
 use yii\web\Controller;
 
@@ -27,9 +28,20 @@ class DefaultController extends Controller
             $costFilter->dateFrom = \Yii::$app->request->get("dateTo");
         }
 
+        $costForm = new CostForm();
+
+        if(\Yii::$app->request->post("CostForm")){
+            $costForm->load(\Yii::$app->request->post());
+
+            if($costForm->save()){
+
+            }
+        }
+
         return $this->render('index', [
             'types'     =>  CostsType::find()->all(),
-            'costFilter'=>  $costFilter
+            'costFilter'=>  $costFilter,
+            'costForm'  =>  $costForm
         ]);
     }
 }

@@ -40,12 +40,14 @@ class CallbackForm extends Model
     }
 
     public function save(){
-        $callback = new Callback([
+        $callback = new Callback();
+
+        $callback->setAttributes([
             'phone'         =>  $this->phone,
             'question'      =>  $this->question,
             'customerName'  =>  $this->name,
             'did_callback'  =>  0
-        ]);
+        ], false);
 
         $callback->save(false);
     }
