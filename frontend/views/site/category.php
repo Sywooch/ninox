@@ -1,14 +1,18 @@
 <?php
 
 use frontend\helpers\PriceRuleHelper;
-use frontend\models\Category;
 use frontend\widgets\Breadcrumbs;
+use bobroid\y2sp\ScrollPager;
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
 
 $this->title = $category->Name;
 
 $helper = new PriceRuleHelper();
+
+\yii\widgets\Pjax::begin([
+    'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a'
+]);
 
 echo Html::tag('div',
     Html::tag('div',
@@ -61,9 +65,18 @@ echo Html::tag('div',
         'itemOptions'   =>  [
             'class'     =>  'hovered'
         ],
-        'pager'         =>  [
+        /*'pager'         =>  [
             'class' =>  \common\components\ShopPager::className()
+        ]*/
+        'pager' =>  [
+            'class'             =>  ScrollPager::className(),
+            'container'         =>  '.list-view div.items-grid',
+            'item'              =>  'div.hovered',
+            'paginationClass'   =>  'pagination',
+            'paginationSelector'=>  'pagi'
         ]
     ]),
     ['class' => $category->viewFile.' clear-fix']
 );
+
+\yii\widgets\Pjax::end();

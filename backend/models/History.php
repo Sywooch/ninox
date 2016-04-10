@@ -78,6 +78,63 @@ class History extends \common\models\History
         return $statuses[$this->status];
     }
 
+    public function getPayOnCard(){
+        switch($this->paymentType){
+            case 2:
+                return true;
+                break;
+            case 1:
+            case 3:
+            default:
+                return false;
+                break;
+        }
+    }
+
+    public function sendMessage($type){
+        switch($type){
+            case 'card':
+                return $this->sendCardSms();
+                break;
+            case 'order':
+                return $this->sendSms();
+                break;
+        }
+    }
+
+    public function sendSms(){
+        switch($this->status){
+            case self::STATUS_NOT_CALLED:
+                break;
+            case self::STATUS_PROCESS:
+                break;
+            case self::STATUS_NOT_PAYED:
+                break;
+            case self::STATUS_WAIT_DELIVERY:
+                break;
+            case self::STATUS_DELIVERED:
+                break;
+        }
+        //\Yii::$app->sms->send();
+    }
+
+    public function sendCardSms(){
+        switch($this->status){
+            case self::STATUS_NOT_CALLED:
+                break;
+            case self::STATUS_PROCESS:
+                break;
+            case self::STATUS_NOT_PAYED:
+                break;
+            case self::STATUS_WAIT_DELIVERY:
+                break;
+            case self::STATUS_DELIVERED:
+                break;
+        }
+
+        //\Yii::$app->sms->send();
+    }
+
     public function beforeSave($insert){
         if($this->isAttributeChanged('confirmed') && $this->confirmed == 1){
             //$this->confirmDate = date('Y-m-d H:i:s');

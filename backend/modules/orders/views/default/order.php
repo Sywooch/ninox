@@ -235,6 +235,7 @@ $js = <<<'JS'
             url: '/orders/createinvoice/' + order,
             success: function(data){
                 e.currentTarget.innerHTML = data;
+                $("#novaPoshtaModal #seats").addInputArea();
             }
         });
     }, getSelectedGoods = function(){
@@ -267,11 +268,35 @@ $js = <<<'JS'
             data: $(this).serialize(),
             success: function(data){
                 container.innerHTML = data;
+                $("#novaPoshtaModal #seats").addInputArea();
             }
         });
 
         e.preventDefault();
     })
+JS;
+
+$npJS = <<<'JS'
+    var openWindow = function(url){
+        var myWindow = window.open(url, 'window', 'menubar=no,toolbar=no,status=no,scrollbars=no', true);
+
+        myWindow.onload = function(){
+            var script = document.createElement('script');
+
+            script.innerHTML = 'window.print()';
+
+            myWindow.document.appendChild(script);
+        }
+
+    }
+
+    $("body").on('click', '.printMark', function(){
+        openWindow('https://my.novaposhta.ua/orders/printMarkings/orders[]/' + $(this)[0].getAttribute('ref') + '/type/html/apiKey/5fdddf77cb55decfcbe289063799c67e');
+    });
+
+    $("body").on('click', '.printEN', function(){
+        openWindow('https://my.novaposhta.ua/orders/printDocument/orders[]/' + $(this)[0].getAttribute('ref') + '/type/html/apiKey/5fdddf77cb55decfcbe289063799c67e');
+    });
 JS;
 
 $this->registerCss($css);
@@ -284,6 +309,9 @@ $this->registerJsFile('/js/bootbox.min.js', [
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
 if($order->deliveryType == 2){
+    \backend\assets\InputAreaAsset::register($this);
+
+    $this->registerJs($npJS);
 
     $novaPoshtaModal = new Remodal([
         'cancelButton'		=>	false,
@@ -292,6 +320,9 @@ if($order->deliveryType == 2){
         'content'			=>	\rmrevin\yii\fontawesome\FA::i('refresh')->addCssClass('fa-spin'),
         'events'			=>	[
             'opening'	=>	new \yii\web\JsExpression("runCreateInvoice(e, ".$order->id.")")
+        ],
+        'options'           =>  [
+            'id'    =>  'novaPoshtaModal'
         ],
         'id'				=>	'novaPoshtaModal',
     ]);

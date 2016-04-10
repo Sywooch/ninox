@@ -398,14 +398,14 @@ class DefaultController extends Controller
             'orderData'         =>  $order,
         ]);
 
+        if(!empty(\Yii::$app->request->post("NovaPoshtaOrder")) && $invoice->load(\Yii::$app->request->post())){
+            $invoice->save();
+        }
+
         if(!empty($invoice->deliveryReference)){
             return $this->renderAjax('print/novaPoshta_invoice', [
                 'invoice'   =>  $invoice
             ]);
-        }
-
-        if(\Yii::$app->request->post("NovaPoshtaOrder") && $invoice->load(\Yii::$app->request->post())){
-            $invoice->save();
         }
 
         return $this->renderAjax('invoice', [
@@ -547,5 +547,21 @@ class DefaultController extends Controller
         //тут должна быть функция пересчёта
 
         return true;
+    }
+
+    public function actionSms(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Этот запрос возможен только через ajax!");
+        }
+
+        $orderID = \Yii::$app->request->post("orderID");
+
+        $order = History::findOne($orderID);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
+
+        return $order->sendMessage(\Yii::$app->request->post("type"));
     }
 }

@@ -316,7 +316,6 @@ $this->beginPage();
 						</div>
 						<div class="phone-number">
 							<?=PopoverX::widget([
-								'class' => \kop\y2sp\ScrollPager::className(),
 								'header' => '',
 								'placement' => PopoverX::ALIGN_BOTTOM,
 								'content' =>

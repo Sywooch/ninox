@@ -53,7 +53,7 @@
         "liqpay/liqpay": "dev-master",
         "phpoffice/phpexcel": "*",
         "morozovsk/yii2-websocket": "dev-master",
-        "kop/yii2-scroll-pager": "dev-master",
+        "bobroid/yii2-scroll-pager": "dev-master",
         "rmrevin/yii2-fontawesome": "*",
         "udokmeci/yii2-phone-validator": "^1.0@dev",
         "vilochane/yii2-barcode-generator": "dev-master",
@@ -99,6 +99,10 @@
         {
             "type": "git",
             "url":  "https://github.com/BoBRoID/yii2-messenger"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/BoBRoID/yii2-scroll-pager"
         }
     ],
     "extra": {

@@ -10,6 +10,7 @@ namespace backend\models;
 
 use common\models\NovaPoshtaContactRecipient;
 use yii\base\InvalidParamException;
+use yii\base\Object;
 use yii\helpers\Json;
 
 class NovaPoshtaOrder extends NovaPoshtaModels
@@ -32,17 +33,6 @@ class NovaPoshtaOrder extends NovaPoshtaModels
      * @type string - значение из справочника "тип груза"
      */
     public $CargoType   =   "Cargo";
-
-    /**
-     * @type float - общий объём, м.куб (min 0.0004), обязательно для заполнения, если не указаны значения OptionsSeat
-     */
-    public $VolumeGeneral;
-
-    /**
-     * @required
-     * @type float - вес фактический, кг
-     */
-    public $Weight = 0.1;
 
     /**
      * @required
@@ -151,34 +141,9 @@ class NovaPoshtaOrder extends NovaPoshtaModels
     public $Amount;
 
     /**
-     * @type float - вес объёмный, кг, не обязательное поле, если указаны значения VolumeGeneral или OptionsSeat
-     */
-    public $VolumeWeight;
-
-    /**
      * @type
      */
-    public $OptionsSeat;
-
-    /**
-     * @type float
-     */
-    public $volumetricVolume = 0.0004;
-
-    /**
-     * @type int
-     */
-    public $volumetricWidth = 5;
-
-    /**
-     * @type int
-     */
-    public $volumetricLength = 5;
-
-    /**
-     * @type int
-     */
-    public $volumetricHeight = 5;
+    public $OptionsSeat = [];
 
     /**
      * @type
@@ -201,19 +166,19 @@ class NovaPoshtaOrder extends NovaPoshtaModels
     public $AccompanyingDocuments;
 
     /**
-     * @type
+     * @type integer - номер заказа, в системе Krasota-Style
      */
     public $InfoRegClientBarcodes;
+
+    /**
+     * @type integer - ID заказа в системе Krasota-style
+     */
+    private $_orderID;
 
     /**
      * @type
      */
     private $_number;
-
-    /**
-     * @type integer - ID заказа, в системе Krasota-Style
-     */
-    private $orderID;
 
     /**
      * @type History
@@ -224,24 +189,12 @@ class NovaPoshtaOrder extends NovaPoshtaModels
      * @type array
      */
     public $BackwardDeliveryData = [];
-    /*private $orderData = [];
-
-    private $recipientData = [];
-    private $recipientContacts = [];
-    private $recipientDelivery = [];*/
 
     private $notDefaultSender = false;
 
-
-    /*private $citySenderData = [];
-    private $cityRecipientData = [];
-    private $senderAddressData = [];
-    private $recipientAddressData = [];*/
-
-
     public function rules(){
         return [
-            [['CargoDescription', 'number', 'RecipientContactName', 'recipientArea', 'recipientsPhone', 'orderID', 'deliveryCost', 'deliveryReference', 'deliveryEstimatedDate'], 'safe'],
+            [['PackingNumber','OptionsSeat', 'CargoDescription', 'number', 'RecipientContactName', 'recipientArea', 'recipientsPhone', 'orderID', 'deliveryCost', 'deliveryReference', 'deliveryEstimatedDate'], 'safe'],
             [['DateTime', 'ServiceType', 'Sender', 'CitySender', 'SenderAddress', 'ContactSender',
                 'SendersPhone', 'Recipient', 'CityRecipient', 'RecipientAddress', 'ContactRecipient',
                 'RecipientsPhone', 'PaymentMethod', 'PayerType', 'Cost', 'SeatsAmount', 'Description',
@@ -257,7 +210,7 @@ class NovaPoshtaOrder extends NovaPoshtaModels
             throw new InvalidParamException("переменная orderData должна быть \\common\\models\\History!");
         }
 
-        if(empty($order->customer->cityCode)){
+        if(empty($order->customer->recipient->cityID)){
             $order->customer->recipient->cityID = \Yii::$app->NovaPoshta->city($order->deliveryCity);
         }
 
@@ -294,14 +247,12 @@ class NovaPoshtaOrder extends NovaPoshtaModels
             }
         }
 
-        if(empty($order->customer->recipient->recipientAddress)){
-            $department = \Yii::$app->NovaPoshta->department($order->deliveryInfo, $order->customer->recipient->cityID);
+        $department = \Yii::$app->NovaPoshta->department($order->deliveryInfo, $order->customer->recipient->cityID);
 
-            if(!($department)){
-                $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
-            }else{
-                $order->customer->recipient->recipientAddress = $department['Ref'];
-            }
+        if(!($department)){
+            $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
+        }else{
+            $order->customer->recipient->recipientAddress = $department['Ref'];
         }
 
         $order->customer->save(false);
@@ -314,16 +265,30 @@ class NovaPoshtaOrder extends NovaPoshtaModels
             'RecipientAddress'      =>  $order->customer->recipient->recipientAddress,
             'ContactRecipient'      =>  $order->customer->recipient->contactID,
             'RecipientsPhone'       =>  $order->customerPhone,
-            'orderID'               =>  $order->id
-        ]);
-    }
+            'InfoRegClientBarcodes' =>  $order->number,
+        ], false);
 
-    public function setOrderID($val){
-        $this->orderID = $val;
+        $this->setOrderID($order->id);
+
+        if($order->paymentType == 1){
+            $backwardDelivery = new \stdClass();
+
+            $backwardDelivery->PayerType = 'Recipient';
+            $backwardDelivery->CargoType = 'Money';
+            $backwardDelivery->RedeliveryString = $this->Cost;
+
+            $this->BackwardDeliveryData = [
+                $backwardDelivery
+            ];
+        }
     }
 
     public function getOrderID(){
-        return $this->orderID;
+        return $this->_orderID;
+    }
+
+    public function setOrderID($val){
+        $this->_orderID = $val;
     }
 
     public function getNumber(){
@@ -392,7 +357,20 @@ class NovaPoshtaOrder extends NovaPoshtaModels
     public function save(){
         empty($this->DateTime) ? $this->DateTime = date('d.m.Y') : null;
 
+        $this->SeatsAmount = sizeof($this->OptionsSeat);
+
         return \Yii::$app->NovaPoshta->createOrder($this);
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'ServiceType'   =>  'Тип доставки',
+            'PaymentMethod' =>  'Метод оплаты доставки',
+            'PayerType'     =>  'Кто оплачивает доставку',
+            'Cost'          =>  'Стоимость посылки',
+            'Description'   =>  'Описание'
+        ];
     }
 
 }
