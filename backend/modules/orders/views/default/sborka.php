@@ -2,6 +2,8 @@
 
 use yii\bootstrap\Html;
 
+$this->title = 'Сборка заказа №'.$order->number;
+
 echo Html::tag('div', Html::tag('div', Html::a('К заказам', '/', [
     'class' =>  'yellow-button small-button button',
 ]).
