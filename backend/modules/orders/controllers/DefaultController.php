@@ -549,6 +549,18 @@ class DefaultController extends Controller
         return true;
     }
 
+    public function actionSborka($param){
+        $order = History::findOne($param);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с ID {$param} не найден");
+        }
+
+        return $this->render('sborka', [
+            'order' =>  $order
+        ]);
+    }
+
     public function actionSms(){
         if(!\Yii::$app->request->isAjax){
             throw new BadRequestHttpException("Этот запрос возможен только через ajax!");

@@ -446,9 +446,7 @@ echo Html::tag('div', '', [
             }
             ?>
         </div>
-        <div class="col-xs-5">
-            <button class="btn btn-lg btn-success btn-block">Сборка</button>
-        </div>
+        <?=Html::tag('div', Html::a('Сборка', '/orders/sborka/'.$order->ID, ['class' => 'btn btn-lg btn-success btn-block']), ['class' => 'col-xs-5'])?>
     </div>
 </div>
 <hr>
