@@ -251,9 +251,9 @@ $this->beginPage();
 		<div class="header">
 			<div class="top-menu">
 				<div class="top-menu-content">
-					<div class="items"><span>О компании</span></div>
-					<div class="items"><span>Помощь</span></div>
-					<div class="items"><span>Контакты</span></div>
+					<div class="items"><a href="/o-nas">О компании</a></div>
+					<div class="items"><a href="/pomoshch">Помощь</a></div>
+					<div class="items"><a href="/kontakty">Контакты</a></div>
 					<div class="blog items">Блог</div>
 					<div class="items currency-rate">1 USD - 24.2 UAH</div>
 					<div class="personal-account">
@@ -417,23 +417,23 @@ $this->beginPage();
 				<div class="goods-item">
 					<?=Html::tag('span', \Yii::t('shop', 'О компании'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/status-zakaza'
+						'data-href'	=>	'/o-nas'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Контакты'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/oplata'
+						'data-href'	=>	'/kontakty'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Вакансии'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/vozvrat-i-obmen'
+						'data-href'	=>	'/vakansii'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Блог'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/kontakty'
+						'data-href'	=>	'/blog'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Отзывы о магазине'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/kontakty'
+						'data-href'	=>	'/otzyvy'
 					]),
 					Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
 						'class'		=>	'link-hide',
@@ -443,26 +443,26 @@ $this->beginPage();
 				<div class="goods-item">
 					<?=Html::tag('span', \Yii::t('shop', 'Услуги'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/status-zakaza'
+						'data-href'	=>	'/status-zakaza'//хз
 					]),
 					Html::tag('span', \Yii::t('shop', 'Акции'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/oplata'
+						'data-href'	=>	'/akcii'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Гарантии'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/vozvrat-i-obmen'
+						'data-href'	=>	'/garantii'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Бонусная программа'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/kontakty'
+						'data-href'	=>	'/kontakty'//хз
 					])
 					?>
 				</div>
 				<div class="goods-item">
 					<?=Html::tag('span', \Yii::t('shop', 'Как заказать'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/status-zakaza'
+						'data-href'	=>	'/pomoshch'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Оплата'), [
 						'class'		=>	'link-hide',
@@ -470,22 +470,22 @@ $this->beginPage();
 					]),
 					Html::tag('span', \Yii::t('shop', 'Доставка'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/vozvrat-i-obmen'
+						'data-href'	=>	'/dostavka'
 					]),
 					Html::tag('span', \Yii::t('shop', 'Возврат товара'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/kontakty'
+						'data-href'	=>	'/vozvrat-i-obmen'
 					])
 					?>
 				</div>
 				<div class="goods-item feedback-link">
 					<?=Html::tag('span', \Yii::t('shop', 'Обратная связь'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/vakansii'
+						'data-href'	=>	'/vakansii'//хз
 					]),
 					Html::tag('span', \Yii::t('shop', 'Проблемы с заказом?'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/kontakty'
+						'data-href'	=>	'/kontakty'//хз
 					])
 					?>
 				</div>

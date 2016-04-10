@@ -3328,6 +3328,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #f6f6f6;*/
 }
 
+.about-return-inform .about-inform-button{
+	float: none;
+	margin: auto;
+	display: block
+}
+
+.about-return-inform .modal-body{
+	overflow: auto;
+}
+
 .about-return span{
 	font-size: 14px;
 	color: #282828;
@@ -3530,7 +3540,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.top-menu-content span{
+.top-menu-content a{
 	color: #3b3b39;
 	font-size: 14px;
 	cursor: pointer;

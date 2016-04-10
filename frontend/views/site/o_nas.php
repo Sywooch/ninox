@@ -1,5 +1,6 @@
 <?php
 use yii\bootstrap\Html;
+use yii\bootstrap\Modal;
 use yii\jui\Accordion;
 /**
  * Created by PhpStorm.
@@ -205,18 +206,34 @@ use yii\jui\Accordion;
                     После того как Вы отправили нам посылку, для того, чтобы
                     оформить возврат, необходимо заполнить форму возврата.
                 </span>
-                <?=\yii\helpers\Html::button('Оформить возврат', [
+
+                <?php
+                Modal::begin([
+                    'header' => '<h2>Hello world</h2>',
+                    'toggleButton' => [
+                        'label' => 'Оформить возврат',
+                        'class' => 'about-inform-button yellow-button large-button',
+                    ],
+                ]);
+
+                echo \yii\helpers\Html::button('Оформить возврат', [
                     'type'  =>  'submit',
                     'class' =>  'about-inform-button yellow-button large-button',
                     'id'    =>  'submit'
-                ])?>
+                ]);
+
+                Modal::end();
+
+           ?>
             </div>
             <div class="about-return-accordion">
                 <?=Accordion::widget([
                     'items' => [
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
-                    'content' =>'о технике', //сделать рендер
+                    'content' =>'<span>о технике</span>', [
+                        'class' =>  'hh',
+                    ] //сделать рендер
                     ],
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (бижутерия)', ['class' => 'content-data-first_1']),
