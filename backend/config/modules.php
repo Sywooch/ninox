@@ -16,6 +16,7 @@ return [
     'printer'       =>  'backend\modules\printer\Module',
     'categories'    =>  'backend\modules\categories\Module',
     'cashboxes'     =>  'backend\modules\cashboxes\Module',
+    'costs'     =>  'backend\modules\costs\Module',
     'pricelists' => [
         'class' => 'backend\modules\pricelists\Module',
     ],
