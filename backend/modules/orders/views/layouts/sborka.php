@@ -6,14 +6,23 @@ $css = <<<'CSS'
 
 .sborka{
     background: #eae9e9;
-    width: 700px;
+/*    width: 700px;
     margin-bottom: 50px;
+    padding-bottom: 10px;*/
     padding-bottom: 10px;
+    height: auto;
+    min-height: 100%;
 }
 
 .sborka .header{
     padding: 25px 35px;
     overflow: auto;
+    width: 700px;
+    margin: auto;
+}
+
+.sborka .header a:hover{
+    text-decoration: none;
 }
 
 .sborka .header span{
@@ -27,6 +36,8 @@ $css = <<<'CSS'
     color: white;
     font-size: 18px;
     font-weight: bold;
+    text-align: center;
+    line-height: 45px;
 }
 
 .sborka .green-button{
@@ -79,9 +90,9 @@ $css = <<<'CSS'
     height: 260px;
     width: 685px;
     background: white;
-    margin: auto;
     display: block;
     box-shadow: 0px 4px 5px #888888;
+    margin: auto auto 10px
 }
 
 .sborka .typical-block .image{
@@ -170,19 +181,19 @@ $this->registerCss($css);
 rmrevin\yii\fontawesome\AssetBundle::register($this);
 
 $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/x-icon" href="https://<?=$_SERVER['SERVER_NAME']?>/favicon.ico">
-    <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
-</head>
-<body>
-<?= $content ?>
-<?php $this->endBody() ?>
-</body>
-</html>
+    <!DOCTYPE html>
+    <html lang="<?= Yii::$app->language ?>">
+    <head>
+        <meta charset="<?= Yii::$app->charset ?>">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="https://<?=$_SERVER['SERVER_NAME']?>/favicon.ico">
+        <?= Html::csrfMetaTags() ?>
+        <title><?= Html::encode($this->title) ?></title>
+        <?php $this->head() ?>
+    </head>
+    <body>
+    <?= $content ?>
+    <?php $this->endBody() ?>
+    </body>
+    </html>
 <?php $this->endPage() ?>

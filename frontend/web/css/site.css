@@ -4139,6 +4139,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .main-content{
 	padding-bottom: 430px;
 	overflow: auto;
+	padding-top: 10px;
 }
 
 .main-content-slider .slick-slide img{

@@ -1,6 +1,6 @@
 <?php
+use bobroid\remodal\Remodal;
 use yii\bootstrap\Html;
-use yii\bootstrap\Modal;
 use yii\jui\Accordion;
 /**
  * Created by PhpStorm.
@@ -207,8 +207,7 @@ use yii\jui\Accordion;
                     оформить возврат, необходимо заполнить форму возврата.
                 </span>
 
-                <?php
-                Modal::begin([
+                <?php /*reModal::begin([
                     'header' => '<h2>Hello world</h2>',
                     'toggleButton' => [
                         'label' => 'Оформить возврат',
@@ -222,7 +221,20 @@ use yii\jui\Accordion;
                     'id'    =>  'submit'
                 ]);
 
-                Modal::end();
+                Modal::end()*/
+                Remodal::widget([
+                    'cancelButton'		=>	false,
+                    'confirmButton'		=>	false,
+                    'addRandomToID'		=>	false,
+                    'content'			=>	/*$this->render('_order_edit', ['order' => $order])*/'fsdfsdf',
+                    'buttonOptions'     =>  [
+                        'label' =>  'редактировать',
+                        'tag'   =>  'a',
+                        'style' =>  ''
+                    ],
+                    'id'				=>	'orderEdit',
+                ])
+                ;
 
            ?>
             </div>
