@@ -178,8 +178,23 @@ echo \kartik\grid\GridView::widget([
         ],
         [
             'header'    =>  'СМС',
+            'class'     =>  \kartik\grid\ActionColumn::className(),
             'hAlign'    =>  GridView::ALIGN_CENTER,
+            'width'     =>  '90px',
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
+            'buttons'   =>  [
+                'sms'   =>  function($url, $model, $key){
+                    return Html::button(\rmrevin\yii\fontawesome\FA::i('envelope-o'), ['class' => 'btn btn-sm btn-default sms-order']);
+                },
+                'card' =>  function($url, $model, $key){
+                    if(!$model->payOnCard){
+                        return '';
+                    }
+
+                    return Html::button(\rmrevin\yii\fontawesome\FA::i('credit-card'), ['class' => 'btn btn-sm btn-default sms-card']);
+                },
+            ],
+            'template'  =>  Html::tag('div', '{sms}{card}', ['class' => 'btn-group btn-group-sm'])
         ],
         [
             'class'     =>  \kartik\grid\ActionColumn::className(),
