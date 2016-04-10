@@ -181,11 +181,7 @@ $this->beginPage() ?>
     <?php $this->head() ?>
 </head>
 <body>
-<div class="wrap">
-    <div class="container">
-        <?= $content ?>
-    </div>
-</div>
+<?= $content ?>
 <?php $this->endBody() ?>
 </body>
 </html>
