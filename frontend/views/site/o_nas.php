@@ -9,31 +9,42 @@ use yii\jui\Accordion;
  */
 ?>
 
-<div class="content">
+<div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="left-side">
         <div class="left-side-menu">
-            <div class="left-side-menu-item" href="#about-as-header">
-                Как мы работаем
+            <div class="left-side-menu-item" href="#questions-answer">
+                <a class="#questions-answer">Вопросы и ответы</a>
             </div>
-            <div class="left-side-menu-item" href="#about-delivery-header">
-                Доставка
+            <div class="left-side-menu-item" href="#about-work-header">
+                <a class="#about-work-header">Как мы работаем</a>
             </div>
-            <div class="left-side-menu-item" href="#about-payment-header">
-                Оплата
+            <div class="left-side-menu-item" href="#about-delivery-payment-header">
+                <a href="#about-delivery-payment-header">Доставка и оплата</a>
             </div>
             <div class="left-side-menu-item" href="#about-return-header">
-                Возврат товара
+                <a href="#about-return-header">Гарантии и возврат</a>
+            </div>
+            <div class="left-side-menu-item" href="#about-contacts-header">
+                <a href="#about-contacts-header">Контакты</a>
+            </div>
+            <div class="left-side-menu-item" href="#about-as-header">
+                <a href="#about-as-header">О нас</a>
+            </div>
+            <div class="left-side-menu-item" href="">
+                <a href="">Сотрудничество с нами</a>
+            </div>
+            <div class="left-side-menu-item" href="">
+                <a href="">Вакансии</a>
             </div>
             <div class="left-side-menu-item" href="#about-TermOfUse-header">
-                Условия использования сайта
+                <a href="#about-TermOfUse-header">Условия исп. сайта</a>
             </div>
         </div>
     </div>
     <div class="about">
-        <div class="about-as">
+        <div class="about-as padding-bottom">
             <div class="about-as-header about-header semi-bold">
-
-                <a name="about-as-header">Как мы работаем</a>
+                <a name="about-work-header">Как мы работаем</a>
             </div>
             <div class="bold about-as-center">
                 На сайте krasota-style.ua действует 2 типа цен
@@ -91,9 +102,9 @@ use yii\jui\Accordion;
                 </div>
             </div>
         </div>
-        <div class="about-delivery">
+        <div class="about-delivery padding-bottom">
             <div class="about-delivery-header about-header semi-bold">
-                <a name="about-delivery-header">Доставка</a>
+                <a id="about-delivery-payment-header">Доставка</a>
             </div>
             <div class="about-delivery-content">
                 <div class="about-delivery-content-img"></div>
@@ -119,7 +130,7 @@ use yii\jui\Accordion;
                 </div>
             </div>
         </div>
-        <div class="about-payment">
+        <div class="about-payment padding-bottom">
             <div class="about-payment-header about-header semi-bold">
                 <a name="about-payment-header">Оплата</a>
             </div>
@@ -135,9 +146,11 @@ use yii\jui\Accordion;
                     Для того, чтобы Ваш заказ был отправлен как можно скорее,
                     перезвоните нам или заполните форму после перевода денег.
                 </span>
-                <button class="about-inform-button yellow-button large-button">
-                    Сообщить об оплате
-                </button>
+                <?=\yii\helpers\Html::button('Сообщить об оплате', [
+                    'type'  =>  'submit',
+                    'class' =>  'about-inform-button yellow-button large-button',
+                    'id'    =>  'submit'
+                ])?>
             </div>
             <span>
                 При оплате на карту взымается комиссия в размере 1% от суммы заказа (она уже входит в стоимость, указанную в смс).
@@ -156,7 +169,7 @@ use yii\jui\Accordion;
                 Доставка оплачивается покупателем отдельно при получении посылки в отделении «Новая Почта».
             </span>
         </div>
-        <div class="about-return">
+        <div class="about-return padding-bottom">
             <div class="about-return-header about-header semi-bold">
                 <a name="about-return-header">Гарантия и возврат</a>
             </div>
@@ -177,57 +190,44 @@ use yii\jui\Accordion;
                 Варианты возврата денежных средств:
             </span>
             <span>
-                • на банковскую карту (возврат денежных средств осуществляется в течение 10 рабочих дней после получения товара)
-                • на личный счет в нашем магазине для новых покупок
+                <p> • на банковскую карту (возврат денежных средств осуществляется в течение 10 рабочих дней после получения товара) </p>
+                 <p>• на личный счет в нашем магазине для новых покупок </p>
             </span>
             <span class="bold">
                 Товар не подлежит возврату, если:
             </span>
             <span>
-                • сумма возврата меньше 5 гривен
-                • прошло более 14 дней со дня получения заказа
+                <p>• сумма возврата меньше 5 гривен</p>
+                <p> • прошло более 14 дней со дня получения заказа </p>
             </span>
             <div class="about-return-inform about-inform">
                 <span>
                     После того как Вы отправили нам посылку, для того, чтобы
                     оформить возврат, необходимо заполнить форму возврата.
                 </span>
-                <button class="about-inform-button yellow-button large-button">
-                    Оформить возврат
-                </button>
+                <?=\yii\helpers\Html::button('Оформить возврат', [
+                    'type'  =>  'submit',
+                    'class' =>  'about-inform-button yellow-button large-button',
+                    'id'    =>  'submit'
+                ])?>
             </div>
             <div class="about-return-accordion">
                 <?=Accordion::widget([
                     'items' => [
                     [
-                    'header'    => Html::tag('div', Html::tag('span', 'Гарантийные обязательства (техника)'),
-                    ['class' =>  'content-data-first_1']),
-                    'content' =>'о технике',
-                    'headerOptions' => [
-                    'tag'   =>  'div',
-                    'onclick' => 'return false;'
-                    ],
+                    'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
+                    'content' =>'о технике', //сделать рендер
                     ],
                     [
-                    'header' => Html::tag('div', Html::tag('span', 'Гарантийные обязательства (бижутерия)'), [
-                    'class' =>  'content-data-first_1']),
-
-                    'headerOptions' => ['tag' => 'div'],
-                    'content' => 'о бижутерии',
-                    'options' => ['tag' => 'div'],
+                    'header' => Html::tag('span', 'Гарантийные обязательства (бижутерия)', ['class' => 'content-data-first_1']),
+                    'content' => 'о бижутерии', //сделать рендер
                     ],
                     ],
-                    'options' => [
-                    'tag'   =>  'div',
-                    'id'    =>  'accordion'
-                    ],
-                    'itemOptions' => ['tag' => 'div'],
-                    'headerOptions' => ['tag' => 'div'],
-                    'clientOptions' => ['collapsible' => false, 'icons' => false, 'heightStyle' => 'content', 'event' => false],
+                    'clientOptions' => ['collapsible' => true, 'active' => false],
                 ]);?>
             </div>
         </div>
-        <div class="about-TermsOfUse">
+        <div class="about-TermsOfUse padding-bottom">
             <div class="about-TermsOfUse-header about-header semi-bold">
                 <a name="about-TermOfUse-header">Условия использования сайта</a>
             </div>
@@ -288,9 +288,9 @@ use yii\jui\Accordion;
                 предложенными нашими партнерами, такими как рекламные услуги, например, которые могут появиться на других сайтах.
             </span>
         </div>
-        <div class="about-contacts">
+        <div class="about-contacts padding-bottom">
             <span class="about-header semi-bold">
-                Контакты
+                <a class="#about-contacts-header">Контакты</a>
             </span>
             <div class="contacts-inform">
                 <div class="inform">
@@ -345,7 +345,8 @@ use yii\jui\Accordion;
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="map">
+                Как к нам добраться
             </div>
             <div class="your-wish">
                 <div class="name">
@@ -362,12 +363,10 @@ use yii\jui\Accordion;
                 </div>
                 <?=\yii\helpers\Html::button('Отправить', [
                     'type'  =>  'submit',
-                    'class' =>  'yellow-button large-button',
+                    'class' =>  'about-inform-button yellow-button large-button',
                     'id'    =>  'submit'
                 ])?>
             </div>
         </div>
     </div>
 </div>
-
-

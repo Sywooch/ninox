@@ -2939,7 +2939,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .left-side-menu{
 	border-radius: 3px;
 	border-top: 1px solid #ebebeb;
+    /*
 	border-bottom: 1px solid #ebebeb;
+    */
 }
 
 .left-side-menu-item{
@@ -2952,9 +2954,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border-right: 1px slolid #ebebeb;
 	margin-bottom: 1px;
 	padding-left: 25px;
-	padding-top: 16px;
+	padding-top: 12px;
 	background: #f1f1f1;
 	cursor: pointer;
+	padding-bottom: 10px;
 }
 
 .about{
@@ -2962,6 +2965,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: 810px;*/
 	float: right;
 	width: 880px;
+}
+
+.about .padding-bottom{
+	padding-bottom: 75px;
 }
 
 .about-header{
@@ -2980,6 +2987,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 22px;
 	font-family: OpenSans-Semibold;
 	color: #282828;
+}
+
+.about-header a:hover{
+	text-decoration: none;
 }
 
 .about-as-header{
@@ -3267,10 +3278,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     /*
 	font-size: 16px;
     */
-	font-size: 16px;
-	width: 60%;
+	font-size: 16px !important;
+	width: 550px;
 	float: left;
 	padding: 0px !important;
+	font-family: OpenSans-Semibold;
 }
 
 .about-payment-inform{
@@ -3280,6 +3292,20 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-inform-button{
 	float: right;
+/*	background: #fcc82d;
+	background: -webkit-linear-gradient(#fee040, #f9b519);
+	background: -o-linear-gradient(#fee040, #f9b519);
+	background: -moz-linear-gradient(#fee040, #f9b519);
+	background: linear-gradient(#fee040, #f9b519);*/
+	font-size: 15px;
+    font-weight: bold;
+	border-radius: 5px;
+	border-top: 1px solid #fdff27 !important;
+	border: none;
+	box-shadow: 0 4px 2px -2px #a1a1a1;
+	height: 45px;
+	color: #404040;
+	font-family: arial;
 }
 
 .about-return-header{
@@ -3290,6 +3316,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-return-header:before{
 	content: url("/img/site/return.png");
+	vertical-align: -o-middle-with-baseline;
+	vertical-align: -webkit-baseline-middle;
+	vertical-align: -moz-middle-with-baseline;
+	vertical-align: sub;
+
 }
 
 .about-return-inform{
@@ -3310,6 +3341,24 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-return-accordion span{
 	font-size: 22px;
+	padding-bottom: 0px;
+	border-bottom: 1px dashed;
+	text-decoration: dashed;
+	display: inline-block;
+	font-family: OpenSans-Semibold;
+	margin-left: 0px;
+}
+
+.about-return-accordion .ui-accordion .ui-accordion-header .ui-accordion-header-icon{
+	display: none;
+}
+
+.about-return-accordion .ui-accordion-header::before{
+	display: none;
+}
+
+.about-return-accordion .ui-accordion .ui-accordion-icons{
+	padding-left: 0px;
 }
 
 .about-TermsOfUse span{
@@ -3331,6 +3380,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-contacts .about-header{
 	border-bottom: none;
+}
+
+.about-contacts .map{
+	font-size: 22px;
+	color: rgb(25, 152, 219);
+	border-bottom: 1px dashed;
+	cursor: pointer;
+	display: inline-block;
+	margin-top: 40px;
 }
 
 .contacts-inform{
@@ -3434,6 +3492,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .your-wish button{
 	display: block;
 	margin: 25px auto auto;
+	float: none;
 }
 
 /*========* END O-NAS *=========*/
