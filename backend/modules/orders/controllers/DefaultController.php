@@ -584,6 +584,8 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Заказ с ID {$param} не найден");
         }
 
+        $this->layout = 'sborka';
+
         return $this->render('sborka', [
             'order' =>  $order
         ]);
