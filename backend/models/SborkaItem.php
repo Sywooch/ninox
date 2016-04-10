@@ -26,6 +26,14 @@ class SborkaItem extends \common\models\SborkaItem{
         ];
     }
 
+    public function getControlled(){
+        return $this->realyCount == $this->originalCount;
+    }
+
+    public function getLeftControl(){
+        return $this->originalCount - $this->realyCount;
+    }
+
     public function __set($name, $value){
         parent::__set($name, $value);
 
