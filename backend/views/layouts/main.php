@@ -716,10 +716,10 @@ $this->beginPage() ?>
                 ],
                 'counter'   =>  '6'
             ],
-            [
+            /*[
                 'label'     =>  'Задания',
                 'url'       =>  Url::toRoute('/tasks/index')
-            ]
+            ]*/
             /*[
                 'label' =>  '<i class="glyphicon glyphicon-usd large" id="currency-icon" data-target="#currencyModal" data-toggle="modal"></i><span class="visible-xs-inline">&nbsp;Курс</span>'
             ],

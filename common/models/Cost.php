@@ -1,0 +1,53 @@
+<?php
+
+namespace common\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "costs".
+ *
+ * @property integer $id
+ * @property string $date
+ * @property integer $costId
+ * @property double $costSumm
+ * @property string $costComment
+ */
+class Cost extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'costs';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['date', 'costId', 'costComment'], 'required'],
+            [['date'], 'safe'],
+            [['costId'], 'integer'],
+            [['costSumm'], 'number'],
+            [['costComment'], 'string'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'date' => 'Date',
+            'costId' => 'Cost ID',
+            'costSumm' => 'Cost Summ',
+            'costComment' => 'Cost Comment',
+        ];
+    }
+}

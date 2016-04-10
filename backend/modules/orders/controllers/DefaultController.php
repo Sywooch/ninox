@@ -445,21 +445,49 @@ class DefaultController extends Controller
     }
 
     public function actionControl($param = null){
+        if(\Yii::$app->request->isAjax && !\Yii::$app->request->get("_pjax")){
+            $param = \Yii::$app->request->post("orderID");
+        }
+
         if($param == null){
             return $this->render('control_index');
         }
 
-        $order = History::findOne(['id' => $param]);
+        $order = History::find()->where(['or', ['number' => $param], ['ID' => $param]])->one();
 
         if(!$order){
             throw new NotFoundHttpException("Такого заказа не существует!");
         }
 
-        $items = SborkaItem::findAll(['orderID' => $order->id]);
+        if(\Yii::$app->request->isAjax && !\Yii::$app->request->get("_pjax")){
+            switch(\Yii::$app->request->post("action")){
+                case 'clear':
+                    $order->clearControl();
+                    break;
+                case 'add':
+                    $requestedItemID = \Yii::$app->request->post("itemID");
+
+                    $good = Good::find()->where(['or', ['ID' => $requestedItemID], ['Code' => $requestedItemID], ['BarCode1' => $requestedItemID]])->one();
+
+                    if(!$good){
+                        throw new NotFoundHttpException("Товар с идентификатором {$requestedItemID} не найден!");
+                    }
+
+                    $order->controlItem($good->ID);
+                    break;
+
+            }
+
+            \Yii::$app->response->format = 'json';
+
+            return [
+                'items' =>  $order->notControlledItemsCount,
+                'goods' =>  $order->notControlledGoodsCount
+            ];
+        }
 
         return $this->render('control', [
             'order' =>  $order,
-            'items' =>  $items
         ]);
     }
 
