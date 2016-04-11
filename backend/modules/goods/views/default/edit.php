@@ -1,4 +1,6 @@
 <?php
+use yii\bootstrap\Html;
+
 $js = <<<'JS'
 var sendForm = function(data){
     console.log(data);
@@ -16,8 +18,13 @@ JS;
 
 $this->registerJs($js);
 
+if(!$good->isNewRecord){
+    echo Html::tag('h1', $good->Name.' '.Html::tag('small', 'редактирование'));
+}else{
+    echo Html::tag('h1', 'Добавление товара '.(!empty($nowCategory) ? Html::tag('small', $nowCategory->Name) : ''));
+}
+
 ?>
-<h1><?=$good->Name?> <small>редактирование</small></h1>
 <div class="row">
     <div class="col-xs-4">
         <div class="well well-sm">

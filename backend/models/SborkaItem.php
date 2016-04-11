@@ -52,6 +52,22 @@ class SborkaItem extends \common\models\SborkaItem{
         return $this->_good;
     }
 
+    public function getInOrder(){
+        return $this->vzakaz == 1;
+    }
+
+    public function getNotFounded(){
+        return $this->nezakaz == 1;
+    }
+
+    public function setInOrder($val){
+        return $this->vzakaz = $val;
+    }
+
+    public function setNotFounded($val){
+        return $this->nezakaz = $val;
+    }
+
     public function getPhoto()
     {
         return $this->good->photo;

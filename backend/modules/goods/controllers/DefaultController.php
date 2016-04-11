@@ -378,62 +378,75 @@ class DefaultController extends Controller
      * Метод добавляет товары на сайт
      * @deprecated метод actionGood должен позволять редактировать и создавать товар
      */
-    public function actionAddgood(){
+    public function actionAdd(){
         $good = new Good();
-        $goodUk = new GoodUk();
-        $c = \Yii::$app->request->get("category");
-        $breadcrumbs = [];
+        $category = \Yii::$app->request->get("category");
 
-        if(\Yii::$app->request->post("Good")){
-            $m = new Good();
-            $m->attributes = \Yii::$app->request->post("Good");
+        /*if(\Yii::$app->request->post("Good")){
+            //$m = new Good();
+            //$m->attributes = \Yii::$app->request->post("Good");
             if($m->save()){
                 $mUk = new GoodUk();
                 $mUk->attributes = \Yii::$app->request->post("GoodUk");
                 $mUk->ID = $m->ID;
                 $mUk->save(false);
             }
-        }
+        }*/
 
-        if(isset($c)){
-            $good->GroupID = $c;
+        if(isset($category)){
+            $category = Category::findOne($category);
 
-            $a = Category::findOne(['ID' => $good->GroupID]);
-            $p = Category::getParentCategories($a->Code);
+            if(!empty($category)){
+                $good->GroupID = $category->ID;
 
+                $this->getView()->params['breadcrumbs'][] = [
+                    'label' =>  'Категории',
+                    'url'   =>  Url::toRoute(['/categories'])
+                ];
 
-            $breadcrumbs[] = [
-                'label' =>  'Категории',
-                'url'   =>  Url::toRoute(['/categories'])
-            ];
+                if (sizeof($category->parents) >= 1) {
+                    $parents = array_reverse($category->parents);
 
-            if (sizeof($p) >= 1) {
-                $p = array_reverse($p);
-
-                foreach ($p as $c) {
-                    if ($c != '') {
-                        $breadcrumbs[] = [
-                            'label' => $c->Name,
-                            'url' => Url::toRoute(['/categories', 'category' => $c->Code])
-                        ];
+                    foreach($parents as $parentCategory) {
+                        if(!empty($parentCategory)){
+                            $this->getView()->params['breadcrumbs'][] = [
+                                'label' =>  $parentCategory->Name,
+                                'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
+                            ];
+                        }
                     }
                 }
-            }
 
-            $breadcrumbs[] = [
-                'label' =>  $a->Name
-            ];
-        }else{
-            $a = [];
+                $this->getView()->params['breadcrumbs'][] = [
+                    'label' =>  $category->Name,
+                    'url'   =>  Url::toRoute(['/categories', 'category' => $category->Code])
+                ];
+            }
         }
 
-        return $this->render('editgood', [
-            'breadcrumbs' => $breadcrumbs,
-            'good'       => $good,
-            'goodUk'     => $goodUk,
-            'nowCategory' => $a,
-            'uploadPhoto'  =>  new UploadPhoto(),
-            'additionalPhotos'  =>  ''
+        $this->getView()->params['breadcrumbs'][] = [
+            'label' =>  'Добавление товара',
+        ];
+
+        if($category instanceof Category == false){
+            $category = new Category();
+        }
+
+        $goodMainForm = new GoodMainForm();
+        $goodAttributesForm = new GoodAttributesForm();
+        $goodExportForm = new GoodExportForm();
+
+        $goodMainForm->loadGood($good);
+
+        $this->getView()->title = 'Добавление нового товара';
+
+        return $this->render('edit', [
+            'good'              =>  $good,
+            //'goodUk'          =>  $goodUK,
+            'goodMainForm'      =>  $goodMainForm,
+            'goodAttributesForm'=>  $goodAttributesForm,
+            'goodExportForm'    =>  $goodExportForm,
+            'nowCategory'       =>  $category,
         ]);
     }
 
@@ -540,15 +553,15 @@ class DefaultController extends Controller
 
         $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good);
 
-        $goodMainForm = new GoodMainForm();
-        $goodAttributesForm = new GoodAttributesForm();
-        $goodExportForm = new GoodExportForm();
-
-        $goodMainForm->loadGood($good);
-        $goodAttributesForm->loadGood($good);
-        $goodExportForm->loadGood($good);
-
         if($request->get("act") == "edit"){
+            $goodMainForm = new GoodMainForm();
+            $goodAttributesForm = new GoodAttributesForm();
+            $goodExportForm = new GoodExportForm();
+
+            $goodMainForm->loadGood($good);
+            $goodAttributesForm->loadGood($good);
+            $goodExportForm->loadGood($good);
+
             if($request->post("GoodMainForm") && $goodMainForm->load($request->post())){
                 $goodMainForm->save();
             }

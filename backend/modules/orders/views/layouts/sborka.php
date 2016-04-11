@@ -56,7 +56,7 @@ $css = <<<'CSS'
     border-bottom: 3px solid #9b3434;
 }
 
-.sborka .grey-button{
+.sborka .gray-button{
     background: #cbcbcb;
     border-bottom: 3px solid #a4a4a4;
 }
