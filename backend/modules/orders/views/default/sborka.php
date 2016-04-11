@@ -15,10 +15,39 @@ var setDefaultState = function(item){
     item.find("button.toOrder").html("В ЗАКАЗ").removeClass('gray-button').removeClass('green-button').addClass('green-button').removeAttr('disabled');
     item.find("button.notFoundItem").css('display', 'block').html("НЕ МОГУ НАЙТИ").removeClass('gray-button').removeClass('red-button').addClass('red-button').removeAttr('disabled');
     item.find(".fromOrder").css('display', 'none');
+}, parseField = function(field){
+    var parent = $(field[0].parentNode.parentNode.parentNode),
+        data = JSON.parse(parent[0].getAttribute('data-key'));
+
+        return {itemID: data.itemID, count: parent.find(".inOrderCount").val()};
+}, saveItemsCount = function(fields){
+    var data = {},
+        createdData = new Array;
+
+    data.action = 'saveItemsCount';
+
+    $.each(fields, function(key, item){
+        createdData.push(parseField($(item)));
+    })
+
+    data.fields = createdData;
+
+    $.ajax({
+        type: 'POST',
+        data: data,
+        success: function(){
+            return true;
+        },
+        error: function(){
+            return false;
+        }
+    });
 }
 
 $("body").on('click', 'button.saveCount', function(){
-    console.log($(this));
+    saveItemsCount($(this));
+}).on('click', 'button.saveOrder', function(){
+    saveItemsCount($(".list-view .saveCount"));
 }).on('click', 'button.notFoundItem', function(){
     if($(this).disabled){
         return false;

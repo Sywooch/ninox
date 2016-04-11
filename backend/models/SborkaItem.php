@@ -77,6 +77,10 @@ class SborkaItem extends \common\models\SborkaItem{
         return $this->good->Code;
     }
 
+    public function setCount($val){
+        $this->count = $val;
+    }
+
     public function __set($name, $value){
         parent::__set($name, $value);
 
