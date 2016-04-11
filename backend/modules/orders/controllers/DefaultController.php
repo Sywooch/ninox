@@ -141,6 +141,22 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Такого заказа не существует!");
         }
 
+        if(\Yii::$app->request->isAjax && !\Yii::$app->request->get("_pjax")){
+            switch(\Yii::$app->request->post("action")){
+                case 'getEditItemForm':
+                    if(!isset($order->items[\Yii::$app->request->post("itemID")])){
+                        throw new NotFoundHttpException("Товар не найден в заказе!");
+                    }
+
+                    $item = $order->items[\Yii::$app->request->post("itemID")];
+
+                    return $this->renderAjax('_order_itemEdit', ['model' => $item]);
+                    break;
+                case 'saveEditItemForm':
+                    break;
+            }
+        }
+
         if(\Yii::$app->request->post("SborkaItem")){
             $p = \Yii::$app->request->post("SborkaItem");
             $item = SborkaItem::findOne(['orderID' => $p['orderID'], 'itemID' => $p['itemID']]);
@@ -606,4 +622,5 @@ class DefaultController extends Controller
 
         return $order->sendMessage(\Yii::$app->request->post("type"));
     }
+
 }
