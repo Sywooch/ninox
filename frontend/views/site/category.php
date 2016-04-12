@@ -10,14 +10,52 @@ $this->title = $category->Name;
 
 $helper = new PriceRuleHelper();
 
+$js = <<<'JS'
+    var params = getFilterParams();
+
+    $('body').on('change', '.filter-rows input[type=checkbox]',function(){
+        var optId = this.getAttribute('name').replace(/\[|\]/g, '');
+        if(optId && this.value){
+            if(params['lastpage']){
+                delete params['lastpage'];
+            }
+            if(params['filter'] != 'goods'){
+                params['filter'] = ['goods'];
+                params[optId] = [];
+                params[optId].push(this.value);
+            }else{
+                if(this.checked){
+                    if(params[optId]){
+                        params[optId].indexOf(this.value) == -1 ? params[optId].push(this.value) : '';
+                    }else{
+                        params[optId] = [];
+                        params[optId].push(this.value);
+                    }
+                }else{
+                    if(params[optId]){
+                        var index = params[optId].indexOf(this.value);
+                        params[optId].length > 1 ? params[optId].splice(index, 1) : delete params[optId];
+                    }
+                }
+            }
+        }
+        window.history.replaceState({}, document.title, buildLinkFromParams(params, false));
+        $.pjax.reload({container: '#w0'});
+    });
+JS;
+
+$this->registerJS($js);
+
+
 \yii\widgets\Pjax::begin([
-    'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a'
+    'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a',
+    'timeout'       =>  '5000'
 ]);
 
 echo Html::tag('div',
     Html::tag('div',
         Html::tag('span', $category->Name, ['class' => 'category-title']).
-        $this->render('_category/_category_filters'),
+        $this->render('_category/_category_filters', ['filters' => $category->filters]),
         ['class' => 'left-menu']
     ).
     ListView::widget([
@@ -35,7 +73,7 @@ echo Html::tag('div',
                 Html::tag('span',
                     \Yii::t('shop',
                         '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}} в категории',
-                        ['n' => $category->goodsCount(true)]
+                        ['n' => $goods->getTotalCount()]
                     ),
                     ['class' => 'category-items-count']),
                 ['class' => 'category-label']

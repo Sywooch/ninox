@@ -3,26 +3,48 @@
 use yii\bootstrap\Html;
 
 echo Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$item->photo).Html::tag('div', '', ['class' => 'ico']), [
-    'class' =>  'image'
-]);
-
-?>
-<div class="content">
-    <div class="items-count">
-        <input type="text" value="<?=$item->count?>">
-        <a href="">OK</a>
-        <?=Html::tag('div', Html::tag('span', $item->code).Html::tag('span', "{$item->count} ШТ."), ['class' => 'count'])?>
-    </div>
-    <div class="buttons">
-        <?=\yii\helpers\Html::button('В ЗАКАЗ', [
-            'type'  =>  'submit',
-            'class' =>  'green-button /*grey-button*/ medium-button button',
-            'id'    =>  'submit'
-        ])?>
-        <?=\yii\helpers\Html::button('НЕ МОГУ НАЙТИ', [
-            'type'  =>  'submit',
-            'class' =>  'red-button /*grey-button*/ medium-button button',
-            'id'    =>  'submit'
-        ])?>
-    </div>
-</div>
+        'class' =>  'image'.($item->inOrder ? ' access' : ($item->notFounded ? ' denied' : ''))
+    ]),
+    Html::tag('div',
+        Html::tag('div',
+            Html::input('string', null, $item->count, ['class' => 'inOrderCount']).
+            Html::button('ОК', ['class' => 'btn btn-link saveCount']).
+            Html::tag('div',
+                Html::tag('span', $item->code).
+                Html::tag('span', "{$item->good->count} ШТ."),
+                [
+                    'class' => 'count'
+                ]
+            ), [
+                'class' => 'items-count'
+            ]
+        ).
+        Html::tag('div',
+            Html::button(($item->inOrder ? 'В ЗАКАЗЕ '.$item->count.' ШТ' : 'В ЗАКАЗ'),
+                [
+                    'type'  =>  'button',
+                    'class' =>  'medium-button button toOrder '.($item->notFounded == 1 ? 'gray-button' : 'green-button'),
+                    ($item->notFounded == 1 ? 'disabled' : 'enabled') => 'true'
+                ]
+            ).
+            Html::button('НЕ МОГУ НАЙТИ',
+                [
+                    'type'  =>  'button',
+                    'class' =>  'medium-button button notFoundItem '.($item->inOrder == 1 ? 'gray-button' : 'red-button'),
+                    ($item->inOrder == 1 ? 'disabled' : 'enabled') => 'true',
+                    'style' =>  $item->inOrder != 1 ? '' : 'display: none'
+                ]
+            ).
+            Html::button('УБРАТЬ ИЗ ЗАКАЗА',
+                [
+                    'type'  =>  'button',
+                    'class' =>  'medium-button button fromOrder gray-button',
+                    'style' =>  $item->inOrder == 1 ? '' : 'display: none'
+                ]
+            ), [
+                'class' => 'buttons'
+            ]
+        ), [
+            'class' => 'content'
+        ]
+    );

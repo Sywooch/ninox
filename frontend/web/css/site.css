@@ -1052,7 +1052,11 @@ h2{
 }
 
 .category .left-menu{
+	width: 274px;
 	float: left;
+	border-right: 1px dotted #aaafb0;
+	font-size: 14px;
+	padding: 0 10px 20px;
 }
 
 .category .list-view{
@@ -1102,6 +1106,10 @@ h2{
 
 .category .pagination-wrapper{
 	text-align: center;
+}
+
+.filters .filter-rows label{
+	display: block;
 }
 
 /*============* END CATEGORY STYLE *==============*/

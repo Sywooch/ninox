@@ -7,88 +7,10 @@ class m150615_131000_modify_sborka_table extends Migration
 {
     public function up()
     {
-	    $this->execute("SET @sql = (SELECT IF (
-			(SELECT COUNT(*)
-                FROM INFORMATION_SCHEMA.COLUMNS WHERE
-				`table_name` = 'sborka'
-				AND `column_name` = 'originalCount'
-				) > 0,
-				\"SELECT 0\",
-				\"ALTER TABLE `sborka` ADD COLUMN `originalCount` INT(10) NOT NULL DEFAULT 0;\"
-			));
-
-			PREPARE stmt FROM @sql;
-			EXECUTE stmt;
-			DEALLOCATE PREPARE stmt;");
-	    $this->execute("SET @sql = (SELECT IF (
-			(SELECT COUNT(*)
-                FROM INFORMATION_SCHEMA.COLUMNS WHERE
-				`table_name` = 'sborka'
-				AND `column_name` = 'discountSize'
-				) > 0,
-				\"SELECT 0\",
-				\"ALTER TABLE `sborka` ADD COLUMN `discountSize` INT(10) NOT NULL DEFAULT 0;\"
-			));
-
-			PREPARE stmt FROM @sql;
-			EXECUTE stmt;
-			DEALLOCATE PREPARE stmt;");
-	    $this->execute("SET @sql = (SELECT IF (
-			(SELECT COUNT(*)
-                FROM INFORMATION_SCHEMA.COLUMNS WHERE
-				`table_name` = 'sborka'
-				AND `column_name` = 'discountType'
-				) > 0,
-				\"SELECT 0\",
-				\"ALTER TABLE `sborka` ADD COLUMN `discountType` INT(1) NOT NULL DEFAULT 0;\"
-			));
-
-			PREPARE stmt FROM @sql;
-			EXECUTE stmt;
-			DEALLOCATE PREPARE stmt;");
-
-	    $this->execute("SET @sql = (SELECT IF (
-			(SELECT COUNT(*)
-                FROM INFORMATION_SCHEMA.COLUMNS WHERE
-				`table_name` = 'sborka'
-				AND `column_name` = 'updated'
-				) > 0,
-				\"ALTER TABLE `sborka` DROP COLUMN `updated`;\",
-				\"SELECT 0\"
-			));
-
-			PREPARE stmt FROM @sql;
-			EXECUTE stmt;
-			DEALLOCATE PREPARE stmt;");
-
-	    $this->execute("SET @sql = (SELECT IF (
-			(SELECT COUNT(*)
-                FROM INFORMATION_SCHEMA.COLUMNS WHERE
-				`table_name` = 'sborka'
-				AND `column_name` = 'updatedUser'
-				) > 0,
-				\"ALTER TABLE `sborka` DROP COLUMN `updatedUser`;\",
-				\"SELECT 0\"
-			));
-
-			PREPARE stmt FROM @sql;
-			EXECUTE stmt;
-			DEALLOCATE PREPARE stmt;");
-
-	    $this->execute("SET @sql = (SELECT IF (
-			(SELECT COUNT(*)
-                FROM INFORMATION_SCHEMA.COLUMNS WHERE
-				`table_name` = 'sborka'
-				AND `column_name` = 'discountPrice'
-				) > 0,
-				\"ALTER TABLE `sborka` DROP COLUMN `discountPrice`;\",
-				\"SELECT 0\"
-			));
-
-			PREPARE stmt FROM @sql;
-			EXECUTE stmt;
-			DEALLOCATE PREPARE stmt;");
-
+	    $this->addColumn('sborka', 'originalCount', Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0');
+	    $this->dropColumn('sborka', 'updated');
+	    $this->dropColumn('sborka', 'updatedUser');
+	    $this->dropColumn('sborka', 'discountPrice');
         $this->execute("ALTER TABLE `sborka`
             CHANGE `realyCountInOrder` `realyCount` INT(10),
             CHANGE `itemid` `itemID` INT(10),
@@ -100,10 +22,9 @@ class m150615_131000_modify_sborka_table extends Migration
 
         $this->execute("DROP INDEX `historyid` ON `sborka`; CREATE INDEX `orderID` ON `sborka` (`orderID`, `added`) USING BTREE;");
 	    $this->execute("DELETE FROM `sborka` WHERE `itemID` = 0");
-		$this->createIndex('itemID', 'sborka', 'itemID');
         $this->execute("UPDATE `sborka`,`goods` SET `sborka`.`itemID` = `goods`.`ID` WHERE `sborka`.`itemID` = `goods`.`Code`");
         $this->execute("UPDATE `sborka` SET `originalPrice` = `price`");
-        $this->execute("ALTER TABLE `sborka` DROP COLUMN `price`");
+        $this->dropColumn('sborka', 'price');
         $this->execute("UPDATE `sborka`, `operations` SET `sborka`.`originalCount` = `operations`.`Qtty` WHERE `sborka`.`orderID` = `operations`.`Acct` AND `sborka`.`itemID` = `operations`.`GoodID`");
     }
 

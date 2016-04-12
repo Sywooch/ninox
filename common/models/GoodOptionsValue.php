@@ -13,6 +13,15 @@ use Yii;
  */
 class GoodOptionsValue extends \yii\db\ActiveRecord
 {
+
+    public function getGoodOptions(){
+        return $this->hasOne(GoodOptions::className(), ['id' => 'option']);
+    }
+
+    public function getGoodOptionsVariants(){
+        return $this->hasOne(GoodOptionsVariant::className(), ['id' => 'value']);
+    }
+
     /**
      * @inheritdoc
      */
