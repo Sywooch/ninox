@@ -28,15 +28,15 @@ echo Html::beginTag('div', ['class' => 'filters']).
 		),
 		['class' => 'filter-block']
 	);
-	foreach($filters as $key => $filter){
+	foreach($filters as $filter){
 		echo Html::tag('div',
 			Html::tag('div', $filter['name'], ['class' => 'filter-head']).
-			Html::checkboxList($filter['name'], '', $filter['options'], [
+			Html::checkboxList($filter['name'], $filter['checked'], $filter['options'], [
 				'class' =>  'filter-rows',
 				'item'  =>  function($index, $data, $name, $checked, $value){
 					return Html::checkbox($name, $checked, [
-						'value' => $value,
-						'label' => $data['label'].'('.$data['count'].')',
+						'value'         =>  $value,
+						'label'         =>  $data['label'].'('.$data['count'].')',
 					]);
 				}
 			]),

@@ -15,11 +15,11 @@ class GoodOptionsValue extends \yii\db\ActiveRecord
 {
 
     public function getGoodOptions(){
-        return $this->hasMany(GoodOptions::className(), ['id' => 'option']);
+        return $this->hasOne(GoodOptions::className(), ['id' => 'option']);
     }
 
     public function getGoodOptionsVariants(){
-        return $this->hasMany(GoodOptionsVariant::className(), ['id' => 'value']);
+        return $this->hasOne(GoodOptionsVariant::className(), ['id' => 'value']);
     }
 
     /**

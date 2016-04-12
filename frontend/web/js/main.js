@@ -214,3 +214,33 @@ function addToWishlist(item){
 		}
 	});
 }
+
+function getFilterParams(){
+	var prmstr = decodeURIComponent(window.location.search.substr(1));
+	return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+}
+
+function transformToAssocArray(prmstr){
+	var params = {};
+	var prmarr = prmstr.split("&");
+	for(var i = 0; i < prmarr.length; i++){
+		var tmparr = prmarr[i].split("=");
+		params[tmparr[0]] = tmparr[1].split(',');
+	}
+	return params;
+}
+
+function buildLinkFromParams(args, linkReplace){
+	var link = linkReplace ? document.location.pathname.replace(/(\/page-)\d+/, '') : document.location.pathname;
+	var argsStr = '';
+	if(Object.keys(args).length >= 1){
+		for(var key in args){
+			var tmp = '';
+			for(var i = 0; i < args[key].length; i++){
+				tmp += args[key][i] + ',';
+			}
+			argsStr += key + '=' + tmp.slice(0, -1) + '&';
+		}
+	}
+	return argsStr ? (link + '?' + argsStr.slice(0, -1)) : link;
+}
