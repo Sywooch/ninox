@@ -2,7 +2,6 @@
 
 use frontend\helpers\PriceRuleHelper;
 use frontend\widgets\Breadcrumbs;
-use bobroid\y2sp\ScrollPager;
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
 
@@ -103,16 +102,16 @@ echo Html::tag('div',
         'itemOptions'   =>  [
             'class'     =>  'hovered'
         ],
-        /*'pager'         =>  [
+        'pager'         =>  [
             'class' =>  \common\components\ShopPager::className()
-        ]*/
-        'pager' =>  [
+        ]
+        /*'pager' =>  [
             'class'             =>  ScrollPager::className(),
             'container'         =>  '.list-view div.items-grid',
             'item'              =>  'div.hovered',
             'paginationClass'   =>  'pagination',
             'paginationSelector'=>  'pagi'
-        ]
+        ]*/
     ]),
     ['class' => $category->viewFile.' clear-fix']
 );

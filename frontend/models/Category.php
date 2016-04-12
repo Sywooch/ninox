@@ -84,115 +84,41 @@ class Category extends \common\models\Category{
 					$itemVars[$filterOption->good][$gv->id] = in_array($gv->id, $filters[$go->id]['checked']);
 
 					empty($filters[$go->id]['checked']) ? '' : $varChecked[$go->id][$gv->id] = in_array($gv->id, $filters[$go->id]['checked']);
-
-					//$filters[$go->id]['options'][$gv->id]['count'] += 1;//empty($filters[$go->id]['checked']) ? 0 : 1;
 				}
 			}
 		}
-
-		//var_dump($varChecked);
 
 		$filterNames = array_column($filters, 'name', 'id');
-
-/*		foreach(\Yii::$app->request->get() as $name => $value){
+		$itemVarsTemp = $itemVars;
+		foreach(\Yii::$app->request->get() as $name => $value){
 			$name = preg_replace('/\_/', ' ', $name);
 			$id = array_search($name, $filterNames);
-			echo '<pre>';
-			var_dump($id);
-			echo '</pre>';
-		}*/
-
-		foreach($itemVars as $k => $itemVar){
-			$step = 1;
-			$break = false;
-			$checked = array_intersect($itemVar, [true]);
-/*			echo '<pre>'.$k;
-			var_dump(sizeof($checked));
-			var_dump(array_intersect_key($itemVar, $varChecked));
-			echo '</pre>';*/
-			if(sizeof($varChecked) == sizeof($checked)){
-				foreach($itemVar as $key => $value){
-					isset($varCount[$key]) ? $varCount[$key]++ : $varCount[$key] = 1;
-				}
-			}else{
-				foreach(\Yii::$app->request->get() as $name => $value){
-					$name = preg_replace('/\_/', ' ', $name);
-					$id = array_search($name, $filterNames);
-					if($id){
-						$break = false;
-						foreach(array_intersect_key($itemVar, $varChecked[$id]) as $k => $v){
-							echo '<pre>';
-							var_dump($step);
-							echo '</pre>';
-							if(($step == 1 && !$v)){
-								isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
-								$break = true;
-							}elseif(($step < sizeof($varChecked) && $v)){
-								isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
-							}
-							$step++;
-						}
-						if($break){
-							break;
+			$temp = [];
+			if($id){
+				foreach($itemVarsTemp as $keyItem => $itemVar){
+					foreach(array_intersect_key($itemVar, $varChecked[$id]) as $k => $v){
+						if($v){
+							$temp[$keyItem] = $itemVar;
+						}else{
+							isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
 						}
 					}
 				}
+				$itemVarsTemp = $temp;
 			}
 		}
-			/*foreach($varChecked as $vars){
-				$intersect = array_intersect($itemVar, array_keys($vars));
 
-				if(empty($intersect)){
-					break;
-				}else{
-					$step++;
-					foreach($intersect as $key){
-						if($vars[$key] && $step == sizeof($varChecked)){
-
-								echo '<pre>'.$k.'First';
-								var_dump($itemVar);
-								var_dump($vars);
-								echo '</pre>';
-
-							foreach($itemVar as $var){
-								isset($varCount[$var]) ? $varCount[$var]++ : $varCount[$var] = 1;
-							}
-						}elseif($vars[$key]){
-								echo '<pre>'.$k.'Second';
-								var_dump($intersect);
-								echo '</pre>';
-
-							isset($varCount[$key]) ? '' : $varCount[$key] = 1;
-							$break = true;
-							break;
-						}else{
-							echo '<pre>'.$k.'Third';
-							var_dump($intersect);
-							echo '</pre>';
-
-							isset($varCount[$key]) ? '' : $varCount[$key] = 1;
-							$break = true;
-							break;
-						}
-					}
-					if($break){
-						break;
-					}
-				}
+		foreach($itemVarsTemp as $keyItem => $itemVar){
+			foreach($itemVar as $k => $v){
+				isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
 			}
-		}*/
-
-/*		echo '<pre>';
-		var_dump($varCount);
-		echo '</pre>';*/
+		}
 
 		foreach($filters as $go => $filter){
 			foreach($filter['options'] as $gv => $val){
 				$filters[$go]['options'][$gv]['count'] = isset($varCount[$gv]) ? $varCount[$gv] : 0;
 			}
 		}
-
-		//var_dump($varCount);
 
 		return $this->_filters = $filters;
 	}
