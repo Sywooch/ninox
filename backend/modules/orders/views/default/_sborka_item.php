@@ -20,13 +20,6 @@ echo Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$item
             ]
         ).
         Html::tag('div',
-            Html::button(($item->inOrder ? 'В ЗАКАЗЕ '.$item->count.' ШТ' : 'В ЗАКАЗ'),
-                [
-                    'type'  =>  'button',
-                    'class' =>  'medium-button button toOrder '.($item->notFounded == 1 ? 'gray-button' : 'green-button'),
-                    ($item->notFounded == 1 ? 'disabled' : 'enabled') => 'true'
-                ]
-            ).
             Html::button('НЕ МОГУ НАЙТИ',
                 [
                     'type'  =>  'button',
@@ -40,6 +33,13 @@ echo Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$item
                     'type'  =>  'button',
                     'class' =>  'medium-button button fromOrder gray-button',
                     'style' =>  $item->inOrder == 1 ? '' : 'display: none'
+                ]
+            ).
+            Html::button(($item->inOrder ? 'В ЗАКАЗЕ '.$item->count.' ШТ' : 'В ЗАКАЗ'),
+                [
+                    'type'  =>  'button',
+                    'class' =>  'medium-button button toOrder '.($item->notFounded == 1 ? 'gray-button' : 'green-button'),
+                    ($item->notFounded == 1 ? 'disabled' : 'enabled') => 'true'
                 ]
             ), [
                 'class' => 'buttons'
