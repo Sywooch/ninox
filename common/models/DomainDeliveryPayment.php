@@ -57,19 +57,19 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
     }
 
 	public function getDeliveryTypes(){
-		return $this->hasMany(DeliveryType::className(), ['id' => 'deliveryType']);
+		return $this->hasOne(DeliveryType::className(), ['id' => 'deliveryType']);
 	}
 
 	public function getDeliveryParams(){
-		return $this->hasMany(DeliveryParam::className(), ['id' => 'deliveryParam']);
+		return $this->hasOne(DeliveryParam::className(), ['id' => 'deliveryParam']);
 	}
 
 	public function getPaymentTypes(){
-		return $this->hasMany(PaymentType::className(), ['id' => 'paymentType']);
+		return $this->hasOne(PaymentType::className(), ['id' => 'paymentType']);
 	}
 
 	public function getPaymentParams(){
-		return $this->hasMany(PaymentParam::className(), ['id' => 'paymentParam']);
+		return $this->hasOne(PaymentParam::className(), ['id' => 'paymentParam']);
 	}
 
 	public static function getConfig(){
@@ -95,21 +95,21 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 		if(!empty($configs)){
 			foreach($configs as $config){
 				$options = Json::decode($config->options, false);
-				$array['deliveryTypes'][$config->deliveryType]['name'] = $config->deliveryTypes[0]->description;
-				$array['deliveryTypes'][$config->deliveryType]['value'] = $config->deliveryTypes[0]->id;
-				$array['deliveryTypes'][$config->deliveryType]['modifyLabel'] = $config->deliveryTypes[0]->modifyLabel;
-				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams[0]->description;
+				$array['deliveryTypes'][$config->deliveryType]['name'] = $config->deliveryTypes->description;
+				$array['deliveryTypes'][$config->deliveryType]['value'] = $config->deliveryTypes->id;
+				$array['deliveryTypes'][$config->deliveryType]['modifyLabel'] = $config->deliveryTypes->modifyLabel;
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams->description;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['label'] =
-					empty($config->deliveryParams[0]->options) ?
-						$config->deliveryParams[0]->description : Html::img($config->deliveryParams[0]->options);
+					empty($config->deliveryParams->options) ?
+						$config->deliveryParams->description : Html::img($config->deliveryParams->options);
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentTypes'][$config->paymentType] = $config->paymentType;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentParams'][$config->paymentParam] = $options->commissions;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['content'] = $options->content;
 
-				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes[0]->description;
-				$array['paymentTypes'][$config->paymentType]['value'] = $config->paymentTypes[0]->id;
-				$array['paymentTypes'][$config->paymentType]['modifyLabel'] = $config->paymentTypes[0]->modifyLabel;
-				$array['paymentTypes'][$config->paymentType]['params'][$config->paymentParam]['name'] = !empty($config->paymentParams[0]) ? $config->paymentParams[0]->description : 'Default Param';
+				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes->description;
+				$array['paymentTypes'][$config->paymentType]['value'] = $config->paymentTypes->id;
+				$array['paymentTypes'][$config->paymentType]['modifyLabel'] = $config->paymentTypes->modifyLabel;
+				$array['paymentTypes'][$config->paymentType]['params'][$config->paymentParam]['name'] = !empty($config->paymentParams) ? $config->paymentParams->description : 'Default Param';
 			}
 
 			foreach($array as $type => $value){
