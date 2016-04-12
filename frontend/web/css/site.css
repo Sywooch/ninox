@@ -3317,7 +3317,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block
 }*/
 
-.about-return-inform a:hover{
+.about-inform a:hover{
 	text-decoration: none;
 }
 

@@ -147,10 +147,22 @@ use yii\jui\Accordion;
                     Для того, чтобы Ваш заказ был отправлен как можно скорее,
                     перезвоните нам или заполните форму после перевода денег.
                 </span>
-                <?=\yii\helpers\Html::button('Сообщить об оплате', [
-                    'type'  =>  'submit',
-                    'class' =>  'about-inform-button yellow-button large-button',
-                    'id'    =>  'submit'
+                <?php  echo Remodal::widget([
+                    'cancelButton'		=>	false,
+                    'confirmButton'		=>	true,
+                    'addRandomToID'		=>	false,
+                    'id'            =>  'payment',
+                    'buttonOptions' =>  [
+                        'label' =>  'Сообщить об оплате',
+                        'class' =>  'about-inform-button yellow-button large-button'
+                    ],
+
+                    'confirmButtonOptions'  =>  [
+                        'label' =>  'Отправить',
+                        'class' =>  'about-inform-button yellow-button large-button'
+                    ],
+                    'content'   =>  $this->render('_payment_confirm'),
+
                 ])?>
             </div>
             <span>
@@ -206,40 +218,12 @@ use yii\jui\Accordion;
                     После того как Вы отправили нам посылку, для того, чтобы
                     оформить возврат, необходимо заполнить форму возврата.
                 </span>
-                <?php /*reModal::begin([
-                    'header' => '<h2>Hello world</h2>',
-                    'toggleButton' => [
-                        'label' => 'Оформить возврат',
-                        'class' => 'about-inform-button yellow-button large-button',
-                    ],
-                ]);
-
-                echo \yii\helpers\Html::button('Оформить возврат', [
-                    'type'  =>  'submit',
-                    'class' =>  'about-inform-button yellow-button large-button',
-                    'id'    =>  'submit'
-                ]);
-
-                Modal::end()*/
-              /*  Remodal::widget([
-                    'cancelButton'		=>	false,
-                    'confirmButton'		=>	false,
-                    'addRandomToID'		=>	false,
-                    'content'			=>	/*$this->render('_order_edit', ['order' => $order])*/
-                    /*'buttonOptions'     =>  [
-                        'label' =>  'редактировать',
-                        'tag'   =>  'a',
-                        'style' =>  ''
-                    ],
-                    'id'				=>	'modal',
-                ])
-                ;*/
-
+                <?php
                echo Remodal::widget([
                    'cancelButton'		=>	false,
                    'confirmButton'		=>	true,
                    'addRandomToID'		=>	false,
-                    'id'            =>  'newPriceRule',
+                    'id'            =>  'vozvrat',
                     'buttonOptions' =>  [
                         'label' =>  'Оформить возврат',
                         'class' =>  'about-inform-button yellow-button large-button'
@@ -249,7 +233,7 @@ use yii\jui\Accordion;
                         'label' =>  'Отправить',
                         'class' =>  'about-inform-button yellow-button large-button'
                     ],
-                    'content'   =>  $this->render('vozvrat'),
+                    'content'   =>  $this->render('_vozvrat'),
 
                 ])
            ?>
