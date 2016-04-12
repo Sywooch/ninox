@@ -218,7 +218,7 @@ i.large{
 .rollback{
     position: fixed;
     padding-top: 110px;
-    width: 80px;
+    width: 30px;
     margin-top: -85px;
     height: 100vh;
     background: rgb(236,236,236);
@@ -239,9 +239,9 @@ and (max-device-width: 1170px){
 }
 
 @media only screen
-and (max-device-width: 1600px){
-    .rollback.orders{
-        width: 30px !important;
+and (min-device-width: 1440px){
+    .rollback{
+        width: 80px;
     }
 }
 CSS;
@@ -716,10 +716,10 @@ $this->beginPage() ?>
                 ],
                 'counter'   =>  '6'
             ],
-            [
+            /*[
                 'label'     =>  'Задания',
                 'url'       =>  Url::toRoute('/tasks/index')
-            ]
+            ]*/
             /*[
                 'label' =>  '<i class="glyphicon glyphicon-usd large" id="currency-icon" data-target="#currencyModal" data-toggle="modal"></i><span class="visible-xs-inline">&nbsp;Курс</span>'
             ],

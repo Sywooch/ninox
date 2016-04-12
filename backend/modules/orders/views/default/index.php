@@ -158,6 +158,28 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
 $(document).on('kvexprow.loaded', 'div[data-attribute-type=ordersGrid]', function(vind, key, extradata){
     $(this).find("tr[data-key=" + extradata + "]").orderPreviewListeners();
 });
+
+var sendSms = function(order, type){
+    $.ajax({
+        type: "POST",
+        url: '/orders/sms',
+        data: {
+            orderID: order,
+            type: type
+        },
+        success: function(response){
+            console.log(response);
+        }
+    });
+}
+
+$("body").on('click', "button.sms-order", function(){
+    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'sms');
+});
+
+$("body").on('click', "button.sms-card", function(){
+    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card');
+});
 JS;
 
 $css = <<<'CSS'

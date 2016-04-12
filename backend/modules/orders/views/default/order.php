@@ -3,6 +3,7 @@ use bobroid\remodal\Remodal;
 use common\models\DeliveryType;
 use kartik\dropdown\DropdownX;
 use kartik\typeahead\Typeahead;
+use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\web\JsExpression;
@@ -50,7 +51,7 @@ foreach($priceRules as $rule){
     ];
 }
 
-$css = <<<'STYLE'
+$css = <<<'CSS'
     .data-items{
         list-style: none;
         line-height: 14px;
@@ -105,9 +106,9 @@ $css = <<<'STYLE'
     }
 
     .orderItemSelected{
-        background: rgb(200, 200, 200) !important;
+        background: rgba(200, 200, 200, 0.2) !important;
     }
-STYLE;
+CSS;
 
 $js = <<<'JS'
     addItemToOrder = function(order, item){
@@ -235,6 +236,7 @@ $js = <<<'JS'
             url: '/orders/createinvoice/' + order,
             success: function(data){
                 e.currentTarget.innerHTML = data;
+                $("#novaPoshtaModal #seats").addInputArea();
             }
         });
     }, getSelectedGoods = function(){
@@ -246,7 +248,61 @@ $js = <<<'JS'
         }
 
         document.querySelector("#discountSelectedItems").value = JSON.stringify(items);
+    }, disableItemInOrder = function(button){
+        data = JSON.parse(button[0].parentNode.parentNode.parentNode.getAttribute('data-key'));
+
+        data.param = 'inorder';
+
+        $.ajax({
+            type: 'POST',
+            url: '/orders/changeiteminorderstate',
+            data: data,
+            success: function(data){
+                var parentRow = $(button[0].parentNode.parentNode.parentNode);
+
+                button.toggleClass('btn-warning');
+                parentRow.toggleClass('warning');
+            }
+        });
+    }, deleteItemInOrder = function(button){
+        data = JSON.parse(button[0].parentNode.parentNode.parentNode.getAttribute('data-key'));
+
+        data.param = 'deleted';
+
+        $.ajax({
+            type: 'POST',
+            url: '/orders/changeiteminorderstate',
+            data: data,
+            success: function(data){
+                var parentRow = $(button[0].parentNode.parentNode.parentNode);
+
+                button.toggleClass('btn-danger');
+                parentRow.toggleClass('danger');
+            }
+        });
+    }, refreshItemInOrder = function(button){
+        $.ajax({
+            type: 'POST',
+            url: '/orders/restoreitemdata',
+            data: JSON.parse(button[0].parentNode.parentNode.parentNode.getAttribute('data-key')),
+            success: function(data){
+                $.pjax.reload({container: '#orderItems-pjax'});
+            }
+        });
     }
+
+
+    $("body").on("click", "button.disableGood", function(){
+        disableItemInOrder($(this));
+    });
+
+    $("body").on("click", "button.actualizeGood", function(){
+        refreshItemInOrder($(this));
+    });
+
+    $("body").on("click", "button.deleteGood", function(){
+        deleteItemInOrder($(this));
+    });
 
     $(".oneOrderItem input:checkbox").change(function(){
         setTimeout(getSelectedGoods, 100);
@@ -267,11 +323,46 @@ $js = <<<'JS'
             data: $(this).serialize(),
             success: function(data){
                 container.innerHTML = data;
+                $("#novaPoshtaModal #seats").addInputArea();
             }
         });
 
         e.preventDefault();
-    })
+    });
+
+    $("body").on('click', 'tr.oneOrderItem button.editGood', function(){
+        var modal = $('[data-remodal-id=goodEditModal]');
+
+        modal[0].innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
+        modal.remodal().open();
+
+        var data = JSON.parse($(this)[0].parentNode.parentNode.parentNode.getAttribute('data-key'));
+
+        $.ajax({
+            type: 'POST',
+            data: {
+                itemID: data.itemID,
+                action: 'getEditItemForm'
+            },
+            success: function(data){
+                modal[0].innerHTML = data;
+            }
+        });
+    });
+
+    $("body").on("submit", "form#editGoodForm", function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(data){
+                $.pjax.reload({container: '#orderItems-pjax'});
+
+                $('[data-remodal-id=goodEditModal]').remodal().close();
+            }
+        });
+    });
 JS;
 
 $npJS = <<<'JS'
@@ -297,10 +388,6 @@ $npJS = <<<'JS'
     });
 JS;
 
-if($order->deliveryType == 2){
-    $this->registerJs($npJS);
-}
-
 $this->registerCss($css);
 $this->registerJs($js);
 $this->registerJsFile('/js/bootbox.min.js', [
@@ -311,21 +398,74 @@ $this->registerJsFile('/js/bootbox.min.js', [
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
 if($order->deliveryType == 2){
+    \backend\assets\InputAreaAsset::register($this);
+
+    $this->registerJs($npJS);
 
     $novaPoshtaModal = new Remodal([
         'cancelButton'		=>	false,
         'confirmButton'		=>	false,
         'addRandomToID'		=>	false,
         'content'			=>	\rmrevin\yii\fontawesome\FA::i('refresh')->addCssClass('fa-spin'),
-        'events'			=>	[
-            'opening'	=>	new \yii\web\JsExpression("runCreateInvoice(e, ".$order->id.")")
-        ],
         'id'				=>	'novaPoshtaModal',
+        'options'           =>  [
+            'id'                =>  'novaPoshtaModal'
+        ],
+        'events'			=>	[
+            'opened'	        =>	new \yii\web\JsExpression("runCreateInvoice(e, ".$order->id.")")
+        ],
     ]);
 
     echo $novaPoshtaModal->renderModal();
 
 }
+
+/**
+ * TODO: желательно блок ниже переместить в какое-нибудь другое, более предназначеное для этого место
+ */
+
+$orderHistory = [];
+
+if($order->confirmed == 1){
+    $orderHistory[] = Html::tag('li', "Заказ подтверждён: {$order->confirmedDate}");
+}
+
+if($order->done == 1){
+    $orderHistory[] = Html::tag('li', "Заказ собран: {$order->doneDate}");
+}
+
+if($order->smsState == 1){
+    $orderHistory[] = Html::tag('li', "Смс с № карты отправлена: {$order->smsSendDate}");
+}
+
+if($order->moneyConfirmed == 1){
+    $orderHistory[] = Html::tag('li', "Заказ оплачен: {$order->smsSendDate}");
+}
+
+if($order->nakladnaSendState == 1){
+    $orderHistory[] = Html::tag('li', "ТТН {$order->nakladna} отправлена {$order->nakladnaSendDate}");
+}
+
+/**
+ * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ */
+
+$goodEditModal = new Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'addRandomToID'		=>	false,
+    'content'			=>	\rmrevin\yii\fontawesome\FA::i('refresh')->addCssClass('fa-spin'),
+    'options'           =>  [
+        'hashTracking'  =>  'false',
+        'id'            =>  'goodEditModal'
+    ],
+    'events'			=>	[
+        'opening'	=>	new \yii\web\JsExpression("console.log(e);")
+    ],
+    'id'				=>	'goodEditModal',
+]);
+
+echo $goodEditModal->renderModal();
 
 echo Html::tag('div', '', [
     'style'                 =>  'display: none',
@@ -352,15 +492,7 @@ echo Html::tag('div', '', [
         </div>
     </div>
     <div class="col-xs-4">
-        <ul class="data-items">
-        <?php
-            if($order->confirmed == 1){ ?><li>Заказ подтверждён: <?=$order->confirmedDate?></li><?php }
-            if($order->done == 1){ ?><li>Заказ собран: <?=$order->doneDate?></li><?php }
-            if($order->smsState == 1){ ?><li>Смс с № карты отправлена: <?=$order->smsSendDate?></li><?php }
-            if($order->moneyConfirmed == 1){ ?><li>Заказ оплачен: <?=$order->moneyConfirmedDate?></li><?php }
-            if($order->nakladnaSendState == 1){ ?><li>ТТН <?=$order->nakladna?> отправлена <?=$order->nakladnaSendDate?></li><?php }
-        ?>
-        </ul>
+        <?=Html::tag('ul', implode($orderHistory), ['class' => 'data-items'])?>
     </div>
 </div>
 <hr>
@@ -384,9 +516,9 @@ echo Html::tag('div', '', [
 
                     <?php Modal::end(); ?>
                     <!--<span class="roundedItem icon-heart"></span>-->
-                    <span class="roundedItem icon-percent<?=$customer->discount > 0 ? ' background-green' : ''?>"></span>
-                    <span class="roundedItem item-lang"><?=$customer->lang?></span>
-                    <h4><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></h4>
+                    <?=Html::tag('span', '', ['class' => 'roundedItem icon-percent'.($order->customer->discount > 0 ? ' background-green' : '')]),
+                        Html::tag('span', $customer->lang, ['class' => 'roundedItem item-lang']),
+                        Html::tag('h4', \Yii::$app->formatter->asPhone($order->customerPhone))?>
                 </h3>
                 <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$deliveryType?> <small>(<?=$deliveryParam?>)</small><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
                 <?=Remodal::widget([
@@ -394,12 +526,12 @@ echo Html::tag('div', '', [
                     'confirmButton'		=>	false,
                     'addRandomToID'		=>	false,
                     'content'			=>	$this->render('_order_edit', ['order' => $order]),
+                    'id'                =>	'orderEdit',
                     'buttonOptions'     =>  [
                         'label' =>  'редактировать',
                         'tag'   =>  'a',
                         'style' =>  'margin-bottom: 20px; display: inline-block'
                     ],
-                    'id'				=>	'orderEdit',
                 ]);?>
             </div>
         </div>
@@ -442,9 +574,7 @@ echo Html::tag('div', '', [
             }
             ?>
         </div>
-        <div class="col-xs-5">
-            <button class="btn btn-lg btn-success btn-block">Сборка</button>
-        </div>
+        <?=Html::tag('div', Html::a('Сборка', '/orders/sborka/'.$order->ID, ['class' => 'btn btn-lg btn-success btn-block']), ['class' => 'col-xs-5'])?>
     </div>
 </div>
 <hr>
@@ -601,9 +731,12 @@ $thiss = $this;
             'header'    =>  'Товар',
             'format'    =>  'html',
             'value'     =>  function($model) use(&$goodsAdditionalInfo){
-                $ico = isset($goodsAdditionalInfo[$model->itemID]->ico) && !empty($goodsAdditionalInfo[$model->itemID]->ico) ? 'http://krasota-style.com.ua/img/catalog/sm/'.$goodsAdditionalInfo[$model->itemID]->ico : '';
-                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a($goodsAdditionalInfo[$model->itemID]->Name.'<br>Код товара: '.$goodsAdditionalInfo[$model->itemID]->Code, \yii\helpers\Url::to([
-                    '/goods/showgood/'.$goodsAdditionalInfo[$model->itemID]->ID
+                //$ico = isset($goodsAdditionalInfo[$model->itemID]->ico) && !empty($goodsAdditionalInfo[$model->itemID]->ico) ? 'http://krasota-style.com.ua/img/catalog/sm/'.$goodsAdditionalInfo[$model->itemID]->ico : '';
+
+                $ico = 'http://krasota-style.com.ua/img/catalog/sm/'.$model->photo;
+
+                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a($model->name.'<br>Код товара: '.$goodsAdditionalInfo[$model->itemID]->Code, \yii\helpers\Url::to([
+                    '/goods/view/'.$model->itemID
                 ]))), ['class'  =>  'col-xs-8']), ['class' =>   'row-responsive']);
             }
         ],
@@ -694,11 +827,20 @@ $thiss = $this;
             'vAlign'    =>  \kartik\grid\GridView::ALIGN_MIDDLE,
             'hAlign'    =>  \kartik\grid\GridView::ALIGN_CENTER,
             'buttons'   =>  [
-                'buttons'   =>  function($url, $model, $some){
-                    return $this->render('_operations', ['model' => $model]);
+                'edit'  =>  function($url, $model){
+                    return Html::button(FA::i('pencil'), ['title' => 'Редактировать товар в заказе', 'class' => 'btn btn-default btn-sm editGood']);
+                },
+                'disable'  =>  function($url, $model){
+                    return Html::button(FA::i('power-off'), ['title' => 'Отключить товар в заказе', 'class' => 'btn disableGood btn-default btn-sm'.($model->nalichie == 0 ? ' btn-warning' : '')]);
+                },
+                'refresh'  =>  function($url, $model){
+                    return Html::button(FA::i('refresh'), ['title' => 'Актуализировать товар (сделать таким же, как и в магазине)', 'class' => 'btn actualizeGood btn-default btn-sm']);
+                },
+                'delete'  =>  function($url, $model){
+                    return Html::button(FA::i('trash'), ['title' => 'Удалить товар в заказе', 'class' => 'btn deleteGood btn-default btn-sm'.($model->nezakaz == 1 ? ' btn-danger' : '')]);
                 }
             ],
-            'template'  =>  '{buttons}',
+            'template'  =>  Html::tag('div', '{edit}{disable}{refresh}{delete}', ['class' => 'btn-group-vertical']),
             'options'   =>  [
                 'style' =>  'width: 40px;'
             ],

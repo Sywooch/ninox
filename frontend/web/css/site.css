@@ -1282,8 +1282,8 @@ footer{
 .main-content .content{
 	max-width: 1170px;
 	overflow: auto;
-	margin-top: 30px;
-	/* на 19.03.16*/
+	margin-top: 40px;
+	/* на 06.04.16*/
 }
 
 .content{
@@ -2937,15 +2937,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 /*========* O-NAS *=========*/
 
 .left-side{
-	float: left;
+/*	float: left;
 	width: 285px;
-	margin-left: 35px;
+	margin-left: 35px;*/ /*было и стало*/
+	float: left;
+	width: 245px;
 }
 
 .left-side-menu{
 	border-radius: 3px;
 	border-top: 1px solid #ebebeb;
+    /*
 	border-bottom: 1px solid #ebebeb;
+    */
 }
 
 .left-side-menu-item{
@@ -2957,19 +2961,44 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border-left: 1px slolid #ebebeb;
 	border-right: 1px slolid #ebebeb;
 	margin-bottom: 1px;
-	padding-left: 32px;
-	padding-top: 16px;
+	padding-left: 25px;
+	padding-top: 12px;
+	background: #f1f1f1;
+	cursor: pointer;
+	padding-bottom: 10px;
 }
 
 .about{
-	float: left;
-	width: 810px;
+/*	float: left;
+	width: 810px;*/
+	float: right;
+	width: 880px;
+}
+
+.about .padding-bottom{
+	padding-bottom: 75px;
 }
 
 .about-header{
-	border-bottom: 1px dotted #8c8c8c;
+/*	border-bottom: 1px dotted #8c8c8c;
 	font-size: 22px;
+	color: #282828;*/
+	border-bottom: 1px dashed #8c8c8c;
+	font-size: 22px;
+	margin-bottom: 30px;
+	vertical-align: super;
+	font-family: OpenSans-Semibold;
+}
+
+.about-header a{
+	vertical-align: super;
+	font-size: 22px;
+	font-family: OpenSans-Semibold;
 	color: #282828;
+}
+
+.about-header a:hover{
+	text-decoration: none;
 }
 
 .about-as-header{
@@ -2983,13 +3012,25 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-as-center{
+/*	text-align: center;
+	margin: auto;*/
 	text-align: center;
 	margin: auto;
+	margin-bottom: 25px;
+	font-size: 16px;
+	font-weight: bold;
+	color: black;
 }
 
 .about-as-price{
+/*	height: 115px;
+	background: #eaf6f9;*/
 	height: 115px;
 	background: #eaf6f9;
+	padding-top: 15px;
+	padding-left: 33px;
+	padding-right: 33px;
+	border-radius: 3px;
 }
 
 .about-as-price-rules{
@@ -2999,28 +3040,66 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-as-price-rules-img{
 	float: left;
+    /*
 	padding-right: 33px;
+    */
 }
 
 .wholesale-prices{
+    /*
 	content: url("/img/site/wholesale-prices.png");
+    */
+	background: url("/img/site/wholesale-prices.png") no-repeat;
+	width: 84px;
+	height: 84px;
+	overflow: auto;
 }
 
 .retail-prices{
+    /*
 	content: url("/img/site/retail-prices.png");
+    */
+	background: url("/img/site/retail-prices.png");
+	width: 84px;
+	height: 84px;
 }
 
 .about-as-price-rules-text{
+/*	float: left;
+	font-size: 14px;*/
 	float: left;
 	font-size: 14px;
+	margin-left: 20px;
+	margin-top: 20px;
+	color: #282828;
 }
 
 .about-as-price-rules-text span{
+    /*
 	font-size: 18px;
+    */
+	font-size: 18px;
+	display: block;
+	font-weight: bold;
 }
 
 .about-as-order-head{
+    /*
 	font-size: 16px;
+    */
+	font-size: 16px;
+	padding: 40px;
+	text-align: center;
+	font-weight: bold;
+	color: #282828;
+}
+
+.about-as-order-infogramma{
+	margin: auto auto 40px;
+	overflow: auto;
+	display: block;
+	text-align: center;
+	width: -moz-fit-content;
 }
 
 .about-as-order-infogramma-item{
@@ -3028,33 +3107,69 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .decor{
+    /*
 	content: url("/img/site/decor.png");
+    */
+	background: url("/img/site/decor.png");
+	height: 84px;
+	width: 84px;
+	display: block;
+	margin: auto;
 }
 
 .assembly-of-goods{
+    /*
 	content: url("/img/site/assembly-of-goods.png");
+    */
+	background: url("/img/site/assembly-of-goods.png");
+	height: 84px;
+	width: 84px;
+	display: block;
+	margin: auto;
 }
 
 .order-shipping{
+    /*
 	content: url("/img/site/order-shipping.png");
+    */
+	background: url("/img/site/order-shipping.png");
+	height: 84px;
+	width: 84px;
+	display: block;
+	margin: auto;
 }
 
-.arrow-rght{
+.arrow-right{
+/*	float: left;
+	content: url("/img/site/arrow-right.png");*/
+	width: 150px;
 	float: left;
-	content: url("/img/site/arrow-right.png");
-
+	background: transparent url("/img/site/arrow-right.png") no-repeat scroll 0% 0%;
+	height: 55px;
+	margin-top: 15px;
 }
 
 .about-as-order-infogramma-item-text{
+    /*
 	font-size: 10px;
+    */
+	font-size: 10px;
+	padding-top: 20px;
+	color: #282828;
 }
 
 .about-as-order-infogramma-item-text span{
+    /*
 	font-size: 14px;
+    */
+	font-size: 14px;
+	display: block;
+	font-weight: bold;
 }
 
 .about-as-order-text{
 	font-size: 14px;
+	color: #282828;
 }
 
 .about-delivery-header{
@@ -3067,33 +3182,63 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	content: url("/img/site/car.png");
 }
 
+.about-delivery-content{
+	overflow: auto;
+}
+
 .about-delivery-content-img{
-	float: left;
+/*	float: left;
 	width: 350px;
 	content: url("/img/site/map.png");
-	padding-left: 15px;
+	padding-left: 15px;*/
+	float: left;
+	width: 350px;
+	background: url("/img/site/map.png") no-repeat;
+	margin-left: 15px;
+	height: 220px;
 }
 
 .about-delivery-content-info{
+    /*
 	float: left;
+    */
+	float: left;
+	width: 510px;
 }
 
 .about-delivery-content-info-delivery{
+    /*
 	height: 70px;
+    */
+	letter-spacing: -1px;
+	font-stretch: condensed;
+	overflow: auto;
 }
 
 .about-delivery-content-info-delivery-time{
+/*	float: left;
+	font-size: 16px;*/
 	float: left;
-	font-size: 16px;
+	font-size: 11px;
+	width: 50%;
+	font-weight: bold;
 }
 
 .about-delivery-content-info-delivery-time span{
+/*	font-size: 38px;
+	color: #008ad2;*/
 	font-size: 38px;
 	color: #008ad2;
+	float: left;
+	letter-spacing: -1px;
+	display: block;
+	vertical-align: middle;
+	font-stretch: condensed;
 }
 
 .about-delivery-content-info-text{
 	font-size: 14px;
+	color: #282828;
 }
 
 .about-payment-header{
@@ -3102,30 +3247,73 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	color: #282828;	*/
 }
 
+.about-payment{
+	color: #282828;
+}
+
 .about-payment-header:before{
 	content: url("/img/site/payment-card.png");
 }
 
 .about-payment .bold{
+    /*
 	font-size: 18px;
+    */
+	font-size: 18px;
+	FONT-weight: bold;
+    /*
+	margin-bottom: 20px;
+    */
 }
 
 .about-payment span{
 	font-size: 14px;
+	display: block;
+	padding-bottom: 15px;
 }
 
 .about-inform{
-	height: 100px;
-	background: #f6f6f6;`
+/*	height: 100px;
+	background: #f6f6f6;*/
+	background: #f6f6f6;
+	padding: 30px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	overflow: auto;
 }
 
 .about-inform span{
+    /*
 	font-size: 16px;
+    */
+	font-size: 16px !important;
+	width: 550px;
+	float: left;
+	padding: 0px !important;
+	font-family: OpenSans-Semibold;
 }
 
 .about-payment-inform{
 	/*height: 100px;
 	background: #f6f6f6;*/
+}
+
+.about-inform-button{
+	float: right;
+/*	background: #fcc82d;
+	background: -webkit-linear-gradient(#fee040, #f9b519);
+	background: -o-linear-gradient(#fee040, #f9b519);
+	background: -moz-linear-gradient(#fee040, #f9b519);
+	background: linear-gradient(#fee040, #f9b519);*/
+	font-size: 15px;
+    font-weight: bold;
+	border-radius: 5px;
+	border-top: 1px solid #fdff27 !important;
+	border: none;
+	box-shadow: 0 4px 2px -2px #a1a1a1;
+	height: 45px;
+	color: #404040;
+	font-family: arial;
 }
 
 .about-return-header{
@@ -3136,6 +3324,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-return-header:before{
 	content: url("/img/site/return.png");
+	vertical-align: -o-middle-with-baseline;
+	vertical-align: -webkit-baseline-middle;
+	vertical-align: -moz-middle-with-baseline;
+	vertical-align: sub;
+
 }
 
 .about-return-inform{
@@ -3143,12 +3336,181 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #f6f6f6;*/
 }
 
+.about-return-inform .about-inform-button{
+	float: none;
+	margin: auto;
+	display: block
+}
+
+.about-return-inform .modal-body{
+	overflow: auto;
+}
+
+.about-return span{
+	font-size: 14px;
+	color: #282828;
+	display: block;
+	padding-bottom: 20px;
+}
+
+.about-return .bold{
+	font-weight: bold;
+}
+
+.about-return-accordion span{
+	font-size: 22px;
+	padding-bottom: 0px;
+	border-bottom: 1px dashed;
+	text-decoration: dashed;
+	display: inline-block;
+	font-family: OpenSans-Semibold;
+	margin-left: 0px;
+}
+
+.about-return-accordion .ui-accordion .ui-accordion-header .ui-accordion-header-icon{
+	display: none;
+}
+
+.about-return-accordion .ui-accordion-header::before{
+	display: none;
+}
+
+.about-return-accordion .ui-accordion .ui-accordion-icons{
+	padding-left: 0px;
+}
+
 .about-TermsOfUse span{
 	font-size: 14px;
+	color: #282828;
+	display: block;
+	padding-bottom: 35px;
 }
 
 .about-TermsOfUse .bold{
 	font-size: 16px;
+	font-weight: bold;
+	padding-bottom: 20px;
+}
+
+.about-contacts{
+	color: #282828;
+}
+
+.about-contacts .about-header{
+	border-bottom: none;
+}
+
+.about-contacts .map{
+	font-size: 22px;
+	color: rgb(25, 152, 219);
+	border-bottom: 1px dashed;
+	cursor: pointer;
+	display: inline-block;
+	margin-top: 40px;
+}
+
+.contacts-inform{
+	overflow: auto;
+}
+
+.contacts-inform .inform{
+	width: 33%;
+	float: left;
+}
+
+.contacts-inform .inform div{
+	overflow: auto;
+}
+
+.contacts-inform .inform .right{
+	float: right;
+}
+
+.contacts-inform .inform span{
+	display: block;
+	padding-top: 20px;
+	font-size: 18px;
+	float: left;
+}
+
+.contacts-inform .inform .operator{
+	padding-left: 55px;
+}
+
+.contacts-inform .numbers span{
+	font-size: 24px;
+}
+
+.contacts-inform .numbers div{
+	font-size: 12px;
+	width: 165px;
+	margin: auto;
+}
+
+.about-contacts .your-wish{
+	width: 880px;
+	height: 350px;
+	background: #f3f8fc;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	border: 3px solid #d0e9f9;
+	padding: 30px;
+	margin-top: 35px;
+	margin-bottom: 35px;
+}
+
+.about-contacts .your-wish span{
+	display: block;
+	font-size: 16px;
+	color: #515152;
+	padding-bottom: 5px;
+}
+
+.about-contacts .your-wish input, textarea{
+	border: 1px solid #e4e4e4;
+	border-radius: 3px;
+	background: #ffffff;
+	padding: 5px;
+	color: #000;
+	box-shadow: inset 0 0 3px #e4e4e4;
+	color: #8b8b8b;
+}
+
+.your-wish .name{
+	float: left;
+	display: block;
+}
+
+.your-wish .email{
+	float: right;
+	display: block;
+}
+
+.your-wish .wish{
+	display: block;
+	margin-top: 90px;
+}
+
+.your-wish .name input{
+	height: 40px;
+	width: 450px;
+}
+
+.your-wish .email input{
+	height: 40px;
+	width: 310px;
+}
+
+.your-wish .wish textarea{
+	width: 100%;
+	height: 100px;
+}
+
+.your-wish button{
+	display: block;
+	margin: 25px auto auto;
+	float: none;
 }
 
 /*========* END O-NAS *=========*/
@@ -3186,7 +3548,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.top-menu-content span{
+.top-menu-content a{
 	color: #3b3b39;
 	font-size: 14px;
 	cursor: pointer;
@@ -3404,9 +3766,12 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header .phone-number .yellow-button{
+    /*
 	margin: auto;
 	display: block;
-	box-shadow: 0px 2px 2px -1px rgb(233, 202, 111);
+	box-shadow: 0px 2px 1px -1px rgb(233, 202, 111);
+    */
+
 }
 
 .header .phone-number .popover-title{
@@ -3651,7 +4016,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: unset;
 	margin-bottom: 10px;
 	margin-top: 5px;
-}   
+}
 
 .in-basket a{
 	color: #4f4f4f;
@@ -3741,6 +4106,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 45px;
 }
 
+.sticky .header-menu:after{
+	background: none;
+}
+
 .sticky .header-menu-item{
 	height: 45px;
 }
@@ -3778,6 +4147,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .main-content{
 	padding-bottom: 430px;
 	overflow: auto;
+	padding-top: 10px;
 }
 
 .main-content-slider .slick-slide img{
@@ -3858,6 +4228,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-overflow: ellipsis;
 	position: unset;
 	margin: 0px;
+	font-size: 16px;
 }
 
 .content-items .goods-item{
@@ -3916,6 +4287,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 85px;
 	vertical-align: middle;
 	display: table-cell;
+	color: #7d8d95;
+	font-size: 15px;
 }
 
 /*.right-item{
@@ -3923,10 +4296,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }*/
 
 /*.right-item*/ .price{
-	display: block;
-	position: absolute;
-	margin-left: 28px;
-	margin-top: -65px
+/*	display: block;
+	position: absolute;*/
+	/*margin-left: 28px;
+	margin-top: -65px*/
 }
 
 .goods-item .price{
@@ -3970,7 +4343,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	position: absolute;
 	margin-left: 20px;
-	margin-top: -35px;
+	margin-top: -60px;
+}
+
+.banners-icons{
+	overflow: auto;
+
+}
+
+.banners-icons .ico{
+	margin: 0px 10px 0px 0px;
 }
 
 .goods-content-icons{
@@ -4064,8 +4446,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding: 20px 15px 20px 13px;
 }
 .goods-content-all .goods-item span{
-	color: #7d8d95;
-	font-size: 15px;
+/*	color: #7d8d95;
+	font-size: 15px;*/
 }
 
 .price-and-order span{
@@ -4078,21 +4460,36 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.goods-content-all .item-id:before{
+/*.goods-content-all .item-id:before{
 	content: url("/img/site/favorite.png");
 	float: left;
 	margin-top: 4px;
 	cursor: pointer;
+}*/
+
+/*.goods-content-all .item-id:hover{
+	content: url("/img/site/favorites.png");!*Допилить*!
+}*/
+
+.goods-content .items-grid .item{
+	width: 215px;
 }
 
-.goods-content-all .item-id:hover{
-	content: url("/img/site/favorites.png");/*Допилить*/
+.goods-content .item .icon-heart:before{
+	font-size: 15px;
+	float: left;
+}
+
+.goods-content .items-grid .item-wish:hover .item-wish-text{
+	width: 100px;
 }
 
 .goods-content-all .goods-item .item-id{
 	text-align: right;
 	float: right;
+    /*
 	width: 100%;
+    */
 }
 
 .goods-item-style span{
@@ -4120,7 +4517,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .item-image{
 	background: url("/img/site/scissors.png") no-repeat;
 	height: 140px;
+    /*
 	margin-top: 40px;
+    */
+	margin-top: 20px;
 }
 
 .item-image img{
@@ -4135,11 +4535,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .price-and-order{
-
+	color: #7d8d95;
 }
 
-.price-and-order span{
-}
+
 
 .price-and-order .semi-bold{
 	font-size: 18px !important;
@@ -4320,7 +4719,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #29a1e0;
 	width: 100%;
 	height: 100px;
-	box-shadow: 0 20px 20px rgba(175,175,175,0.5);}
+    /*
+	box-shadow: 0 20px 20px rgba(175,175,175,0.5);
+    */
+}
+
+.footer .blue-line:after{
+	overflow: auto;
+	height: 38px;
+	content: "";
+	display: block;
+	background: url("/img/site/shadow_2.png") repeat;
+	width: 100%;
+}
 
 .footer-content{
 	width: 1175px;
@@ -4333,7 +4744,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .blue-line .footer-content{
 	padding-top: 27px;
-	padding-bottom: 27px;
+	padding-bottom: 23px;
 }
 
 .blue-line .footer-content:before{
@@ -4349,7 +4760,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-left: 90px;
 	margin-top: 13px;
 	float: left;
-
 }
 
 .footer-content .phone-numbers:before{
@@ -4394,6 +4804,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	-moz-box-shadow: inset 0 0 9px #ffec9a;
 	-webkit-box-shadow: inset 0 0 9px #ffec9a;
 	box-shadow: inset 0 0 9px #ffec9a;
+	display: block;
+	margin: auto;
+}
+
+.phone-number .button{
+	text-transform: none;
+	font-family: unset ;
 }
 
 .footer-menu{

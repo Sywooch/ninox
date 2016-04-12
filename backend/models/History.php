@@ -2,9 +2,9 @@
 
 namespace backend\models;
 
-use common\models\SborkaItem;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\web\ConflictHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -17,7 +17,7 @@ class History extends \common\models\History
 {
 
     private $real_summ;
-    private $items;
+    private $_items;
     private $isWholesale;
     public $summ;
 
@@ -76,6 +76,63 @@ class History extends \common\models\History
         }
 
         return $statuses[$this->status];
+    }
+
+    public function getPayOnCard(){
+        switch($this->paymentType){
+            case 2:
+                return true;
+                break;
+            case 1:
+            case 3:
+            default:
+                return false;
+                break;
+        }
+    }
+
+    public function sendMessage($type){
+        switch($type){
+            case 'card':
+                return $this->sendCardSms();
+                break;
+            case 'order':
+                return $this->sendSms();
+                break;
+        }
+    }
+
+    public function sendSms(){
+        switch($this->status){
+            case self::STATUS_NOT_CALLED:
+                break;
+            case self::STATUS_PROCESS:
+                break;
+            case self::STATUS_NOT_PAYED:
+                break;
+            case self::STATUS_WAIT_DELIVERY:
+                break;
+            case self::STATUS_DELIVERED:
+                break;
+        }
+        //\Yii::$app->sms->send();
+    }
+
+    public function sendCardSms(){
+        switch($this->status){
+            case self::STATUS_NOT_CALLED:
+                break;
+            case self::STATUS_PROCESS:
+                break;
+            case self::STATUS_NOT_PAYED:
+                break;
+            case self::STATUS_WAIT_DELIVERY:
+                break;
+            case self::STATUS_DELIVERED:
+                break;
+        }
+
+        //\Yii::$app->sms->send();
     }
 
     public function beforeSave($insert){
@@ -229,9 +286,64 @@ class History extends \common\models\History
         return $this->real_summ;
     }
 
+    public function clearControl(){
+        foreach($this->items as $item) {
+            $item->realyCount = 0;
+
+            $item->save(false);
+        }
+    }
+
+    public function getNotControlledGoods(){
+        $items = [];
+
+        foreach($this->items as $item){
+            if(!$item->controlled){
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
+
+    public function getNotControlledGoodsCount(){
+        return sizeof($this->notControlledGoods);
+    }
+
+    public function getNotControlledItemsCount(){
+        $count = 0;
+
+        foreach($this->notControlledGoods as $item){
+            $count += ($item->originalCount - $item->realyCount);
+        }
+
+        return $count;
+    }
+
+    public function getControlledGoods(){
+        $items = [];
+
+        foreach($this->items as $item){
+            if($item->controlled){
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
+
+
+    public function getControlled(){
+        if(sizeof($this->notControlledGoods) > 0){
+            return false;
+        }
+
+        return true;
+    }
+
     public function getItems($returnAll = true){
-        if(!empty($this->items) && $returnAll){
-            return $this->items;
+        if(!empty($this->_items) && $returnAll){
+            return $this->_items;
         }
 
         $q = SborkaItem::find()->where(['orderid' => $this->id]);
@@ -240,10 +352,28 @@ class History extends \common\models\History
             return $q;
         }
 
-        $this->items = $q->all();
+        $items = [];
 
+        foreach($q->all() as $tempItem){
+            $items[$tempItem->itemID] = $tempItem;
+        }
 
-        return $this->items;
+        return $this->_items = $items;
+    }
+
+    public function controlItem($itemID, $count = 1){
+        if(!isset($this->items[$itemID])){
+            throw new NotFoundHttpException("Товар с ID {$itemID} не найден в заказе #{$this->number} (ID {$this->ID})");
+        }
+
+        $item = $this->items[$itemID];
+
+        if($item->controlled){
+            throw new ConflictHttpException("Нельзя подтвердить подтверждённый товар дважды!");
+        }
+
+        $item->realyCount += $count;
+        $item->save(false);
     }
 
 
