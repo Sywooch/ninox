@@ -13,13 +13,13 @@ $css = <<<'CSS'
 }
 
 .vozvrat-modal{
-text-align: left;
+    text-align: left;
 }
 
 .vozvrat-modal textarea{
-display: block;
-width: 100%;
-max-width: 100%;
+    display: block;
+    width: 100%;
+    max-width: 100%;
 }
 
 .remodal button{
@@ -35,9 +35,10 @@ max-width: 100%;
 }
 
 .vozvrat-modal .row .title{
-padding: 20px;
+    padding: 20px;
 }
 
+\
 CSS;
 
 $this->registerCss($css);
