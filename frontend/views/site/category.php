@@ -18,23 +18,17 @@ $js = <<<'JS'
             if(params['lastpage']){
                 delete params['lastpage'];
             }
-            if(params['filter'] != 'goods'){
-                params['filter'] = ['goods'];
-                params[optId] = [];
-                params[optId].push(this.value);
-            }else{
-                if(this.checked){
-                    if(params[optId]){
-                        params[optId].indexOf(this.value) == -1 ? params[optId].push(this.value) : '';
-                    }else{
-                        params[optId] = [];
-                        params[optId].push(this.value);
-                    }
+            if(this.checked){
+                if(params[optId]){
+                    params[optId].indexOf(this.value) == -1 ? params[optId].push(this.value) : '';
                 }else{
-                    if(params[optId]){
-                        var index = params[optId].indexOf(this.value);
-                        params[optId].length > 1 ? params[optId].splice(index, 1) : delete params[optId];
-                    }
+                    params[optId] = [];
+                    params[optId].push(this.value);
+                }
+            }else{
+                if(params[optId]){
+                    var index = params[optId].indexOf(this.value);
+                    params[optId].length > 1 ? params[optId].splice(index, 1) : delete params[optId];
                 }
             }
         }
@@ -44,7 +38,6 @@ $js = <<<'JS'
 JS;
 
 $this->registerJS($js);
-
 
 \yii\widgets\Pjax::begin([
     'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a',
@@ -102,16 +95,13 @@ echo Html::tag('div',
         'itemOptions'   =>  [
             'class'     =>  'hovered'
         ],
-        'pager'         =>  [
-            'class' =>  \common\components\ShopPager::className()
-        ]
-        /*'pager' =>  [
+        'pager' =>  [
             'class'             =>  ScrollPager::className(),
             'container'         =>  '.list-view div.items-grid',
             'item'              =>  'div.hovered',
             'paginationClass'   =>  'pagination',
             'paginationSelector'=>  'pagi'
-        ]*/
+        ]
     ]),
     ['class' => $category->viewFile.' clear-fix']
 );
