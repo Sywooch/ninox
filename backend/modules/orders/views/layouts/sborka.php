@@ -151,6 +151,14 @@ $css = <<<'CSS'
     width: 100%;
 }
 
+.sborka .access img{
+opacity: 0.2;
+}
+
+.sborka .denied img{
+opacity: 0.2;
+}
+
 .sborka .typical-block .access .ico{
     background: url("/img/access.png") no-repeat;
     position: relative;

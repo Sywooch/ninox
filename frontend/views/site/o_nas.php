@@ -206,7 +206,6 @@ use yii\jui\Accordion;
                     После того как Вы отправили нам посылку, для того, чтобы
                     оформить возврат, необходимо заполнить форму возврата.
                 </span>
-
                 <?php /*reModal::begin([
                     'header' => '<h2>Hello world</h2>',
                     'toggleButton' => [
@@ -222,20 +221,37 @@ use yii\jui\Accordion;
                 ]);
 
                 Modal::end()*/
-                Remodal::widget([
+              /*  Remodal::widget([
                     'cancelButton'		=>	false,
                     'confirmButton'		=>	false,
                     'addRandomToID'		=>	false,
-                    'content'			=>	/*$this->render('_order_edit', ['order' => $order])*/'fsdfsdf',
-                    'buttonOptions'     =>  [
+                    'content'			=>	/*$this->render('_order_edit', ['order' => $order])*/
+                    /*'buttonOptions'     =>  [
                         'label' =>  'редактировать',
                         'tag'   =>  'a',
                         'style' =>  ''
                     ],
-                    'id'				=>	'orderEdit',
+                    'id'				=>	'modal',
                 ])
-                ;
+                ;*/
 
+               echo Remodal::widget([
+                   'cancelButton'		=>	false,
+                   'confirmButton'		=>	true,
+                   'addRandomToID'		=>	false,
+                    'id'            =>  'newPriceRule',
+                    'buttonOptions' =>  [
+                        'label' =>  'Оформить возврат',
+                        'class' =>  'about-inform-button yellow-button large-button'
+                    ],
+
+                    'confirmButtonOptions'  =>  [
+                        'label' =>  'Отправить',
+                        'class' =>  'about-inform-button yellow-button large-button'
+                    ],
+                    'content'   =>  $this->render('vozvrat'),
+
+                ])
            ?>
             </div>
             <div class="about-return-accordion">
@@ -243,7 +259,7 @@ use yii\jui\Accordion;
                     'items' => [
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
-                    'content' =>'<span>о технике</span>', [
+                    'content' =>'о технике', [
                         'class' =>  'hh',
                     ] //сделать рендер
                     ],
