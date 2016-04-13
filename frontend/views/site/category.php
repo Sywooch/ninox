@@ -5,7 +5,7 @@ use frontend\helpers\PriceRuleHelper;
 use frontend\widgets\Breadcrumbs;
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
-
+    
 $this->title = $category->Name;
 
 $helper = new PriceRuleHelper();
