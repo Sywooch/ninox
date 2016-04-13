@@ -14,14 +14,10 @@ class FrontEndAsset extends AssetBundle
 {
 	public $sourcePath = '@web';
 	public $css = [
-		'css/normalize.css',
-		'css/ion.rangeSlider.css',
-		'css/ion.rangeSlider.skinModern.css',
 		'css/counter.css',
 		'css/maskedphone.css',
 		'css/outdatedbrowser.min.css',
 		'css/site.css',
-		'css/base64.css',
 		'css/menu.css',
 	];
 	public $js = [

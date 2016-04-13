@@ -13,7 +13,16 @@ return [
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'assetManager'  =>  [
-            'linkAssets'    =>  true
+            'linkAssets'    =>  true,
+            'bundles' => [
+                'yii2mod\slider\IonSliderAsset' => [
+                    'css' => [
+                        'css/normalize.css',
+                        'css/ion.rangeSlider.css',
+                        'css/ion.rangeSlider.skinModern.css'
+                    ]
+                ],
+            ],
         ],
         'cache' =>  [
             'class' =>  'yii\caching\FileCache'

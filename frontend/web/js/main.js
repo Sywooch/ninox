@@ -25,6 +25,8 @@ var isMobile = {
 
 var keysdown = {};
 
+var params = getFilterParams();
+
 String.prototype.isJSON = function(){
 	if(this.length && (/^[\],:{}\s]*$/.test(this.replace(/\\["\\\/bfnrtu]/g, '@').
 		replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
@@ -243,4 +245,37 @@ function buildLinkFromParams(args, linkReplace){
 		}
 	}
 	return argsStr ? (link + '?' + argsStr.slice(0, -1)) : link;
+}
+
+function updateFilter(data){
+	if(data.from >= 0 && data.to >= 0){
+		if(params['minPrice'] && params['maxPrice']){
+			params['minPrice'][0] = data.from;
+			params['maxPrice'][0] = data.to;
+		}else{
+			params['minPrice'] = [];
+			params['minPrice'].push(data.from);
+			params['maxPrice'] = [];
+			params['maxPrice'].push(data.to);
+		}
+	}else{
+		var optId = data.getAttribute('name').replace(/\[|\]/g, '');
+		if(optId && data.value){
+			if(data.checked){
+				if(params[optId]){
+					params[optId].indexOf(data.value) == -1 ? params[optId].push(data.value) : '';
+				}else{
+					params[optId] = [];
+					params[optId].push(data.value);
+				}
+			}else{
+				if(params[optId]){
+					var index = params[optId].indexOf(data.value);
+					params[optId].length > 1 ? params[optId].splice(index, 1) : delete params[optId];
+				}
+			}
+		}
+	}
+	window.history.replaceState({}, document.title, buildLinkFromParams(params, false));
+	$.pjax.reload({container: '#pjax-category'});
 }

@@ -1051,15 +1051,15 @@ h2{
 	margin: 0 auto;
 }
 
-.category .left-menu{
+.category .filters{
 	width: 274px;
 	float: left;
 	border-right: 1px dotted #aaafb0;
 	font-size: 14px;
-	padding: 0 10px 20px;
+	padding: 25px 10px 0 20px;
 }
 
-.category .list-view{
+.category .content{
 	width: 870px;
 	float: right;
 }
@@ -1279,11 +1279,11 @@ footer{
 
 }
 
-.main-content .content{
+/*.main-content .content{
 	max-width: 1170px;
 	overflow: auto;
 	margin-top: 40px;
-	/* на 06.04.16*/
+	!* на 06.04.16*!
 }
 
 .content{
@@ -1291,7 +1291,7 @@ footer{
 	max-width: 1050px;
 	margin: 0 auto;
 	min-width: 880px;
-}
+}*/
 
 .content-data-body label{
 	font-weight: normal;
