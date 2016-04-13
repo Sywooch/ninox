@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use bobroid\remodal\Remodal;
 use common\helpers\Formatter;
 use frontend\models\Category;
 use frontend\assets\RuLangAsset;
@@ -406,11 +407,24 @@ $this->beginPage();
 							с 8.00 до 17:30, без выходных
 						</span>
 					</div>
-					<?=\yii\helpers\Html::button('Заказать обратный звонок', [
-						'type'  =>  'submit',
-						'class' =>  'yellow-button large-button',
-						'id'    =>  'submit'
-					])?>
+					<?php	echo Remodal::widget([
+						'cancelButton'		=>	false,
+						'confirmButton'		=>	true,
+						'addRandomToID'		=>	false,
+						'id'            =>  'submit',
+						'buttonOptions' =>  [
+							'label' =>  'Заказать обратный звонок',
+							'class' =>  'yellow-button large-button',
+						],
+
+						'confirmButtonOptions'  =>  [
+							'label' =>  'Отправить',
+							'class' =>  'yellow-button large-button'
+						],
+						'content'   =>  $this->render('_callback'),
+
+					])
+					?>
 				</div>
 			</div>
 			<div class="footer-menu">
