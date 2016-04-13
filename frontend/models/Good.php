@@ -31,6 +31,11 @@ class Good extends \common\models\Good{
 
     private $_options = [];
 
+	public function getFilters(){
+		return $this->hasMany(GoodOptionsValue::className(), ['good' => 'ID'])
+			->joinWith('goodOptions');
+	}
+
 	public function getReviewsCount(){
 		return GoodsComment::find()->where(['goodID' => $this->ID])->count();
 	}

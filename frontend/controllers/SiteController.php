@@ -181,6 +181,9 @@ class SiteController extends Controller
 
         $this->getBreadcrumbsLinks($category);
 
+        $pageParams = \Yii::$app->request->get();
+        unset($pageParams['_pjax']);
+
         return $this->render($view, [
             'category'          =>  $category,
             'showText'          =>  true,
@@ -189,10 +192,10 @@ class SiteController extends Controller
                 'pagination'    =>  [
                     'pageSize'          =>  '15',
                     'forcePageParam'    =>  false,
-                    'pageSizeParam'     =>  false
+                    'pageSizeParam'     =>  false,
+                    'params'            =>  $pageParams
                 ]
-            ]),
-            'filters'           =>  $category->filters
+            ])
         ]);
     }
 

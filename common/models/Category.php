@@ -60,6 +60,12 @@ class Category extends \yii\db\ActiveRecord
         return $this->parents;
     }
 
+    /**
+     * @param bool $withSubcategories
+     * @return int|null
+     * @deprecated
+     */
+
     public function goodsCount($withSubcategories = false){
         if(!$withSubcategories && $this->goodsCount != null){
             return $this->goodsCount;

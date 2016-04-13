@@ -14,7 +14,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём стандартный склад
          */
-        echo '     > Создаём стандартный склад... ';
+        echo '    > Создаём стандартный склад... ';
         $defaultStore = new \common\models\Shop([
             'name'  =>  'Склад троещина',
             'type'  =>  1
@@ -27,7 +27,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём склад в Хмельницком
          */
-        echo '     > Создаём склад в Хмельницком... ';
+        echo '    > Создаём склад в Хмельницком... ';
         $store = new \common\models\Shop([
             'name'  =>  'Склад Хмельницкий',
             'type'  =>  1
@@ -40,7 +40,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём дефолтного розничного покупателя
          */
-        echo '     > Создаём дефолтного розничного покупателя... ';
+        echo '    > Создаём дефолтного розничного покупателя... ';
         $defaultCustomer = new \common\models\Customer([
             'name'      =>  'Розничный',
             'surname'   =>  'покупатель',
@@ -54,7 +54,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём дефолтного оптового покупателя
          */
-        echo '     > Создаём дефолтного оптового покупателя... ';
+        echo '    > Создаём дефолтного оптового покупателя... ';
         $defaultWholesaleCustomer = new \common\models\Customer([
             'name'      =>  'Оптовый',
             'surname'   =>  'покупатель',
@@ -67,7 +67,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём розничного покупателя для Хмельницкого
          */
-        echo '     > Создаём розничного покупателя для Хмельницкого... ';
+        echo '    > Создаём розничного покупателя для Хмельницкого... ';
         $customer = new \common\models\Customer([
             'name'      =>  'Розничный',
             'surname'   =>  'покупатель',
@@ -81,7 +81,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём оптового покупателя для Хмельницкого
          */
-        echo '     > Создаём оптового покупателя для Хмельницкого... ';
+        echo '    > Создаём оптового покупателя для Хмельницкого... ';
         $wholesaleCustomer = new \common\models\Customer([
             'name'      =>  'Оптовый',
             'surname'   =>  'покупатель',
@@ -95,7 +95,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём дефолтную кассу
          */
-        echo '     > Создаём дефолтную кассу... ';
+        echo '    > Создаём дефолтную кассу... ';
         $defaultCashbox = new \common\models\Cashbox([
             'name'                      =>  'Касса 1',
             'defaultCustomer'           =>  $defaultCustomer->ID,
@@ -111,7 +111,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём кассу для Хмельницкого
          */
-        echo '     > Создаём кассу для Хмельницкого... ';
+        echo '    > Создаём кассу для Хмельницкого... ';
         $cashbox = new \common\models\Cashbox([
             'name'                      =>  'Касса Хмельницкий',
             'defaultCustomer'           =>  $customer->ID,
@@ -126,7 +126,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Создаём стандартные домены
          */
-        echo '     > Создаём стандартные домены... ';
+        echo '    > Создаём стандартные домены... ';
         $defaultDomain = new \common\models\SubDomain([
             'name'              =>  '',
             'autologin'         =>  false,
@@ -140,7 +140,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Домен для Хмельницкого
          */
-        echo '     > Домен для Хмельницкого... ';
+        echo '    > Домен для Хмельницкого... ';
         $domain = new \common\models\SubDomain([
             'name'              =>  'kh',
             'autologin'         =>  true,
@@ -154,8 +154,8 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Пользователи для Хмельницкого
          */
-        echo '     > Пользователи для Хмельницкого... '."\r\n";
-        echo '     > Пользователь Ирина... ';
+        echo "    > Пользователи для Хмельницкого...\r\n";
+        echo '    > Пользователь Ирина... ';
         $userIrina = new \common\models\Siteuser([
             'username'  =>  'kh.irina',
             'name'      =>  'Ирина',
@@ -167,7 +167,7 @@ class m160131_110736_default_cashboxes extends Migration
             echo "Успех \r\n";
         }
 
-        echo '     > Пользователь Марина... ';
+        echo '    > Пользователь Марина... ';
         $userMarina = new \common\models\Siteuser([
             'username'  =>  'kh.marina',
             'name'      =>  'Марина',
@@ -182,7 +182,7 @@ class m160131_110736_default_cashboxes extends Migration
         /**
          * Раз созданы пользователи - можем сделать под них автологин
          */
-        echo '     > Раз созданы пользователи - можем сделать под них автологин... ';
+        echo '    > Раз созданы пользователи - можем сделать под них автологин... ';
         $domain->autologinParams = [
             [
                 'user'  =>  [$userIrina->id, $userMarina->id],

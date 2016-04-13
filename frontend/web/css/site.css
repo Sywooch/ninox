@@ -1052,7 +1052,11 @@ h2{
 }
 
 .category .left-menu{
+	width: 274px;
 	float: left;
+	border-right: 1px dotted #aaafb0;
+	font-size: 14px;
+	padding: 0 10px 20px;
 }
 
 .category .list-view{
@@ -1102,6 +1106,10 @@ h2{
 
 .category .pagination-wrapper{
 	text-align: center;
+}
+
+.filters .filter-rows label{
+	display: block;
 }
 
 /*============* END CATEGORY STYLE *==============*/
@@ -3265,8 +3273,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-inform{
-/*	height: 100px;
-	background: #f6f6f6;*/
 	background: #f6f6f6;
 	padding: 30px;
 	margin-top: 20px;
@@ -3275,9 +3281,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-inform span{
-    /*
-	font-size: 16px;
-    */
 	font-size: 16px !important;
 	width: 550px;
 	float: left;
@@ -3285,18 +3288,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 }
 
-.about-payment-inform{
-	/*height: 100px;
-	background: #f6f6f6;*/
-}
-
 .about-inform-button{
 	float: right;
-/*	background: #fcc82d;
-	background: -webkit-linear-gradient(#fee040, #f9b519);
-	background: -o-linear-gradient(#fee040, #f9b519);
-	background: -moz-linear-gradient(#fee040, #f9b519);
-	background: linear-gradient(#fee040, #f9b519);*/
 	font-size: 15px;
     font-weight: bold;
 	border-radius: 5px;
@@ -3306,12 +3299,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 45px;
 	color: #404040;
 	font-family: arial;
-}
-
-.about-return-header{
-	/*border-bottom: 1px dotted #8c8c8c;
-	font-size: 22px;
-	color: #282828;	*/
+	text-align: center;
+	line-height: 45px;
 }
 
 .about-return-header:before{
@@ -3320,18 +3309,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	vertical-align: -webkit-baseline-middle;
 	vertical-align: -moz-middle-with-baseline;
 	vertical-align: sub;
-
 }
 
-.about-return-inform{
-	/*height: 100px;
-	background: #f6f6f6;*/
-}
-
-.about-return-inform .about-inform-button{
+/*.about-return-inform .about-inform-button{
 	float: none;
 	margin: auto;
 	display: block
+}*/
+
+.about-inform a:hover{
+	text-decoration: none;
 }
 
 .about-return-inform .modal-body{
@@ -3658,8 +3645,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	white-space: normal;
 }
 
-
-
 .input-style-main input[type='text'] {
 	background: url("/img/site/search.png") no-repeat 10px 7px;
 	width: 305px;
@@ -3695,14 +3680,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	color: white;
 	vertical-align: bottom;
-	/*background: #ffd600; /* Old browsers */
-	/*background: -moz-linear-gradient(top,  #ffd600 0%, #f9b519 80%); /* FF3.6+ */
-	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffd600), color-stop(80%,#f9b519)); /* Chrome,Safari4+ */
-	/*background: -webkit-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* Chrome10+,Safari5.1+ */
-	/*background: -o-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* Opera 11.10+ */
-/*	background: -ms-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* IE10+ */
-/*	background: linear-gradient(to bottom,  #ffd600 0%,#f9b519 80%); /* W3C */
-/*	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd600', endColorstr='#f9b519',GradientType=0 ); /* IE6-9 */
 	-webkit-box-shadow: inset 0px 0px 5px 0px white;
 	box-shadow: inset 0px 1px 5px 0px white;
 	background: #29a1e0;
@@ -3743,29 +3720,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.header .phone-number .call-back{
-	/*height: 330px;*/
-	/*width: 285px;
-	position: absolute;
-	background: #ffffff;
-	border-radius: 3px;
-	box-shadow: 0px 1px 3px -1px rgba(0, 0, 0, 0.5);
-	margin-top: 14px;
-	margin-left: 10px;
-	display: ;
-	z-index: 115;
-	padding: 25px;*/
-}
-
-.header .phone-number .yellow-button{
-    /*
-	margin: auto;
-	display: block;
-	box-shadow: 0px 2px 1px -1px rgb(233, 202, 111);
-    */
-
-}
-
 .header .phone-number .popover-title{
 	background: no-repeat;
 	border: none;
@@ -3776,7 +3730,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border: none;
 	margin-bottom: 10px;
 }
-
 
 .call-back .yellow-button{
 	border-bottom: 3px solid rgb(233, 202, 111);
@@ -3824,11 +3777,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .call-back .city-number span{
 	font-family: OpenSans-Semibold;
 	color: #4f4f4f;
-	/*font-size: 14px;
-	height: 15px;
-	line-height: 15px;
-	display: inline-block;
-	overflow: auto;*/
 }
 
 .call-back .work-time span{
@@ -3839,50 +3787,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .call-back .work-time{
 	margin-top: 10px;
 }
-
-/*.call-back .city-number li{
-	display: block;
-	float: left;
-	width: 45%;
-	font-size: 14px;
-	color: #4f4f4f;
-}
-
-.call-back .city-number{
-	overflow: auto;
-	margin-top: 25px;
-	margin-left: 5px;
-}*/
-
-/*.header .phone-number .call-back:before, .header .phone-number .call-back:after{
-	content: '';
-	position: absolute;
-	display: inline-block;
-	height: 1px;
-	width: 12px;
-	top: ;
-	margin-top: -1px;
-	left: 55%;
-	margin-left: -6px;
-	background: #a2e0b0;
-}
-
-.header .phone-number .call-back:before{
-	-webkit-transform: rotate(135deg);
-	-moz-transform: rotate(135deg);
-	-ms-transform: rotate(135deg);
-	-o-transform: rotate(135deg);
-	transform: rotate(135deg);
-}
-
-.header .phone-number .call-back:after{
-	-webkit-transform: rotate(45deg);
-	-moz-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
-	transform: rotate(45deg);
-	margin-left: 2px;
-}*/
 
 .header .number:before{
 	content: url("/img/site/phone.png");
@@ -3920,7 +3824,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .in-basket{
-	/*height: 180px;*/
 	width: 355px;
 	position: absolute;
 	background: #ffffff;
@@ -3940,9 +3843,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: -moz-linear-gradient(#fee040, #f9b519);
 	background: linear-gradient(#fee040, #f9b519);
 	font-size: 15px;
-    /*
-	font-weight: bold;
-    */
 	border-radius: 5px;
 	border-top: 1px solid #fdff27 !important;
 	border: none;
@@ -3993,9 +3893,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	top:0px;
 	cursor: auto;
-    /*
-	margin-bottom: 10px;
-    */
 }
 
 .header .in-basket .button{
@@ -4025,9 +3922,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	top: -12px;
 	position: relative;
 	cursor: pointer;
-    /*
-	margin-top: 14px;
-    */
 }
 
 .desire-icon{
@@ -4235,26 +4129,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: 0px;
 }
 
-/*.content-items .icons-fav-bask{
-	margin-right: 10px;
-	padding: unset;
-	position: unset;
-}
-
-.content-items .icons-fav-bask{
-	padding: unset;
-	position: unset;
-}*/
-
 .content-items .goods-item-style{
 	background: #eaa51e;
 	cursor: pointer;
 	padding: 20px;
 }
-
-/*.content-banners .goods-item{
-	!*cursor: pointer;*!
-}*/
 
 .goods-items .goods-item{
 	height: 215px;
@@ -4283,22 +4162,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 15px;
 }
 
-/*.right-item{
-	height: 450px;
-}*/
-
-/*.right-item*/ .price{
-/*	display: block;
-	position: absolute;*/
-	/*margin-left: 28px;
-	margin-top: -65px*/
-}
-
 .goods-item .price{
 	color: #eaa51e;
 	font-family: OpenSans-Semibold;
 	font-size: 16px;
-
 }
 
 .icons-fav-bask .desire-ico:before{
@@ -4310,26 +4177,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	float: left;
 	margin-left: 10px;
 }
-/*
-!*.right-item*! .icons-fav-bask:before{
-	padding-top: 32px;
-	position: absolute;
-	color: #7d8d95;
-}*/
 
 .icons-fav-bask .basket-ico:after{
 	content: url("/img/site/grey-basket.png");
 	cursor: pointer;
 }
-
-/*
-!*.right-item *!.icons-fav-bask:after{
-	padding-top: 32px;
-	position: absolute;
-	left: 22px;
-	color: #7d8d95;
-}
-*/
 
 .icons-fav-bask{
 	display: block;
@@ -4340,7 +4192,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .banners-icons{
 	overflow: auto;
-
 }
 
 .banners-icons .ico{
@@ -4437,10 +4288,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 345px;
 	padding: 20px 15px 20px 13px;
 }
-.goods-content-all .goods-item span{
-/*	color: #7d8d95;
-	font-size: 15px;*/
-}
 
 .price-and-order span{
 	display: block;
@@ -4451,17 +4298,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #8acc5e;
 	cursor: pointer;
 }
-
-/*.goods-content-all .item-id:before{
-	content: url("/img/site/favorite.png");
-	float: left;
-	margin-top: 4px;
-	cursor: pointer;
-}*/
-
-/*.goods-content-all .item-id:hover{
-	content: url("/img/site/favorites.png");!*Допилить*!
-}*/
 
 .goods-content .items-grid .item{
 	width: 215px;
@@ -4479,9 +4315,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .goods-content-all .goods-item .item-id{
 	text-align: right;
 	float: right;
-    /*
-	width: 100%;
-    */
 }
 
 .goods-item-style span{
@@ -4509,9 +4342,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .item-image{
 	background: url("/img/site/scissors.png") no-repeat;
 	height: 140px;
-    /*
-	margin-top: 40px;
-    */
 	margin-top: 20px;
 }
 
@@ -4529,8 +4359,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .price-and-order{
 	color: #7d8d95;
 }
-
-
 
 .price-and-order .semi-bold{
 	font-size: 18px !important;
@@ -4703,7 +4531,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .footer{
 	width: 100%;
 	bottom: 0;
-	/*z-index: 4;*/
 	position: absolute;
 }
 
@@ -4711,9 +4538,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #29a1e0;
 	width: 100%;
 	height: 100px;
-    /*
-	box-shadow: 0 20px 20px rgba(175,175,175,0.5);
-    */
 }
 
 .footer .blue-line:after{
