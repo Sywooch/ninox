@@ -9,11 +9,6 @@
 use yii\helpers\Html;
 use yii2mod\slider\IonSlider;
 
-var_dump($min);
-var_dump($max);
-var_dump($from);
-var_dump($to);
-
 echo Html::beginTag('div', ['class' => 'filters']).
 	Html::tag('div',
 		Html::tag('div', \Yii::t('shop', 'Цена'), ['class' => 'filter-head']).
