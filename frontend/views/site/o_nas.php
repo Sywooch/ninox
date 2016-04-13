@@ -243,13 +243,11 @@ use yii\jui\Accordion;
                     'items' => [
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
-                    'content' =>'о технике', [
-                        'class' =>  'hh',
-                    ] //сделать рендер
+                    'content' =>$this->render('_guarantee_equipment'),
                     ],
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (бижутерия)', ['class' => 'content-data-first_1']),
-                    'content' => 'о бижутерии', //сделать рендер
+                    'content' => $this->render('_guarantee_jewelry'),
                     ],
                     ],
                     'clientOptions' => ['collapsible' => true, 'active' => false],

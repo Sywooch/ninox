@@ -3353,6 +3353,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: 0px;
 }
 
+.about-return-accordion ul{
+	font-size: 13px;
+	color: rgb(103, 103, 103);
+}
+
+.about-return-accordion ul p{
+	font-weight: bold;
+}
+
+.about-return-accordion .ui-accordion .ui-accordion-content{
+	height: auto !important;
+}
+
 .about-return-accordion .ui-accordion .ui-accordion-header .ui-accordion-header-icon{
 	display: none;
 }
@@ -3453,7 +3466,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-bottom: 5px;
 }
 
-.about-contacts .your-wish input, textarea{
+.about-contacts .your-wish input, .about-contacts .your-wish textarea{
 	border: 1px solid #e4e4e4;
 	border-radius: 3px;
 	background: #ffffff;
@@ -4563,6 +4576,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 20px;
+}
+
+.footer-content a{
+	text-align: center;
+	line-height: 43px;
+}
+
+.footer-content a:hover{
+	text-decoration: none;
 }
 
 .blue-line .footer-content{
