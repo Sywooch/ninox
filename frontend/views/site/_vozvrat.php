@@ -35,10 +35,23 @@ $css = <<<'CSS'
 }
 
 .vozvrat-modal .row .title{
-    padding: 20px;
+    margin-left: 20px;
+    line-height: 40px;
+    font-size: 16px;
+    margin-right: 20px;
 }
 
-\
+.vozvrat-modal .row{
+    /*
+    margin: 0px;
+    */
+}
+
+.vozvrat-modal  input{
+height: 40px;
+}
+
+
 CSS;
 
 $this->registerCss($css);

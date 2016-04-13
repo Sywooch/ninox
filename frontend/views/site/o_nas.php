@@ -112,12 +112,12 @@ use yii\jui\Accordion;
                 <div class="about-delivery-content-info">
                     <div class="about-delivery-content-info-delivery">
                         <div class="about-delivery-content-info-delivery-time">
-                            <span>24 часа</span>
-                            ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТРЫ
+                            <span class="time">24 часа</span>
+                            <span>ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТР</span>
                         </div>
                         <div class="about-delivery-content-info-delivery-time">
-                            <span>48 часов</span>
-                            ДОСТАВКА В РЕГИОНЫ
+                            <span class="time">48 часов</span>
+                            <span>ДОСТАВКА В РЕГИОНЫ</span>
                         </div>
                     </div>
                     <div class="about-delivery-content-info-text">

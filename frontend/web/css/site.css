@@ -3225,6 +3225,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-delivery-content-info-delivery-time span{
+	margin-top: 13px;
+	display: block;
+}
+
+.about-delivery-content-info-delivery-time .time{
 /*	font-size: 38px;
 	color: #008ad2;*/
 	font-size: 38px;
@@ -3234,6 +3239,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	vertical-align: middle;
 	font-stretch: condensed;
+	margin-top: 0px;
+	margin-right: 5px;
 }
 
 .about-delivery-content-info-text{
