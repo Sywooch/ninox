@@ -112,12 +112,12 @@ use yii\jui\Accordion;
                 <div class="about-delivery-content-info">
                     <div class="about-delivery-content-info-delivery">
                         <div class="about-delivery-content-info-delivery-time">
-                            <span>24 часа</span>
-                            ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТРЫ
+                            <span class="time">24 часа</span>
+                            <span>ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТР</span>
                         </div>
                         <div class="about-delivery-content-info-delivery-time">
-                            <span>48 часов</span>
-                            ДОСТАВКА В РЕГИОНЫ
+                            <span class="time">48 часов</span>
+                            <span>ДОСТАВКА В РЕГИОНЫ</span>
                         </div>
                     </div>
                     <div class="about-delivery-content-info-text">
@@ -243,13 +243,11 @@ use yii\jui\Accordion;
                     'items' => [
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
-                    'content' =>'о технике', [
-                        'class' =>  'hh',
-                    ] //сделать рендер
+                    'content' =>$this->render('_guarantee_equipment'),
                     ],
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (бижутерия)', ['class' => 'content-data-first_1']),
-                    'content' => 'о бижутерии', //сделать рендер
+                    'content' => $this->render('_guarantee_jewelry'),
                     ],
                     ],
                     'clientOptions' => ['collapsible' => true, 'active' => false],
