@@ -2,6 +2,8 @@
 
 namespace frontend\modules\account\controllers;
 
+use frontend\models\History;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -51,6 +53,17 @@ class DefaultController extends Controller
 
     public function actionOrders()
     {
-        return $this->render('orders');
+        $ordersDataProvider = new ActiveDataProvider([
+            'query' => History::find()->where(['customerID' => \Yii::$app->user->identity->ID]),
+            'sort'  =>  [
+                'defaultOrder'  =>  [
+                    'id'    =>  SORT_DESC
+                ]
+            ]
+        ]);
+
+        return $this->render('orders', [
+            'ordersDataProvider'    =>  $ordersDataProvider
+        ]);
     }
 }

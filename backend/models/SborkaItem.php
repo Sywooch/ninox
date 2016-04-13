@@ -8,15 +8,10 @@
 
 namespace backend\models;
 
-
-use yii\web\NotFoundHttpException;
-
 class SborkaItem extends \common\models\SborkaItem{
 
     public $priceModified = false;
     public $addedCount = 0;
-
-    private $_good;
 
     public function behaviors()
     {
@@ -36,20 +31,6 @@ class SborkaItem extends \common\models\SborkaItem{
 
     public function getLeftControl(){
         return $this->originalCount - $this->realyCount;
-    }
-
-    public function getGood(){
-        if(empty($this->_good)){
-            $good = Good::findOne($this->itemID);
-
-            if(!$good){
-                throw new NotFoundHttpException("Товара с идентификатором {$this->itemID} не существует!");
-            }
-
-            $this->_good = $good;
-        }
-
-        return $this->_good;
     }
 
     public function getInOrder(){

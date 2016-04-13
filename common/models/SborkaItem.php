@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "sborka".
@@ -36,6 +37,23 @@ class SborkaItem extends \yii\db\ActiveRecord
 
     public $_category;
     public $_photo;
+
+    private $_good;
+
+    public function getGood(){
+        if(empty($this->_good)){
+            $good = Good::findOne($this->itemID);
+
+            if(!$good){
+                return new Good();
+                throw new NotFoundHttpException("Товара с идентификатором {$this->itemID} не существует!");
+            }
+
+            $this->_good = $good;
+        }
+
+        return $this->_good;
+    }
 
     public function getCategory(){
         if(empty($this->_category)){
