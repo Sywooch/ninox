@@ -68,8 +68,8 @@ echo Html::tag('div',
             ],
             'pager' =>  [
                 'class'             =>  ScrollPager::className(),
-                'container'         =>  '.list-view div.items-grid',
-                'item'              =>  'div.hovered',
+                'container'         =>  '.list-view',
+                'item'              =>  '.hovered',
                 'paginationClass'   =>  'pagination',
                 'paginationSelector'=>  'pagi'
             ]
