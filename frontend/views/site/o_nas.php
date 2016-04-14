@@ -1,7 +1,9 @@
 <?php
 use bobroid\remodal\Remodal;
+use frontend\models\ReturnForm;
 use yii\bootstrap\Html;
 use yii\jui\Accordion;
+
 /**
  * Created by PhpStorm.
  * User: hellios
@@ -223,7 +225,7 @@ use yii\jui\Accordion;
                    'cancelButton'		=>	false,
                    'confirmButton'		=>	true,
                    'addRandomToID'		=>	false,
-                    'id'            =>  'vozvrat',
+                    'id'            =>  'return-form',
                     'buttonOptions' =>  [
                         'label' =>  'Оформить возврат',
                         'class' =>  'about-inform-button yellow-button large-button'
@@ -233,8 +235,9 @@ use yii\jui\Accordion;
                         'label' =>  'Отправить',
                         'class' =>  'about-inform-button yellow-button large-button'
                     ],
-                    'content'   =>  $this->render('_vozvrat'),
+                    'content'   =>  $this->render('_return'),[
 
+                   ]
                 ])
            ?>
             </div>

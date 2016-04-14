@@ -97,6 +97,22 @@ class ReturnForm extends Model
         ], false);
 
         $return->save(false);
+
+    }
+
+    public function attributeLabels(){
+        return [
+            'orderNumber'           =>  \Yii::t('shop', '№ заказа'),
+            'customerPhone'         =>  \Yii::t('shop', 'Тел. отправителя'),
+            'sendDate'              =>  \Yii::t('shop', 'Дата отправки'),
+            'nakladna'              =>  \Yii::t('shop', '№ ТТН'),
+            'comment'               =>  \Yii::t('shop', ''),
+            'brokenGood'            =>  \Yii::t('shop', 'брак товара'),
+            'notMatchGood'          =>  \Yii::t('shop', 'не соответствует заказу'),
+            'notLikeGood'           =>  \Yii::t('shop', 'просто не подошел'),
+            'cardNumber'            =>  \Yii::t('shop', 'Номер карты для возврата денег*'),
+            'cardHolder'            =>  \Yii::t('shop', 'Имя и фамилия владельца карты'),
+        ];
     }
 
 }
