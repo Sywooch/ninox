@@ -13,15 +13,11 @@ use yii\web\AssetBundle;
 
 class MainMenuAsset extends AssetBundle
 {
-
-    public $sourcePath = '@web';
-
-    public $js = [
-        'js/mainMenu.js'
-    ];
-
-    public $css = [
-        'css/menu.css'
-    ];
-
+	public $sourcePath = '@web';
+	public $js = [
+		'js/mainMenu.js'
+	];
+	public $css = [
+		'css/menu.css'
+	];
 }

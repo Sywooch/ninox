@@ -112,12 +112,12 @@ use yii\jui\Accordion;
                 <div class="about-delivery-content-info">
                     <div class="about-delivery-content-info-delivery">
                         <div class="about-delivery-content-info-delivery-time">
-                            <span>24 часа</span>
-                            ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТРЫ
+                            <span class="time">24 часа</span>
+                            <span>ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТР</span>
                         </div>
                         <div class="about-delivery-content-info-delivery-time">
-                            <span>48 часов</span>
-                            ДОСТАВКА В РЕГИОНЫ
+                            <span class="time">48 часов</span>
+                            <span>ДОСТАВКА В РЕГИОНЫ</span>
                         </div>
                     </div>
                     <div class="about-delivery-content-info-text">
@@ -147,10 +147,22 @@ use yii\jui\Accordion;
                     Для того, чтобы Ваш заказ был отправлен как можно скорее,
                     перезвоните нам или заполните форму после перевода денег.
                 </span>
-                <?=\yii\helpers\Html::button('Сообщить об оплате', [
-                    'type'  =>  'submit',
-                    'class' =>  'about-inform-button yellow-button large-button',
-                    'id'    =>  'submit'
+                <?php  echo Remodal::widget([
+                    'cancelButton'		=>	false,
+                    'confirmButton'		=>	true,
+                    'addRandomToID'		=>	false,
+                    'id'            =>  'payment',
+                    'buttonOptions' =>  [
+                        'label' =>  'Сообщить об оплате',
+                        'class' =>  'about-inform-button yellow-button large-button'
+                    ],
+
+                    'confirmButtonOptions'  =>  [
+                        'label' =>  'Отправить',
+                        'class' =>  'about-inform-button yellow-button large-button'
+                    ],
+                    'content'   =>  $this->render('_payment_confirm'),
+
                 ])?>
             </div>
             <span>
@@ -206,36 +218,24 @@ use yii\jui\Accordion;
                     После того как Вы отправили нам посылку, для того, чтобы
                     оформить возврат, необходимо заполнить форму возврата.
                 </span>
-
-                <?php /*reModal::begin([
-                    'header' => '<h2>Hello world</h2>',
-                    'toggleButton' => [
-                        'label' => 'Оформить возврат',
-                        'class' => 'about-inform-button yellow-button large-button',
+                <?php
+               echo Remodal::widget([
+                   'cancelButton'		=>	false,
+                   'confirmButton'		=>	true,
+                   'addRandomToID'		=>	false,
+                    'id'            =>  'vozvrat',
+                    'buttonOptions' =>  [
+                        'label' =>  'Оформить возврат',
+                        'class' =>  'about-inform-button yellow-button large-button'
                     ],
-                ]);
 
-                echo \yii\helpers\Html::button('Оформить возврат', [
-                    'type'  =>  'submit',
-                    'class' =>  'about-inform-button yellow-button large-button',
-                    'id'    =>  'submit'
-                ]);
-
-                Modal::end()*/
-                Remodal::widget([
-                    'cancelButton'		=>	false,
-                    'confirmButton'		=>	false,
-                    'addRandomToID'		=>	false,
-                    'content'			=>	/*$this->render('_order_edit', ['order' => $order])*/'fsdfsdf',
-                    'buttonOptions'     =>  [
-                        'label' =>  'редактировать',
-                        'tag'   =>  'a',
-                        'style' =>  ''
+                    'confirmButtonOptions'  =>  [
+                        'label' =>  'Отправить',
+                        'class' =>  'about-inform-button yellow-button large-button'
                     ],
-                    'id'				=>	'orderEdit',
+                    'content'   =>  $this->render('_vozvrat'),
+
                 ])
-                ;
-
            ?>
             </div>
             <div class="about-return-accordion">
@@ -243,13 +243,11 @@ use yii\jui\Accordion;
                     'items' => [
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
-                    'content' =>'<span>о технике</span>', [
-                        'class' =>  'hh',
-                    ] //сделать рендер
+                    'content' =>$this->render('_guarantee_equipment'),
                     ],
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (бижутерия)', ['class' => 'content-data-first_1']),
-                    'content' => 'о бижутерии', //сделать рендер
+                    'content' => $this->render('_guarantee_jewelry'),
                     ],
                     ],
                     'clientOptions' => ['collapsible' => true, 'active' => false],

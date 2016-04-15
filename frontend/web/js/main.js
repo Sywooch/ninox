@@ -25,6 +25,8 @@ var isMobile = {
 
 var keysdown = {};
 
+var params = getFilterParams();
+
 String.prototype.isJSON = function(){
 	if(this.length && (/^[\],:{}\s]*$/.test(this.replace(/\\["\\\/bfnrtu]/g, '@').
 		replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
@@ -230,17 +232,63 @@ function transformToAssocArray(prmstr){
 	return params;
 }
 
-function buildLinkFromParams(args, linkReplace){
-	var link = linkReplace ? document.location.pathname.replace(/(\/page-)\d+/, '') : document.location.pathname;
+function buildLinkFromParams(linkPartReplace, param){
+	var link = '';
+	switch(linkPartReplace){
+		case 'page':
+			link = document.location.pathname.replace(/(\/page-)\d+/, '');
+			break;
+		case 'order':
+			var match = document.location.pathname.match(/\/page-\d+/);
+			link = document.location.pathname.replace(/\/order-\w+|\/page-\d+/g, '') + '/order-' + param + (match ? match : '');
+			break;
+		default:
+			link = document.location.pathname;
+			break;
+	}
 	var argsStr = '';
-	if(Object.keys(args).length >= 1){
-		for(var key in args){
+	if(Object.keys(params).length >= 1){
+		for(var key in params){
 			var tmp = '';
-			for(var i = 0; i < args[key].length; i++){
-				tmp += args[key][i] + ',';
+			for(var i = 0; i < params[key].length; i++){
+				tmp += params[key][i] + ',';
 			}
 			argsStr += key + '=' + tmp.slice(0, -1) + '&';
 		}
 	}
 	return argsStr ? (link + '?' + argsStr.slice(0, -1)) : link;
+}
+
+function updateFilter(data){
+	params['offset'] ? delete params['offset'] : '';
+	if(data.from >= 0 && data.to >= 0){
+		if(params['minPrice'] && params['maxPrice']){
+			params['minPrice'][0] = data.from;
+			params['maxPrice'][0] = data.to;
+		}else{
+			params['minPrice'] = [];
+			params['minPrice'].push(data.from);
+			params['maxPrice'] = [];
+			params['maxPrice'].push(data.to);
+		}
+	}else{
+		var optId = data.getAttribute('name').replace(/\[|\]/g, '');
+		if(optId && data.value){
+			if(data.checked){
+				if(params[optId]){
+					params[optId].indexOf(data.value) == -1 ? params[optId].push(data.value) : '';
+				}else{
+					params[optId] = [];
+					params[optId].push(data.value);
+				}
+			}else{
+				if(params[optId]){
+					var index = params[optId].indexOf(data.value);
+					params[optId].length > 1 ? params[optId].splice(index, 1) : delete params[optId];
+				}
+			}
+		}
+	}
+	window.history.replaceState({}, document.title, buildLinkFromParams('page', false));
+	$.pjax.reload({container: '#pjax-category'});
 }

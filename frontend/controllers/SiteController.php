@@ -183,6 +183,7 @@ class SiteController extends Controller
 
         $pageParams = \Yii::$app->request->get();
         unset($pageParams['_pjax']);
+        unset($pageParams['offset']);
 
         return $this->render($view, [
             'category'          =>  $category,

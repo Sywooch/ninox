@@ -5,97 +5,61 @@
  * Date: 12/9/2015
  * Time: 2:06 PM
  */
+use yii\bootstrap\Html;
+use yii\widgets\ListView;
+
+$js = <<<'JS'
+$("body").on('click', ".spoiler-title", function(){
+    $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");
+});
+JS;
+
+$this->registerJs($js);
+
 ?>
 <div class="content">
-    <div class="menu">
-        <?=\frontend\widgets\ListGroupMenu::widget([
-            'items'    => [
-                [
-                    'label' =>  'Личные данные',
-                    'href'  =>  '/account'
-                ],
-                [
-                    'label' =>  'Мои заказы',
-                    'href'  =>  '/account/orders'
-                ],
-                [
-                    'label' =>  'Моя скидка',
-                    'href'  =>  '/account/discount'
-                ],
-                [
-                    'label' =>  'Список желаний',
-                    'href'  =>  '/account/wish-list'
-                ],
-                [
-                    'label' =>  'Мои отзывы',
-                    'href'  =>  '/account/reviews'
-                ],
-                [
-                    'label' =>  'Возвраты',
-                    'href'  =>  '/account/123'
-                ],
-                [
-                    'label' =>  'Ярмарка мастеров',
-                    'href'  =>  '/account/mas'
-                ],
-            ]
-        ])?>
-    </div>
+    <?=Html::tag('div', \frontend\widgets\ListGroupMenu::widget([
+        'items'    => [
+            [
+                'label' =>  'Личные данные',
+                'href'  =>  '/account'
+            ],
+            [
+                'label' =>  'Мои заказы',
+                'href'  =>  '/account/orders'
+            ],
+            [
+                'label' =>  'Моя скидка',
+                'href'  =>  '/account/discount'
+            ],
+            [
+                'label' =>  'Список желаний',
+                'href'  =>  '/account/wish-list'
+            ],
+            [
+                'label' =>  'Мои отзывы',
+                'href'  =>  '/account/reviews'
+            ],
+            [
+                'label' =>  'Возвраты',
+                'href'  =>  '/account/123'
+            ],
+            [
+                'label' =>  'Ярмарка мастеров',
+                'href'  =>  '/account/mas'
+            ],
+        ]
+    ]), ['class' => 'menu'])?>
     <div class="user-data-content">
         <div class="user-account box myriad">
             <i class="icon icon-box"></i> Мои заказы
         </div>
         <div class="orders">
-            <?php
-            /*
-            ListView::widget([
+            <?=ListView::widget([
                 'dataProvider'  =>  $ordersDataProvider,
-                'view'          =>  function($model){
-                    return $this->render('_order', [
-                        'order'     =>  $model
-                }
-            ]);
-            */
-            ?>
-            <?=$this->render('_order', [
-                'windowClass'   =>  'order-waiting',
-                'order' =>  [
-                    'number'    =>  123,
-                    'date'      =>  '01.02.03',
-                    'status'    =>  'Ожидается оплата',
-                    'summ'      =>  '100500',
-                ]
-            ])?>
-            <?=$this->render('_order', [
-                'windowClass'   =>  'order-canceled',
-                'order' =>  [
-                    'number'    =>  123,
-                    'date'      =>  '01.02.03',
-                    'status'    =>  'Отменен',
-                    'summ'      =>  '100500',
-                ]
-            ])?>
-            <?=$this->render('_order', [
-                'windowClass'   =>  'order-complete',
-                'order' =>  [
-                    'number'    =>  123,
-                    'date'      =>  '01.02.03',
-                    'status'    =>  'Выполнен',
-                    'summ'      =>  '100500',
-                ]
+                'summary'       =>  false,
+                'itemView'      =>  '_order',
             ])?>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js">
-</script>
-<script type="text/javascript">
-            $(".spoiler-title").click(function(){
-                if ($(this).parent().hasClass("showw")) {
-                    $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");
-                }
-                else {
-                    $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");
-                }
-            });
-</script>

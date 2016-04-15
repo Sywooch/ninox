@@ -1051,15 +1051,15 @@ h2{
 	margin: 0 auto;
 }
 
-.category .left-menu{
+.category .filters{
 	width: 274px;
 	float: left;
 	border-right: 1px dotted #aaafb0;
 	font-size: 14px;
-	padding: 0 10px 20px;
+	padding: 25px 10px 0 20px;
 }
 
-.category .list-view{
+.category .content{
 	width: 870px;
 	float: right;
 }
@@ -1110,6 +1110,10 @@ h2{
 
 .filters .filter-rows label{
 	display: block;
+}
+
+.category .select2{
+	margin: 25px 0;
 }
 
 /*============* END CATEGORY STYLE *==============*/
@@ -1279,11 +1283,11 @@ footer{
 
 }
 
-.main-content .content{
+/*.main-content .content{
 	max-width: 1170px;
 	overflow: auto;
 	margin-top: 40px;
-	/* на 06.04.16*/
+	!* на 06.04.16*!
 }
 
 .content{
@@ -1291,7 +1295,7 @@ footer{
 	max-width: 1050px;
 	margin: 0 auto;
 	min-width: 880px;
-}
+}*/
 
 .content-data-body label{
 	font-weight: normal;
@@ -3225,6 +3229,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-delivery-content-info-delivery-time span{
+	margin-top: 13px;
+	display: block;
+}
+
+.about-delivery-content-info-delivery-time .time{
 /*	font-size: 38px;
 	color: #008ad2;*/
 	font-size: 38px;
@@ -3234,6 +3243,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	vertical-align: middle;
 	font-stretch: condensed;
+	margin-top: 0px;
+	margin-right: 5px;
 }
 
 .about-delivery-content-info-text{
@@ -3273,8 +3284,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-inform{
-/*	height: 100px;
-	background: #f6f6f6;*/
 	background: #f6f6f6;
 	padding: 30px;
 	margin-top: 20px;
@@ -3283,9 +3292,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-inform span{
-    /*
-	font-size: 16px;
-    */
 	font-size: 16px !important;
 	width: 550px;
 	float: left;
@@ -3293,18 +3299,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 }
 
-.about-payment-inform{
-	/*height: 100px;
-	background: #f6f6f6;*/
-}
-
 .about-inform-button{
 	float: right;
-/*	background: #fcc82d;
-	background: -webkit-linear-gradient(#fee040, #f9b519);
-	background: -o-linear-gradient(#fee040, #f9b519);
-	background: -moz-linear-gradient(#fee040, #f9b519);
-	background: linear-gradient(#fee040, #f9b519);*/
 	font-size: 15px;
     font-weight: bold;
 	border-radius: 5px;
@@ -3314,12 +3310,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 45px;
 	color: #404040;
 	font-family: arial;
-}
-
-.about-return-header{
-	/*border-bottom: 1px dotted #8c8c8c;
-	font-size: 22px;
-	color: #282828;	*/
+	text-align: center;
+	line-height: 45px;
 }
 
 .about-return-header:before{
@@ -3328,18 +3320,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	vertical-align: -webkit-baseline-middle;
 	vertical-align: -moz-middle-with-baseline;
 	vertical-align: sub;
-
 }
 
-.about-return-inform{
-	/*height: 100px;
-	background: #f6f6f6;*/
-}
-
-.about-return-inform .about-inform-button{
+/*.about-return-inform .about-inform-button{
 	float: none;
 	margin: auto;
 	display: block
+}*/
+
+.about-inform a:hover{
+	text-decoration: none;
 }
 
 .about-return-inform .modal-body{
@@ -3365,6 +3355,19 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: inline-block;
 	font-family: OpenSans-Semibold;
 	margin-left: 0px;
+}
+
+.about-return-accordion ul{
+	font-size: 13px;
+	color: rgb(103, 103, 103);
+}
+
+.about-return-accordion ul p{
+	font-weight: bold;
+}
+
+.about-return-accordion .ui-accordion .ui-accordion-content{
+	height: auto !important;
 }
 
 .about-return-accordion .ui-accordion .ui-accordion-header .ui-accordion-header-icon{
@@ -3467,7 +3470,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-bottom: 5px;
 }
 
-.about-contacts .your-wish input, textarea{
+.about-contacts .your-wish input, .about-contacts .your-wish textarea{
 	border: 1px solid #e4e4e4;
 	border-radius: 3px;
 	background: #ffffff;
@@ -3661,8 +3664,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	white-space: normal;
 }
 
-
-
 .input-style-main input[type='text'] {
 	background: url("/img/site/search.png") no-repeat 10px 7px;
 	width: 305px;
@@ -3698,14 +3699,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	color: white;
 	vertical-align: bottom;
-	/*background: #ffd600; /* Old browsers */
-	/*background: -moz-linear-gradient(top,  #ffd600 0%, #f9b519 80%); /* FF3.6+ */
-	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffd600), color-stop(80%,#f9b519)); /* Chrome,Safari4+ */
-	/*background: -webkit-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* Chrome10+,Safari5.1+ */
-	/*background: -o-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* Opera 11.10+ */
-/*	background: -ms-linear-gradient(top,  #ffd600 0%,#f9b519 80%); /* IE10+ */
-/*	background: linear-gradient(to bottom,  #ffd600 0%,#f9b519 80%); /* W3C */
-/*	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd600', endColorstr='#f9b519',GradientType=0 ); /* IE6-9 */
 	-webkit-box-shadow: inset 0px 0px 5px 0px white;
 	box-shadow: inset 0px 1px 5px 0px white;
 	background: #29a1e0;
@@ -3746,29 +3739,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
-.header .phone-number .call-back{
-	/*height: 330px;*/
-	/*width: 285px;
-	position: absolute;
-	background: #ffffff;
-	border-radius: 3px;
-	box-shadow: 0px 1px 3px -1px rgba(0, 0, 0, 0.5);
-	margin-top: 14px;
-	margin-left: 10px;
-	display: ;
-	z-index: 115;
-	padding: 25px;*/
-}
-
-.header .phone-number .yellow-button{
-    /*
-	margin: auto;
-	display: block;
-	box-shadow: 0px 2px 1px -1px rgb(233, 202, 111);
-    */
-
-}
-
 .header .phone-number .popover-title{
 	background: no-repeat;
 	border: none;
@@ -3779,7 +3749,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border: none;
 	margin-bottom: 10px;
 }
-
 
 .call-back .yellow-button{
 	border-bottom: 3px solid rgb(233, 202, 111);
@@ -3827,11 +3796,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .call-back .city-number span{
 	font-family: OpenSans-Semibold;
 	color: #4f4f4f;
-	/*font-size: 14px;
-	height: 15px;
-	line-height: 15px;
-	display: inline-block;
-	overflow: auto;*/
 }
 
 .call-back .work-time span{
@@ -3842,50 +3806,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .call-back .work-time{
 	margin-top: 10px;
 }
-
-/*.call-back .city-number li{
-	display: block;
-	float: left;
-	width: 45%;
-	font-size: 14px;
-	color: #4f4f4f;
-}
-
-.call-back .city-number{
-	overflow: auto;
-	margin-top: 25px;
-	margin-left: 5px;
-}*/
-
-/*.header .phone-number .call-back:before, .header .phone-number .call-back:after{
-	content: '';
-	position: absolute;
-	display: inline-block;
-	height: 1px;
-	width: 12px;
-	top: ;
-	margin-top: -1px;
-	left: 55%;
-	margin-left: -6px;
-	background: #a2e0b0;
-}
-
-.header .phone-number .call-back:before{
-	-webkit-transform: rotate(135deg);
-	-moz-transform: rotate(135deg);
-	-ms-transform: rotate(135deg);
-	-o-transform: rotate(135deg);
-	transform: rotate(135deg);
-}
-
-.header .phone-number .call-back:after{
-	-webkit-transform: rotate(45deg);
-	-moz-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
-	transform: rotate(45deg);
-	margin-left: 2px;
-}*/
 
 .header .number:before{
 	content: url("/img/site/phone.png");
@@ -3923,7 +3843,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .in-basket{
-	/*height: 180px;*/
 	width: 355px;
 	position: absolute;
 	background: #ffffff;
@@ -3943,9 +3862,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: -moz-linear-gradient(#fee040, #f9b519);
 	background: linear-gradient(#fee040, #f9b519);
 	font-size: 15px;
-    /*
-	font-weight: bold;
-    */
 	border-radius: 5px;
 	border-top: 1px solid #fdff27 !important;
 	border: none;
@@ -3996,9 +3912,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	top:0px;
 	cursor: auto;
-    /*
-	margin-bottom: 10px;
-    */
 }
 
 .header .in-basket .button{
@@ -4028,9 +3941,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	top: -12px;
 	position: relative;
 	cursor: pointer;
-    /*
-	margin-top: 14px;
-    */
 }
 
 .desire-icon{
@@ -4137,6 +4047,221 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 /*========* END UNDER MENU *=========*/
 
 
+/*========* HEADER MENU *=========*/
+.header-menu{
+	width: 100%;
+	background: #2ba3e1; /* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(#5ec0f3, #018ad2); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#5ec0f3, #018ad2); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#5ec0f3, #018ad2); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#5ec0f3, #018ad2); /* Standard syntax */
+}
+
+.header-menu:after{
+	overflow: auto;
+	height: 38px;
+	content: "";
+	display: block;
+	background: url("/img/site/shadow_2.png") repeat;
+	width: 100%;
+}
+
+.header-menu-items{
+	width: 1172px;
+	height: 77px;
+	margin: auto;
+	display: table;
+	table-layout: fixed;
+	border-left: 1px solid #3F99C9;
+	border-right: 1px solid #8ED2F7;
+}
+
+.header-menu-item{
+	border-left: 1px solid #8ed2f7;
+	border-right: 1px solid #3f99c9;
+	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
+	display: table-cell; /* эмуляция ячейки таблицы */
+	text-align: center;
+	height: 50px; /* высота пункта */
+	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
+	vertical-align: bottom;
+	cursor: pointer;
+}
+
+.header-menu-item:hover{
+	border-left: 1px solid #8ed2f7;
+	border-right: 1px solid #3f99c9;
+	background: #f1f1f1;
+	border-top: 3px solid #e7e7e7;
+	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
+	display: table-cell; /* эмуляция ячейки таблицы */
+	text-align: center;
+	height: 77px; /* высота пункта */
+	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
+	vertical-align: bottom;
+}
+
+.header-menu-items >li>a {
+	width: 1000px; /* вот это заставляет наши псевдоячейки растянуться должным образом */
+	display: table-cell; /* без этого тоже никак */
+	vertical-align: middle; /* вертикальное выравнивание текста */
+	font-size: 13px;
+	/*height: 38px;
+	>что было до изменений<
+	padding-bottom: 10px;*/
+	color: white;
+	padding: 5px;
+	line-height: 12px;
+	text-decoration: none;
+	/*изменения на 12.03.16*/
+	height: 32px;
+	padding-top: 0px;
+	/*конец изменений, если ничего не поедет в дальнейшем оптимизировать паддинги*/
+}
+
+.header-menu-item:hover a{
+	color: black;
+}
+
+.header-menu-item:hover .header-menu-item-content{
+	display: block;
+	z-index: 100;
+	max-height: 500px;
+}
+
+.header-menu-item-image{
+	height: 35px;
+}
+
+.header-menu-item img.svg{
+	display: none;
+}
+
+.header-menu-item .svg path{
+	fill: #fff;
+}
+
+.header-menu-item:hover .svg path{
+	fill: #3cace7;
+}
+
+.sticky .header-menu-item-image{
+	height: 40px;
+	margin-top: 0px;
+}
+
+/*.header-menu-item-image > *{
+    transform: scale(1);
+    max-height: 35px;
+}*/
+
+.header-menu-item-content{
+	background: #f1f1f1 none repeat scroll 0% 0%;
+	display: none;
+	left: 2px;
+	right: 0px;
+	letter-spacing: normal;
+	max-height: 0px;
+	overflow: hidden;
+	position: absolute;
+	width: 1170px;
+	margin-left: auto;
+	margin-right: auto;
+	z-index: 0;
+	text-align: left;
+}
+
+.header-menu-item-content-list{
+	float: left;
+	border-right: 1px solid #ffffff;
+	border-left: 1px solid #d1d1d1;
+	display: inline-block;
+	max-width: 260px;
+	width: auto;
+	padding-right: 0px;
+	padding-left: 0px;
+	transition: all 500ms ease-in-out 0s;
+	vertical-align: top;
+	height: 336px;
+}
+
+.header-menu-item-content-text{
+	padding-top: 20px;
+	padding-bottom: 20px;
+	height: 375px;
+	float: left;
+	width: 780px;
+}
+
+.header-menu-item-content-text a{
+	width: 260px;
+	display: inline-flex;
+	float: left;
+	padding-left: 30px;
+	text-decoration: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.header-menu-item-content-text a:before {
+	content: '';
+	display: inline-table;
+	width: 3px;
+	height: 3px;
+	border-radius: 2px;
+	background: #29a1e0;
+	list-style: inside;
+	margin-top: 8px;
+	margin-right: 10px;
+}
+
+.header-menu-item-content ul {
+	-webkit-column-gap: 0px; /* Chrome, Safari, Opera */
+	-moz-column-gap: 0px; /* Firefox */
+	column-gap: 0px;
+}
+
+
+ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
+	font-size: 13px;
+	-moz-column-rule: 2px outset #fff;
+	-moz-columns: 3 260px;
+	-webkit-column-count: 3;
+	-webkit-column-width: 260px;
+	-webkit-column-rule: 2px outset #d1d1d1;
+	column-count: 3;
+	column-width: 260px;
+	column-rule: 2px outset #fff;
+	margin-right: -3px;
+}
+
+.header-menu-item-content-text a:hover{
+	background: #e3e3e3;
+}
+
+.header-menu-item-content li {
+	display: inline-block;
+}
+
+.header-menu-item-content-list a{
+	vertical-align: inherit;
+	padding: 0px;
+	height: 30px;
+}
+
+.header-menu-item-content-slider{
+	width: 388px;
+	background: linear-gradient(to bottom right, #17cad8, #a21ae6);
+	height: 375px;
+	float: right;
+}
+
+.header-menu-item-content-slider img{
+	width: 100%;
+	opacity: 0.5;
+}
+/*========* END HEADER MENU *=========*/
+
 /*========*  MAIN  *=========*/
 
 .main-content{
@@ -4238,26 +4363,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: 0px;
 }
 
-/*.content-items .icons-fav-bask{
-	margin-right: 10px;
-	padding: unset;
-	position: unset;
-}
-
-.content-items .icons-fav-bask{
-	padding: unset;
-	position: unset;
-}*/
-
 .content-items .goods-item-style{
 	background: #eaa51e;
 	cursor: pointer;
 	padding: 20px;
 }
-
-/*.content-banners .goods-item{
-	!*cursor: pointer;*!
-}*/
 
 .goods-items .goods-item{
 	height: 215px;
@@ -4286,22 +4396,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 15px;
 }
 
-/*.right-item{
-	height: 450px;
-}*/
-
-/*.right-item*/ .price{
-/*	display: block;
-	position: absolute;*/
-	/*margin-left: 28px;
-	margin-top: -65px*/
-}
-
 .goods-item .price{
 	color: #eaa51e;
 	font-family: OpenSans-Semibold;
 	font-size: 16px;
-
 }
 
 .icons-fav-bask .desire-ico:before{
@@ -4313,26 +4411,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	float: left;
 	margin-left: 10px;
 }
-/*
-!*.right-item*! .icons-fav-bask:before{
-	padding-top: 32px;
-	position: absolute;
-	color: #7d8d95;
-}*/
 
 .icons-fav-bask .basket-ico:after{
 	content: url("/img/site/grey-basket.png");
 	cursor: pointer;
 }
-
-/*
-!*.right-item *!.icons-fav-bask:after{
-	padding-top: 32px;
-	position: absolute;
-	left: 22px;
-	color: #7d8d95;
-}
-*/
 
 .icons-fav-bask{
 	display: block;
@@ -4343,7 +4426,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .banners-icons{
 	overflow: auto;
-
 }
 
 .banners-icons .ico{
@@ -4440,10 +4522,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 345px;
 	padding: 20px 15px 20px 13px;
 }
-.goods-content-all .goods-item span{
-/*	color: #7d8d95;
-	font-size: 15px;*/
-}
 
 .price-and-order span{
 	display: block;
@@ -4454,17 +4532,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #8acc5e;
 	cursor: pointer;
 }
-
-/*.goods-content-all .item-id:before{
-	content: url("/img/site/favorite.png");
-	float: left;
-	margin-top: 4px;
-	cursor: pointer;
-}*/
-
-/*.goods-content-all .item-id:hover{
-	content: url("/img/site/favorites.png");!*Допилить*!
-}*/
 
 .goods-content .items-grid .item{
 	width: 215px;
@@ -4482,9 +4549,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .goods-content-all .goods-item .item-id{
 	text-align: right;
 	float: right;
-    /*
-	width: 100%;
-    */
 }
 
 .goods-item-style span{
@@ -4512,9 +4576,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .item-image{
 	background: url("/img/site/scissors.png") no-repeat;
 	height: 140px;
-    /*
-	margin-top: 40px;
-    */
 	margin-top: 20px;
 }
 
@@ -4532,8 +4593,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .price-and-order{
 	color: #7d8d95;
 }
-
-
 
 .price-and-order .semi-bold{
 	font-size: 18px !important;
@@ -4706,7 +4765,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .footer{
 	width: 100%;
 	bottom: 0;
-	/*z-index: 4;*/
 	position: absolute;
 }
 
@@ -4714,9 +4772,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #29a1e0;
 	width: 100%;
 	height: 100px;
-    /*
-	box-shadow: 0 20px 20px rgba(175,175,175,0.5);
-    */
 }
 
 .footer .blue-line:after{
@@ -4735,6 +4790,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 20px;
+}
+
+.footer-content a{
+	text-align: center;
+	line-height: 43px;
+}
+
+.footer-content a:hover{
+	text-decoration: none;
 }
 
 .blue-line .footer-content{

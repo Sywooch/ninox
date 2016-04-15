@@ -17,7 +17,6 @@ class History extends \common\models\History
 {
 
     private $real_summ;
-    private $_items;
     private $isWholesale;
     public $summ;
 
@@ -59,23 +58,6 @@ class History extends \common\models\History
         }
 
         return $this->_customer;
-    }
-
-    public function getStatusDescription(){
-        $statuses = [
-            'Не прозвонен',
-            'В обработке',
-            'Не оплачен',
-            'Ожидает доставку',
-            'Отправлен',
-            'Выполнен'
-        ];
-
-        if(!isset($statuses[$this->status])){
-            return '';
-        }
-
-        return $statuses[$this->status];
     }
 
     public function getPayOnCard(){
@@ -339,26 +321,6 @@ class History extends \common\models\History
         }
 
         return true;
-    }
-
-    public function getItems($returnAll = true){
-        if(!empty($this->_items) && $returnAll){
-            return $this->_items;
-        }
-
-        $q = SborkaItem::find()->where(['orderid' => $this->id]);
-
-        if(!$returnAll){
-            return $q;
-        }
-
-        $items = [];
-
-        foreach($q->all() as $tempItem){
-            $items[$tempItem->itemID] = $tempItem;
-        }
-
-        return $this->_items = $items;
     }
 
     public function controlItem($itemID, $count = 1){
