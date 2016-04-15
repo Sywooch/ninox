@@ -82,6 +82,6 @@ $model = new \frontend\models\PaymentConfirmForm();
     </div>
         <?= $form->field($model, 'paymentDate')?>
         <?php
-        echo $form->field($model, 'paymentType')->dropDownList($model-> paymentTypes);
+        echo $form->field($model, 'paymentType')->dropDownList($model->paymentTypes);
         ?>
 </div>
