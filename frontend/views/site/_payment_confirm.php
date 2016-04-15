@@ -52,6 +52,13 @@ $css = <<<'CSS'
     float: right;
 }
 
+.form_content #paymentconfirmform-paymenttype{
+    width: 50%;
+    height: 40px;
+    float: right;
+    margin-right: 20px;
+}
+
 CSS;
 
 $this->registerCss($css);
@@ -74,5 +81,7 @@ $model = new \frontend\models\PaymentConfirmForm();
         2. Как вы платили
     </div>
         <?= $form->field($model, 'paymentDate')?>
-        <?= $form->field($model, 'paymentType')->checkbox()?>
+        <?php
+        echo $form->field($model, 'paymentType')->dropDownList($model-> paymentTypes);
+        ?>
 </div>

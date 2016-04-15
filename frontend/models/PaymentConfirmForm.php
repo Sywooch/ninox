@@ -50,7 +50,7 @@ class PaymentConfirmForm extends Model
             'orderNumber'           =>  \Yii::t('shop', '№ заказа'),
             'sum'                   =>  \Yii::t('shop', 'Сумма оплаты'),
             'paymentDate'           =>  \Yii::t('shop', 'Дата оплаты'),
-
+            'paymentType'           =>  \Yii::t('shop', 'Способ оплаты'),
         ];
     }
 
