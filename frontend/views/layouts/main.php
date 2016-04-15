@@ -419,7 +419,7 @@ $this->beginPage();
 
 						'confirmButtonOptions'  =>  [
 							'label' =>  'Отправить',
-							'class' =>  'yellow-button large-button'
+							'class' =>  'about-inform-button yellow-button large-button'
 						],
 						'content'   =>  $this->render('_callback'),
 

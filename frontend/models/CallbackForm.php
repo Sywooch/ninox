@@ -52,4 +52,13 @@ class CallbackForm extends Model
         $callback->save(false);
     }
 
+    public function attributeLabels(){
+        return [
+            'phone'           =>  \Yii::t('shop', 'Ваш телефон'),
+            'question'        =>  \Yii::t('shop', 'Сообщение'),
+            'name'            =>  \Yii::t('shop', 'Имя и фамилия'),
+
+        ];
+    }
+
 }

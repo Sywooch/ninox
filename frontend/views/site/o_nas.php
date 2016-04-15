@@ -235,9 +235,7 @@ use yii\jui\Accordion;
                         'label' =>  'Отправить',
                         'class' =>  'about-inform-button yellow-button large-button'
                     ],
-                    'content'   =>  $this->render('_return'),[
-
-                   ]
+                    'content'   =>  $this->render('_return')
                 ])
            ?>
             </div>
