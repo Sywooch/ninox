@@ -53,10 +53,10 @@ echo Html::tag('div',
         ]).
         \kartik\select2\Select2::widget([
             'data'          => [
-                'date'      =>  'По рейтингу',
-                'asc'       =>  'По возрастанию цены',
-                'desc'      =>  'По убыванию цены',
-                'novinki'   =>  'По новизне',
+                'date'      =>  \Yii::t('shop', 'По рейтингу'),
+                'asc'       =>  \Yii::t('shop', 'По возрастанию цены'),
+                'desc'      =>  \Yii::t('shop', 'По убыванию цены'),
+                'novinki'   =>  \Yii::t('shop', 'По новизне'),
             ],
             'name'          =>  'Sorting',
             'hideSearch'    => true,
