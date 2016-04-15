@@ -78,6 +78,12 @@ class ReturnForm extends Model
         ];
     }
 
+    public function getRefundMethods(){
+        return [
+            'на карту'          =>  'на карту ПриватБанк',
+            'на личный счет'    =>  'добавить на ваш личный счет Krasota-Style.ua'
+        ];
+    }
 
     public function save(){
         $return = new OrderReturn();
