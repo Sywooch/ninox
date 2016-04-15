@@ -1112,6 +1112,10 @@ h2{
 	display: block;
 }
 
+.category .select2{
+	margin: 25px 0;
+}
+
 /*============* END CATEGORY STYLE *==============*/
 
 /*============* RATING STYLE *==============*/

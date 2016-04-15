@@ -51,6 +51,27 @@ echo Html::tag('div',
             },
             'class'     =>  'sub-categories'
         ]).
+        \kartik\select2\Select2::widget([
+            'data'          => [
+                'date'      =>  'По рейтингу',
+                'asc'       =>  'По возрастанию цены',
+                'desc'      =>  'По убыванию цены',
+                'novinki'   =>  'По новизне',
+            ],
+            'name'          =>  'Sorting',
+            'hideSearch'    => true,
+            'value'         =>  \Yii::$app->request->get('order'),
+            'language'      => \Yii::$app->language,
+            'pluginOptions' =>   [
+                'width' =>  '250px',
+            ],
+            'pluginEvents'  => [
+                'change'    =>  'function(data){
+                    window.history.replaceState({}, document.title, buildLinkFromParams(\'order\', data.target.value));
+                    $.pjax.reload({container: \'#pjax-category\'});
+                }'
+            ],
+        ]).
         ListView::widget([
             'dataProvider'  =>  $goods,
             'itemView'      =>  function($model) use (&$helper){
@@ -68,10 +89,22 @@ echo Html::tag('div',
             ],
             'pager' =>  [
                 'class'             =>  ScrollPager::className(),
-                'container'         =>  '.list-view',
                 'item'              =>  '.hovered',
                 'paginationClass'   =>  'pagination',
                 'paginationSelector'=>  'pagi',
+                'triggerOffset'     =>  \Yii::$app->request->get('offset'),
+                'eventOnPageChange' =>  new \Yii\web\JsExpression('
+                    function(offset){
+                        if(params[\'offset\']){
+                            offset > params[\'offset\'][0] ? params[\'offset\'][0] = offset : \'\';
+                        }else{
+                            params[\'offset\'] = [];
+					        params[\'offset\'].push(offset);
+                        }
+                        window.history.replaceState({}, document.title, buildLinkFromParams(false, false));
+                        return false;
+                    }
+                ')
             ]
         ]).
         Html::tag('div',

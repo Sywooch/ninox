@@ -232,14 +232,26 @@ function transformToAssocArray(prmstr){
 	return params;
 }
 
-function buildLinkFromParams(args, linkReplace){
-	var link = linkReplace ? document.location.pathname.replace(/(\/page-)\d+/, '') : document.location.pathname;
+function buildLinkFromParams(linkPartReplace, param){
+	var link = '';
+	switch(linkPartReplace){
+		case 'page':
+			link = document.location.pathname.replace(/(\/page-)\d+/, '');
+			break;
+		case 'order':
+			var match = document.location.pathname.match(/\/page-\d+/);
+			link = document.location.pathname.replace(/\/order-\w+|\/page-\d+/g, '') + '/order-' + param + (match ? match : '');
+			break;
+		default:
+			link = document.location.pathname;
+			break;
+	}
 	var argsStr = '';
-	if(Object.keys(args).length >= 1){
-		for(var key in args){
+	if(Object.keys(params).length >= 1){
+		for(var key in params){
 			var tmp = '';
-			for(var i = 0; i < args[key].length; i++){
-				tmp += args[key][i] + ',';
+			for(var i = 0; i < params[key].length; i++){
+				tmp += params[key][i] + ',';
 			}
 			argsStr += key + '=' + tmp.slice(0, -1) + '&';
 		}
@@ -248,6 +260,7 @@ function buildLinkFromParams(args, linkReplace){
 }
 
 function updateFilter(data){
+	params['offset'] ? delete params['offset'] : '';
 	if(data.from >= 0 && data.to >= 0){
 		if(params['minPrice'] && params['maxPrice']){
 			params['minPrice'][0] = data.from;
@@ -276,6 +289,6 @@ function updateFilter(data){
 			}
 		}
 	}
-	window.history.replaceState({}, document.title, buildLinkFromParams(params, false));
+	window.history.replaceState({}, document.title, buildLinkFromParams('page', false));
 	$.pjax.reload({container: '#pjax-category'});
 }
