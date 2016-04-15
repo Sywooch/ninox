@@ -729,7 +729,7 @@ h2{
 .hovered:hover .item{
 	box-shadow: 0 3px 10px #516d89;
 	border: 1px solid #bfd1e3;
-	z-index: 3;
+	z-index: 4;
 	background: rgba(255,255,255,0.9);
 }
 
@@ -3616,11 +3616,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 50px;
 }
 
-.sticky-on-scroll{
-	z-index: 3;
-	position: relative;
-}
-
 .header .input-style-main{
 	float: left;
 	padding-left: 50px;
@@ -4097,7 +4092,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .sticky{
-	z-index: 4;
+	z-index: 5;
 	display: block;
 	position: relative;
 }
