@@ -49,6 +49,22 @@ class Category extends \common\models\Category{
 		    ->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
 		    ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
 
+	    switch(\Yii::$app->request->get('order')){
+		    case 'asc':
+			    $return->addOrderBy(['`goods`.`PriceOut1`' => SORT_ASC]);
+			    break;
+		    case 'desc':
+			    $return->addOrderBy(['`goods`.`PriceOut1`' => SORT_DESC]);
+			    break;
+		    case 'novinki':
+			    $return->addOrderBy(['`goods`.`photodate`' => SORT_DESC]);
+			    break;
+		    case 'date':
+		    default:
+		        $return->addOrderBy(['`goods`.`tovupdate`' => SORT_DESC]);
+			    break;
+	    }
+
 	    return $return;
     }
 

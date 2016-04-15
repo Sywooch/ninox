@@ -14,6 +14,7 @@ class FrontEndAsset extends AssetBundle
 {
 	public $sourcePath = '@web';
 	public $css = [
+		'css/normalize.css',
 		'css/counter.css',
 		'css/maskedphone.css',
 		'css/outdatedbrowser.min.css',

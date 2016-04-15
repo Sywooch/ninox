@@ -318,7 +318,7 @@ class Category extends \yii\db\ActiveRecord
                         $branch[$element->Code]['imgSrc'] = $element->imgSrc;
                     }
 
-					$items = Category::buildTree($elements, $element->Code);
+					$items = self::buildTree($elements, $element->Code);
 					if($items && $parentCode == ''){
 						array_unshift($items, ['label' => $element->Name, 'url' => $element->link, 'options' => ['class' => 'see-all']]);
 						$branch[$element->Code]['items'] = $items;

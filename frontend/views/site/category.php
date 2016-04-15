@@ -71,7 +71,7 @@ echo Html::tag('div',
                 'container'         =>  '.list-view',
                 'item'              =>  '.hovered',
                 'paginationClass'   =>  'pagination',
-                'paginationSelector'=>  'pagi'
+                'paginationSelector'=>  'pagi',
             ]
         ]).
         Html::tag('div',

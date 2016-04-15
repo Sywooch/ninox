@@ -12,7 +12,9 @@ return [
         '<action:(reset-password)>/<token>'      =>   'site/<action>',
         '<module(account)>'          =>  '<module>/default/index',
         '<module(account)>/<action>'          =>  '<module>/default/<action>',
-        '<url:(.*)>/page/<page:\d+>'    =>  'site/renderpage',
+        '<url:(.*)>/order-<order:(\w+)>/page-<page:(\d+)>'    =>  'site/renderpage',
+        '<url:(.*)>/page-<page:(\d+)>'    =>  'site/renderpage',
+        '<url:(.*)>/order-<order:(\w+)>'    =>  'site/renderpage',
         '<url:(.*)>'        =>  'site/renderpage',
     ]
 ];
