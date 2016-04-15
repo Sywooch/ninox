@@ -1,17 +1,43 @@
+<?php
+
+use yii\helpers\Html;
+
+switch($model->status){
+    case $model::STATUS_NOT_CALLED:
+    case $model::STATUS_PROCESS:
+    case $model::STATUS_NOT_PAYED:
+    case $model::STATUS_WAIT_DELIVERY:
+        $windowClass = 'order-waiting';
+        break;
+    case $model::STATUS_DELIVERED:
+    case $model::STATUS_DONE:
+        $windowClass = 'order-complete';
+        break;
+}
+
+if($model->deleted){
+    $windowClass = 'order-canceled';
+}
+
+?>
+
 <div class="order <?=$windowClass?>">
     <div class="waiting spoiler-title">
         <i class="icon icon-arrow"></i>
         <div class="myriad">
-            <?=$order['number']?>
+            <?=$model->number?>
         </div>
         <div class="data semi">
-            <?=$order['date']?>
+            <?=\Yii::$app->formatter->asDatetime($model->added, 'php:d-m-Y')?>
         </div>
         <div class="payment semi">
-            <?=$order['status']?>
+            <?=$model->statusDescription?>
         </div>
         <div class="money semi">
-            <?=$order['summ']?> грн.
+            <?=\Yii::t('shop', '{sum} {sign}', [
+                'sum'   =>  empty($model->actualAmount) ? $model->originalSum : $model->actualAmount,
+                'sign'  =>  \Yii::$app->params['domainInfo']['currencyShortName']
+            ])?>
         </div>
     </div>
     <div class="pr">
@@ -30,24 +56,12 @@
             <div class="seller">
             </div>
             <div class="sold-items">
-                <?=$this->render('_items', [
-                    'item' =>  [
-                        'image'                 =>  '',
-                        'order-profile'         =>  'фиолетовый квадрат',
-                        'one-price'                 =>  '100 Грн.',
-                        'sum'                 =>  '5',
-                        'sum-price'                 =>  '500 Грн.',
-                    ]
-                ])?>
-                <?=$this->render('_items', [
-                    'item' =>  [
-                        'image'                 =>  'https://i1.rozetka.com.ua/goods/7222/copy_canon_pixma_mg3240+usb_cable_6223b007_506aea18b0f14_7222551.jpg',
-                        'order-profile'         =>  'принтер',
-                        'one-price'                 =>  '10000 Грн.',
-                        'sum'                 =>  '5',
-                        'sum-price'                 =>  '50000 Грн.',
-
-                    ]
+                <?=\yii\widgets\ListView::widget([
+                    'dataProvider'  =>  new \yii\data\ActiveDataProvider([
+                        'query'     =>  $model->getItems(false),
+                    ]),
+                    'summary'   =>  false,
+                    'itemView'  =>  '_items'
                 ])?>
             </div>
             <div class="delivery">
@@ -62,9 +76,10 @@
                 <div class="title">
                     Итого к оплате:
                 </div>
-                <div class="sum">
-                    2554411 Грн.
-                </div>
+                <?=Html::tag('div', \Yii::t('shop', '{sum} {sign}', [
+                    'sum'   =>  empty($model->actualAmount) ? $model->originalSum : $model->actualAmount,
+                    'sign'  =>  \Yii::$app->params['domainInfo']['currencyShortName']
+                ]), ['class' => 'sum'])?>
             </div>
         </div>
     </div>

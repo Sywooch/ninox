@@ -78,6 +78,12 @@ class ReturnForm extends Model
         ];
     }
 
+    public function getRefundMethods(){
+        return [
+            'на карту'          =>  'на карту ПриватБанк',
+            'на личный счет'    =>  'добавить на ваш личный счет Krasota-Style.ua'
+        ];
+    }
 
     public function save(){
         $return = new OrderReturn();
@@ -112,6 +118,7 @@ class ReturnForm extends Model
             'notLikeGood'           =>  \Yii::t('shop', 'просто не подошел'),
             'cardNumber'            =>  \Yii::t('shop', 'Номер карты для возврата денег*'),
             'cardHolder'            =>  \Yii::t('shop', 'Имя и фамилия владельца карты'),
+            'refundMethod'          =>  \Yii::t('shop', ''),
         ];
     }
 

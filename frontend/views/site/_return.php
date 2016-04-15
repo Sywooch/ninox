@@ -160,24 +160,7 @@ $model = new \frontend\models\ReturnForm();
             <span class="cap">
                 5. Способ возврата денег
             </span>
-<!--        /*$form->field($model, 'refundMethod', [
-        ])->radioList($domainConfiguration['refundMethod'], [
-        'unselect'  => null,
-        'item' => function ($index, $label, $name, $checked, $value) use ($form, $model){
-        return Html::radio($name, $checked, [
-            'value'     =>  $value,
-            'id'        =>  'payment-type-'.$value,
-            'class'     =>  'payment-types payment-type-'.$value,
-        ]);
-        }
-        ])*/-->
-
-        <?php
-        echo $form->field($model, 'refundMethod')->radioList($model-> paymentTypes);
-        ?>
-
-        <input name="returnmoney" id="returnmoney_oncard" checked="checked" type="radio">
-        <input name="returnmoney" id="returnmoney_onaccount" type="radio">
+        <?php echo $form->field($model, 'refundMethod')->radioList($model->refundMethods);?>
     </div>
     <span class="cap">6. Введите номер банковской карты (*перевод возможен только на карту ПриватБанк)</span>
         <?= $form->field($model, 'cardNumber')?>

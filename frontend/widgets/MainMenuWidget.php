@@ -40,7 +40,6 @@ class MainMenuWidget extends Widget{
         'otherLiClass'      =>  '',
         'headerImageClass'  =>  'header-menu-item-image',
         'menuClass'         =>  'header-menu',
-        'menuClassDiv'      =>  'header-menu-content',
         'sliderClassDiv'    =>  'header-menu-item-content-slider',
         'sliderClassImage'  =>  'img',
         'sticky'            =>  true
@@ -65,10 +64,8 @@ class MainMenuWidget extends Widget{
             $this->getView()->registerJs('$(".sticky-on-scroll").sticky({topSpacing: 0, className: "sticky"})');
         }
 
-        return Html::tag('div', Html::tag('div', Html::tag('ul', implode('', $items), [
+        return Html::tag('div', Html::tag('ul', implode('', $items), [
             'class' =>  $this->options['firstLevelUlClass']
-        ]), [
-            'class' =>  $this->options['menuClassDiv']
         ]), [
             'class' =>  $this->options['menuClass']
         ]);
@@ -81,11 +78,6 @@ class MainMenuWidget extends Widget{
             $menu .= Html::tag('div', Html::img($item['imgSrc'], ['class' => 'svg']), [
                 'class' =>  $this->options['headerImageClass']
             ]);
-        }
-
-        if(!$subitem){// && !empty($item['badge'])){
-            $menu .= Html::tag('span', '',//$item['badge']
-            []);
         }
 
         $menu .= Html::a($item['label'], '/'.$item['url']);

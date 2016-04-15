@@ -37,12 +37,54 @@ class Category extends \common\models\Category{
 			    ->having('COUNT(goodsoptions_values.good) >= '.sizeof($names));
 	    }
 
+	    if($priceMin = \Yii::$app->request->get('minPrice')){
+		    $return->andWhere(['>=', '`goods`.`PriceOut1`', $priceMin]);
+	    }
+
+	    if($priceMax = \Yii::$app->request->get('maxPrice')){
+		    $return->andWhere(['<=', '`goods`.`PriceOut1`', $priceMax]);
+	    }
+
 	    $return->andWhere(['`goodsgroups`.`enabled`' => 1])
 		    ->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
 		    ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
 
+	    switch(\Yii::$app->request->get('order')){
+		    case 'asc':
+			    $return->addOrderBy(['`goods`.`PriceOut1`' => SORT_ASC]);
+			    break;
+		    case 'desc':
+			    $return->addOrderBy(['`goods`.`PriceOut1`' => SORT_DESC]);
+			    break;
+		    case 'novinki':
+			    $return->addOrderBy(['`goods`.`photodate`' => SORT_DESC]);
+			    break;
+		    case 'date':
+		    default:
+		        $return->addOrderBy(['`goods`.`tovupdate`' => SORT_DESC]);
+			    break;
+	    }
+
 	    return $return;
     }
+
+	public function getMinPrice(){
+		return Good::find()
+			->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+			->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+			->andWhere(['`goodsgroups`.`enabled`' => 1])
+			->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+			->min('PriceOut1');
+	}
+
+	public function getMaxPrice(){
+		return Good::find()
+			->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+			->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+			->andWhere(['`goodsgroups`.`enabled`' => 1])
+			->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+			->max('PriceOut1');
+	}
 
 	public static function getMenu(){
 		$cats = self::find()
