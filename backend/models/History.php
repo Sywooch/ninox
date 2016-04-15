@@ -87,12 +87,13 @@ class History extends \common\models\History
     public function sendSms(){
         switch($this->status){
             case self::STATUS_NOT_CALLED:
-                break;
-            case self::STATUS_PROCESS:
+                //отправить смс "не дозвонились"
                 break;
             case self::STATUS_NOT_PAYED:
+                //отправить смс с номером карты
                 break;
             case self::STATUS_WAIT_DELIVERY:
+                //
                 break;
             case self::STATUS_DELIVERED:
                 break;

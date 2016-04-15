@@ -2,10 +2,12 @@
 
 namespace frontend\modules\account\controllers;
 
+use common\models\SborkaItem;
 use frontend\models\History;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 
@@ -39,7 +41,22 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $customerOrders = ArrayHelper::getColumn(History::find()
+            ->select('id')
+            ->where(['customerID' => \Yii::$app->user->identity->ID])
+            ->orderBy('added DESC')
+            ->asArray()
+            ->all(), 'id');
+
+        return $this->render('index',
+            [
+                'buyedItems'    =>  new ActiveDataProvider([
+                    'query'         =>  SborkaItem::find()->where(['in', 'orderID', $customerOrders])->limit(6),
+                    'pagination'    =>  [
+                        'pageSize'  =>  6
+                    ]
+                ])
+            ]);
     }
 
     public function actionBetterlistclosed(){
