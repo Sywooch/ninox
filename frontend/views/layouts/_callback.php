@@ -100,3 +100,5 @@ $model = new \frontend\models\CallbackForm();
         <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
         'callback-button']) ?>
 </div>
+<?php $form->end(); ?>
+

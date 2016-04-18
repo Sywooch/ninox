@@ -179,6 +179,8 @@ $model = new \frontend\models\ReturnForm();
         <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
             'return-button']) ?>
 </div>
+<?php $form->end(); ?>
+
 <!--
    тут недавно один парниша, патлач как прозвали, познакомися с тянкой, превосходной и милой, она увлекалась вязанием
     спортом, и как же умна была и красива, они говорили по телефону, часами
