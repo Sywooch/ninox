@@ -42,10 +42,10 @@ class History extends \common\models\History
 
     public function getCustomer(){
         if(empty($this->_customer)){
-            $customer = Customer::findOne($this->customerID);
+            $customer = Customer::findOne(['ID' => $this->customerID]);
 
             if(!$customer){
-                throw new NotFoundHttpException("Клиент с идентификатором '{$this->customerID}' не найден!");
+                $customer = new Customer();
             }
 
             $this->_customer = $customer;

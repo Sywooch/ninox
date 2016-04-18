@@ -756,7 +756,8 @@ $this->beginPage() ?>
         <?php
 
         echo ServiceMenuWidget::widget([
-            'showDateButtons'   =>  isset($this->params['showDateButtons']) ? $this->params['showDateButtons'] : false
+            'showDateButtons'   =>  isset($this->params['showDateButtons']) ? $this->params['showDateButtons'] : false,
+            'showFilterButtons' =>  isset($this->params['showDateButtons']) ? $this->params['showDateButtons'] : false,
         ]),
         Breadcrumbs::widget([
             'homeLink'  =>  ['label' => 'Главная', 'url' => Url::home()],
