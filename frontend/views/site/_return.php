@@ -65,9 +65,6 @@ width: 100%;
 }
 
 .vozvrat-modal .row{
-    /*
-    margin: 0px;
-    */
     padding-bottom: 25px;
 }
 
@@ -100,18 +97,9 @@ width: 100%;
     font-weight: unset;
 }
 
-.card .title{
-    width: 300px;
-}
-
 .card_owner_name input{
     width: 300px;
 }
-
-/*.vozvrat-modal .check-buttons{
-    overflow: auto;
-    padding-top: 25px;
-}*/
 
 .vozvrat-modal .field-returnform-cardnumber, .vozvrat-modal .field-returnform-cardholder{
     width: 100%;
@@ -125,6 +113,15 @@ width: 100%;
 .vozvrat-modal .field-returnform-cardnumber input, .vozvrat-modal .field-returnform-cardholder input{
     width: 50%;
     float: right;
+}
+
+.vozvrat-modal .check-buttons .field-returnform-refundmethod{
+    width: 50%;
+    float: left;
+}
+
+.field-returnform-refundmethod .control-label{
+    display: none;
 }
 
 
