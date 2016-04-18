@@ -7,6 +7,7 @@
  */
 
 use kartik\date\DatePicker;
+use yii\helpers\Html;
 
 $css = <<<'CSS'
 
@@ -45,6 +46,8 @@ width: 100%;
 
 .remodal button{
     float: none;
+    margin: auto;
+    display: block;
 }
 
 .vozvrat-modal .cap{
@@ -173,6 +176,8 @@ $model = new \frontend\models\ReturnForm();
     <span class="cap">6. Введите номер банковской карты (*перевод возможен только на карту ПриватБанк)</span>
         <?= $form->field($model, 'cardNumber')?>
         <?= $form->field($model, 'cardHolder')?>
+        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+            'return-button']) ?>
 </div>
 <!--
    тут недавно один парниша, патлач как прозвали, познакомися с тянкой, превосходной и милой, она увлекалась вязанием

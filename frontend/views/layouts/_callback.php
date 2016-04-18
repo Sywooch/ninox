@@ -6,6 +6,8 @@
  * Time: 14:43
  */
 
+use yii\helpers\Html;
+
 $css = <<<'CSS'
 
 .callback {
@@ -95,4 +97,6 @@ $model = new \frontend\models\CallbackForm();
             'captchaAction' =>  '/captchacallbackmodal',
             'id'            =>  'captcha-modal'
             ]);?>
+        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+        'callback-button']) ?>
 </div>

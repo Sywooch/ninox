@@ -151,16 +151,11 @@ use yii\jui\Accordion;
                 </span>
                 <?php  echo Remodal::widget([
                     'cancelButton'		=>	false,
-                    'confirmButton'		=>	true,
+                    'confirmButton'		=>	false,
                     'addRandomToID'		=>	false,
                     'id'            =>  'payment-confirm-form',
                     'buttonOptions' =>  [
                         'label' =>  'Сообщить об оплате',
-                        'class' =>  'about-inform-button yellow-button large-button'
-                    ],
-
-                    'confirmButtonOptions'  =>  [
-                        'label' =>  'Отправить',
                         'class' =>  'about-inform-button yellow-button large-button'
                     ],
                     'content'   =>  $this->render('_payment_confirm'),
@@ -223,16 +218,11 @@ use yii\jui\Accordion;
                 <?php
                echo Remodal::widget([
                    'cancelButton'		=>	false,
-                   'confirmButton'		=>	true,
+                   'confirmButton'		=>	false,
                    'addRandomToID'		=>	false,
                     'id'            =>  'return-form',
                     'buttonOptions' =>  [
                         'label' =>  'Оформить возврат',
-                        'class' =>  'about-inform-button yellow-button large-button'
-                    ],
-
-                    'confirmButtonOptions'  =>  [
-                        'label' =>  'Отправить',
                         'class' =>  'about-inform-button yellow-button large-button'
                     ],
                     'content'   =>  $this->render('_return')
@@ -389,11 +379,8 @@ use yii\jui\Accordion;
                     <span>Что Вас интересует?</span>
                     <textarea type="text"></textarea>
                 </div>
-                <?=\yii\helpers\Html::button('Отправить', [
-                    'type'  =>  'submit',
-                    'class' =>  'about-inform-button yellow-button large-button',
-                    'id'    =>  'submit'
-                ])?>
+                <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+                    'your-wish-button']) ?>
             </div>
         </div>
     </div>

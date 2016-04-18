@@ -7,6 +7,7 @@
  */
 
 use kartik\date\DatePicker;
+use yii\helpers\Html;
 
 $css = <<<'CSS'
 
@@ -100,4 +101,6 @@ $model = new \frontend\models\PaymentConfirmForm();
         <?php
         echo $form->field($model, 'paymentType')->dropDownList($model->paymentTypes);
         ?>
+        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+        'payment-confirm-button']) ?>
 </div>
