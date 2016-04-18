@@ -79,27 +79,34 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 		'action'	=>	'/order'
 	]);
 	$form->begin();
-		$maskedInputOptions = [
-			'name'			=>	'phone',
-			'mask'			=>	'+38-999-999-99-99',
-			'options'		=>	[
-				'class'			=>	'phone-number',
-			]
-		];
-
-		if(!\Yii::$app->user->isGuest){
-			$maskedInputOptions['value'] 	=	\Yii::$app->user->identity->phone;
-		}elseif(\Yii::$app->request->cookies->getValue("customerPhone", false)){
-			$maskedInputOptions['value']	=   \Yii::$app->request->cookies->getValue("customerPhone");
-		}
-
 		echo Html::tag('div',
 			Html::tag('div',
 				Html::tag('div',
 					\Yii::t('shop', 'Введите ваш телефон:'), [
 					'class' =>  'phone-number-text'
 				]).
-				\yii\widgets\MaskedInput::widget($maskedInputOptions), [
+				\frontend\widgets\MaskedInput::widget([
+					'name'			=>	'phone',
+					'options'		=>	[
+						'class'			=>	'phone-number',
+					],
+					'clientOptions' =>  [
+						'clearIncomplete'   =>  true,
+						'alias'             =>  'phone',
+						'url'               =>  \yii\helpers\Url::to('/js/phone-codes.json'),
+						'countrycode'       =>  '38',
+/*						'oncomplete'           =>  new \yii\web\JsExpression('
+							function(){
+								}
+							}
+						') TODO: сделать вывод флага после того, как плагин будет пофикшен*/
+
+					],
+					'value'         =>  !\Yii::$app->user->isGuest ?
+						\Yii::$app->user->identity->phone :
+							(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
+								\Yii::$app->request->cookies->getValue("customerPhone") : '')
+				]), [
 				'class' =>  'phone-number-block'
 			]), [
 			'class' =>  'left'
