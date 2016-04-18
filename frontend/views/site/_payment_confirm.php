@@ -104,3 +104,5 @@ $model = new \frontend\models\PaymentConfirmForm();
         <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
         'payment-confirm-button']) ?>
 </div>
+<?php $form->end(); ?>
+
