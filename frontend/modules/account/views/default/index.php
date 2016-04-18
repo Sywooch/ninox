@@ -75,9 +75,9 @@ function diplay_hide (reviews)
                                     <div class="">
                                         <?=\Yii::$app->user->identity->phone?>
                                     </div>
-                                    <div class="personal-data">
+                                    <!--<div class="personal-data">
                                         <?=\Yii::$app->user->identity->Phone2?>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                             <div class="email">
@@ -182,54 +182,11 @@ $("#reviews .icon.icon-exit").on('click', function(e){
 SCRIPT;
 
 $this->registerJs($js);
-            ?>
-            <div id="reviews" class="reviews user-account">
-                <div class="pull-right">
-                    <i class="icon icon-exit"></i>
-                </div>
-                <div class="text">
-                    <div class="review-tittle">
-                        <div class="myriad">
-                            Сделайте наш сервис еще лучше
-                        </div>
-                        <div class="semi-font">
-                            Оставьте отзывы о купленных вами товарах
-                        </div>
-                    </div>
-                    <div class="review">
-                        <?=$this->render('_review_items', [
-                            'review_item_image' =>  [
-                                'image'   =>  'img/catalog/265efa88d5d8547c1b9d65f57ca003bdac2ffa911433839838.png',
-                            ]
-                        ])?>
-                        <?=$this->render('_review_items', [
-                            'review_item_image' =>  [
-                                'image'   =>  'img/catalog/zont-avtomat-mo-007-1-sht-629084.jpg',
-                            ]
-                        ])?>
-                        <?=$this->render('_review_items', [
-                            'review_item_image' =>  [
-                                'image'   =>  'img/site/sven.jpg',
-                            ]
-                        ])?>
-                        <?=$this->render('_review_items', [
-                            'review_item_image' =>  [
-                                'image'   =>  'img/catalog/892fb5764422cfbeeb1da96bb02e9465b91bc7551431090634.png',
-                            ]
-                        ])?>
-                        <?=$this->render('_review_items', [
-                            'review_item_image' =>  [
-                                'image'   =>  'img/blog/articles/gde-kupit-zakolku-297982.jpg',
-                            ]
-                        ])?>
-                        <?=$this->render('_review_items', [
-                            'review_item_image' =>  [
-                                'image'   =>  'img/catalog/f107ffd8dd260383c57c457b17bef6a9d8493b6a1433513755.png',
-                            ]
-                        ])?>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
+
+            echo $this->render('_account_leaveFeedback', [
+                'customerBuyedItems'    =>  $buyedItems
+            ]);
+
+             } ?>
     </div>
 </div>

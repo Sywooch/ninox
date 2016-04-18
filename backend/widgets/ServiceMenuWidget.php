@@ -21,6 +21,7 @@ use yii\helpers\Url;
 class ServiceMenuWidget extends Widget{
 
     public $showDateButtons = true;
+    public $showFilterButtons = true;
     public $showCurrencyBlock = true;
     public $canChangeCurrency = true;
     public $showUserDropdown = true;
@@ -29,13 +30,6 @@ class ServiceMenuWidget extends Widget{
         [
             'label'     =>  'Сегодня',
             'link'  =>  '',
-            'options'   =>  [
-                'class' =>  'btn btn-default btn-sm',
-            ]
-        ],
-        [
-            'label'     =>  'Вчера',
-            'link'  =>  'yesterday',
             'options'   =>  [
                 'class' =>  'btn btn-default btn-sm',
             ]
@@ -54,6 +48,37 @@ class ServiceMenuWidget extends Widget{
                 'class' =>  'btn btn-default btn-sm',
             ]
         ],
+        [
+            'label'     =>  'Всё время',
+            'link'  =>  'alltime',
+            'options'   =>  [
+                'class' =>  'btn btn-default btn-sm',
+            ]
+        ],
+    ];
+
+    public $orderFilterButtons = [
+        [
+            'label' =>  'Новые',
+            'link'  =>  '',
+            'options'   =>  [
+                'class' =>  'btn btn-default btn-sm'
+            ]
+        ],
+        [
+            'label' =>  'Готовые',
+            'link'  =>  'done',
+            'options'   =>  [
+                'class' =>  'btn btn-default btn-sm',
+            ]
+        ],
+        [
+            'label' =>  'Все',
+            'link'  =>  'all',
+            'options'   =>  [
+                'class' =>  'btn btn-default btn-sm'
+            ]
+        ]
     ];
 
     public $currencies = [];
@@ -61,6 +86,7 @@ class ServiceMenuWidget extends Widget{
     public $userDropdownItems = [];
 
     public $dateGetVariable = "showDates";
+    public $orderFilterGetVariable = "ordersStatus";
 
     public function init(){
         if($this->showDateButtons && empty($this->dateButtons)){
@@ -85,17 +111,18 @@ class ServiceMenuWidget extends Widget{
         if(\Yii::$app->user->identity->superAdmin == 1){
             $this->userDropdownItems[] = ['label' => 'Конфигурация модуля', 'url' => '#moduleConfiguration'];
         }
-
-        /*    ,
-        ['label' => 'Something else here', 'url' => '#'],
-        '<li class="divider"></li>',
-        ['label' => 'Separated link', 'url' => '#'],*/
     }
 
     private function findActive(){
         foreach($this->dateButtons as $key => $button){
             if(\Yii::$app->request->get($this->dateGetVariable) == $button['link']){
                 $this->dateButtons[$key]['options']['disabled'] = 'disablbed';
+            }
+        }
+
+        foreach($this->orderFilterButtons as $key => $button){
+            if(\Yii::$app->request->get($this->orderFilterGetVariable) == $button['link']){
+                $this->orderFilterButtons[$key]['options']['disabled'] = 'disablbed';
             }
         }
     }
@@ -107,6 +134,20 @@ class ServiceMenuWidget extends Widget{
 
         foreach($this->dateButtons as $button){
             $buttonsHtml .= Html::a($button['label'], RequestHelper::createGetLink($this->dateGetVariable, $button['link']), $button['options']);
+        }
+
+        return Html::tag('div', $buttonsHtml, [
+            'class' =>  'btn-group'
+        ]);
+    }
+
+    public function renderFilterButtons(){
+        $buttonsHtml = '';
+
+        $this->findActive();
+
+        foreach($this->orderFilterButtons as $button){
+            $buttonsHtml .= Html::a($button['label'], RequestHelper::createGetLink($this->orderFilterGetVariable, $button['link']), $button['options']);
         }
 
         return Html::tag('div', $buttonsHtml, [
@@ -141,7 +182,7 @@ class ServiceMenuWidget extends Widget{
                         'url'       =>  Url::to('/updatecurrency'),
                     ],
                     'afterInput'    =>  function ($form, $widget) {
-                        echo '<input type="hidden" name="Service[key]" value="'.$widget->model->key.'" style="display: none">';
+                        return Html::input('hidden', 'Service[key]', $widget->model->key, ['style' => 'display: none']);
                     }
                 ]);
             }else{
@@ -155,6 +196,10 @@ class ServiceMenuWidget extends Widget{
     private function renderLeftBlock(){
         $data = '';
         $date = strftime("%d %B %Y", time());
+
+        if($this->showFilterButtons){
+            $data .= $this->renderFilterButtons();
+        }
 
         if($this->showDateButtons){
             $data .= $this->renderDateButtons();
