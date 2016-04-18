@@ -674,7 +674,11 @@ class SiteController extends Controller
 
         $model->load(\Yii::$app->request->post());
 
-        \Yii::trace($model);
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
     }
 
     public function savePaymentConfirmForm(){
@@ -682,7 +686,11 @@ class SiteController extends Controller
 
         $model->load(\Yii::$app->request->post());
 
-        \Yii::trace($model);
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
     }
 
 
@@ -691,7 +699,11 @@ class SiteController extends Controller
 
         $model->load(\Yii::$app->request->post());
 
-        \Yii::trace($model);
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
     }
 
 	public function beforeAction($action){
