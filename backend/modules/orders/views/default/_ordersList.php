@@ -4,6 +4,7 @@
  * @property $model /backend/models/History
  */
 use kartik\grid\GridView;
+use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -184,14 +185,14 @@ echo \kartik\grid\GridView::widget([
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'buttons'   =>  [
                 'sms'   =>  function($url, $model, $key){
-                    return Html::button(\rmrevin\yii\fontawesome\FA::i('envelope-o'), ['class' => 'btn btn-sm btn-default sms-order']);
+                    return Html::button(FA::i('envelope-o'), ['class' => 'btn btn-sm btn-default sms-order']);
                 },
                 'card' =>  function($url, $model, $key){
                     if(!$model->payOnCard){
                         return '';
                     }
 
-                    return Html::button(\rmrevin\yii\fontawesome\FA::i('credit-card'), ['class' => 'btn btn-sm btn-default sms-card']);
+                    return Html::button(FA::i('credit-card'), ['class' => 'btn btn-default sms-card']);
                 },
             ],
             'template'  =>  Html::tag('div', '{sms}{card}', ['class' => 'btn-group btn-group-sm'])
@@ -200,7 +201,7 @@ echo \kartik\grid\GridView::widget([
             'class'     =>  \kartik\grid\ActionColumn::className(),
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
-            'width'     =>  '180px',
+            'width'     =>  '250px',
             'header'    =>  '',
             'buttons'   =>  [
                 'contents'  =>  function($url, $model, $key){
@@ -215,17 +216,17 @@ echo \kartik\grid\GridView::widget([
                 },
                 'print'  =>  function($url, $model, $key){
                     return Html::a('', Url::toRoute([
-                        '/printer/order/'.$model->id
+                        '/printer/invoice/'.$model->id
                     ]), [
                         'target'    =>  '_blank',
                         'class'     =>  'btn btn-default glyphicon glyphicon-print',
                         'data-pjax' =>  0,
-                        'title'     =>  'Печатать заказ'
+                        'title'     =>  'Печатать накладную'
                     ]);
                 },
                 'done'  =>  function($url, $model, $key){
-                    return Html::button('', [
-                        'class' =>  'btn btn-default doneOrder glyphicon glyphicon-ok'.($model->done == 1 ? ' btn-success' : ''),
+                    return Html::button(FA::i('check')->size(FA::SIZE_4X), [
+                        'class' =>  'btn btn-default doneOrder '.($model->done == 1 ? ' btn-success' : ''),
                         ($model->confirmed == $model::CALLBACK_COMPLETED ? '' : 'disabled')  =>  'disabled',
                         'title' =>  $model->done == 1 ? 'Заказ выполнен' : 'Заказ не выполнен'
                     ]);
@@ -264,12 +265,15 @@ echo \kartik\grid\GridView::widget([
                     ]);
                 },
             ],
-            'template'  =>  Html::tag('div', '{contents}', [
-                    'class' =>  'btn-group btn-group-sm',
-                ]).Html::tag('div', '{print}{changes}{call}{done}',[
-                    'class' =>  'btn-group btn-group-sm',
-                    'style' =>  'margin-top: -2px;'
-                ])
+            'template'  =>  Html::tag('div', Html::tag('div', Html::tag('div', '{contents}', [
+                        'class' =>  'btn-group btn-group-sm',
+                ]).Html::tag('div', '{print}{changes}{call}',[
+                        'class' =>  'btn-group btn-group-sm',
+                        'style' =>  'margin-top: 8px;'
+                ]), [
+                    'class' => 'col-xs-8',
+                    'style' =>  'padding-left: 0px'
+                ]).Html::tag('div', '{done}', ['class' => 'col-xs-4', 'style' => 'margin-left: -17px; padding-left: 0']), ['class' => 'row'])
         ],
         [
             'class'     =>  \kartik\grid\ExpandRowColumn::className(),

@@ -83,6 +83,10 @@ Messenger.options = {
 $(".showChat").on('click', function(e){
     document.querySelector(".chatbox").style.display = document.querySelector(".chatbox").style.display == 'none' ? 'block' : 'none';
 });
+
+$("body").on('click', '.rollback', function(){
+    history.back();
+});
 SCRIPT;
 
 $newOrderAlert = <<<'JS'
@@ -743,8 +747,11 @@ $this->beginPage() ?>
             ]*/
         ],
     ]);
+
+    echo Html::tag('div', FA::icon('arrow-left'), [
+        'class' =>  'rollback'.($ordersPage ? ' orders' : ''),
+    ]);
     ?>
-    <div class="rollback<?=$ordersPage ? ' orders' : ''?>" onclick="history.back()"><?=FA::icon('arrow-left')?></div>
     <div class="container"<?=$ordersPage == 'Заказы' ? ' style="max-width: 1300px; width: auto;"' : ''?>>
         <?php
 

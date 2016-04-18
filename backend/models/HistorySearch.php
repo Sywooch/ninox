@@ -114,6 +114,20 @@ class HistorySearch extends History{
             }
         }
 
+        $params['ordersStatus'] = isset($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
+
+        switch($params['ordersStatus']){
+            case 'all':
+                break;
+            case 'done':
+                $query->andWhere(['status' => self::STATUS_DONE]);
+                break;
+            case 'new':
+            default:
+                $query->andWhere(['status' => self::STATUS_NOT_CALLED]);
+                break;
+        }
+
         if(!empty($params["showDeleted"]) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted')){
             $query->andWhere('deleted = 0');
         }

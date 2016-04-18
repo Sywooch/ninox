@@ -8,9 +8,9 @@
 ?>
 <div class="items">
     <div class="image">
-        <img src="<?=$review_item_image['image']?>">
+        <?=\yii\bootstrap\Html::img('https://krasota-style.com.ua/img/catalog/'.$model->photo)?>
     </div>
     <div class="write-review">
-        <a>Написать отзыв</a>
+        <?=\yii\bootstrap\Html::a(\Yii::t('shop', 'написать отзыв'), '/tovar/'.$model->good->link.'-g'.$model->itemID)?>
     </div>
 </div>
