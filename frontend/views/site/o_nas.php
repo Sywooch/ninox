@@ -153,7 +153,7 @@ use yii\jui\Accordion;
                     'cancelButton'		=>	false,
                     'confirmButton'		=>	true,
                     'addRandomToID'		=>	false,
-                    'id'            =>  'payment',
+                    'id'            =>  'payment-confirm-form',
                     'buttonOptions' =>  [
                         'label' =>  'Сообщить об оплате',
                         'class' =>  'about-inform-button yellow-button large-button'

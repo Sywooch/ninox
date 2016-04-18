@@ -6,6 +6,8 @@
  * Time: 15:35
  */
 
+use kartik\date\DatePicker;
+
 $css = <<<'CSS'
 
 .vozvrat-modal .form-group {
@@ -141,7 +143,16 @@ $model = new \frontend\models\ReturnForm();
                 <?= $form->field($model, 'orderNumber')?>
                 <?= $form->field($model, 'customerPhone')?>
     <span class="cap">2. Введите данные ТТН "Новая Почта"</span>
-                <?= $form->field($model, 'sendDate')?>
+                <?php
+                echo $form->field($model, 'sendDate')->widget(DatePicker::classname(), [
+                    'name' => 'dp_1',
+                    'type' => DatePicker::TYPE_INPUT,
+                    'value' => '23-Feb-1982',
+                    'pluginOptions' => [
+                        'autoclose'=>true,
+                        'format' => 'dd-M-yyyy'
+                    ]
+                ]);?>
                 <?= $form->field($model, 'nakladna')?>
     <span class="cap">3. Ваш комментарий (не обязательно) </span>
     <?= $form->field($model, 'comment')->textarea()?>

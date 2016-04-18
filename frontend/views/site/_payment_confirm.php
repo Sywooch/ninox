@@ -6,6 +6,8 @@
  * Time: 11:59
  */
 
+use kartik\date\DatePicker;
+
 $css = <<<'CSS'
 
 .form_content .cap{
@@ -59,6 +61,10 @@ $css = <<<'CSS'
     margin-right: 20px;
 }
 
+.datepicker{
+    z-index: 10010 !important;
+}
+
 CSS;
 
 $this->registerCss($css);
@@ -80,7 +86,17 @@ $model = new \frontend\models\PaymentConfirmForm();
     <div class="cap">
         2. Как вы платили
     </div>
-        <?= $form->field($model, 'paymentDate')?>
+        <?php
+        echo $form->field($model, 'paymentDate')->widget(DatePicker::classname(), [
+            'name' => 'dp_1',
+            'type' => DatePicker::TYPE_INPUT,
+            'value' => '23-Feb-1982',
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'dd-M-yyyy'
+            ]
+        ]);
+        ?>
         <?php
         echo $form->field($model, 'paymentType')->dropDownList($model->paymentTypes);
         ?>

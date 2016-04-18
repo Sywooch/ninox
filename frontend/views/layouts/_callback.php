@@ -69,6 +69,11 @@ padding-bottom: 25px;
     float: left;
 }
 
+.callback .field-callbackform-captcha img{
+    height: 35px;
+    margin-left: 30px;
+}
+
 CSS;
 
 $this->registerCss($css);
@@ -85,10 +90,9 @@ $model = new \frontend\models\CallbackForm();
         <?= $form->field($model, 'name')?>
         <?= $form->field($model, 'phone')?>
         <?= $form->field($model, 'question')->textarea()?>
-        <div class="captcha">
-            <span class="title">Введите код с картинки</span>
-            <input class="captcha" title="" name="captcha" pattern="[0-9]{4}" type="text">
-            <img src="https://krasota-style.com.ua/captcha.png?0.3437326502675966" alt="captcha image" pagespeed_url_hash="383813741" onload="pagespeed.CriticalImages.checkImageForCriticality(this);" height="40" width="80">
-            <input class="reloadCaptchaz" onclick="updateCaptcha(this)" value="1" type="button">
-        </div>
+        <?=$form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className(), [
+            'template'      =>  '{image} {input}',
+            'captchaAction' =>  '/captchacallbackmodal',
+            'id'            =>  'captcha-modal'
+            ]);?>
 </div>
