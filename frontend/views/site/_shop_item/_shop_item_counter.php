@@ -6,7 +6,7 @@
  * Time: 17:01
  */
 
-use app\widgets\CartItemsCounterWidget;
+use frontend\widgets\ItemCounterWidget;
 use yii\helpers\Html;
 
 if($model->isUnlimited || $model->count > 9){
@@ -31,6 +31,6 @@ echo Html::tag('div',
 		Html::tag('div', $name, ['class' => $class]),
 		['class' => 'item-count-info']
 	).
-	CartItemsCounterWidget::widget(['model' => $model]),
+	ItemCounterWidget::widget(['model' => $model]),
 	['class' => 'item-counter-info']
 );

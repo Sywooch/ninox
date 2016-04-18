@@ -6,7 +6,7 @@
  * Time: 3:12 PM
  */
 
-use app\widgets\CartItemsCounterWidget;
+use frontend\widgets\ItemCounterWidget;
 use common\helpers\Formatter;
 use yii\helpers\Html;
 
@@ -79,7 +79,7 @@ echo \kartik\grid\GridView::widget([
 		[
 			'format'        =>  'raw',
 			'value'         =>  function($model){
-				return CartItemsCounterWidget::widget(['model' => $model]);
+				return ItemCounterWidget::widget(['model' => $model]);
 			},
 		],
 		[

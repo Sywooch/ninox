@@ -357,6 +357,17 @@ h2{
 	height: 40px;
 }
 
+.mini-button{
+	width: 40px;
+	height: 40px;
+}
+
+.mini-button:before{
+	content: url("/img/site/white-basket.png");
+	height: 17px;
+	display: block;
+}
+
 .blue{
 	color: #29a1e0;
 }
@@ -4606,20 +4617,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	float: right;
 	margin-top: -43px;
 	cursor: pointer;
-}
-
-.goods-basket:before{
-	content: url("/img/site/white-basket.png");
-	display: block;
-	text-align: center;
-	margin-top: 12px;
-}
-
-.buy::before {
-	content: url("/img/site/white-basket.png");
-	display: block;
-	text-align: center;
-	margin-top: 12px;
 }
 
 .news-and-events{

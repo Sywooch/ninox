@@ -6,7 +6,7 @@
  * Time: 12:57 PM
  */
 
-namespace app\widgets;
+namespace frontend\widgets;
 
 
 use frontend\models\Good;
@@ -14,7 +14,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\Html;
 
-class CartItemsCounterWidget extends Widget{
+class ItemCounterWidget extends Widget{
 
 	public $value;
 	public $store;

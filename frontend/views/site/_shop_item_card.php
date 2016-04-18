@@ -207,7 +207,7 @@ $this->title = $good->Name;
                             ['class' => 'price-list']
                         ).
                         $this->render('_shop_item/_shop_item_counter', ['model' => $good]).
-                        $this->render('_shop_item/_shop_item_buy_button', ['model' => $good, 'class' => 'large-button'])
+                        frontend\widgets\ItemBuyButtonWidget::widget(['model' => $good, 'btnClass' => 'large-button'])
                         ?>
                         <div class="about-price italic">
                             <?=($good->customerRule ?

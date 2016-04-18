@@ -26,7 +26,7 @@ $buyBlock = function($model){
 			['class' => 'price-list']
 		).
 		Html::tag('div',
-			$this->render('_shop_item/_shop_item_buy_button', ['model' => $model, 'class' => 'small-button']),
+			frontend\widgets\ItemBuyButtonWidget::widget(['model' => $model]),
 			['class' => 'button-block']
 		),
 		['class' => 'price-block']
