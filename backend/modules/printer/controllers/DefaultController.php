@@ -21,6 +21,8 @@ class DefaultController extends Controller
             return true;
         }
 
+        $this->layout = 'print';
+
         return parent::beforeAction($action);
     }
 
@@ -63,23 +65,37 @@ class DefaultController extends Controller
             $goods[$good->ID] = $good;
         }
 
-        $customer = Customer::findOne($order->customerID);
-
-        if(!$customer){
-            $customer = new Customer();
-        }
-
         return $this->renderAjax('invoice', [
             'order'         =>  $order,
             'goods'         =>  $goods,
             'orderItems'    =>  $sborkaItems,
-            'customer'      =>  $customer,
+            'customer'      =>  $order->customer,
             'act'           =>  'printOrder'
         ]);
     }
 
-    public function actionOrder($param){
+    public function actionTransport_list($param){
+        $order = History::findOne($param);
 
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$param} не найден!");
+        }
+
+        return $this->render('_last_page', [
+            'order' =>  $order
+        ]);
+    }
+
+    public function actionOrder($param){
+        $order = History::findOne($param);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$param} не найден!");
+        }
+
+        return $this->render('order', [
+            'order' =>  $order
+        ]);
     }
 
     public function actionRefund($param){

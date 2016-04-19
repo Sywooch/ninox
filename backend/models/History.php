@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\models\Siteuser;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\ConflictHttpException;
@@ -12,6 +13,7 @@ use yii\web\NotFoundHttpException;
  * @package backend\models
  * @author  Nikolai Gilko   <n.gilko@gmail.com>
  * @property Customer $customer
+ * @property Siteuser $responsibleUser
  */
 class History extends \common\models\History
 {
@@ -35,6 +37,7 @@ class History extends \common\models\History
     public $status_10    =   'Ожидает отправки';
 
     private $_customer;
+    private $_responsibleUser = null;
 
     public function getID(){
         return $this->id;
@@ -42,16 +45,20 @@ class History extends \common\models\History
 
     public function getCustomer(){
         if(empty($this->_customer)){
-            $customer = Customer::findOne($this->customerID);
+            $customer = Customer::findOne(['ID' => $this->customerID]);
 
             if(!$customer){
-                throw new NotFoundHttpException("Клиент с идентификатором '{$this->customerID}' не найден!");
+                $customer = new Customer();
             }
 
             $this->_customer = $customer;
         }
 
         return $this->_customer;
+    }
+
+    public function getNewCustomer(){
+        return sizeof($this->customer->orders) > 1;
     }
 
     public function getPayOnCard(){
@@ -76,6 +83,40 @@ class History extends \common\models\History
                 return $this->sendSms();
                 break;
         }
+    }
+
+    public function getItems($returnAll = true){
+        if(!empty($this->_items) && $returnAll){
+            return $this->_items;
+        }
+
+        $q = SborkaItem::find()->where(['orderid' => $this->id]);
+
+        if(!$returnAll){
+            return $q;
+        }
+
+        $items = [];
+
+        foreach($q->all() as $tempItem){
+            $items[$tempItem->itemID] = $tempItem;
+        }
+
+        return $this->_items = $items;
+    }
+
+    public function getResponsibleUser(){
+        if(empty($this->_responsibleUser)){
+            $user = Siteuser::findOne($this->responsibleUserID);
+
+            if(!$user){
+                $user = new Siteuser();
+            }
+
+            $this->_responsibleUser = $user;
+        }
+
+        return $this->_responsibleUser;
     }
 
     public function sendSms(){
@@ -188,8 +229,9 @@ class History extends \common\models\History
      * @param string $priceType
      * @return bool
      */
-    public function recalculatePrices($priceType = 'opt'){
-        switch($priceType){
+    public function recalculatePrices($priceType = 'opt')
+    {
+        switch ($priceType) {
             case 'opt':
             case 'wholesale':
             case '1':
@@ -206,16 +248,16 @@ class History extends \common\models\History
 
         $itemsIDs = $goods = [];
 
-        foreach($assemblyItems as $item){
+        foreach ($assemblyItems as $item) {
             $itemsIDs[] = $item->itemID;
         }
 
-        foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
+        foreach (Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good) {
             $goods[$good->ID] = $good;
         }
 
-        foreach($assemblyItems as $item){
-            if(isset($goods[$item->itemID])){
+        foreach ($assemblyItems as $item) {
+            if (isset($goods[$item->itemID])) {
                 $item->originalPrice = $goods[$item->itemID]->$priceType;
                 $item->save(false);
             }
@@ -261,12 +303,35 @@ class History extends \common\models\History
         return $this->orderSum;
     }
 
+    /**
+     * @return mixed
+     * @deprecated use $this->getRealSum() or $this->realSum
+     */
     public function orderRealSumm(){
         if(!empty($this->real_summ)){
             return $this->real_summ;
         }
 
         foreach(SborkaItem::findAll(['orderID' => $this->id]) as $item){
+            $this->real_summ += ($item->price * $item->count);
+        }
+
+        return $this->real_summ;
+    }
+
+    /**
+     * Возвращает реальную стоимость заказа
+     *
+     * @return double
+     */
+    public function getRealSum(){
+        if(!empty($this->real_summ)){
+            return $this->real_summ;
+        }
+
+        $this->real_summ = 0;
+
+        foreach($this->items as $item){
             $this->real_summ += ($item->price * $item->count);
         }
 
