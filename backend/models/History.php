@@ -57,6 +57,10 @@ class History extends \common\models\History
         return $this->_customer;
     }
 
+    public function getNewCustomer(){
+        return sizeof($this->customer->orders) > 1;
+    }
+
     public function getPayOnCard(){
         switch($this->paymentType){
             case 2:
@@ -79,6 +83,26 @@ class History extends \common\models\History
                 return $this->sendSms();
                 break;
         }
+    }
+
+    public function getItems($returnAll = true){
+        if(!empty($this->_items) && $returnAll){
+            return $this->_items;
+        }
+
+        $q = SborkaItem::find()->where(['orderid' => $this->id]);
+
+        if(!$returnAll){
+            return $q;
+        }
+
+        $items = [];
+
+        foreach($q->all() as $tempItem){
+            $items[$tempItem->itemID] = $tempItem;
+        }
+
+        return $this->_items = $items;
     }
 
     public function getResponsibleUser(){
@@ -205,8 +229,9 @@ class History extends \common\models\History
      * @param string $priceType
      * @return bool
      */
-    public function recalculatePrices($priceType = 'opt'){
-        switch($priceType){
+    public function recalculatePrices($priceType = 'opt')
+    {
+        switch ($priceType) {
             case 'opt':
             case 'wholesale':
             case '1':
@@ -223,16 +248,16 @@ class History extends \common\models\History
 
         $itemsIDs = $goods = [];
 
-        foreach($assemblyItems as $item){
+        foreach ($assemblyItems as $item) {
             $itemsIDs[] = $item->itemID;
         }
 
-        foreach(Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good){
+        foreach (Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good) {
             $goods[$good->ID] = $good;
         }
 
-        foreach($assemblyItems as $item){
-            if(isset($goods[$item->itemID])){
+        foreach ($assemblyItems as $item) {
+            if (isset($goods[$item->itemID])) {
                 $item->originalPrice = $goods[$item->itemID]->$priceType;
                 $item->save(false);
             }
@@ -278,12 +303,35 @@ class History extends \common\models\History
         return $this->orderSum;
     }
 
+    /**
+     * @return mixed
+     * @deprecated use $this->getRealSum() or $this->realSum
+     */
     public function orderRealSumm(){
         if(!empty($this->real_summ)){
             return $this->real_summ;
         }
 
         foreach(SborkaItem::findAll(['orderID' => $this->id]) as $item){
+            $this->real_summ += ($item->price * $item->count);
+        }
+
+        return $this->real_summ;
+    }
+
+    /**
+     * Возвращает реальную стоимость заказа
+     *
+     * @return double
+     */
+    public function getRealSum(){
+        if(!empty($this->real_summ)){
+            return $this->real_summ;
+        }
+
+        $this->real_summ = 0;
+
+        foreach($this->items as $item){
             $this->real_summ += ($item->price * $item->count);
         }
 

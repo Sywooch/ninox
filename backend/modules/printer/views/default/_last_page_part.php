@@ -3,7 +3,7 @@ use yii\bootstrap\Html;
 
 $delivery = $payment = '';
 
-$paymentSum = 0;
+$paymentSum = empty($order->actualAmount) ? $order->realSum : $order->actualAmount;
 
 $barcodeID = \Yii::$app->security->generateRandomString(8);
 

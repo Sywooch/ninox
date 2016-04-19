@@ -91,7 +91,7 @@ class History extends \yii\db\ActiveRecord
     const STATUS_DONE = 5;          //Выполнен
 
 
-    private $_items;
+    protected $_items;
 
     public function getItems($returnAll = true){
         if(!empty($this->_items) && $returnAll){
