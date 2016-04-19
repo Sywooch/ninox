@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\models\Siteuser;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\ConflictHttpException;
@@ -12,6 +13,7 @@ use yii\web\NotFoundHttpException;
  * @package backend\models
  * @author  Nikolai Gilko   <n.gilko@gmail.com>
  * @property Customer $customer
+ * @property Siteuser $responsibleUser
  */
 class History extends \common\models\History
 {
@@ -35,6 +37,7 @@ class History extends \common\models\History
     public $status_10    =   'Ожидает отправки';
 
     private $_customer;
+    private $_responsibleUser = null;
 
     public function getID(){
         return $this->id;
@@ -76,6 +79,20 @@ class History extends \common\models\History
                 return $this->sendSms();
                 break;
         }
+    }
+
+    public function getResponsibleUser(){
+        if(empty($this->_responsibleUser)){
+            $user = Siteuser::findOne($this->responsibleUserID);
+
+            if(!$user){
+                $user = new Siteuser();
+            }
+
+            $this->_responsibleUser = $user;
+        }
+
+        return $this->_responsibleUser;
     }
 
     public function sendSms(){

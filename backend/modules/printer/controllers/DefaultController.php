@@ -74,8 +74,16 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function actionTransport_list(){
-        return '';
+    public function actionTransport_list($param){
+        $order = History::findOne($param);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$param} не найден!");
+        }
+
+        return $this->render('_last_page', [
+            'order' =>  $order
+        ]);
     }
 
     public function actionOrder($param){

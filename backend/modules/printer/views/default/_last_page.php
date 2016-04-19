@@ -3,11 +3,8 @@
 
 use yii\helpers\Html;
 
-$delivery = 'delivery';
-$paymentSum = 'paymentSum';
-
 $css = <<<'CSS'
-div.barcode img {
+.barcodeCode {
     margin-right: 4mm;
 }
 div.verticalseparator {
@@ -18,7 +15,7 @@ div.verticalseparator {
     height: 95mm;
     border-left: 1px dotted #000000;
 }
-div.gorizontalseparator {
+div.horizontalseparator {
     width: 100%;
     height: 15mm;
     display: block;
@@ -27,13 +24,14 @@ div.gorizontalseparator {
 }
 div.barcode.first {
     margin-left: 10mm;
+    margin-right: -1mm;
 }
 div.barcode {
     margin-left: 2mm;
     margin-top: 10mm;
     padding: 0;
     height: 85mm;
-    width: 92mm;
+    width: 98mm;
     float: left;
     overflow: hidden;
     display: inline-block !important;
@@ -76,6 +74,7 @@ table.orderinfo td {
 }
 .textbig {
     font-size: 1.5em;
+    margin-right: 5px;
 }
 .minwidth {
     min-width: 52%;
@@ -122,7 +121,7 @@ div.barcode span#code {
         height: 95mm;
         border-left: 3px dotted #000000;
     }
-    div.gorizontalseparator {
+    div.horizontalseparator {
         width: 100%;
         height: 15mm;
         display: block;
@@ -183,6 +182,7 @@ div.barcode span#code {
     }
     .textbig {
         font-size: 1.5em;
+        margin-right: 15px;
     }
     div.barcode span#code {
         width: 100%;
@@ -199,219 +199,20 @@ CSS;
 $this->registerCss($css);
 
 echo Html::tag('div',
-    Html::tag('table',
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('div', '', ['id' => 'barcode'])
-            ).
-            Html::tag('td',
-                Html::tag('span', $order->number, ['id' => 'code'])
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('span', 'г. '.$order->deliveryCity, ['id' => 'city']),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('span', $order->deliveryRegion, ['class' => 'textcenter']),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('table',
-                    Html::tag('tr',
-                        Html::tag('td',
-                            Html::tag('span', \Yii::$app->formatter->asPhone($order->customerPhone), ['class' => 'bold displayblock']).
-                            $order->customerName.' '.$order->customerSurname,
-                            [
-                                'class' => 'border right bottom minwidth'
-                            ]
-                        ).
-                        Html::tag('td',
-                            $delivery
-                            ,
-                            [
-                                'class' => 'border bottom',
-                                'width' =>  '45%'
-                            ])
-                    ).
-                    Html::tag('tr',
-                        Html::tag('td',
-                            Html::tag('span',
-                                $paymentSum
-                                ,
-                                [
-                                    'class' =>  'textbig'
-                                ]
-                            ),
-                            [
-                                'colspan'   =>  2
-                            ]
-                        )
-                    ),
-                    [
-                        'class'         =>  'orderinfo',
-                        'cellspacing'   =>  0,
-                        'cellpadding'   =>  0,
-                        'width'         =>  '100%'
-                    ]
-                ),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('table',
-                    Html::tag('tr',
-                        Html::tag('td',
-                            Html::tag('span', 'Менеджер: ', ['class' => 'displayblock smalltext']).
-                            Html::tag('span', $order->responsibleUserID, ['class' => 'displayblock smalltext'])
-                        ).
-                        Html::tag('td',
-                            Html::tag('span', 'Дата поступления: '.\Yii::$app->formatter->asDatetime($order->added, 'php:d.m.Y H:i'), ['class' => 'displayblock smalltext']).
-                            Html::tag('span', 'Дата сборки: '.\Yii::$app->formatter->asDatetime($order->doneDate, 'php:d.m.Y H:i'), ['class' => 'displayblock smalltext'])
-                        )
-                    ),
-                    [
-                        'cellspacing'   =>  0,
-                        'cellpadding'   =>  0,
-                        'width'         =>  '100%'
-                    ]
-                ),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        )
-    ),
+    $this->render('_last_page_part', [
+        'order' =>  $order
+    ]),
     [
         'class' => 'barcode first'
     ]
 ),
 Html::tag('div', '&nbsp;', ['class' => 'verticalseparator']),
 Html::tag('div',
-    Html::tag('table',
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('div', '', ['id' => 'barcodeTwo'])
-            ).
-            Html::tag('td',
-                Html::tag('span', $order->number, ['id' => 'code'])
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('span', 'г. '.$order->deliveryCity, ['id' => 'city']),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('span', $order->deliveryRegion, ['class' => 'textcenter']),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('table',
-                    Html::tag('tr',
-                        Html::tag('td',
-                            Html::tag('span', \Yii::$app->formatter->asPhone($order->customerPhone), ['class' => 'bold displayblock']).
-                            $order->customerName.' '.$order->customerSurname,
-                            [
-                                'class' => 'border right bottom minwidth'
-                            ]
-                        ).
-                        Html::tag('td',
-                            $delivery
-                            ,
-                            [
-                                'class' => 'border bottom',
-                                'width' =>  '45%'
-                            ])
-                    ).
-                    Html::tag('tr',
-                        Html::tag('td',
-                            Html::tag('span',
-                                $paymentSum
-                                ,
-                                [
-                                    'class' =>  'textbig'
-                                ]
-                            ),
-                            [
-                                'colspan'   =>  2
-                            ]
-                        )
-                    ),
-                    [
-                        'class'         =>  'orderinfo',
-                        'cellspacing'   =>  0,
-                        'cellpadding'   =>  0,
-                        'width'         =>  '100%'
-                    ]
-                ),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        ).
-        Html::tag('tr',
-            Html::tag('td',
-                Html::tag('table',
-                    Html::tag('tr',
-                        Html::tag('td',
-                            Html::tag('span', 'Менеджер: ', ['class' => 'displayblock smalltext']).
-                            Html::tag('span', $order->responsibleUserID, ['class' => 'displayblock smalltext'])
-                        ).
-                        Html::tag('td',
-                            Html::tag('span', 'Дата поступления: '.\Yii::$app->formatter->asDatetime($order->added, 'php:d.m.Y H:i'), ['class' => 'displayblock smalltext']).
-                            Html::tag('span', 'Дата сборки: '.\Yii::$app->formatter->asDatetime($order->doneDate, 'php:d.m.Y H:i'), ['class' => 'displayblock smalltext'])
-                        )
-                    ),
-                    [
-                        'cellspacing'   =>  0,
-                        'cellpadding'   =>  0,
-                        'width'         =>  '100%'
-                    ]
-                ),
-                [
-                    'colspan'   =>  2
-                ]
-            )
-        )
-    ),
+    $this->render('_last_page_part', [
+        'order' =>  $order
+    ]),
     [
         'class' => 'barcode'
     ]
 ),
-\barcode\barcode\BarcodeGenerator::widget([
-    'elementId' =>  'barcode',
-    'type'      =>  'code39',
-    'value'     =>  $order->id,
-    'settings'  =>  [
-        'output'=>  'bmp'
-    ]
-]),
-\barcode\barcode\BarcodeGenerator::widget([
-    'elementId' =>  'barcodeTwo',
-    'type'      =>  'code39',
-    'value'     =>  $order->id,
-    'settings'  =>  [
-        'output'=>  'bmp'
-    ]
-]);
+Html::tag('div', '', ['class' => 'horizontalseparator']);
