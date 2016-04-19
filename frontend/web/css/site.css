@@ -3408,12 +3408,35 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-contacts .map{
-	font-size: 22px;
-	color: rgb(25, 152, 219);
-	border-bottom: 1px dashed;
-	cursor: pointer;
 	display: inline-block;
 	margin-top: 40px;
+}
+
+.about-contacts .map .ui-accordion-content-active{
+	height: auto;
+}
+
+.about-contacts .map .ui-accordion-header-icon{
+	display: none;
+}
+
+.about-contacts .map .content-data-first_1{
+	color: rgb(25, 152, 219);
+	border-bottom: 1px dashed;
+}
+
+.about-contacts .map span{
+	margin: 0px;
+}
+
+.about-contacts .map .ui-accordion-header{
+	padding: 0px;
+	margin: 0px;
+}
+
+.about-contacts .map .ui-accordion-content{
+	padding: 20px 0px 0px;
+	height: auto !important;
 }
 
 .contacts-inform{

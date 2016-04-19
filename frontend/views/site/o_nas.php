@@ -364,7 +364,17 @@ use yii\jui\Accordion;
                 </div>
             </div>
             <div class="map">
-                Как к нам добраться
+                <?=Accordion::widget([
+                    'items' => [
+                        [
+                            'header' => Html::tag('span', 'Как к нам добраться', ['class' => 'content-data-first_1']),
+                            'content' =>  '<script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1
+.0/js/?sid=4hFYumeZNU3DOUuSwFOHsj9YvHKV9fH0&width=880&height=600&scroll=true&lang=ru_UA&sourceType=constructor
+"></script>',
+                        ],
+                    ],
+                    'clientOptions' => ['collapsible' => true, 'active' => false],
+                ]);?>
             </div>
             <div class="your-wish">
                 <div class="name">
