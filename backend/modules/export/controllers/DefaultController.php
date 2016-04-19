@@ -111,7 +111,7 @@ class DefaultController extends Controller
 
             $list->setCellValue("A{$row}", $i);
 
-            if(!empty($item->photo)){
+            if(!empty($item->photo) && file_exists($_SERVER['DOCUMENT_ROOT']."/img/catalog/sm/".$item->photo)){
                 $objDrawing = new PHPExcel_Worksheet_Drawing();
 
                 $objDrawing->setWorksheet($list)
