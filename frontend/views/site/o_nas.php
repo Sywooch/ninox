@@ -1,7 +1,9 @@
 <?php
 use bobroid\remodal\Remodal;
+use frontend\models\ReturnForm;
 use yii\bootstrap\Html;
 use yii\jui\Accordion;
+
 /**
  * Created by PhpStorm.
  * User: hellios
@@ -149,16 +151,11 @@ use yii\jui\Accordion;
                 </span>
                 <?php  echo Remodal::widget([
                     'cancelButton'		=>	false,
-                    'confirmButton'		=>	true,
+                    'confirmButton'		=>	false,
                     'addRandomToID'		=>	false,
-                    'id'            =>  'payment',
+                    'id'            =>  'payment-confirm-form',
                     'buttonOptions' =>  [
                         'label' =>  'Сообщить об оплате',
-                        'class' =>  'about-inform-button yellow-button large-button'
-                    ],
-
-                    'confirmButtonOptions'  =>  [
-                        'label' =>  'Отправить',
                         'class' =>  'about-inform-button yellow-button large-button'
                     ],
                     'content'   =>  $this->render('_payment_confirm'),
@@ -221,20 +218,14 @@ use yii\jui\Accordion;
                 <?php
                echo Remodal::widget([
                    'cancelButton'		=>	false,
-                   'confirmButton'		=>	true,
+                   'confirmButton'		=>	false,
                    'addRandomToID'		=>	false,
-                    'id'            =>  'vozvrat',
+                    'id'            =>  'return-form',
                     'buttonOptions' =>  [
                         'label' =>  'Оформить возврат',
                         'class' =>  'about-inform-button yellow-button large-button'
                     ],
-
-                    'confirmButtonOptions'  =>  [
-                        'label' =>  'Отправить',
-                        'class' =>  'about-inform-button yellow-button large-button'
-                    ],
-                    'content'   =>  $this->render('_vozvrat'),
-
+                    'content'   =>  $this->render('_return')
                 ])
            ?>
             </div>
@@ -250,7 +241,7 @@ use yii\jui\Accordion;
                     'content' => $this->render('_guarantee_jewelry'),
                     ],
                     ],
-                    'clientOptions' => ['collapsible' => true, 'active' => false],
+                    'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
                 ]);?>
             </div>
         </div>
@@ -373,7 +364,17 @@ use yii\jui\Accordion;
                 </div>
             </div>
             <div class="map">
-                Как к нам добраться
+                <?=Accordion::widget([
+                    'items' => [
+                        [
+                            'header' => Html::tag('span', 'Как к нам добраться', ['class' => 'content-data-first_1']),
+                            'content' =>  '<script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1
+.0/js/?sid=4hFYumeZNU3DOUuSwFOHsj9YvHKV9fH0&width=880&height=600&scroll=true&lang=ru_UA&sourceType=constructor
+"></script>',
+                        ],
+                    ],
+                    'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
+                ]);?>
             </div>
             <div class="your-wish">
                 <div class="name">
@@ -388,11 +389,8 @@ use yii\jui\Accordion;
                     <span>Что Вас интересует?</span>
                     <textarea type="text"></textarea>
                 </div>
-                <?=\yii\helpers\Html::button('Отправить', [
-                    'type'  =>  'submit',
-                    'class' =>  'about-inform-button yellow-button large-button',
-                    'id'    =>  'submit'
-                ])?>
+                <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+                    'your-wish-button']) ?>
             </div>
         </div>
     </div>

@@ -45,4 +45,20 @@ class PaymentConfirmForm extends Model
         $customerOrderPayment->save(false);
     }
 
+    public function rules()
+    {
+        return [
+            [['orderNumber', 'sum', 'paymentDate', 'paymentType'], 'safe']
+        ];
+    }
+
+    public function attributeLabels(){
+        return [
+            'orderNumber'           =>  \Yii::t('shop', '№ заказа'),
+            'sum'                   =>  \Yii::t('shop', 'Сумма оплаты'),
+            'paymentDate'           =>  \Yii::t('shop', 'Дата оплаты'),
+            'paymentType'           =>  \Yii::t('shop', 'Способ оплаты'),
+        ];
+    }
+
 }

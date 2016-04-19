@@ -6,24 +6,19 @@
  * Time: 11:59
  */
 
+use kartik\date\DatePicker;
+use yii\helpers\Html;
+
 $css = <<<'CSS'
 
 .form_content .cap{
     color: #acacac;
     font-size: 12px;
-    display: inline-block;
+    display: block;
     padding-bottom: 20px;
 }
 
-.form_content .row .title{
-    margin: 0px;
-    display: block;
-    float: left;
-    font-size: 16px;
-    color: #4f4f4f;
-    line-height: 40px;
-    margin-right: 15px;
-}
+
 
 .form_content .row{
     margin: 0px;
@@ -34,9 +29,6 @@ $css = <<<'CSS'
     text-align: left;
 }
 
-.order_number{
-    float: left;
-}
 
 .form_content input{
     height: 40px;
@@ -46,46 +38,71 @@ $css = <<<'CSS'
     width: 100px;
 }
 
-.summ{
+.form_content .form-group{
+    width: 50%;
+    overflow: auto;
     float: left;
-    margin-left: 35px;
 }
 
-.summ input{
-    width: 110px;
+.form_content .form-group label{
+    line-height: 40px;
+    float: left;
 }
 
-.payDate input{
-    float: left;
+.form_content .form-group input{
+    width: 50%;
+    margin-right: 20px;
+    float: right;
+}
+
+.form_content #paymentconfirmform-paymenttype{
+    width: 50%;
+    height: 40px;
+    float: right;
+    margin-right: 20px;
+}
+
+.datepicker{
+    z-index: 10010 !important;
 }
 
 CSS;
 
 $this->registerCss($css);
 
+$model = new \frontend\models\PaymentConfirmForm();
+
 ?>
 
 <div class="form_content" id="payMessage">
+    <?php    $form = \yii\bootstrap\ActiveForm::begin([
+        'id'            =>  'payment-confirm-form'
+    ]);
+    ?>
     <div class="cap">
         1. Введите данные заказа
     </div>
-    <div class="row">
-        <div class="order_number">
-            <span class="title">Номер заказа</span>
-            <input name="order_number" type="text">
-        </div>
-        <div class="summ">
-            <span class="title">Сумма оплаты</span>
-            <input name="summ" type="text">
-        </div>
-    </div>
+        <?= $form->field($model, 'orderNumber')?>
+        <?= $form->field($model, 'sum')?>
     <div class="cap">
         2. Как вы платили
     </div>
-    <div class="row">
-        <div class="payDate">
-            <span class="title">Дата оплаты</span><input aria-owns="P1507405932_root P1507405932_hidden" aria-readonly="false" aria-expanded="false" aria-haspopup="true" class="picker__input" id="P1507405932" readonly="" name="" type="text">
-        </div>
-    <div class="line"></div>
-    </div>
+        <?php
+        echo $form->field($model, 'paymentDate')->widget(DatePicker::classname(), [
+            'name' => 'dp_1',
+            'type' => DatePicker::TYPE_INPUT,
+            'value' => '23-Feb-1982',
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'dd-M-yyyy'
+            ]
+        ]);
+        ?>
+        <?php
+        echo $form->field($model, 'paymentType')->dropDownList($model->paymentTypes);
+        ?>
+        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+        'payment-confirm-button']) ?>
 </div>
+<?php $form->end(); ?>
+
