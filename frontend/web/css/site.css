@@ -3370,10 +3370,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-weight: bold;
 }
 
-.about-return-accordion .ui-accordion .ui-accordion-content{
-	height: auto !important;
-}
-
 .about-return-accordion .ui-accordion .ui-accordion-header .ui-accordion-header-icon{
 	display: none;
 }
@@ -3436,7 +3432,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-contacts .map .ui-accordion-content{
 	padding: 20px 0px 0px;
-	height: auto !important;
 }
 
 .contacts-inform{

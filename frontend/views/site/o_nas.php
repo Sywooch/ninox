@@ -241,7 +241,7 @@ use yii\jui\Accordion;
                     'content' => $this->render('_guarantee_jewelry'),
                     ],
                     ],
-                    'clientOptions' => ['collapsible' => true, 'active' => false],
+                    'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
                 ]);?>
             </div>
         </div>
@@ -373,7 +373,7 @@ use yii\jui\Accordion;
 "></script>',
                         ],
                     ],
-                    'clientOptions' => ['collapsible' => true, 'active' => false],
+                    'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
                 ]);?>
             </div>
             <div class="your-wish">
