@@ -12,6 +12,7 @@ namespace frontend\helpers;
 use common\helpers\Formatter;
 use frontend\models\Banner;
 use frontend\models\Good;
+use frontend\widgets\ItemBuyButtonWidget;
 use yii\base\Component;
 use yii\bootstrap\Html;
 use yii\helpers\Json;
@@ -91,13 +92,13 @@ class BannerHelper extends Component
                         (\Yii::$app->user->isGuest ?
                         $color : (\Yii::$app->user->identity->hasInWishlist($good->ID) ? ' green' : $color)),
                         'data-itemId'   =>  $good->ID]).
-                html::tag('span', '', ['class' => 'basket-ico ico']),
+                ItemBuyButtonWidget::widget(['model' => $good, 'btnClass' => 'micro-button']),
                     ['class' => 'icons-fav-bask']).
                 Html::a(Html::tag('span', $good->Name), '/tovar/'.$good->link.'-g'.$good->ID).
                 Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
             ).
             Html::tag('div', Html::a(Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico), '/tovar/'.$good->link.'-g'.$good->ID)), [
-            'class' =>  'goods-item'
+            'class' => 'goods-item'
         ]);
     }
 
@@ -133,7 +134,7 @@ class BannerHelper extends Component
                                     (\Yii::$app->user->isGuest ?
                                         $color : (\Yii::$app->user->identity->hasInWishlist($good->ID) ? ' green' : $color)),
                                     'data-itemId'   =>  $good->ID]).
-                        html::tag('span', '', ['class' => 'basket-ico ico']),
+                            ItemBuyButtonWidget::widget(['model' => $good, 'btnClass' => 'micro-button']),
                              ['class' => 'banners-icons']),
                         ['class' => 'icons-fav-bask']),
                     [

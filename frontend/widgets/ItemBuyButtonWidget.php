@@ -43,7 +43,9 @@ class ItemBuyButtonWidget extends Widget{
 					) : \Yii::t('shop', "Нет\r\nв наличии");
 				break;
 			case 'mini-button':
+			case 'micro-button':
 				$this->value = '';
+			$this->btnClass .= ' icon-cart';
 				break;
 			default:
 				$this->value = $this->model->count > 0 || $this->model->isUnlimited ?

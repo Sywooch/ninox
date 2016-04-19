@@ -95,6 +95,11 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 						'alias'             =>  'phone',
 						'url'               =>  \yii\helpers\Url::to('/js/phone-codes.json'),
 						'countrycode'       =>  '38',
+						'onBeforePaste'           =>  new \yii\web\JsExpression('
+							function(){
+								return false;
+							}
+						')
 /*						'oncomplete'           =>  new \yii\web\JsExpression('
 							function(){
 								}

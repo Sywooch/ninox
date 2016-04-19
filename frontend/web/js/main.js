@@ -59,7 +59,7 @@ function addToCart(item){
 			},
 			success: function(data){
 				$('.buy[data-itemId='+ itemId +']')
-					.text(function(index, val){return $(this).hasClass('mini-button') ? '' : texts.itemText.inCart;})
+					.text(function(){return $(this).hasClass('mini-button') || $(this).hasClass('micro-button') ? '' : texts.itemText.inCart;})
 					.toggleClass('yellow-button green-button buy open-cart');
 				$('.count[data-itemId='+ itemId +']').data('incart', count);
 				updateCart(data);
@@ -76,7 +76,7 @@ function changeItemCount(item){
 		switch(className){
 			case 'remove-item':
 				$('.open-cart[data-itemId='+ itemId +']')
-					.text(function(index, val){return $(this).hasClass('mini-button') ? '' : texts.itemText.buy;})
+					.text(function(){return $(this).hasClass('mini-button') || $(this).hasClass('micro-button') ? '' : texts.itemText.buy;})
 					.toggleClass('green-button yellow-button open-cart buy')
 					.data('count', 1);
 				$('#modal-cart .grid-view [data-key="' + itemId + '"]').remove();

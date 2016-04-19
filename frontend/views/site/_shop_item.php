@@ -5,8 +5,10 @@ use yii\helpers\Html;
 
 $link = '/tovar/'.$model->link.'-g'.$model->ID;
 $photo = \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->ico;
+$btnClass = isset($btnClass) ? $btnClass : 'small-button';
+$innerSub = isset($innerSub) ? $innerSub : true;
 
-$buyBlock = function($model){
+$buyBlock = function($model, $btnClass){
 	return Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
@@ -26,7 +28,7 @@ $buyBlock = function($model){
 			['class' => 'price-list']
 		).
 		Html::tag('div',
-			frontend\widgets\ItemBuyButtonWidget::widget(['model' => $model]),
+			frontend\widgets\ItemBuyButtonWidget::widget(['model' => $model, 'btnClass' => $btnClass]),
 			['class' => 'button-block']
 		),
 		['class' => 'price-block']
@@ -80,12 +82,13 @@ echo Html::tag('div',
 			$link,
 			['title' => $model->Name.' - '.\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')]
 		).
-		$buyBlock($model),
+		$buyBlock($model, $btnClass),
 		['class' => 'inner-main']
 	).
-	Html::tag('div',
+	($innerSub ? Html::tag('div',
 		$this->render('_shop_item/_shop_item_counter', ['model' => $model]).
 		$onePriceBlock($model).
 		$itemDopInfoBlock($model),
-		['class' => 'inner-sub']),
+		['class' => 'inner-sub']) : ''
+	),
 	['class' => 'item']);
