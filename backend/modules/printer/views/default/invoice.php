@@ -272,8 +272,10 @@ SCRIPT;
 
 $this->registerJs($js);
 $this->registerCss($css);
-//$this->registerCss($css2);
 $this->registerCssFile('/css/normalize.css');
+
+
+//$this->registerCss($css2);
 
 echo $this->render('_invoice_header');
 
