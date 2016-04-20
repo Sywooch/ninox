@@ -73,7 +73,9 @@ class ReturnForm extends Model
     public function rules()
     {
         return [
-            [['customerPhone', 'sendDate', 'refundMethod', 'cardNumber', 'cardHolder'], 'string'],
+            [['orderNumber', 'sendDate', 'nakladna', 'customerPhone', 'refundMethod', 'cardNumber'], 'required'],//мб
+            // еще чтот хз!!!?
+            [['customerPhone', 'sendDate', 'refundMethod', 'cardNumber', 'cardHolder', 'comment'], 'string'],
             [['orderNumber', 'nakladna', 'brokenGood', 'notMatchGood', 'notLikeGood'], 'integer']
         ];
     }
@@ -90,7 +92,7 @@ class ReturnForm extends Model
 
         $return->setAttributes([
             'orderNumber'   =>  $this->orderNumber,
-            'sendDate'      =>  $this->sendDate,
+            'data_otpravki' =>  $this->sendDate,
             'ttn'           =>  $this->nakladna,
             'telefon'       =>  $this->customerPhone,
             'brak'          =>  $this->brokenGood,

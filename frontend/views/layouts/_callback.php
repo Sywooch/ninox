@@ -92,11 +92,7 @@ $model = new \frontend\models\CallbackForm();
         <?= $form->field($model, 'name')?>
         <?= $form->field($model, 'phone')?>
         <?= $form->field($model, 'question')->textarea()?>
-        <?=$form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className(), [
-            'template'      =>  '{image} {input}',
-            'captchaAction' =>  '/captchacallbackmodal',
-            'id'            =>  'captcha-modal'
-            ]);?>
+        <?=$form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className());?>
         <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
         'callback-button']) ?>
 </div>
