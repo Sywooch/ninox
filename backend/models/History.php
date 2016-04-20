@@ -79,7 +79,7 @@ class History extends \common\models\History
             case 'card':
                 return $this->sendCardSms();
                 break;
-            case 'order':
+            case 'sms':
                 return $this->sendSms();
                 break;
         }
@@ -122,6 +122,7 @@ class History extends \common\models\History
     public function sendSms(){
         switch($this->status){
             case self::STATUS_NOT_CALLED:
+                \Yii::$app->sms->sendCantCall($this);
                 //отправить смс "не дозвонились"
                 break;
             case self::STATUS_NOT_PAYED:

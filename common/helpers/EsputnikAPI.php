@@ -20,8 +20,13 @@ class EsputnikAPI {
     private static $email = '';
     private static $baseURL = 'https://esputnik.com.ua/api/v1';
 
-    public static function _sendRequest($data, $post = 1){
+    public static function _sendRequest($data, $post = 1, $operation = null){
         $url = self::$baseURL."/".$data['action'];
+
+        if(!empty($operation)){
+            $url .= "/".$operation;
+        }
+
         $ch = new curl\Curl();
 
         $ch->setOption(CURLOPT_HEADER, 1)
