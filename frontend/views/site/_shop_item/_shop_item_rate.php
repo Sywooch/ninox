@@ -71,11 +71,11 @@ echo Html::tag('span',
 	$createStar(2).
 	$createStar(1).
 	Html::tag('span', $model->rate ? $model->rate : 5, [
-		'class' => 'rate-count',
-		'itemprop' => 'ratingValue'
+		'class'     =>  'rate-count',
+		'itemprop'  =>  'ratingValue'
 	]), [
-		'class' => 'rating',
-		'itemscope' => '',
-		'itemtype' => 'http://schema.org/AggregateRating'
+		'class'     =>  'rating',
+		'itemscope' =>  '',
+		'itemtype'  =>  'http://schema.org/AggregateRating'
 	]
 );

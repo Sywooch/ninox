@@ -191,8 +191,8 @@ class SiteController extends Controller
         return $this->render($view, [
             'category'          =>  $category,
             'showText'          =>  true,
-            'goods'             =>  new ActiveDataProvider([
-                'query'         =>  $category->goods(),
+            'items'             =>  new ActiveDataProvider([
+                'query'         =>  $category->getItems(),
                 'pagination'    =>  [
                     'pageSize'          =>  '15',
                     'forcePageParam'    =>  false,

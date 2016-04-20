@@ -8,13 +8,16 @@
 
 namespace frontend\models;
 
+use common\helpers\Formatter;
 use common\models\GoodOptionsValue;
 
 class Category extends \common\models\Category{
 
 	private $_filters;
+	private $_minPrice;
+	private $_maxPrice;
 
-    public function goods(){
+    public function getItems(){
 	    $values = $names = [];
 
 	    foreach($this->filters as $filterArray){
@@ -69,7 +72,10 @@ class Category extends \common\models\Category{
     }
 
 	public function getMinPrice(){
-		return Good::find()
+		if(!empty($this->_minPrice)){
+			return $this->_minPrice;
+		}
+		return $this->_minPrice = Good::find()
 			->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
 			->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
 			->andWhere(['`goodsgroups`.`enabled`' => 1])
@@ -78,7 +84,10 @@ class Category extends \common\models\Category{
 	}
 
 	public function getMaxPrice(){
-		return Good::find()
+		if(!empty($this->_maxPrice)){
+			return $this->_maxPrice;
+		}
+		return $this->_maxPrice = Good::find()
 			->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
 			->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
 			->andWhere(['`goodsgroups`.`enabled`' => 1])
@@ -163,6 +172,123 @@ class Category extends \common\models\Category{
 		}
 
 		return $this->_filters = $filters;
+	}
+
+
+
+	public function getMetaTitle(){
+		switch(\Yii::$app->request->get('order')){
+			case 'asc':
+				$title = $this->titleasc;
+				$priceType = \Yii::t('shop', 'дешево');
+				break;
+			case 'desc':
+				$title = $this->titledesc;
+				$priceType = \Yii::t('shop', 'дорого');
+				break;
+			case 'novinki':
+				$title = $this->titlenew;
+				break;
+			default:
+				$title = $this->title;
+				break;
+		}
+
+		if(empty($title)){
+			switch(\Yii::$app->request->get('order')){
+				case 'asc':
+				case 'desc':
+					return \Yii::t('shop',
+						'{name}. Купить {priceType} оптом в интернет-магазине Krasota-Style с доставкой по Украине',
+						[
+							'name'      =>  $this->Name,
+							'priceType' =>  $priceType
+						]
+					);
+					break;
+				default:
+					return \Yii::t('shop',
+						'{name}. Купить {name2} оптом недорого с доставкой по Украине - интернет-магазин Krasota Style',
+						[
+							'name'  =>  $this->Name,
+							'name2' =>  mb_strtolower($this->Name, 'UTF-8')
+						]
+					);
+					break;
+			}
+		}else{
+			return strip_tags(htmlspecialchars_decode($title));
+		}
+	}
+
+	public function getMetaDescription(){
+		if(empty($this->descr)){
+			switch(\Yii::$app->request->get('order')){
+				case 'asc':
+					$priceType = \Yii::t('shop', 'дешево');
+					$priceType2 = \Yii::t('shop', 'от {minprice}',
+						['minprice' =>  Formatter::getFormattedPrice($this->minPrice)]
+					);
+					$priceType3 = \Yii::t('shop', 'Скидки до 30%.');
+				case 'desc':
+					$priceType = empty($priceType) ?
+						\Yii::t('shop', 'дорого') : $priceType;
+					$priceType2 = empty($priceType2) ?
+						\Yii::t('shop', 'до {maxprice}',
+							['maxprice' =>  Formatter::getFormattedPrice($this->maxPrice)]
+						) : $priceType2;
+					$priceType3 = empty($priceType3) ?
+						\Yii::t('shop', 'Возможна покупка в розницу.') : $priceType3;
+					return \Yii::t('shop',
+						'{name} {priceType} на сайте Krasota-Style. {count} наименований {priceType2} Специальные условия для оптовиков. {priceType3} Быстрая доставка по Украине.',
+						[
+							'name'          =>  $this->Name,
+							'priceType'     =>  $priceType,
+							'priceType2'    =>  $priceType2,
+							'priceType3'    =>  $priceType3,
+							'count'         =>  $this->getItems()->count()
+						]
+					);
+					break;
+				default:
+					return \Yii::t('shop',
+						'{name} по оптовым ценам. {count} наименований от {minprice} Специальные условия для оптовиков. Скидки до 30%. Быстрая доставка по Украине.',
+						[
+							'name'      =>  $this->Name,
+							'minprice'  =>  Formatter::getFormattedPrice($this->minPrice),
+							'count'     =>  $this->getItems()->count()
+						]
+					);
+					break;
+			}
+		}else{
+			return strip_tags(htmlspecialchars_decode($this->descr));
+		}
+	}
+
+	public function getMetaKeywords(){
+		if(empty($this->keyword)){
+			switch(\Yii::$app->request->get('order')){
+				case 'asc':
+					$priceType = \Yii::t('shop', 'дешево, недорого, ');
+				case 'desc':
+					$priceType = empty($priceType) ?
+						\Yii::t('shop', 'дорого, ') : $priceType;
+					break;
+				default:
+					$priceType = '';
+					break;
+			}
+			return \Yii::t('shop',
+				'{name}, {priceType}оптом, интернет-магазин, Киев, Украина, Krasota-Style',
+				[
+					'name'          =>  $this->Name,
+					'priceType'     =>  $priceType
+				]
+			);
+		}else{
+			return strip_tags(htmlspecialchars_decode($this->keyword));
+		}
 	}
 
 }
