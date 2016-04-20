@@ -32,12 +32,17 @@ class CallbackForm extends Model
      */
     public $name;
 
+    /**
+     * @type string
+     */
     public $captcha;
 
     public function rules()
     {
         return [
-            [['phone', 'question', 'name'], 'string']
+            [['phone', 'question', 'name'], 'string'],
+            ['captcha', 'captcha'],
+            [['phone', 'question', 'captcha'], 'required']
         ];
     }
 
@@ -48,7 +53,7 @@ class CallbackForm extends Model
             'phone'         =>  $this->phone,
             'question'      =>  $this->question,
             'customerName'  =>  $this->name,
-            'did_callback'  =>  0
+            'did_callback'  =>  0,
         ], false);
 
         $callback->save(false);
@@ -60,8 +65,6 @@ class CallbackForm extends Model
             'question'        =>  \Yii::t('shop', 'Сообщение'),
             'name'            =>  \Yii::t('shop', 'Имя и фамилия'),
             'captcha'         =>  \Yii::t('shop', 'Введите код с картинки'),
-
-
         ];
     }
 

@@ -346,7 +346,7 @@ $this->beginPage();
 											</span>
 										</div>
 									</div>',
-								'footer' => Html::input('button', null, \Yii::t('shop', 'Перезвоните мне'), ['class'=>'button yellow-button middle-button']),
+								'footer' => Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
 								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number']
 							])?>
 						</div>
@@ -407,7 +407,7 @@ $this->beginPage();
 						'cancelButton'		=>	false,
 						'confirmButton'		=>	false,
 						'addRandomToID'		=>	false,
-						'id'            =>  'submit',
+						'id'           		=>  'callbackModal',
 						'buttonOptions' =>  [
 							'label' =>  'Заказать обратный звонок',
 							'class' =>  'yellow-button large-button',
