@@ -126,12 +126,15 @@ class History extends \common\models\History
                 //отправить смс "не дозвонились"
                 break;
             case self::STATUS_NOT_PAYED:
+                \Yii::$app->sms->sendNotPayed($this);
                 //отправить смс с номером карты
                 break;
             case self::STATUS_WAIT_DELIVERY:
+                \Yii::$app->sms->sendWaitDelivery($this);
                 //
                 break;
             case self::STATUS_DELIVERED:
+                \Yii::$app->sms->sendDelivered($this);
                 break;
         }
         //\Yii::$app->sms->send();
