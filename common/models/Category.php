@@ -320,9 +320,9 @@ class Category extends \yii\db\ActiveRecord
 
 					$items = self::buildTree($elements, $element->Code);
 					if($items && $parentCode == ''){
-						array_unshift($items, ['label' => $element->Name, 'url' => $element->link, 'options' => ['class' => 'see-all']]);
+						//array_unshift($items, ['label' => $element->Name, 'url' => $element->link, 'options' => ['class' => 'see-all']]);
 						$branch[$element->Code]['items'] = $items;
-						$branch[$element->Code]['url'] = '#0';
+						$branch[$element->Code]['url'] = $element->link;
 					}
 				}
 			}
