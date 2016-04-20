@@ -38,7 +38,7 @@ class ReturnForm extends Model
     /**
      * @type string
      */
-    public $comment;
+    public $comment = '';
 
     /**
      * @type string
@@ -73,7 +73,7 @@ class ReturnForm extends Model
     public function rules()
     {
         return [
-            [['customerPhone', 'sendDate', 'refundMethod', 'cardNumber', 'cardHolder'], 'string'],
+            [['customerPhone', 'sendDate', 'refundMethod', 'cardNumber', 'cardHolder', 'comment'], 'string'],
             [['orderNumber', 'nakladna', 'brokenGood', 'notMatchGood', 'notLikeGood'], 'integer']
         ];
     }
