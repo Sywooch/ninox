@@ -5,12 +5,15 @@ use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
+use frontend\models\CallbackForm;
 use frontend\models\Cart;
 use frontend\models\Customer;
 use frontend\models\CustomerWishlist;
 use frontend\models\History;
 use frontend\models\ItemRate;
 use frontend\models\OrderForm;
+use frontend\models\PaymentConfirmForm;
+use frontend\models\ReturnForm;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
 use Yii;
 use common\models\Domain;
@@ -451,6 +454,10 @@ class SiteController extends Controller
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+            'captchacallbackmodal' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
         ];
     }
 
@@ -662,9 +669,58 @@ class SiteController extends Controller
         ]);
     }
 
+    public function saveReturnForm(){
+        $model = new ReturnForm();
+
+        $model->load(\Yii::$app->request->post());
+
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
+    }
+
+    public function savePaymentConfirmForm(){
+        $model = new PaymentConfirmForm();
+
+        $model->load(\Yii::$app->request->post());
+
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
+    }
+
+
+    public function saveCallbackForm(){
+        $model = new CallbackForm();
+
+        $model->load(\Yii::$app->request->post());
+
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
+    }
+
 	public function beforeAction($action){
 		$domainInfo = Domain::findOne(['name' => \Yii::$app->request->getServerName()]);
 		\Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;
+
+        if(\Yii::$app->request->post("ReturnForm")){
+            $this->saveReturnForm();
+        }
+
+        if(\Yii::$app->request->post("CallbackForm")){
+            $this->saveCallbackForm();
+        }
+
+        if(\Yii::$app->request->post("PaymentConfirmForm")){
+            $this->savePaymentConfirmForm();
+        }
 
         return parent::beforeAction($action);
 	}

@@ -405,17 +405,12 @@ $this->beginPage();
 					</div>
 					<?php	echo Remodal::widget([
 						'cancelButton'		=>	false,
-						'confirmButton'		=>	true,
+						'confirmButton'		=>	false,
 						'addRandomToID'		=>	false,
 						'id'            =>  'submit',
 						'buttonOptions' =>  [
 							'label' =>  'Заказать обратный звонок',
 							'class' =>  'yellow-button large-button',
-						],
-
-						'confirmButtonOptions'  =>  [
-							'label' =>  'Отправить',
-							'class' =>  'yellow-button large-button'
 						],
 						'content'   =>  $this->render('_callback'),
 

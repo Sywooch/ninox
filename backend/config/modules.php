@@ -16,23 +16,13 @@ return [
     'printer'       =>  'backend\modules\printer\Module',
     'categories'    =>  'backend\modules\categories\Module',
     'cashboxes'     =>  'backend\modules\cashboxes\Module',
-    'costs'     =>  'backend\modules\costs\Module',
-    'pricelists' => [
-        'class' => 'backend\modules\pricelists\Module',
-    ],
-    'test' => [
-        'class' => 'backend\modules\test\Module',
-    ],
-    'promocodes' => [
-        'class' => 'backend\modules\promocodes\Module',
-    ],
-    'gridview' =>  [
-        'class' => '\kartik\grid\Module'
-    ],
-    'treemanager' =>  [
-        'class' => '\kartik\tree\Module',
-        // other module settings, refer detailed documentation
-    ],
+    'costs'         =>  'backend\modules\costs\Module',
+    'pricelists'    =>  'backend\modules\pricelists\Module',
+    'test'          =>  'backend\modules\test\Module',
+    'promocodes'    =>  'backend\modules\promocodes\Module',
+    'export'        =>  'backend\modules\export\Module',
+    'gridview'      =>  '\kartik\grid\Module',
+    'treemanager'   =>  '\kartik\tree\Module',
     'debug' => [
         'class' => 'yii\debug\Module',
         'allowedIPs' => ['80.78.45.114', '127.0.0.1', '::1'],

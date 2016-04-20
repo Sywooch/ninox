@@ -45,8 +45,7 @@ class SborkaItem extends \yii\db\ActiveRecord
             $good = Good::findOne($this->itemID);
 
             if(!$good){
-                return new Good();
-                throw new NotFoundHttpException("Товара с идентификатором {$this->itemID} не существует!");
+                $good = new Good();
             }
 
             $this->_good = $good;

@@ -6,6 +6,7 @@ use kartik\typeahead\Typeahead;
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\JsExpression;
 
 $this->title = 'Заказ #'.$order->number;
@@ -541,13 +542,13 @@ echo Html::tag('div', '', [
                 if($order->deliveryType == 2){
                     echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#novaPoshtaModal' : '#novaPoshtaModal'), ['class' => 'btn btn-default', /*(!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true'*/]);
                 }
-                echo Html::a('Накладная', \yii\helpers\Url::to(['/printer/invoice/'.$order->id]), [
+                echo Html::a('Накладная', Url::to(['/printer/invoice/'.$order->id]), [
                     'class' =>  'btn btn-default'
                 ]),
-                Html::button('Транспортный лист', [
+                Html::a('Транспортный лист', Url::to(['/printer/transport_list/'.$order->id]), [
                     'class' =>  'btn btn-default'
                 ]),
-                Html::button('Заказ', [
+                Html::a('Заказ', Url::to(['/printer/order/'.$order->id]), [
                     'class' =>  'btn btn-default'
                 ]);
 

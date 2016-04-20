@@ -1325,12 +1325,16 @@ footer{
 /*========* END FOOTER STYLE *==========*/
 
 /*========* ORDER *=========*/
-
+/*
+<<<<<<< HEAD
+.main-content .content{
+=======
 .order-body .question{
 
-}
+}*/
 
 /*.main-content .content{
+>>>>>>> 6f0c8bdb1796701958075e1cf3304bd724b14a3c
 	max-width: 1170px;
 	overflow: auto;
 	margin-top: 40px;
@@ -3413,10 +3417,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-weight: bold;
 }
 
-.about-return-accordion .ui-accordion .ui-accordion-content{
-	height: auto !important;
-}
-
 .about-return-accordion .ui-accordion .ui-accordion-header .ui-accordion-header-icon{
 	display: none;
 }
@@ -3451,12 +3451,34 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-contacts .map{
-	font-size: 22px;
-	color: rgb(25, 152, 219);
-	border-bottom: 1px dashed;
-	cursor: pointer;
 	display: inline-block;
 	margin-top: 40px;
+}
+
+.about-contacts .map .ui-accordion-content-active{
+	height: auto;
+}
+
+.about-contacts .map .ui-accordion-header-icon{
+	display: none;
+}
+
+.about-contacts .map .content-data-first_1{
+	color: rgb(25, 152, 219);
+	border-bottom: 1px dashed;
+}
+
+.about-contacts .map span{
+	margin: 0px;
+}
+
+.about-contacts .map .ui-accordion-header{
+	padding: 0px;
+	margin: 0px;
+}
+
+.about-contacts .map .ui-accordion-content{
+	padding: 20px 0px 0px;
 }
 
 .contacts-inform{
