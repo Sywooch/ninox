@@ -32,7 +32,8 @@ class Good extends \common\models\Good{
 
 	public static function find(){
 		return parent::find()
-			->with('photos');
+			->with('photos')
+			->with('category');
 	}
 
 	public function getFilters(){

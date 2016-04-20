@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use backend\models\GoodPhoto;
+use common\models\Category;
 use common\helpers\TranslitHelper;
 use Yii;
 
@@ -107,17 +107,12 @@ class Good extends \yii\db\ActiveRecord
      */
     public $retail_real_price;
 
-    /**
-     * @type GoodPhoto array
-     */
-    private $_photos = [];
 
     /**
      * @type Category
      */
     private $_category = null;
 
-    private $_photo = '';
 
 
     /**
@@ -171,11 +166,7 @@ class Good extends \yii\db\ActiveRecord
      * @return Category
      */
     public function getCategory(){
-        if(empty($this->_category)){
-            $this->_category = Category::findOne($this->GroupID);
-        }
-
-        return $this->_category;
+        return $this->hasOne(Category::className(), ['ID' => 'GroupID']);
     }
 
     /**
