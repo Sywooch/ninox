@@ -2,8 +2,6 @@
 
 namespace common\models;
 
-use common\models\Category;
-use common\helpers\TranslitHelper;
 use Yii;
 
 /**
@@ -106,14 +104,6 @@ class Good extends \yii\db\ActiveRecord
      * @deprecated use retailRealPrice
      */
     public $retail_real_price;
-
-
-    /**
-     * @type Category
-     */
-    private $_category = null;
-
-
 
     /**
      * Возвращает оптовую цену товара
