@@ -290,10 +290,11 @@ class OrderForm extends Model{
             $this->createdOrder = $order->id;
 
             foreach(\Yii::$app->cart->goods as $good){
-                if($customer->cardNumber > 0 && $good->discountSize == 0){
+                if(!empty($customer->cardNumber) && $good->discountSize == 0){
                     $good->setAttributes([
                         'discountSize'  =>  2,
-                        'discountType'  =>  2
+                        'discountType'  =>  2,
+                        'customerRule'  =>  '-1'
                     ]);
                 }
 
