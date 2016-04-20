@@ -29,6 +29,10 @@ class Sms extends \common\components\Sms{
         $message = new \stdClass();
 
         $message->recipients = [$order->customerPhone];
+        $message->params = [
+            ['key' => 'ORDERID', 'value' => $order->number],
+            ['key' => 'ORIGINALSUM', 'value' => $order->originalSum],
+        ];
 
         return $this->send([
             'action'    =>  'message',

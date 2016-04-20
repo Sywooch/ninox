@@ -42,11 +42,7 @@ class EsputnikAPI {
             $ch->setOption(CURLOPT_POSTFIELDS, Json::encode($data['data']));
         }
 
-        var_dump($ch);
-
         $ch->post($url);
-
-        var_dump($ch);
 
         if($ch->responseCode){
             return $ch->responseCode;
