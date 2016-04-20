@@ -5,8 +5,10 @@ use frontend\helpers\PriceRuleHelper;
 use frontend\widgets\Breadcrumbs;
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
-    
-$this->title = $category->Name;
+
+$this->title = $category->metaTitle;
+$this->registerMetaTag(['name' => 'description', 'content' => $category->metaDescription], 'description');
+$this->registerMetaTag(['name' => 'keywords', 'content' => $category->metaKeywords], 'keywords');
 
 $helper = new PriceRuleHelper();
 
@@ -40,7 +42,7 @@ echo Html::tag('div',
             Html::tag('span',
                 \Yii::t('shop',
                     '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}} в категории',
-                    ['n' => $goods->getTotalCount()]
+                    ['n' => $items->getTotalCount()]
                 ),
                 ['class' => 'category-items-count']),
             ['class' => 'category-label']
@@ -73,7 +75,7 @@ echo Html::tag('div',
             ],
         ]).
         ListView::widget([
-            'dataProvider'  =>  $goods,
+            'dataProvider'  =>  $items,
             'itemView'      =>  function($model) use (&$helper){
                 $helper->recalc($model, true);
 

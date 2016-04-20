@@ -15,15 +15,11 @@ use yii\web\JsExpression;
 use kartik\popover\PopoverX;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
-$this->registerMetaTag(['name' => 'description', 'content' => '']);
-$this->registerMetaTag(['name' => 'keywords', 'content' => '']);
 $this->registerMetaTag(['name' => 'MobileOptimized', 'content' => '1240']);
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width; initial-scale=1.0']);
 $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
-
-$this->title = $this->title.' - '.\Yii::t('shop', 'Krasota-Style Бижутерия по украине оптом и в розницу');
 
 /*
  * это нужно?
