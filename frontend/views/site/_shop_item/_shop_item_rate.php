@@ -52,13 +52,13 @@ $createStar = function($rate) use ($model){
 
 echo Html::tag('span',
 	Html::tag('span',
-		Html::tag('span', $model->reviewsCount, [
+		Html::tag('span', sizeof($model->reviews), [
 			'class' => 'reviews-count icon-bubble blue',
 			'itemprop' => 'reviewCount'
 		]).
 		Html::tag('span',
 			Yii::t('shop', '{n, plural, one{отзыв} few{отзыва} many{отзывов} other{отзывов}}',
-				['n' =>  $model->reviewsCount]
+				['n' =>  sizeof($model->reviews)]
 			), ['class' => 'blue']
 		), [
 			'class'     =>  'link-hide reviews',

@@ -2,8 +2,6 @@
 
 namespace common\models;
 
-use backend\models\GoodPhoto;
-use common\helpers\TranslitHelper;
 use Yii;
 
 /**
@@ -108,19 +106,6 @@ class Good extends \yii\db\ActiveRecord
     public $retail_real_price;
 
     /**
-     * @type GoodPhoto array
-     */
-    private $_photos = [];
-
-    /**
-     * @type Category
-     */
-    private $_category = null;
-
-    private $_photo = '';
-
-
-    /**
      * Возвращает оптовую цену товара
      *
      * @return float
@@ -139,27 +124,21 @@ class Good extends \yii\db\ActiveRecord
     }
 
     /**
-     * Возвращает фото товара
-     *
-     * @deprecated
-     * @return string
-     */
-    public function getIco(){
-        return $this->getPhoto();
-    }
-
-    /**
      * Возвращает главную фотографию товара
      *
      * @return string
      */
     public function getPhoto(){
-        if(!empty($this->_photo)){
-            return $this->_photo;
-        }
+        return $this->mainPhoto->ico;
+    }
 
-        return $this->_photo = GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID])->orderBy('order')->limit(1)->scalar();
-
+    /**
+     * Возвращает модель главной фотографии товара
+     *
+     * @return string
+     */
+    public function getMainPhoto(){
+        return isset($this->photos[0]) ? $this->photos[0] : new GoodsPhoto();
     }
 
     /**
@@ -168,11 +147,7 @@ class Good extends \yii\db\ActiveRecord
      * @return GoodsPhoto[]
      */
     public function getPhotos(){
-        if(!empty($this->_photos)){
-            return $this->_photos;
-        }
-
-        return $this->_photos = GoodsPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+        return $this->hasMany(GoodsPhoto::className(), ['itemid' => 'ID'])->orderBy('order');
     }
 
     /**
@@ -181,11 +156,7 @@ class Good extends \yii\db\ActiveRecord
      * @return Category
      */
     public function getCategory(){
-        if(empty($this->_category)){
-            $this->_category = Category::findOne($this->GroupID);
-        }
-
-        return $this->_category;
+        return $this->hasOne(Category::className(), ['ID' => 'GroupID']);
     }
 
     /**

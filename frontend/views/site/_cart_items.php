@@ -38,7 +38,7 @@ echo \kartik\grid\GridView::widget([
 					'data-count'    =>  0,
 				]).
 				Html::tag('img', '', [
-					'src'       =>  \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->ico,
+					'src'       =>  \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->photo,
 					'alt'       =>  $model->Name.' '.\Yii::t('shop', 'от интернет магазина Krasota-Style.ua'),
 					'width'     =>  '100px',
 					'height'    =>  '75px'
