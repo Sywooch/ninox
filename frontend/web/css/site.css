@@ -3521,7 +3521,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-contacts .your-wish{
 	width: 880px;
-	height: 350px;
+	height: auto;
 	background: #f3f8fc;
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;

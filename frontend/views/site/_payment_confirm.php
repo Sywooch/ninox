@@ -89,12 +89,10 @@ $model = new \frontend\models\PaymentConfirmForm();
     </div>
         <?php
         echo $form->field($model, 'paymentDate')->widget(DatePicker::classname(), [
-            'name' => 'dp_1',
             'type' => DatePicker::TYPE_INPUT,
-            'value' => '23-Feb-1982',
             'pluginOptions' => [
                 'autoclose'=>true,
-                'format' => 'dd-M-yyyy'
+                'format' => 'mm-dd-yyyy'
             ]
         ]);
         ?>

@@ -706,6 +706,18 @@ class SiteController extends Controller
         return true;
     }
 
+/*    public function saveContactForm(){ //опять нужно ли это ???
+        $model = new ContactForm();
+
+        $model->load(\Yii::$app->request->post());
+
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
+    }*/
+
 	public function beforeAction($action){
 		$domainInfo = Domain::findOne(['name' => \Yii::$app->request->getServerName()]);
 		\Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;

@@ -40,9 +40,9 @@ class CallbackForm extends Model
     public function rules()
     {
         return [
-            [['phone', 'question', 'name'], 'string'],
             ['captcha', 'captcha'],
-            [['phone', 'question', 'captcha'], 'required']
+            [['name', 'question', 'captcha'], 'required'],
+            [['phone', 'question', 'name'], 'string'],
         ];
     }
 

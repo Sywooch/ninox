@@ -10,6 +10,9 @@ use yii\jui\Accordion;
  * Date: 08.02.16
  * Time: 14:07
  */
+
+$model = new \frontend\models\ContactForm();
+
 ?>
 
 <div class="content" xmlns="http://www.w3.org/1999/html">
@@ -376,21 +379,30 @@ use yii\jui\Accordion;
                     'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
                 ]);?>
             </div>
-            <div class="your-wish">
-                <div class="name">
+            <div class="your-wish">  <!--\frontend\models\ContactForm(); та ли это форма???
+            /var/www/yii.krasota-style/frontend/views/site/contact.php оно уже есть сдесь -->
+                <?php    $form = \yii\bootstrap\ActiveForm::begin([
+                    'id'            =>  'contact-form'
+                ]);
+                ?>
+                <?= $form->field($model, 'name')?>
+               <!-- <div class="name">
                     <span>Ваше имя</span>
                     <input type="text">
-                </div>
-                <div class="email">
+                </div>-->
+                <?= $form->field($model, 'email')?>
+<!--                <div class="email">
                     <span>Электронная почта</span>
                     <input type="text">
-                </div>
-                <div class="wish">
+                </div>-->
+                <?= $form->field($model, 'subject')->textarea()?>
+<!--                <div class="wish">
                     <span>Что Вас интересует?</span>
                     <textarea type="text"></textarea>
-                </div>
+                </div>-->
                 <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
-                    'your-wish-button']) ?>
+                    'contact-button']) ?>
+                <?php $form->end(); ?>
             </div>
         </div>
     </div>
