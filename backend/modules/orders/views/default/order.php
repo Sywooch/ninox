@@ -555,7 +555,10 @@ echo Html::tag('div', '', [
                 ?>
             </div>
             <div style="margin-top: 10px;" class="btn-toolbar pull-right">
-                <button class="btn btn-link">Выслать накладную</button> <button class="btn btn-link">Скачать накладную</button>
+                <button class="btn btn-link">Выслать накладную</button>
+                <?=Html::a('Скачать накладную', "/export/excel/{$order->id}", [
+                    'class' =>  'btn btn-link'
+                ])?>
             </div>
             <div class="clearfix"></div>
         </div>

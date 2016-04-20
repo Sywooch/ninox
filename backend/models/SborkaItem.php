@@ -62,6 +62,26 @@ class SborkaItem extends \common\models\SborkaItem{
         $this->count = $val;
     }
 
+    public function getSum(){
+        return $this->price * $this->count;
+    }
+
+    public function getOriginalSum(){
+        return $this->originalPrice * $this->count;
+    }
+
+    public function getDiscountSum(){
+        return $this->originalPrice - $this->price;
+    }
+
+    public function getCustomerDiscountSum(){
+        if(!empty($this->discountSize) && $this->customerRule < 0){
+            return $this->discountSum;
+        }
+
+        return 0;
+    }
+
     public function __set($name, $value){
         parent::__set($name, $value);
 
