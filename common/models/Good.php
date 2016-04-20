@@ -139,27 +139,21 @@ class Good extends \yii\db\ActiveRecord
     }
 
     /**
-     * Возвращает фото товара
-     *
-     * @deprecated
-     * @return string
-     */
-    public function getIco(){
-        return $this->getPhoto();
-    }
-
-    /**
      * Возвращает главную фотографию товара
      *
      * @return string
      */
     public function getPhoto(){
-        if(!empty($this->_photo)){
-            return $this->_photo;
-        }
+        return $this->mainPhoto->ico;
+    }
 
-        return $this->_photo = GoodsPhoto::find()->select('ico')->where(['itemid' => $this->ID])->orderBy('order')->limit(1)->scalar();
-
+    /**
+     * Возвращает модель главной фотографии товара
+     *
+     * @return string
+     */
+    public function getMainPhoto(){
+        return isset($this->photos[0]) ? $this->photos[0] : new GoodsPhoto();
     }
 
     /**
@@ -168,11 +162,7 @@ class Good extends \yii\db\ActiveRecord
      * @return GoodsPhoto[]
      */
     public function getPhotos(){
-        if(!empty($this->_photos)){
-            return $this->_photos;
-        }
-
-        return $this->_photos = GoodsPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
+        return $this->hasMany(GoodsPhoto::className(), ['itemid' => 'ID'])->orderBy('order');
     }
 
     /**

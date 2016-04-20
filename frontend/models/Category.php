@@ -29,7 +29,8 @@ class Category extends \common\models\Category{
 
 	    $return = Good::find()
 		    ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-		    ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false]);
+		    ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+		    ->with('reviews');
 
 	    if(!empty($values) && !empty($names)){
 		    $return
