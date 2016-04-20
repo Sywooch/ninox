@@ -4100,7 +4100,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 45px;
 }
 
-.sticky .header-menu-item a{
+.sticky .header-menu-item .item-label{
 	display: none;
 }
 
@@ -4170,7 +4170,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	vertical-align: bottom;
 }
 
-.header-menu-items >li>a {
+.header-menu-items .item-label{
 	width: 1000px; /* вот это заставляет наши псевдоячейки растянуться должным образом */
 	display: table-cell; /* без этого тоже никак */
 	vertical-align: middle; /* вертикальное выравнивание текста */
@@ -4188,7 +4188,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	/*конец изменений, если ничего не поедет в дальнейшем оптимизировать паддинги*/
 }
 
-.header-menu-item:hover a{
+.header-menu-item:hover .item-label{
 	color: black;
 }
 
@@ -4198,8 +4198,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	max-height: 500px;
 }
 
-.header-menu-item-image{
+.header-menu-item .svg{
 	height: 35px;
+	display: block;
+	margin: 0 auto;
 }
 
 .header-menu-item img.svg{
@@ -4214,15 +4216,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	fill: #3cace7;
 }
 
-.sticky .header-menu-item-image{
-	height: 40px;
-	margin-top: 0px;
+.sticky .header-menu-item .svg{
+	margin-bottom: 5px;
 }
-
-/*.header-menu-item-image > *{
-    transform: scale(1);
-    max-height: 35px;
-}*/
 
 .header-menu-item-content{
 	background: #f1f1f1 none repeat scroll 0% 0%;
@@ -4270,6 +4266,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-decoration: none;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	color: black;
 }
 
 .header-menu-item-content-text a:before {
