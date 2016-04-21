@@ -62,8 +62,20 @@ $css = <<<'CSS'
     margin-right: 20px;
 }
 
+.form_content .field-paymentconfirmform-paymentdate{
+    margin: 0px;
+}
+
+.form_content .field-paymentconfirmform-paymenttype{
+    height: 55px;
+}
+
 .datepicker{
     z-index: 10010 !important;
+}
+
+.form_content label{
+margin: 0px;
 }
 
 CSS;
