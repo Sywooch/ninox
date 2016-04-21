@@ -190,19 +190,19 @@ $form = \yii\bootstrap\ActiveForm::begin([
                             <div class="all-price">
                                 <?=\Yii::t('shop', '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}}', ['n' => \Yii::$app->cart->itemsCount])?> на сумму
                                 <div class="bold">
-                                    <span class="amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
+                                    <span class="amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount)?></span>
                                 </div>
                             </div>
                             <div class="price action-discount">
                                 Сумма скидки по акции
                                 <div class="bold">
-	                                <span class="action-discount-amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm - \Yii::$app->cart->cartSumWithoutDiscount, true)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
+	                                <span class="action-discount-amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm - \Yii::$app->cart->cartSumWithoutDiscount, true)?></span>
                                 </div>
                             </div>
 	                        <div class="price card-discount">
 		                        Скидка по карте (<span class="card-discount-percent"><?=((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : '-'.$customer->discount)?>%</span>)
 		                        <div class="bold">
-			                        <span class="card-discount-amount"><?=Formatter::getFormattedPrice(((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : -\Yii::$app->cart->cartSumNotDiscounted / 100 * $customer->discount), true)?></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
+			                        <span class="card-discount-amount"><?=Formatter::getFormattedPrice(((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : -\Yii::$app->cart->cartSumNotDiscounted / 100 * $customer->discount), true)?></span>
 		                        </div>
 	                        </div>
                             <div class="price commission">
