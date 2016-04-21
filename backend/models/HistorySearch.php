@@ -114,17 +114,17 @@ class HistorySearch extends History{
             }
         }
 
-        $params['ordersStatus'] = isset($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
+        $params['ordersStatus'] = !empty($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
 
         switch($params['ordersStatus']){
             case 'all':
                 break;
             case 'done':
-                $query->andWhere(['status' => self::STATUS_DONE]);
+                $query->andWhere(['or', ['status' => self::STATUS_DONE], ['status' => self::STATUS_DELIVERED]]);
                 break;
             case 'new':
             default:
-                $query->andWhere(['status' => self::STATUS_NOT_CALLED]);
+                $query->andWhere(['or', ['status' => self::STATUS_NOT_CALLED], ['status' => self::STATUS_PROCESS], ['status' => self::STATUS_NOT_PAYED], ['status' => self::STATUS_WAIT_DELIVERY]]);
                 break;
         }
 

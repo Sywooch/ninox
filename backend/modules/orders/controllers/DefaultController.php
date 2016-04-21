@@ -103,7 +103,6 @@ class DefaultController extends Controller
         $orderID = \Yii::$app->request->post("OrderID");
 
         $order = History::findOne($orderID);
-        //TODO: сделать проверку на колл-во звонков (поле callsCount)
 
         if(empty($order)){
             throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
@@ -112,7 +111,16 @@ class DefaultController extends Controller
         $order->callback = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
 
         $order->save(false);
-        return $order->callback;
+
+        \Yii::$app->response->format = 'json';
+
+        return [
+            'callback'  =>  $order->callback,
+            'status'    =>  [
+                'id'            =>  $order->status,
+                'description'   =>  $order->statusDescription
+            ]
+        ];
     }
 
     public function actionDoneorder(){
@@ -131,7 +139,16 @@ class DefaultController extends Controller
         $order->done = $order->done == 1 ? 0 : 1;
 
         $order->save(false);
-        return $order->done;
+
+        \Yii::$app->response->format = 'json';
+
+        return [
+            'done'      =>  $order->done,
+            'status'    =>  [
+                'id'            =>  $order->status,
+                'description'   =>  $order->statusDescription
+            ]
+        ];
     }
 
     /**

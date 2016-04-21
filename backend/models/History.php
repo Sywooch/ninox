@@ -140,10 +140,18 @@ class History extends \common\models\History
                 break;
         }
 
-        return \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+        $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+
+        if($result == 200){
+            $this->smsSendDate = date('Y-m-d H:i:s');
+        }
+
+        return $result;
     }
 
     public function sendCardSms(){
+        $messageID = 0;
+
         switch($this->status){
             case self::STATUS_NOT_CALLED:
                 break;
@@ -158,7 +166,13 @@ class History extends \common\models\History
                 break;
         }
 
-        return \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+        $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+
+        if($result == 200){
+            $this->smsSendDate = date('Y-m-d H:i');
+        }
+
+        return $result;
     }
 
     public function beforeSave($insert){
@@ -181,6 +195,14 @@ class History extends \common\models\History
         if($this->isAttributeChanged('moneyConfirmed') && $this->moneyConfirmed == 1){
             $this->moneyConfirmed = date('Y-m-d H:i:s');
             \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
+        }
+
+        if($this->status != $this->getCurrentStatus()) {
+            $this->status = $this->getCurrentStatus();
+        }
+
+        if($this->isAttributeChanged('status')){
+            $this->statusChangedDate = date('Y-m-d H:i:s');
         }
 
         //$this->status = $this->getCurrentStatus();
