@@ -41,7 +41,7 @@ class CallbackForm extends Model
     {
         return [
             ['captcha', 'captcha'],
-            [['name', 'question', 'captcha'], 'required'],
+            [['name', 'phone', 'question', 'captcha'], 'required'],
             [['phone', 'question', 'name'], 'string'],
         ];
     }

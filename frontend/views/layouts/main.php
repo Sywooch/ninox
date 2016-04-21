@@ -139,6 +139,13 @@ $js = <<<JS
 	$(function () {
 	    $("[data-toggle='popover']").popover();
 	});
+
+$('body').on('click', function(e){
+	if(!$(e.target).closest('.phone-number').length && $(e.target).parents('.popover').length == 0){
+		$(".popover").popoverX('hide');
+	}
+});
+
 JS;
 
 $this->registerJs($js);
@@ -313,9 +320,9 @@ $this->beginPage();
 						</div>
 						<div class="phone-number">
 							<?=PopoverX::widget([
-								'header' => '',
+								'header'    => '',
 								'placement' => PopoverX::ALIGN_BOTTOM,
-								'content' =>
+								'content'   =>
 									'<div class="call-back">
 										<div>
 											<div class="blue-white-phone"></div>
@@ -347,7 +354,7 @@ $this->beginPage();
 										</div>
 									</div>',
 								'footer' => Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
-								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number']
+								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number'],
 							])?>
 						</div>
 						<div class="desire-basket">
