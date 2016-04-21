@@ -48,6 +48,7 @@ class PaymentConfirmForm extends Model
     public function rules()
     {
         return [
+            [['orderNumber', 'sum', 'paymentDate', 'paymentType'], 'required'],
             [['orderNumber', 'sum', 'paymentDate', 'paymentType'], 'safe']
         ];
     }

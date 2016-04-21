@@ -28,6 +28,17 @@ class Callback extends \yii\db\ActiveRecord
 
         return false;
     }
+
+    public function beforeSave($insert)
+    {
+        if($this->isNewRecord){
+            $this->received = date('Y-m-d H:i:s');
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+
     /**
      * @inheritdoc
      */

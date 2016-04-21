@@ -100,13 +100,19 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+        $orderID = \Yii::$app->request->post("OrderID");
+
+        $order = History::findOne($orderID);
         //TODO: сделать проверку на колл-во звонков (поле callsCount)
+
+        if(empty($order)){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
 
         $order->callback = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
 
         $order->save(false);
-        return $order->confirmed;
+        return $order->callback;
     }
 
     public function actionDoneorder(){
@@ -114,17 +120,18 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+        $orderID = \Yii::$app->request->post("OrderID");
 
-        if($order){
-            $order->done = $order->done == 1 ? 0 : 1;
-            $order->doneDate = $order->done == 1 ? date('Y-m-d H:i:s') : '0000-00-00 00:00:00';
+        $order = History::findOne($orderID);
 
-            $order->save(false);
-            return $order->done;
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
         }
 
-        return 0;
+        $order->done = $order->done == 1 ? 0 : 1;
+
+        $order->save(false);
+        return $order->done;
     }
 
     /**

@@ -29,6 +29,7 @@ return [
         'panels' => [
             'views' => ['class' => 'common\panels\ViewsPanel'],
             'version' => ['class' => 'common\panels\VersionPanel'],
+            'userIP' => ['class' => 'common\panels\UserIPPanel'],
         ],
     ],
 ];

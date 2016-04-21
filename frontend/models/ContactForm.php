@@ -34,12 +34,16 @@ class ContactForm extends Model
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+  /*  public function attributeLabels() Нужно ли если это для отправки формы на странице o-nas в поле что вас
+  интересует!!!???
     {
         return [
             'verifyCode' => 'Verification Code',
+            'name'       =>  \Yii::t('shop', 'Ваше имя'),
+            'email'      =>  \Yii::t('shop', 'Электронная почта'),
+            'subject'    =>  \Yii::t('shop', 'Что Вас интересует?'),
         ];
-    }
+    }*/
 
     /**
      * Sends an email to the specified email address using the information collected by this model.

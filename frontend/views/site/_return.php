@@ -148,12 +148,10 @@ $model = new \frontend\models\ReturnForm();
     <span class="cap">2. Введите данные ТТН "Новая Почта"</span>
                 <?php
                 echo $form->field($model, 'sendDate')->widget(DatePicker::classname(), [
-                    'name' => 'dp_1',
                     'type' => DatePicker::TYPE_INPUT,
-                    'value' => '23-Feb-1982',
                     'pluginOptions' => [
                         'autoclose'=>true,
-                        'format' => 'dd-M-yyyy'
+                        'format' => 'mm-dd-yyyy'
                     ]
                 ]);?>
                 <?= $form->field($model, 'nakladna')?>
@@ -171,7 +169,7 @@ $model = new \frontend\models\ReturnForm();
             <span class="cap">
                 5. Способ возврата денег
             </span>
-        <?php echo $form->field($model, 'refundMethod')->radioList($model->refundMethods);?>
+        <?= $form->field($model, 'refundMethod')->radioList($model->refundMethods);?>
     </div>
     <span class="cap">6. Введите номер банковской карты (*перевод возможен только на карту ПриватБанк)</span>
         <?= $form->field($model, 'cardNumber')?>
