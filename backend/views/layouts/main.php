@@ -23,7 +23,7 @@ function getCookie(name){
 
 $(function () {
     $("[data-toggle='tooltip']").tooltip();
-});;
+});
 
 $(function () {
     $("[data-toggle='popover-x']").popover();

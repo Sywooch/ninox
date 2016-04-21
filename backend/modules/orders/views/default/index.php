@@ -5,7 +5,9 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $js = <<<'JS'
-$("body").on('click', "a.deleteOrder", function(e){
+$("body").on('click', '.sms-buttons button', function(){
+    $(this).prop('disabled', true).html('<i class="fa fa-refresh fa-spin"></i>');
+}).on('click', "a.deleteOrder", function(e){
     deleteOrder(e.currentTarget);
 }).on('click', "a.ordersChanges", function(e){
     ordersChanges(e.currentTarget);
@@ -76,7 +78,10 @@ var ordersChanges = function(e){
         }
     });
 }, confirmCall = function(obj){
-    var orderID = obj.parentNode.parentNode.parentNode.getAttribute('data-key');
+    var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode.parentNode),
+        orderID = orderNode.attr('data-key'),
+        button = $(obj);
+
 
     swal({
         title: "Вы дозвонились?",
@@ -99,18 +104,22 @@ var ordersChanges = function(e){
                 'confirm': isConfirm
             },
             success: function(data){
-                //TODO: can refactor
-                obj.setAttribute('class', obj.getAttribute('class').replace(/btn-\w+/g));
-                if(data == 1){
-                    obj.setAttribute('class', 'btn-success ' + obj.getAttribute('class'));
-                    if(obj.parentNode.querySelector("button[disabled]") !== null){
-                        obj.parentNode.querySelector("button[disabled]").removeAttribute('disabled');
-                    }
-                }else{
-                    obj.setAttribute('class', 'btn-danger ' + obj.getAttribute('class'));
-                    if(obj.parentNode.querySelector("button.doneOrder") !== null){
-                        obj.parentNode.querySelector("button.doneOrder").setAttribute('disabled', 'disabled');
-                    }
+                button.attr('class', 'btn btn-default confirmCall').prop('disabled', false);
+
+
+                switch(data){
+                    case '0':
+                        orderNode.find("button.doneOrder").prop('disabled', true);
+                        break;
+                    case '1':
+                        button.toggleClass('btn-success');
+                        orderNode.find("button.doneOrder").prop('disabled', false);
+                        break;
+                    case '2':
+                    default:
+                        button.toggleClass('btn-danger');
+                        orderNode.find("button.doneOrder").prop('disabled', true);
+                        break;
                 }
             }
         });
@@ -159,7 +168,7 @@ $(document).on('kvexprow.loaded', 'div[data-attribute-type=ordersGrid]', functio
     $(this).find("tr[data-key=" + extradata + "]").orderPreviewListeners();
 });
 
-var sendSms = function(order, type){
+var sendSms = function(order, type, button){
     $.ajax({
         type: "POST",
         url: '/orders/sms',
@@ -168,20 +177,25 @@ var sendSms = function(order, type){
             type: type
         },
         success: function(response){
-            console.log(response);
+            button.removeClass('btn-danger').removeClass('btn-default').removeClass('btn-success').prop('disabled', false);
+
+            if(response == 200){
+                button.toggleClass('btn-success').html('<i class="fa fa-check"></i>');
+            }else{
+                button.toggleClass('btn-danger').html('<i class="fa fa-times"></i>');
+            }
         }
     });
 }
 
 $("body").on('click', "button.sms-order", function(){
-    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'sms');
+    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'sms', $(this));
 });
 
 $("body").on('click', "button.sms-card", function(){
-    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card');
+    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card', $(this));
 });
 JS;
-
 $css = <<<'CSS'
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;

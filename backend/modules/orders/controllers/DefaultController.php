@@ -100,13 +100,19 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
+        $orderID = \Yii::$app->request->post("OrderID");
+
+        $order = History::findOne($orderID);
         //TODO: сделать проверку на колл-во звонков (поле callsCount)
+
+        if(empty($order)){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
 
         $order->callback = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
 
         $order->save(false);
-        return $order->confirmed;
+        return $order->callback;
     }
 
     public function actionDoneorder(){
