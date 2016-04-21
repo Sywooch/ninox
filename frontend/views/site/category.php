@@ -61,13 +61,13 @@ echo Html::tag('div',
                 'novinki'   =>  \Yii::t('shop', 'По новизне'),
             ],
             'name'          =>  'Sorting',
-            'hideSearch'    => true,
+            'hideSearch'    =>  true,
             'value'         =>  \Yii::$app->request->get('order'),
-            'language'      => \Yii::$app->language,
+            'language'      =>  \Yii::$app->language,
             'pluginOptions' =>   [
                 'width' =>  '250px',
             ],
-            'pluginEvents'  => [
+            'pluginEvents'  =>  [
                 'change'    =>  'function(data){
                     window.history.replaceState({}, document.title, buildLinkFromParams(\'order\', data.target.value));
                     $.pjax.reload({container: \'#pjax-category\'});

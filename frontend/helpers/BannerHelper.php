@@ -97,7 +97,7 @@ class BannerHelper extends Component
                 Html::a(Html::tag('span', $good->Name), '/tovar/'.$good->link.'-g'.$good->ID).
                 Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
             ).
-            Html::tag('div', Html::a(Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico), '/tovar/'.$good->link.'-g'.$good->ID)), [
+            Html::tag('div', Html::a(Html::img('http://krasota-style.com.ua/img/catalog/'.$good->photo), '/tovar/'.$good->link.'-g'.$good->ID)), [
             'class' => 'goods-item'
         ]);
     }

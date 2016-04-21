@@ -20,10 +20,9 @@ use yii\db\Query;
 class Good extends \common\models\Good{
 
     use PriceHelper;
-	//public $category = '';                //Код категории //Выпилено: Николай Гилко. Для получения кода категории используйте $categorycode
+
 	public $priceRuleID = 0;                //ID примененного ценового правила
 	public $priceForOneItem = 0;            //Цена за единицу товара
-	//public $reviewsCount = 0;               //Количество отзывов
 	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
 	public $isNew = false;                  //Флаг-новинка
     public $canBuy = true;
@@ -31,17 +30,19 @@ class Good extends \common\models\Good{
 
     private $_options = [];
 
+	public static function find(){
+		return parent::find()
+			->with('photos')
+			->with('category');
+	}
+
 	public function getFilters(){
 		return $this->hasMany(GoodOptionsValue::className(), ['good' => 'ID'])
 			->joinWith('goodOptions');
 	}
 
-	public function getReviewsCount(){
-		return GoodsComment::find()->where(['goodID' => $this->ID])->count();
-	}
-
 	public function getReviews(){
-		return GoodsComment::find()->where(['goodID' => $this->ID])->all();
+		return $this->hasMany(GoodsComment::className(), ['goodID' => 'ID']);
 	}
 
     public function getRealRetailPrice()
@@ -118,9 +119,6 @@ class Good extends \common\models\Good{
 			    break;
             case 'video':
                 return true; //TODO: return video from dopVideo table
-                break;
-            case 'dopPhoto':
-                return GoodsPhoto::find()->where(['itemid' => $this->ID])->all();
                 break;
 		    default:
 			    return parent::__get($name);

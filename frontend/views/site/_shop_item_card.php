@@ -67,7 +67,7 @@ if($good->video){
 $items = [];
 $itemsNav = [];
 
-foreach($good->dopPhoto as $photo){
+foreach($good->photos as $photo){
     $items[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, ['width'=>'475px',
         'height'=>'355px']);
     $itemsNav[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$photo->ico,

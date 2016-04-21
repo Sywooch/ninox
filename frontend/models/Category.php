@@ -29,7 +29,8 @@ class Category extends \common\models\Category{
 
 	    $return = Good::find()
 		    ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-		    ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false]);
+		    ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+		    ->with('reviews');
 
 	    if(!empty($values) && !empty($names)){
 		    $return
@@ -72,27 +73,29 @@ class Category extends \common\models\Category{
     }
 
 	public function getMinPrice(){
-		if(!empty($this->_minPrice)){
-			return $this->_minPrice;
+		if(empty($this->_minPrice)){
+			$this->_minPrice = Good::find()
+				->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+				->andWhere(['`goodsgroups`.`enabled`' => 1])
+				->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+				->min('PriceOut1');
 		}
-		return $this->_minPrice = Good::find()
-			->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-			->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-			->andWhere(['`goodsgroups`.`enabled`' => 1])
-			->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
-			->min('PriceOut1');
+
+		return $this->_minPrice;
 	}
 
 	public function getMaxPrice(){
-		if(!empty($this->_maxPrice)){
-			return $this->_maxPrice;
+		if(empty($this->_maxPrice)){
+			$this->_maxPrice = Good::find()
+				->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+				->andWhere(['`goodsgroups`.`enabled`' => 1])
+				->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+				->max('PriceOut1');
 		}
-		return $this->_maxPrice = Good::find()
-			->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-			->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-			->andWhere(['`goodsgroups`.`enabled`' => 1])
-			->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
-			->max('PriceOut1');
+
+		return $this->_maxPrice;
 	}
 
 	public static function getMenu(){
@@ -104,74 +107,74 @@ class Category extends \common\models\Category{
 	}
 
 	public function getFilters(){
-		if(!empty($this->_filters)){
-			return $this->_filters;
-		}
+		if(empty($this->_filters)){
+			$filters = [];
+			$varCount = [];
+			$itemVars = [];
+			$varChecked = [];
 
-		$filters = [];
-		$varCount = [];
-		$itemVars = [];
-		$varChecked = [];
+			foreach(GoodOptionsValue::find()
+				        ->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0 AND `goods`.`show_img` = 1')
+				        ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+				        ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+				        ->joinWith(['goodOptions', 'goodOptionsVariants'])
+				        ->all() as $filterOption){
+				if(!empty($filterOption->goodOptions)){
+					$go = $filterOption->goodOptions;
+					isset($filters[$go->id]['name']) ? '' :
+						$filters[$go->id]['name'] = $go->name;
+					isset($filters[$go->id]['id']) ? '' :
+						$filters[$go->id]['id'] = $go->id;
+					isset($filters[$go->id]['checked']) ? '' :
+						$filters[$go->id]['checked'] = array_diff(explode(',', \Yii::$app->request->get(preg_replace('/\s/', '_', $go->name))), ['']);
+					if(!empty($filterOption->goodOptionsVariants)){
+						$gv = $filterOption->goodOptionsVariants;
+						isset($filters[$go->id]['options'][$gv->id]['label']) ? '' :
+							$filters[$go->id]['options'][$gv->id]['label'] = $gv->value;
 
-		foreach(GoodOptionsValue::find()
-			->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0 AND `goods`.`show_img` = 1')
-			->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-			->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-			->joinWith(['goodOptions', 'goodOptionsVariants'])
-			->all() as $filterOption){
-			if(!empty($filterOption->goodOptions)){
-				$go = $filterOption->goodOptions;
-				isset($filters[$go->id]['name']) ? '' :
-					$filters[$go->id]['name'] = $go->name;
-				isset($filters[$go->id]['id']) ? '' :
-					$filters[$go->id]['id'] = $go->id;
-				isset($filters[$go->id]['checked']) ? '' :
-					$filters[$go->id]['checked'] = array_diff(explode(',', \Yii::$app->request->get(preg_replace('/\s/', '_', $go->name))), ['']);
-				if(!empty($filterOption->goodOptionsVariants)){
-					$gv = $filterOption->goodOptionsVariants;
-					isset($filters[$go->id]['options'][$gv->id]['label']) ? '' :
-						$filters[$go->id]['options'][$gv->id]['label'] = $gv->value;
+						$itemVars[$filterOption->good][$gv->id] = in_array($gv->id, $filters[$go->id]['checked']);
 
-					$itemVars[$filterOption->good][$gv->id] = in_array($gv->id, $filters[$go->id]['checked']);
-
-					empty($filters[$go->id]['checked']) ? '' : $varChecked[$go->id][$gv->id] = in_array($gv->id, $filters[$go->id]['checked']);
-				}
-			}
-		}
-
-		$filterNames = array_column($filters, 'name', 'id');
-		$itemVarsTemp = $itemVars;
-		foreach(\Yii::$app->request->get() as $name => $value){
-			$name = preg_replace('/\_/', ' ', $name);
-			$id = array_search($name, $filterNames);
-			$temp = [];
-			if($id){
-				foreach($itemVarsTemp as $keyItem => $itemVar){
-					foreach(array_intersect_key($itemVar, $varChecked[$id]) as $k => $v){
-						if($v){
-							$temp[$keyItem] = $itemVar;
-						}else{
-							isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
-						}
+						empty($filters[$go->id]['checked']) ? '' : $varChecked[$go->id][$gv->id] = in_array($gv->id, $filters[$go->id]['checked']);
 					}
 				}
-				$itemVarsTemp = $temp;
 			}
+
+			$filterNames = array_column($filters, 'name', 'id');
+			$itemVarsTemp = $itemVars;
+			foreach(\Yii::$app->request->get() as $name => $value){
+				$name = preg_replace('/\_/', ' ', $name);
+				$id = array_search($name, $filterNames);
+				$temp = [];
+				if($id){
+					foreach($itemVarsTemp as $keyItem => $itemVar){
+						foreach(array_intersect_key($itemVar, $varChecked[$id]) as $k => $v){
+							if($v){
+								$temp[$keyItem] = $itemVar;
+							}else{
+								isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
+							}
+						}
+					}
+					$itemVarsTemp = $temp;
+				}
+			}
+
+			foreach($itemVarsTemp as $keyItem => $itemVar){
+				foreach($itemVar as $k => $v){
+					isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
+				}
+			}
+
+			foreach($filters as $go => $filter){
+				foreach($filter['options'] as $gv => $val){
+					$filters[$go]['options'][$gv]['count'] = isset($varCount[$gv]) ? $varCount[$gv] : 0;
+				}
+			}
+
+			$this->_filters = $filters;
 		}
 
-		foreach($itemVarsTemp as $keyItem => $itemVar){
-			foreach($itemVar as $k => $v){
-				isset($varCount[$k]) ? $varCount[$k]++ : $varCount[$k] = 1;
-			}
-		}
-
-		foreach($filters as $go => $filter){
-			foreach($filter['options'] as $gv => $val){
-				$filters[$go]['options'][$gv]['count'] = isset($varCount[$gv]) ? $varCount[$gv] : 0;
-			}
-		}
-
-		return $this->_filters = $filters;
+		return $this->_filters;
 	}
 
 

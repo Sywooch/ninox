@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use backend\components\Sms;
 use common\models\Siteuser;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -79,7 +80,7 @@ class History extends \common\models\History
             case 'card':
                 return $this->sendCardSms();
                 break;
-            case 'order':
+            case 'sms':
                 return $this->sendSms();
                 break;
         }
@@ -120,20 +121,26 @@ class History extends \common\models\History
     }
 
     public function sendSms(){
+        $messageID = 0;
+
         switch($this->status){
             case self::STATUS_NOT_CALLED:
-                //отправить смс "не дозвонились"
+                $messageID = Sms::MESSAGE_CANT_CALL_ID;
                 break;
             case self::STATUS_NOT_PAYED:
+                //$messageID = Sms::MESSAGE_CANT_CALL_ID;
                 //отправить смс с номером карты
                 break;
             case self::STATUS_WAIT_DELIVERY:
+                $messageID = Sms::MESSAGE_ORDER_WAIT_DELIVERY_ID;
                 //
                 break;
             case self::STATUS_DELIVERED:
+                //$messageID = Sms::MESSAGE_CANT_CALL_ID;
                 break;
         }
-        //\Yii::$app->sms->send();
+
+        return \Yii::$app->sms->sendPreparedMessage($this, $messageID);
     }
 
     public function sendCardSms(){
@@ -145,32 +152,42 @@ class History extends \common\models\History
             case self::STATUS_NOT_PAYED:
                 break;
             case self::STATUS_WAIT_DELIVERY:
+                $messageID = Sms::MESSAGE_PAYMENT_CONFIRMED_ID;
                 break;
             case self::STATUS_DELIVERED:
                 break;
         }
 
-        //\Yii::$app->sms->send();
+        return \Yii::$app->sms->sendPreparedMessage($this, $messageID);
     }
 
     public function beforeSave($insert){
         if($this->isAttributeChanged('confirmed') && $this->confirmed == 1){
-            //$this->confirmDate = date('Y-m-d H:i:s');
+            $this->confirmDate = date('Y-m-d H:i:s');
         }
+
+        if($this->isAttributeChanged('done') && $this->done == 1){
+            $this->doneDate = date('Y-m-d H:i:s');
+        }
+
+        if($this->isAttributeChanged('takeOrder') && $this->takeOrder == 1){
+            $this->takeOrderDate = date('Y-m-d H:i:s');
+        }
+
+        if($this->isAttributeChanged('takeTTNMoney') && $this->takeTTNMoney == 1){
+            $this->takeTTNMoneyDate = date('Y-m-d H:i:s');
+        }
+
+        if($this->isAttributeChanged('moneyConfirmed') && $this->moneyConfirmed == 1){
+            $this->moneyConfirmed = date('Y-m-d H:i:s');
+            \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
+        }
+
+        //$this->status = $this->getCurrentStatus();
 
         $this->hasChanges = 1;
 
         return parent::beforeSave($insert);
-    }
-
-    public function afterFind(){
-        $this->status = $this->getStatus();
-
-        return parent::afterFind();
-    }
-
-    public function setStatus($val){
-        $this->status = $val;
     }
 
     public function behaviors(){

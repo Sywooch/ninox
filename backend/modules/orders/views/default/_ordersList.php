@@ -195,7 +195,7 @@ echo \kartik\grid\GridView::widget([
                     return Html::button(FA::i('credit-card'), ['class' => 'btn btn-default sms-card']);
                 },
             ],
-            'template'  =>  Html::tag('div', '{sms}{card}', ['class' => 'btn-group btn-group-sm'])
+            'template'  =>  Html::tag('div', '{sms}{card}', ['class' => 'btn-group btn-group-sm sms-buttons'])
         ],
         [
             'class'     =>  \kartik\grid\ActionColumn::className(),
@@ -215,11 +215,11 @@ echo \kartik\grid\GridView::widget([
                     ]);
                 },
                 'print'  =>  function($url, $model, $key){
-                    return Html::a('', Url::toRoute([
+                    return Html::a(FA::i('print'), Url::toRoute([
                         '/printer/invoice/'.$model->id
                     ]), [
                         'target'    =>  '_blank',
-                        'class'     =>  'btn btn-default glyphicon glyphicon-print',
+                        'class'     =>  'btn btn-default',
                         'data-pjax' =>  0,
                         'title'     =>  'Печатать накладную'
                     ]);
@@ -227,7 +227,7 @@ echo \kartik\grid\GridView::widget([
                 'done'  =>  function($url, $model, $key){
                     return Html::button(FA::i('check')->size(FA::SIZE_4X), [
                         'class' =>  'btn btn-default doneOrder '.($model->done == 1 ? ' btn-success' : ''),
-                        ($model->confirmed == $model::CALLBACK_COMPLETED ? '' : 'disabled')  =>  'disabled',
+                        ($model->callback == $model::CALLBACK_COMPLETED ? '' : 'disabled')  =>  'disabled',
                         'title' =>  $model->done == 1 ? 'Заказ выполнен' : 'Заказ не выполнен'
                     ]);
                 },
@@ -250,14 +250,14 @@ echo \kartik\grid\GridView::widget([
                         $subclass = 'btn-warning';
                     }
 
-                    return Html::button('', [
-                        'class' =>  'btn confirmCall glyphicon glyphicon-phone-alt '.$subclass,
+                    return Html::button(FA::i('phone'), [
+                        'class' =>  'btn btn-default confirmCall '.$subclass,
                         'title' =>  $title
                     ]);
                 },
                 'changes'   =>  function($url, $model, $key){
-                    return Html::a('', '#orderChanges', [
-                        'class'                     =>  'ordersChanges btn btn-default glyphicon glyphicon-list-alt',
+                    return Html::a(FA::i('list-alt'), '#orderChanges', [
+                        'class'                     =>  'ordersChanges btn btn-default',
                         'data-attribute-orderID'    =>  $model->id,
                         ($model->hasChanges != 1 ? 'disabled' : 'enabled') => 'disabled',
                         'onclick'   =>  ($model->hasChanges != 1 ? 'return false;' : ''),

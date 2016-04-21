@@ -99,8 +99,8 @@ class Cart extends Component{
             }
         }
 
-        return Good::find()->
-	        where(['in', '`goods`.`ID`', $items]);
+        return Good::find()
+	        ->where(['in', '`goods`.`ID`', $items]);
     }
 
     public function save(){
