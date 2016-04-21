@@ -62,8 +62,20 @@ $css = <<<'CSS'
     margin-right: 20px;
 }
 
+.form_content .field-paymentconfirmform-paymentdate{
+    margin: 0px;
+}
+
+.form_content .field-paymentconfirmform-paymenttype{
+    height: 55px;
+}
+
 .datepicker{
     z-index: 10010 !important;
+}
+
+.form_content label{
+margin: 0px;
 }
 
 CSS;
@@ -89,12 +101,10 @@ $model = new \frontend\models\PaymentConfirmForm();
     </div>
         <?php
         echo $form->field($model, 'paymentDate')->widget(DatePicker::classname(), [
-            'name' => 'dp_1',
             'type' => DatePicker::TYPE_INPUT,
-            'value' => '23-Feb-1982',
             'pluginOptions' => [
                 'autoclose'=>true,
-                'format' => 'dd-M-yyyy'
+                'format' => 'mm-dd-yyyy'
             ]
         ]);
         ?>
