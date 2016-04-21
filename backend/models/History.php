@@ -183,19 +183,11 @@ class History extends \common\models\History
             \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
         }
 
+        //$this->status = $this->getCurrentStatus();
+
         $this->hasChanges = 1;
 
         return parent::beforeSave($insert);
-    }
-
-    public function afterFind(){
-        $this->status = $this->getStatus();
-
-        return parent::afterFind();
-    }
-
-    public function setStatus($val){
-        $this->status = $val;
     }
 
     public function behaviors(){

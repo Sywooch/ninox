@@ -128,7 +128,7 @@ class History extends \yii\db\ActiveRecord
      *
      * @return int идентификатор статуса
      */
-    public function getStatus(){
+    public function getCurrentStatus(){
         if($this->callback != self::CALLBACK_COMPLETED){
             return self::STATUS_NOT_CALLED;
         }

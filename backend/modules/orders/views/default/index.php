@@ -8,15 +8,15 @@ $js = <<<'JS'
 $("body").on('click', '.sms-buttons button', function(){
     $(this).prop('disabled', true).html('<i class="fa fa-refresh fa-spin"></i>');
 }).on('click', "a.deleteOrder", function(e){
-    deleteOrder(e.currentTarget);
+    deleteOrder(this);
 }).on('click', "a.ordersChanges", function(e){
-    ordersChanges(e.currentTarget);
+    ordersChanges(this);
 }).on('click', "a.restoreOrder", function(e){
-    restoreOrder(e.currentTarget);
+    restoreOrder(this);
 }).on('click', "button.doneOrder", function(e){
-    doneOrder(e.currentTarget);
+    doneOrder(this);
 }).on('click', "button.confirmCall", function(e){
-    confirmCall(e.currentTarget);
+    confirmCall(this);
 });
 
 var ordersChanges = function(e){
@@ -62,14 +62,16 @@ var ordersChanges = function(e){
         }
     });
 }, doneOrder = function(obj){
-    var orderID = obj.parentNode.parentNode.parentNode.getAttribute('data-key');
+    var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode),
+        button = $(obj);
     $.ajax({
         type: 'POST',
         url: '/orders/doneorder',
         data: {
-            'OrderID': orderID
+            'OrderID': orderNode.attr('data-key')
         },
         success: function(data){
+
             if(data == 1){
                 obj.setAttribute('class', 'btn-success ' + obj.getAttribute('class'));
             }else{
@@ -79,9 +81,7 @@ var ordersChanges = function(e){
     });
 }, confirmCall = function(obj){
     var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode.parentNode),
-        orderID = orderNode.attr('data-key'),
         button = $(obj);
-
 
     swal({
         title: "Вы дозвонились?",
@@ -100,12 +100,11 @@ var ordersChanges = function(e){
             type: 'POST',
             url: '/orders/confirmordercall',
             data: {
-                'OrderID': orderID,
+                'OrderID': orderNode.attr('data-key'),
                 'confirm': isConfirm
             },
             success: function(data){
                 button.attr('class', 'btn btn-default confirmCall').prop('disabled', false);
-
 
                 switch(data){
                     case '0':
