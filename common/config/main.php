@@ -39,7 +39,7 @@ return [
 			'targets'	=>	[
 				[
 					'class'		=>	'yii\log\EmailTarget',
-					'levels'	=>	['error'],
+					'levels'	=>	['*'],
 					'mailer'	=>	'mailer',
 					'message'	=>	[
 						'from'		=>	['krasotastyleyii@gmail.com', 'Krasota-Style'],
