@@ -48,7 +48,7 @@ return [
 					'exportInterval'	=>	10,
 					'message'	=>	[
 						'from'		=>	['krasotastyleyii@gmail.com'],
-						'to'		=>	['krasotastyleyii@gmail.com', 'n.gilko@gmail.com'],
+						'to'		=>	['krasotastyleyii@gmail.com'],
 						'subject'	=>	"Ошибки на сайте ".\Yii::$app->name." ".date('d.m.Y H:i:s')
 					]
 				]
