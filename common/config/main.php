@@ -36,6 +36,18 @@ return [
 			],
 		],
 		'log'	=>	[
+			'targets'	=>	[
+				[
+					'class'		=>	'yii\log\EmailTarget',
+					'levels'	=>	['error'],
+					'mailer'	=>	'mailer',
+					'message'	=>	[
+						'from'		=>	['krasotastyleyii@gmail.com', 'Krasota-Style'],
+						'to'		=>	['krasotastyleyii@gmail.com', 'n.gilko@gmail.com'],
+						'subject'	=>	"Ошибки на сайте ".\Yii::$app->name." ".date('d.m.Y H:i:s')
+					]
+				]
+			],
 			'flushInterval'	=>	'1000',
 		],
 	    'cache' => [
