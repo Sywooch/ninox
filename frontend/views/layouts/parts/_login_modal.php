@@ -1,7 +1,7 @@
 <?php
 $model = new \frontend\models\LoginForm();
 $form = new \yii\widgets\ActiveForm([
-    'action'    =>  'login'
+    'action'    =>  'login',
 ]);
 
 $form->begin();
@@ -15,4 +15,4 @@ echo $form->field($model, 'phone'),
 $form->end();
 
 echo \yii\helpers\Html::a(\Yii::t('site', 'Восстановить пароль'), \yii\helpers\Url::to('/request-password-reset')), '&nbsp; | &nbsp;',
-    \yii\helpers\Html::a('Регистрация', '#registration');
+    \yii\helpers\Html::a('Регистрация', '/register');
