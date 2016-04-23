@@ -379,7 +379,7 @@ $model = new \frontend\models\UsersInterestsForm();
                     'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
                 ]);?>
             </div>
-            <div class="your-wish">  
+            <div class="your-wish">
                 <?php    $form = \yii\bootstrap\ActiveForm::begin([
                     'id'            =>  'users-interests-form'
                 ]);

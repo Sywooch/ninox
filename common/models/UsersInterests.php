@@ -10,7 +10,7 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "send_pay".
+ * This is the model class for table "users_interests".
  *
  * @property string $name
  * @property string $email
