@@ -3787,8 +3787,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .modal-open{
-	overflow: auto;
 	padding: 0px !important;
+	margin-right: 8px;
 }
 .header .phone-number .popover.bottom{
 
