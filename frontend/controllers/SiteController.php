@@ -708,7 +708,7 @@ class SiteController extends Controller
         return true;
     }
 
-    public function saveUsersInterestsForm(){ //опять нужно ли это ???
+    public function saveUsersInterestsForm(){
         $model = new UsersInterestsForm();
 
         $model->load(\Yii::$app->request->post());
@@ -737,7 +737,7 @@ class SiteController extends Controller
         }
 
         if(\Yii::$app->request->post("UsersInterestsForm")){
-            $this->saveUsersInterestsForm();/*form or not*/
+            $this->saveUsersInterestsForm();
         }
 
         return parent::beforeAction($action);
