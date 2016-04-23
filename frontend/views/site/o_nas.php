@@ -379,27 +379,14 @@ $model = new \frontend\models\UsersInterestsForm();
                     'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
                 ]);?>
             </div>
-            <div class="your-wish">  <!--\frontend\models\ContactForm(); та ли это форма???
-            /var/www/yii.krasota-style/frontend/views/site/contact.php оно уже есть сдесь -->
+            <div class="your-wish">  
                 <?php    $form = \yii\bootstrap\ActiveForm::begin([
                     'id'            =>  'users-interests-form'
                 ]);
                 ?>
                 <?= $form->field($model, 'name')?>
-               <!-- <div class="name">
-                    <span>Ваше имя</span>
-                    <input type="text">
-                </div>-->
                 <?= $form->field($model, 'email')?>
-<!--                <div class="email">
-                    <span>Электронная почта</span>
-                    <input type="text">
-                </div>-->
                 <?= $form->field($model, 'text')->textarea()?>
-<!--                <div class="wish">
-                    <span>Что Вас интересует?</span>
-                    <textarea type="text"></textarea>
-                </div>-->
                 <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
                     'contact-button']) ?>
                 <?php $form->end(); ?>
