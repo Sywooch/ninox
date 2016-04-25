@@ -168,11 +168,11 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax && !\Yii::$app->request->get("_pjax")){
             switch(\Yii::$app->request->post("action")){
                 case 'getEditItemForm':
-                    if(!isset($order->items[\Yii::$app->request->post("itemID")])){
+                    $item = $order->findItem(\Yii::$app->request->post("itemID"));
+
+                    if(empty($item)){
                         throw new NotFoundHttpException("Товар не найден в заказе!");
                     }
-
-                    $item = $order->items[\Yii::$app->request->post("itemID")];
 
                     return $this->renderAjax('_order_itemEdit', ['model' => $item]);
                     break;

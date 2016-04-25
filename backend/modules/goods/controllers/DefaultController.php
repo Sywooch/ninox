@@ -775,67 +775,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @deprecated
-     * @author Nikolai Gilko <n.gilko@gmail.com>
-     * @return SborkaItem                       -   модель товара в заказе
-     * @throws MethodNotAllowedHttpException    -   если запрос не через ajax
-     * @throws NotFoundHttpException            -   если не найден заказ, или товар
-     *
-     * Метод позволяет добавить товар в заказ
-     */
-    public function actionAdditemtoorder(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        \Yii::$app->response->format = 'json';
-
-        $wantedCount = \Yii::$app->request->post("ItemsCount");
-
-        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
-
-        if(!$order){
-            throw new NotFoundHttpException("Такой заказ не найден!");
-        }
-
-        $good = Good::findOne(['ID' => \Yii::$app->request->post("itemID")]);
-
-        if(!$good){
-            throw new NotFoundHttpException("Такой товар не найден!");
-        }
-
-        $item = SborkaItem::findOne(['itemID' => $good->ID, 'orderID' => \Yii::$app->request->post("OrderID")]);
-
-        if(!$item){
-            $item = new SborkaItem();
-            $item->itemID = $good->ID;
-            $item->name = $good->Name;
-            $item->realyCount = 0;
-            $item->originalPrice = $order->isWholesale() ? $good->PriceOut2 : $good->PriceOut1;
-            $item->orderID = $order->id;
-        }
-
-        if(($good->count >= $wantedCount) || ($good->count < $wantedCount && \Yii::$app->request->post("IgnoreMaxCount") == "true")){
-            $item->count += $wantedCount;
-        }elseif($good->count > 0 && \Yii::$app->request->post("IgnoreMaxCount") == "false"){
-            $item->count += $good->count;
-        }else{
-            return $good->count;
-        }
-
-        //TODO: логику пересчёта товара (заказа?) по ценовым правилам можно впилить здесь
-
-        $good->count = $good->count - $item->addedCount;
-
-        if($item->save(false)){ //TODO: сделать без false
-            //TODO: Дима, когда напишешь триггер для автоматического отнимания из `goods`?
-            $good->save(false);
-        }
-
-        return -1;
-    }
-
-    /**
      * @return bool
      * @throws \yii\web\MethodNotAllowedHttpException
      * @throws \yii\web\NotFoundHttpException

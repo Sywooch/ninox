@@ -95,24 +95,6 @@ class History extends \yii\db\ActiveRecord
     protected $_items;
 
     public function getItems($returnAll = true){
-        /*if(!empty($this->_items) && $returnAll){
-            return $this->_items;
-        }
-
-        $q = SborkaItem::find()->where(['orderid' => $this->id]);
-
-        if(!$returnAll){
-            return $q;
-        }
-
-        $items = [];
-
-        foreach($q->all() as $tempItem){
-            $items[$tempItem->itemID] = $tempItem;
-        }
-
-        return $this->_items = $items;*/
-
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 

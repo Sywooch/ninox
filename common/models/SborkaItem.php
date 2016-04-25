@@ -35,20 +35,14 @@ class SborkaItem extends \yii\db\ActiveRecord
     ];
 
     public $price;
-
-    public $_category;
-    public $_photo;
+    public $addedCount = 0;
 
     public function getGood(){
         return $this->hasOne(Good::className(), ['ID' => 'itemID']);
     }
 
     public function getCategory(){
-        if(empty($this->_category)){
-            $this->_category = Category::findOne(['Code' => $this->categoryCode]);
-        }
-
-        return $this->_category;
+        return $this->hasOne(Category::className(), ['Code' => 'categoryCode']);
     }
 
     public function getPhoto(){
@@ -73,6 +67,16 @@ class SborkaItem extends \yii\db\ActiveRecord
         }
     }
 
+    public function returnToStore($deleteItem = true){
+        $this->good->count += $this->count;
+
+        if($deleteItem){
+            return $this->delete();
+        }
+
+        return true;
+    }
+
     public function beforeSave($insert){
         if(empty($this->realyCount)){
             $this->realyCount = 0;
@@ -82,10 +86,25 @@ class SborkaItem extends \yii\db\ActiveRecord
             if(empty($this->added)){
                 $this->added = time();
             }
+
             $this->originalCount = $this->count;
         }
 
+        if($this->isAttributeChanged('count')){
+            $this->good->count += $this->addedCount;
+        }
+
         return parent::beforeSave(true);
+    }
+
+    public function __set($name, $value){
+        parent::__set($name, $value);
+
+        switch($name){
+            case 'count':
+                $this->addedCount = $value - $this->getOldAttribute('count');
+                break;
+        }
     }
 
     /**

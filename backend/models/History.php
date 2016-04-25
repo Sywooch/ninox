@@ -37,7 +37,6 @@ class History extends \common\models\History
     public $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
     public $status_10    =   'Ожидает отправки';
 
-    private $_customer;
     private $_responsibleUser = null;
 
     public static function find()
@@ -45,6 +44,19 @@ class History extends \common\models\History
         return parent::find()->with('items')->with('customer');
     }
 
+    public function getItems($returnAll = true){
+        return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
+    }
+
+    public function findItem($itemID){
+        foreach($this->items as $item){
+            if($item->itemID == $itemID){
+                return $item;
+            }
+        }
+
+        return false;
+    }
 
     public function getID(){
         return $this->id;

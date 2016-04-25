@@ -226,11 +226,7 @@ class Customer extends \yii\db\ActiveRecord
      * @return History[]
      */
     public function getOrders(){
-        if(empty($this->_orders)){
-            $this->_orders = History::find()->where(['customerID' => $this->ID])->orderBy('added DESC')->all();
-        }
-
-        return $this->_orders;
+        return $this->hasMany(History::className(), ['customerID' => 'ID'])->orderBy('added DESC');
     }
 
     /**

@@ -32,7 +32,7 @@ $typeaheadTemplate = $this->render(
 $customerOrders = [];
 
 if($customer){
-    foreach($customer->getOrders() as $oneOrder){
+    foreach($customer->orders as $oneOrder){
         $customerOrders[] = $this->render('order/_customer_order', [
             'nowOrder'  =>  $order->id,
             'order'     =>  $oneOrder
