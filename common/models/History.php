@@ -72,6 +72,7 @@ use yii\base\ErrorException;
  * @property double $deliveryCost
  * @property string $deliveryReference
  * @property string $deliveryEstimatedDate
+ * @property SborkaItem[] $items
  */
 class History extends \yii\db\ActiveRecord
 {
@@ -94,7 +95,7 @@ class History extends \yii\db\ActiveRecord
     protected $_items;
 
     public function getItems($returnAll = true){
-        if(!empty($this->_items) && $returnAll){
+        /*if(!empty($this->_items) && $returnAll){
             return $this->_items;
         }
 
@@ -110,7 +111,9 @@ class History extends \yii\db\ActiveRecord
             $items[$tempItem->itemID] = $tempItem;
         }
 
-        return $this->_items = $items;
+        return $this->_items = $items;*/
+
+        return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 
     public function beforeSave($insert){

@@ -734,12 +734,10 @@ $thiss = $this;
             'attribute' =>  'name',
             'header'    =>  'Товар',
             'format'    =>  'html',
-            'value'     =>  function($model) use(&$goodsAdditionalInfo){
-                //$ico = isset($goodsAdditionalInfo[$model->itemID]->ico) && !empty($goodsAdditionalInfo[$model->itemID]->ico) ? 'http://krasota-style.com.ua/img/catalog/sm/'.$goodsAdditionalInfo[$model->itemID]->ico : '';
-
+            'value'     =>  function($model){
                 $ico = 'http://krasota-style.com.ua/img/catalog/sm/'.$model->photo;
 
-                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a($model->name.'<br>Код товара: '.$goodsAdditionalInfo[$model->itemID]->Code, \yii\helpers\Url::to([
+                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a($model->name.'<br>Код товара: '.$model->good->Code, \yii\helpers\Url::to([
                     '/goods/view/'.$model->itemID
                 ]))), ['class'  =>  'col-xs-8']), ['class' =>   'row-responsive']);
             }
@@ -814,14 +812,14 @@ $thiss = $this;
             'options'   =>  [
                 'style' =>  'width: 50px; text-align: center'
             ],
-            'value'     =>  function($model) use(&$goodsAdditionalInfo){
-                if($goodsAdditionalInfo[$model->itemID]->count < 0){
-                    return Html::tag('span', $goodsAdditionalInfo[$model->itemID]->count.' шт.', [
+            'value'     =>  function($model){
+                if($model->good->count < 0){
+                    return Html::tag('span', $model->good->count.' шт.', [
                         'style' =>  'color: red'
                     ]);
                 }
 
-                return $goodsAdditionalInfo[$model->itemID]->count.' шт.';
+                return $model->good->count.' шт.';
             }
 
         ],

@@ -25,6 +25,10 @@ class SborkaItem extends \common\models\SborkaItem{
         ];
     }
 
+    public static function find(){
+        return parent::find()->with('good');
+    }
+
     public function getControlled(){
         return $this->realyCount == $this->originalCount;
     }
@@ -47,11 +51,6 @@ class SborkaItem extends \common\models\SborkaItem{
 
     public function setNotFounded($val){
         return $this->nezakaz = $val;
-    }
-
-    public function getPhoto()
-    {
-        return $this->good->photo;
     }
 
     public function getCode(){

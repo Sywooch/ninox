@@ -213,15 +213,11 @@ class DefaultController extends Controller
             $order->save(false);
         }
 
-        $goodsAdditionalInfo = $st = [];
+        $st = [];
         $sborkaItems = SborkaItem::findAll(['orderID' => $order->id]);
 
         foreach($sborkaItems as $sItem){
             $st[] = $sItem->itemID;
-        }
-
-        foreach(Good::find()->where(['in', 'ID', $st])->each() as $sItem){
-            $goodsAdditionalInfo[$sItem->ID] = $sItem;
         }
 
         $itemsDataProvider = new ActiveDataProvider([
@@ -239,19 +235,12 @@ class DefaultController extends Controller
             ]
         ]);
 
-        $customer = Customer::findOne($order->customerID);
-
-        if(!$customer){
-            $customer = new Customer;
-        }
-
         return $this->render('order', [
             'order'                 =>  $order,
-            'items'                 =>  $sborkaItems,
+            'items'                 =>  $order->items,
             'itemsDataProvider'     =>  $itemsDataProvider,
             'priceRules'            =>  Pricerule::find()->orderBy('priority')->all(),
-            'goodsAdditionalInfo'   =>  $goodsAdditionalInfo,
-            'customer'              =>  $customer
+            'customer'              =>  $order->customer
         ]);
     }
 
@@ -324,7 +313,7 @@ class DefaultController extends Controller
 
         $item->name = $good->Name;
         //$item->count = $item->originalCount;
-        $item->originalPrice = $order->isOpt() ? $good->PriceOut1 : $good->PriceOut2;
+        $item->originalPrice = $order->isWholesale() ? $good->PriceOut1 : $good->PriceOut2;
 
         if($item->save(false)){
             //$good->count = $good->count - $item->addedCount;
@@ -399,10 +388,17 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $d = \Yii::$app->request->post();
-        if($d['type'] == 'opt' || $d['type'] == 'rozn'){
-            $order = History::findOne(['id' => $d['OrderID']]);
-            $order->recalculatePrices($d['type']);
+        $type = \Yii::$app->request->post("type");
+        $orderID = \Yii::$app->request->post("OrderID");
+
+        $order = History::findOne(['id' => $orderID]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
+
+        if(in_array($type, ['opt', 'rozn'])){
+            $order->recalculatePrices($type);
         }
     }
 

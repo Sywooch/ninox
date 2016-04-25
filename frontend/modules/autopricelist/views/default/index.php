@@ -47,7 +47,7 @@ echo \yii\widgets\ListView::widget([
             Html::tag('currencyId', 'UAH'),
             Html::tag('categoryId', $model->GroupID),
             Html::tag('market_category', $categories[$model->GroupID]->yandexName),
-            Html::tag('picture', 'http://krasota-style.com.ua/img/catalog/'.$model->ico),
+            Html::tag('picture', 'http://krasota-style.com.ua/img/catalog/'.$model->photo),
             Html::tag('description', preg_replace('/\&/', '', strip_tags($model->Description))),
             Html::tag('manufacturer_warranty', 'true'),
             Html::tag('seller_warranty', 'P1Y')

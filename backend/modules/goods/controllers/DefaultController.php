@@ -319,15 +319,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @deprecated
-     * @return array
-     * @throws \yii\web\MethodNotAllowedHttpException
-     */
-    public function actionSearchgoods(){
-        return $this->actionSearch();
-    }
-
-    /**
      * Ищет товары
      *
      * @return array массив товаров для TypeAhead виджета
@@ -355,7 +346,7 @@ class DefaultController extends Controller
             $tArray = [
                 'name'      =>  $good->Name,
                 'category'  =>  !empty($good->category) ? $good->category->Name : '(без категории)',
-                'photo'     =>  $good->ico,
+                'photo'     =>  $good->photo,
                 'code'      =>  $good->Code,
                 'ID'        =>  $good->ID,
                 'disabled'  =>  $good->show_img == 0,
@@ -820,7 +811,7 @@ class DefaultController extends Controller
             $item->itemID = $good->ID;
             $item->name = $good->Name;
             $item->realyCount = 0;
-            $item->originalPrice = $order->isOpt() ? $good->PriceOut2 : $good->PriceOut1;
+            $item->originalPrice = $order->isWholesale() ? $good->PriceOut2 : $good->PriceOut1;
             $item->orderID = $order->id;
         }
 

@@ -20,7 +20,7 @@ use kartik\datetime\DateTimePicker;
 
     <?php if(!$model->isNewRecord) {?>
     <label class="control-label" for="articles-content">Текущая картинка</label>
-    <img width="100%" src="<?= LinkController::getForImg().$model->ico ?>">
+    <img width="100%" src="<?= LinkController::getForImg().$model->photo ?>">
     <?php } ?>
     <div class="form-group field-articles-future_publish">
         <?= $form->field($model, 'ico')->input('hidden') ?>

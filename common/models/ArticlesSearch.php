@@ -70,7 +70,7 @@ class ArticlesSearch extends Articles
             ->andFilterWhere(['like', 'content', $this->content])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'keywords', $this->keywords])
-            ->andFilterWhere(['like', 'ico', $this->ico])
+            ->andFilterWhere(['like', 'ico', $this->photo])
             ->andFilterWhere(['like', 'link', $this->link])
             ->andFilterWhere(['like', 'video', $this->video]);
 

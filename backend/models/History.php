@@ -40,22 +40,18 @@ class History extends \common\models\History
     private $_customer;
     private $_responsibleUser = null;
 
+    public static function find()
+    {
+        return parent::find()->with('items')->with('customer');
+    }
+
+
     public function getID(){
         return $this->id;
     }
 
     public function getCustomer(){
-        if(empty($this->_customer)){
-            $customer = Customer::findOne(['ID' => $this->customerID]);
-
-            if(!$customer){
-                $customer = new Customer();
-            }
-
-            $this->_customer = $customer;
-        }
-
-        return $this->_customer;
+        return $this->hasOne(Customer::className(), ['ID' => 'customerID']);
     }
 
     public function getNewCustomer(){
@@ -84,26 +80,6 @@ class History extends \common\models\History
                 return $this->sendSms();
                 break;
         }
-    }
-
-    public function getItems($returnAll = true){
-        if(!empty($this->_items) && $returnAll){
-            return $this->_items;
-        }
-
-        $q = SborkaItem::find()->where(['orderid' => $this->id]);
-
-        if(!$returnAll){
-            return $q;
-        }
-
-        $items = [];
-
-        foreach($q->all() as $tempItem){
-            $items[$tempItem->itemID] = $tempItem;
-        }
-
-        return $this->_items = $items;
     }
 
     public function getResponsibleUser(){
@@ -283,21 +259,9 @@ class History extends \common\models\History
                 break;
         }
 
-        $assemblyItems = SborkaItem::findAll(['orderID' => $this->id]);
-
-        $itemsIDs = $goods = [];
-
-        foreach ($assemblyItems as $item) {
-            $itemsIDs[] = $item->itemID;
-        }
-
-        foreach (Good::find()->where(['in', 'ID', $itemsIDs])->each() as $good) {
-            $goods[$good->ID] = $good;
-        }
-
-        foreach ($assemblyItems as $item) {
-            if (isset($goods[$item->itemID])) {
-                $item->originalPrice = $goods[$item->itemID]->$priceType;
+        foreach ($this->items as $item) {
+            if(!empty($item->good)) {
+                $item->originalPrice = $item->good->$priceType;
                 $item->save(false);
             }
         }

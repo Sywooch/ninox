@@ -23,6 +23,7 @@ use yii\web\NotFoundHttpException;
  * @property double $originalPrice
  * @property integer $discountSize
  * @property integer $discountType
+ * @property Good $good
  */
 class SborkaItem extends \yii\db\ActiveRecord
 {
@@ -38,20 +39,8 @@ class SborkaItem extends \yii\db\ActiveRecord
     public $_category;
     public $_photo;
 
-    private $_good;
-
     public function getGood(){
-        if(empty($this->_good)){
-            $good = Good::findOne($this->itemID);
-
-            if(!$good){
-                $good = new Good();
-            }
-
-            $this->_good = $good;
-        }
-
-        return $this->_good;
+        return $this->hasOne(Good::className(), ['ID' => 'itemID']);
     }
 
     public function getCategory(){
@@ -63,15 +52,7 @@ class SborkaItem extends \yii\db\ActiveRecord
     }
 
     public function getPhoto(){
-        if(empty($this->_photo)){
-            $this->_photo = GoodsPhoto::find()
-                ->select('ico')
-                ->where(['itemid' => $this->itemID])
-                ->orderBy('order DESC')
-                ->scalar();
-        }
-
-        return $this->_photo;
+        return $this->good->photo;
     }
 
     public function afterFind(){

@@ -74,36 +74,21 @@ use Yii;
  * @property string $video
  * @property integer $count
  * @property integer $isUnlimited
- * @property float realWholesalePrice
- * @property float realRetailPrice
- * @property float wholesalePrice
- * @property float retailPrice
+ * @property Category $category
+ * @property GoodsPhoto $mainPhoto
+ * @property GoodsPhoto[] $photos
+ * @property string $photo
+ * @property double $wholesalePrice
+ * @property double $retailPrice
+ * @property double $realWholesalePrice
+ * @property double $realRetailPrice
+ * @property string $categorycode
  */
 class Good extends \yii\db\ActiveRecord
 {
 
     const STATE_ENABLED = 1;
     const STATE_DISABLED = 0;
-
-    /**
-     * @deprecated use wholesalePrice
-     */
-    public $wholesale_price;
-
-    /**
-     * @deprecated use wholesaleRealPrice
-     */
-    public $wholesale_real_price;
-
-    /**
-     * @deprecated use retailPrice
-     */
-    public $retail_price;
-
-    /**
-     * @deprecated use retailRealPrice
-     */
-    public $retail_real_price;
 
     /**
      * Возвращает оптовую цену товара
@@ -201,11 +186,6 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function afterFind(){
-        $this->wholesale_price = $this->PriceOut1;
-        $this->wholesale_real_price = $this->PriceOut1;
-        $this->retail_price = $this->PriceOut2;
-        $this->retail_real_price = $this->PriceOut2;
-
         $this->Description = htmlspecialchars_decode($this->Description);
 
         return parent::afterFind();
