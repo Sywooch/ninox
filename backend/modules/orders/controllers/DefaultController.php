@@ -59,13 +59,13 @@ class DefaultController extends Controller
             'ordersSumm'        =>  0
         ];
 
-	    foreach($orders->asArray()->each() as $order){
+	    /*foreach($orders->asArray()->each() as $order){
             $ordersStats['totalOrders']++;
             $ordersStats['completedOrders'] += $order['done'];
             $ordersStats['notCalled']   += $order['callback'] != 1;
             $ordersStats['ordersFaktSumm']   += $order['actualAmount'];
             $ordersStats['ordersSumm']   += $order['originalSum'];
-        }
+        }*/
 
         return $this->render('index', [
             'collectors'        =>  Siteuser::getCollectorsWithData($timeTo, $timeFrom),
