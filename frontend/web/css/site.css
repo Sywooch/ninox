@@ -774,7 +774,11 @@ h2{
 	display: block;
 }
 
-.category .hovered:not(:nth-child(3n - 3)){
+.category:not(.search) .hovered:not(:nth-child(3n - 3)){
+	margin-right: 30px;
+}
+
+.category.search .hovered:not(:nth-child(4n - 4)){
 	margin-right: 30px;
 }
 

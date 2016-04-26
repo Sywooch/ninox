@@ -296,7 +296,7 @@ $this->beginPage();
 								'dataset' => [
 									[
 										'remote' => [
-											'url' => Url::to(['/search']).'?string=%QUERY',
+											'url' => Url::to(['/search']).'/%QUERY',
 											'wildcard' => '%QUERY'
 										],
 										'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",

@@ -579,11 +579,18 @@ class SiteController extends Controller
             return $goods;
         }
 
+        $pageParams = \Yii::$app->request->get();
+        unset($pageParams['_pjax']);
+        unset($pageParams['offset']);
+
         return $this->render('searchResults', [
             'goods' =>  new ActiveDataProvider([
                 'query' =>  $goodsQuery,
                 'pagination'    =>  [
-                    'pageSize'  =>  '15'
+                    'pageSize'          =>  '20',
+                    'forcePageParam'    =>  false,
+                    'pageSizeParam'     =>  false,
+                    'params'            =>  $pageParams
                 ]
             ])
         ]);

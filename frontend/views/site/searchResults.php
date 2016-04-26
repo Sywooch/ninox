@@ -8,20 +8,16 @@ $this->params['breadcrumbs'][] = [
     'label' =>  \Yii::t('shop', 'Результаты поиска')
 ];
 
+use bobroid\y2sp\ScrollPager;
 use frontend\helpers\PriceRuleHelper;
+use frontend\widgets\Breadcrumbs;
 use yii\helpers\Html;
 use yii\widgets\ListView;
 
 $helper = new PriceRuleHelper();
 
-echo Html::tag('div', \yii\widgets\Breadcrumbs::widget([
-        'activeItemTemplate'    =>  '<span class="item-name" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>',
-        'itemTemplate'          =>  '
-                    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{link}</span>
-                    <span class="fa fa-long-arrow-right fa-fw"></span>
-                ',
-        'links'                 =>  $this->params['breadcrumbs']
-    ]).Html::tag('h2', \Yii::t('shop', 'Результаты поиска по запросу "{request}":', [
+echo Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]).
+    Html::tag('h2', \Yii::t('shop', 'Результаты поиска по запросу "{request}":', [
         'request' => \Yii::$app->request->get("string")
     ])).
     ListView::widget([
@@ -35,15 +31,30 @@ echo Html::tag('div', \yii\widgets\Breadcrumbs::widget([
             ]);
         },
         'layout' => '{summary}'.
-            Html::tag('div', '{items}', ['class' => 'items-grid']).
-            '{pager}',
+            Html::tag('div', '{items}', ['class' => 'items-grid clear-fix']).
+            Html::tag('div', '{pager}', ['class' => 'pagination-wrapper']),
         'itemOptions'   =>  [
             'class'     =>  'hovered'
         ],
-        'pager'         =>  [
-            'class' =>  \common\components\ShopPager::className()
+        'pager' =>  [
+            'class'             =>  ScrollPager::className(),
+            'item'              =>  '.hovered',
+            'paginationClass'   =>  'pagination',
+            'paginationSelector'=>  'pagi',
+            'triggerOffset'     =>  \Yii::$app->request->get('offset'),
+            'eventOnPageChange' =>  new \yii\web\JsExpression('
+                    function(offset){
+                        if(params[\'offset\']){
+                            offset > params[\'offset\'][0] ? params[\'offset\'][0] = offset : \'\';
+                        }else{
+                            params[\'offset\'] = [];
+					        params[\'offset\'].push(offset);
+                        }
+                        window.history.replaceState({}, document.title, buildLinkFromParams(false, false));
+                        return false;
+                    }
+                ')
         ]
 ]), [
-    'class' =>  'content catalog',
-    'style' =>  'margin-top: 20px;'
+    'class' =>  'category search'
 ]);

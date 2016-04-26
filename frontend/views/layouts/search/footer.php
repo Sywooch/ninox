@@ -23,6 +23,6 @@ $content = Html::tag('div',
     ]
 );
 
-echo Html::a($content, '/search?string={{query}}', [
+echo Html::a($content, '/search/{{query}}', [
     'class' =>  'typeahead-list-item'
 ]);
