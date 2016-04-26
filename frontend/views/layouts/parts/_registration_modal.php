@@ -13,7 +13,15 @@ $form = ActiveForm::begin([
 echo $form->field($model, 'name'),
     $form->field($model, 'surname'),
     $form->field($model, 'email'),
-    $form->field($model, 'phone'),
+    $form->field($model, 'phone')->widget(\frontend\widgets\MaskedInput::className(), [
+        'clientOptions' =>  [
+            'clearIncomplete'   =>  true,
+            'alias'             =>  'phone',
+            'url'               =>  \yii\helpers\Url::to('/js/phone-codes.json'),
+            'onBeforePaste'     =>  new \yii\web\JsExpression('function(){ return false; }')
+        ],
+    ]),
+    $form->field($model, 'countryCode', ['options' => ['style' => 'display: none'], 'inputOptions' => ['id' => 'countryCode']])->hiddenInput()->label(false),
     $form->field($model, 'password')->passwordInput(),
     $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className(), [
         'template'      =>  '{image} {input}',
