@@ -112,7 +112,7 @@ class MainMenuWidget extends Widget{
     }
 
     public function renderSliderItem($item){
-        return Html::img(\Yii::getAlias('@menuSliderPhotos').'/'.$item->photo).Html::tag('div', '', [
+        return Html::tag('div', Html::img(\Yii::getAlias('@menuSliderPhotos').'/'.$item->photo), [
             'class' =>  $this->options['sliderClassImage']
         ]);
     }
