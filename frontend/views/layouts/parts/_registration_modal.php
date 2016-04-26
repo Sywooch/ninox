@@ -7,6 +7,7 @@ $form = ActiveForm::begin([
     'action'                =>  '/register',
     'validationUrl'         =>  '/register',
     'enableAjaxValidation'  =>  true,
+    'enableClientValidation'=>  false,
     'id'                    =>  'registrationForm'
 ]);
 
@@ -17,8 +18,7 @@ echo $form->field($model, 'name'),
     $form->field($model, 'password')->passwordInput(),
     $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className(), [
         'template'      =>  '{image} {input}',
-        'captchaAction' =>  '/captcharegistermodal',
-        'id'            =>  'captcha-modal'
+        'captchaAction' =>  'site/captcharegistermodal',
     ]);
 echo \yii\helpers\Html::button('Регистрация', [
     'type'  =>  'submit'

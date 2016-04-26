@@ -453,12 +453,12 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
             'captcharegistermodal' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'class'         =>  'yii\captcha\CaptchaAction',
+                'transparent'   =>  true,
             ],
             'captchacallbackmodal' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'class'         =>  'yii\captcha\CaptchaAction',
+                'transparent'   =>  true,
             ],
         ];
     }
@@ -622,10 +622,12 @@ class SiteController extends Controller
         if(\Yii::$app->request->isAjax && \Yii::$app->request->post("ajax") == 'registrationForm'){
             \Yii::$app->response->format = 'json';
 
-            return ActiveForm::validate($model);
+            return ActiveForm::validate($model, [
+                'name', 'surname', 'email', 'password', 'phone'
+            ]);
         }
 
-        if ($model->validate() && $user = $model->signup()) {
+        if ($user = $model->signup()) {
             if(Yii::$app->getUser()->login($user)) return $this->goHome();
         }
 

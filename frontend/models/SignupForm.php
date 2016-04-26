@@ -50,7 +50,7 @@ class SignupForm extends Model
             ['newCustomer', 'boolean'],
 
             ['captcha', 'required'],
-            ['captcha', 'captcha'],
+            ['captcha', 'captcha', 'captchaAction'  =>  'site/captcharegistermodal'],
         ];
     }
 
@@ -82,6 +82,8 @@ class SignupForm extends Model
                 return $user;
             }
         }
+
+        \Yii::trace($this->getErrors());
 
         return null;
     }
