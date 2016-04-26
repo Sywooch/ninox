@@ -1167,6 +1167,11 @@ h2{
 	margin: 25px 0;
 }
 
+.category .ias-trigger, .category .ias-noneleft{
+	width: 100%;
+	float: left;
+}
+
 /*============* END CATEGORY STYLE *==============*/
 
 /*============* RATING STYLE *==============*/

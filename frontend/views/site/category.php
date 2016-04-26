@@ -4,11 +4,34 @@ use bobroid\y2sp\ScrollPager;
 use frontend\helpers\PriceRuleHelper;
 use frontend\widgets\Breadcrumbs;
 use yii\bootstrap\Html;
+use yii\helpers\Url;
 use yii\widgets\ListView;
 
 $this->title = $category->metaTitle;
 $this->registerMetaTag(['name' => 'description', 'content' => $category->metaDescription], 'description');
 $this->registerMetaTag(['name' => 'keywords', 'content' => $category->metaKeywords], 'keywords');
+
+if(urldecode(Url::canonical()) != \Yii::$app->request->absoluteUrl){
+    $this->registerLinkTag(['rel' => 'canonical', 'href' => urldecode(Url::canonical())]);
+}
+
+$pageSize = $items->pagination->getPageSize();
+$totalCount = $items->getTotalCount();
+$page = empty(\Yii::$app->request->get('page')) ? 1 : \Yii::$app->request->get('page');
+if($pageSize < 1){
+    $pageCount = $totalCount > 0 ? 1 : 0;
+}else{
+    $totalCount = $totalCount < 0 ? 0 : (int)$totalCount;
+    $pageCount = (int)(($totalCount + $pageSize - 1) / $pageSize);
+}
+
+if($page > 1){
+    $this->registerLinkTag(['rel' => 'prev', 'href' => urldecode($items->pagination->createUrl($page - 2, null, true))]);
+    $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
+}
+if($page < $pageCount){
+    $this->registerLinkTag(['rel' => 'next', 'href' => urldecode($items->pagination->createUrl($page, null, true))]);
+}
 
 $helper = new PriceRuleHelper();
 
@@ -42,7 +65,7 @@ echo Html::tag('div',
             Html::tag('span',
                 \Yii::t('shop',
                     '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}} в категории',
-                    ['n' => $items->getTotalCount()]
+                    ['n' => $totalCount]
                 ),
                 ['class' => 'category-items-count']),
             ['class' => 'category-label']
@@ -92,6 +115,7 @@ echo Html::tag('div',
             'pager' =>  [
                 'class'             =>  ScrollPager::className(),
                 'item'              =>  '.hovered',
+                'noneLeftText'      =>  '',
                 'paginationClass'   =>  'pagination',
                 'paginationSelector'=>  'pagi',
                 'triggerOffset'     =>  \Yii::$app->request->get('offset'),
@@ -103,6 +127,14 @@ echo Html::tag('div',
                             params[\'offset\'] = [];
 					        params[\'offset\'].push(offset);
                         }
+                        $(\'.list-view .pagination .active ~ li:not(.next)\').each(
+                            function(){
+                                if(offset > 1){
+                                    $(this).addClass(\'active\');
+                                    offset--;
+                                }
+                            }
+                        )
                         window.history.replaceState({}, document.title, buildLinkFromParams(false, false));
                         return false;
                     }
@@ -110,7 +142,7 @@ echo Html::tag('div',
             ]
         ]).
         Html::tag('div',
-            htmlspecialchars_decode($category->text2).
+            ($page > 1 ? '' : htmlspecialchars_decode($category->text2)).
             Html::tag('div',
                 Html::tag('p',
                     $category->Name.
