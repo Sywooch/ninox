@@ -38,7 +38,7 @@ echo Html::tag('div',
     Html::tag('div',
         Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]).
         Html::tag('div',
-            Html::tag('h1', $category->Name).
+            Html::tag('h1', $category->metaName).
             Html::tag('span',
                 \Yii::t('shop',
                     '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}} в категории',

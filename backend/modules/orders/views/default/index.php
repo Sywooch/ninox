@@ -64,6 +64,7 @@ var ordersChanges = function(e){
 }, doneOrder = function(obj){
     var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode),
         button = $(obj);
+
     $.ajax({
         type: 'POST',
         url: '/orders/doneorder',
@@ -71,14 +72,30 @@ var ordersChanges = function(e){
             'OrderID': orderNode.attr('data-key')
         },
         success: function(data){
-
-            if(data == 1){
-                obj.setAttribute('class', 'btn-success ' + obj.getAttribute('class'));
-            }else{
-                obj.setAttribute('class', obj.getAttribute('class').replace(/btn-success/g));
-            }
+            button.toggleClass('btn-success');
+            changeStatus(orderNode, data.status);
         }
     });
+}, changeStatus = function(row, status){
+    row.attr('class', '');
+
+    switch(status.id){
+        case 1:
+        case 3:
+            row.toggleClass('warning');
+            break;
+        case 2:
+        case 4:
+        case 5:
+            row.toggleClass('success');
+            break;
+        default:
+        case 0:
+            row.toggleClass('danger');
+            break;
+    }
+
+    row.find(".mainStatus").html(status.description);
 }, confirmCall = function(obj){
     var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode.parentNode),
         button = $(obj);
@@ -106,20 +123,22 @@ var ordersChanges = function(e){
             success: function(data){
                 button.attr('class', 'btn btn-default confirmCall').prop('disabled', false);
 
-                switch(data){
-                    case '0':
+                switch(data.callback){
+                    case 0:
                         orderNode.find("button.doneOrder").prop('disabled', true);
                         break;
-                    case '1':
+                    case 1:
                         button.toggleClass('btn-success');
                         orderNode.find("button.doneOrder").prop('disabled', false);
                         break;
-                    case '2':
+                    case 2:
                     default:
                         button.toggleClass('btn-danger');
                         orderNode.find("button.doneOrder").prop('disabled', true);
                         break;
                 }
+
+                changeStatus(orderNode, data.status);
             }
         });
 
@@ -475,87 +494,10 @@ $this->title = 'Заказы';
         float: left;
     }
 </style>
-<div class="ordersStatsContainer">
-    <div class="ordersStats">
-        <div style="display: table; margin: 0 auto; position: relative; top: 11px;">
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('dropbox', [
-                            'class' =>  'yellow'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <table>
-                            <tr>
-                                <td>
-                                    <span>Заказов</span>
-                                </td>
-                                <td>
-                                    <span>Выполнено</span>
-                                </td>
-                            </tr>
-                            <tr style="text-align: center;">
-                                <td>
-                                    <?=Html::tag('h1', strlen($ordersStats['totalOrders']) >= 4 ? Html::tag('small', $ordersStats['totalOrders']) : $ordersStats['totalOrders'], [
-                                        'style' =>  'line-height: '.(strlen($ordersStats['totalOrders']) < 4 ? '26px;' : '0px;')
-                                    ])?>
-                                </td>
-                                <td>
-                                    <?=Html::tag('h1', strlen($ordersStats['completedOrders']) >= 4 ? Html::tag('small', $ordersStats['completedOrders'], ['style' => 'color: #fff']) : $ordersStats['completedOrders'], [
-                                        'style' =>  'color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; border-radius: 3px; display: inline-block; line-height: '.(strlen($ordersStats['completedOrders']) < 4 ? '26px;' : '0px;')
-                                    ])?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('frown-o', [
-                            'class' =>  'purple'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Не прозвонено</span>
-                        <h1><?=$ordersStats['notCalled']?></h1>
-                    </div>
-                </div>
-            </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('cubes', [
-                            'class' =>  'green'
-                        ])->size(FA::SIZE_2X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Всего на складе</span>
-                        <h1>150 000</h1>
-                    </div>
-                </div>
-            </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('calculator', [
-                            'class' =>  'blue'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Сума заказов</span>
-                        <h1 title="Фактическая сумма заказов" style="line-height: 22px; font-size: 22px;"><?=$ordersStats['ordersFaktSumm']?>₴</h1>
-                        <small title="Общая сумма заказов"><?=$ordersStats['ordersSumm']?>₴</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?=\backend\widgets\CollectorsWidget::widget([
+<?=\backend\modules\orders\widgets\OrdersStatsWidget::widget([
+    'model' =>  $ordersStatsModel
+]),
+\backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
 ]),
@@ -669,21 +611,21 @@ Html::tag('div', OrdersSearchWidget::widget([
                 'id'        =>  'source-internet',
             ],
             'active'    =>  true,
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet'])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'   =>  'Магазин',
             'options'   =>  [
                 'id'        =>  'source-local_store',
             ],
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market'])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'   =>  'Все',
             'options'   =>  [
                 'id'        =>  'source-all',
             ],
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all'])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'     =>  'Результаты поиска',

@@ -14,7 +14,6 @@ use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use common\models\GoodsComment;
-use common\models\GoodsPhoto;
 use yii\db\Query;
 
 class Good extends \common\models\Good{
@@ -42,7 +41,10 @@ class Good extends \common\models\Good{
 	}
 
 	public function getReviews(){
-		return $this->hasMany(GoodsComment::className(), ['goodID' => 'ID']);
+		return $this
+			->hasMany(GoodsComment::className(), ['goodID' => 'ID'])
+			->where(['type' => 1])->orderBy(['date' => SORT_DESC])
+			->with('childs');
 	}
 
     public function getRealRetailPrice()
@@ -132,5 +134,29 @@ class Good extends \common\models\Good{
 	        $this->afterFind();
         }
     }
+
+	public function getMetaTitle(){
+		return \Yii::t('shop',
+			'{name}: купить оптом по цене {price} в интернет-магазине Krasota-Style.',
+			[
+				'name'  =>  $this->Name,
+				'price' =>  Formatter::getFormattedPrice($this->PriceOut1)
+			]);
+	}
+
+	public function getMetaDescription(){
+		return \Yii::t('shop',
+			'Купить по оптовым ценам {name} на сайте Krasota-Style. Доставка по Украине, большой ассортимент товаров, мелкий и крупный опт.',
+			['name'  =>  mb_strtolower($this->Name)]);
+	}
+
+	public function getMetaKeywords(){
+		return \Yii::t('shop',
+			'{name}, {name2}, оптом, интернет-магазин, Krasota-Style',
+			[
+				'name'  =>  $this->Name,
+				'name2' =>  mb_strtolower($this->category->Name)
+			]);
+	}
 
 }

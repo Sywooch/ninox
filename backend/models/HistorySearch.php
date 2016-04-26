@@ -12,7 +12,7 @@ use yii\data\ActiveDataProvider;
 
 class HistorySearch extends History{
 
-    public function search($params, $onlyQuery = false){
+    public function search($params, $onlyQuery = false, $ignoreFilters = []){
         $query = History::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -38,7 +38,7 @@ class HistorySearch extends History{
             ]
         ]);
 
-        if(!empty($params["ordersSource"])){
+        if(!empty($params["ordersSource"]) && !isset($ignoreFilters['ordersSource'])){
 	        switch($params["ordersSource"]){
 		        case 'all':
 			        break;
@@ -55,7 +55,7 @@ class HistorySearch extends History{
 	        }
         }
 
-	    if(!empty($params["smartFilter"])){
+	    if(!empty($params["smartFilter"]) && !isset($ignoreFilters['smartFilter'])){
 		    switch($params["smartFilter"]){
 			    case 'shipping':
 					$query->andWhere(
@@ -89,7 +89,7 @@ class HistorySearch extends History{
 		    }
 	    }
 
-        if(!empty($params["showDates"]) || empty($params['HistorySearch'])){
+        if((!empty($params["showDates"])  && !isset($ignoreFilters['showDates'])) || (empty($params['HistorySearch'])  && !isset($ignoreFilters['HistorySearch']))){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
             $params['showDates'] = empty($params['showDates']) ? 'today' : $params['showDates'];
@@ -102,7 +102,6 @@ class HistorySearch extends History{
                     $query->andWhere('added >= '.($date - (date("N") - 1) * 86400));
                     break;
                 case 'thismonth':
-                    \Yii::trace($date);
                     $query->andWhere('added >= '.($date - (date("j") - 1) * 86400));
                     break;
                 case 'alltime':
@@ -114,21 +113,28 @@ class HistorySearch extends History{
             }
         }
 
-        $params['ordersStatus'] = isset($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
+        if(!isset($ignoreFilters['ordersStatus'])){
+            $params['ordersStatus'] = !empty($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
 
-        switch($params['ordersStatus']){
-            case 'all':
-                break;
-            case 'done':
-                $query->andWhere(['status' => self::STATUS_DONE]);
-                break;
-            case 'new':
-            default:
-                $query->andWhere(['status' => self::STATUS_NOT_CALLED]);
-                break;
+            switch($params['ordersStatus']){
+                case 'all':
+                    break;
+                case self::STATUS_WAIT_DELIVERY:
+                case 'delivery':
+                    $query->andWhere(['status' => self::STATUS_WAIT_DELIVERY]);
+                    break;
+                case 'done':
+                case self::STATUS_DONE:
+                    $query->andWhere(['or', ['status' => self::STATUS_DONE], ['status' => self::STATUS_DELIVERED]]);
+                    break;
+                case 'new':
+                default:
+                    $query->andWhere(['or', ['status' => self::STATUS_NOT_CALLED], ['status' => self::STATUS_PROCESS], ['status' => self::STATUS_NOT_PAYED], ['status' => self::STATUS_WAIT_DELIVERY]]);
+                    break;
+            }
         }
 
-        if(!empty($params["showDeleted"]) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted')){
+        if((!empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted')){
             $query->andWhere('deleted = 0');
         }
 

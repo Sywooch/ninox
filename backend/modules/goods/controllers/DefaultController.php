@@ -319,15 +319,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @deprecated
-     * @return array
-     * @throws \yii\web\MethodNotAllowedHttpException
-     */
-    public function actionSearchgoods(){
-        return $this->actionSearch();
-    }
-
-    /**
      * Ищет товары
      *
      * @return array массив товаров для TypeAhead виджета
@@ -355,7 +346,7 @@ class DefaultController extends Controller
             $tArray = [
                 'name'      =>  $good->Name,
                 'category'  =>  !empty($good->category) ? $good->category->Name : '(без категории)',
-                'photo'     =>  $good->ico,
+                'photo'     =>  $good->photo,
                 'code'      =>  $good->Code,
                 'ID'        =>  $good->ID,
                 'disabled'  =>  $good->show_img == 0,
@@ -781,67 +772,6 @@ class DefaultController extends Controller
                 return ['id' => $option->id, 'name' => $option->value];
                 break;
         }
-    }
-
-    /**
-     * @deprecated
-     * @author Nikolai Gilko <n.gilko@gmail.com>
-     * @return SborkaItem                       -   модель товара в заказе
-     * @throws MethodNotAllowedHttpException    -   если запрос не через ajax
-     * @throws NotFoundHttpException            -   если не найден заказ, или товар
-     *
-     * Метод позволяет добавить товар в заказ
-     */
-    public function actionAdditemtoorder(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        \Yii::$app->response->format = 'json';
-
-        $wantedCount = \Yii::$app->request->post("ItemsCount");
-
-        $order = History::findOne(['id' => \Yii::$app->request->post("OrderID")]);
-
-        if(!$order){
-            throw new NotFoundHttpException("Такой заказ не найден!");
-        }
-
-        $good = Good::findOne(['ID' => \Yii::$app->request->post("itemID")]);
-
-        if(!$good){
-            throw new NotFoundHttpException("Такой товар не найден!");
-        }
-
-        $item = SborkaItem::findOne(['itemID' => $good->ID, 'orderID' => \Yii::$app->request->post("OrderID")]);
-
-        if(!$item){
-            $item = new SborkaItem();
-            $item->itemID = $good->ID;
-            $item->name = $good->Name;
-            $item->realyCount = 0;
-            $item->originalPrice = $order->isOpt() ? $good->PriceOut2 : $good->PriceOut1;
-            $item->orderID = $order->id;
-        }
-
-        if(($good->count >= $wantedCount) || ($good->count < $wantedCount && \Yii::$app->request->post("IgnoreMaxCount") == "true")){
-            $item->count += $wantedCount;
-        }elseif($good->count > 0 && \Yii::$app->request->post("IgnoreMaxCount") == "false"){
-            $item->count += $good->count;
-        }else{
-            return $good->count;
-        }
-
-        //TODO: логику пересчёта товара (заказа?) по ценовым правилам можно впилить здесь
-
-        $good->count = $good->count - $item->addedCount;
-
-        if($item->save(false)){ //TODO: сделать без false
-            //TODO: Дима, когда напишешь триггер для автоматического отнимания из `goods`?
-            $good->save(false);
-        }
-
-        return -1;
     }
 
     /**

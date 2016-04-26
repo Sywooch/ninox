@@ -105,7 +105,7 @@ $this->title = 'Товар "'.$good->Name.'"';
     <div class="panel-body">
         <div class="row">
             <div class="col-xs-4">
-                <img class="img-thumbnail" src="http://krasota-style.com.ua/img/catalog/<?=$good->ico?>">
+                <img class="img-thumbnail" src="http://krasota-style.com.ua/img/catalog/<?=$good->photo?>">
                 <br><br>
                 <?php if(!empty($good->video)){ ?>
                 <div class="panel panel-default">

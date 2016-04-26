@@ -31,23 +31,23 @@ echo \kartik\grid\GridView::widget([
         'data-attribute-type'   =>  'ordersGrid'
     ],
     'rowOptions'    =>  function($model){
-        if($model->deleted != 0){
-            return ['class' => 'danger'];
+        switch($model->status){
+            case $model::STATUS_PROCESS:
+            case $model::STATUS_WAIT_DELIVERY:
+                $class = 'warning';
+                break;
+            case $model::STATUS_NOT_PAYED:
+            case $model::STATUS_DELIVERED:
+            case $model::STATUS_DONE:
+                $class = 'success';
+                break;
+            case $model::STATUS_NOT_CALLED:
+            default:
+                $class = 'danger';
+                break;
         }
 
-        if($model->done == 1){
-            return ['class' =>  'success'];
-        }
-
-        if($model->confirmed == 1){
-            return ['class' =>  'warning'];
-        }
-
-        if($model->callback == -1 || $model->callback == 0){
-            return ['class' =>  'danger'];
-        }
-
-        return [];
+        return ['class' => $class];
     },
     'hover'         =>  true,
     'columns'       =>  [
@@ -128,20 +128,16 @@ echo \kartik\grid\GridView::widget([
             'noWrap'    =>  true,
             'attribute' =>  'status',
             'value'     =>  function($model){
-                if(!empty($model->status)){
-                    $status1 = $model->statusDescription;
-                }else{
-                    $status1 = '';
-                }
 
-                if($model->status == '1' && $model->done == 1 && $model->doneDate != '0000-00-00 00:00:00'){
+                if($model->status == $model::STATUS_DONE){
                     $status2 = 'Выполнено '.\Yii::$app->formatter->asDatetime($model->doneDate, 'php:d.m.Y');
                 }else{
                     $status2 = 'Не выполнено';
                 }
 
-                return Html::tag('div', Html::tag('div', $status1, [
-                        'style' =>  'width: 100%; height: 40%'
+                return Html::tag('div', Html::tag('div', $model->statusDescription, [
+                        'style' =>  'width: 100%; height: 40%',
+                        'class' =>  'mainStatus'
                     ]).Html::tag('small', $status2), [
                     'style' =>  'width: 100%; display: block; position: inherit; height: 100%;'
                 ]);
@@ -171,10 +167,11 @@ echo \kartik\grid\GridView::widget([
             ],
             'noWrap'    =>  true,
             'value'     =>  function($model){
-                $user = \common\models\Siteuser::getUser($model->responsibleUserID);
                 return  Html::tag('span' , $model->actualAmount.' грн.', ['class' => 'actualAmount']).
                 Html::tag('br').
-                ($model->responsibleUserID != 0 && !empty($model->responsibleUserID) ? Html::tag('small', (is_object($user) ? $user->name : $user), ['class' => 'responsibleUser']) : '');
+                (\Yii::$app->user->identity->superAdmin ? Html::tag('small', 'Товаров '.count($model->items), ['style' => 'display: block']) : '').
+                Html::tag('br').
+                (!empty($model->responsibleUser) ? Html::tag('small', $model->responsibleUser->name, ['class' => 'responsibleUser']) : '');
             }
         ],
         [

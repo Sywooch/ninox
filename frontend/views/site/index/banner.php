@@ -14,4 +14,4 @@ echo Html::tag('div',
         Html::tag('span', $good->Name).
         Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
 ).
-    Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$good->ico));
+    Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$good->photo));

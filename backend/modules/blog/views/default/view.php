@@ -40,7 +40,7 @@ $this->registerCss($css);
         'attributes' => [
             [
                 'attribute' => 'ico',
-                'value' =>  '<img class="img-thumbnail max-height-200" src="'.LinkController::getForImg().$model->ico.'">',
+                'value' =>  '<img class="img-thumbnail max-height-200" src="'.LinkController::getForImg().$model->photo.'">',
                 'format'    =>  'html'
             ],
             'title',
