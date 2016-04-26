@@ -16,6 +16,7 @@ use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
+use kartik\form\ActiveForm;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
 use Yii;
 use common\models\Domain;
@@ -481,6 +482,13 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+        $model->load(\Yii::$app->request->post());
+
+        if(\Yii::$app->request->isAjax && \Yii::$app->request->post("ajax") == 'loginForm'){
+            \Yii::$app->response->format = 'json';
+
+            return ActiveForm::validate($model);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             if(\Yii::$app->cart->itemsCount > 0){

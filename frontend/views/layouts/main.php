@@ -527,12 +527,12 @@ $this->beginPage();
 				<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
 			</div>
 		</div>
-		<?=$cartModal->renderModal()?>
-		<?=$loginModal->renderModal()?>
-		<?php
+		<?=$cartModal->renderModal(),
+		$loginModal->renderModal();
+
 		RuLangAsset::register($this);
-		?>
-		<?php $this->endBody() ?>
+
+		$this->endBody() ?>
 	</body>
 </html>
 <?php $this->endPage() ?>

@@ -1,10 +1,14 @@
 <?php
 use kartik\form\ActiveForm;
-?>
-<span class="close"></span>
-<?php
+use yii\bootstrap\Html;
 
-$form = new ActiveForm([
+echo Html::tag('span', '', ['class' => 'close']);
+
+$form = ActiveForm::begin([
+    'action'                =>  '/login',
+    'validationUrl'         =>  '/login',
+    'validateOnType'        =>  true,
+    'enableAjaxValidation'  =>  true,
     'type'          => ActiveForm::TYPE_HORIZONTAL,
     'formConfig'    => [
         'labelSpan' => 3,
@@ -13,11 +17,12 @@ $form = new ActiveForm([
 ]);
 
 echo $form->field($model, 'phone'),
-$form->field($model, 'password')->passwordInput();
+    $form->field($model, 'password')->passwordInput(),
+    Html::button(\Yii::t('shop', 'Войти'), [
+        'class' =>  'yellowButton largeButton'
+    ]);
 
-echo \yii\bootstrap\Html::button(\Yii::t('shop', 'Войти'), [
-    'class' =>  'yellowButton largeButton'
-])
+ActiveForm::end();
 
 ?>
 <div class="row center">
