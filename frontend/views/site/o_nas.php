@@ -11,7 +11,7 @@ use yii\jui\Accordion;
  * Time: 14:07
  */
 
-$model = new \frontend\models\ContactForm();
+$model = new \frontend\models\UsersInterestsForm();
 
 ?>
 
@@ -379,27 +379,14 @@ $model = new \frontend\models\ContactForm();
                     'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
                 ]);?>
             </div>
-            <div class="your-wish">  <!--\frontend\models\ContactForm(); та ли это форма???
-            /var/www/yii.krasota-style/frontend/views/site/contact.php оно уже есть сдесь -->
+            <div class="your-wish">
                 <?php    $form = \yii\bootstrap\ActiveForm::begin([
-                    'id'            =>  'contact-form'
+                    'id'            =>  'users-interests-form'
                 ]);
                 ?>
                 <?= $form->field($model, 'name')?>
-               <!-- <div class="name">
-                    <span>Ваше имя</span>
-                    <input type="text">
-                </div>-->
                 <?= $form->field($model, 'email')?>
-<!--                <div class="email">
-                    <span>Электронная почта</span>
-                    <input type="text">
-                </div>-->
-                <?= $form->field($model, 'subject')->textarea()?>
-<!--                <div class="wish">
-                    <span>Что Вас интересует?</span>
-                    <textarea type="text"></textarea>
-                </div>-->
+                <?= $form->field($model, 'text')->textarea()?>
                 <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
                     'contact-button']) ?>
                 <?php $form->end(); ?>

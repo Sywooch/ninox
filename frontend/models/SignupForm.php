@@ -23,13 +23,13 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            /*['name', 'filter', 'filter' => 'trim'],
+            ['name', 'filter', 'filter' => 'trim'],
             ['name', 'required'],
-            ['name', 'string', 'min' => 2, 'max' => 255],*/
+            ['name', 'string', 'min' => 2, 'max' => 255],
 
-            /*['surname', 'filter', 'filter' => 'trim'],
+            ['surname', 'filter', 'filter' => 'trim'],
             ['surname', 'required'],
-            ['surname', 'string', 'min' => 2, 'max' => 255],*/
+            ['surname', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
@@ -84,5 +84,16 @@ class SignupForm extends Model
         }
 
         return null;
+    }
+
+    public function attributeLabels(){
+        return [
+            'name'              =>  \Yii::t('shop', 'Ваше Имя'),
+            'surname'           =>  \Yii::t('shop', 'Ваша Фамилия'),
+            'email'             =>  \Yii::t('shop', 'Ваш email'),
+            'password'          =>  \Yii::t('shop', 'Ваш пароль'),
+            'phone'             =>  \Yii::t('shop', 'Ваш телефон'),
+            'captcha'           =>  \Yii::t('shop', 'Капча'),
+        ];
     }
 }

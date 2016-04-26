@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
+use common\models\UsersInterests;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\CallbackForm;
@@ -15,6 +16,8 @@ use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
+use frontend\models\UsersInterestsForm;
+use Prophecy\Exception\Doubler\ClassNotFoundException;
 use kartik\form\ActiveForm;
 use yii;
 use common\models\Domain;
@@ -715,8 +718,8 @@ class SiteController extends Controller
         return true;
     }
 
-/*    public function saveContactForm(){ //опять нужно ли это ???
-        $model = new ContactForm();
+    public function saveUsersInterestsForm(){
+        $model = new UsersInterestsForm();
 
         $model->load(\Yii::$app->request->post());
 
@@ -725,7 +728,7 @@ class SiteController extends Controller
         }
 
         return true;
-    }*/
+    }
 
 	public function beforeAction($action){
 		$domainInfo = Domain::findOne(['name' => \Yii::$app->request->getServerName()]);
@@ -741,6 +744,10 @@ class SiteController extends Controller
 
         if(\Yii::$app->request->post("PaymentConfirmForm")){
             $this->savePaymentConfirmForm();
+        }
+
+        if(\Yii::$app->request->post("UsersInterestsForm")){
+            $this->saveUsersInterestsForm();
         }
 
         return parent::beforeAction($action);

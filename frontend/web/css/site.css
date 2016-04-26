@@ -3791,6 +3791,17 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding: 20px 0 0 50px;
 }
 
+.header .sticky .phone-number .popover.bottom{
+}
+
+.modal-open{
+	padding: 0px !important;
+	margin-right: 8px;
+}
+.header .phone-number .popover.bottom{
+
+}
+
 .header .phone-number .popover.bottom > .arrow{
 	margin-left: 20px;
 }
@@ -4339,7 +4350,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 /*========*  MAIN  *=========*/
 
 .main-content{
-	padding-bottom: 430px;
+	padding-bottom: 440px;
 	overflow: auto;
 	padding-top: 10px;
 }
@@ -5075,5 +5086,26 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 
+.site-request-password-reset{
+	width: 1170px;
+	margin: auto;
+}
+
+.site-signup{
+	margin: auto;
+	width: 1170px;
+	text-align: center;
+}
+
+.site-signup .row{
+	width:100%;
+	margin: 0px;
+}
+
+.site-signup .col-lg-5{
+	margin: auto;
+	display: block;
+	float: none;
+}
 
 
