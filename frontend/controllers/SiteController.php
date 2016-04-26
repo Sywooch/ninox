@@ -16,6 +16,7 @@ use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
+use frontend\models\SubscribeForm;
 use frontend\models\UsersInterestsForm;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
 use kartik\form\ActiveForm;
@@ -603,7 +604,21 @@ class SiteController extends Controller
         return $this->redirect(\Yii::$app->request->referrer);
     }
 
+    public function actionSubscribe(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
 
+        $model = new SubscribeForm();
+
+        \Yii::$app->response->format = 'json';
+
+        if($model->load(\Yii::$app->request->post()) && $model->validate() && $model->subscribe()){
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Signs user up.
