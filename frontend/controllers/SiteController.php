@@ -3,10 +3,12 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
+use common\models\GoodsComment;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\CallbackForm;
 use frontend\models\Cart;
+use frontend\models\CommentForm;
 use frontend\models\Customer;
 use frontend\models\CustomerWishlist;
 use frontend\models\History;
@@ -119,9 +121,15 @@ class SiteController extends Controller
      */
 
     public function actionShowtovar($link){
+        if(!empty(\Yii::$app->request->post('CommentForm'))){
+            $model = new CommentForm();
+            $model->load(\Yii::$app->request->post());
+            $model->save();
+        }
+
         $id = preg_replace('/\D+/', '', preg_replace('/[^g(.)]+\D+/', '', $link));
 
-        $good = Good::findOne(['`goods`.`ID`' => $id]);
+        $good = Good::find()->where(['`goods`.`ID`' => $id])->with('reviews')->one();
 
         if(!$good){
             return \Yii::$app->runAction('site/error');

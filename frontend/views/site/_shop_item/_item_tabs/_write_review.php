@@ -51,11 +51,9 @@
 
             <input title="" name="captcha" pattern="[0-9]{4}" type="text" placeholder="Введите код с картинки">
         </div>
-<?
-echo \yii\helpers\Html::button('Отправить', [
-    'type'  =>  'submit',
-    'class' =>  'yellow-button large-button ',
-    'id'    =>  'submit'
-]);
-?>
+        <?=\yii\helpers\Html::button('Отправить', [
+            'type'  =>  'submit',
+            'class' =>  'yellow-button large-button ',
+            'id'    =>  'submit'
+        ]);?>
 </div>

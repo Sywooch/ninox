@@ -14,7 +14,6 @@ use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use common\models\GoodsComment;
-use common\models\GoodsPhoto;
 use yii\db\Query;
 
 class Good extends \common\models\Good{
@@ -42,7 +41,10 @@ class Good extends \common\models\Good{
 	}
 
 	public function getReviews(){
-		return $this->hasMany(GoodsComment::className(), ['goodID' => 'ID']);
+		return $this
+			->hasMany(GoodsComment::className(), ['goodID' => 'ID'])
+			->where(['type' => 1])->orderBy(['date' => SORT_DESC])
+			->with('childs');
 	}
 
     public function getRealRetailPrice()
