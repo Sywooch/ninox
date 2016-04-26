@@ -50,7 +50,7 @@ $caption = '<dl>
         </div>';
 
 echo Html::tag('div',
-    Html::img('http://krasota-style.com.ua/img/catalog/sm/'.$good->ico, [
+    Html::img('http://krasota-style.com.ua/img/catalog/sm/'.$good->photo, [
         'alt'   =>  $good->Name,
         'class' =>  ($good->discountType != 0 ? 'good-sale' : '')
     ]).

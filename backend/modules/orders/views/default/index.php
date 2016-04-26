@@ -64,6 +64,7 @@ var ordersChanges = function(e){
 }, doneOrder = function(obj){
     var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode),
         button = $(obj);
+
     $.ajax({
         type: 'POST',
         url: '/orders/doneorder',
@@ -71,14 +72,30 @@ var ordersChanges = function(e){
             'OrderID': orderNode.attr('data-key')
         },
         success: function(data){
-
-            if(data == 1){
-                obj.setAttribute('class', 'btn-success ' + obj.getAttribute('class'));
-            }else{
-                obj.setAttribute('class', obj.getAttribute('class').replace(/btn-success/g));
-            }
+            button.toggleClass('btn-success');
+            changeStatus(orderNode, data.status);
         }
     });
+}, changeStatus = function(row, status){
+    row.attr('class', '');
+
+    switch(status.id){
+        case 1:
+        case 3:
+            row.toggleClass('warning');
+            break;
+        case 2:
+        case 4:
+        case 5:
+            row.toggleClass('success');
+            break;
+        default:
+        case 0:
+            row.toggleClass('danger');
+            break;
+    }
+
+    row.find(".mainStatus").html(status.description);
 }, confirmCall = function(obj){
     var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode.parentNode),
         button = $(obj);
@@ -106,20 +123,22 @@ var ordersChanges = function(e){
             success: function(data){
                 button.attr('class', 'btn btn-default confirmCall').prop('disabled', false);
 
-                switch(data){
-                    case '0':
+                switch(data.callback){
+                    case 0:
                         orderNode.find("button.doneOrder").prop('disabled', true);
                         break;
-                    case '1':
+                    case 1:
                         button.toggleClass('btn-success');
                         orderNode.find("button.doneOrder").prop('disabled', false);
                         break;
-                    case '2':
+                    case 2:
                     default:
                         button.toggleClass('btn-danger');
                         orderNode.find("button.doneOrder").prop('disabled', true);
                         break;
                 }
+
+                changeStatus(orderNode, data.status);
             }
         });
 
@@ -669,21 +688,21 @@ Html::tag('div', OrdersSearchWidget::widget([
                 'id'        =>  'source-internet',
             ],
             'active'    =>  true,
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet'])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'   =>  'Магазин',
             'options'   =>  [
                 'id'        =>  'source-local_store',
             ],
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market'])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'   =>  'Все',
             'options'   =>  [
                 'id'        =>  'source-all',
             ],
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all'])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'     =>  'Результаты поиска',

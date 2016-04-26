@@ -562,7 +562,7 @@ class SiteController extends Controller
                     'price2'    =>  $good->retailPrice,
                     'link'      =>  $good->link,
                     'name'      =>  $good->Name,
-                    'photo'     =>  $good->ico
+                    'photo'     =>  $good->photo
                 ];
 
                 if(!empty($good->category)){
