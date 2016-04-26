@@ -3,6 +3,7 @@
 namespace backend\modules\orders\controllers;
 
 use backend\models\HistorySearch;
+use backend\models\OrdersStats;
 use common\helpers\PriceRuleHelper;
 use backend\models\Customer;
 use backend\models\CustomerAddresses;
@@ -51,12 +52,14 @@ class DefaultController extends Controller
 
         $orders = $historySearch->search(\Yii::$app->request->get(), true);
 
+        $stats = new OrdersStats();
+
         $ordersStats = [
-            'totalOrders'       =>  0,
+            'totalOrders'       =>  $stats->orders,
             'completedOrders'   =>  0,
             'notCalled'         =>  0,
-            'ordersFaktSumm'    =>  0,
-            'ordersSumm'        =>  0
+            'ordersFaktSumm'    =>  $stats->ordersAmount,
+            'ordersSumm'        =>  $stats->ordersActualAmount
         ];
 
 	    /*foreach($orders->asArray()->each() as $order){
@@ -71,6 +74,7 @@ class DefaultController extends Controller
             'collectors'        =>  Siteuser::getCollectorsWithData($timeTo, $timeFrom),
             'showUnfinished'    =>  !\Yii::$app->request->get("showDates") || \Yii::$app->request->get("showDates") == 'today',
             'ordersStats'       =>  $ordersStats,
+            'ordersStatsModel'  =>  $stats,
             'searchModel'       =>  $historySearch,
             'orders'            =>  $historySearch->search(\Yii::$app->request->get())
         ]);
