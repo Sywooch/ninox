@@ -30,34 +30,17 @@ use yii\helpers\Html;
             $count = count($orderItems);
             $first = true;
             foreach($orderItems as $item){
-                $ico = strtolower($goods[$item->itemID]->ico);
+                $ico = strtolower($goods[$item->itemID]->photo);
                 $i++;
                 $n++;
-                /*
-                if($item->zamena == '1' || $order['nalichie'] == '1'){
-                    if($order['zamena'] == '1' && $order['nalichie'] == '0'){
-                        $img = 'zamena.png';
-                    }elseif($order['zamena'] == '0' && $order['nalichie'] == '1'){
-                        $img = 'zamena.png';
-                    }else{
-                        $img = 'zamena.png';
-                    }
-                }else{
-                    $img = 'zamena.png';
+
+                if($i == '1'){
+                    echo Html::beginTag('table', ['class' => 'pageend']);
                 }
-                TODO: этот код вывел меня из равновесия
-                */
-                ?>
-                <?php if($i == '1'){ ?>
-                    <table class='pageend'>
-                <?php
+
+                if($i%2 == '1'){
+                    echo Html::beginTag('tr');
                 }
-                ?>
-                <?php if($i%2 == '1'){
-                ?>
-                <tr>
-            <?php
-            }
                 ?>
                 <td width="50%">
                     <li>
@@ -98,24 +81,25 @@ use yii\helpers\Html;
                         </div>
                     </li>
                 </td>
-                <?php if($i%2 == '0'){
-                ?>
-                </tr>
-            <?php
-            }
-                ?>
                 <?php
+                if($i%2 == '0'){
+                    echo Html::endTag('tr');
+                }
+
                 if(($first && ($i == '6' || $i == $count)) || ($i == '8' || $i == $count)){
+
                     if($first){
                         $count = $count - 6;
                         $first = false;
                     }else{
                         $count = $count - 8;
                     }
+
                     $i = 0;
                     ?>
                     <tr>
-                        <td class="telefon">Заказ №<?=$order->id?></td><td class="telefon">Менеджер: <?=\common\models\Siteuser::getUser($order->responsibleUser)?></td>
+                        <td class="telefon">Заказ №<?=$order->id?></td>
+                        <td class="telefon">Менеджер: <?=\common\models\Siteuser::getUser($order->responsibleUser)?></td>
                     </tr>
                     </table>
                 <?php

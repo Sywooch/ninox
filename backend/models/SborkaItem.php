@@ -11,7 +11,6 @@ namespace backend\models;
 class SborkaItem extends \common\models\SborkaItem{
 
     public $priceModified = false;
-    public $addedCount = 0;
 
     public function behaviors()
     {
@@ -23,6 +22,10 @@ class SborkaItem extends \common\models\SborkaItem{
                 ],
             ]
         ];
+    }
+
+    public static function find(){
+        return parent::find()->with('good');
     }
 
     public function getControlled(){
@@ -47,11 +50,6 @@ class SborkaItem extends \common\models\SborkaItem{
 
     public function setNotFounded($val){
         return $this->nezakaz = $val;
-    }
-
-    public function getPhoto()
-    {
-        return $this->good->photo;
     }
 
     public function getCode(){
@@ -80,16 +78,6 @@ class SborkaItem extends \common\models\SborkaItem{
         }
 
         return 0;
-    }
-
-    public function __set($name, $value){
-        parent::__set($name, $value);
-
-        switch($name){
-            case 'count':
-                $this->addedCount = $value - $this->getOldAttribute('count');
-                break;
-        }
     }
 
 }

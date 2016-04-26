@@ -52,14 +52,15 @@ STYLE;
             if(result !== null){
                 $.ajax({
                     type: 'POST',
-                    url: '/goods/additemtoorder',
+                    url: '/goods/addtoorder',
                     data: {
-                        'OrderID': item.getAttribute("data-key"),
-                        'itemID':  item.getAttribute("data-attribute-itemID"),
-                        'ItemsCount': result
+                        'orderID': item.getAttribute("data-key"),
+                        'goodID':  item.getAttribute("data-attribute-itemID"),
+                        'itemsCount': result,
+                        'ignoreMaxCount': ignoreCount
                     },
-                    success: function(data){
-
+                    success: function(){
+                        $.pjax.reload({container: '#orderItems-pjax'});
                     }
                 });
             }

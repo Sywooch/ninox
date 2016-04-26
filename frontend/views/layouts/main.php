@@ -55,6 +55,15 @@ $loginModal = new \bobroid\remodal\Remodal([
 	'id'				=>	'loginModal',
 ]);
 
+$registrationModal = new \bobroid\remodal\Remodal([
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'closeButton'		=>	false,
+	'addRandomToID'		=>	false,
+	'content'			=>	$this->render('parts/_registration_modal'),
+	'id'				=>	'registrationModal',
+]);
+
 
 $js = <<<JS
 	if(hasTouch){
@@ -527,12 +536,13 @@ $this->beginPage();
 				<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
 			</div>
 		</div>
-		<?=$cartModal->renderModal()?>
-		<?=$loginModal->renderModal()?>
-		<?php
+		<?=$cartModal->renderModal(),
+		$loginModal->renderModal(),
+		$registrationModal->renderModal();
+
 		RuLangAsset::register($this);
-		?>
-		<?php $this->endBody() ?>
+
+		$this->endBody() ?>
 	</body>
 </html>
 <?php $this->endPage() ?>

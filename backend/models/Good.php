@@ -12,6 +12,7 @@ use common\helpers\TranslitHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
+use common\models\GoodsPhoto;
 use yii\db\Query;
 use yii\web\NotFoundHttpException;
 
@@ -19,18 +20,6 @@ use yii\web\NotFoundHttpException;
 class Good extends \common\models\Good{
 
     private $_options = [];
-    private $_photos = [];
-
-    /**
-     * @return GoodPhoto[]
-     */
-    public function getPhotos(){
-        if(!empty($this->_photos)){
-            return $this->_photos;
-        }
-
-        return $this->_photos = GoodPhoto::find()->where(['itemid' => $this->ID])->orderBy('order')->all();
-    }
 
     public function getOptions($updateCache = false){
         if(!empty($this->_options) && !$updateCache){
@@ -124,14 +113,14 @@ class Good extends \common\models\Good{
             throw new \BadFunctionCallException("Невозможно пользоваться данным методом, не передав заказ!");
         }
 
-        $item = SborkaItem::findOne(['orderID' => $order->ID, 'itemID' => $this->ID]);
+        $item = SborkaItem::findOne(['orderID' => $order->id, 'itemID' => $this->ID]);
 
         if(!$item){
             $item = new SborkaItem([
                 'itemID'        =>  $this->ID,
-                'orderID'       =>  $order->ID,
+                'orderID'       =>  $order->id,
                 'name'          =>  $this->Name,
-                'originalPrice' =>  $order->isWholesale() ? $this->wholesale_price : $this->retail_price
+                'originalPrice' =>  $order->isWholesale() ? $this->wholesalePrice : $this->retailPrice
             ]);
         }
 

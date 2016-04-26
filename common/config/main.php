@@ -36,6 +36,23 @@ return [
 			],
 		],
 		'log'	=>	[
+			'targets'	=>	[
+				[
+					'class' => 'yii\log\FileTarget',
+					'exportInterval' => 1,
+				],
+				[
+					'class'		=>	'yii\log\EmailTarget',
+					'levels'	=>	['error'],
+					'mailer'	=>	'mailer',
+					'exportInterval'	=>	10,
+					'message'	=>	[
+						'from'		=>	['krasotastyleyii@gmail.com'],
+						'to'		=>	['krasotastyleyii@gmail.com'],
+						'subject'	=>	"Ошибки на сайте dev.k-s.com.ua ".date('d.m.Y H:i:s')
+					]
+				]
+			],
 			'flushInterval'	=>	'1000',
 		],
 	    'cache' => [

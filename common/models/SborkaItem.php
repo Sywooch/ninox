@@ -23,6 +23,7 @@ use yii\web\NotFoundHttpException;
  * @property double $originalPrice
  * @property integer $discountSize
  * @property integer $discountType
+ * @property Good $good
  */
 class SborkaItem extends \yii\db\ActiveRecord
 {
@@ -34,44 +35,18 @@ class SborkaItem extends \yii\db\ActiveRecord
     ];
 
     public $price;
-
-    public $_category;
-    public $_photo;
-
-    private $_good;
+    public $addedCount = 0;
 
     public function getGood(){
-        if(empty($this->_good)){
-            $good = Good::findOne($this->itemID);
-
-            if(!$good){
-                $good = new Good();
-            }
-
-            $this->_good = $good;
-        }
-
-        return $this->_good;
+        return $this->hasOne(Good::className(), ['ID' => 'itemID']);
     }
 
     public function getCategory(){
-        if(empty($this->_category)){
-            $this->_category = Category::findOne(['Code' => $this->categoryCode]);
-        }
-
-        return $this->_category;
+        return $this->hasOne(Category::className(), ['Code' => 'categoryCode']);
     }
 
     public function getPhoto(){
-        if(empty($this->_photo)){
-            $this->_photo = GoodsPhoto::find()
-                ->select('ico')
-                ->where(['itemid' => $this->itemID])
-                ->orderBy('order DESC')
-                ->scalar();
-        }
-
-        return $this->_photo;
+        return $this->good->photo;
     }
 
     public function afterFind(){
@@ -92,6 +67,16 @@ class SborkaItem extends \yii\db\ActiveRecord
         }
     }
 
+    public function returnToStore($deleteItem = true){
+        $this->good->count += $this->count;
+
+        if($deleteItem){
+            return $this->delete();
+        }
+
+        return true;
+    }
+
     public function beforeSave($insert){
         if(empty($this->realyCount)){
             $this->realyCount = 0;
@@ -101,10 +86,25 @@ class SborkaItem extends \yii\db\ActiveRecord
             if(empty($this->added)){
                 $this->added = time();
             }
+
             $this->originalCount = $this->count;
         }
 
+        if($this->isAttributeChanged('count')){
+            $this->good->count += $this->addedCount;
+        }
+
         return parent::beforeSave(true);
+    }
+
+    public function __set($name, $value){
+        parent::__set($name, $value);
+
+        switch($name){
+            case 'count':
+                $this->addedCount = $value - $this->getOldAttribute('count');
+                break;
+        }
     }
 
     /**

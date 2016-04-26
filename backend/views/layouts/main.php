@@ -420,7 +420,7 @@ $this->beginPage() ?>
                 'label'     => FA::icon('arrow-circle-o-up')->size(FA::SIZE_2X).'<span class="visible-lg-inline visible-xs-inline">&nbsp;Отправка</span>',
                 'url'       => Url::toRoute([
                     Url::home(),
-                    'status'    =>  'delivery'
+                    'ordersStatus'    =>  'delivery'
                 ]),
                 'counter'   =>  '0',
                 'options'   =>  [

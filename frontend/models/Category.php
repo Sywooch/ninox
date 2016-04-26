@@ -117,7 +117,7 @@ class Category extends \common\models\Category{
 				        ->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0 AND `goods`.`show_img` = 1')
 				        ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
 				        ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-				        ->joinWith(['goodOptions', 'goodOptionsVariants'])
+				        ->with(['goodOptions', 'goodOptionsVariants'])
 				        ->all() as $filterOption){
 				if(!empty($filterOption->goodOptions)){
 					$go = $filterOption->goodOptions;
@@ -177,51 +177,64 @@ class Category extends \common\models\Category{
 		return $this->_filters;
 	}
 
+	public function getMetaName(){
+		switch(\Yii::$app->request->get('order')){
+			case 'asc':
+				$name = empty($this->h1asc) ?
+					\Yii::t('shop', 'Дешёвые {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
+					$this->h1asc;
+				break;
+			case 'desc':
+				$name = empty($this->h1desc) ?
+					\Yii::t('shop', 'Дорогие {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
+					$this->h1desc;
+				break;
+			case 'novinki':
+				$name = empty($this->h1new) ?
+					\Yii::t('shop', 'Новинки {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
+					$this->h1new;
+				break;
+			default:
+				$name = empty($this->h1) ? $this->Name : $this->h1;
+				break;
+		}
 
+		return strip_tags(htmlspecialchars_decode($name));
+	}
 
 	public function getMetaTitle(){
 		switch(\Yii::$app->request->get('order')){
 			case 'asc':
-				$title = $this->titleasc;
 				$priceType = \Yii::t('shop', 'дешево');
-				break;
+				$title = $this->titleasc;
 			case 'desc':
-				$title = $this->titledesc;
-				$priceType = \Yii::t('shop', 'дорого');
+				$priceType = empty($priceType) ? \Yii::t('shop', 'дорого') : $priceType;
+				$title = empty($title) ?
+					(empty($this->titledesc) ?
+						\Yii::t('shop',
+							'{name}. Купить {priceType} оптом в интернет-магазине Krasota-Style с доставкой по Украине',
+							[
+								'name'      =>  $this->Name,
+								'priceType' =>  $priceType
+							]
+						) : $this->titledesc) : $title;
 				break;
 			case 'novinki':
 				$title = $this->titlenew;
-				break;
 			default:
-				$title = $this->title;
+				$title = empty($title) ?
+					(empty($this->title) ?
+						\Yii::t('shop',
+							'{name}. Купить {name2} оптом недорого с доставкой по Украине - интернет-магазин Krasota Style',
+							[
+								'name'  =>  $this->Name,
+								'name2' =>  mb_strtolower($this->Name, 'UTF-8')
+							]
+						) : $this->title) : $title;
 				break;
 		}
 
-		if(empty($title)){
-			switch(\Yii::$app->request->get('order')){
-				case 'asc':
-				case 'desc':
-					return \Yii::t('shop',
-						'{name}. Купить {priceType} оптом в интернет-магазине Krasota-Style с доставкой по Украине',
-						[
-							'name'      =>  $this->Name,
-							'priceType' =>  $priceType
-						]
-					);
-					break;
-				default:
-					return \Yii::t('shop',
-						'{name}. Купить {name2} оптом недорого с доставкой по Украине - интернет-магазин Krasota Style',
-						[
-							'name'  =>  $this->Name,
-							'name2' =>  mb_strtolower($this->Name, 'UTF-8')
-						]
-					);
-					break;
-			}
-		}else{
-			return strip_tags(htmlspecialchars_decode($title));
-		}
+		return strip_tags(htmlspecialchars_decode($title));
 	}
 
 	public function getMetaDescription(){

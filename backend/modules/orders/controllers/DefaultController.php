@@ -3,6 +3,7 @@
 namespace backend\modules\orders\controllers;
 
 use backend\models\HistorySearch;
+use backend\models\OrdersStats;
 use common\helpers\PriceRuleHelper;
 use backend\models\Customer;
 use backend\models\CustomerAddresses;
@@ -51,26 +52,29 @@ class DefaultController extends Controller
 
         $orders = $historySearch->search(\Yii::$app->request->get(), true);
 
+        $stats = new OrdersStats();
+
         $ordersStats = [
-            'totalOrders'       =>  0,
+            'totalOrders'       =>  $stats->orders,
             'completedOrders'   =>  0,
             'notCalled'         =>  0,
-            'ordersFaktSumm'    =>  0,
-            'ordersSumm'        =>  0
+            'ordersFaktSumm'    =>  $stats->ordersAmount,
+            'ordersSumm'        =>  $stats->ordersActualAmount
         ];
 
-	    foreach($orders->asArray()->each() as $order){
+	    /*foreach($orders->asArray()->each() as $order){
             $ordersStats['totalOrders']++;
             $ordersStats['completedOrders'] += $order['done'];
             $ordersStats['notCalled']   += $order['callback'] != 1;
             $ordersStats['ordersFaktSumm']   += $order['actualAmount'];
             $ordersStats['ordersSumm']   += $order['originalSum'];
-        }
+        }*/
 
         return $this->render('index', [
             'collectors'        =>  Siteuser::getCollectorsWithData($timeTo, $timeFrom),
             'showUnfinished'    =>  !\Yii::$app->request->get("showDates") || \Yii::$app->request->get("showDates") == 'today',
             'ordersStats'       =>  $ordersStats,
+            'ordersStatsModel'  =>  $stats,
             'searchModel'       =>  $historySearch,
             'orders'            =>  $historySearch->search(\Yii::$app->request->get())
         ]);
@@ -103,7 +107,6 @@ class DefaultController extends Controller
         $orderID = \Yii::$app->request->post("OrderID");
 
         $order = History::findOne($orderID);
-        //TODO: сделать проверку на колл-во звонков (поле callsCount)
 
         if(empty($order)){
             throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
@@ -112,7 +115,16 @@ class DefaultController extends Controller
         $order->callback = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
 
         $order->save(false);
-        return $order->callback;
+
+        \Yii::$app->response->format = 'json';
+
+        return [
+            'callback'  =>  $order->callback,
+            'status'    =>  [
+                'id'            =>  $order->status,
+                'description'   =>  $order->statusDescription
+            ]
+        ];
     }
 
     public function actionDoneorder(){
@@ -131,7 +143,16 @@ class DefaultController extends Controller
         $order->done = $order->done == 1 ? 0 : 1;
 
         $order->save(false);
-        return $order->done;
+
+        \Yii::$app->response->format = 'json';
+
+        return [
+            'done'      =>  $order->done,
+            'status'    =>  [
+                'id'            =>  $order->status,
+                'description'   =>  $order->statusDescription
+            ]
+        ];
     }
 
     /**
@@ -151,11 +172,11 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax && !\Yii::$app->request->get("_pjax")){
             switch(\Yii::$app->request->post("action")){
                 case 'getEditItemForm':
-                    if(!isset($order->items[\Yii::$app->request->post("itemID")])){
+                    $item = $order->findItem(\Yii::$app->request->post("itemID"));
+
+                    if(empty($item)){
                         throw new NotFoundHttpException("Товар не найден в заказе!");
                     }
-
-                    $item = $order->items[\Yii::$app->request->post("itemID")];
 
                     return $this->renderAjax('_order_itemEdit', ['model' => $item]);
                     break;
@@ -196,15 +217,11 @@ class DefaultController extends Controller
             $order->save(false);
         }
 
-        $goodsAdditionalInfo = $st = [];
+        $st = [];
         $sborkaItems = SborkaItem::findAll(['orderID' => $order->id]);
 
         foreach($sborkaItems as $sItem){
             $st[] = $sItem->itemID;
-        }
-
-        foreach(Good::find()->where(['in', 'ID', $st])->each() as $sItem){
-            $goodsAdditionalInfo[$sItem->ID] = $sItem;
         }
 
         $itemsDataProvider = new ActiveDataProvider([
@@ -222,19 +239,12 @@ class DefaultController extends Controller
             ]
         ]);
 
-        $customer = Customer::findOne($order->customerID);
-
-        if(!$customer){
-            $customer = new Customer;
-        }
-
         return $this->render('order', [
             'order'                 =>  $order,
-            'items'                 =>  $sborkaItems,
+            'items'                 =>  $order->items,
             'itemsDataProvider'     =>  $itemsDataProvider,
             'priceRules'            =>  Pricerule::find()->orderBy('priority')->all(),
-            'goodsAdditionalInfo'   =>  $goodsAdditionalInfo,
-            'customer'              =>  $customer
+            'customer'              =>  $order->customer
         ]);
     }
 
@@ -307,7 +317,7 @@ class DefaultController extends Controller
 
         $item->name = $good->Name;
         //$item->count = $item->originalCount;
-        $item->originalPrice = $order->isOpt() ? $good->PriceOut1 : $good->PriceOut2;
+        $item->originalPrice = $order->isWholesale() ? $good->PriceOut1 : $good->PriceOut2;
 
         if($item->save(false)){
             //$good->count = $good->count - $item->addedCount;
@@ -382,10 +392,17 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $d = \Yii::$app->request->post();
-        if($d['type'] == 'opt' || $d['type'] == 'rozn'){
-            $order = History::findOne(['id' => $d['OrderID']]);
-            $order->recalculatePrices($d['type']);
+        $type = \Yii::$app->request->post("type");
+        $orderID = \Yii::$app->request->post("OrderID");
+
+        $order = History::findOne(['id' => $orderID]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
+
+        if(in_array($type, ['opt', 'rozn'])){
+            $order->recalculatePrices($type);
         }
     }
 

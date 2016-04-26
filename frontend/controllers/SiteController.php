@@ -8,6 +8,7 @@ use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\CallbackForm;
 use frontend\models\Cart;
+use frontend\models\CommentForm;
 use frontend\models\Customer;
 use frontend\models\CustomerWishlist;
 use frontend\models\History;
@@ -17,11 +18,10 @@ use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
 use frontend\models\UsersInterestsForm;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
-use Yii;
+use kartik\form\ActiveForm;
+use yii;
 use common\models\Domain;
-use common\models\Pagetype;
 
-use frontend\models\Banner;
 use frontend\models\Category;
 use frontend\models\Good;
 use frontend\models\Question;
@@ -31,15 +31,9 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 
-use yii\base\ErrorException;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -121,9 +115,15 @@ class SiteController extends Controller
      */
 
     public function actionShowtovar($link){
+        if(!empty(\Yii::$app->request->post('CommentForm'))){
+            $model = new CommentForm();
+            $model->load(\Yii::$app->request->post());
+            $model->save();
+        }
+
         $id = preg_replace('/\D+/', '', preg_replace('/[^g(.)]+\D+/', '', $link));
 
-        $good = Good::findOne(['`goods`.`ID`' => $id]);
+        $good = Good::find()->where(['`goods`.`ID`' => $id])->with('reviews')->one();
 
         if(!$good){
             return \Yii::$app->runAction('site/error');
@@ -475,24 +475,25 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+        $model->load(\Yii::$app->request->post());
 
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if(\Yii::$app->request->isAjax && \Yii::$app->request->post("ajax") == 'loginForm'){
+            \Yii::$app->response->format = 'json';
+
+            return ActiveForm::validate($model);
+        }elseif ($model->validate() && $model->login()){
             if(\Yii::$app->cart->itemsCount > 0){
                 Cart::updateAll(['customerID'   =>  \Yii::$app->user->identity->ID], ['cartCode' => \Yii::$app->cart->cartCode]);
             }
 
-            return $this->goBack();
-        } else {
-            if(\Yii::$app->request->isAjax){
-                return $this->renderAjax('login', [
-                    'model' =>  $model
-                ]);
-            }else{
-                return $this->render('login', [
-                    'model' => $model,
-                ]);
-            }
+            return $this->redirect(\Yii::$app->request->referrer);
+        }else if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('login', [
+                'model' =>  $model
+            ]);
         }
+
+        return $this->redirect('/#loginModal');
     }
 
     /**
@@ -556,7 +557,7 @@ class SiteController extends Controller
                     'price2'    =>  $good->retailPrice,
                     'link'      =>  $good->link,
                     'name'      =>  $good->Name,
-                    'photo'     =>  $good->ico
+                    'photo'     =>  $good->photo
                 ];
 
                 if(!empty($good->category)){
@@ -592,7 +593,7 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect(\Yii::$app->request->referrer);
     }
 
 
@@ -609,17 +610,19 @@ class SiteController extends Controller
         }
 
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
-            }
+        $model->load(Yii::$app->request->post());
+
+        if(\Yii::$app->request->isAjax && \Yii::$app->request->post("ajax") == 'registrationForm'){
+            \Yii::$app->response->format = 'json';
+
+            return ActiveForm::validate($model);
         }
 
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
+        if ($model->validate() && $user = $model->signup()) {
+            if(Yii::$app->getUser()->login($user)) return $this->goHome();
+        }
+
+        return $this->redirect('/#registrationModal');
     }
 
     /**

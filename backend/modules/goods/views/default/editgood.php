@@ -208,7 +208,8 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
     <div class="panel-body">
         <div class="row">
             <div class="col-xs-4">
-                <?php if($good->ico != ''){?><img class="img-thumbnail" id="good-main-photo" src="http://krasota-style.com.ua/img/catalog/<?=$good->ico?>">
+                <?php //TODO: refactor this ?>
+                <?php if($good->photo != ''){?><img class="img-thumbnail" id="good-main-photo" src="http://krasota-style.com.ua/img/catalog/<?=$good->photo?>">
                 <br style="margin-top: 10px; display: block;">
                 <?php } ?>
                 <div id="updateGoodPhoto" class="clearfix">

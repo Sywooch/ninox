@@ -30,7 +30,7 @@ use yii\helpers\Html;
             $count = count($orderItems);
             $first = true;
             foreach($orderItems as $item){
-                $ico = strtolower($goods[$item->itemID]->ico);
+                $ico = strtolower($goods[$item->itemID]->photo);
                 $i++;
                 $n++;
                 /*
@@ -52,8 +52,8 @@ use yii\helpers\Html;
                     <table class='pageend'>
                 <?php
                 }
-                ?>
-                <?php if($i%2 == '1'){
+            
+            if($i%2 == '1'){
                 ?>
                 <tr>
             <?php
