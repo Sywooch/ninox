@@ -117,7 +117,7 @@ class Category extends \common\models\Category{
 				        ->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0 AND `goods`.`show_img` = 1')
 				        ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
 				        ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-				        ->joinWith(['goodOptions', 'goodOptionsVariants'])
+				        ->with(['goodOptions', 'goodOptionsVariants'])
 				        ->all() as $filterOption){
 				if(!empty($filterOption->goodOptions)){
 					$go = $filterOption->goodOptions;

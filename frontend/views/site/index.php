@@ -1,11 +1,31 @@
 <?php
+use common\helpers\Formatter;
 use evgeniyrru\yii2slick\Slick;
 use frontend\helpers\BannerHelper;
 use frontend\models\BannersCategory;
 use yii\helpers\Html;
 $mainGalleryHtml = [];
 
-$this->title = \Yii::t('shop', 'Главная');
+$this->title = \Yii::t('shop', 'Бижутерия, заколки, серьги, бисер оптом с доставкой по Киеву и Украине от интернет-магазина "Krasota-Style.ua"');
+$this->registerMetaTag(
+	[
+		'name' => 'description',
+		'content' => \Yii::t('shop',
+			'Купить бижутерию оптом со скалда в Киеве. Более 10000 товаров. Оптовые цены. Минимальный заказ {minOrder} Беспроблемный возврат. Скидки для оптовиков.',
+			[
+				'minOrder'  =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['minimalOrderSum'])
+			])
+	],
+	'description'
+);
+$this->registerMetaTag(
+	[
+		'name' => 'keywords',
+		'content' => \Yii::t('shop', 'Бижутерия, товары для рукоделия, оптом, интернет-магазин, Украина, Krasota-Style')
+	],
+	'keywords'
+);
+
 
 $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 

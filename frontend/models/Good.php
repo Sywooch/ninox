@@ -135,4 +135,28 @@ class Good extends \common\models\Good{
         }
     }
 
+	public function getMetaTitle(){
+		return \Yii::t('shop',
+			'{name}: купить оптом по цене {price} в интернет-магазине Krasota-Style.',
+			[
+				'name'  =>  $this->Name,
+				'price' =>  Formatter::getFormattedPrice($this->PriceOut1)
+			]);
+	}
+
+	public function getMetaDescription(){
+		return \Yii::t('shop',
+			'Купить по оптовым ценам {name} на сайте Krasota-Style. Доставка по Украине, большой ассортимент товаров, мелкий и крупный опт.',
+			['name'  =>  mb_strtolower($this->Name)]);
+	}
+
+	public function getMetaKeywords(){
+		return \Yii::t('shop',
+			'{name}, {name2}, оптом, интернет-магазин, Krasota-Style',
+			[
+				'name'  =>  $this->Name,
+				'name2' =>  mb_strtolower($this->category->Name)
+			]);
+	}
+
 }

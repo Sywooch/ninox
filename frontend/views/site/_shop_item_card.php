@@ -6,6 +6,11 @@ use kartik\tabs\TabsX;
 use yii\helpers\Html;
 use evgeniyrru\yii2slick\Slick;
 
+$this->title = $good->metaTitle;
+$this->registerMetaTag(['name' => 'description', 'content' => $good->metaDescription], 'description');
+$this->registerMetaTag(['name' => 'keywords', 'content' => $good->metaKeywords], 'keywords');
+
+
 $link = '/tovar/'.$good->link.'-g'.$good->ID;
 
 $reviewModal = new Remodal([
@@ -73,8 +78,6 @@ foreach($good->photos as $photo){
     $itemsNav[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$photo->ico,
                            ['width'=>'105px', 'height'=>'80px']);
 }
-
-$this->title = $good->Name;
 
 ?>
 <script type="text/javascript">(function(w,doc) {

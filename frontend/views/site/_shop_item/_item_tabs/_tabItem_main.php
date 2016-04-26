@@ -22,8 +22,8 @@ $this->registerJs($js);
     </span>
     <div class="details">
         <?php foreach($good->options as $option => $value){
-            echo Html::tag('div', Html::tag('div', $option, ['class' => 'characteristic']).Html::tag('div', $value),[
-                'class' =>  'characteristics'
+            echo Html::tag('div', Html::tag('div', $option, ['class' => 'option-name']).Html::tag('div', $value, ['class' => 'option-value']),[
+                'class' =>  'option'
             ]);
         }?>
     </div>
