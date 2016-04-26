@@ -7,7 +7,6 @@ $form = ActiveForm::begin([
     'action'                =>  '/register',
     'validationUrl'         =>  '/register',
     'enableAjaxValidation'  =>  true,
-    'enableClientValidation'=>  false,
     'id'                    =>  'registrationForm'
 ]);
 
