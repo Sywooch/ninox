@@ -494,87 +494,10 @@ $this->title = 'Заказы';
         float: left;
     }
 </style>
-<div class="ordersStatsContainer">
-    <div class="ordersStats">
-        <div style="display: table; margin: 0 auto; position: relative; top: 11px;">
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('dropbox', [
-                            'class' =>  'yellow'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <table>
-                            <tr>
-                                <td>
-                                    <span>Заказов</span>
-                                </td>
-                                <td>
-                                    <span>Выполнено</span>
-                                </td>
-                            </tr>
-                            <tr style="text-align: center;">
-                                <td>
-                                    <?=Html::tag('h1', strlen($ordersStats['totalOrders']) >= 4 ? Html::tag('small', $ordersStats['totalOrders']) : $ordersStats['totalOrders'], [
-                                        'style' =>  'line-height: '.(strlen($ordersStats['totalOrders']) < 4 ? '26px;' : '0px;')
-                                    ])?>
-                                </td>
-                                <td>
-                                    <?=Html::tag('h1', strlen($ordersStats['completedOrders']) >= 4 ? Html::tag('small', $ordersStats['completedOrders'], ['style' => 'color: #fff']) : $ordersStats['completedOrders'], [
-                                        'style' =>  'color: #fff; min-width: 36px; background: #B5B5B5; padding: 5px; border-radius: 3px; display: inline-block; line-height: '.(strlen($ordersStats['completedOrders']) < 4 ? '26px;' : '0px;')
-                                    ])?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('frown-o', [
-                            'class' =>  'purple'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Не прозвонено</span>
-                        <h1><?=$ordersStats['notCalled']?></h1>
-                    </div>
-                </div>
-            </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('cubes', [
-                            'class' =>  'green'
-                        ])->size(FA::SIZE_2X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Всего на складе</span>
-                        <h1>150 000</h1>
-                    </div>
-                </div>
-            </div>
-            <div style="display: table-cell;">
-                <div>
-                    <div class="icon">
-                        <?=FA::icon('calculator', [
-                            'class' =>  'blue'
-                        ])->size(FA::SIZE_3X)->inverse()?>
-                    </div>
-                    <div class="description">
-                        <span>Сума заказов</span>
-                        <h1 title="Фактическая сумма заказов" style="line-height: 22px; font-size: 22px;"><?=$ordersStats['ordersFaktSumm']?>₴</h1>
-                        <small title="Общая сумма заказов"><?=$ordersStats['ordersSumm']?>₴</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?=\backend\widgets\CollectorsWidget::widget([
+<?=\backend\modules\orders\widgets\OrdersStatsWidget::widget([
+    'model' =>  $ordersStatsModel
+]),
+\backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
 ]),
