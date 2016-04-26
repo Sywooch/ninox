@@ -3,7 +3,6 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
-use common\models\GoodsComment;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\CallbackForm;
@@ -17,12 +16,9 @@ use frontend\models\OrderForm;
 use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
 use kartik\form\ActiveForm;
-use Prophecy\Exception\Doubler\ClassNotFoundException;
-use Yii;
+use yii;
 use common\models\Domain;
-use common\models\Pagetype;
 
-use frontend\models\Banner;
 use frontend\models\Category;
 use frontend\models\Good;
 use frontend\models\Question;
@@ -32,15 +28,9 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 
-use yii\base\ErrorException;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -617,17 +607,19 @@ class SiteController extends Controller
         }
 
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
-            }
+        $model->load(Yii::$app->request->post());
+
+        if(\Yii::$app->request->isAjax && \Yii::$app->request->post("ajax") == 'registrationForm'){
+            \Yii::$app->response->format = 'json';
+
+            return ActiveForm::validate($model);
         }
 
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
+        if ($model->validate() && $user = $model->signup()) {
+            if(Yii::$app->getUser()->login($user)) return $this->goHome();
+        }
+
+        return $this->redirect('/#registrationModal');
     }
 
     /**

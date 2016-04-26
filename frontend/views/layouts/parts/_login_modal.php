@@ -20,4 +20,4 @@ echo $form->field($model, 'phone'),
 ActiveForm::end();
 
 echo \yii\helpers\Html::a(\Yii::t('site', 'Восстановить пароль'), \yii\helpers\Url::to('/request-password-reset')), '&nbsp; | &nbsp;',
-    \yii\helpers\Html::a('Регистрация', '#registration');
+    \yii\helpers\Html::a('Регистрация', '#registrationModal');

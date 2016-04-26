@@ -55,6 +55,15 @@ $loginModal = new \bobroid\remodal\Remodal([
 	'id'				=>	'loginModal',
 ]);
 
+$registrationModal = new \bobroid\remodal\Remodal([
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'closeButton'		=>	false,
+	'addRandomToID'		=>	false,
+	'content'			=>	$this->render('parts/_registration_modal'),
+	'id'				=>	'registrationModal',
+]);
+
 
 $js = <<<JS
 	if(hasTouch){
@@ -528,7 +537,8 @@ $this->beginPage();
 			</div>
 		</div>
 		<?=$cartModal->renderModal(),
-		$loginModal->renderModal();
+		$loginModal->renderModal(),
+		$registrationModal->renderModal();
 
 		RuLangAsset::register($this);
 
