@@ -35,7 +35,6 @@ class SignupForm extends Model
             ['email', 'unique', 'targetClass' => '\frontend\models\User', 'message' => \Yii::t('shop', 'Пользователь с таким аддресом электронной почты уже зарегистрирован!')],
 
             ['phone', 'udokmeci\yii2PhoneValidator\PhoneValidator', 'countryAttribute' => 'countryCode'],
-            //['phone', 'string', 'max' => 255],
             ['phone', 'unique', 'targetClass' => '\frontend\models\User', 'message' => \Yii::t('shop', 'Пользователь с таким номером телефона уже зарегистрирован!')],
 
             ['password', 'string', 'min' => 6],
