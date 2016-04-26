@@ -260,16 +260,21 @@
     font-size: 20px;
 }
 
-.product-characteristics .characteristics{
-    height: 30px;
+.product-characteristics .option{
+    line-height: 30px;
     font-size: 13px;
 }
 
-.product-characteristics .characteristic{
+.product-characteristics .option-name{
     float: left;
-    width: 400px;
+    width: 60%;
     color: #29a1e0;
     font-family: OpenSans-Semibold;
+}
+
+.product-characteristics .option-value{
+    float: left;
+    width: 40%;
 }
 
 .customer-reviews{
