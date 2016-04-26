@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use app\helpers\TranslitHelper;
+use common\helpers\TranslitHelper;
 use Yii;
 use yii\db\Query;
 use yii\helpers\Json;
@@ -58,6 +58,10 @@ class Category extends \yii\db\ActiveRecord
         $this->parents = self::getParentCategories($this->Code);
 
         return $this->parents;
+    }
+
+    public function getPhotos(){
+        return $this->hasMany(CategoryPhoto::className(), ['categoryID' => 'ID'])->orderBy('order');
     }
 
     /**
@@ -316,6 +320,10 @@ class Category extends \yii\db\ActiveRecord
 
                     if(!empty($element->imgSrc)){
                         $branch[$element->Code]['imgSrc'] = $element->imgSrc;
+                    }
+
+                    if(!empty($element->photos)){
+                        $branch[$element->Code]['slider'] = $element->photos;
                     }
 
 					$items = self::buildTree($elements, $element->Code);

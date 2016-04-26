@@ -13,6 +13,8 @@ use frontend\models\History;
 
 class Email extends \common\components\Email{
 
+    private $defaultSubscribeGroup = '340381';
+
     /**
      * @param $order History
      *
@@ -68,6 +70,28 @@ class Email extends \common\components\Email{
         //$order->discount = 10;  // Скидка (дополнительная информация, при расчётах не учитывается).
         //$order->restoreUrl = "http://test.com?restore";  // Cсылка на восстановление корзины, если необходима такая функциональность.
         //$order->statusDescriptsion = "test";  // Дополнительное описание статуса заказа.*/
+    }
+
+    /**
+     * Подписывает клиента на нас :)
+     *
+     * @param $email string
+     * @return int|string
+     */
+    public function subscribeCustomer($email){
+        $contact = new \stdClass();
+        $contactJson = new \stdClass();
+
+        $contact->channels = ['type' => 'email', 'value' => $email];
+        //$contact->addressBookId = $this->defaultSubscribeGroup;
+
+        $contactJson->contact = $contact;
+        $contactJson->groups = ['Подписчики'];
+
+        return $this->send([
+            'action'    =>  'contact/subscribe',
+            'data'      =>  $contactJson
+        ]);
     }
 
 }

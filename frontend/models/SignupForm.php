@@ -14,6 +14,7 @@ class SignupForm extends Model
     public $email;
     public $password;
     public $phone;
+    public $countryCode;
     public $captcha;
     public $newCustomer = true;
 
@@ -23,34 +24,22 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            /*['name', 'filter', 'filter' => 'trim'],
-            ['name', 'required'],
-            ['name', 'string', 'min' => 2, 'max' => 255],*/
+            [['name', 'surname', 'email', 'phone', 'password', 'captcha'], 'required'],
+            [['countryCode'], 'safe'],
+            [['name', 'surname', 'email', 'phone'], 'filter', 'filter' => 'trim'],
+            ['name', 'string', 'min' => 2, 'max' => 255],
 
-            /*['surname', 'filter', 'filter' => 'trim'],
-            ['surname', 'required'],
-            ['surname', 'string', 'min' => 2, 'max' => 255],*/
-
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'required'],
+            ['surname', 'string', 'min' => 2, 'max' => 255],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\frontend\models\User', 'message' => \Yii::t('shop', 'Пользователь с таким аддресом электронной почты уже зарегистрирован!')],
 
-            ['phone', 'filter', 'filter' => 'trim'],
-            ['phone', 'required'],
-            ['phone', 'udokmeci\yii2PhoneValidator\PhoneValidator','strict'=>false,'format'=>true],
-            ['phone', 'string', 'max' => 255],
+            ['phone', 'udokmeci\yii2PhoneValidator\PhoneValidator', 'countryAttribute' => 'countryCode'],
             ['phone', 'unique', 'targetClass' => '\frontend\models\User', 'message' => \Yii::t('shop', 'Пользователь с таким номером телефона уже зарегистрирован!')],
 
-            ['password', 'required'],
             ['password', 'string', 'min' => 6],
-
-            ['newCustomer', 'required'],
             ['newCustomer', 'boolean'],
-
-            ['captcha', 'required'],
-            ['captcha', 'captcha'],
+            ['captcha', 'captcha', 'captchaAction'  =>  'site/captcharegistermodal'],
         ];
     }
 
@@ -83,6 +72,19 @@ class SignupForm extends Model
             }
         }
 
+        \Yii::trace($this->getErrors());
+
         return null;
+    }
+
+    public function attributeLabels(){
+        return [
+            'name'              =>  \Yii::t('shop', 'Ваше Имя'),
+            'surname'           =>  \Yii::t('shop', 'Ваша Фамилия'),
+            'email'             =>  \Yii::t('shop', 'Ваш email'),
+            'password'          =>  \Yii::t('shop', 'Ваш пароль'),
+            'phone'             =>  \Yii::t('shop', 'Ваш телефон'),
+            'captcha'           =>  \Yii::t('shop', 'Капча'),
+        ];
     }
 }

@@ -15,17 +15,7 @@ use yii\bootstrap\Html;
 
 class MainMenuWidget extends Widget{
 
-    private $defaultItemParams = [
-        'slider'    =>  [
-            [
-                'img'   =>  '#',
-            ],[
-                'img'   =>  '#',
-            ],[
-                'img'   =>  '#',
-            ],
-        ]
-    ];
+    private $defaultItemParams = ['slider' => ''];
     
     public $items = [];
     
@@ -122,7 +112,7 @@ class MainMenuWidget extends Widget{
     }
 
     public function renderSliderItem($item){
-        return Html::img($item['img']).Html::tag('div', '', [
+        return Html::tag('div', Html::img(\Yii::getAlias('@menuSliderPhotos').'/'.$item->photo), [
             'class' =>  $this->options['sliderClassImage']
         ]);
     }

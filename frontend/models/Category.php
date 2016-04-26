@@ -99,10 +99,8 @@ class Category extends \common\models\Category{
 	}
 
 	public static function getMenu(){
-		$cats = self::find()
-			->select(['ID', 'Name', 'Code', 'link', 'listorder', 'enabled', 'imgSrc'])
-			->orderBy('Code')
-			->all();
+		$cats = self::find()->with('photos')->orderBy('Code')->all();
+
 		return self::buildTree($cats);
 	}
 

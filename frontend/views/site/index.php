@@ -41,6 +41,21 @@ $(".goods-content-icons .main-icons").on('click', function(e){
 
 	$.pjax({url: url, container: '#goods_tabs', push: false, replace: false, timeout: 10000,scrollTo: true});
 });
+
+$('#subscribeForm').on('submit', function(e){
+	e.preventDefault();   
+	
+	var form = $(this);
+	
+    $.ajax({
+        type: 'POST',
+        url: '/subscribe',
+        data: form.serialize(),
+        success: function(){
+        	form.html("спасибо за подписку!");
+        }
+    });
+});
 JS;
 
 $this->registerJs($js);
@@ -172,15 +187,7 @@ $this->registerJs($js);
 		</div>
 		<div class="subscribe style">
 			<div class="style">
-				<span>Подпишитесь на рассылку, не пропустите скидки</span>
-				<div class="subscribe-email input-style-main">
-					<input type="text" placeholder="Ваш эл. адрес">
-					<?=\yii\helpers\Html::button('Подписаться', [
-						'type'  =>  'submit',
-						'class' =>  'blue-button small-button ',
-						'id'    =>  'submit'
-					])?>
-				</div>
+				<?=$this->render('subscribeForm')?>
 			</div>
 			<div class="style"></div>
 		</div>
