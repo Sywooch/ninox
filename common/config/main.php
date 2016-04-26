@@ -49,7 +49,7 @@ return [
 					'message'	=>	[
 						'from'		=>	['krasotastyleyii@gmail.com'],
 						'to'		=>	['krasotastyleyii@gmail.com'],
-						'subject'	=>	"Ошибки на сайте ".\Yii::$app->name." ".date('d.m.Y H:i:s')
+						'subject'	=>	"Ошибки на сайте dev.k-s.com.ua ".date('d.m.Y H:i:s')
 					]
 				]
 			],
