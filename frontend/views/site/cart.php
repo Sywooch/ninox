@@ -75,7 +75,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 		'class' =>  'cart-footer-top'
 	]).
 	Html::beginTag('div', ['class' => 'cart-footer-bottom']);
-	$form = new \yii\bootstrap\ActiveForm([
+	$form = new \yii\widgets\ActiveForm([
 		'action'	=>	'/order'
 	]);
 	$form->begin();

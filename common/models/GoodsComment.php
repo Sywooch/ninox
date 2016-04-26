@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use DateTime;
 use Yii;
 
 /**
@@ -27,6 +28,23 @@ class GoodsComment extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'goodscomments';
+    }
+
+    public function getChilds(){
+        return $this->hasMany(self::className(), ['target' => 'commentID'])->where(['type' => 2])->orderBy('date');
+    }
+
+    public function beforeSave($insert){
+        if($this->isNewRecord){
+            date_default_timezone_set('Europe/Kiev');
+            $date = new DateTime(date('Y-m-d H:i:s'));
+            $this->setAttributes([
+                'customerID'    =>  \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->identity->ID,
+			    'date'          =>  $date->format('Y-m-d H:i:s')
+            ]);
+        }
+
+        return parent::beforeSave($insert);
     }
 
     /**
