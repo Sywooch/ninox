@@ -1163,6 +1163,10 @@ h2{
 	margin: 25px 0;
 }
 
+.category .category-description ul{
+	list-style: square inside none;
+}
+
 /*============* END CATEGORY STYLE *==============*/
 
 /*============* RATING STYLE *==============*/
@@ -3676,16 +3680,24 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	width: 1172px;
 	margin: auto;
+	overflow: hidden;
 }
 
 .sticky-wrapper:not(.sticky) .under-menu-content{
 	padding-top: 10px;
 	height: 90px;
+/*	-webkit-transition: height 2s;
+	-moz-transition: height 2s;
+	transition: height 2s;*/
+
 }
 
 .sticky-wrapper.sticky .under-menu-content{
 	padding-top: 8px;
 	height: 50px;
+	-webkit-transition: height 0.5s;
+	-moz-transition: height 0.5s;
+	transition: height 0.5s;
 }
 
 .header .input-style-main{
@@ -4087,8 +4099,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	position: relative;
 }
 
+.sticky-wrapper{
+	height: auto !important;
+	margin-bottom: 30px;
+}
+
 .sticky .header-menu{
 	height: 45px;
+/*	-webkit-transition: height 2s;
+	-moz-transition: height 2s;
+	transition: height 2s;*/
 }
 
 .sticky .header-menu:after{
@@ -4097,18 +4117,30 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .sticky .header-menu-item{
 	height: 45px;
+/*	-webkit-transition: height 2s;
+	-moz-transition: height 2s;
+	transition: height 2s;*/
 }
 
 .sticky .header-menu-item:hover{
 	height: 45px;
+/*	-webkit-transition: height 2s;
+	-moz-transition: height 2s;
+	transition: height 2s;*/
 }
 
 .sticky .header-menu-content{
 	height: 45px;
+/*	-webkit-transition: height 2s;
+	-moz-transition: height 2s;
+	transition: height 2s;*/
 }
 
 .sticky .header-menu-items{
 	height: 45px;
+/*	-webkit-transition: height 2s;
+	-moz-transition: height 2s;
+	transition: height 2s;*/
 }
 
 .sticky .header-menu-item .item-label{
@@ -4135,6 +4167,17 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: -o-linear-gradient(#5ec0f3, #018ad2); /* For Opera 11.1 to 12.0 */
 	background: -moz-linear-gradient(#5ec0f3, #018ad2); /* For Firefox 3.6 to 15 */
 	background: linear-gradient(#5ec0f3, #018ad2); /* Standard syntax */
+	height: 78px;
+	-webkit-transition: height 0s;
+	-moz-transition: height 0s;
+	transition: height 0s;
+}
+
+.sticky .header-menu{
+	height: 45px;
+	-webkit-transition: height 0.5s;
+	-moz-transition: height 0.5s;
+	transition: height 0.5s;
 }
 
 .header-menu:after{
@@ -4154,6 +4197,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	table-layout: fixed;
 	border-left: 1px solid #3F99C9;
 	border-right: 1px solid #8ED2F7;
+	-webkit-transition: height 0.5s;
+	-moz-transition: height 0.5s;
+	transition: height 0.5s;
 }
 
 .header-menu-item{
@@ -4162,10 +4208,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
 	display: table-cell; /* эмуляция ячейки таблицы */
 	text-align: center;
-	height: 50px; /* высота пункта */
+	height: 77px; /* высота пункта */
 	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
 	vertical-align: bottom;
 	cursor: pointer;
+	-webkit-transition: height 0.5s;
+	-moz-transition: height 0.5s;
+	transition: height 0.5s;
 }
 
 .header-menu-item:hover{
@@ -4179,6 +4228,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 77px; /* высота пункта */
 	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
 	vertical-align: bottom;
+	-webkit-transition: height 0.5s;
+	-moz-transition: height 0.5s;
+	transition: height 0.5s;
 }
 
 .header-menu-items .item-label{
