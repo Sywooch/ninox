@@ -3678,6 +3678,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: auto;
 }
 
+.sticky-wrapper:not(.sticky){
+	height: auto!important;
+}
+
 .sticky-wrapper:not(.sticky) .under-menu-content{
 	padding-top: 10px;
 	height: 90px;
