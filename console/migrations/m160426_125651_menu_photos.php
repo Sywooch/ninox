@@ -13,6 +13,8 @@ class m160426_125651_menu_photos extends Migration
             'photo'         =>  Schema::TYPE_STRING,
         ]);
 
+        $this->addPrimaryKey('photo', 'categoryPhotos', ['categoryID', 'order']);
+
         $categoryPhotos = [
             '78'    =>  ['rezinki.png', 'kolie.png'], // Бижутерия
             '202'   =>  ['mozaika.png', 'tychynky.png', 'shnur.png'], // Рукоделие
