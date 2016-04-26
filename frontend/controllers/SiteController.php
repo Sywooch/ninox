@@ -488,25 +488,19 @@ class SiteController extends Controller
             \Yii::$app->response->format = 'json';
 
             return ActiveForm::validate($model);
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        }elseif ($model->validate() && $model->login()){
             if(\Yii::$app->cart->itemsCount > 0){
                 Cart::updateAll(['customerID'   =>  \Yii::$app->user->identity->ID], ['cartCode' => \Yii::$app->cart->cartCode]);
             }
 
-            return $this->goBack();
-        } else {
-            if(\Yii::$app->request->isAjax){
-                return $this->renderAjax('login', [
-                    'model' =>  $model
-                ]);
-            }else{
-                return $this->render('login', [
-                    'model' => $model,
-                ]);
-            }
+            return $this->redirect(\Yii::$app->request->referrer);
+        }else if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('login', [
+                'model' =>  $model
+            ]);
         }
+
+        return $this->redirect('/#loginModal');
     }
 
     /**
@@ -606,7 +600,7 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect(\Yii::$app->request->referrer);
     }
 
 
