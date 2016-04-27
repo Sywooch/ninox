@@ -4,6 +4,8 @@ use common\helpers\Formatter;
 use yii\jui\Accordion;
 use yii\bootstrap\Html;
 
+$this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
+
 $js = <<<JS
 
 var page = 0;

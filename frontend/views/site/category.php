@@ -27,10 +27,13 @@ if($pageSize < 1){
 
 if($page > 1){
     $this->registerLinkTag(['rel' => 'prev', 'href' => urldecode($items->pagination->createUrl($page - 2, null, true))]);
-    $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
 }
 if($page < $pageCount){
     $this->registerLinkTag(['rel' => 'next', 'href' => urldecode($items->pagination->createUrl($page, null, true))]);
+}
+
+if($page > 1 || !$totalCount || in_array(\Yii::$app->request->get('order'), ['asc', 'desc', 'novivki'])){
+    $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
 }
 
 $helper = new PriceRuleHelper();
@@ -51,13 +54,15 @@ $this->registerJS($js);
 ]);
 
 echo Html::tag('div',
-    $this->render('_category/_category_filters', [
-        'filters'   =>  $category->filters,
-        'min'       =>  $category->minPrice,
-        'max'       =>  $category->maxPrice,
-        'from'      =>  \Yii::$app->request->get('minPrice') ? \Yii::$app->request->get('minPrice') : $category->minPrice,
-        'to'        =>  \Yii::$app->request->get('maxPrice') ? \Yii::$app->request->get('maxPrice') : $category->maxPrice,
-    ]).
+    ($totalCount ?
+        $this->render('_category/_category_filters', [
+            'filters'   =>  $category->filters,
+            'min'       =>  $category->minPrice,
+            'max'       =>  $category->maxPrice,
+            'from'      =>  \Yii::$app->request->get('minPrice') ? \Yii::$app->request->get('minPrice') : $category->minPrice,
+            'to'        =>  \Yii::$app->request->get('maxPrice') ? \Yii::$app->request->get('maxPrice') : $category->maxPrice,
+        ]) : ''
+    ).
     Html::tag('div',
         Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]).
         Html::tag('div',
