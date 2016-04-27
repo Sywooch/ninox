@@ -3690,18 +3690,12 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .sticky-wrapper:not(.sticky) .under-menu-content{
 	padding-top: 10px;
 	height: 90px;
-/*	-webkit-transition: height 2s;
-	-moz-transition: height 2s;
-	transition: height 2s;*/
-
 }
 
 .sticky-wrapper.sticky .under-menu-content{
 	padding-top: 8px;
 	height: 50px;
-	-webkit-transition: height 0.5s;
-	-moz-transition: height 0.5s;
-	transition: height 0.5s;
+	transition: height 1s;
 }
 
 .header .input-style-main{
@@ -4108,47 +4102,34 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-bottom: 30px;
 }
 
-.sticky .header-menu{
-	height: 45px;
-/*	-webkit-transition: height 2s;
-	-moz-transition: height 2s;
-	transition: height 2s;*/
-}
-
 .sticky .header-menu:after{
 	background: none;
 }
 
 .sticky .header-menu-item{
-	height: 45px;
-/*	-webkit-transition: height 2s;
-	-moz-transition: height 2s;
-	transition: height 2s;*/
+	height: 100%;
 }
 
 .sticky .header-menu-item:hover{
-	height: 45px;
-/*	-webkit-transition: height 2s;
-	-moz-transition: height 2s;
-	transition: height 2s;*/
+	height: 100%;
 }
 
 .sticky .header-menu-content{
-	height: 45px;
-/*	-webkit-transition: height 2s;
-	-moz-transition: height 2s;
-	transition: height 2s;*/
+	height: 100%;
 }
 
 .sticky .header-menu-items{
-	height: 45px;
-/*	-webkit-transition: height 2s;
-	-moz-transition: height 2s;
-	transition: height 2s;*/
+	height: 100%;
 }
 
 .sticky .header-menu-item .item-label{
-	display: none;
+	display: block;
+	height: 0px;
+	visibility: hidden;
+	transition-property: height, opacity,visibility, delay;
+	transition-duration: 1s, 0.5s, 0.5s, 0s;
+	opacity: 0;
+	vertical-align: middle;
 }
 
 .sticky .header-menu-item-content a{
@@ -4172,16 +4153,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: -moz-linear-gradient(#5ec0f3, #018ad2); /* For Firefox 3.6 to 15 */
 	background: linear-gradient(#5ec0f3, #018ad2); /* Standard syntax */
 	height: 78px;
-	-webkit-transition: height 0s;
-	-moz-transition: height 0s;
-	transition: height 0s;
+	-webkit-transition: height 1s;
+	-moz-transition: height 1s;
+	transition: height 1s;
 }
 
 .sticky .header-menu{
 	height: 45px;
-	-webkit-transition: height 0.5s;
-	-moz-transition: height 0.5s;
-	transition: height 0.5s;
 }
 
 .header-menu:after{
@@ -4195,15 +4173,12 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .header-menu-items{
 	width: 1172px;
-	height: 77px;
+	height: 100%;
 	margin: auto;
 	display: table;
 	table-layout: fixed;
 	border-left: 1px solid #3F99C9;
 	border-right: 1px solid #8ED2F7;
-	-webkit-transition: height 0.5s;
-	-moz-transition: height 0.5s;
-	transition: height 0.5s;
 }
 
 .header-menu-item{
@@ -4212,13 +4187,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
 	display: table-cell; /* эмуляция ячейки таблицы */
 	text-align: center;
-	height: 77px; /* высота пункта */
+	height: 100%; /* высота пункта */
 	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
 	vertical-align: bottom;
 	cursor: pointer;
-	-webkit-transition: height 0.5s;
-	-moz-transition: height 0.5s;
-	transition: height 0.5s;
+}
+
+.header-menu-item span{
+	display: table-cell;
 }
 
 .header-menu-item:hover{
@@ -4229,34 +4205,61 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
 	display: table-cell; /* эмуляция ячейки таблицы */
 	text-align: center;
-	height: 77px; /* высота пункта */
+	height: 100%; /* высота пункта */
 	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
 	vertical-align: bottom;
-	-webkit-transition: height 0.5s;
-	-moz-transition: height 0.5s;
-	transition: height 0.5s;
 }
 
 .header-menu-items .item-label{
-	width: 1000px; /* вот это заставляет наши псевдоячейки растянуться должным образом */
-	display: table-cell; /* без этого тоже никак */
-	vertical-align: middle; /* вертикальное выравнивание текста */
+	/*width: 1000px; !* вот это заставляет наши псевдоячейки растянуться должным образом *!
+	display: table-cell; !* без этого тоже никак *!
+	vertical-align: middle; !* вертикальное выравнивание текста *!
 	font-size: 13px;
-	/*height: 38px;
+	!*height: 38px;
 	>что было до изменений<
-	padding-bottom: 10px;*/
+	padding-bottom: 10px;*!
 	color: white;
 	padding: 5px;
 	line-height: 12px;
 	text-decoration: none;
-	/*изменения на 12.03.16*/
+	!*изменения на 12.03.16*!
 	height: 32px;
 	padding-top: 0px;
-	/*конец изменений, если ничего не поедет в дальнейшем оптимизировать паддинги*/
+	!*конец изменений, если ничего не поедет в дальнейшем оптимизировать паддинги*!*/
+    /*
+	width: 1000px;
+    */
+	display: block;
+	vertical-align: middle;
+	font-size: 13px;
+	color: white;
+    /*
+	padding: 5px;
+    */
+	line-height: 12px;
+    /*
+	text-decoration: none;
+    */
+	height: 32px;
+    /*
+	padding-top: 0px;
+    */
+/*	display: block;
+	transition: height 1s;
+	transition-delay: 0.1s;
+	transition: opacity 1s;*/
+	transition-property: height, delay, opacity;
+	transition-duration: 1s, 1s, 1s;
+	opacity: 1;
+	margin-top: 5px;
+}
+
+.header-menu-items a{
+	text-decoration: none;
 }
 
 .header-menu-item:hover .item-label{
-	color: black;
+	color: #337ab7;
 }
 
 .header-menu-item:hover .header-menu-item-content{
@@ -4266,7 +4269,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header-menu-item .svg{
-	height: 35px;
 	display: block;
 	margin: 0 auto;
 }
