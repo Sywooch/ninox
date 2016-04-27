@@ -11,6 +11,14 @@ namespace frontend\models;
 
 class History extends \common\models\History{
 
+    public function getID(){
+        return $this->id;
+    }
+
+    public function setID($val){
+        $this->id = $val;
+    }
+
     public function rules()
     {
         return [
