@@ -9,6 +9,8 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Востановление пароля';
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
 ?>
 <div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="site-request-password-reset">

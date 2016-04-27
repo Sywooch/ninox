@@ -1,4 +1,9 @@
 <?php
+use bobroid\y2sp\ScrollPager;
+use frontend\helpers\PriceRuleHelper;
+use frontend\widgets\Breadcrumbs;
+use yii\helpers\Html;
+use yii\widgets\ListView;
 
 $this->title = \Yii::t('shop', 'Результаты поиска по запросу "{request}"', [
     'request'   =>  \Yii::$app->request->get("string")
@@ -8,11 +13,7 @@ $this->params['breadcrumbs'][] = [
     'label' =>  \Yii::t('shop', 'Результаты поиска')
 ];
 
-use bobroid\y2sp\ScrollPager;
-use frontend\helpers\PriceRuleHelper;
-use frontend\widgets\Breadcrumbs;
-use yii\helpers\Html;
-use yii\widgets\ListView;
+$this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
 
 $helper = new PriceRuleHelper();
 
