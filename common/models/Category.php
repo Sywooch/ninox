@@ -60,8 +60,51 @@ class Category extends \yii\db\ActiveRecord
         return $this->parents;
     }
 
+    public function getTranslation(){
+        return $this->hasOne(CategoryTranslation::className(), ['ID' => 'ID'])->andWhere(['language' => \Yii::$app->language]);
+    }
+
+    public static function findByLink($link){
+        return self::find()
+            ->joinWith(['translation'])
+            ->where([CategoryTranslation::tableName().'.link' => $link])
+            ->one();
+    }
+
     public function getPhotos(){
         return $this->hasMany(CategoryPhoto::className(), ['categoryID' => 'ID'])->orderBy('order');
+    }
+
+    public function getName(){
+        return $this->translation->Name;
+    }
+
+    public function getLink(){
+        return $this->translation->link;
+    }
+
+    public function getTitle(){
+        return $this->translation->title;
+    }
+
+    public function getTitleOrderAscending(){
+        return $this->translation->titleOrderAscending;
+    }
+
+    public function getTitleOrderDescending(){
+        return $this->translation->titleOrderDescending;
+    }
+
+    public function getTitleOrderNew(){
+        return $this->translation->titleOrderNew;
+    }
+
+    public function getDescription(){
+        return $this->translation->categoryDescription;
+    }
+
+    public function getEnabled(){
+        return empty($this->translation->enabled) ? 0 : $this->translation->enabled;
     }
 
     /**
@@ -341,8 +384,6 @@ class Category extends \yii\db\ActiveRecord
 	}
 
     public function afterFind(){
-        $this->link = urldecode($this->link);
-
         if(empty($this->viewOptions)){
             $this->viewOptions = '{}';
         }

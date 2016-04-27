@@ -77,7 +77,7 @@ echo Html::tag('div',
         ).
         Html::ul($category->subCategories, [
             'item'      =>  function($item){
-                return Html::tag('li', Html::a($item->Name, '/'.$item->link));
+                return Html::tag('li', Html::a($item->name, '/'.$item->link));
             },
             'class'     =>  'sub-categories'
         ]).
@@ -147,10 +147,10 @@ echo Html::tag('div',
             ]
         ]).
         Html::tag('div',
-            ($page > 1 ? '' : htmlspecialchars_decode($category->text2)).
+            ($page > 1 ? '' : htmlspecialchars_decode($category->description)).
             Html::tag('div',
                 Html::tag('p',
-                    $category->Name.
+                    $category->name.
                     ' '.
                     \Yii::t('shop',
                         'с доставкой в Киев, Харьков, Одессу, Львов, Днепропетровск, Донецк, Винницу, Луганск,

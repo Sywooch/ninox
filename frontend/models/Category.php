@@ -1,14 +1,18 @@
 <?php
+use common\models\CategoryTranslation;
+
 /**
  * Created by PhpStorm.
  * User: bobroid
  * Date: 14.10.15
  * Time: 17:25
+ * @property CategoryTranslation $translate
  */
 
 namespace frontend\models;
 
 use common\helpers\Formatter;
+use common\models\CategoryTranslation;
 use common\models\GoodOptionsValue;
 
 class Category extends \common\models\Category{
@@ -16,6 +20,13 @@ class Category extends \common\models\Category{
 	private $_filters;
 	private $_minPrice;
 	private $_maxPrice;
+	
+	public static function find(){
+		return parent::find()->with('translation');
+	}
+
+
+
 
     public function getItems(){
 	    $values = $names = [];
@@ -49,7 +60,7 @@ class Category extends \common\models\Category{
 		    $return->andWhere(['<=', '`goods`.`PriceOut1`', $priceMax]);
 	    }
 
-	    $return->andWhere(['`goodsgroups`.`enabled`' => 1])
+	    $return//->andWhere(['`goodsgroups`.`enabled`' => 1])
 		    ->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
 		    ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
 
@@ -77,7 +88,7 @@ class Category extends \common\models\Category{
 			$this->_minPrice = Good::find()
 				->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
 				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-				->andWhere(['`goodsgroups`.`enabled`' => 1])
+				//->andWhere(['`goodsgroups`.`enabled`' => 1])
 				->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
 				->min('PriceOut1');
 		}
@@ -90,7 +101,7 @@ class Category extends \common\models\Category{
 			$this->_maxPrice = Good::find()
 				->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
 				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-				->andWhere(['`goodsgroups`.`enabled`' => 1])
+				//->andWhere(['`goodsgroups`.`enabled`' => 1])
 				->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
 				->max('PriceOut1');
 		}
@@ -178,19 +189,19 @@ class Category extends \common\models\Category{
 	public function getMetaName(){
 		switch(\Yii::$app->request->get('order')){
 			case 'asc':
-				$name = empty($this->h1asc) ?
-					\Yii::t('shop', 'Дешёвые {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
-					$this->h1asc;
+				$name = empty($this->headerOrderAscending) ?
+					\Yii::t('shop', 'Дешёвые {name}',['name' => mb_strtolower($this->name, 'UTF-8')]) :
+					$this->headerOrderAscending;
 				break;
 			case 'desc':
-				$name = empty($this->h1desc) ?
-					\Yii::t('shop', 'Дорогие {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
-					$this->h1desc;
+				$name = empty($this->headerOrderDescending) ?
+					\Yii::t('shop', 'Дорогие {name}',['name' => mb_strtolower($this->name, 'UTF-8')]) :
+					$this->headerOrderDescending;
 				break;
 			case 'novinki':
-				$name = empty($this->h1new) ?
-					\Yii::t('shop', 'Новинки {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
-					$this->h1new;
+				$name = empty($this->headerOrderNew) ?
+					\Yii::t('shop', 'Новинки {name}',['name' => mb_strtolower($this->name, 'UTF-8')]) :
+					$this->headerOrderNew;
 				break;
 			default:
 				$name = empty($this->h1) ? $this->Name : $this->h1;
