@@ -130,6 +130,8 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
+        $this->saveGoodInViewed($good);
+
         $this->getBreadcrumbsLinks($good);
 
         (new PriceRuleHelper())->recalc($good, true);
@@ -137,6 +139,35 @@ class SiteController extends Controller
         return $this->render('_shop_item_card', [
             'good'  =>  $good
         ]);
+    }
+
+    /**
+     * @param $good Good
+     * @return bool
+     */
+    public function saveGoodInViewed($good){
+        $session = \Yii::$app->session;
+        $storedItems = [];
+
+        if(!$session->isActive){
+            $session->open();
+        }
+
+        if(isset($session['viewedGoods'])){
+            $storedItems = $session['viewedGoods'];
+        }
+
+        foreach($storedItems as $key => $item){
+            if($item == $good->ID){
+                unset($storedItems[$key]);
+            }
+        }
+
+        array_unshift($storedItems, $good->ID);
+
+        $session['viewedGoods'] = $storedItems;
+
+        return true;
     }
 
     /**
