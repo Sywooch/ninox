@@ -8,6 +8,7 @@
 
 namespace frontend\models;
 
+use backend\models\SborkaItem;
 use common\helpers\Formatter;
 use common\helpers\PriceHelper;
 use common\models\GoodOptions;
@@ -46,6 +47,20 @@ class Good extends \common\models\Good{
 			->where(['type' => 1])->orderBy(['date' => SORT_DESC])
 			->with('childs');
 	}
+
+    public function getRelatedProducts(){
+        return SborkaItem::find()
+            ->where(['in', 'orderID',
+                SborkaItem::find()
+                    ->select('orderID')
+                    ->where(['itemID' => $this->ID])
+            ])
+            ->andWhere("itemID != {$this->ID}")
+            ->groupBy('itemID')
+            ->orderBy('count(`itemID`) DESC')
+            ->limit(10)
+            ->all();
+    }
 
     public function getRealRetailPrice()
     {
