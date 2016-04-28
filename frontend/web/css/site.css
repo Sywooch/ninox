@@ -2426,7 +2426,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .content{
+    /*
     width: 1250px;
+    */
+	overflow: auto;
+	width: 1170px;
     margin: 0 auto;
 }
 
@@ -4386,14 +4390,18 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .header-menu-item-content-slider{
 	width: 388px;
+    /*
 	background: linear-gradient(to bottom right, #17cad8, #a21ae6);
+    */
 	height: 375px;
 	float: right;
 }
 
 .header-menu-item-content-slider img{
 	width: 100%;
+    /*
 	opacity: 0.5;
+    */
 }
 /*========* END HEADER MENU *=========*/
 
@@ -5007,6 +5015,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	font-family: unset;
 	text-align: center;
 	padding: 9px;
+	text-decoration: none;
 }
 
 .footer-menu{
