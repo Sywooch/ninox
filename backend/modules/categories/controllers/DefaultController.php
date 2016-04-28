@@ -91,12 +91,12 @@ class DefaultController extends Controller
         $category = Category::findOne(['ID' => $param]);
 
         if(!$category){
-            throw new NotFoundHttpException("Такая категория не найдена!");
+            throw new NotFoundHttpException("Категория с идентификатором {$param} не найдена!");
         }
 
         $b = $category->parents;
 
-        $breadcrumbs = [];
+        /*$breadcrumbs = [];
 
         if(!empty($b)){
             foreach($b as $bb){
@@ -105,9 +105,15 @@ class DefaultController extends Controller
                     'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
                 ];
             }
-        }
+        }*/
+
+
+        $this->getView()->params['breadcrumbs'] = $this->createBreadcrumbs($category, false);
+        $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Просмотр');
+
 
         if(\Yii::$app->request->post("Category") && \Yii::$app->request->get("act") == "edit"){
+
             $r = \Yii::$app->request;
             $c = Category::findOne(['ID' => $param]);
 
@@ -264,7 +270,7 @@ class DefaultController extends Controller
      *
      * @return array
      */
-    public function createBreadcrumbs($category = null){
+    public function createBreadcrumbs($category = null, $last = true){
         $breadcrumbs = [];
 
         $moduleBreadcrumb = [
@@ -294,7 +300,13 @@ class DefaultController extends Controller
             }
         }
 
-        $breadcrumbs[] = ['label' => $category->Name];
+        $lastBreadcrumb = ['label' => $category->Name];
+
+        if(!$last){
+            $lastBreadcrumb['url'] = Url::toRoute(['/categories', 'category' => $category->Code, 'smartFilter' => \Yii::$app->request->get("smartFilter")]);
+        }
+
+        $breadcrumbs[] = $lastBreadcrumb;
 
 
         return $breadcrumbs;
