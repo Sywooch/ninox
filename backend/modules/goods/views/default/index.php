@@ -10,7 +10,7 @@ if(!empty($nowCategory)){
     $this->title = 'Товары категории "'.$nowCategory->Name.'"';
 }
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -76,7 +76,7 @@ $(".categoryActions .shutdown").on('click', function(e){
 $(".categoryActions .canBuy").on('click', function(e){
     changeCategoryCanBuy(e);
 });
-SCRIPT;
+JS;
 
 $css = <<<'STYLE'
 .dropdown li{

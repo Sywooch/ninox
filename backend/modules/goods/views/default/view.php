@@ -22,40 +22,8 @@ dl dt{
 
 STYLE;
 
-$js = <<<'SCRIPT'
-var changeState = function(e){
-    var target = e.currentTarget;
-    $.ajax({
-        type: 'POST',
-        url: '/goods/changestate',
-        data: {
-            'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
-        },
-        success: function(data){
-            if(data.length >= "1"){
-                target.innerHTML = data == "1" ? "Отключить" : "Включить";
-                if(document.querySelector("#good-show_img") != null && document.querySelector("#good-show_img") != undefined){
-                    var el = document.querySelector("#good-show_img");
-                    el.querySelector("input[value='" + data + "']").checked = true;
-                }
-            }
-        }
-    });
-}, changeTrashState = function(e){
-    var target = e.currentTarget;
-    $.ajax({
-        type: 'POST',
-        url: '/goods/workwithtrash',
-        data: {
-            'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
-        },
-        success: function(data){
-            if(data.length >= "1"){
-                target.innerHTML = data == "1" ? "Восстановить" : "Удалить";
-            }
-        }
-    });
-}, hideAdditionalPhotos = function(){
+$js = <<<'JS'
+var hideAdditionalPhotos = function(){
     var a = document.querySelectorAll("#additionalPhotos div.image-thumb-mask"),
         elem = document.createElement('div'),
         button = document.createElement('button');
@@ -84,11 +52,8 @@ var changeState = function(e){
     }
 };
 
-document.querySelector("#changeState").addEventListener('click', changeState, false);
-document.querySelector("#changeTrashState").addEventListener('click', changeTrashState, false);
-
 hideAdditionalPhotos();
-SCRIPT;
+JS;
 
 $this->registerCss($css);
 $this->registerJs($js);

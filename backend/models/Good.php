@@ -41,6 +41,30 @@ class Good extends \common\models\Good{
         return $this->_options = $query->all();
     }
 
+    public function getCategory(){
+        return $this->hasOne(Category::className(), ['GroupID' => 'ID']);
+    }
+
+    public function setDeleted($val){
+        $this->Deleted = $val;
+    }
+
+    public function getDeleted(){
+        return $this->Deleted;
+    }
+
+    public function setEnabled($val){
+        $this->show_img = $val;
+    }
+
+    public function getEnabled(){
+        return $this->show_img;
+    }
+
+    public function getName(){
+        return $this->Name;
+    }
+
     /**
      * Добавляет фото
      *

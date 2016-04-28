@@ -153,6 +153,8 @@ $('body').on('click', function(e){
 	if(!$(e.target).closest('.phone-number').length && $(e.target).parents('.popover').length == 0){
 		$(".popover").popoverX('hide');
 	}
+}).on('complete', '#registrationForm #signupform-phone', function(){ 
+	$("#registrationForm #countryCode").val($(this).inputmask("getmetadata").cc); 
 });
 
 JS;
@@ -305,7 +307,7 @@ $this->beginPage();
 								'dataset' => [
 									[
 										'remote' => [
-											'url' => Url::to(['/search']).'?string=%QUERY',
+											'url' => Url::to(['/search']).'/%QUERY',
 											'wildcard' => '%QUERY'
 										],
 										'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",

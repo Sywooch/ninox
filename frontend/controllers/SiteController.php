@@ -16,6 +16,7 @@ use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
+use frontend\models\SubscribeForm;
 use frontend\models\UsersInterestsForm;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
 use kartik\form\ActiveForm;
@@ -129,6 +130,8 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
+        $this->saveGoodInViewed($good);
+
         $this->getBreadcrumbsLinks($good);
 
         (new PriceRuleHelper())->recalc($good, true);
@@ -136,6 +139,35 @@ class SiteController extends Controller
         return $this->render('_shop_item_card', [
             'good'  =>  $good
         ]);
+    }
+
+    /**
+     * @param $good Good
+     * @return bool
+     */
+    public function saveGoodInViewed($good){
+        $session = \Yii::$app->session;
+        $storedItems = [];
+
+        if(!$session->isActive){
+            $session->open();
+        }
+
+        if(isset($session['viewedGoods'])){
+            $storedItems = $session['viewedGoods'];
+        }
+
+        foreach($storedItems as $key => $item){
+            if($item == $good->ID){
+                unset($storedItems[$key]);
+            }
+        }
+
+        array_unshift($storedItems, $good->ID);
+
+        $session['viewedGoods'] = $storedItems;
+
+        return true;
     }
 
     /**
@@ -453,12 +485,12 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
             'captcharegistermodal' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'class'         =>  'yii\captcha\CaptchaAction',
+                'transparent'   =>  true,
             ],
             'captchacallbackmodal' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'class'         =>  'yii\captcha\CaptchaAction',
+                'transparent'   =>  true,
             ],
         ];
     }
@@ -574,11 +606,18 @@ class SiteController extends Controller
             return $goods;
         }
 
+        $pageParams = \Yii::$app->request->get();
+        unset($pageParams['_pjax']);
+        unset($pageParams['offset']);
+
         return $this->render('searchResults', [
             'goods' =>  new ActiveDataProvider([
                 'query' =>  $goodsQuery,
                 'pagination'    =>  [
-                    'pageSize'  =>  '15'
+                    'pageSize'          =>  '20',
+                    'forcePageParam'    =>  false,
+                    'pageSizeParam'     =>  false,
+                    'params'            =>  $pageParams
                 ]
             ])
         ]);
@@ -596,7 +635,21 @@ class SiteController extends Controller
         return $this->redirect(\Yii::$app->request->referrer);
     }
 
+    public function actionSubscribe(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
 
+        $model = new SubscribeForm();
+
+        \Yii::$app->response->format = 'json';
+
+        if($model->load(\Yii::$app->request->post()) && $model->validate() && $model->subscribe()){
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Signs user up.
@@ -615,10 +668,12 @@ class SiteController extends Controller
         if(\Yii::$app->request->isAjax && \Yii::$app->request->post("ajax") == 'registrationForm'){
             \Yii::$app->response->format = 'json';
 
-            return ActiveForm::validate($model);
+            return ActiveForm::validate($model, [
+                'name', 'surname', 'email', 'password', 'phone'
+            ]);
         }
 
-        if ($model->validate() && $user = $model->signup()) {
+        if ($user = $model->signup()) {
             if(Yii::$app->getUser()->login($user)) return $this->goHome();
         }
 
