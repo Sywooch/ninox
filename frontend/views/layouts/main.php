@@ -410,7 +410,7 @@ $this->beginPage();
 		<div class="footer">
 			<div class="blue-line">
 				<div class="footer-content">
-					<span class="phone-numbers">044 123 45 67 • 067 123 45 67</span>
+					<span class="phone-numbers"> 044 578 20 16 • 067 507 87 73</span>
 					<div class="hours">
 						<span>
 							Время работы call-центра:

@@ -3705,6 +3705,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .header .input-style-main{
 	float: left;
 	padding-left: 50px;
+	min-width: 450px;
 }
 
 .under-menu .logo{
@@ -3712,6 +3713,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: 250px;
 	height: 80px;
 	background: url("/img/site/logo.png") no-repeat;
+	transition-property: width, background;
+	transition-duration: 1s, 1s;
 }
 
 .sticky .logo{
@@ -3720,6 +3723,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: 160px;
 	height: 23px;
 	margin-top: 6px;
+	transition-property: height, width, background;
+	transition-duration: 1s, 1s, 1s;
 }
 
 .tt-scrollable-menu{
@@ -3760,11 +3765,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 18px;
 	color: #8b8b8b;
 	margin-right: 5px;
+	transition-property: width, margin-top, delay;
+	transition-duration: 1s, 1s, 1s;
 }
 
 .sticky .input-style-main input[type='text'] {
 	width: 575px;
 	margin-top: 0px;
+	transition-property: width, margin-top, delay;
+	transition-duration: 1s, 1s, 1s;
 }
 
 .input-style-main .small-button {
@@ -3786,15 +3795,30 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	box-shadow: inset 0px 1px 5px 0px white;
 	background: #29a1e0;
 	margin-top: 18px;
+	opacity: 1;
+	transition-property: width, opacity, visibility;
+	transition-duration: 1s, 2s, 2s;
+	transition-delay: 1s;
 }
 
 .sticky .blue-button{
+    /*
 	display: none;
+    */
+	visibility: hidden;
+	width: 0px;
+	opacity: 0;
+	transition-property: width, opacity, visibility, margin-top;
+	transition-duration: 1s, 1s, 1s, 1.5s;
+	margin-top: 0px;
+	transition-delay: 0s;
 }
 
 .header .phone-number{
 	display: inline-block;
 	padding: 20px 0 0 50px;
+	transition: padding;
+	transition-duration: 1.5s;
 }
 
 .header .sticky .phone-number .popover.bottom{
@@ -3824,6 +3848,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .sticky .phone-number{
 	padding-top: 3px;
+	transition: padding;
+	transition-duration: 1s;
 }
 
 .header .phone-number .number{
