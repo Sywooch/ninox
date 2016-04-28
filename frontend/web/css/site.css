@@ -1167,10 +1167,26 @@ h2{
 	margin: 25px 0;
 }
 
+/*
+
+TODO: fix my merge, pls (begin)
+
+*/
+
+.category .category-description ul {
+	list-style: square inside none;
+}
+
 .category .ias-trigger, .category .ias-noneleft{
 	width: 100%;
 	float: left;
 }
+
+/*
+
+TODO: fix my merge, pls (end)
+
+*/
 
 /*============* END CATEGORY STYLE *==============*/
 
@@ -2431,7 +2447,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .content{
+    /*
     width: 1250px;
+    */
+	overflow: auto;
+	width: 1170px;
     margin: 0 auto;
 }
 
@@ -3685,6 +3705,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	width: 1172px;
 	margin: auto;
+	overflow: hidden;
 }
 
 .sticky-wrapper:not(.sticky){
@@ -3699,11 +3720,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .sticky-wrapper.sticky .under-menu-content{
 	padding-top: 8px;
 	height: 50px;
+	transition: height 1s;
 }
 
 .header .input-style-main{
 	float: left;
 	padding-left: 50px;
+	min-width: 450px;
 }
 
 .under-menu .logo{
@@ -3711,6 +3734,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: 250px;
 	height: 80px;
 	background: url("/img/site/logo.png") no-repeat;
+	transition-property: width, background;
+	transition-duration: 1s, 1s;
 }
 
 .sticky .logo{
@@ -3719,6 +3744,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: 160px;
 	height: 23px;
 	margin-top: 6px;
+	transition-property: height, width, background;
+	transition-duration: 1s, 1s, 1s;
 }
 
 .tt-scrollable-menu{
@@ -3759,11 +3786,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 18px;
 	color: #8b8b8b;
 	margin-right: 5px;
+	transition-property: width, margin-top, delay;
+	transition-duration: 1s, 1s, 1s;
 }
 
 .sticky .input-style-main input[type='text'] {
 	width: 575px;
 	margin-top: 0px;
+	transition-property: width, margin-top, delay;
+	transition-duration: 1s, 1s, 1s;
 }
 
 .input-style-main .small-button {
@@ -3785,15 +3816,30 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	box-shadow: inset 0px 1px 5px 0px white;
 	background: #29a1e0;
 	margin-top: 18px;
+	opacity: 1;
+	transition-property: width, opacity, visibility;
+	transition-duration: 1s, 2s, 2s;
+	transition-delay: 1s;
 }
 
 .sticky .blue-button{
+    /*
 	display: none;
+    */
+	visibility: hidden;
+	width: 0px;
+	opacity: 0;
+	transition-property: width, opacity, visibility, margin-top;
+	transition-duration: 1s, 1s, 1s, 1.5s;
+	margin-top: 0px;
+	transition-delay: 0s;
 }
 
 .header .phone-number{
 	display: inline-block;
 	padding: 20px 0 0 50px;
+	transition: padding;
+	transition-duration: 1.5s;
 }
 
 .header .sticky .phone-number .popover.bottom{
@@ -3823,6 +3869,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .sticky .phone-number{
 	padding-top: 3px;
+	transition: padding;
+	transition-duration: 1s;
 }
 
 .header .phone-number .number{
@@ -4100,8 +4148,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	position: relative;
 }
 
-.sticky .header-menu{
-	height: 45px;
+.sticky-wrapper{
+	height: auto !important;
+	margin-bottom: 30px;
 }
 
 .sticky .header-menu:after{
@@ -4109,23 +4158,29 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .sticky .header-menu-item{
-	height: 45px;
+	height: 100%;
 }
 
 .sticky .header-menu-item:hover{
-	height: 45px;
+	height: 100%;
 }
 
 .sticky .header-menu-content{
-	height: 45px;
+	height: 100%;
 }
 
 .sticky .header-menu-items{
-	height: 45px;
+	height: 100%;
 }
 
 .sticky .header-menu-item .item-label{
-	display: none;
+	display: block;
+	height: 0px;
+	visibility: hidden;
+	transition-property: height, opacity,visibility, delay;
+	transition-duration: 1s, 0.5s, 0.5s, 0s;
+	opacity: 0;
+	vertical-align: middle;
 }
 
 .sticky .header-menu-item-content a{
@@ -4148,6 +4203,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: -o-linear-gradient(#5ec0f3, #018ad2); /* For Opera 11.1 to 12.0 */
 	background: -moz-linear-gradient(#5ec0f3, #018ad2); /* For Firefox 3.6 to 15 */
 	background: linear-gradient(#5ec0f3, #018ad2); /* Standard syntax */
+	height: 78px;
+	-webkit-transition: height 1s;
+	-moz-transition: height 1s;
+	transition: height 1s;
+}
+
+.sticky .header-menu{
+	height: 45px;
 }
 
 .header-menu:after{
@@ -4161,7 +4224,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .header-menu-items{
 	width: 1172px;
-	height: 77px;
+	height: 100%;
 	margin: auto;
 	display: table;
 	table-layout: fixed;
@@ -4175,10 +4238,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
 	display: table-cell; /* эмуляция ячейки таблицы */
 	text-align: center;
-	height: 50px; /* высота пункта */
+	height: 100%; /* высота пункта */
 	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
 	vertical-align: bottom;
 	cursor: pointer;
+}
+
+.header-menu-item span{
+	display: table-cell;
 }
 
 .header-menu-item:hover{
@@ -4189,31 +4256,61 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
 	display: table-cell; /* эмуляция ячейки таблицы */
 	text-align: center;
-	height: 77px; /* высота пункта */
+	height: 100%; /* высота пункта */
 	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
 	vertical-align: bottom;
 }
 
 .header-menu-items .item-label{
-	width: 1000px; /* вот это заставляет наши псевдоячейки растянуться должным образом */
-	display: table-cell; /* без этого тоже никак */
-	vertical-align: middle; /* вертикальное выравнивание текста */
+	/*width: 1000px; !* вот это заставляет наши псевдоячейки растянуться должным образом *!
+	display: table-cell; !* без этого тоже никак *!
+	vertical-align: middle; !* вертикальное выравнивание текста *!
 	font-size: 13px;
-	/*height: 38px;
+	!*height: 38px;
 	>что было до изменений<
-	padding-bottom: 10px;*/
+	padding-bottom: 10px;*!
 	color: white;
 	padding: 5px;
 	line-height: 12px;
 	text-decoration: none;
-	/*изменения на 12.03.16*/
+	!*изменения на 12.03.16*!
 	height: 32px;
 	padding-top: 0px;
-	/*конец изменений, если ничего не поедет в дальнейшем оптимизировать паддинги*/
+	!*конец изменений, если ничего не поедет в дальнейшем оптимизировать паддинги*!*/
+    /*
+	width: 1000px;
+    */
+	display: block;
+	vertical-align: middle;
+	font-size: 13px;
+	color: white;
+    /*
+	padding: 5px;
+    */
+	line-height: 12px;
+    /*
+	text-decoration: none;
+    */
+	height: 32px;
+    /*
+	padding-top: 0px;
+    */
+/*	display: block;
+	transition: height 1s;
+	transition-delay: 0.1s;
+	transition: opacity 1s;*/
+	transition-property: height, delay, opacity;
+	transition-duration: 1s, 1s, 1s;
+	opacity: 1;
+	margin-top: 5px;
+}
+
+.header-menu-items a{
+	text-decoration: none;
 }
 
 .header-menu-item:hover .item-label{
-	color: black;
+	color: #337ab7;
 }
 
 .header-menu-item:hover .header-menu-item-content{
@@ -4223,7 +4320,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header-menu-item .svg{
-	height: 35px;
 	display: block;
 	margin: 0 auto;
 }
@@ -4341,14 +4437,18 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .header-menu-item-content-slider{
 	width: 388px;
+    /*
 	background: linear-gradient(to bottom right, #17cad8, #a21ae6);
+    */
 	height: 375px;
 	float: right;
 }
 
 .header-menu-item-content-slider img{
 	width: 100%;
+    /*
 	opacity: 0.5;
+    */
 }
 /*========* END HEADER MENU *=========*/
 
@@ -4962,6 +5062,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	font-family: unset;
 	text-align: center;
 	padding: 9px;
+	text-decoration: none;
 }
 
 .footer-menu{

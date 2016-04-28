@@ -72,6 +72,12 @@
     height: auto;
 }
 
+.item-photos .slick-slide img{
+    margin: auto;
+    width: auto;
+    max-width: 475px;
+}
+
 .item-info{
     width: 55%;
     float: left;
