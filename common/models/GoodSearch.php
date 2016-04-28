@@ -15,7 +15,15 @@ class GoodSearch extends Good{
 
     public function search($params){
 
-        $query = Good::find()->where(['GroupID' => $params['catID']]);
+        $query = Good::find();
+
+        if(!empty($params['category'])){
+            if(is_array($params['category'])){
+                $query->andWhere(['in', 'GroupID', $params['category']]);
+            }else{
+                $query->andWhere(['GroupID' => $params['category']]);
+            }
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,

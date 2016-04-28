@@ -20,7 +20,7 @@ class Category extends \common\models\Category
 {
 
     public function getGoods(){
-        return Good::findAll(['GroupID' => $this->ID]);
+        return $this->hasMany(Good::className(), ['GroupID' => 'ID']);
     }
 
     public function getChilds(){
@@ -30,6 +30,10 @@ class Category extends \common\models\Category
             ->where(['like', 'Code', $this->Code.'%', false])
             ->andWhere("LENGTH(`Code`) = '{$len}'")
             ->all();
+    }
+
+    public function getName(){
+        return $this->name;
     }
 
     /**
