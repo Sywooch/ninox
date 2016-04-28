@@ -486,10 +486,12 @@ class SiteController extends Controller
             ],
             'captcharegistermodal' => [
                 'class'         =>  'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
                 'transparent'   =>  true,
             ],
             'captchacallbackmodal' => [
                 'class'         =>  'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
                 'transparent'   =>  true,
             ],
         ];
