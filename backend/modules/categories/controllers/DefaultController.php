@@ -94,46 +94,35 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Категория с идентификатором {$param} не найдена!");
         }
 
-        $b = $category->parents;
-
-        /*$breadcrumbs = [];
-
-        if(!empty($b)){
-            foreach($b as $bb){
-                $breadcrumbs[] = [
-                    'label' =>  $bb->Name,
-                    'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
-                ];
-            }
-        }*/
-
-
         $this->getView()->params['breadcrumbs'] = $this->createBreadcrumbs($category, false);
-        $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Просмотр');
 
+        if(\Yii::$app->request->get('act') == 'edit'){
+            $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Редактирование');
 
-        if(\Yii::$app->request->post("Category") && \Yii::$app->request->get("act") == "edit"){
+            if(\Yii::$app->request->post("Category")){
+                $r = \Yii::$app->request;
+                $c = Category::findOne(['ID' => $param]);
 
-            $r = \Yii::$app->request;
-            $c = Category::findOne(['ID' => $param]);
-
-            if(isset($r->post("Category")['keywords'])){
-                $r->post("Category")['keywords'] = implode(", ", $r->post("Category")['keywords']);
-            }
-
-            foreach($r->post("Category") as $k => $v){
-                if($k == 'keywords'){
-                    $k = 'keyword';
-                    $v = implode(', ', $v);
+                if(isset($r->post("Category")['keywords'])){
+                    $r->post("Category")['keywords'] = implode(", ", $r->post("Category")['keywords']);
                 }
-                if(isset($c->$k) && (!empty($v) || $v == "0")){
-                    $c->$k = $v;
-                }else{
-                    $c->$k = " ";
-                }
-            }
 
-            $c->save(false);
+                foreach($r->post("Category") as $k => $v){
+                    if($k == 'keywords'){
+                        $k = 'keyword';
+                        $v = implode(', ', $v);
+                    }
+                    if(isset($c->$k) && (!empty($v) || $v == "0")){
+                        $c->$k = $v;
+                    }else{
+                        $c->$k = " ";
+                    }
+                }
+
+                $c->save(false);
+            }
+        }else{
+            $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Просмотр');
         }
 
         return $this->render(\Yii::$app->request->get("act") == "edit" ? 'edit' : 'view', [

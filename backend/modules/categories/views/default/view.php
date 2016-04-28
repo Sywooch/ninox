@@ -1,19 +1,4 @@
 <?php
-$this->title = "Категория \"".$category->Name.'"';
-$this->params['breadcrumbs'][] = [
-    'label' =>  "Категории",
-    'url'   =>  '/categories'
-];
-
-if(!empty($breadcrumbs)){
-    $breadcrumbs = array_reverse($breadcrumbs);
-    foreach($breadcrumbs as $bb){
-        $this->params['breadcrumbs'][] = $bb;
-    }
-}
-
-$this->params['breadcrumbs'][] = $category->Name;
-
 $css = <<<'STYLE'
 .tab-content .good-table tr:first-child td{
     border-top: 0px;
