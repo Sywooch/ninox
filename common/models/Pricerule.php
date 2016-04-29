@@ -73,6 +73,25 @@ class Pricerule extends \yii\db\ActiveRecord
 		}
 	}
 
+	public function getPossibleTerms(){
+		return [
+			'GoodGroup', 'Date', 'WithoutBlyamba', 'DocumentSum'
+		];
+	}
+
+	public function getTermsPossibleValues(){
+		return [
+			'GoodGroup'	=>	[],
+			'Date'	=>	[],
+			'WithoutBlyamba'	=>	[],
+			'DocumentSum'	=>	[],
+		];
+	}
+
+	public function getTermPossibleValue(){
+
+	}
+
     /**
      * @inheritdoc
      */
