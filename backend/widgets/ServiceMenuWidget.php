@@ -29,28 +29,28 @@ class ServiceMenuWidget extends Widget{
     public $dateButtons = [
         [
             'label'     =>  'Сегодня',
-            'link'  =>  '',
+            'link'      =>  'today',
             'options'   =>  [
                 'class' =>  'btn btn-default btn-sm',
             ]
         ],
         [
             'label'     =>  'Неделя',
-            'link'  =>  'thisweek',
+            'link'      =>  'thisweek',
             'options'   =>  [
                 'class' =>  'btn btn-default btn-sm',
             ]
         ],
         [
             'label'     =>  'Месяц',
-            'link'  =>  'thismonth',
+            'link'      =>  'thismonth',
             'options'   =>  [
                 'class' =>  'btn btn-default btn-sm',
             ]
         ],
         [
             'label'     =>  'Всё время',
-            'link'  =>  'alltime',
+            'link'      =>  '',
             'options'   =>  [
                 'class' =>  'btn btn-default btn-sm',
             ]

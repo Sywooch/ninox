@@ -342,15 +342,15 @@ $this->beginPage();
 										</div>
 										<div class="city-number">
 											<span class="city">Киев</span>
-											<span>044 232 82 20</span>
-											<span class="city">Одесса</span>
-											<span>048 735 10 80</span>
+											<span>044 578 20 16</span>
+											<!--<span class="city">Одесса</span>
+											<span>048 735 10 80</span>-->
 											<span class="city">моб. МТС</span>
 											<span>050 677 54 56</span>
 											<span class="city">моб. Киевстар</span>
 											<span>067 507 87 73</span>
 											<span class="city">моб. Life</span>
-											<span>063 334 49 15</span>
+											<span>063 578 20 16	</span>
 										</div>
 										<div class="work-time">
 											<span class="">
@@ -412,7 +412,7 @@ $this->beginPage();
 		<div class="footer">
 			<div class="blue-line">
 				<div class="footer-content">
-					<span class="phone-numbers">044 123 45 67 • 067 123 45 67</span>
+					<span class="phone-numbers"> 044 578 20 16 • 067 507 87 73</span>
 					<div class="hours">
 						<span>
 							Время работы call-центра:

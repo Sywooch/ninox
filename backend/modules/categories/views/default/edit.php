@@ -99,7 +99,7 @@ $form = ActiveForm::begin([
         <div class="btn-group pull-right" role="group" aria-label="...">
             <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->canBuy == "1" ? "Не продавать товары" : "Продавать товары"?></button>
             <button type="button" class="btn btn-info" data-attribute-categoryID="<?=$category->ID?>"><?=$category->enabled == "1" ? "Выключить" : "Включить"?></button>
-            <a href="/goods/showcategory/<?=$category->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
+            <a href="/categories/view/<?=$category->ID?>" type="button" class="btn btn-info">В режим просмотра</a>
         </div>
         <div class="clearfix"></div>
     </div>
@@ -185,7 +185,7 @@ $form = ActiveForm::begin([
                             <tr>
                                 <td>Состояние категории</td>
                                 <td>
-                                    <?=$form->field($category, 'menu_show', [
+                                    <?=$form->field($category, 'enabled', [
                                         //'inline'    =>  true,
                                         //'enableLabel'   =>  false
                                     ])->radioList([

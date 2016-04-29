@@ -91,43 +91,38 @@ class DefaultController extends Controller
         $category = Category::findOne(['ID' => $param]);
 
         if(!$category){
-            throw new NotFoundHttpException("Такая категория не найдена!");
+            throw new NotFoundHttpException("Категория с идентификатором {$param} не найдена!");
         }
 
-        $b = $category->parents;
+        $this->getView()->params['breadcrumbs'] = $this->createBreadcrumbs($category, false);
 
-        $breadcrumbs = [];
+        if(\Yii::$app->request->get('act') == 'edit'){
+            $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Редактирование');
 
-        if(!empty($b)){
-            foreach($b as $bb){
-                $breadcrumbs[] = [
-                    'label' =>  $bb->Name,
-                    'url'   =>  Url::toRoute(['/goods', 'category' => $bb->Code])
-                ];
-            }
-        }
+            if(\Yii::$app->request->post("Category")){
+                $r = \Yii::$app->request;
+                $c = Category::findOne(['ID' => $param]);
 
-        if(\Yii::$app->request->post("Category") && \Yii::$app->request->get("act") == "edit"){
-            $r = \Yii::$app->request;
-            $c = Category::findOne(['ID' => $param]);
-
-            if(isset($r->post("Category")['keywords'])){
-                $r->post("Category")['keywords'] = implode(", ", $r->post("Category")['keywords']);
-            }
-
-            foreach($r->post("Category") as $k => $v){
-                if($k == 'keywords'){
-                    $k = 'keyword';
-                    $v = implode(', ', $v);
+                if(isset($r->post("Category")['keywords'])){
+                    $r->post("Category")['keywords'] = implode(", ", $r->post("Category")['keywords']);
                 }
-                if(isset($c->$k) && (!empty($v) || $v == "0")){
-                    $c->$k = $v;
-                }else{
-                    $c->$k = " ";
-                }
-            }
 
-            $c->save(false);
+                foreach($r->post("Category") as $k => $v){
+                    if($k == 'keywords'){
+                        $k = 'keyword';
+                        $v = implode(', ', $v);
+                    }
+                    if(isset($c->$k) && (!empty($v) || $v == "0")){
+                        $c->$k = $v;
+                    }else{
+                        $c->$k = " ";
+                    }
+                }
+
+                $c->save(false);
+            }
+        }else{
+            $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Просмотр');
         }
 
         return $this->render(\Yii::$app->request->get("act") == "edit" ? 'edit' : 'view', [
@@ -264,7 +259,7 @@ class DefaultController extends Controller
      *
      * @return array
      */
-    public function createBreadcrumbs($category = null){
+    public function createBreadcrumbs($category = null, $last = true){
         $breadcrumbs = [];
 
         $moduleBreadcrumb = [
@@ -294,7 +289,13 @@ class DefaultController extends Controller
             }
         }
 
-        $breadcrumbs[] = ['label' => $category->Name];
+        $lastBreadcrumb = ['label' => $category->Name];
+
+        if(!$last){
+            $lastBreadcrumb['url'] = Url::toRoute(['/categories', 'category' => $category->Code, 'smartFilter' => \Yii::$app->request->get("smartFilter")]);
+        }
+
+        $breadcrumbs[] = $lastBreadcrumb;
 
 
         return $breadcrumbs;
