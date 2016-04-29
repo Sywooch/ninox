@@ -2,6 +2,9 @@
 
 namespace frontend\modules\account\controllers;
 
+use common\models\GoodsComment;
+use frontend\models\CustomerWishlist;
+use frontend\models\Good;
 use frontend\models\SborkaItem;
 use frontend\models\History;
 use frontend\modules\account\models\ChangePasswordForm;
@@ -13,6 +16,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
@@ -60,6 +64,41 @@ class DefaultController extends Controller
                     ]
                 ])
             ]);
+    }
+
+    public function actionDiscount(){
+        return $this->render('discount');
+    }
+
+    public function actionWishList(){
+        $wishlistItems = ArrayHelper::getColumn(CustomerWishlist::find()
+        ->select('itemID')
+        ->where(['customerID' => \Yii::$app->user->identity->ID])
+        ->asArray()
+        ->all(), 'itemID');
+
+        return $this->render('wishList', [
+            'items' =>  new ActiveDataProvider([
+                'query' =>  Good::find()->where(['in', 'ID', $wishlistItems])
+            ])
+        ]);
+    }
+
+    public function actionReviews(){
+        return $this->render('reviews', [
+            'reviews' =>  new ActiveDataProvider([
+                'query' =>  GoodsComment::find()->where(['customerID' => \Yii::$app->user->identity->ID])
+            ])
+        ]);
+    }
+
+    public function actionReturns(){
+        return $this->render('returns');
+    }
+    
+    public function actionYarmarkaMasterov(){
+        throw new NotFoundHttpException("Ярмарка мастеров не работает");
+        return $this->render('yarmarkaMasterov');
     }
 
     public function actionPasswordChange(){

@@ -276,7 +276,7 @@ $this->beginPage();
 						<?php if(\Yii::$app->user->isGuest){
 							echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
 						}else{
-							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('account')).Html::a('Выйти', Url::to('/logout'), [
+							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('/account')).Html::a('Выйти', Url::to('/logout'), [
 									'data-method'   =>  'post'
 								]), ['class' => 'items account-icon']);
 						} ?>

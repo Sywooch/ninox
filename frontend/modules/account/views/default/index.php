@@ -30,11 +30,11 @@ echo Html::beginTag('div', ['class' => 'content']),
                 ],
                 [
                     'label' =>  'Возвраты',
-                    'href'  =>  '/account/123'
+                    'href'  =>  '/account/returns'
                 ],
                 [
                     'label' =>  'Ярмарка мастеров',
-                    'href'  =>  '/account/mas'
+                    'href'  =>  '/account/yarmarka-masterov'
                 ],
             ]
         ]),
