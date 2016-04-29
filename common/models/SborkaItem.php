@@ -36,7 +36,7 @@ class SborkaItem extends \yii\db\ActiveRecord
 
     public $price;
     public $addedCount = 0;
-
+    
     public function getGood(){
         return $this->hasOne(Good::className(), ['ID' => 'itemID']);
     }
@@ -46,6 +46,7 @@ class SborkaItem extends \yii\db\ActiveRecord
     }
 
     public function getPhoto(){
+        \Yii::trace($this->itemID);
         return $this->good->photo;
     }
 

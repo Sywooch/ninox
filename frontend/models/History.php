@@ -19,6 +19,10 @@ class History extends \common\models\History{
         $this->id = $val;
     }
 
+    public function getItems($returnAll = true){
+        return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
+    }
+
     public function rules()
     {
         return [

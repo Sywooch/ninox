@@ -2,7 +2,7 @@
 
 namespace frontend\modules\account\controllers;
 
-use common\models\SborkaItem;
+use frontend\models\SborkaItem;
 use frontend\models\History;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
