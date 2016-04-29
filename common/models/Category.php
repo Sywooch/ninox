@@ -60,13 +60,32 @@ class Category extends \yii\db\ActiveRecord
         return $this->parents;
     }
 
+    public function getTranslations(){
+        return $this->hasMany(CategoryTranslation::className(), ['ID' => 'ID']);
+    }
+
     public function getTranslation(){
-        return $this->hasOne(CategoryTranslation::className(), ['ID' => 'ID'])->andWhere(['language' => \Yii::$app->language]);
+        return $this->getTranslationByKey(\Yii::$app->language);
+    }
+
+    public function getTranslationByKey($key){
+        $defaultLang = 'ru_RU';
+        $defaultLangModel = new CategoryTranslation();
+        foreach($this->translations as $translation){
+            if($translation->language == $defaultLang){
+                $defaultLangModel = $translation;
+            }
+            if($translation->language == $key){
+                return $translation;
+            }
+        }
+
+        return $defaultLangModel;
     }
 
     public static function findByLink($link){
         return self::find()
-            ->joinWith(['translation'])
+            ->joinWith(['translations'])
             ->where([CategoryTranslation::tableName().'.link' => $link])
             ->one();
     }
@@ -76,6 +95,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function getName(){
+        //echo '<pre>';var_dump($this->translation);die();
         return $this->translation->Name;
     }
 
@@ -105,6 +125,10 @@ class Category extends \yii\db\ActiveRecord
 
     public function getEnabled(){
         return empty($this->translation->enabled) ? 0 : $this->translation->enabled;
+    }
+
+    public function getSequence(){
+        return empty($this->translation->sequence) ? 0 : $this->translation->sequence;
     }
 
     /**
@@ -253,7 +277,7 @@ class Category extends \yii\db\ActiveRecord
 
     public function getSubCategories(){
         $s = strlen($this->Code) + 3;
-        return Category::find()->where(['like', 'Code', $this->Code.'%', false])->andWhere(['LENGTH(`Code`)' => $s])->all();
+        return $this::find()->where(['like', 'Code', $this->Code.'%', false])->andWhere(['LENGTH(`Code`)' => $s])->all();
     }
 
     public static function getParentCategory($identifier){
@@ -351,36 +375,47 @@ class Category extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-	static function buildTree(array &$elements, $parentCode = ''){
-		$branch = [];
+	static function buildTree($elements){
+		$tree = [];
 
 		foreach($elements as $element){
-
 			if($element->enabled == 1){
-				if(substr($element->Code, 0, -3) == $parentCode){
-					$branch[$element->Code]['label'] = $element->Name;
-					$branch[$element->Code]['url'] = $element->link;
+				if(strlen($element->Code) == 3){
+                    $tree[$element->Code]['label'] = $element->name;
+                    $tree[$element->Code]['url'] = $element->link;
+                    $tree[$element->Code]['sequence'] = $element->sequence;
 
                     if(!empty($element->imgSrc)){
-                        $branch[$element->Code]['imgSrc'] = $element->imgSrc;
+                        $tree[$element->Code]['imgSrc'] = $element->imgSrc;
                     }
 
                     if(!empty($element->photos)){
-                        $branch[$element->Code]['slider'] = $element->photos;
+                        $tree[$element->Code]['slider'] = $element->photos;
                     }
-
-					$items = self::buildTree($elements, $element->Code);
-					if($items && $parentCode == ''){
-						//array_unshift($items, ['label' => $element->Name, 'url' => $element->link, 'options' => ['class' => 'see-all']]);
-						$branch[$element->Code]['items'] = $items;
-						$branch[$element->Code]['url'] = $element->link;
-					}
-				}
+				}elseif(strlen($element->Code) == 6 && isset($tree[substr($element->Code, 0, -3)])){
+                    $tree[substr($element->Code, 0, -3)]['items'][] = [
+                        'label'     =>  $element->name,
+                        'url'       =>  $element->link,
+                        'sequence'  =>  $element->sequence
+                    ];
+                }
 			}
-
 		}
 
-		return $branch;
+        uasort($tree, function($a, $b){
+            return $a['sequence'] > $b['sequence'];
+        });
+
+        foreach($tree as $key => $branch){
+            if(isset($branch['items']) && is_array($branch['items'])){
+                uasort($branch['items'], function($a, $b){
+                    return $a['sequence'] > $b['sequence'];
+                });
+                $tree[$key] = $branch;
+            }
+        }
+
+		return $tree;
 	}
 
     public function afterFind(){
