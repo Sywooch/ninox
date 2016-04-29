@@ -293,27 +293,22 @@ $js = <<<'JS'
     }
 
 
-    $("body").on("click", "button.disableGood", function(){
-        disableItemInOrder($(this));
-    });
 
-    $("body").on("click", "button.actualizeGood", function(){
-        refreshItemInOrder($(this));
-    });
-
-    $("body").on("click", "button.deleteGood", function(){
-        deleteItemInOrder($(this));
-    });
-
+    
     $(".oneOrderItem input:checkbox").change(function(){
         setTimeout(getSelectedGoods, 100);
     });
 
-    $('body').on('click', ".itemToOrder", function(e){
-        addItemToOrder($("#orderInfo")[0].getAttribute('data-attribute-orderID'), e.currentTarget.getAttribute("data-attribute-itemID"));
-    })
 
-    $('body').on('submit', '#invoiceForm', function(e){
+    $("body").on("click", "button.disableGood", function(){
+        disableItemInOrder($(this));
+    }).on("click", "button.actualizeGood", function(){
+        refreshItemInOrder($(this));
+    }).on("click", "button.deleteGood", function(){
+        deleteItemInOrder($(this));
+    }).on('click', ".itemToOrder", function(e){
+        addItemToOrder($("#orderInfo")[0].getAttribute('data-attribute-orderID'), e.currentTarget.getAttribute("data-attribute-itemID"));
+    }).on('submit', '#invoiceForm', function(e){
         var container = $(this)[0].parentNode;
 
         container.innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
@@ -329,9 +324,7 @@ $js = <<<'JS'
         });
 
         e.preventDefault();
-    });
-
-    $("body").on('click', 'tr.oneOrderItem button.editGood', function(){
+    }).on('click', 'tr.oneOrderItem button.editGood', function(){
         var modal = $('[data-remodal-id=goodEditModal]');
 
         modal[0].innerHTML = '<i class="fa fa-refresh fa-spin"></i>';

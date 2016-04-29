@@ -4,10 +4,13 @@ namespace frontend\modules\account\controllers;
 
 use frontend\models\SborkaItem;
 use frontend\models\History;
+use frontend\modules\account\models\ChangePasswordForm;
+use kartik\form\ActiveForm;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 
@@ -57,6 +60,28 @@ class DefaultController extends Controller
                     ]
                 ])
             ]);
+    }
+
+    public function actionPasswordChange(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
+
+        $model = new ChangePasswordForm();
+        $model->load(\Yii::$app->request->post());
+
+        \Yii::$app->response->format = 'json';
+
+        if(\Yii::$app->request->post("ajax") == 'changePasswordForm'){
+            return ActiveForm::validate($model);
+        }
+
+        if($model->validate()){
+            \Yii::$app->user->identity->setPassword($model->newPassword);
+            return \Yii::$app->user->identity->save(false);
+        }
+
+        return false;
     }
 
     public function actionBetterlistclosed(){
