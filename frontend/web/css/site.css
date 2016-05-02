@@ -3752,7 +3752,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	width: 1172px;
 	margin: auto;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
 .sticky-wrapper:not(.sticky){
