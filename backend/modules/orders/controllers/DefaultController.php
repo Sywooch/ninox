@@ -4,6 +4,7 @@ namespace backend\modules\orders\controllers;
 
 use backend\models\HistorySearch;
 use backend\models\OrdersStats;
+use backend\modules\orders\models\OrderPreviewForm;
 use common\helpers\PriceRuleHelper;
 use backend\models\Customer;
 use backend\models\CustomerAddresses;
@@ -22,6 +23,7 @@ use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UnsupportedMediaTypeHttpException;
+use yii\widgets\ActiveForm;
 
 class DefaultController extends Controller
 {
@@ -29,9 +31,15 @@ class DefaultController extends Controller
     public function actionIndex(){
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
+        $showDates = \Yii::$app->request->get("showDates");
+
         $timeFrom = $timeTo = null;
 
-        switch(\Yii::$app->request->get("showDates")){
+        if(empty(\Yii::$app->request->get("ordersStatus"))){
+            $showDates = 'alltime';
+        }
+
+        switch($showDates){
             case 'yesterday':
                 $timeFrom = $date;
                 $timeTo = $date - 86400;
@@ -80,23 +88,47 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function actionSaveorderpreview(){
+    /**
+     * Возвращает и сохраняет превью блока заказа
+     *
+     * @return array|string
+     * @throws NotFoundHttpException
+     * @throws UnsupportedMediaTypeHttpException
+     */
+    public function actionOrderPreview(){
         if(!\Yii::$app->request->isAjax){
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        \Yii::$app->response->format = 'json';
+        $orderForm = new OrderPreviewForm();
 
-        $order = History::findOne(['id' => \Yii::$app->request->post('History')['id']]);
+        $orderForm->load(\Yii::$app->request->post());
 
-        $order->attributes = \Yii::$app->request->post('History');
-        $order->save();
-
-        if(isset($order->responsibleUserID) && $order->responsibleUserID != 0){
-            $order->responsibleUserID = Siteuser::getUser($order->responsibleUserID)->name;
+        if(empty($orderForm->id)){
+            $orderForm->id = \Yii::$app->request->post("expandRowKey");
         }
 
-        return $order;
+        $order = History::findOne(['id' => $orderForm->id]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ {$orderForm->id} не найден!");
+        }
+
+        if(!empty(\Yii::$app->request->post("ajax"))){
+            \Yii::$app->response->format = 'json';
+
+            return ActiveForm::validate($orderForm);
+        }
+
+        $orderForm->loadOrder($order);
+
+        if(\Yii::$app->request->post("OrderPreviewForm") && $orderForm->load(\Yii::$app->request->post()) && \Yii::$app->request->post("action") == "save"){
+            $orderForm->save();
+        }
+
+        return $this->renderAjax('_orderPreview', [
+            'model' =>  $orderForm
+        ]);
     }
 
     public function actionConfirmordercall(){
@@ -272,22 +304,6 @@ class DefaultController extends Controller
         }
 
         return $return;
-    }
-
-    public function actionGetorderpreview(){
-        if(!\Yii::$app->request->isAjax){
-            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
-        }
-
-        $order = History::findOne(['id' => \Yii::$app->request->post("expandRowKey")]);
-
-        if(!$order){
-            throw new NotFoundHttpException("Заказ ".\Yii::$app->request->post("expandRowKey")." не найден!");
-        }
-
-        return $this->renderAjax('_orderPreview', [
-            'model' =>  $order
-        ]);
     }
 
     public function actionRestoreitemdata(){

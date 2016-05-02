@@ -11,6 +11,9 @@ $form = ActiveForm::begin([
     'fieldConfig'   =>  [
         'template'  =>  '{input}'
     ],
+    //'action'                =>  '/orders/order-preview',
+    'validationUrl'         =>  '/orders/order-preview',
+    'enableAjaxValidation'  =>  true,
 ]);
 ?>
 <div class="row">
@@ -28,7 +31,7 @@ $form = ActiveForm::begin([
                         Менеджер:
                     </td>
                     <td style="width: 30%;">
-                        <?=$form->field($model, 'responsibleUserID')->dropDownList(Siteuser::getActiveUsers())->label(false)?>
+                        <?=$form->field($model, 'responsibleUser')->dropDownList(Siteuser::getActiveUsers())->label(false)?>
                     </td>
                 </tr>
                 <tr>
@@ -70,7 +73,7 @@ $form = ActiveForm::begin([
                         Оплата:
                     </td>
                     <td>
-                        <?=$form->field($model, 'moneyConfirmed')->widget(SwitchInput::classname(), [
+                        <?=$form->field($model, 'paymentConfirmed')->widget(SwitchInput::classname(), [
                             'type'  =>  SwitchInput::CHECKBOX,
                             'pluginOptions' => [
                                 'onText' => 'Да',
@@ -90,7 +93,7 @@ $form = ActiveForm::begin([
                         Платёж Global Money:
                     </td>
                     <td>
-                        <?=$form->field($model, 'globalmoney')->widget(SwitchInput::classname(), [
+                        <?=$form->field($model, 'globalMoneyPayment')->widget(SwitchInput::classname(), [
                             'type'  =>  SwitchInput::CHECKBOX,
                             'pluginOptions' => [
                                 'onText' => 'Да',
