@@ -23,6 +23,14 @@ class History extends \common\models\History{
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 
+    public function beforeSave($insert)
+    {
+        $this->sourceType = self::SOURCETYPE_INTERNET;
+        $this->orderSource = \Yii::$app->params['domainInfo']['id'];
+
+        return parent::beforeSave($insert);
+    }
+
     public function rules()
     {
         return [
