@@ -40,9 +40,10 @@ echo Html::beginTag('div', ['class' => 'content']),
         ]),
         [
             'class' =>  'menu'
-        ])?>
-    <div class="user-data-content">
-        <?=Html::tag('div', Html::tag('div',
+        ]).
+    Html::beginTag('div', ['class'  =>  'user-data-content']).
+        Html::tag('div',
+            Html::tag('div',
                 Html::tag('div',
                     Html::tag('div',
                         Html::tag('div',
@@ -211,7 +212,7 @@ echo Html::beginTag('div', ['class' => 'content']),
                 ]);
         }
 
-        if(!empty(\Yii::$app->user->identity->cardNumber)){
+        if(!empty(\Yii::$app->user->identity->cardNumber) || !empty(\Yii::$app->user->identity->personalRules)){
             echo Html::tag('div',
                 Html::tag('div',
                     Html::tag('div',
@@ -222,8 +223,8 @@ echo Html::beginTag('div', ['class' => 'content']),
                     ]).
                 Html::tag('div',
                     Html::tag('div',
-                        Html::tag('div', \Yii::t('shop', 'Дисконтная карта - 2% на все товары на сайте'), ['class' => 'address']).
-                        Html::tag('div', \Yii::t('shop', 'Персональная скидка - 15% на <a>избранные</a> категории'), ['class' => 'address']),
+                        (!empty(\Yii::$app->user->identity->cardNumber) ? Html::tag('div', \Yii::t('shop', 'Дисконтная карта - 2% на все товары на сайте'), ['class' => 'address']) : '').
+                        (!empty(\Yii::$app->user->identity->personalRules) ? Html::tag('div', \Yii::t('shop', 'Персональная скидка - 15% на <a>избранные</a> категории'), ['class' => 'address']) : ''),
                         [
                             'class' =>  'address-data'
                         ]),
@@ -238,22 +239,22 @@ echo Html::beginTag('div', ['class' => 'content']),
         echo Html::endTag('div');
      if(!empty($lastOrderProvider->getModels()) && (time() - strtotime(\Yii::$app->user->identity->giveFeedbackClosed)) > 3600){
             $js = <<<'JS'
-$("#reviews .icon.icon-exit").on('click', function(e){
-    $.ajax({
-        type: 'POST',
-		url: '/account/betterlistclosed',
-		success: function(data){
-		    var reviews = $('.reviews');
-		
-		    reviews.animate({height: (reviews.css('display') == 'none' ? 'show' : 'hide')}, 500);
-        }
-    });
-});
+                $("#reviews .icon.icon-exit").on('click', function(e){
+                    $.ajax({
+                        type: 'POST',
+                        url: '/account/betterlistclosed',
+                        success: function(data){
+                            var reviews = $('.reviews');
+                        
+                            reviews.animate({height: (reviews.css('display') == 'none' ? 'show' : 'hide')}, 500);
+                        }
+                    });
+                });
 JS;
 
-$this->registerJs($js);
+        $this->registerJs($js);
 
-            echo $this->render('_account_leaveFeedback', [
+         echo $this->render('_account_leaveFeedback', [
                 'customerBuyedItems'    =>  $buyedItems
             ]);
         }
