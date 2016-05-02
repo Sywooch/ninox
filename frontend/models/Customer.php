@@ -11,6 +11,10 @@ namespace frontend\models;
 
 class Customer extends \common\models\Customer{
 
+    public static function find(){
+        return parent::find()->with('wishes');
+    }
+
     public static function getList($options = []){
         $list = self::find();
 
@@ -23,6 +27,14 @@ class Customer extends \common\models\Customer{
         }
 
         return $list->all();
+    }
+
+    public function getWishes(){
+        return $this->hasMany(CustomerWishlist::className(), ['customerID' => 'ID']);
+    }
+
+    public function getWishesCount(){
+        return count($this->wishes);
     }
 
 }

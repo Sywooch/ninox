@@ -368,13 +368,17 @@ $this->beginPage();
 								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number'],
 							])?>
 						</div>
+
 						<div class="desire-basket">
-							<div class="desire">
-								<div class="desire-icon"></div>
-								<div class="count">5</div>
-								<span>Желания</span>
-							</div>
-							<?=CartWidget::widget(['remodalInstance' => $cartModal])?>
+							<?=Html::tag('a',
+								Html::tag('div', '', ['class' => 'desire-icon']).
+								Html::tag('div', \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->identity->wishesCount, ['class' => 'count']).
+								Html::tag('span', \Yii::t('shop', 'Желания')),
+								[
+									'class'	=>	'desire',
+									'href'	=>	'/account/wish-list'
+								]).
+							CartWidget::widget(['remodalInstance' => $cartModal])?>
 							<div class="in-basket popover-arrow bottom">
 								<div class="arrow"></div>
 								<span>
