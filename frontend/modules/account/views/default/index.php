@@ -42,9 +42,8 @@ echo Html::beginTag('div', ['class' => 'content']),
             'class' =>  'menu'
         ])?>
     <div class="user-data-content">
-        <div class="user-account-data">
-            <div class="pages">
-                <?=Html::tag('div',
+        <?=Html::tag('div', Html::tag('div',
+                Html::tag('div',
                     Html::tag('div',
                         Html::tag('div',
                             Html::tag('i', '',
@@ -111,26 +110,48 @@ echo Html::beginTag('div', ['class' => 'content']),
                         ]),
                     [
                         'class' =>  'page'
-                    ])?>
-                <div class="page">
-                    <div class="user-account ">
-                        <div class="semi-font">
-                            <div class="color">
-                                 <i class="icon icon-delivery-car"></i> Адрес для доставки:
-                            </div>
-                            <div class="address-data">
-                                <div class="address">
-                                    г. Киев, ул. Гетьмана Вадима, 1А/11
-                                </div>
-                                <div class="address">
-                                    Ивано-Франковск обл., г. Коломья Новая Почта 2 отд.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?=Html::tag('div',
+                    ]).
+                \yii\widgets\ListView::widget([
+                    'dataProvider'  =>  $lastOrderProvider,
+                    'itemView'      =>  function($model){
+                        return ' г. Киев, ул. Гетьмана Вадима, 1А/11 ';
+                    },
+                    'showOnEmpty' => false,
+                    'emptyTextOptions'  =>  [
+                        'style' =>  'display: none'
+                    ],
+                    'options'   =>  [
+                        'class' =>  'page'
+                    ],
+                    'itemOptions'   =>  [
+                        'class' =>  'address'
+                    ],
+                    'layout'    =>  Html::tag('div',
+                        Html::tag('div',
+                            Html::tag('div',
+                                Html::tag('i', '', ['class' => 'icon icon-delivery-car']).\Yii::t('shop', 'Адрес для доставки:'),
+                                [
+                                    'class' =>  'color'
+                                ]
+                            ).
+                            Html::tag('div',
+                                '{items}',
+                                [
+                                    'class' =>  'address-data'
+                                ]),
+                            [
+                                'class' =>  'semi-font'
+                            ]
+                        ),
+                        [
+                            'class' =>  'user-account'
+                        ]
+                    )
+                ]),
+                [
+                    'class' => 'pages'
+                ]).
+            Html::tag('div',
                 Html::tag('div',
                     Remodal::widget([
                         'confirmButton'	=>	false,
@@ -160,14 +181,22 @@ echo Html::beginTag('div', ['class' => 'content']),
                     ]),
                 [
                     'class' =>  'user-options'
-                ])?>
-        </div>
-        <div class="user-money-discount">
-            <div class="user-account personal-discount">
-                <div class="myriad">
-                    <i class="icon icon-money-pig"></i> <?=\Yii::t('shop', 'Личный счет')?>
-                </div>
-                <?=Html::tag('div',
+                ]),
+            [
+                'class' => 'user-account-data'
+            ]).
+        Html::beginTag('div', ['class' =>   'user-money-discount']);
+
+        if(!empty(\Yii::$app->user->identity->money)){
+            echo Html::tag('div',
+                Html::tag('div',
+                    Html::tag('div',
+                        Html::tag('i', '', ['class' => 'icon icon-money-pig']).\Yii::t('shop', 'Личный счёт')
+                    ),
+                    [
+                        'class' =>  'myriad'
+                    ]).
+                Html::tag('div',
                     Html::tag('div',
                         Html::tag('div', \Yii::t('shop', 'На вашем счету:'), ['class' => 'address']).
                         Html::tag('div', \Yii::$app->user->identity->money, ['class' => 'account-money']),
@@ -176,25 +205,38 @@ echo Html::beginTag('div', ['class' => 'content']),
                         ]),
                     [
                         'class' =>  'semi-font'
-                    ])?>
-            </div>
-            <div class="user-account personal-discount">
-                <div class="myriad">
-                    <i class="icon icon-your-discont"></i>  Ваша скидка
-                </div>
-                <div class="semi-font">
-                    <div class="address-data">
-                        <div class="address">
-                            Дисконтная карта - 2% на все товары на сайте
-                        </div>
-                        <div class="address">
-                            Персональная скидка - 15% на <a>избранные</a> категории
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php if((time() - strtotime(\Yii::$app->user->identity->giveFeedbackClosed)) > 3600){
+                    ]),
+                [
+                    'class' =>  'user-account personal-discount'
+                ]);
+        }
+
+        if(!empty(\Yii::$app->user->identity->cardNumber)){
+            echo Html::tag('div',
+                Html::tag('div',
+                    Html::tag('div',
+                        Html::tag('i', '', ['class' => 'icon icon-your-discont']).\Yii::t('shop', 'Ваша скидка')
+                    ),
+                    [
+                        'class' =>  'myriad'
+                    ]).
+                Html::tag('div',
+                    Html::tag('div',
+                        Html::tag('div', \Yii::t('shop', 'Дисконтная карта - 2% на все товары на сайте'), ['class' => 'address']).
+                        Html::tag('div', \Yii::t('shop', 'Персональная скидка - 15% на <a>избранные</a> категории'), ['class' => 'address']),
+                        [
+                            'class' =>  'address-data'
+                        ]),
+                    [
+                        'class' =>  'semi-font'
+                    ]),
+                [
+                    'class' =>  'user-account personal-discount'
+                ]);
+        }
+
+        echo Html::endTag('div');
+     if(!empty($lastOrderProvider->getModels()) && (time() - strtotime(\Yii::$app->user->identity->giveFeedbackClosed)) > 3600){
             $js = <<<'JS'
 $("#reviews .icon.icon-exit").on('click', function(e){
     $.ajax({

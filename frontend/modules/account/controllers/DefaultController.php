@@ -62,6 +62,12 @@ class DefaultController extends Controller
                     'pagination'    =>  [
                         'pageSize'  =>  6
                     ]
+                ]),
+                'lastOrderProvider' =>  new \yii\data\ActiveDataProvider([
+                    'query' =>  \frontend\models\History::find()->where(['customerID' => \Yii::$app->user->identity->ID])->limit('1'),
+                    'pagination'    =>  [
+                        'pageSize'  =>  1
+                    ]
                 ])
             ]);
     }
