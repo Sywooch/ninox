@@ -155,8 +155,11 @@ $('body').on('click', function(e){
 	}
 }).on('complete', '#registrationForm #signupform-phone', function(){ 
 	$("#registrationForm #countryCode").val($(this).inputmask("getmetadata").cc); 
+}).on('click', '#continueShopping', function(){
+	$("#basketPopover").hide();
+}).on('mouseout', '#basketPopover', function(){
+	$("#basketPopover").prop('style', '');
 });
-
 JS;
 
 $this->registerJs($js);
@@ -329,8 +332,8 @@ $this->beginPage();
 							$form->end();
 							?>
 						</div>
-						<div class="phone-number">
-							<?=PopoverX::widget([
+						<?=Html::tag('div',
+							PopoverX::widget([
 								'header'    => '',
 								'placement' => PopoverX::ALIGN_BOTTOM,
 								'content'   =>
@@ -366,11 +369,12 @@ $this->beginPage();
 									</div>',
 								'footer' => Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
 								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number'],
-							])?>
-						</div>
-
-						<div class="desire-basket">
-							<?=Html::tag('a',
+							]),
+							[
+								'class'	=>	'phone-number'
+							]).
+						Html::tag('div',
+							Html::tag('a',
 								Html::tag('div', '', ['class' => 'desire-icon']).
 								Html::tag('div', \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->identity->wishesCount, ['class' => 'count']).
 								Html::tag('span', \Yii::t('shop', 'Желания')),
@@ -378,33 +382,38 @@ $this->beginPage();
 									'class'	=>	'desire',
 									'href'	=>	'/account/wish-list'
 								]).
-							CartWidget::widget(['remodalInstance' => $cartModal])?>
-							<div class="in-basket popover-arrow bottom">
-								<div class="arrow"></div>
-								<span>
-									<?=\Yii::t('shop', '{username}в Вашей корзине ', [
+							CartWidget::widget(['remodalInstance' => $cartModal]).
+							Html::tag('div',
+								Html::tag('div', '', ['class' => 'arrow']).
+								Html::tag('span',
+									\Yii::t('shop', '{username}в Вашей корзине ', [
 										'username' => !\Yii::$app->user->isGuest ? \Yii::$app->user->identity->Company.', '
-									: ''
+											: ''
 									]).Html::a(\Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
 									товара}	many{# товаров} other{# товар}}', [
 										'n'	=>	\Yii::$app->cart->itemsCount
 									]), '#modalCart', [
 										'class' =>  'items-count-ext'
 									])
-									?>
-								</span>
-								<span>на сумму <?=Html::tag('span',
+								).
+								Html::tag('span',
+									\Yii::t('shop', 'на сумму').'&nbsp;'.Html::tag('span',
 										Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm), [
 											'class' => 'amount-cart'
-										])?>
-								</span>
-								<span class="price-info">Вы покупаете по оптовым ценам</span>
-								<?=Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
+										])
+								).
+								Html::tag('span', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), ['class' => 'price-info']).
+								Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
 									'class' =>  'button yellow-button middle-button'
-								])?>
-								<a onclick="this.parentNode.style.display = 'none'">Продолжить покупки</a>
-							</div>
-						</div>
+								]).
+								Html::button(\Yii::t('shop', 'Продолжить покупки'), ['id' => 'continueShopping']),
+								[
+									'class'	=>	'in-basket popover-arrow bottom',
+									'id'	=>	'basketPopover'
+								]),
+							[
+								'class'	=>	'desire-basket'
+							])?>
 					</div>
 				</div>
 			<?=\frontend\widgets\MainMenuWidget::widget([
