@@ -278,7 +278,7 @@ echo \kartik\grid\GridView::widget([
                 return GridView::ROW_COLLAPSED;
             },
             'detailRowCssClass' =>  GridView::TYPE_DEFAULT,
-            'detailUrl' =>  '/orders/getorderpreview',
+            'detailUrl' =>  '/orders/order-preview',
         ],
     ],
     'export'    =>  false

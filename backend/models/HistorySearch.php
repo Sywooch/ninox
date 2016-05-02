@@ -89,10 +89,16 @@ class HistorySearch extends History{
 		    }
 	    }
 
+
+        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
+            $params['showDates'] = 'alltime';
+        }
+
         if((!empty($params["showDates"])  && !isset($ignoreFilters['showDates'])) || (empty($params['HistorySearch'])  && !isset($ignoreFilters['HistorySearch']))){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
-            $params['showDates'] = empty($params['showDates']) ? 'today' : $params['showDates'];
+
+            $params['showDates'] = empty($params['showDates']) ? 'alltime' : $params['showDates'];
 
             switch($params["showDates"]){
                 case 'yesterday':
@@ -104,11 +110,11 @@ class HistorySearch extends History{
                 case 'thismonth':
                     $query->andWhere('added >= '.($date - (date("j") - 1) * 86400));
                     break;
-                case 'alltime':
-                    break;
                 case 'today':
-                default:
                     $query->andWhere('added >= '.$date);
+                    break;
+                case 'alltime':
+                default:
                     break;
             }
         }

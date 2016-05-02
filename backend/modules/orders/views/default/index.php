@@ -148,36 +148,42 @@ var ordersChanges = function(e){
 
 $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
     event.preventDefault();
-
-    $.ajax({
-        type: "POST",
-        url: '/orders/saveorderpreview',
-        data: $(this).serialize(),
-        success: function(response){
-            if(response.length == 0 || response == false){
-                return false;
-            }
-
-            var tr = $('div[data-attribute-type="ordersGrid"] tr[data-key="' + response.id + '"]')[0],
-                responsibleUser = tr.querySelector('small.responsibleUser'),
-                actualAmount = tr.querySelector('span.actualAmount');
-
-            if(responsibleUser != null){
-                if(response.responsibleUserID != 0){
-                    responsibleUser.innerHTML = response.responsibleUserID;
-                }else{
-                    responsibleUser.remove();
-                }
-            }else if(response.responsibleUserID != 0){
-                var node = document.createElement('small');
-                node.innerHTML = response.responsibleUserID;
-                node.setAttribute('class', 'responsibleUser');
-                tr.querySelector('td[data-col-seq="7"]').appendChild(node);
-            }
-
-            actualAmount.innerHTML = response.actualAmount + ' грн.';
-        }
-    });
+    
+    var form = $(this);
+   
+   if(form.find('.has-error').length) {
+      return false;
+   }
+   
+   $.ajax({
+       type: "POST",
+       url: '/orders/order-preview',
+       data: $.extend({action: 'save'}, form.serializeJSON()),
+       success: function(response){
+           if(response.length == 0 || response == false){
+               return false;
+           }
+   
+           var tr = $('div[data-attribute-type="ordersGrid"] tr[data-key="' + response.id + '"]')[0],
+               responsibleUser = tr.querySelector('small.responsibleUser'),
+               actualAmount = tr.querySelector('span.actualAmount');
+   
+           if(responsibleUser != null){
+               if(response.responsibleUserID != 0){
+                   responsibleUser.innerHTML = response.responsibleUserID;
+               }else{
+                   responsibleUser.remove();
+               }
+           }else if(response.responsibleUserID != 0){
+               var node = document.createElement('small');
+               node.innerHTML = response.responsibleUserID;
+               node.setAttribute('class', 'responsibleUser');
+               tr.querySelector('td[data-col-seq="7"]').appendChild(node);
+           }
+   
+           actualAmount.innerHTML = response.actualAmount + ' грн.';
+       }
+   });
 
     return false;
 });
@@ -545,7 +551,7 @@ echo Html::tag('div', OrdersSearchWidget::widget([
                     kvExpandRow({
                         "gridId": selector.substr(1),
                         "hiddenFromExport":true,
-                        "detailUrl":"/orders/getorderpreview",
+                        "detailUrl":"/orders/order-preview",
                         "expandTitle":"Развернуть",
                         "collapseTitle":"Свернуть",
                         "expandAllTitle":"Развернуть все",
@@ -567,7 +573,7 @@ echo Html::tag('div', OrdersSearchWidget::widget([
                     kvExpandRow({
                         "gridId": selector.substr(1),
                         "hiddenFromExport":true,
-                        "detailUrl":"/orders/getorderpreview",
+                        "detailUrl":"/orders/order-preview",
                         "expandTitle":"Развернуть",
                         "collapseTitle":"Свернуть",
                         "expandAllTitle":"Развернуть все",
