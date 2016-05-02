@@ -32,7 +32,7 @@ $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 $js = <<<'JS'
 $(".arrow-bottom").on('click', function(){
 	$('html, body').animate({
-        scrollTop: $('.arrow-bottom').offset().top - 100
+        scrollTop: $('.arrow-bottom').offset().top - 15
     }, 1000);
 });
 
