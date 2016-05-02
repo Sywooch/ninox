@@ -279,7 +279,7 @@ $this->beginPage();
 						<?php if(\Yii::$app->user->isGuest){
 							echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
 						}else{
-							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('/account')).Html::a('Выйти', Url::to('/logout'), [
+							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет', ['class' => 'items']), Url::to('/account')).Html::a('Выйти', Url::to('/logout'), [
 									'data-method'   =>  'post'
 								]), ['class' => 'items account-icon']);
 						} ?>
@@ -323,21 +323,16 @@ $this->beginPage();
 										]
 									]
 								]
-							]),
-							\yii\helpers\Html::button('Найти', [
-								'type'  =>  'submit',
-								'class' =>  'blue-button small-button ',
-								'id'    =>  'submit'
 							]);
 							$form->end();
 							?>
 						</div>
 						<?=Html::tag('div',
-							PopoverX::widget([
-								'header'    => '',
-								'placement' => PopoverX::ALIGN_BOTTOM,
-								'content'   =>
-									'<div class="call-back">
+							Html::tag('div',
+							Html::tag('span', '(044) 257-45-54', ['class' => 'number']).
+							Html::tag('div',
+								Html::tag('div',
+									'<div class="arrow"></div><div class="call-back">
 										<div>
 											<div class="blue-white-phone"></div>
 											<span class="semibold">0 800 508 208</span>
@@ -366,10 +361,22 @@ $this->beginPage();
 												пн: с 9.00 до 15.00
 											</span>
 										</div>
-									</div>',
-								'footer' => Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
+									</div>'.
+									Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
+									[
+										'class'	=>	'popover-arrow bottom'
+									]),
+								[
+									'class'	=>	'popover'
+								])
+							/*PopoverX::widget([
+								'header'    => '',
+								'placement' => PopoverX::ALIGN_BOTTOM,
+								'content'   =>
+									,
+								'footer' => ,
 								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number'],
-							]),
+							])*/,
 							[
 								'class'	=>	'phone-number'
 							]).
@@ -413,6 +420,9 @@ $this->beginPage();
 								]),
 							[
 								'class'	=>	'desire-basket'
+							]),
+							[
+								'class'	=>	'right-side'
 							])?>
 					</div>
 				</div>

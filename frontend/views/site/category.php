@@ -165,7 +165,7 @@ echo Html::tag('div',
                 ['class' => 'seo-city']),
             ['class' => 'category-description']),
         ['class' => 'content']),
-    ['class' => $category->viewFile.' category'.' clear-fix']
+    ['class' => $category->viewFile.' clear-fix']
 );
 
 \yii\widgets\Pjax::end();
