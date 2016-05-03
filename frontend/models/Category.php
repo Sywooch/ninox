@@ -1,9 +1,12 @@
 <?php
+use common\models\CategoryTranslation;
+
 /**
  * Created by PhpStorm.
  * User: bobroid
  * Date: 14.10.15
  * Time: 17:25
+ * @property CategoryTranslation $translate
  */
 
 namespace frontend\models;
@@ -16,8 +19,13 @@ class Category extends \common\models\Category{
 	private $_filters;
 	private $_minPrice;
 	private $_maxPrice;
+	private $_groupIDs;
 
-    public function getItems(){
+	public static function find(){
+		return parent::find()->with('translations');
+	}
+
+	public function getItems(){
 	    $values = $names = [];
 
 	    foreach($this->filters as $filterArray){
@@ -28,15 +36,14 @@ class Category extends \common\models\Category{
 	    }
 
 	    $return = Good::find()
-		    ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-		    ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+		    ->where(['in', '`goods`.`GroupID`', $this->groupIDs])
 		    ->with('reviews');
 
 	    if(!empty($values) && !empty($names)){
 		    $return
 			    ->joinWith('filters')
-			    ->andWhere(['IN', '`goodsoptions`.`name`', $names])
-			    ->andWhere(['IN', '`goodsoptions_values`.`value`', $values])
+			    ->andWhere(['in', '`goodsoptions`.`name`', $names])
+			    ->andWhere(['in', '`goodsoptions_values`.`value`', $values])
 			    ->groupBy('goodsoptions_values.good')
 			    ->having('COUNT(goodsoptions_values.good) >= '.sizeof($names));
 	    }
@@ -49,8 +56,7 @@ class Category extends \common\models\Category{
 		    $return->andWhere(['<=', '`goods`.`PriceOut1`', $priceMax]);
 	    }
 
-	    $return->andWhere(['`goodsgroups`.`enabled`' => 1])
-		    ->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+	    $return->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
 		    ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
 
 	    switch(\Yii::$app->request->get('order')){
@@ -75,11 +81,12 @@ class Category extends \common\models\Category{
 	public function getMinPrice(){
 		if(empty($this->_minPrice)){
 			$this->_minPrice = Good::find()
-				->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-				->andWhere(['`goodsgroups`.`enabled`' => 1])
-				->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
-				->min('PriceOut1');
+				->select('PriceOut1')
+				->where(['in', 'GroupID', $this->groupIDs])
+				->andWhere(['show_img' => 1, 'deleted' => 0])
+				->andWhere('`PriceOut1` != 0 AND `PriceOut2` != 0')
+				->orderBy(['PriceOut1' => SORT_ASC])
+				->limit(1)->scalar();
 		}
 
 		return $this->_minPrice;
@@ -88,18 +95,39 @@ class Category extends \common\models\Category{
 	public function getMaxPrice(){
 		if(empty($this->_maxPrice)){
 			$this->_maxPrice = Good::find()
-				->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-				->andWhere(['`goodsgroups`.`enabled`' => 1])
-				->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
-				->max('PriceOut1');
+				->select('PriceOut1')
+				->where(['in', 'GroupID', $this->groupIDs])
+				->andWhere(['show_img' => 1, 'deleted' => 0])
+				->andWhere('`PriceOut1` != 0 AND `PriceOut2` != 0')
+				->orderBy(['PriceOut1' => SORT_DESC])
+				->limit(1)->scalar();
 		}
 
 		return $this->_maxPrice;
 	}
 
+	public function getGroupIDs(){
+		if(empty($this->_groupIDs)){
+			$this->_groupIDs = array_column(self::find()
+				->select('`goodsgroups`.`ID`')
+				->joinWith(['translations'])
+				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+				->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
+				->andWhere(['`category_translations`.`enabled`' => 1])
+				->asArray()->all(), 'ID');
+		}
+
+		return $this->_groupIDs;
+	}
+
 	public static function getMenu(){
-		$cats = self::find()->with('photos')->orderBy('Code')->all();
+		$cats = self::find()
+			->joinWith(['translations'])
+			->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
+			->andWhere(['`category_translations`.`enabled`' => 1])
+			->with('photos')
+			->orderBy('Code')
+			->all();
 
 		return self::buildTree($cats);
 	}
@@ -113,8 +141,7 @@ class Category extends \common\models\Category{
 
 			foreach(GoodOptionsValue::find()
 				        ->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0 AND `goods`.`show_img` = 1')
-				        ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-				        ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+				        ->where(['in', '`goods`.`GroupID`', $this->groupIDs])
 				        ->with(['goodOptions', 'goodOptionsVariants'])
 				        ->all() as $filterOption){
 				if(!empty($filterOption->goodOptions)){
@@ -178,19 +205,19 @@ class Category extends \common\models\Category{
 	public function getMetaName(){
 		switch(\Yii::$app->request->get('order')){
 			case 'asc':
-				$name = empty($this->h1asc) ?
-					\Yii::t('shop', 'Дешёвые {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
-					$this->h1asc;
+				$name = empty($this->headerOrderAscending) ?
+					\Yii::t('shop', 'Дешёвые {name}',['name' => mb_strtolower($this->name, 'UTF-8')]) :
+					$this->headerOrderAscending;
 				break;
 			case 'desc':
-				$name = empty($this->h1desc) ?
-					\Yii::t('shop', 'Дорогие {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
-					$this->h1desc;
+				$name = empty($this->headerOrderDescending) ?
+					\Yii::t('shop', 'Дорогие {name}',['name' => mb_strtolower($this->name, 'UTF-8')]) :
+					$this->headerOrderDescending;
 				break;
 			case 'novinki':
-				$name = empty($this->h1new) ?
-					\Yii::t('shop', 'Новинки {name}',['name' => mb_strtolower($this->Name, 'UTF-8')]) :
-					$this->h1new;
+				$name = empty($this->headerOrderNew) ?
+					\Yii::t('shop', 'Новинки {name}',['name' => mb_strtolower($this->name, 'UTF-8')]) :
+					$this->headerOrderNew;
 				break;
 			default:
 				$name = empty($this->h1) ? $this->Name : $this->h1;

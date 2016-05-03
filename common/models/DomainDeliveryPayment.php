@@ -83,9 +83,9 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 				self::tableName().'.enabled' => 1,
 				'deliveryTypes.enabled' => 1
 			])
-			->andWhere(['OR', ['deliveryParams.enabled' => 1], [self::tableName().'.deliveryParam' => 0]])
+			->andWhere(['or', ['deliveryParams.enabled' => 1], [self::tableName().'.deliveryParam' => 0]])
 			->andWhere(['paymentTypes.enabled' => 1])
-			->andWhere(['OR', ['paymentParams.enabled' => 1], [self::tableName().'.paymentParam' => 0]])
+			->andWhere(['or', ['paymentParams.enabled' => 1], [self::tableName().'.paymentParam' => 0]])
 			->all();
 	}
 

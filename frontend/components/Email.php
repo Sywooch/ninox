@@ -37,7 +37,7 @@ class Email extends \common\components\Email{
             $emailOrder->items[] = [
                 'name'              =>  $item->name,
                 'cost'              =>  $item->price,
-                'category'          =>  $item->category->Name,
+                'category'          =>  $item->category->name,
                 'quantity'          =>  $item->count,
                 'externalItemId'    =>  $item->good->Code,
                 'url'               =>  'https://krasota-style.com.ua/tovar/-g'.$item->itemID,

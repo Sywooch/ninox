@@ -177,7 +177,7 @@ class SiteController extends Controller
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionRenderpage($url){
-        $category = Category::findOne(['link' => $url]);
+        $category = Category::findByLink($url);
 
         if(empty($category)){
             throw new NotFoundHttpException("Страница не найдена!");
@@ -257,7 +257,7 @@ class SiteController extends Controller
             case 'common\models\Category':
                 $category = $object;
                 $temp = [
-                    'label' =>  $object->Name
+                    'label' =>  $object->name
                 ];
                 break;
             case 'common\models\Good':
@@ -265,10 +265,10 @@ class SiteController extends Controller
                 $temp = [
                     [
                         'url'   =>  '/'.$category->link,
-                        'label' =>  $category->Name
+                        'label' =>  $category->name
                     ],
                     [
-                        'label' =>  $object->Name
+                        'label' =>  $object->name
                     ]
                 ];
                 break;
@@ -281,7 +281,7 @@ class SiteController extends Controller
             foreach($category->parents as $parent){
                 $this->getView()->params['breadcrumbs'][] = [
                     'url'   =>  '/'.$parent->link,
-                    'label' =>  $parent->Name
+                    'label' =>  $parent->name
                 ];
             }
         }
@@ -598,7 +598,7 @@ class SiteController extends Controller
                 ];
 
                 if(!empty($good->category)){
-                    $goodInfo['category'] = $good->category->Name;
+                    $goodInfo['category'] = $good->category->name;
                 }
 
                 if(!empty($good->BarCode2)){
