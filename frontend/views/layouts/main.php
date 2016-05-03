@@ -329,7 +329,7 @@ $this->beginPage();
 						</div>
 						<?=Html::tag('div',
 							Html::tag('div',
-							Html::tag('span', '(044) 257-45-54', ['class' => 'number']).
+							Html::tag('span', '(044) 578 20 16', ['class' => 'number']).
 							Html::tag('div',
 								Html::tag('div',
 									'<div class="arrow"></div><div class="call-back">

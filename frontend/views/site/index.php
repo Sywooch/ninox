@@ -131,11 +131,12 @@ $this->registerJs($js);
 			?>
 		</div>
 		<?=Html::tag('div',
-			Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-best']).
+			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon
+			icon-best']).
 				Html::tag('span', \Yii::t('shop', 'Лучшее'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'best']).
-			Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-news']).
+			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon icon-news']).
 				Html::tag('span', \Yii::t('shop', 'Новинки'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'new']).
-			Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-sale']).
+			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon icon-sale']).
 				Html::tag('span', \Yii::t('shop', 'Распродажа'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'sale']),
 
 			[
