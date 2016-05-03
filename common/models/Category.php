@@ -46,6 +46,7 @@ class Category extends \yii\db\ActiveRecord
     var $parentCategory;
 	protected $items;
 
+    private $_translation;
     private $parents = [];
     private $goodsCount = null;
     private $goodsCountSubcategories = null;
@@ -65,18 +66,29 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function getTranslation(){
-        return $this->getTranslationByKey(\Yii::$app->language);
+        if(empty($this->_translation)){
+            $this->_translation = $this->getTranslationByKey(\Yii::$app->language);
+        }
+
+        return $this->_translation;
     }
 
     public function getTranslationByKey($key){
         $defaultLang = 'ru_RU';
         $defaultLangModel = new CategoryTranslation();
+        $currentLangModel = new CategoryTranslation();
         foreach($this->translations as $translation){
             if($translation->language == $defaultLang){
                 $defaultLangModel = $translation;
             }
             if($translation->language == $key){
-                return $translation;
+                $currentLangModel = $translation;
+            }
+        }
+
+        if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
+            foreach($defaultLangModel as $key => $value){
+                $defaultLangModel[$key] = empty($currentLangModel[$key]) ? $value : $currentLangModel[$key];
             }
         }
 
@@ -95,7 +107,6 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function getName(){
-        //echo '<pre>';var_dump($this->translation);die();
         return $this->translation->Name;
     }
 
@@ -277,7 +288,13 @@ class Category extends \yii\db\ActiveRecord
 
     public function getSubCategories(){
         $s = strlen($this->Code) + 3;
-        return $this::find()->where(['like', 'Code', $this->Code.'%', false])->andWhere(['LENGTH(`Code`)' => $s])->all();
+        return $this::find()
+            ->joinWith(['translations'])
+            ->where(['`category_translations`.`language`' => \Yii::$app->language])
+            ->andWhere(['`category_translations`.`enabled`' => 1])
+            ->andWhere(['like', 'Code', $this->Code.'%', false])
+            ->andWhere(['LENGTH(`Code`)' => $s])
+            ->all();
     }
 
     public static function getParentCategory($identifier){

@@ -113,14 +113,21 @@ class Category extends \common\models\Category{
 				->joinWith(['translations'])
 				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
 				->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
-				->andWhere(['`category_translations`.`enabled`' => 1])->asArray()->all(), 'ID');
+				->andWhere(['`category_translations`.`enabled`' => 1])
+				->asArray()->all(), 'ID');
 		}
 
 		return $this->_groupIDs;
 	}
 
 	public static function getMenu(){
-		$cats = self::find()->with('photos')->orderBy('Code')->all();
+		$cats = self::find()
+			->joinWith(['translations'])
+			->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
+			->andWhere(['`category_translations`.`enabled`' => 1])
+			->with('photos')
+			->orderBy('Code')
+			->all();
 
 		return self::buildTree($cats);
 	}
@@ -134,8 +141,7 @@ class Category extends \common\models\Category{
 
 			foreach(GoodOptionsValue::find()
 				        ->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0 AND `goods`.`show_img` = 1')
-				        ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-				        ->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
+				        ->where(['in', '`goods`.`GroupID`', $this->groupIDs])
 				        ->with(['goodOptions', 'goodOptionsVariants'])
 				        ->all() as $filterOption){
 				if(!empty($filterOption->goodOptions)){
