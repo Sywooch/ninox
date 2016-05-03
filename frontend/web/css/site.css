@@ -3922,7 +3922,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .header .phone-number .popover .arrow{
 	border: none;
-	margin-left: 76px;
+	margin-left: 72px;
 }
 
 .header .sticky .phone-number .popover{
@@ -4046,6 +4046,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .call-back .work-time{
 	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .header .number:before{
@@ -4632,6 +4633,24 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	text-align: center;
 	display: block;
 	padding-top: 23px;
+}
+
+.main-content .arrow-bottom:hover::before{
+	content: '';
+	text-align: center;
+	display: block;
+	animation: 1s infinite alternate down;
+	background: url("/img/site/white-arrow.png") 0 0 no-repeat;
+	width: 32px;
+	height: 18px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -6px 0 0 -15px;
+	-webkit-animation: 1s infinite alternate down;
+}
+@keyframes down{0%{top:20%;}
+	100%{top:60%;}
 }
 
 .goods-content{
