@@ -199,6 +199,15 @@ h2{
 
 .main-icons:hover .icon-down:after{content: '\e800';}
 
+@keyframes anim-rotate{
+	0% {
+		transform: rotate(0);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 [class^="icon-"]:before, [class*=" icon-"]:before, [class^="icon-"]:after, [class*=" icon-"]:after{
 	/* use !important to prevent issues with browser extensions that change fonts */
 	font-family: 'shop' !important;
@@ -237,9 +246,14 @@ h2{
 .icon-origin:before{content: "\e906";}
 .icon-home:before{content: "\e907";}
 .icon-arrow-right:before{content: "\e908" !important;}
-.buy.mini-button:before, .buy.micro-button:before{content: "\e909";}
-.open-cart.mini-button:before, .open-cart.micro-button:before{content: "\e910";}
-.out-of-stock.mini-button:before, .out-of-stock.micro-button:before{content: "\e911";}
+.buy.icon-cart:before{content: "\e909";}
+.open-cart.icon-cart:before{content: "\e910";}
+.out-of-stock.icon-cart:before{content: "\e911";}
+.icon-loader:before{
+	content: "\e912";
+	animation: anim-rotate 2s infinite linear;
+	display: inline-block;
+}
 
 .button{
 	text-transform: uppercase;
@@ -501,7 +515,7 @@ h2{
 }
 
 .all-banners-center .slick-dots li:before{
-	content: "";
+	content: '';
 	position: absolute;
 	top: -8px;
 	left: 0;
@@ -893,7 +907,7 @@ h2{
 	width: 120%;
 	height: 1px;
 	background: #dd5b5b;
-	content: "";
+	content: '';
 	position: absolute;
 	bottom: 9px;
 	left: -6px;
@@ -1172,41 +1186,32 @@ h2{
 	margin: 25px 0;
 }
 
-/*
-
-TODO: fix my merge, pls (begin)
-
-*/
-
-.category .category-description ul {
+.category .category-description ul{
 	list-style: square inside none;
 }
 
-.category .ias-trigger, .category .ias-noneleft{
+.category .ias-trigger, .category .ias-loader{
 	width: 100%;
 	float: left;
 }
 
-/*
-
-TODO: fix my merge, pls (end)
-
-*/
-.load-more {
+.load-more{
 	margin: 25px auto;
 	cursor: pointer;
 	width: 264px;
 	height: 47px;
-	display: inline-block;
+	display: block;
 	position: relative;
 	padding: 15px 0;
 	text-align: center;
 	border-radius: 5px;
-	left: 35%; /* TODO: pls fix it */
 	box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.4);
 	font-size: 15px;
 	vertical-align: middle;
 	font-family: OpenSans-Semibold;
+}
+
+.ias-trigger .load-more{
 	color: #6f550f;
 	text-shadow: 1px 1px #fee37f;
 	background: rgba(254,228,60,1);
@@ -1219,15 +1224,19 @@ TODO: fix my merge, pls (end)
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fee43c', endColorstr='#fab81d', GradientType=0 );
 }
 
-.load-more:hover{
-	background: linear-gradient(to bottom, #FCDB33 0%, #FAD93F 80%) repeat scroll 0 0 transparent;
+.ias-loader .load-more{
+	background: #cacaca;
 }
 
-.load-more:hover::after{
-	border-top: 20px solid #FAD93F;
+.ias-trigger .load-more:hover{
+	background: linear-gradient(to bottom, #fcdb33 0%, #fad93f 80%) repeat scroll 0 0 transparent;
 }
 
-.load-more::after {
+.ias-trigger .load-more:hover::after{
+	border-top: 20px solid #fad93f;
+}
+
+.load-more::after{
 	content: '';
 	display: block;
 	position: absolute;
@@ -1235,10 +1244,17 @@ TODO: fix my merge, pls (end)
 	top: 100%;
 	width: 0;
 	height: 0;
-	border-top: 20px solid #faba1f;
 	border-right: 132px solid transparent;
 	border-bottom: 0 solid transparent;
 	border-left: 132px solid transparent;
+}
+
+.ias-trigger .load-more::after{
+	border-top: 20px solid #faba1f;
+}
+
+.ias-loader .load-more::after{
+	border-top: 20px solid #cacaca;
 }
 /*============* END CATEGORY STYLE *==============*/
 
