@@ -150,17 +150,18 @@ h2{
     url('../fonts/MyriadProBold.ttf') format('truetype');
     font-style: normal;
     font-weight: normal;
-}
+}/*
 @font-face {
 	font-family: 'arrow-down';
-	src: url('../fonts/arrow-down.eot?41651202');
-	src: url('../fonts/arrow-down.eot?41651202#iefix') format('embedded-opentype'),
-	url('../fonts/arrow-down.woff2?41651202') format('woff2'),
-	url('../fonts/arrow-down.woff?41651202') format('woff'),
-	url('../fonts/arrow-down.ttf?41651202') format('truetype'),
-	url('../fonts/arrow-down.svg?41651202#arrow-down') format('svg');
+	src: url('../fonts/arrow-down.eot');
+	src: url('../fonts/arrow-down.eot') format('embedded-opentype'),
+	url('../fonts/arrow-down.woff2') format('woff2'),
+	url('../fonts/arrow-down.woff') format('woff'),
+	url('../fonts/arrow-down.ttf') format('truetype'),
+	url('../fonts/arrow-down.svg') format('svg');
 	font-weight: normal;
-}
+}*/
+/*
 [class^="icon-down"]:after, [class*=" icon-down"]:after {
 	font-family: "arrow-down";
 	font-size: 10px;
@@ -168,9 +169,59 @@ h2{
 	font-weight: normal;
 	speak: none;
 
-	/*display: inline-block;
+	!*display: inline-block;
 	text-decoration: inherit;
 	width: 1em;
+	margin-right: .2em;
+	text-align: center;
+	!* opacity: .8; *!
+
+	!* For safety - reset parent styles, that can break glyph codes*!
+	font-variant: normal;
+	text-transform: none;
+
+	!* fix buttons height, for twitter bootstrap *!
+	!*line-height: 1em;
+
+	!* Animation center compensation - margins should be symmetric *!
+	!* remove if not needed *!
+	!*margin-left: .2em;
+
+	!* you can be more comfortable with increased icons size *!
+	!* font-size: 120%; *!
+
+	!* Font smoothing. That was taken from TWBS *!
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	!* Uncomment for 3D effect *!
+	!* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); *!
+}
+
+.main-icons:hover .icon-down:after{content: '\e800';}
+*/
+@font-face {
+	font-family: 'arrow-down';
+	src: url('../fonts/arrow-down.eot?5294065');
+	src: url('../fonts/arrow-down.eot?5294065#iefix') format('embedded-opentype'),
+	url('../fonts/arrow-down.woff2?5294065') format('woff2'),
+	url('../fonts/arrow-down.woff?5294065') format('woff'),
+	url('../fonts/arrow-down.ttf?5294065') format('truetype'),
+	url('../fonts/arrow-down.svg?5294065#arrow-down') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+[class^="icon-"]:after, [class*=" icon-"]:after {
+	font-family: "arrow-down";
+	font-style: normal;
+	font-weight: normal;
+	speak: none;
+
+	display: inline-block;
+	text-decoration: inherit;
+    /*
+	width: 1em;
+    */
 	margin-right: .2em;
 	text-align: center;
 	/* opacity: .8; */
@@ -180,11 +231,11 @@ h2{
 	text-transform: none;
 
 	/* fix buttons height, for twitter bootstrap */
-	/*line-height: 1em;
+	line-height: 1em;
 
 	/* Animation center compensation - margins should be symmetric */
 	/* remove if not needed */
-	/*margin-left: .2em;
+	margin-left: .2em;
 
 	/* you can be more comfortable with increased icons size */
 	/* font-size: 120%; */
@@ -197,7 +248,8 @@ h2{
 	/* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.main-icons:hover .icon-down:after{content: '\e800';}
+.main-icons:hover .icon-down:after { content: '\e807';
+	font-weight: bold;} /* '' */
 
 [class^="icon-"]:before, [class*=" icon-"]:before, [class^="icon-"]:after, [class*=" icon-"]:after{
 	/* use !important to prevent issues with browser extensions that change fonts */
@@ -3851,15 +3903,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-top: 18px;
 	color: #8b8b8b;
 	margin-right: 5px;
-	transition-property: width, margin-top, delay;
-	transition-duration: 1s, 1s, 1s;
+/*	transition-property: width, margin-top, delay;
+	transition-duration: 1s, 1s, 1s;*/
+	transition: 1s width;
 }
 
 .sticky .input-style-main input[type='text'] {
 	width: 575px;
 	margin-top: 0px;
-	transition-property: width, margin-top, delay;
-	transition-duration: 1s, 1s, 1s;
+	transition-property: width, margin-top;
+	transition-duration: 1s, 1s;
 }
 
 .input-style-main .small-button {
@@ -3903,7 +3956,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .header .phone-number{
 	display: inline-block;
 	padding: 20px 45px 0px 0px;
-	transition: padding;
+	transition: padding-right;
 	transition-duration: 1s;
 }
 
@@ -4632,25 +4685,33 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	content: url("/img/site/white-arrow.png");
 	text-align: center;
 	display: block;
+    /*
 	padding-top: 23px;
+    */
 }
 
-.main-content .arrow-bottom:hover::before{
+.main-content .arrow-bottom/*:hover:*/:before{
 	content: '';
 	text-align: center;
 	display: block;
-	animation: 1s infinite alternate down;
 	background: url("/img/site/white-arrow.png") 0 0 no-repeat;
 	width: 32px;
 	height: 18px;
 	position: absolute;
-	left: 50%;
+	left: 25%;
 	top: 50%;
-	margin: -6px 0 0 -15px;
-	-webkit-animation: 1s infinite alternate down;
+/*	margin: -6px 0 0 -15px;*/
+	animation: 1s ease-in-out infinite alternate down;
+	-webkit-animation: 1s ease-in-out infinite alternate down;
 }
-@keyframes down{0%{top:20%;}
-	100%{top:60%;}
+
+@keyframes down{
+	0%{
+		top:30%;
+	}
+	100%{
+		top:50%;
+	}
 }
 
 .goods-content{
@@ -4826,10 +4887,9 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .main-icons:hover  span:after{
-	content: '\e800';
 	display: block;
 	text-align: center;
-	padding-top: 8px;
+	padding-top: 4px;
 }
 
 .main-icon{
@@ -4837,7 +4897,98 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	width: 40px;
 	border-radius: 20px;
 	margin: auto;
+	position: relative;
 }
+
+
+/*
+.yellow-button:hover::after{
+	height: 100%;
+	filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+	opacity: 1;
+}
+
+.yellow-button:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	height: 0;
+	background: #338BCB;
+	z-index: -1;
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	opacity: 0;
+	-moz-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	-moz-transition-property: height, opacity;
+	-o-transition-property: height, opacity;
+	-webkit-transition-property: height, opacity;
+	transition-property: height, opacity;
+	-moz-transition-duration: 0.2s;
+	-o-transition-duration: 0.2s;
+	-webkit-transition-duration: 0.2s;
+	transition-duration: 0.2s;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-webkit-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+
+
+*/
+
+.main-icon .icon-anim{
+	height: 50px;
+	width: 50px;
+	display: block;
+	position: absolute;
+	z-index: 1;
+	border: 2px solid /*#FAD70C*/;
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	opacity: 0;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	margin: 0;
+	top: -5px;
+	left: -5px;
+}
+
+.main-icons:hover .icon-anim{
+	border-color: transparent;
+	-webkit-animation: anim cubic-bezier(0.18, 0.14, 0.29, 1) 1.5s;
+	animation: anim cubic-bezier(0.18, 0.14, 0.29, 1) 1.5s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+}
+
+.main-icons:hover .icon-best .icon-anim{
+	border-right-color: #8acc5e;
+    /*
+	margin: -39px 0px 0px -3px;
+    */
+}
+
+.main-icons:hover .icon-news .icon-anim{
+	border-right-color: #45b1ea;
+}
+
+.main-icons:hover .icon-sale .icon-anim{
+	border-right-color: #eaa51e;
+}
+
+@keyframes anim { 0% { -moz-transform: rotate(-90deg); -o-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); -ms-transform: rotate(-90deg); transform: rotate(-90deg); filter: progid:DXImageTransform.Microsoft.Matrix( M11=$m11, M12=$m12,M21=$m21, M22=$m22, sizingMethod='auto expand'); zoom: 1; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); opacity: 0; }
+	50% { filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false); opacity: 1; }
+	100% { -moz-transform: rotate(360deg); -o-transform: rotate(360deg); -webkit-transform: rotate(360deg); -ms-transform: rotate(360deg); transform: rotate(360deg); filter: progid:DXImageTransform.Microsoft.Matrix( M11=$m11, M12=$m12,M21=$m21, M22=$m22, sizingMethod='auto expand'); zoom: 1; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); opacity: 0; } }
+
+
+
 
 .goods-content-icons .icon-best{
 	background: #8acc5e;
