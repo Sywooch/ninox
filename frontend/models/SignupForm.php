@@ -55,7 +55,7 @@ class SignupForm extends Model
 
             if($this->newCustomer){
                 $user->Company = $this->name.' '.$this->surname;
-                $user->phone = $this->phone;
+                $user->phone = filter_var($this->phone, FILTER_SANITIZE_NUMBER_INT);
                 $user->email = $this->email;
                 /*
                 $user->name = $this->name;

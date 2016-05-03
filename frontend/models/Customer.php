@@ -8,8 +8,17 @@
 
 namespace frontend\models;
 
-
+/**
+ * Class Customer
+ * @package frontend\models
+ * @property CustomerWishlist $wishes
+ * @property int $wishesCount
+ */
 class Customer extends \common\models\Customer{
+
+    public static function find(){
+        return parent::find()->with('wishes');
+    }
 
     public static function getList($options = []){
         $list = self::find();
@@ -23,6 +32,24 @@ class Customer extends \common\models\Customer{
         }
 
         return $list->all();
+    }
+
+    /**
+     * Возвращает желания клиента
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWishes(){
+        return $this->hasMany(CustomerWishlist::className(), ['customerID' => 'ID']);
+    }
+
+    /**
+     * Возвращает колличество желаний клиента
+     *
+     * @return int
+     */
+    public function getWishesCount(){
+        return sizeof($this->wishes);
     }
 
 }

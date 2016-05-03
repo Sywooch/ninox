@@ -332,15 +332,18 @@ class SiteController extends Controller
 	        $order->loadCustomer($customer);
         }
 
+        if((\Yii::$app->request->post("OrderForm") && $order->load(\Yii::$app->request->post())) || \Yii::$app->request->post("orderType") == 1){
+            if($order->validate() || \Yii::$app->request->post("orderType") == 1){
+                $order->create();
 
-        if(\Yii::$app->request->post("OrderForm") && $order->load(\Yii::$app->request->post()) && $order->validate() && $order->create()){
-            $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
+                $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
 
-            \Yii::trace($email);
+                \Yii::trace($email);
 
-            return $this->render('order_success', [
-                'model' =>  $order
-            ]);
+                return $this->render('order_success', [
+                    'model' =>  $order
+                ]);
+            }
         }
 
         $this->layout = 'order';

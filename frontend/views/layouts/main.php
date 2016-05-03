@@ -155,8 +155,11 @@ $('body').on('click', function(e){
 	}
 }).on('complete', '#registrationForm #signupform-phone', function(){ 
 	$("#registrationForm #countryCode").val($(this).inputmask("getmetadata").cc); 
+}).on('click', '#continueShopping', function(){
+	$("#basketPopover").hide();
+}).on('mouseout', '#basketPopover', function(){
+	$("#basketPopover").prop('style', '');
 });
-
 JS;
 
 $this->registerJs($js);
@@ -276,7 +279,7 @@ $this->beginPage();
 						<?php if(\Yii::$app->user->isGuest){
 							echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
 						}else{
-							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('account')).Html::a('Выйти', Url::to('/logout'), [
+							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет', ['class' => 'items']), Url::to('/account')).Html::a('Выйти', Url::to('/logout'), [
 									'data-method'   =>  'post'
 								]), ['class' => 'items account-icon']);
 						} ?>
@@ -320,25 +323,20 @@ $this->beginPage();
 										]
 									]
 								]
-							]),
-							\yii\helpers\Html::button('Найти', [
-								'type'  =>  'submit',
-								'class' =>  'blue-button small-button ',
-								'id'    =>  'submit'
 							]);
 							$form->end();
 							?>
 						</div>
-						<div class="phone-number">
-							<?=PopoverX::widget([
-								'header'    => '',
-								'placement' => PopoverX::ALIGN_BOTTOM,
-								'content'   =>
-									'<div class="call-back">
+						<?=Html::tag('div',
+							Html::tag('div',
+							Html::tag('span', '(044) 257-45-54', ['class' => 'number']).
+							Html::tag('div',
+								Html::tag('div',
+									'<div class="arrow"></div><div class="call-back">
 										<div>
 											<div class="blue-white-phone"></div>
 											<span class="semibold">0 800 508 208</span>
-											<span class="free-call">бесплатно со стационарных</span>
+											<span class="free-call"></span>
 										</div>
 										<div class="city-number">
 											<span class="city">Киев</span>
@@ -363,44 +361,69 @@ $this->beginPage();
 												пн: с 9.00 до 15.00
 											</span>
 										</div>
-									</div>',
-								'footer' => Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
+									</div>'.
+									Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
+									[
+										'class'	=>	'popover-arrow bottom'
+									]),
+								[
+									'class'	=>	'popover'
+								])
+							/*PopoverX::widget([
+								'header'    => '',
+								'placement' => PopoverX::ALIGN_BOTTOM,
+								'content'   =>
+									,
+								'footer' => ,
 								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number'],
-							])?>
-						</div>
-						<div class="desire-basket">
-							<div class="desire">
-								<div class="desire-icon"></div>
-								<div class="count">5</div>
-								<span>Желания</span>
-							</div>
-							<?=CartWidget::widget(['remodalInstance' => $cartModal])?>
-							<div class="in-basket popover-arrow bottom">
-								<div class="arrow"></div>
-								<span>
-									<?=\Yii::t('shop', '{username}в Вашей корзине ', [
+							])*/,
+							[
+								'class'	=>	'phone-number'
+							]).
+						Html::tag('div',
+							Html::tag('a',
+								Html::tag('div', '', ['class' => 'desire-icon']).
+								Html::tag('div', \Yii::$app->user->isGuest ? 0 : \Yii::$app->user->identity->wishesCount, ['class' => 'count']).
+								Html::tag('span', \Yii::t('shop', 'Желания')),
+								[
+									'class'	=>	'desire',
+									'href'	=>	'/account/wish-list'
+								]).
+							CartWidget::widget(['remodalInstance' => $cartModal]).
+							Html::tag('div',
+								Html::tag('div', '', ['class' => 'arrow']).
+								Html::tag('span',
+									\Yii::t('shop', '{username}в Вашей корзине ', [
 										'username' => !\Yii::$app->user->isGuest ? \Yii::$app->user->identity->Company.', '
-									: ''
+											: ''
 									]).Html::a(\Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
 									товара}	many{# товаров} other{# товар}}', [
 										'n'	=>	\Yii::$app->cart->itemsCount
 									]), '#modalCart', [
 										'class' =>  'items-count-ext'
 									])
-									?>
-								</span>
-								<span>на сумму <?=Html::tag('span',
+								).
+								Html::tag('span',
+									\Yii::t('shop', 'на сумму').'&nbsp;'.Html::tag('span',
 										Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm), [
 											'class' => 'amount-cart'
-										])?>
-								</span>
-								<span class="price-info">Вы покупаете по оптовым ценам</span>
-								<?=Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
+										])
+								).
+								Html::tag('span', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), ['class' => 'price-info']).
+								Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
 									'class' =>  'button yellow-button middle-button'
-								])?>
-								<a onclick="this.parentNode.style.display = 'none'">Продолжить покупки</a>
-							</div>
-						</div>
+								]).
+								Html::button(\Yii::t('shop', 'Продолжить покупки'), ['id' => 'continueShopping']),
+								[
+									'class'	=>	'in-basket popover-arrow bottom',
+									'id'	=>	'basketPopover'
+								]),
+							[
+								'class'	=>	'desire-basket'
+							]),
+							[
+								'class'	=>	'right-side'
+							])?>
 					</div>
 				</div>
 			<?=\frontend\widgets\MainMenuWidget::widget([
@@ -436,107 +459,136 @@ $this->beginPage();
 					?>
 				</div>
 			</div>
-			<div class="footer-menu">
-				<div class="goods-item">
-					<?=Html::tag('span', \Yii::t('shop', 'О компании'), [
+			<?=Html::tag('div',
+				Html::tag('div',
+					Html::tag('span', \Yii::t('shop', 'О компании'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/o-nas'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Контакты'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/kontakty'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Вакансии'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/vakansii'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Блог'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/blog'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Отзывы о магазине'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/otzyvy'
-					]),
+					]).
 					Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
 						'class'		=>	'link-hide',
 						'href'		=>	'/map'
-					])?>
-				</div>
-				<div class="goods-item">
-					<?=Html::tag('span', \Yii::t('shop', 'Услуги'), [
+					]),
+					[
+						'class'	=>	'goods-item'
+					]).
+				Html::tag('div',
+					Html::tag('span', \Yii::t('shop', 'Услуги'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/status-zakaza'//хз
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Акции'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/akcii'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Гарантии'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/garantii'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Бонусная программа'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/kontakty'//хз
-					])
-					?>
-				</div>
-				<div class="goods-item">
-					<?=Html::tag('span', \Yii::t('shop', 'Как заказать'), [
+					]),
+					[
+						'class'	=>	'goods-item'
+					]).
+				Html::tag('div',
+					Html::tag('span', \Yii::t('shop', 'Как заказать'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/pomoshch'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Оплата'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/oplata'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Доставка'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/dostavka'
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Возврат товара'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/vozvrat-i-obmen'
-					])
-					?>
-				</div>
-				<div class="goods-item feedback-link">
-					<?=Html::tag('span', \Yii::t('shop', 'Обратная связь'), [
+					]),
+					[
+						'class'	=>	'goods-item'
+					]).
+				Html::tag('div',
+					Html::tag('span', \Yii::t('shop', 'Обратная связь'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/vakansii'//хз
-					]),
+					]).
 					Html::tag('span', \Yii::t('shop', 'Проблемы с заказом?'), [
 						'class'		=>	'link-hide',
 						'data-href'	=>	'/kontakty'//хз
-					])
-					?>
-				</div>
-			</div>
-			<div class="feedback-block">
-				<div class="footer-content">
-					<div class="card">
-						<img src="/img/site/visa-icon.png">
-						<img src="/img/site/mastercard-icon.png">
-						<img src="/img/site/privat24-icon.png">
-					</div>
-					<div class="socialNetworks">
-						<?=SocialButtonWidget::widget([
-														  'items' => [
-															  ['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
-															  ['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
-															  ['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
-															  ['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
-															  ['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
-														  ]
-													  ])?>
-					</div>
-				</div>
-			</div>
-			<div class="footer-content">
-				<span class="left">© Интернет-магазин «krasota-style™» 2011–2015</span>
-				<span class="right">Дизайн и разработка сайта “krasota-style.ua”</span>
-			</div>
+					]),
+					[
+						'class'	=>	'goods-item feedback-link'
+					]),
+				[
+					'class'	=>	'footer-menu'
+				]).
+			Html::tag('div',
+				Html::tag('div',
+					Html::tag('div',
+						Html::img('/img/site/visa-icon.png').
+						Html::img('/img/site/mastercard-icon.png').
+						Html::img('/img/site/privat24-icon.png'),
+						[
+							'class'	=>	'card'
+						]).
+					Html::tag('div',
+						SocialButtonWidget::widget([
+							'items' => [
+								['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
+								['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
+								['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
+								['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
+								['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
+							]
+						]),
+						[
+							'class'	=>	'socialNetworks'
+						]),
+					[
+						'class'	=>	'footer-content'
+					]),
+				[
+					'class'	=>	'feedback-block'
+				]).
+			Html::tag('div',
+				Html::tag('span',
+					\Yii::t('shop', '© Интернет-магазин «krasota-style™» 2011–{year}', ['year' => date('Y')]),
+					[
+						'class' => 'left'
+					]
+				).'&nbsp;'.
+				Html::tag('span',
+					\Yii::t('shop', 'Дизайн и разработка сайта “krasota-style.ua”',
+						[
+							'class' => 'right'
+						]
+					)
+				),
+				[
+					'class'	=>	'footer-content'
+				]
+			)?>
 		</div>
 		<?=$cartModal->renderModal(),
 		$loginModal->renderModal(),

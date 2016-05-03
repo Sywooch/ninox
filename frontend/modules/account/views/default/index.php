@@ -1,23 +1,12 @@
 <?php
 
 use bobroid\remodal\Remodal;
+use yii\bootstrap\Html;
+use yii\helpers\Url;
 
-?>
-<script type="text/javascript">
-function diplay_hide (reviews)
-{
-    if ($(reviews).css('display') == 'none')
-    {
-        $(reviews).animate({height: 'show'}, 500);
-    }
-    else
-    {
-        $(reviews).animate({height: 'hide'}, 500);
-    }}
-</script>
-<div class="content">
-    <div class="menu">
-        <?=\frontend\widgets\ListGroupMenu::widget([
+echo Html::beginTag('div', ['class' => 'content']),
+    Html::tag('div',
+        \frontend\widgets\ListGroupMenu::widget([
             'items'    => [
                 [
                     'label' =>  'Личные данные',
@@ -41,77 +30,131 @@ function diplay_hide (reviews)
                 ],
                 [
                     'label' =>  'Возвраты',
-                    'href'  =>  '/account/123'
+                    'href'  =>  '/account/returns'
                 ],
                 [
                     'label' =>  'Ярмарка мастеров',
-                    'href'  =>  '/account/mas'
+                    'href'  =>  '/account/yarmarka-masterov'
                 ],
             ]
-        ])?>
-    </div>
-    <div class="user-data-content">
-        <div class="user-account-data">
-            <div class="pages">
-                <div class="page">
-                    <div class="user-account personal-data data">
-                        <div class="myriad">
-                            <i class="icon icon-note"></i> Личные данные
-                        </div>
-                        <div class="semi-font data">
-                            <div class="name">
-                                <div class="semi">
-                                    Имя
-                                </div>
-                                <div class="personal-data">
-                                    <?=\Yii::$app->user->identity->Company?>
-                                </div>
-                            </div>
-                            <div class="phone">
-                                <div class="semi">
-                                    Телефон
-                                </div>
-                                <div class="">
-                                    <div class="">
-                                        <?=\Yii::$app->user->identity->phone?>
-                                    </div>
-                                    <!--<div class="personal-data">
-                                        <?=\Yii::$app->user->identity->Phone2?>
-                                    </div>-->
-                                </div>
-                            </div>
-                            <div class="email">
-                                <div class="semi">
-                                    Эл. почта
-                                </div>
-                                <div class="personal-data">
-                                    <?=\Yii::$app->user->identity->email?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="page">
-                    <div class="user-account ">
-                        <div class="semi-font">
-                            <div class="color">
-                                 <i class="icon icon-delivery-car"></i> Адрес для доставки:
-                            </div>
-                            <div class="address-data">
-                                <div class="address">
-                                    г. Киев, ул. Гетьмана Вадима, 1А/11
-                                </div>
-                                <div class="address">
-                                    Ивано-Франковск обл., г. Коломья Новая Почта 2 отд.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="user-options">
-                <div class="border">
-                    <?=Remodal::widget([
+        ]),
+        [
+            'class' =>  'menu'
+        ]).
+    Html::beginTag('div', ['class'  =>  'user-data-content']).
+        Html::tag('div',
+            Html::tag('div',
+                Html::tag('div',
+                    Html::tag('div',
+                        Html::tag('div',
+                            Html::tag('i', '',
+                                [
+                                    'class' => 'icon icon-note'
+                                ]).
+                            ' '.
+                            \Yii::t('shop', 'Личные данные'),
+                            [
+                                'class' => 'myriad'
+                            ]).
+                        Html::tag('div',
+                            Html::tag('div',
+                                Html::tag('div',
+                                    \Yii::t('shop', 'Имя'),
+                                    [
+                                        'class' => 'semi'
+                                    ]).
+                                Html::tag('div',
+                                    \Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname,
+                                    [
+                                        'class' => 'personal-data'
+                                    ]),
+                                [
+                                    'class' => 'name'
+                                ]).
+                            Html::tag('div',
+                                Html::tag('div',
+                                    \Yii::t('shop', 'Телефон'),
+                                    [
+                                        'class' => 'semi'
+                                    ]).
+                                Html::tag('div',
+                                    Html::tag('div',
+                                        \Yii::$app->formatter->asPhone(\Yii::$app->user->identity->phone),
+                                        [
+                                            'class' => ''
+                                        ]),
+                                    [
+                                        'class' => ''
+                                    ]),
+                                [
+                                    'class' => 'phone'
+                                ]).
+                            Html::tag('div',
+                                Html::tag('div',
+                                    \Yii::t('shop', 'Эл. почта'),
+                                    [
+                                        'class' => 'semi'
+                                    ]).
+                                Html::tag('div',
+                                    \Yii::$app->user->identity->email,
+                                    [
+                                        'class' => 'personal-data'
+                                    ]),
+                                [
+                                    'class' => 'email'
+                                ]),
+                            [
+                                'class' =>  'semi-font data'
+                            ]),
+                        [
+                            'class' =>  'user-account personal-data data'
+                        ]),
+                    [
+                        'class' =>  'page'
+                    ]).
+                \yii\widgets\ListView::widget([
+                    'dataProvider'  =>  $lastOrderProvider,
+                    'itemView'      =>  function($model){
+                        return ' г. Киев, ул. Гетьмана Вадима, 1А/11 ';
+                    },
+                    'showOnEmpty' => false,
+                    'emptyTextOptions'  =>  [
+                        'style' =>  'display: none'
+                    ],
+                    'options'   =>  [
+                        'class' =>  'page'
+                    ],
+                    'itemOptions'   =>  [
+                        'class' =>  'address'
+                    ],
+                    'layout'    =>  Html::tag('div',
+                        Html::tag('div',
+                            Html::tag('div',
+                                Html::tag('i', '', ['class' => 'icon icon-delivery-car']).\Yii::t('shop', 'Адрес для доставки:'),
+                                [
+                                    'class' =>  'color'
+                                ]
+                            ).
+                            Html::tag('div',
+                                '{items}',
+                                [
+                                    'class' =>  'address-data'
+                                ]),
+                            [
+                                'class' =>  'semi-font'
+                            ]
+                        ),
+                        [
+                            'class' =>  'user-account'
+                        ]
+                    )
+                ]),
+                [
+                    'class' => 'pages'
+                ]).
+            Html::tag('div',
+                Html::tag('div',
+                    Remodal::widget([
                         'confirmButton'	=>	false,
                         'id'			=>	'editAccount',
                         'cancelButton'	=>	false,
@@ -120,73 +163,101 @@ function diplay_hide (reviews)
                         'buttonOptions'	=>	[
                             'label'		=>	\Yii::t('shop', 'Редактировать')
                         ],
-                    ]),
+                    ]).
                     Remodal::widget([
-                            'confirmButton'	=>	false,
-                            'id'			=>	'changePassword',
-                            'cancelButton'	=>	false,
-                            'addRandomToID'	=>	false,
-                            'content'		=>	$this->render('_change_password_modal'),
-                            'buttonOptions'	=>	[
-                                'label'		=>	\Yii::t('shop', 'Изменить пароль')
-                            ],
-                        ])?>
-                    <a>Выход</a>
-                </div>
-            </div>
-        </div>
-        <div class="user-money-discount">
-            <div class="user-account personal-discount">
-                <div class="myriad">
-                    <i class="icon icon-money-pig"></i> Личный счет
-                </div>
-                <div class="semi-font">
-                    <div class="address-data">
-                        <div class=" address">
-                            На вашем счету:
-                        </div>
-                            <div class="  account-money">
-                            <?=\Yii::$app->user->identity->money?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="user-account personal-discount">
-                <div class="myriad">
-                    <i class="icon icon-your-discont"></i>  Ваша скидка
-                </div>
-                <div class="semi-font">
-                    <div class="address-data">
-                        <div class="address">
-                            Дисконтная карта - 2% на все товары на сайте
-                        </div>
-                        <div class="address">
-                            Персональная скидка - 15% на <a>избранные</a> категории
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php if((time() - strtotime(\Yii::$app->user->identity->giveFeedbackClosed)) > 3600){ ?>
-            <?php
-            $js = <<<'SCRIPT'
-$("#reviews .icon.icon-exit").on('click', function(e){
-    $.ajax({
-        type: 'POST',
-		url: '/account/betterlistclosed',
-		success: function(data){
-            diplay_hide('.reviews')
+                        'confirmButton'	=>	false,
+                        'id'			=>	'changePassword',
+                        'cancelButton'	=>	false,
+                        'addRandomToID'	=>	false,
+                        'content'		=>	$this->render('_change_password_modal'),
+                        'buttonOptions'	=>	[
+                            'label'		=>	\Yii::t('shop', 'Изменить пароль')
+                        ],
+                    ]).
+                    Html::a('Выйти',
+                        Url::to('/logout'), [
+                            'data-method'   =>  'post'
+                        ]), [
+                        'class' => 'border'
+                    ]),
+                [
+                    'class' =>  'user-options'
+                ]),
+            [
+                'class' => 'user-account-data'
+            ]).
+        Html::beginTag('div', ['class' =>   'user-money-discount']);
+
+        if(!empty(\Yii::$app->user->identity->money)){
+            echo Html::tag('div',
+                Html::tag('div',
+                    Html::tag('div',
+                        Html::tag('i', '', ['class' => 'icon icon-money-pig']).\Yii::t('shop', 'Личный счёт')
+                    ),
+                    [
+                        'class' =>  'myriad'
+                    ]).
+                Html::tag('div',
+                    Html::tag('div',
+                        Html::tag('div', \Yii::t('shop', 'На вашем счету:'), ['class' => 'address']).
+                        Html::tag('div', \Yii::$app->user->identity->money, ['class' => 'account-money']),
+                        [
+                            'class' =>  'address-data'
+                        ]),
+                    [
+                        'class' =>  'semi-font'
+                    ]),
+                [
+                    'class' =>  'user-account personal-discount'
+                ]);
         }
-    });
-});
-SCRIPT;
 
-$this->registerJs($js);
+        if(!empty(\Yii::$app->user->identity->cardNumber) || !empty(\Yii::$app->user->identity->personalRules)){
+            echo Html::tag('div',
+                Html::tag('div',
+                    Html::tag('div',
+                        Html::tag('i', '', ['class' => 'icon icon-your-discont']).\Yii::t('shop', 'Ваша скидка')
+                    ),
+                    [
+                        'class' =>  'myriad'
+                    ]).
+                Html::tag('div',
+                    Html::tag('div',
+                        (!empty(\Yii::$app->user->identity->cardNumber) ? Html::tag('div', \Yii::t('shop', 'Дисконтная карта - 2% на все товары на сайте'), ['class' => 'address']) : '').
+                        (!empty(\Yii::$app->user->identity->personalRules) ? Html::tag('div', \Yii::t('shop', 'Персональная скидка - 15% на <a>избранные</a> категории'), ['class' => 'address']) : ''),
+                        [
+                            'class' =>  'address-data'
+                        ]),
+                    [
+                        'class' =>  'semi-font'
+                    ]),
+                [
+                    'class' =>  'user-account personal-discount'
+                ]);
+        }
 
-            echo $this->render('_account_leaveFeedback', [
+        echo Html::endTag('div');
+     if(!empty($lastOrderProvider->getModels()) && (time() - strtotime(\Yii::$app->user->identity->giveFeedbackClosed)) > 3600){
+            $js = <<<'JS'
+                $("#reviews .icon.icon-exit").on('click', function(e){
+                    $.ajax({
+                        type: 'POST',
+                        url: '/account/betterlistclosed',
+                        success: function(data){
+                            var reviews = $('.reviews');
+                        
+                            reviews.animate({height: (reviews.css('display') == 'none' ? 'show' : 'hide')}, 500);
+                        }
+                    });
+                });
+JS;
+
+        $this->registerJs($js);
+
+         echo $this->render('_account_leaveFeedback', [
                 'customerBuyedItems'    =>  $buyedItems
             ]);
+        }
 
-             } ?>
-    </div>
-</div>
+echo Html::endTag('div'),
+    Html::endTag('div');

@@ -12,38 +12,58 @@ use yii\jui\Accordion;
  */
 
 $model = new \frontend\models\UsersInterestsForm();
+$js = <<<'JS'
+    function scrollToAnchor(aid){
+       $('html,body').animate({scrollTop: ($("a[name='"+ aid +"']").offset().top - 100)},2000);
+    }
 
+    $("body").on('click', '#link', function(e){
+        e.preventDefault();
+        scrollToAnchor($(this).prop('href').replace(/(.*)\#/, ''));
+    });
+JS;
+$this->registerJs($js);
 ?>
+<!--<script type="text/javascript">
+    function scrollToAnchor(aid){
+        var aTag = $("a[name='"+ aid +"']");
+        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    }
 
+    $("#link").click(function() {
+        scrollToAnchor('#');
+    });
+
+</script>-->
 <div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="left-side">
         <div class="left-side-menu">
-            <div class="left-side-menu-item" href="#questions-answer">
-                <a class="#questions-answer">Вопросы и ответы</a>
+            <div class="left-side-menu-item" >
+                <a id="link" href="#questions-answer">Вопросы и ответы</a>
             </div>
-            <div class="left-side-menu-item" href="#about-work-header">
-                <a class="#about-work-header">Как мы работаем</a>
+            <div class="left-side-menu-item" >
+                <a id="link" href="#about-work-header">Как мы работаем</a>
             </div>
-            <div class="left-side-menu-item" href="#about-delivery-payment-header">
-                <a href="#about-delivery-payment-header">Доставка и оплата</a>
+            <div class="left-side-menu-item" >
+                <a id="link" href="#about-delivery-payment-header">Доставка и оплата</a>
             </div>
-            <div class="left-side-menu-item" href="#about-return-header">
-                <a href="#about-return-header">Гарантии и возврат</a>
+            <div class="left-side-menu-item" >
+                <a id="link" href="#about-return-header">Гарантии и возврат</a>
             </div>
-            <div class="left-side-menu-item" href="#about-contacts-header">
-                <a href="#about-contacts-header">Контакты</a>
+            <div class="left-side-menu-item" >
+                <a id="link" href="#about-contacts-header">Контакты</a>
             </div>
-            <div class="left-side-menu-item" href="#about-as-header">
-                <a href="#about-as-header">О нас</a>
-            </div>
-            <div class="left-side-menu-item" href="">
-                <a href="">Сотрудничество с нами</a>
+            <div class="left-side-menu-item">
+                <a id="link" href="#about-as-header">О нас</a>
             </div>
             <div class="left-side-menu-item" href="">
-                <a href="">Вакансии</a>
+                <a id="link" href="">Сотрудничество с нами</a>
+            </div>
+            <div class="left-side-menu-item" href="">
+                <a id="link" href="">Вакансии</a>
             </div>
             <div class="left-side-menu-item" href="#about-TermOfUse-header">
-                <a href="#about-TermOfUse-header">Условия исп. сайта</a>
+                <a id="link" href="#about-TermOfUse-header">Условия исп. сайта</a>
             </div>
         </div>
     </div>
@@ -110,7 +130,7 @@ $model = new \frontend\models\UsersInterestsForm();
         </div>
         <div class="about-delivery padding-bottom">
             <div class="about-delivery-header about-header semi-bold">
-                <a id="about-delivery-payment-header">Доставка</a>
+                <a name="about-delivery-payment-header">Доставка</a>
             </div>
             <div class="about-delivery-content">
                 <div class="about-delivery-content-img"></div>
@@ -311,7 +331,7 @@ $model = new \frontend\models\UsersInterestsForm();
         </div>
         <div class="about-contacts padding-bottom">
             <span class="about-header semi-bold">
-                <a class="#about-contacts-header">Контакты</a>
+                <a name="about-contacts-header">Контакты</a>
             </span>
             <div class="contacts-inform">
                 <div class="inform">

@@ -15,7 +15,7 @@ use yii\widgets\Breadcrumbs;
 
 $ordersPage = $this->title == 'Заказы';
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
 function getCookie(name){
 	var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
 	return matches ? decodeURIComponent(matches[1]) : undefined;
@@ -87,7 +87,7 @@ $(".showChat").on('click', function(e){
 $("body").on('click', '.rollback', function(){
     history.back();
 });
-SCRIPT;
+JS;
 
 $newOrderAlert = <<<'JS'
 var lastOrder = 0,

@@ -119,6 +119,11 @@ echo Html::tag('div',
             ],
             'pager' =>  [
                 'class'             =>  ScrollPager::className(),
+                'triggerTemplate'   =>
+                    Html::tag('div', \Yii::t('shop', 'Ещё 15 товаров'),
+                    [
+                        'class' => 'load-more'
+                    ]),
                 'item'              =>  '.hovered',
                 'noneLeftText'      =>  '',
                 'paginationClass'   =>  'pagination',
@@ -160,7 +165,7 @@ echo Html::tag('div',
                 ['class' => 'seo-city']),
             ['class' => 'category-description']),
         ['class' => 'content']),
-    ['class' => $category->viewFile.' category'.' clear-fix']
+    ['class' => $category->viewFile.' clear-fix']
 );
 
 \yii\widgets\Pjax::end();

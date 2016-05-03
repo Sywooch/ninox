@@ -21,10 +21,12 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
-        'js/essentials.js'
+        'js/essentials.js',
+        'js/jquery.serializejson.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
+        'yii\web\JqueryAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
 }

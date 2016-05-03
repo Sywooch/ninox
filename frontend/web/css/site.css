@@ -9,6 +9,7 @@ body{
 	position: relative;
 	font-family: OpenSans;
 	color: #75868f;
+	padding: 0px !important;/*надеюсь ничего не поедет поедет*/
 }
 
 p{
@@ -41,6 +42,10 @@ h2{
 
 .link-hide{
 	cursor: pointer;
+}
+
+.header{
+	height: 200px;
 }
 
 /* Header style
@@ -1187,7 +1192,54 @@ TODO: fix my merge, pls (begin)
 TODO: fix my merge, pls (end)
 
 */
+.load-more {
+	margin: 25px auto;
+	cursor: pointer;
+	width: 264px;
+	height: 47px;
+	display: inline-block;
+	position: relative;
+	padding: 15px 0;
+	text-align: center;
+	border-radius: 5px;
+	left: 35%; /* TODO: pls fix it */
+	box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.4);
+	font-size: 15px;
+	vertical-align: middle;
+	font-family: OpenSans-Semibold;
+	color: #6f550f;
+	text-shadow: 1px 1px #fee37f;
+	background: rgba(254,228,60,1);
+	background: -moz-linear-gradient(top, rgba(254,228,60,1) 0%, rgba(250,184,29,1) 92%, rgba(250,184,29,1) 96%, rgba(250,184,29,1) 98%, rgba(250,184,29,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(254,228,60,1)), color-stop(92%, rgba(250,184,29,1)), color-stop(96%, rgba(250,184,29,1)), color-stop(98%, rgba(250,184,29,1)), color-stop(100%, rgba(250,184,29,1)));
+	background: -webkit-linear-gradient(top, rgba(254,228,60,1) 0%, rgba(250,184,29,1) 92%, rgba(250,184,29,1) 96%, rgba(250,184,29,1) 98%, rgba(250,184,29,1) 100%);
+	background: -o-linear-gradient(top, rgba(254,228,60,1) 0%, rgba(250,184,29,1) 92%, rgba(250,184,29,1) 96%, rgba(250,184,29,1) 98%, rgba(250,184,29,1) 100%);
+	background: -ms-linear-gradient(top, rgba(254,228,60,1) 0%, rgba(250,184,29,1) 92%, rgba(250,184,29,1) 96%, rgba(250,184,29,1) 98%, rgba(250,184,29,1) 100%);
+	background: linear-gradient(to bottom, rgba(254,228,60,1) 0%, rgba(250,184,29,1) 92%, rgba(250,184,29,1) 96%, rgba(250,184,29,1) 98%, rgba(250,184,29,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fee43c', endColorstr='#fab81d', GradientType=0 );
+}
 
+.load-more:hover{
+	background: linear-gradient(to bottom, #FCDB33 0%, #FAD93F 80%) repeat scroll 0 0 transparent;
+}
+
+.load-more:hover::after{
+	border-top: 20px solid #FAD93F;
+}
+
+.load-more::after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 100%;
+	width: 0;
+	height: 0;
+	border-top: 20px solid #faba1f;
+	border-right: 132px solid transparent;
+	border-bottom: 0 solid transparent;
+	border-left: 132px solid transparent;
+}
 /*============* END CATEGORY STYLE *==============*/
 
 /*============* RATING STYLE *==============*/
@@ -2453,6 +2505,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	overflow: auto;
 	width: 1170px;
     margin: 0 auto;
+	padding-top: 30px;
 }
 
 .user-data-content{
@@ -2462,8 +2515,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .user-account-data{
-    height: 400px;
-    width: 100%;
+	height: auto;
+	width: 100%;
 }
 
 .user-money-discount{
@@ -3676,9 +3729,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	cursor: pointer;
 }
 
+.items.account-icon a{
+	margin-left: 10px;
+}
+
 .personal-account .account-icon:before{
 	content: url("/img/site/account.png");
-	margin-right: 5px;
+	margin-right: -5px;
 }
 
 .personal-account .items:after{
@@ -3699,13 +3756,14 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: linear-gradient(#ffffff, #f3f3f3); /* Standard syntax */
 	border-top: 1px solid #e5e5e5;
 	border-bottom: 1px solid #fefefe;
+	overflow: hidden;
 }
 
 .under-menu-content{
 	display: block;
 	width: 1172px;
 	margin: auto;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
 .sticky-wrapper:not(.sticky){
@@ -3723,10 +3781,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	transition: height 1s;
 }
 
+.header .sticky .input-style-main{
+	float: left;
+	padding-left: 50px;
+	width: auto;
+}
+
 .header .input-style-main{
 	float: left;
 	padding-left: 50px;
-	min-width: 450px;
+	width: auto;
 }
 
 .under-menu .logo{
@@ -3750,6 +3814,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .tt-scrollable-menu{
 	float: left;
+	width: 100%;
 }
 
 .under-menu-content .tt-scrollable-menu .tt-menu{
@@ -3775,7 +3840,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .input-style-main input[type='text'] {
 	background: url("/img/site/search.png") no-repeat 10px 7px;
-	width: 305px;
+	width: 450px;
 	height: 35px;
 	-moz-box-shadow: inset 0 0 3px #e4e4e4;
 	-webkit-box-shadow: inset 0 0 3px #e4e4e4;
@@ -3837,9 +3902,31 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .header .phone-number{
 	display: inline-block;
-	padding: 20px 0 0 50px;
+	padding: 20px 45px 0px 0px;
 	transition: padding;
-	transition-duration: 1.5s;
+	transition-duration: 1s;
+}
+
+.header .phone-number .popover{
+	padding: 20px !important;
+	margin-top: 10px;
+	border:0px;
+	top: auto;
+	left: auto;
+	margin-left: -50px;
+}
+
+.header .phone-number .popover:hover{
+	display: block !important;
+}
+
+.header .phone-number .popover .arrow{
+	border: none;
+	margin-left: 76px;
+}
+
+.header .sticky .phone-number .popover{
+
 }
 
 .header .sticky .phone-number .popover.bottom{
@@ -3847,14 +3934,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .modal-open{
 	padding: 0px !important;
-	margin-right: 8px;
+	margin-right: 7px;
 }
 .header .phone-number .popover.bottom{
+	border: 0px;
 
 }
 
 .header .phone-number .popover.bottom > .arrow{
 	margin-left: 20px;
+	border: 0px;
 }
 
 .header .phone-number .popover.bottom > .arrow::after{
@@ -3867,10 +3956,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border-width: 11px;
 }
 
+.right-side{
+	float: right;
+}
+
 .sticky .phone-number{
 	padding-top: 3px;
 	transition: padding;
 	transition-duration: 1s;
+	margin-right: 41px;
+	padding-right: 0px;
 }
 
 .header .phone-number .number{
@@ -3878,6 +3973,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	color: #3b3b39;
 	cursor: pointer;
+	padding-bottom: 11px;
+}
+
+.header .phone-number .number:hover + .popover{
+	display: block !important;
 }
 
 .header .phone-number .popover-title{
@@ -3913,9 +4013,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	color: #4f4f4f;
 	margin-top: -5px;
-	height: 26px;
-	display: inline-block;
-	vertical-align: bottom;
+	height: 40px;
+	display: block;
+	vertical-align: middle;
 }
 
 .call-back .free-call{
@@ -3981,6 +4081,17 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: 25px;
 	float: left;
 	text-decoration: none;
+}
+
+.desire-basket #basketPopover button{
+	float: right;
+	background: transparent none repeat scroll 0% 0%;
+	border: medium none;
+	line-height: 45px;
+}
+
+.desire-basket #basketPopover button:hover{
+	text-decoration: underline;
 }
 
 .in-basket{
@@ -4155,7 +4266,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .sticky .header-menu:after{
 	background: none;
+	display: none;
 }
+
+/*.sticky .header-menu:before{
+	background: none;
+	display: none;
+}*/
 
 .sticky .header-menu-item{
 	height: 100%;
@@ -4199,19 +4316,29 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .header-menu{
 	width: 100%;
 	background: #2ba3e1; /* For browsers that do not support gradients */
-	background: -webkit-linear-gradient(#5ec0f3, #018ad2); /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#5ec0f3, #018ad2); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#5ec0f3, #018ad2); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(#5ec0f3, #018ad2); /* Standard syntax */
+	/*background: -webkit-linear-gradient(#5ec0f3, #018ad2); !* For Safari 5.1 to 6.0 *!
+	background: -o-linear-gradient(#5ec0f3, #018ad2); !* For Opera 11.1 to 12.0 *!
+	background: -moz-linear-gradient(#5ec0f3, #018ad2); !* For Firefox 3.6 to 15 *!
+	background: linear-gradient(#5ec0f3, #018ad2); !* Standard syntax *!*/
 	height: 78px;
 	-webkit-transition: height 1s;
 	-moz-transition: height 1s;
 	transition: height 1s;
+	overflow: visible;
 }
 
 .sticky .header-menu{
 	height: 45px;
 }
+/*
+.header-menu:before{
+	overflow: auto;
+	height: 38px;
+	content: "";
+	display: block;
+	background: url("/img/site/shadow_2.png") repeat;
+	width: 100%;
+}*/
 
 .header-menu:after{
 	overflow: auto;
@@ -4455,9 +4582,11 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 /*========*  MAIN  *=========*/
 
 .main-content{
-	padding-bottom: 440px;
+	padding-bottom: 515px;
 	overflow: auto;
-	padding-top: 10px;
+    /*
+	padding-top: 10px;хз!!!!
+    */
 }
 
 .main-content-slider .slick-slide img{
@@ -4961,7 +5090,16 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .footer .blue-line{
 	background: #29a1e0;
 	width: 100%;
-	height: 100px;
+	height: 100%;
+}
+
+.footer .blue-line:before{
+	overflow: auto;
+	height: 38px;
+	content: "";
+	display: block;
+	background: url("/img/site/shadow_1.png") repeat;
+	width: 100%;
 }
 
 .footer .blue-line:after{
@@ -5197,6 +5335,10 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	margin: auto;
 }
 
+.site-request-password-reset .row{
+	margin: 0px;
+}
+
 .site-signup{
 	margin: auto;
 	width: 1170px;
@@ -5214,4 +5356,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	float: none;
 }
 
-
+.remodal-is-locked body{
+	padding: 0px !important;
+	margin-right: 7px;
+}

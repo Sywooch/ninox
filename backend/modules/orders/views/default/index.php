@@ -148,36 +148,42 @@ var ordersChanges = function(e){
 
 $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
     event.preventDefault();
-
-    $.ajax({
-        type: "POST",
-        url: '/orders/saveorderpreview',
-        data: $(this).serialize(),
-        success: function(response){
-            if(response.length == 0 || response == false){
-                return false;
-            }
-
-            var tr = $('div[data-attribute-type="ordersGrid"] tr[data-key="' + response.id + '"]')[0],
-                responsibleUser = tr.querySelector('small.responsibleUser'),
-                actualAmount = tr.querySelector('span.actualAmount');
-
-            if(responsibleUser != null){
-                if(response.responsibleUserID != 0){
-                    responsibleUser.innerHTML = response.responsibleUserID;
-                }else{
-                    responsibleUser.remove();
-                }
-            }else if(response.responsibleUserID != 0){
-                var node = document.createElement('small');
-                node.innerHTML = response.responsibleUserID;
-                node.setAttribute('class', 'responsibleUser');
-                tr.querySelector('td[data-col-seq="7"]').appendChild(node);
-            }
-
-            actualAmount.innerHTML = response.actualAmount + ' грн.';
-        }
-    });
+    
+    var form = $(this);
+   
+   if(form.find('.has-error').length) {
+      return false;
+   }
+   
+   $.ajax({
+       type: "POST",
+       url: '/orders/order-preview',
+       data: $.extend({action: 'save'}, form.serializeJSON()),
+       success: function(response){
+           if(response.length == 0 || response == false){
+               return false;
+           }
+   
+           var tr = $('div[data-attribute-type="ordersGrid"] tr[data-key="' + response.id + '"]')[0],
+               responsibleUser = tr.querySelector('small.responsibleUser'),
+               actualAmount = tr.querySelector('span.actualAmount');
+   
+           if(responsibleUser != null){
+               if(response.responsibleUserID != 0){
+                   responsibleUser.innerHTML = response.responsibleUserID;
+               }else{
+                   responsibleUser.remove();
+               }
+           }else if(response.responsibleUserID != 0){
+               var node = document.createElement('small');
+               node.innerHTML = response.responsibleUserID;
+               node.setAttribute('class', 'responsibleUser');
+               tr.querySelector('td[data-col-seq="7"]').appendChild(node);
+           }
+   
+           actualAmount.innerHTML = response.actualAmount + ' грн.';
+       }
+   });
 
     return false;
 });
@@ -342,64 +348,8 @@ $css = <<<'CSS'
 .nav.nav-tabs li.active a{
     background-color: #cfcfcf;
 }
-CSS;
 
-\bobroid\sweetalert\SweetalertAsset::register($this);
-
-$this->registerJs($js);
-$this->registerCss($css);
-
-$accordionJs = <<<'JS'
-(function( $ ){
-    $.fn.menuAccordion = function(options) {
-        if(options == undefined || options == null){
-            options = {};
-        }
-
-        var defaultOptions = {
-                panelWidth:  '340',
-                labelWidth: '100',
-                animationDelay: '300'
-            },
-            container = this,
-            activePanel = container.find('.panel:first');
-
-        options = $.extend(defaultOptions, options);
-
-        $(activePanel).addClass('active');
-
-        this.delegate('.panel', 'click', function(e){
-            if(!$(this).is('.active')){
-                $(activePanel).animate({width: options.labelWidth + "px"}, options.animationDelay);
-                $(this).animate({width: options.panelWidth + "px"}, options.animationDelay);
-                container.find('.panel').removeClass('active');
-                $(this).addClass('active');
-                activePanel = this;
-            };
-        });
-
-        this.delegate('input', 'keypress', function(e){
-            if(e.keyCode == 13){
-                e.preventDefault();
-                $("#searchResults").tab('show');
-                $("#searchResults").css('display', 'block');
-                url = '/orders/showlist?ordersSource=search&context=true&' + e.currentTarget.name + '=' + e.currentTarget.value;
-                $.pjax({url: url, container: '#ordersGridView_search-pjax', push: false, replace: false, timeout: 10000,scrollTo: true});
-
-            }
-        });
-    };
-})( jQuery );
-
-$("#accordion").menuAccordion();
-JS;
-
-$this->registerJs($accordionJs, 3);
-
-$this->title = 'Заказы';
-?>
-<style>
-    .ordersStatsContainer{
+.ordersStatsContainer{
         height: 100px;
     }
 
@@ -493,15 +443,72 @@ $this->title = 'Заказы';
     .ordersStats .icon{
         float: left;
     }
-</style>
-<?=\backend\modules\orders\widgets\OrdersStatsWidget::widget([
+CSS;
+
+\bobroid\sweetalert\SweetalertAsset::register($this);
+
+$this->registerJs($js);
+$this->registerCss($css);
+
+$accordionJs = <<<'JS'
+(function( $ ){
+    $.fn.menuAccordion = function(options) {
+        if(options == undefined || options == null){
+            options = {};
+        }
+
+        var defaultOptions = {
+                panelWidth:  '340',
+                labelWidth: '100',
+                animationDelay: '300'
+            },
+            container = this,
+            activePanel = container.find('.panel:first');
+
+        options = $.extend(defaultOptions, options);
+
+        $(activePanel).addClass('active');
+
+        this.delegate('.panel', 'click', function(e){
+            if(!$(this).is('.active')){
+                $(activePanel).animate({width: options.labelWidth + "px"}, options.animationDelay);
+                $(this).animate({width: options.panelWidth + "px"}, options.animationDelay);
+                container.find('.panel').removeClass('active');
+                $(this).addClass('active');
+                activePanel = this;
+            };
+        });
+
+        this.delegate('input', 'keypress', function(e){
+            if(e.keyCode == 13){
+                e.preventDefault();
+                $("#searchResults").tab('show');
+                $("#searchResults").css('display', 'block');
+                url = '/orders/showlist?ordersSource=search&context=true&' + e.currentTarget.name + '=' + e.currentTarget.value;
+                $.pjax({url: url, container: '#ordersGridView_search-pjax', push: false, replace: false, timeout: 10000,scrollTo: true});
+
+            }
+        });
+    };
+})( jQuery );
+
+$("#accordion").menuAccordion();
+JS;
+
+$this->registerJs($accordionJs, 3);
+
+$this->title = 'Заказы';
+
+
+echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
     'model' =>  $ordersStatsModel
 ]),
 \backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
-]),
-Html::tag('div', OrdersSearchWidget::widget([
+]);
+
+echo Html::tag('div', OrdersSearchWidget::widget([
     'searchModel'   =>  $searchModel,
     'items'         =>  [
         [
@@ -544,7 +551,7 @@ Html::tag('div', OrdersSearchWidget::widget([
                     kvExpandRow({
                         "gridId": selector.substr(1),
                         "hiddenFromExport":true,
-                        "detailUrl":"/orders/getorderpreview",
+                        "detailUrl":"/orders/order-preview",
                         "expandTitle":"Развернуть",
                         "collapseTitle":"Свернуть",
                         "expandAllTitle":"Развернуть все",
@@ -566,7 +573,7 @@ Html::tag('div', OrdersSearchWidget::widget([
                     kvExpandRow({
                         "gridId": selector.substr(1),
                         "hiddenFromExport":true,
-                        "detailUrl":"/orders/getorderpreview",
+                        "detailUrl":"/orders/order-preview",
                         "expandTitle":"Развернуть",
                         "collapseTitle":"Свернуть",
                         "expandAllTitle":"Развернуть все",
@@ -652,4 +659,3 @@ $modal = new \bobroid\remodal\Remodal([
     ]
 ]);
 echo $modal->renderModal();
-?>
