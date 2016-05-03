@@ -109,13 +109,13 @@ $this->registerJs($js);
 				<div class="two-items content-items">
 					<?php
 					if(!empty(BannersCategory::findOne(['alias' => '1x1.3'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.3'])->banners[0]);
+                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.3'], true)->banners[0]);
                     }else{
 						echo $this->render('index/banner2');
 					}
 
 					if(!empty(BannersCategory::findOne(['alias' => '1x1.4'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.4'])->banners[0]);
+                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.4'], true)->banners[0]);
                     }else{
 						echo $this->render('index/banner3');
 					}

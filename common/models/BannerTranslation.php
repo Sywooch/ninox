@@ -15,6 +15,10 @@ use Yii;
  */
 class BannerTranslation extends \yii\db\ActiveRecord
 {
+
+    const STATE_ENABLED = 1;
+    const STATE_DISABLED = 0;
+
     /**
      * @inheritdoc
      */
