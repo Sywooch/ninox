@@ -90,6 +90,40 @@ class Good extends \yii\db\ActiveRecord
     const STATE_ENABLED = 1;
     const STATE_DISABLED = 0;
 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTranslations(){
+        return $this->hasMany(GoodTranslation::className(), ['ID' => 'ID']);
+    }
+
+    /**
+     * @param $key string
+     * @return GoodTranslation
+     */
+    public function getTranslationByKey($key){
+        $defaultLang = 'ru_RU';
+        $defaultLangModel = new GoodTranslation();
+        $currentLangModel = new GoodTranslation();
+        foreach($this->translations as $translation){
+            if($translation->language == $defaultLang){
+                $defaultLangModel = $translation;
+            }
+            if($translation->language == $key){
+                $currentLangModel = $translation;
+            }
+        }
+
+        if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
+            foreach($defaultLangModel as $key => $value){
+                $defaultLangModel[$key] = empty($currentLangModel[$key]) ? $value : $currentLangModel[$key];
+            }
+        }
+
+        return $defaultLangModel;
+    }
+
     /**
      * Возвращает оптовую цену товара
      *
@@ -183,6 +217,18 @@ class Good extends \yii\db\ActiveRecord
         $query->limit(10);
 
         return $query->asArray()->all();
+    }
+
+    public function getName(){
+        return $this->translation->name;
+    }
+
+    public function getLink(){
+        return $this->translation->link;
+    }
+
+    public function getDescription(){
+        return $this->translation->description;
     }
 
     public function afterFind(){
