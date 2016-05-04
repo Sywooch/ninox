@@ -3594,15 +3594,29 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-contacts{
 	color: #282828;
+	overflow: hidden;
+	width: 880px;
+	margin: auto;
+/*///////////хз...........*/
 }
 
 .about-contacts .about-header{
 	border-bottom: none;
 }
 
+.map #ui-id-1.ui-accordion-header::before {
+	content: none;
+}
+
 .about-contacts .map{
 	display: inline-block;
 	margin-top: 40px;
+}
+
+.about-contacts .map span{
+	display: block;
+	text-align: center;
+	margin-bottom: 20px;
 }
 
 .about-contacts .map .ui-accordion-content-active{
@@ -4968,8 +4982,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	box-shadow: none;
 }
 
-
-
 .main-icon .icon-anim{
 	height: 50px;
 	width: 50px;
@@ -5016,9 +5028,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 @keyframes anim { 0% { -moz-transform: rotate(-90deg); -o-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); -ms-transform: rotate(-90deg); transform: rotate(-90deg); filter: progid:DXImageTransform.Microsoft.Matrix( M11=$m11, M12=$m12,M21=$m21, M22=$m22, sizingMethod='auto expand'); zoom: 1; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); opacity: 0; }
 	50% { filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false); opacity: 1; }
 	100% { -moz-transform: rotate(360deg); -o-transform: rotate(360deg); -webkit-transform: rotate(360deg); -ms-transform: rotate(360deg); transform: rotate(360deg); filter: progid:DXImageTransform.Microsoft.Matrix( M11=$m11, M12=$m12,M21=$m21, M22=$m22, sizingMethod='auto expand'); zoom: 1; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); opacity: 0; } }
-
-
-
 
 .goods-content-icons .icon-best{
 	background: #8acc5e;
@@ -5675,4 +5684,18 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .remodal-is-locked body{
 	padding: 0px !important;
 	margin-right: 7px;
+}
+
+.help-page{
+	color: black;
+}
+
+.help-page ul{
+	list-style: disc inside;
+	padding-left: 30px;
+}
+
+.help-page span{
+	display: block;
+	padding-bottom: 10px;
 }
