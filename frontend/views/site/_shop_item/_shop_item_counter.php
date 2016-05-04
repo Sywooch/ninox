@@ -9,21 +9,27 @@
 use frontend\widgets\ItemCounterWidget;
 use yii\helpers\Html;
 
-if($model->isUnlimited || $model->count > 9){
-	$name = \Yii::t('shop', 'достаточно');
-	$class = 'green';
-}else{
-	if($model->count > 1){
-		$name = \Yii::t('shop', 'заканчивается');
-		$class = 'red';
-	}else if($model->count <= 0){
-		$name = \Yii::t('shop', 'нет в наличии');
-		$class = 'gray';
+if($model->enabled){
+	if($model->isUnlimited || $model->count > 9){
+		$name = \Yii::t('shop', 'достаточно');
+		$class = 'green';
 	}else{
-		$name = \Yii::t('shop', 'последний');
-		$class = 'gray bold';
+		if($model->count > 1){
+			$name = \Yii::t('shop', 'заканчивается');
+			$class = 'red';
+		}else if($model->count <= 0){
+			$name = \Yii::t('shop', 'нет в наличии');
+			$class = 'gray';
+		}else{
+			$name = \Yii::t('shop', 'последний');
+			$class = 'gray bold';
+		}
 	}
+}else{
+	$name = \Yii::t('shop', 'нет в наличии');
+	$class = 'gray';
 }
+
 
 echo Html::tag('div',
 	Html::tag('div',
