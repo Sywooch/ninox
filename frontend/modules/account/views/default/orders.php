@@ -16,50 +16,61 @@ JS;
 
 $this->registerJs($js);
 
-?>
-<div class="content">
-    <?=Html::tag('div', \frontend\widgets\ListGroupMenu::widget([
+echo Html::tag('div',
+    Html::tag('div', \frontend\widgets\ListGroupMenu::widget([
         'items'    => [
             [
-                'label' =>  'Личные данные',
+                'label' =>  \Yii::t('shop', 'Личные данные'),
                 'href'  =>  '/account'
             ],
             [
-                'label' =>  'Мои заказы',
+                'label' =>  \Yii::t('shop', 'Мои заказы'),
                 'href'  =>  '/account/orders'
             ],
             [
-                'label' =>  'Моя скидка',
+                'label' =>  \Yii::t('shop', 'Моя скидка'),
                 'href'  =>  '/account/discount'
             ],
             [
-                'label' =>  'Список желаний',
+                'label' =>  \Yii::t('shop', 'Список желаний'),
                 'href'  =>  '/account/wish-list'
             ],
             [
-                'label' =>  'Мои отзывы',
+                'label' =>  \Yii::t('shop', 'Мои отзывы'),
                 'href'  =>  '/account/reviews'
             ],
-            [
-                'label' =>  'Возвраты',
-                'href'  =>  '/account/123'
+            /*[
+                'label' =>  \Yii::t('shop', 'Возвраты'),
+                'href'  =>  '/account/returns'
             ],
             [
-                'label' =>  'Ярмарка мастеров',
-                'href'  =>  '/account/mas'
-            ],
+                'label' =>  \Yii::t('shop', 'Ярмарка мастеров'),
+                'href'  =>  '/account/yarmarka-masterov'
+            ],*/
         ]
-    ]), ['class' => 'menu'])?>
-    <div class="user-data-content">
-        <div class="user-account box myriad">
-            <i class="icon icon-box"></i> Мои заказы
-        </div>
-        <div class="orders">
-            <?=ListView::widget([
+    ]), ['class' => 'menu']).
+    Html::tag('div',
+        Html::tag('div',
+            Html::tag('i', '', ['class' => 'icon icon-box']).' '.\Yii::t('shop', 'Мои заказы'),
+            [
+                'class' =>  'user-account box myriad'
+            ]
+        ).
+        Html::tag('div',
+            ListView::widget([
                 'dataProvider'  =>  $ordersDataProvider,
                 'summary'       =>  false,
                 'itemView'      =>  '_order',
-            ])?>
-        </div>
-    </div>
-</div>
+            ]),
+            [
+                'class' =>  'orders'
+            ]
+        ),
+        [
+            'class' =>  'user-data-content'
+        ]
+    ),
+    [
+        'class' =>  'content'
+    ]
+);

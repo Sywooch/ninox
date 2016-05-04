@@ -130,7 +130,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
             (044) 232 82 20
         </div>
         <div class="ordering-title">
-            Оформление заказа
+            <?=\Yii::t('shop', 'Оформление заказа')?>
         </div>
     </div>
     <div class="order-body">
@@ -186,17 +186,17 @@ $form = \yii\bootstrap\ActiveForm::begin([
             <div class="ordering">
                 <div class="load">
                     <div class="ordering-body">
-                        <div class="semi-bold">Итого</div>
+                        <div class="semi-bold"><?=\Yii::t('shop', 'Итого')?></div>
                         <div class="ordering-body-items">
                         <div class="ordering-body-items-discount">
                             <div class="all-price">
-                                <?=\Yii::t('shop', '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}}', ['n' => \Yii::$app->cart->itemsCount])?> на сумму
+                                <?=\Yii::t('shop', '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}} на сумму', ['n' => \Yii::$app->cart->itemsCount])?>
                                 <div class="bold">
                                     <span class="amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount)?></span>
                                 </div>
                             </div>
                             <div class="price action-discount">
-                                Сумма скидки по акции
+                                <?=\Yii::t('shop', 'Сумма скидки по акции')?>
                                 <div class="bold">
 	                                <span class="action-discount-amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm - \Yii::$app->cart->cartSumWithoutDiscount, true)?></span>
                                 </div>
