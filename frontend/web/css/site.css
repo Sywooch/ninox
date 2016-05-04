@@ -2792,7 +2792,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .user-data-content .reviews{
     width: 100%;
-    height: 305px;
+    height: auto;
     float: left;
     background-color: #e2f3fc;
     border-radius: 7px 7px 7px 7px;
@@ -3863,22 +3863,23 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .under-menu .logo{
 	float: left;
 	width: 250px;
-	height: 80px;
-	background: url("/img/site/logo.png") no-repeat;
+	height: 50px;
+	background: url("/img/site/krasota-style_logo2.svg") no-repeat;
 	transition-property: width, background;
 	transition-duration: 1s, 1s;
+	margin-top: 10px;
 }
 
 
 
 .sticky .logo{
-	background: url("/img/site/short-logo.png") no-repeat;
+	background: url("/img/site/krasota-style_logo3.svg") no-repeat;
 	float: left;
 	width: 160px;
-	height: 23px;
-	margin-top: 6px;
+	height: 35px;
 	transition-property: height, width, background;
 	transition-duration: 1s, 1s, 1s;
+	margin: 0px;
 }
 
 .tt-scrollable-menu{
@@ -4715,7 +4716,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	width: 32px;
 	height: 18px;
 	position: absolute;
-	left: 25%;
+	left: 24%;
 	top: 50%;
 /*	margin: -6px 0 0 -15px;*/
 	animation: 1s ease-in-out infinite alternate down;
