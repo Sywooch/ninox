@@ -8,7 +8,10 @@ use yii\helpers\Url;
 use yii\widgets\ListView;
 
 $this->title = $category->metaTitle;
-$this->registerMetaTag(['name' => 'description', 'content' => $category->metaDescription], 'description');
+
+$totalCount = $items->getTotalCount();
+
+$this->registerMetaTag(['name' => 'description', 'content' => $category->getMetaDescription($totalCount)], 'description');
 $this->registerMetaTag(['name' => 'keywords', 'content' => $category->metaKeywords], 'keywords');
 
 if(urldecode(Url::canonical()) != \Yii::$app->request->absoluteUrl){
@@ -16,7 +19,6 @@ if(urldecode(Url::canonical()) != \Yii::$app->request->absoluteUrl){
 }
 
 $pageSize = $items->pagination->getPageSize();
-$totalCount = $items->getTotalCount();
 $page = empty(\Yii::$app->request->get('page')) ? 1 : \Yii::$app->request->get('page');
 if($pageSize < 1){
     $pageCount = $totalCount > 0 ? 1 : 0;

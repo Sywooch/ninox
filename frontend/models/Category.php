@@ -264,7 +264,7 @@ class Category extends \common\models\Category{
 		return strip_tags(htmlspecialchars_decode($title));
 	}
 
-	public function getMetaDescription(){
+	public function getMetaDescription($count = 0){
 		if(empty($this->translation->metaDescription)){
 			switch(\Yii::$app->request->get('order')){
 				case 'asc':
@@ -289,7 +289,7 @@ class Category extends \common\models\Category{
 							'priceType'     =>  $priceType,
 							'priceType2'    =>  $priceType2,
 							'priceType3'    =>  $priceType3,
-							'count'         =>  $this->getItems()->count()
+							'count'         =>  empty($count) ? $this->getItems()->count() : $count
 						]
 					);
 					break;
@@ -299,7 +299,7 @@ class Category extends \common\models\Category{
 						[
 							'name'      =>  $this->Name,
 							'minprice'  =>  Formatter::getFormattedPrice($this->minPrice),
-							'count'     =>  $this->getItems()->count()
+							'count'     =>  empty($count) ? $this->getItems()->count() : $count
 						]
 					);
 					break;
