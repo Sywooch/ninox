@@ -95,6 +95,10 @@ class Category extends \yii\db\ActiveRecord
         return $defaultLangModel;
     }
 
+    /**
+     * @param $link string
+     * @return Category
+     */
     public static function findByLink($link){
         return self::find()
             ->joinWith(['translations'])
@@ -393,6 +397,8 @@ class Category extends \yii\db\ActiveRecord
     }
 
 	static function buildTree($elements){
+        \Yii::trace('BuildTree is called', __METHOD__);
+
 		$tree = [];
 
 		foreach($elements as $element){

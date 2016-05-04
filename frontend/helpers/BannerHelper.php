@@ -27,11 +27,11 @@ class BannerHelper extends Component
      *
      * @return array|string
      */
-    public static function renderItems($models, $asArray = true){
+    public static function renderItems($models, $asArray = true, $withBlock = true){
         $items = [];
 
         foreach($models as $model){
-            $items[] = self::renderItem($model);
+            $items[] = self::renderItem($model, $withBlock);
         }
 
         return $asArray ? $items : implode('', $items);
@@ -39,10 +39,11 @@ class BannerHelper extends Component
 
     /**
      * @param Banner $model
+     * @param bool $withBlock
      *
      * @return string|null
      */
-    public static function renderItem($model){
+    public static function renderItem($model, $withBlock = false){
         if(empty($model)){
             return;
         }
@@ -51,7 +52,7 @@ class BannerHelper extends Component
 
         switch($model->type){
             case $model::TYPE_IMAGE:
-                $banner = self::renderImageBanner($model);
+                $banner = self::renderImageBanner($model, $withBlock);
                 break;
             case $model::TYPE_HTML:
                 $banner = self::renderHTMLBanner($model);
@@ -164,10 +165,18 @@ class BannerHelper extends Component
      *
      * @return string
      */
-    public static function renderImageBanner($banner){
-        $data = Html::img(preg_match('/http/', $banner->banner->value) ? $banner->banner->value : 'http://krasota-style.com.ua/'.$banner->banner->value);
+    public static function renderImageBanner($banner, $withBlock){
+        $content = Html::img(preg_match('/http/', $banner->banner->value) ? $banner->banner->value : \Yii::$app->params['frontend'].$banner->banner->value);
 
-        return !empty($banner->banner->link) ? Html::a($data, $banner->banner->link) : $data;
+        $content = !empty($banner->banner->link) ? Html::a($content, $banner->banner->link) : $content;
+
+        if($withBlock){
+            return $content;
+        }
+
+        return Html::tag('div', $content, [
+            'class'	=>	'goods-item'
+        ]);
     }
 
 
