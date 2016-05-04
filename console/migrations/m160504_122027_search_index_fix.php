@@ -2,17 +2,17 @@
 
 use yii\db\Migration;
 
-class m160421_142847_order_status_update_date extends Migration
+class m160504_122027_search_index_fix extends Migration
 {
     public function up()
     {
-        $this->addColumn('history', 'statusChangedDate', \yii\db\Schema::TYPE_DATETIME);
+        $this->execute("ALTER TABLE `item_translations` ADD FULLTEXT INDEX `Name` (`name`)");
     }
 
     public function down()
     {
-        $this->dropColumn('history', 'statusChangedDate');
-
+        $this->dropIndex('Name', 'item_translations');
+        echo "m160504_122027_search_index_fix was successfully reverted.\n";
         return true;
     }
 

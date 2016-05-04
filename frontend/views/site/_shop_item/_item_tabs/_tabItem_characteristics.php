@@ -17,7 +17,7 @@ use yii\bootstrap\Html;
 <div class="item-detail">
     <span class="tabTitle semi-bold"><?=\Yii::t('shop', 'Описание товара')?></span>
     <div class="details">
-        <?=!empty($good->Description) ? $good->Description : \Yii::t('shop', 'Нет описания')?>
+        <?=!empty($good->description) ? $good->description : \Yii::t('shop', 'Нет описания')?>
     </div>
 </div>
 

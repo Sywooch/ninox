@@ -17,7 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Восстановить пароль' => '',
-    'Заказать в 1 клик' => '',
-    'Оформить заказ' => '',
+    'Note:' => '',
+    'Your browser does not support {validation}. Try an alternative or more recent browser to access these features.' => '',
+    'file preview and multiple file upload' => '',
+    'multiple file upload' => '',
 ];

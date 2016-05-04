@@ -18,8 +18,6 @@
  */
 return [
     '(not set)' => '',
-    'All relations' => '',
-    'All relations with inverse' => '',
     'An internal server error occurred.' => '',
     'Are you sure you want to delete this item?' => '',
     'Delete' => '',
@@ -31,7 +29,6 @@ return [
     'Missing required arguments: {params}' => '',
     'Missing required parameters: {params}' => '',
     'No' => '',
-    'No relations' => '',
     'No results found.' => '',
     'Only files with these MIME types are allowed: {mimeTypes}.' => '',
     'Only files with these extensions are allowed: {extensions}.' => '',

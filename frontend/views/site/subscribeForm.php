@@ -13,7 +13,7 @@ echo Html::tag('span', \Yii::t('shop', 'Подпишитесь на рассыл
     ]);
 
     echo $form->field($model, 'email')->label(false),
-    Html::button('Подписаться', [
+    Html::button(\Yii::t('shop', 'Подписаться'), [
         'type'  =>  'submit',
         'class' =>  'blue-button small-button ',
     ]);

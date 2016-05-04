@@ -1,6 +1,6 @@
 <?php
 return [
-    'language'  =>  'ru_RU',
+    'language'  =>  'uk_UA',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
 	'timeZone'	=>	'UTC',
     'components' => [

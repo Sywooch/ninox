@@ -243,7 +243,7 @@ Tabs::widget([
         [
             'content'   =>  Html::tag('div', $form->field($model, 'anotherReceiverName').
 		            $form->field($model, 'anotherReceiverSurname').
-		            $form->field($model, 'anotherReceiverPhone')->hint(\Yii::t('site', 'Телефон получателя, если он отличается от вашего!')),
+		            $form->field($model, 'anotherReceiverPhone')->hint(\Yii::t('shop', 'Телефон получателя, если он отличается от вашего!')),
 		            ['class' => 'content-data-body-second']),
             'label'     =>  '',
             'id'        =>  '2'

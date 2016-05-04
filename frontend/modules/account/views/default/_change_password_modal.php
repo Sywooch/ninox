@@ -42,6 +42,6 @@ $form = \kartik\form\ActiveForm::begin([
 echo $form->field($model, 'oldPassword')->passwordInput(),
     $form->field($model, 'newPassword')->passwordInput(),
     $form->field($model, 'newPassword_repeat')->passwordInput(),
-    \yii\bootstrap\Html::button('Сохранить', ['type' => 'submit']);
+    \yii\bootstrap\Html::button(\Yii::t('shop', 'Сохранить'), ['type' => 'submit']);
 
 $form->end();
