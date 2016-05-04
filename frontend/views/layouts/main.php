@@ -269,9 +269,9 @@ $this->beginPage();
 		<div class="header">
 			<div class="top-menu">
 				<div class="top-menu-content">
-					<div class="items"><a href="/o-nas">О компании</a></div>
-					<div class="items"><a href="/pomoshch">Помощь</a></div>
-					<div class="items"><a href="/kontakty">Контакты</a></div>
+					<div class="items"><a href="/o-nas"><?=\Yii::t('shop', 'О компании')?></a></div>
+					<div class="items"><a href="/pomoshch"><?=\Yii::t('shop', 'Помощь')?></a></div>
+					<div class="items"><a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a></div>
 					<div class="blog items">Блог</div>
 					<div class="items currency-rate">1 USD - 24.2 UAH</div>
 					<div class="personal-account">
@@ -279,7 +279,7 @@ $this->beginPage();
 						<?php if(\Yii::$app->user->isGuest){
 							echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
 						}else{
-							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет', ['class' => 'items']), Url::to('/account')).Html::a('Выйти', Url::to('/logout'), [
+							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('/account')).Html::a(\Yii::t('shop', 'Выйти'), Url::to('/logout'), [
 									'data-method'   =>  'post'
 								]), ['class' => 'items account-icon']);
 						} ?>
@@ -301,7 +301,8 @@ $this->beginPage();
 
 							echo \kartik\typeahead\Typeahead::widget([
 								'name'          => 'string',
-								'options'       => ['placeholder' => 'Поиск...'],
+
+								'options'       => ['placeholder' => \Yii::t('shop', 'Поиск')],
 								'value'	=>	\Yii::$app->request->get("string"),
 								'scrollable'    => true,
 								'pluginOptions' => [
@@ -332,51 +333,47 @@ $this->beginPage();
 							Html::tag('span', '(044) 578 20 16', ['class' => 'number']).
 							Html::tag('div',
 								Html::tag('div',
-									'<div class="arrow"></div><div class="call-back">
-										<div>
-											<div class="blue-white-phone"></div>
-											<span class="semibold">0 800 508 208</span>
-											<span class="free-call"></span>
-										</div>
-										<div class="city-number">
-											<span class="city">Киев</span>
-											<span>044 578 20 16</span>
-											<!--<span class="city">Одесса</span>
-											<span>048 735 10 80</span>-->
-											<span class="city">моб. МТС</span>
-											<span>050 677 54 56</span>
-											<span class="city">моб. Киевстар</span>
-											<span>067 507 87 73</span>
-											<span class="city">моб. Life</span>
-											<span>063 578 20 16	</span>
-										</div>
-										<div class="work-time">
-											<span class="">
-												Время работы call-центра:
-											</span>
-											<span class="">
-												вт.-вс: с 9.00 до 18.00
-											</span>
-											<span class="">
-												пн: с 9.00 до 15.00
-											</span>
-										</div>
-									</div>'.
+									Html::tag('div', '', ['class' => 'arrow']).
+									Html::tag('div',
+										Html::tag('div',
+											Html::tag('div', '', ['class' => 'blue-white-phone']).
+											Html::tag('div', '0 800 508 208', ['class' => 'semibold']).
+											Html::tag('div', '', ['class' => 'free-call'])
+										).
+										Html::tag('div',
+											Html::tag('span', \Yii::t('shop', 'Киев'), ['class' => 'city']).
+											Html::tag('span', '0 800 508 208').
+											/*Html::tag('span', \Yii::t('shop', 'Одесса'), ['class' => 'city']).
+                                            Html::tag('span', '048 735 10 80').*/
+											Html::tag('span', \Yii::t('shop', 'моб. МТС'), ['class' => 'city']).
+											Html::tag('span', '050 677 54 56').
+											Html::tag('span', \Yii::t('shop', 'моб. Киевстар'), ['class' => 'city']).
+											Html::tag('span', '067 507 87 73').
+											Html::tag('span', \Yii::t('shop', 'моб. Life'), ['class' => 'city']).
+											Html::tag('span', '063 578 20 16'),
+											[
+												'class'	=>	'city-number'
+											]
+										).
+										Html::tag('div',
+											Html::tag('span', \Yii::t('shop', 'Время работы call-центра:')).
+											Html::tag('span', \Yii::t('shop', 'вт.-вс: с 9.00 до 18.00')).
+											Html::tag('span', \Yii::t('shop', 'пн: с 9.00 до 15.00')),
+											[
+												'class'	=>	'work-time'
+											]
+										),
+										[
+											'class' => 'call-back'
+										]
+									).
 									Html::a(\Yii::t('shop', 'Перезвоните мне'), '#callbackModal', ['class'=>'button yellow-button middle-button']),
 									[
 										'class'	=>	'popover-arrow bottom'
 									]),
 								[
 									'class'	=>	'popover'
-								])
-							/*PopoverX::widget([
-								'header'    => '',
-								'placement' => PopoverX::ALIGN_BOTTOM,
-								'content'   =>
-									,
-								'footer' => ,
-								'toggleButton' => ['tag' => 'span', 'label' => '(044) 257-45-54', 'class'=>'number'],
-							])*/,
+								]),
 							[
 								'class'	=>	'phone-number'
 							]).
@@ -436,15 +433,13 @@ $this->beginPage();
 			<div class="blue-line">
 				<div class="footer-content">
 					<span class="phone-numbers"> 044 578 20 16 • 067 507 87 73</span>
-					<div class="hours">
-						<span>
-							Время работы call-центра:
-						</span>
-						<span>
-							с 8.00 до 17:30, без выходных
-						</span>
-					</div>
-					<?php	echo Remodal::widget([
+					<?=Html::tag('div',
+						Html::tag('span', \Yii::t('shop', 'Время работы call-центра:')).
+						Html::tag('span', \Yii::t('shop', 'с 8.00 до 17:30, без выходных')),
+						[
+							'class'	=>	'hours'
+						]),
+					Remodal::widget([
 						'cancelButton'		=>	false,
 						'confirmButton'		=>	false,
 						'addRandomToID'		=>	false,

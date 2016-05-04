@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $model = new \frontend\models\LoginForm();
@@ -12,12 +13,12 @@ $form = ActiveForm::begin([
 echo $form->field($model, 'phone'),
     $form->field($model, 'password')->passwordInput(),
     $form->field($model, 'rememberMe')->checkbox(),
-    \yii\bootstrap\Html::button('Войти', [
+    Html::button(\Yii::t('shop', 'Войти'), [
         'type'  =>  'success',
         'class' =>  'btn btn-default'
     ]);
 
 ActiveForm::end();
 
-echo \yii\helpers\Html::a(\Yii::t('site', 'Восстановить пароль'), \yii\helpers\Url::to('/request-password-reset')), '&nbsp; | &nbsp;',
-    \yii\helpers\Html::a('Регистрация', '#registrationModal');
+echo Html::a(\Yii::t('shop', 'Восстановить пароль'), \yii\helpers\Url::to('/request-password-reset')), '&nbsp; | &nbsp;',
+    Html::a(\Yii::t('shop', 'Регистрация'), '#registrationModal');

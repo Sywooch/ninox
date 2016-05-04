@@ -7,33 +7,33 @@ echo Html::tag('div',
         \frontend\widgets\ListGroupMenu::widget([
             'items'    => [
                 [
-                    'label' =>  'Личные данные',
+                    'label' =>  \Yii::t('shop', 'Личные данные'),
                     'href'  =>  '/account'
                 ],
                 [
-                    'label' =>  'Мои заказы',
+                    'label' =>  \Yii::t('shop', 'Мои заказы'),
                     'href'  =>  '/account/orders'
                 ],
                 [
-                    'label' =>  'Моя скидка',
+                    'label' =>  \Yii::t('shop', 'Моя скидка'),
                     'href'  =>  '/account/discount'
                 ],
                 [
-                    'label' =>  'Список желаний',
+                    'label' =>  \Yii::t('shop', 'Список желаний'),
                     'href'  =>  '/account/wish-list'
                 ],
                 [
-                    'label' =>  'Мои отзывы',
+                    'label' =>  \Yii::t('shop', 'Мои отзывы'),
                     'href'  =>  '/account/reviews'
                 ],
-                [
-                    'label' =>  'Возвраты',
+                /*[
+                    'label' =>  \Yii::t('shop', 'Возвраты'),
                     'href'  =>  '/account/returns'
                 ],
                 [
-                    'label' =>  'Ярмарка мастеров',
+                    'label' =>  \Yii::t('shop', 'Ярмарка мастеров'),
                     'href'  =>  '/account/yarmarka-masterov'
-                ],
+                ],*/
             ]
         ]),
         [

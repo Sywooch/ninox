@@ -22,11 +22,11 @@ $form::begin();
 	$form->field($model, 'comment')->textarea().
 	$form->field($model, 'name').
 	$form->field($model, 'email').
-	Html::button(\Yii::t('site', 'Добавить'), [
+	Html::button(\Yii::t('shop', 'Добавить'), [
 		'type'	    =>	'submit',
 		'class'	    =>	'button yellow-button small-button comment-button-submit'
 	]).
-	Html::button(\Yii::t('site', 'Отменить'), [
+	Html::button(\Yii::t('shop', 'Отменить'), [
 		'class'	    =>	'comment-button-cancel'
 	]);
 $form::end();

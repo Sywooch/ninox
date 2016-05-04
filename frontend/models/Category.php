@@ -56,7 +56,7 @@ class Category extends \common\models\Category{
 		    $return->andWhere(['<=', '`goods`.`PriceOut1`', $priceMax]);
 	    }
 
-	    $return->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
 		    ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
 
 	    switch(\Yii::$app->request->get('order')){
@@ -83,7 +83,7 @@ class Category extends \common\models\Category{
 			$this->_minPrice = Good::find()
 				->select('PriceOut1')
 				->where(['in', 'GroupID', $this->groupIDs])
-				->andWhere(['show_img' => 1, 'deleted' => 0])
+				->andWhere(['deleted' => 0])
 				->andWhere('`PriceOut1` != 0 AND `PriceOut2` != 0')
 				->orderBy(['PriceOut1' => SORT_ASC])
 				->limit(1)->scalar();
@@ -97,7 +97,7 @@ class Category extends \common\models\Category{
 			$this->_maxPrice = Good::find()
 				->select('PriceOut1')
 				->where(['in', 'GroupID', $this->groupIDs])
-				->andWhere(['show_img' => 1, 'deleted' => 0])
+				->andWhere(['deleted' => 0])
 				->andWhere('`PriceOut1` != 0 AND `PriceOut2` != 0')
 				->orderBy(['PriceOut1' => SORT_DESC])
 				->limit(1)->scalar();
@@ -140,7 +140,7 @@ class Category extends \common\models\Category{
 			$varChecked = [];
 
 			foreach(GoodOptionsValue::find()
-				        ->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0 AND `goods`.`show_img` = 1')
+				        ->leftJoin('goods', '`goods`.`ID` = `goodsoptions_values`.`good` AND `goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0 AND `goods`.`Deleted` = 0')
 				        ->where(['in', '`goods`.`GroupID`', $this->groupIDs])
 				        ->with(['goodOptions', 'goodOptionsVariants'])
 				        ->all() as $filterOption){

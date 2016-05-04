@@ -17,5 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'name-' => '',
+    '<b>Прайслист импортирован!</b> Всего товаров: {totalCount}, добавлено новых {added}, изменено существующих {updated}' => '',
+    'По вашему запросу ничего не найдено!' => '',
 ];
