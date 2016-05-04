@@ -17,5 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'name-' => '',
+    'Load more items' => '',
+    'You reached the end' => '',
 ];

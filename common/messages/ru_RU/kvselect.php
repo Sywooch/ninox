@@ -17,8 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'For phone validation country required' => '',
-    'Phone number does not seem to be a valid phone number' => '',
-    'Unexpected Phone Number Format' => '',
-    'Unexpected Phone Number Format or Country Code' => '',
+    'Select all' => '',
+    'Unselect all' => '',
 ];

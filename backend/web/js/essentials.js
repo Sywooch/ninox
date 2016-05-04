@@ -10,10 +10,10 @@ $.urlParam = function(name){
 
 (function($){
     $.fn.orderPreviewListeners = function() {
-        if($(this).find("#history-globalmoney, #history-moneyconfirmed").data("bootstrapSwitch")){
-            $(this).find("#history-globalmoney, #history-moneyconfirmed").bootstrapSwitch("destroy");
+        if($(this).find("input[data-krajee-bootstrapswitch]").data("bootstrapSwitch")){
+            $(this).find("input[data-krajee-bootstrapswitch]").bootstrapSwitch("destroy");
         }
 
-        $(this).find("#history-globalmoney, #history-moneyconfirmed").bootstrapSwitch({"onText":"Да","offText":"Нет","animate":true,"indeterminate":false,"disabled":false,"readonly":false});
+        $(this).find("input[data-krajee-bootstrapswitch]").bootstrapSwitch({"onText":"Да","offText":"Нет","animate":true,"indeterminate":false,"disabled":false,"readonly":false});
     };
 })(jQuery);

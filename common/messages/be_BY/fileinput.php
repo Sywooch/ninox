@@ -19,4 +19,6 @@
 return [
     'Note:' => '',
     'Your browser does not support {validation}. Try an alternative or more recent browser to access these features.' => '',
+    'file preview and multiple file upload' => '',
+    'multiple file upload' => '',
 ];

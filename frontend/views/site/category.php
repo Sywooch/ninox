@@ -120,10 +120,23 @@ echo Html::tag('div',
             'pager' =>  [
                 'class'             =>  ScrollPager::className(),
                 'triggerTemplate'   =>
-                    Html::tag('div', \Yii::t('shop', 'Ещё 15 товаров'),
+                    Html::tag('div',
+                        Html::tag('div', \Yii::t('shop', 'Ещё 15 товаров'),
+                        [
+                            'class' => 'load-more'
+                        ]),
                     [
-                        'class' => 'load-more'
+                        'class' =>  'ias-trigger'
                     ]),
+                'spinnerTemplate'   =>
+                    Html::tag('div',
+                        Html::tag('div', '',
+                            [
+                                'class' => 'load-more icon-loader'
+                            ]),
+                        [
+                            'class' =>  'ias-loader'
+                        ]),
                 'item'              =>  '.hovered',
                 'noneLeftText'      =>  '',
                 'paginationClass'   =>  'pagination',
