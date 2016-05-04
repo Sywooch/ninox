@@ -23,7 +23,6 @@ use Yii;
  * @property string $length
  * @property string $diameter
  * @property integer $listorder
- * @property string $show_img
  * @property string $otkl_time
  * @property string $vkl_time
  * @property string $tovdate
@@ -90,12 +89,22 @@ class Good extends \yii\db\ActiveRecord
     const STATE_ENABLED = 1;
     const STATE_DISABLED = 0;
 
+    private $_translation;
+
 
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getTranslations(){
         return $this->hasMany(GoodTranslation::className(), ['ID' => 'ID']);
+    }
+
+    public function getTranslation(){
+        if(empty($this->_translation)){
+            $this->_translation = $this->getTranslationByKey(\Yii::$app->language);
+        }
+
+        return $this->_translation;
     }
 
     /**
@@ -231,7 +240,11 @@ class Good extends \yii\db\ActiveRecord
         return $this->translation->description;
     }
 
-    public function afterFind(){
+    public function getEnabled(){
+        return $this->translation->enabled;
+    }
+
+/*    public function afterFind(){
         $this->Description = htmlspecialchars_decode($this->Description);
 
         return parent::afterFind();
@@ -241,7 +254,7 @@ class Good extends \yii\db\ActiveRecord
         $this->Description = htmlspecialchars($this->Description);
 
         return parent::beforeSave($insert);
-    }
+    }*/
 
     /**
      * @inheritdoc
@@ -258,7 +271,7 @@ class Good extends \yii\db\ActiveRecord
     {
         return [
             [['dimensions', 'width', 'height', 'length', 'diameter', 'listorder', 'otkl_time', 'vkl_time', 'tovdate', 'tovupdate', 'photodate', 'otgruzka', 'otgruzka_time', 'p_photo', 'link', 'rate', 'originalGood', 'video'], 'required'],
-            [['listorder', 'otgruzka', 'show_img', 'otgruzka2', 'discountType', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
+            [['listorder', 'otgruzka', 'otgruzka2', 'discountType', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
             [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2'], 'safe'],
             [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'discountSize', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
             [['link'], 'string'],
@@ -292,7 +305,6 @@ class Good extends \yii\db\ActiveRecord
             'length' => 'Length',
             'diameter' => 'Diameter',
             'listorder' => 'Listorder',
-            'show_img' => 'Show Img',
             'otkl_time' => 'Otkl Time',
             'vkl_time' => 'Vkl Time',
             'tovdate' => 'Tovdate',

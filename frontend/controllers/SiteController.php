@@ -578,7 +578,7 @@ class SiteController extends Controller
             ->orWhere(['like', '`goods`.`Code`', $suggestion])
             ->orWhere(['like', '`goods`.`BarCode2`', $suggestion])
             ->orWhere(['like', '`goodsgroups`.`Name`', $suggestion])
-            ->andWhere('`goods`.`show_img` = 1 AND `goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+            ->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
             ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC');
 
         if(\Yii::$app->request->isAjax){

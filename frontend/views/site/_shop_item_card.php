@@ -133,7 +133,7 @@ foreach($good->photos as $photo){
             <div class="code blue"><?=\Yii::t('shop', 'Код:').$good->Code?></div>
             <div class="item-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <div class="item-main-info">
-                    <div class="pricelist-content <?=($good->show_img ? 'available' : 'not-available').
+                    <div class="pricelist-content <?=($good->enabled ? 'available' : 'not-available').
                     ($good->discountType && $good->customerRule ? ' vip' :
                         ($good->discountType && !$good->customerRule ? ' discounted' : ''))?>">
                         <?php
@@ -184,7 +184,7 @@ foreach($good->photos as $photo){
                         }
                         ?>
                         <?=Html::tag('div',
-                            ($good->show_img ?
+                            ($good->enabled ?
                                 ($good->count < 1 ?
                                     \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии')) :
                                 \Yii::t('shop', 'Нет в наличии')),
@@ -216,7 +216,7 @@ foreach($good->photos as $photo){
                             <?=($good->customerRule ?
                                 Html::tag('span', \Yii::t('shop', 'Нашли дешевлее?'), ['class' => 'cheaper blue']) : ''
                             ).
-                            Html::tag('span', $good->show_img == 1 ?
+                            Html::tag('span', $good->enabled == 1 ?
                                 \Yii::t('shop', 'Узнать о снижении цены') : \Yii::t('shop', 'Узнать когда появится'),
                                 [
                                     'class'     =>  'notification blue'
