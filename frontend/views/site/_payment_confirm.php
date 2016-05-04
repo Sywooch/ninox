@@ -92,12 +92,12 @@ $model = new \frontend\models\PaymentConfirmForm();
     ]);
     ?>
     <div class="cap">
-        1. Введите данные заказа
+        1. <?=\Yii::t('shop', 'Введите данные заказа')?>
     </div>
         <?= $form->field($model, 'orderNumber')?>
         <?= $form->field($model, 'sum')?>
     <div class="cap">
-        2. Как вы платили
+        2. <?=\Yii::t('shop', 'Как вы платили')?>
     </div>
         <?php
         echo $form->field($model, 'paymentDate')->widget(DatePicker::classname(), [
@@ -111,7 +111,7 @@ $model = new \frontend\models\PaymentConfirmForm();
         <?php
         echo $form->field($model, 'paymentType')->dropDownList($model->paymentTypes);
         ?>
-        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+        <?= Html::submitButton(\Yii::t('shop', 'Отправить'), ['class' => 'about-inform-button yellow-button large-button', 'name' =>
         'payment-confirm-button']) ?>
 </div>
 <?php $form->end(); ?>
