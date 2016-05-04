@@ -16,4 +16,14 @@ class Review extends \common\models\Review{
         orderBy('type ASC, IF (type = 1, - UNIX_TIMESTAMP(`date`) , UNIX_TIMESTAMP(`date`)) ASC')->all();
     }
 
+    public function beforeSave($insert){
+        if(!\Yii::$app->user->isGuest){
+            $this->customerID = \Yii::$app->user->identity->id;
+        }
+
+        $this->date = date('Y-m-d H:i:s');
+
+        return parent::beforeSave($insert);
+    }
+
 }
