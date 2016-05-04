@@ -34,6 +34,8 @@ class m160503_151119_item_translations extends Migration
         echo "    > prepare array for batch insert into item_translations for ".$itemRU." items... \r \n";
 
         foreach(Good::find()->each(100) as $model){
+            $model->show_img = !empty($model->show_img) ? $model->show_img : 0;
+
             $items[] = [
                 $model->ID,
                 'ru_RU',
