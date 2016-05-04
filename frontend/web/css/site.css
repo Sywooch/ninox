@@ -3604,7 +3604,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	border-bottom: none;
 }
 
-.map #ui-id-1.ui-accordion-header::before {
+.about-contacts .map #ui-id-1.ui-accordion-header::before {
+	content: none;
+}
+
+.about-contacts .map #ui-id-3.ui-accordion-header::before {
 	content: none;
 }
 
@@ -4114,7 +4118,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .call-back .city{
-	float: left;
+	float: left !important;
 	width: 130px;
 	font-family: OpenSans !important;
 }
@@ -4122,6 +4126,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .call-back .city-number span{
 	font-family: OpenSans-Semibold;
 	color: #4f4f4f;
+	display: block;
+	float: right;
 }
 
 .call-back .work-time span{
