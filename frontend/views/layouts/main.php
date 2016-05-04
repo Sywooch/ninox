@@ -302,7 +302,7 @@ $this->beginPage();
 							echo \kartik\typeahead\Typeahead::widget([
 								'name'          => 'string',
 
-								'options'       => ['placeholder' => \Yii::t('shop', 'Поиск')],
+								'options'       => ['placeholder' => \Yii::t('shop', 'Поиск...')],
 								'value'	=>	\Yii::$app->request->get("string"),
 								'scrollable'    => true,
 								'pluginOptions' => [

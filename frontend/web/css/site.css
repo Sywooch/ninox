@@ -3616,7 +3616,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .about-contacts .map span{
 	display: block;
 	text-align: center;
-	margin-bottom: 20px;
+	margin-bottom: 20px !important;
 }
 
 .about-contacts .map .ui-accordion-content-active{
