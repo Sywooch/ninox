@@ -17,5 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'name-' => '',
+    'Action' => '',
+    'Field' => '',
+    'ID' => '',
+    'New Value' => '',
+    'Old Value' => '',
+    'Stamp' => '',
+    'Type' => '',
+    'User' => '',
 ];
