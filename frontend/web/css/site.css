@@ -3824,7 +3824,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: linear-gradient(#ffffff, #f3f3f3); /* Standard syntax */
 	border-top: 1px solid #e5e5e5;
 	border-bottom: 1px solid #fefefe;
-	overflow: hidden;
 }
 
 .under-menu-content{
@@ -4394,7 +4393,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	-webkit-transition: height 1s;
 	-moz-transition: height 1s;
 	transition: height 1s;
-	overflow: visible;
+	overflow: hidden;
 }
 
 .sticky .header-menu{
