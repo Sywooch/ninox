@@ -37,7 +37,8 @@ class Category extends \common\models\Category{
 
 	    $return = Good::find()
 		    ->where(['in', '`goods`.`GroupID`', $this->groupIDs])
-		    ->with('reviews');
+		    ->with('reviews')
+	        ->joinWith(['translations']);
 
 	    if(!empty($values) && !empty($names)){
 		    $return
@@ -57,7 +58,8 @@ class Category extends \common\models\Category{
 	    }
 
 	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
-		    ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
+	        ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
+		    ->orderBy('IF ((`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\') OR `item_translations`.`enabled` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
 
 	    switch(\Yii::$app->request->get('order')){
 		    case 'asc':
@@ -220,7 +222,7 @@ class Category extends \common\models\Category{
 					$this->headerOrderNew;
 				break;
 			default:
-				$name = empty($this->h1) ? $this->Name : $this->h1;
+				$name = empty($this->header) ? $this->Name : $this->header;
 				break;
 		}
 
@@ -231,21 +233,21 @@ class Category extends \common\models\Category{
 		switch(\Yii::$app->request->get('order')){
 			case 'asc':
 				$priceType = \Yii::t('shop', 'дешево');
-				$title = $this->titleasc;
+				$title = $this->titleOrderAscending;
 			case 'desc':
 				$priceType = empty($priceType) ? \Yii::t('shop', 'дорого') : $priceType;
 				$title = empty($title) ?
-					(empty($this->titledesc) ?
+					(empty($this->titleOrderDescending) ?
 						\Yii::t('shop',
 							'{name}. Купить {priceType} оптом в интернет-магазине Krasota-Style с доставкой по Украине',
 							[
 								'name'      =>  $this->Name,
 								'priceType' =>  $priceType
 							]
-						) : $this->titledesc) : $title;
+						) : $this->titleOrderDescending) : $title;
 				break;
 			case 'novinki':
-				$title = $this->titlenew;
+				$title = $this->titleOrderNew;
 			default:
 				$title = empty($title) ?
 					(empty($this->title) ?
@@ -263,7 +265,7 @@ class Category extends \common\models\Category{
 	}
 
 	public function getMetaDescription(){
-		if(empty($this->descr)){
+		if(empty($this->translation->metaDescription)){
 			switch(\Yii::$app->request->get('order')){
 				case 'asc':
 					$priceType = \Yii::t('shop', 'дешево');
@@ -303,12 +305,12 @@ class Category extends \common\models\Category{
 					break;
 			}
 		}else{
-			return strip_tags(htmlspecialchars_decode($this->descr));
+			return strip_tags(htmlspecialchars_decode($this->translation->metaDescription));
 		}
 	}
 
 	public function getMetaKeywords(){
-		if(empty($this->keyword)){
+		if(empty($this->translation->metaKeywords)){
 			switch(\Yii::$app->request->get('order')){
 				case 'asc':
 					$priceType = \Yii::t('shop', 'дешево, недорого, ');
@@ -328,7 +330,7 @@ class Category extends \common\models\Category{
 				]
 			);
 		}else{
-			return strip_tags(htmlspecialchars_decode($this->keyword));
+			return strip_tags(htmlspecialchars_decode($this->translation->metaKeywords));
 		}
 	}
 
