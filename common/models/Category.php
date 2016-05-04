@@ -134,6 +134,22 @@ class Category extends \yii\db\ActiveRecord
         return $this->translation->titleOrderNew;
     }
 
+    public function getHeader(){
+        return $this->translation->header;
+    }
+
+    public function getHeaderOrderAscending(){
+        return $this->translation->headerOrderAscending;
+    }
+
+    public function getHeaderOrderDescending(){
+        return $this->translation->headerOrderDescending;
+    }
+
+    public function getHeaderOrderNew(){
+        return $this->translation->headerOrderNew;
+    }
+
     public function getDescription(){
         return $this->translation->categoryDescription;
     }
