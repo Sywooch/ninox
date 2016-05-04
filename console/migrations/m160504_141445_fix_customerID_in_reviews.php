@@ -6,7 +6,7 @@ class m160504_141445_fix_customerID_in_reviews extends Migration
 {
     public function up()
     {
-        $this->alterColumn('reviews', 'customerID', \yii\db\Schema::TYPE_BIGINT.' UNSIGNED NOT NULL');
+        $this->alterColumn('reviews', 'customerID', \yii\db\Schema::TYPE_BIGINT.' UNSIGNED');
     }
 
     public function down()
