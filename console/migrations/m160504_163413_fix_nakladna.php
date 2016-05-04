@@ -8,6 +8,7 @@ class m160504_163413_fix_nakladna extends Migration
     {
         $this->alterColumn('history', 'nakladna', \yii\db\Schema::TYPE_STRING."(32) DEFAULT NULL");
         $this->alterColumn('history', 'moneyConfirmedDate', \yii\db\Schema::TYPE_DATETIME." DEFAULT NULL");
+        $this->alterColumn('history', 'takeOrderDate', \yii\db\Schema::TYPE_DATETIME." DEFAULT NULL");
     }
 
     public function down()
