@@ -2579,7 +2579,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .user-data-content{
     float: right;
     /*width: 920px;*/
-	width: 840px;
+	width: 870px;
 }
 
 .user-account-data{
@@ -3868,6 +3868,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	transition-property: width, background;
 	transition-duration: 1s, 1s;
 }
+
+
 
 .sticky .logo{
 	background: url("/img/site/short-logo.png") no-repeat;
