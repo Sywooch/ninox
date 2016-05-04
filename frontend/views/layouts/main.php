@@ -301,7 +301,7 @@ $this->beginPage();
 
 							echo \kartik\typeahead\Typeahead::widget([
 								'name'          => 'string',
-								'options'       => ['placeholder' => 'Поиск'],
+								'options'       => ['placeholder' => 'Поиск...'],
 								'value'	=>	\Yii::$app->request->get("string"),
 								'scrollable'    => true,
 								'pluginOptions' => [
@@ -451,7 +451,7 @@ $this->beginPage();
 						'id'           		=>  'callbackModal',
 						'buttonOptions' =>  [
 							'label' =>  'Заказать обратный звонок',
-							'class' =>  'yellow-button large-button',
+							'class' =>  'yellow-button-new large-button',
 						],
 						'content'   =>  $this->render('_callback'),
 

@@ -12,7 +12,11 @@ echo Html::tag('span', \Yii::t('shop', 'Подпишитесь на рассыл
         'id'        =>  'subscribeForm',
     ]);
 
-    echo $form->field($model, 'email')->label(false),
+    echo $form->field($model, 'email', [
+        'inputOptions'  =>  [
+            'placeholder'   =>  'Ваш эл. адрес'
+        ]
+    ])->label(false),
     Html::button('Подписаться', [
         'type'  =>  'submit',
         'class' =>  'blue-button small-button ',

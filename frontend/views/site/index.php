@@ -190,9 +190,11 @@ $this->registerJs($js);
 			<div class="style">
 				<?=$this->render('subscribeForm')?>
 			</div>
-			<div class="style"></div>
+			<div class="style banner-img"></div>
 		</div>
-		<div class="right-block style"></div>
+		<div class="right-block style">
+			<?=$this->render('reviewForm')?>
+		</div>
 		<div></div>
 	</div>
 </div>
