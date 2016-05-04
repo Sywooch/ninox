@@ -10,10 +10,10 @@ class m160503_151119_item_translations extends Migration
     {
         $this->createTable('item_translations',[
             'ID'                    =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL',
-            'language'              =>  Schema::TYPE_STRING.'(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'ru_RU\'',
+            'language'              =>  Schema::TYPE_STRING."(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'ru_RU'",
             'enabled'               =>  Schema::TYPE_SMALLINT.' UNSIGNED NOT NULL DEFAULT 0',
-            'name'                  =>  Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'',
-            'link'                  =>  Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'',
+            'name'                  =>  Schema::TYPE_STRING."(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",
+            'link'                  =>  Schema::TYPE_STRING."(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",
             'description'           =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci',
         ], 'ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci');
 
@@ -35,6 +35,7 @@ class m160503_151119_item_translations extends Migration
 
         foreach(Good::find()->each(100) as $model){
             $model->show_img = !empty($model->show_img) ? $model->show_img : 0;
+            $model->Name = !empty($model->Name) ? $model->Name : '';
 
             $items[] = [
                 $model->ID,
