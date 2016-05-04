@@ -23,6 +23,10 @@ class m160503_151119_item_translations extends Migration
         $this->createIndex('language', 'item_translations', 'language');
         $this->createIndex('link', 'item_translations', 'link');
 
+        $this->alterColumn('goods', 'Description', Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'');
+        $this->alterColumn('goods_uk', 'Description', Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'');
+        $this->alterColumn('goods_be', 'Description', Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'');
+
         $items = [];
         $itemRU = Good::find()->count();
         $i = 0;
@@ -36,7 +40,7 @@ class m160503_151119_item_translations extends Migration
                 $model->show_img,
                 $model->Name,
                 $model->link,
-                empty($model->Description) ? '' : $model->Description
+                $model->Description
             ];
             $items[] = [
                 $model->ID,
