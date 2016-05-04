@@ -80,14 +80,14 @@ $this->registerJs($js);
                     <div class="about-as-price-rules-img wholesale-prices"></div>
                     <div class="about-as-price-rules-text">
                         <span class="bold">ОПТОВЫЕ ЦЕНЫ</span>
-                        При заказе на суммуот 1000 грн.
+                        При заказе на сумму от 1000 грн.
                     </div>
                 </div>
                 <div class="about-as-price-rules">
                     <div class="about-as-price-rules-img retail-prices"></div>
                     <div class="about-as-price-rules-text">
                         <span class="bold">РОЗНИЧНЫЕ ЦЕНЫ</span>
-                        При заказе на сумму от 500 до 1000 грн.
+                        При заказе на сумму от 100 до 1000 грн.
                     </div>
                 </div>
             </div>
@@ -99,8 +99,7 @@ $this->registerJs($js);
                     <div class="about-as-order-infogramma-item">
                         <div class="about-as-order-infogramma-item-img decor"></div>
                         <div class="about-as-order-infogramma-item-text">
-                            <span class="bold">ОФОРМЛЕНИЕ</span>
-                            ЧТО-ТО ДА ПИСАТЬ
+                            <span class="bold">ОФОРМЛЕНИЕ ЗАКАЗА</span>
                         </div>
                     </div>
                     <div class="arrow-right"></div>
@@ -138,7 +137,7 @@ $this->registerJs($js);
                     <div class="about-delivery-content-info-delivery">
                         <div class="about-delivery-content-info-delivery-time">
                             <span class="time">24 часа</span>
-                            <span>ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТР</span>
+                            <span>ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТРЫ</span>
                         </div>
                         <div class="about-delivery-content-info-delivery-time">
                             <span class="time">48 часов</span>
@@ -258,10 +257,6 @@ $this->registerJs($js);
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
                     'content' =>$this->render('_guarantee_equipment'),
-                    ],
-                    [
-                    'header' => Html::tag('span', 'Гарантийные обязательства (бижутерия)', ['class' => 'content-data-first_1']),
-                    'content' => $this->render('_guarantee_jewelry'),
                     ],
                     ],
                     'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],

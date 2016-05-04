@@ -90,7 +90,7 @@ echo Html::tag('div',
             ]
         ]),
         [
-            'class' =>  'user-data-content'
+            'class' =>  'user-data-content category'
         ]),
     [
         'class' =>  'content'
