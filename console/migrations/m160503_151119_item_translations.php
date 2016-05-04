@@ -36,7 +36,7 @@ class m160503_151119_item_translations extends Migration
                 $model->show_img,
                 $model->Name,
                 $model->link,
-                $model->Description
+                empty($model->Description) ? '' : $model->Description
             ];
             $items[] = [
                 $model->ID,
