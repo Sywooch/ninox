@@ -156,7 +156,7 @@ echo Html::tag('div',
     $form->field($model, 'nakladna').
     Html::tag('span', '3. '.\Yii::t('shop', 'Ваш комментарий (не обязательно)'), ['class' => 'cap']).
     $form->field($model, 'comment')
-        ->textarea(),
+        ->textarea().
     Html::tag('div',
         Html::tag('div',
             Html::tag('span',
@@ -180,8 +180,8 @@ echo Html::tag('div',
         [
             'class' =>  'check-buttons'
         ]
-    ),
-    Html::tag('span', '6. '.\Yii::t('shop', 'Введите номер банковской карты (*перевод возможен только на карту ПриватБанк)'), ['class' => 'cap']),
+    ).
+    Html::tag('span', '6. '.\Yii::t('shop', 'Введите номер банковской карты (*перевод возможен только на карту ПриватБанк)'), ['class' => 'cap']).
     $form->field($model, 'cardNumber').
     $form->field($model, 'cardHolder').
     Html::submitButton(\Yii::t('shop', 'Отправить'),
