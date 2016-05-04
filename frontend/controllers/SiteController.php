@@ -572,14 +572,17 @@ class SiteController extends Controller
         $name = $this->getSearchStatement($suggestion);
 
         $goodsQuery = Good::find()
-            ->select("`goods`.*, (MATCH(`goods`.`Name`) AGAINST('{$name}' IN BOOLEAN MODE)) AS `relevant`")
-            ->leftJoin('goodsgroups', '`goods`.`GroupID` = `goodsgroups`.`ID`')
-            ->where("MATCH(`goods`.`Name`) AGAINST('{$name}' IN BOOLEAN MODE)")
+            ->select("*, (MATCH(`item_translations`.`name`) AGAINST('{$name}' IN BOOLEAN MODE)) AS `relevant`")
+            ->leftJoin('category_translations', '`goods`.`GroupID` = `category_translations`.`ID`')
+            ->joinWith(['translations'])
+            ->where("MATCH(`item_translations`.`name`) AGAINST('{$name}' IN BOOLEAN MODE)")
             ->orWhere(['like', '`goods`.`Code`', $suggestion])
             ->orWhere(['like', '`goods`.`BarCode2`', $suggestion])
-            ->orWhere(['like', '`goodsgroups`.`Name`', $suggestion])
+            ->orWhere(['like', '`category_translations`.`name`', $suggestion])
             ->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
-            ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC');
+            ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
+            ->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
+            ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC'); //TODO: Пофиксить поиск, бо це глина
 
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
