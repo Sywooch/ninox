@@ -109,13 +109,13 @@ $this->registerJs($js);
 				<div class="two-items content-items">
 					<?php
 					if(!empty(BannersCategory::findOne(['alias' => '1x1.3'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.3'])->banners[0]);
+                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.3'], true)->banners[0]);
                     }else{
 						echo $this->render('index/banner2');
 					}
 
 					if(!empty(BannersCategory::findOne(['alias' => '1x1.4'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.4'])->banners[0]);
+                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.4'], true)->banners[0]);
                     }else{
 						echo $this->render('index/banner3');
 					}
@@ -131,11 +131,12 @@ $this->registerJs($js);
 			?>
 		</div>
 		<?=Html::tag('div',
-			Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-best']).
+			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon
+			icon-best']).
 				Html::tag('span', \Yii::t('shop', 'Лучшее'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'best']).
-			Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-news']).
+			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon icon-news']).
 				Html::tag('span', \Yii::t('shop', 'Новинки'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'new']).
-			Html::tag('div', Html::tag('div', '', ['class' => 'main-icon icon-sale']).
+			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon icon-sale']).
 				Html::tag('span', \Yii::t('shop', 'Распродажа'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'sale']),
 
 			[
