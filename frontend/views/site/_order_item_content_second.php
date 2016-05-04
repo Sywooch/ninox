@@ -208,53 +208,52 @@ $tabItems = [];
         'items' =>  $tabItems
     ])?>
 </div>
-
-<div class="content-data-body-delivery-type">
-<?=$form->field($model, 'anotherReceiver')->radioList([
-    '0' =>  'Отправлять на меня',
-    '1' =>  'Будет получать другой человек',
-    ],
-    [
-	    'unselect'  => null,
-        'item'  =>  function ($index, $label, $name, $checked, $value) {
-                return Html::radio($name, $checked, [
-                        'value' => $value,
-                        'id' => 'tab-'.Tabs::$counter.$index
-                    ]).
-                    Html::tag('label', $label, [
-	                    'class'         =>  'tabsLabels',
-	                    'data-target'   =>  '#w'.Tabs::$counter.'-tab'.$index,
-	                    'for'           =>  'tab-'.Tabs::$counter.$index
-                    ]);
-        }
-    ]
-)->label(false).
-Tabs::widget([
-    'headerOptions' =>  [
-        'style' =>  'display: none'
-    ],
-    'items' =>  [
-        [
-            'content'   =>  '',
-            'label'     =>  '',
-            'id'        =>  '1',
-            'active' => true
-        ],
-        [
-            'content'   =>  Html::tag('div', $form->field($model, 'anotherReceiverName').
-		            $form->field($model, 'anotherReceiverSurname').
-		            $form->field($model, 'anotherReceiverPhone')->hint(\Yii::t('shop', 'Телефон получателя, если он отличается от вашего!')),
-		            ['class' => 'content-data-body-second']),
-            'label'     =>  '',
-            'id'        =>  '2'
+<?=Html::tag('div',
+	$form->field($model, 'anotherReceiver')->radioList($model->availableReceivers,
+		[
+			'unselect'  => null,
+			'item'  =>  function ($index, $label, $name, $checked, $value) {
+				return Html::radio($name, $checked, [
+					'value' => $value,
+					'id' => 'tab-'.Tabs::$counter.$index
+				]).
+				Html::tag('label', $label, [
+					'class'         =>  'tabsLabels',
+					'data-target'   =>  '#w'.Tabs::$counter.'-tab'.$index,
+					'for'           =>  'tab-'.Tabs::$counter.$index
+				]);
+			}
+		]
+	)->label(false).
+	Tabs::widget([
+		'headerOptions' =>  [
+			'style' =>  'display: none'
+		],
+		'items' =>  [
+			[
+				'content'   =>  '',
+				'label'     =>  '',
+				'id'        =>  '1',
+				'active' => true
+			],
+			[
+				'content'   =>  Html::tag('div', $form->field($model, 'anotherReceiverName').
+					$form->field($model, 'anotherReceiverSurname').
+					$form->field($model, 'anotherReceiverPhone')->hint(\Yii::t('shop', 'Телефон получателя, если он отличается от вашего!')),
+					['class' => 'content-data-body-second']),
+				'label'     =>  '',
+				'id'        =>  '2'
 
 
-        ]
-    ]
-])?>
-</div>
-<div class="payment-type">Способ оплаты</div>
-<?=$form->field($model, 'paymentType')->radioList($domainConfiguration['paymentTypes'], [
+			]
+		]
+	]),
+	[
+		'class'	=>	'content-data-body-delivery-type'
+	]
+),
+	Html::tag('div', \Yii::t('shop', 'Способ оплаты'), ['class' => 'payment-type']).
+$form->field($model, 'paymentType')->radioList($domainConfiguration['paymentTypes'], [
 	'unselect'  => null,
     'item' => function ($index, $label, $name, $checked, $value) use ($form, $model){
         return Html::radio($name, $checked, [
@@ -285,5 +284,5 @@ Tabs::widget([
 				    }
 		    ])->label(false);
     }
-])->label(false);?>
-<div class="add-comment">Добавить коментарий к заказу</div>
+])->label(false),
+Html::tag('div', \Yii::t('shop', 'Добавить коментарий к заказу'), ['class' => 'add-comment']);

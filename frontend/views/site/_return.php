@@ -136,69 +136,62 @@ $this->registerCss($css);
 
 $model = new \frontend\models\ReturnForm();
 
-?>
-<div class="vozvrat-modal">
-    <?php    $form = \yii\bootstrap\ActiveForm::begin([
-    'id'            =>  'return-form'
-    ]);
- ?>
-    <span class="cap">1. Введите данные заказа</span>
-                <?= $form->field($model, 'orderNumber')?>
-                <?= $form->field($model, 'customerPhone')?>
-    <span class="cap">2. Введите данные ТТН "Новая Почта"</span>
-                <?php
-                echo $form->field($model, 'sendDate')->widget(DatePicker::classname(), [
-                    'type' => DatePicker::TYPE_INPUT,
-                    'pluginOptions' => [
-                        'autoclose'=>true,
-                        'format' => 'mm-dd-yyyy'
-                    ]
-                ]);?>
-                <?= $form->field($model, 'nakladna')?>
-    <span class="cap">3. Ваш комментарий (не обязательно) </span>
-    <?= $form->field($model, 'comment')->textarea()?>
-    <div class="check-buttons">
-        <div class="left">
-            <span class="cap">
-                4. Причина возврата
-            </span>
-            <?= $form->field($model, 'brokenGood')->checkbox()?>
-            <?= $form->field($model, 'notMatchGood')->checkbox()?>
-            <?= $form->field($model, 'notLikeGood')->checkbox()?>
-        </div>
-            <span class="cap">
-                5. Способ возврата денег
-            </span>
-        <?= $form->field($model, 'refundMethod')->radioList($model->refundMethods);?>
-    </div>
-    <span class="cap">6. Введите номер банковской карты (*перевод возможен только на карту ПриватБанк)</span>
-        <?= $form->field($model, 'cardNumber')?>
-        <?= $form->field($model, 'cardHolder')?>
-        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
-            'return-button']) ?>
-</div>
-<?php $form->end(); ?>
+$form = \yii\bootstrap\ActiveForm::begin([
+    'id'    =>  'return-form'
+]);
 
-<!--
-   тут недавно один парниша, патлач как прозвали, познакомися с тянкой, превосходной и милой, она увлекалась вязанием
-    спортом, и как же умна была и красива, они говорили по телефону, часами
+echo Html::tag('div',
+    Html::tag('span', '1. '.\Yii::t('shop', 'Введите данные заказа'), ['class' => 'cap']).
+    $form->field($model, 'orderNumber').
+    $form->field($model, 'customerPhone').
+    Html::tag('span', '2. '.\Yii::t('shop', 'Введите данные ТТН "Новая Почта"'), ['class' => 'cap']).
+    $form->field($model, 'sendDate')
+        ->widget(DatePicker::className(), [
+            'type' => DatePicker::TYPE_INPUT,
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'mm-dd-yyyy'
+            ]
+        ]).
+    $form->field($model, 'nakladna').
+    Html::tag('span', '3. '.\Yii::t('shop', 'Ваш комментарий (не обязательно)'), ['class' => 'cap']).
+    $form->field($model, 'comment')
+        ->textarea(),
+    Html::tag('div',
+        Html::tag('div',
+            Html::tag('span',
+                '4. '.\Yii::t('shop', 'Причина возврата').
+                $form->field($model, 'brokenGood')
+                    ->checkbox().
+                $form->field($model, 'notMatchGood')
+                    ->checkbox().
+                $form->field($model, 'notLikeGood')
+                    ->checkbox(),
+                [
+                    'class' => 'cap'
+                ]
+            ),
+            [
+                'class' => 'left'
+            ]
+        ).
+        '5. '.\Yii::t('shop', 'Способ возврата денег').
+        $form->field($model, 'refundMethod')->radioList($model->refundMethods),
+        [
+            'class' =>  'check-buttons'
+        ]
+    ),
+    Html::tag('span', '6. '.\Yii::t('shop', 'Введите номер банковской карты (*перевод возможен только на карту ПриватБанк)'), ['class' => 'cap']),
+    $form->field($model, 'cardNumber').
+    $form->field($model, 'cardHolder').
+    Html::submitButton(\Yii::t('shop', 'Отправить'),
+        [
+            'class' => 'about-inform-button yellow-button large-button', 'name' => 'return-button'
+        ]
+    ),
+    [
+        'class' =>  'vozvrat-modal'
+    ]
+);
 
-
-
-
-    так вот в один день да такой судьбоносный, когда ничего не вещало беды,
-
-
-
-    взяло да
-    случилось и знай бы он что, все было бы так превосходно, опустился чс на вк
-    опустился
-которая увекается всем чем и он и даже боьше
-
-
-
-
-
-
-
--->
+$form->end();
