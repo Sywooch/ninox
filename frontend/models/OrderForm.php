@@ -166,6 +166,13 @@ class OrderForm extends Model{
         ];
     }
 
+    public function getAvailableReceivers(){
+        return [
+            '0' =>  \Yii::t('shop', 'Отправлять на меня'),
+            '1' =>  \Yii::t('shop', 'Будет получать другой человек'),
+        ];
+    }
+
     /**
      * Загружает данные о клиенте в модель формы заказа
      *

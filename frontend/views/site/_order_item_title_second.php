@@ -15,7 +15,7 @@
         </div>
         <div class="contacy-data-title-buttom-border">
             <div class="content-data-title-text">
-                Доставка и Оплата
+                <?=\Yii::t('shop', 'Доставка и Оплата')?>
             </div>
         </div>
     </div>
