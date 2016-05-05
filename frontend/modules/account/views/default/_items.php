@@ -9,7 +9,7 @@
 use yii\bootstrap\Html;
 
 echo Html::tag('div', Html::tag('div',
-        Html::img('http://krasota-style.com.ua/ico/catalog/sm/'.$model->photo), [
+        Html::img(\Yii::$app->params['frontend'].'/img/catalog/'.$model->photo), [
             'class' => 'image'
         ]).
     Html::tag('div',

@@ -15,7 +15,7 @@ echo $form->field($model, 'phone'),
     $form->field($model, 'rememberMe')->checkbox(),
     Html::button(\Yii::t('shop', 'Войти'), [
         'type'  =>  'success',
-        'class' =>  'btn btn-default'
+        'class' =>  'btn btn-primary'
     ]);
 
 ActiveForm::end();

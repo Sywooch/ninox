@@ -1181,6 +1181,16 @@ h2{
 	padding: 25px 10px 0 20px;
 }
 
+.category .filters .filter-block{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	color: #3b3b39;
+}
+
+.category .filters .filter-head{
+	font-family: OpenSans-Semibold;
+}
+
 .category .content{
 	width: 870px;
 	float: right;
@@ -1232,6 +1242,7 @@ h2{
 
 .filters .filter-rows label{
 	display: block;
+	font-weight: unset;
 }
 
 .category .select2{
@@ -3887,8 +3898,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	transition-duration: 1s;
 	margin-top: 10px;
 }
-
-
 
 .sticky .logo{
 	background: url("/img/site/krasota-style_logo3.svg") no-repeat;
