@@ -6,7 +6,9 @@ use backend\controllers\SiteController as Controller;
 use backend\models\Category;
 use backend\models\Good;
 use backend\models\CategorySearch;
+use common\models\CategoryTranslation;
 use common\models\CategoryUk;
+use common\models\GoodTranslation;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
@@ -316,9 +318,11 @@ class DefaultController extends Controller
         $categoryCodeLength = strlen($category->Code) + 3;
 
         $goodsCountQuery = Category::find()
-            ->select(['`a`.`Code` as `Code`', 'SUM(`b`.`show_img`) as `enabled`', 'COUNT(`b`.`ID`) as `all`'])
-            ->from([Category::tableName().' a', Good::tableName().' b'])
-            ->where('`b`.`GroupID` = `a`.`ID`')
+            ->select(['`a`.`Code` as `Code`', 'SUM(`c`.`enabled`) as `enabled`', 'COUNT(`b`.`ID`) as `all`'])
+            ->from([Category::tableName().' a'])
+            ->leftJoin(Good::tableName().' b', '`b`.`GroupID` = `a`.`ID`')
+            ->leftJoin(GoodTranslation::tableName().' c', '`c`.`ID` = `b`.`ID`')
+            ->andWhere(['c.language'    =>  \Yii::$app->language])
             ->groupBy('`b`.`GroupID`');
 
         if(!empty($category->Code)){

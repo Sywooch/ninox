@@ -32,10 +32,6 @@ class Category extends \common\models\Category
             ->all();
     }
 
-    public function getName(){
-        return $this->name;
-    }
-
     /**
      * @param float $size       - размер скидки
      * @param string $priceType - тип цены

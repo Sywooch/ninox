@@ -35,6 +35,7 @@ use frontend\models\SignupForm;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
+use yii\data\Sort;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
