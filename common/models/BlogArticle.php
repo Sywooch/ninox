@@ -27,7 +27,7 @@ use Yii;
  * @property string $video
  * @property string $future_publish
  */
-class Articles extends \yii\db\ActiveRecord
+class BlogArticle extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -39,6 +39,14 @@ class Articles extends \yii\db\ActiveRecord
 
     public static function getDb(){
         return Yii::$app->dbBlog;
+    }
+
+    public function getPreview(){
+        return empty($this->small_content) ? mb_substr(strip_tags($this->content), 0, 200): $this->small_content;
+    }
+
+    public static function findByLink($link){
+        return self::findOne(['link' => $link]);
     }
 
     /**
