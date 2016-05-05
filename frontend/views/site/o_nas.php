@@ -51,17 +51,17 @@ $this->registerJs($js);
                 <a id="link" href="#about-return-header"><?=\Yii::t('shop', 'Гарантии и возврат')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-contacts-header"><?=\Yii::t('shop', 'Контакты')?></a>
+                <a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a>
             </div>
-            <div class="left-side-menu-item">
-                <a id="link" href="#about-as-header"><?=\Yii::t('shop', 'О нас')?></a>
-            </div>
-            <div class="left-side-menu-item" href="">
-                <a id="link" href=""><?=\Yii::t('shop', 'Сотрудничество с нами')?></a>
+ <!--           <div class="left-side-menu-item">
+                <a id="link" href="#about-as-header"><?/*=\Yii::t('shop', 'О нас')*/?></a>
             </div>
             <div class="left-side-menu-item" href="">
-                <a id="link" href=""><?=\Yii::t('shop', 'Вакансии')?></a>
+                <a id="link" href=""><?/*=\Yii::t('shop', 'Сотрудничество с нами')*/?></a>
             </div>
+            <div class="left-side-menu-item" href="">
+                <a id="link" href=""><?/*=\Yii::t('shop', 'Вакансии')*/?></a>
+            </div>-->
             <div class="left-side-menu-item" href="#about-TermOfUse-header">
                 <a id="link" href="#about-TermOfUse-header"><?=\Yii::t('shop', 'Условия исп. сайта')?></a>
             </div>
