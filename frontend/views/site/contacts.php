@@ -12,7 +12,7 @@ use yii\jui\Accordion;
 <div class="content">
 <div class="about-contacts padding-bottom">
             <span class="about-header semi-bold">
-                <a name="about-contacts-header">Контакты</a>
+                <a name="about-contacts-header"><h1>Контакты</h1></a>
             </span>
     <div class="contacts-inform">
         <div class="inform">
@@ -72,17 +72,6 @@ use yii\jui\Accordion;
         <script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1
 .0/js/?sid=4hFYumeZNU3DOUuSwFOHsj9YvHKV9fH0&width=880&height=600&scroll=true&lang=ru_UA&sourceType=constructor
 "></script>
-       <!-- --><?/*=Accordion::widget([
-            'items' => [
-                [
-                    'header' => Html::tag('span', 'Как к нам добраться', ['class' => 'content-data-first_1']),
-                    'content' =>  '<script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1
-.0/js/?sid=4hFYumeZNU3DOUuSwFOHsj9YvHKV9fH0&width=880&height=600&scroll=true&lang=ru_UA&sourceType=constructor
-"></script>',
-                ],
-            ],
-            'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
-        ]);*/?>
     </div>
     </div>
 </div>
