@@ -7,7 +7,7 @@
  */
 ?>
 <div class="content help-page">
-<span>Вопросы и ответы</span>
+<h1>Вопросы и ответы</h1>
 
 <span><b>Как оплатить?</b></span>
 

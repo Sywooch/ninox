@@ -39,31 +39,31 @@ $this->registerJs($js);
     <div class="left-side">
         <div class="left-side-menu">
             <div class="left-side-menu-item" >
-                <a id="link" href="#questions-answer">Вопросы и ответы</a>
+                <a href="/pomoshch"><?=\Yii::t('shop', 'Вопросы и ответы')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-work-header">Как мы работаем</a>
+                <a id="link" href="#about-work-header"><?=\Yii::t('shop', 'Как мы работаем')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-delivery-payment-header">Доставка и оплата</a>
+                <a id="link" href="#about-delivery-payment-header"><?=\Yii::t('shop', 'Доставка и оплата')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-return-header">Гарантии и возврат</a>
+                <a id="link" href="#about-return-header"><?=\Yii::t('shop', 'Гарантии и возврат')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-contacts-header">Контакты</a>
+                <a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a>
             </div>
-            <div class="left-side-menu-item">
-                <a id="link" href="#about-as-header">О нас</a>
+ <!--           <div class="left-side-menu-item">
+                <a id="link" href="#about-as-header"><?/*=\Yii::t('shop', 'О нас')*/?></a>
             </div>
             <div class="left-side-menu-item" href="">
-                <a id="link" href="">Сотрудничество с нами</a>
+                <a id="link" href=""><?/*=\Yii::t('shop', 'Сотрудничество с нами')*/?></a>
             </div>
             <div class="left-side-menu-item" href="">
-                <a id="link" href="">Вакансии</a>
-            </div>
+                <a id="link" href=""><?/*=\Yii::t('shop', 'Вакансии')*/?></a>
+            </div>-->
             <div class="left-side-menu-item" href="#about-TermOfUse-header">
-                <a id="link" href="#about-TermOfUse-header">Условия исп. сайта</a>
+                <a id="link" href="#about-TermOfUse-header"><?=\Yii::t('shop', 'Условия исп. сайта')?></a>
             </div>
         </div>
     </div>
