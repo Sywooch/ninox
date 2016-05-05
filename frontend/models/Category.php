@@ -13,6 +13,7 @@ namespace frontend\models;
 
 use common\helpers\Formatter;
 use common\models\GoodOptionsValue;
+use yii\data\Sort;
 
 class Category extends \common\models\Category{
 
@@ -57,9 +58,10 @@ class Category extends \common\models\Category{
 		    $return->andWhere(['<=', '`goods`.`PriceOut1`', $priceMax]);
 	    }
 
-	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
+	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` > 0 AND `goods`.`PriceOut2` > 0)')
 	        ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
-		    ->orderBy('IF ((`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\') OR `item_translations`.`enabled` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
+	        ->andWhere(['`item_translations`.`enabled`' => 1])
+		    ->orderBy("IF ((`goods`.`count` <= '0' AND `goods`.`isUnlimited` = '0') OR `item_translations`.`enabled` = '0', 'FIELD(`goods`.`count` DESC)', 'FIELD()')");
 
 	    switch(\Yii::$app->request->get('order')){
 		    case 'asc':
@@ -110,13 +112,22 @@ class Category extends \common\models\Category{
 
 	public function getGroupIDs(){
 		if(empty($this->_groupIDs)){
-			$this->_groupIDs = array_column(self::find()
-				->select('`goodsgroups`.`ID`')
+			foreach(self::find()
 				->joinWith(['translations'])
 				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
 				->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
 				->andWhere(['`category_translations`.`enabled`' => 1])
-				->asArray()->all(), 'ID');
+				->orderBy('`goodsgroups`.`Code`')
+				->all() as $category){
+				if($category->enabled == 1){
+					if(empty($this->_groupIDs)){
+						$this->_groupIDs[$category->Code] = $category->ID;
+					}elseif(isset($this->_groupIDs[substr($category->Code, 0, -3)])){
+						$this->_groupIDs[$category->Code] = $category->ID;
+					}
+				}
+			}
+			$this->_groupIDs = array_values($this->_groupIDs);
 		}
 
 		return $this->_groupIDs;
