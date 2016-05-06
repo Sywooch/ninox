@@ -15,6 +15,7 @@ use common\helpers\UploadHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
+use common\models\GoodTranslation;
 use common\models\GoodUk;
 use common\models\PriceListImport;
 use common\models\UploadPhoto;
@@ -295,10 +296,12 @@ class DefaultController extends Controller
         $item = \Yii::$app->request->get("string");
 
         $goods = Good::find()
-            ->where(['like', 'Name', $item])
-            ->orWhere(['like', 'Code', $item.'%', false])
-            ->orWhere(['like', 'BarCode1', $item])
-            ->orWhere(['like', 'BarCode2', $item])
+            ->where(['like', GoodTranslation::tableName().'.name', $item])
+            ->joinWith('translations')
+            ->andWhere([GoodTranslation::tableName().'.language' => \Yii::$app->language])
+            ->orWhere(['like', 'goods.Code', $item.'%', false])
+            ->orWhere(['like', 'goods.BarCode1', $item])
+            ->orWhere(['like', 'goods.BarCode2', $item])
             ->limit(10);
 
         $return = [];
