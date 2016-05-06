@@ -117,14 +117,14 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 		]).
 		Html::tag('div',
 			Html::tag('div',
-				Html::button(\Yii::t('site', 'Оформить заказ'), [
+				Html::button(\Yii::t('shop', 'Оформить заказ'), [
 					'type'	    =>	'submit',
 					'name'	    =>	'orderType',
 					'value'	    =>	'0',
 					'class'	    =>	'button yellow-button cart-button form-order',
 					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
 				]).
-				Html::button(\Yii::t('site', 'Заказать в 1 клик'), [
+				Html::button(\Yii::t('shop', 'Заказать в 1 клик'), [
 					'type'	    =>	'submit',
 					'name'	    =>	'orderType',
 					'value'	    =>	'1',
