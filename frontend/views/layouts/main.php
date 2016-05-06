@@ -9,6 +9,7 @@ use frontend\models\Category;
 use frontend\assets\RuLangAsset;
 use common\components\SocialButtonWidget;
 use frontend\widgets\CartWidget;
+use frontend\widgets\LanguageDropdown;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
@@ -276,6 +277,7 @@ $this->beginPage();
 					<div class="items currency-rate">1 USD - 24.2 UAH</div>
 					<div class="personal-account">
 						<div class="items">РУС</div>
+						<?=LanguageDropdown::widget(['name' => 'languages'])?>
 						<?php if(\Yii::$app->user->isGuest){
 							echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
 						}else{
