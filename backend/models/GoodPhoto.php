@@ -44,7 +44,7 @@ class GoodPhoto extends GoodsPhoto
             $good = Good::findOne($this->itemid);
 
             if($good){
-                $good->show_img = 0;
+                $good->enabled = 0;
 
                 $good->save(false);
             }

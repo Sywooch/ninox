@@ -5,16 +5,16 @@ namespace backend\modules\goods\controllers;
 use backend\controllers\SiteController as Controller;
 use backend\models\Good;
 use backend\models\History;
+use backend\models\Category;
 use backend\modules\goods\assets\GoodsModuleAsset;
 use backend\modules\goods\models\GoodAttributesForm;
 use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
+use backend\models\GoodSearch;
 use common\helpers\UploadHelper;
-use backend\models\Category;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
-use common\models\GoodSearch;
 use common\models\GoodUk;
 use common\models\PriceListImport;
 use common\models\UploadPhoto;
@@ -310,7 +310,7 @@ class DefaultController extends Controller
                 'photo'     =>  $good->photo,
                 'code'      =>  $good->Code,
                 'ID'        =>  $good->ID,
-                'disabled'  =>  $good->show_img == 0,
+                'disabled'  =>  $good->enabled == 0,
                 'ended'     =>  $good->count <= 0,
                 'sale'      =>  $good->discountType != 0
             ];
