@@ -69,6 +69,9 @@ return [
         'account' => [
             'class' => 'frontend\modules\account\Module',
         ],
+        'blog' => [
+            'class' => 'frontend\modules\blog\Module',
+        ],
         'autopricelist' => [
             'class' => 'frontend\modules\autopricelist\Module',
         ],
