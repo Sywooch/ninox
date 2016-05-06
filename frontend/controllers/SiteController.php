@@ -264,7 +264,7 @@ class SiteController extends Controller
                 $category = Category::findOne($object->GroupID);
                 $temp = [
                     [
-                        'url'   =>  '/'.$category->link,
+                        'url'   =>  Url::to([$category->link, 'language' => \Yii::$app->language]),
                         'label' =>  $category->name
                     ],
                     [
@@ -280,7 +280,7 @@ class SiteController extends Controller
         if(strlen($category->Code) != 3){
             foreach($category->parents as $parent){
                 $this->getView()->params['breadcrumbs'][] = [
-                    'url'   =>  '/'.$parent->link,
+                    'url'   =>  Url::to(['/'.$parent->link, 'language' => \Yii::$app->language]),
                     'label' =>  $parent->name
                 ];
             }
@@ -544,8 +544,8 @@ class SiteController extends Controller
      */
     function getSearchStatement($string){
         $vowels = array(
-            'ru_RU' => '[аеиоуыэюяьъй]',
-            'uk_UA' => '[аеиіоуєюяїьй]'
+            'ru-RU' => '[аеиоуыэюяьъй]',
+            'uk-UA' => '[аеиіоуєюяїьй]'
         );
         $pattern = $vowels[\Yii::$app->language];
         $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';

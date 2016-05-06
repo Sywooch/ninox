@@ -12,6 +12,7 @@ namespace frontend\widgets;
 use frontend\assets\MainMenuAsset;
 use yii\base\Widget;
 use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 class MainMenuWidget extends Widget{
 
@@ -69,7 +70,7 @@ class MainMenuWidget extends Widget{
             $item['label'] = Html::tag('span', $item['label'], ['class' => 'item-label']);
         }
 
-        $menu .= Html::a($item['label'], '/'.$item['url']);
+        $menu .= Html::a($item['label'], Url::to(['/'.$item['url'], 'language' => \Yii::$app->language]));
 
         if(!empty($item['items'])){
             foreach($item['items'] as $sub){

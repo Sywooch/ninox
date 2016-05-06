@@ -112,7 +112,7 @@ class Good extends \yii\db\ActiveRecord
      * @return GoodTranslation
      */
     public function getTranslationByKey($key){
-        $defaultLang = 'ru_RU';
+        $defaultLang = 'ru-RU';
         $defaultLangModel = new GoodTranslation();
         $currentLangModel = new GoodTranslation();
         foreach($this->translations as $translation){
