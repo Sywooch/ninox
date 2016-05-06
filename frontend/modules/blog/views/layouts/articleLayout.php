@@ -72,7 +72,9 @@ $this->beginPage() ?>
     ?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
+        <?= \frontend\modules\blog\widgets\MenuWidget::widget([
+            'items' =>  \common\models\BlogCategory::find()->with('childs')->where(['parent' => 0, 'taxonomy' => 'category'])->all()
+        ]),Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>

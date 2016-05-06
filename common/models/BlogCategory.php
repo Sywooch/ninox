@@ -37,6 +37,11 @@ class BlogCategory extends \yii\db\ActiveRecord
         return $this->hasMany(BlogArticle::className(), ['category' => 'term_id']);
     }
 
+    public function getChilds(){
+        return $this->hasMany(BlogCategory::className(), ['parent' => 'term_id']);
+    }
+
+
     /**
      * @inheritdoc
      */

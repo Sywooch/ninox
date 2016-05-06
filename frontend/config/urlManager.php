@@ -14,6 +14,7 @@ return [
         '<action:(reset-password)>/<token>'      =>   'site/<action>',
         '<module(account|blog)>'          =>  '<module>/default/index',
         '<module(account)>/<action>'          =>  '<module>/default/<action>',
+        '<module(blog)>/<action:(lastnews)>'          =>  '<module>/default/<action>',
         '<module(blog)>/<url:(.*)>'          =>  '<module>/default/route',
         '<url:(.*)>/order-<order:(\w+)>/page-<page:(\d+)>'    =>  'site/renderpage',
         '<url:(.*)>/page-<page:(\d+)>'    =>  'site/renderpage',

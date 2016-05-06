@@ -48,7 +48,7 @@ class BlogArticle extends \yii\db\ActiveRecord
     public static function findByLink($link){
         return self::findOne(['link' => $link]);
     }
-
+    
     /**
      * @inheritdoc
      */
