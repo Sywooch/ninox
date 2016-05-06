@@ -8,7 +8,7 @@ return [
             'password' => '',
             'charset' => 'utf8',
         ],
-        'db' => [
+        'dbBlog' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=blog',
             'username' => 'root',
