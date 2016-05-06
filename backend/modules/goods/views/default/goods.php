@@ -61,11 +61,9 @@ $("body").on('click', ".changeViewBtn", function(){
         params += "&";
     }
     
-    if($(this).attr("data-view").length != 0 && urlVars['view'].length == 0){
+    if($(this).attr("data-view").length != 0 && (urlVars['view'] == undefined || urlVars['view'].length == 0)){
         params += "view" + "=" + $(this).attr("data-view")
     }
-    
-    console.log(params);
     
     $.pjax({url: "/goods" + params, container: '#goods-view-pjax'});
 })
