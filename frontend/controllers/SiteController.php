@@ -130,6 +130,10 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
+        if($good->link.'-g'.$good->ID != $link){
+            $this->redirect(Url::to(['/tovar/'.$good->link.'-g'.$good->ID, 'language' => \Yii::$app->language]), 301);
+        }
+
         $this->saveGoodInViewed($good);
 
         $this->getBreadcrumbsLinks($good);
