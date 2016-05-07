@@ -6,7 +6,7 @@ class m160506_082730_hotfix_cashbox_sale extends Migration
 {
     public function up()
     {
-        $this->alterColumn('history', 'deliveryInfo', \yii\db\Schema::TYPE_TEXT." DEFAULT ''");
+        $this->alterColumn('history', 'deliveryInfo', \yii\db\Schema::TYPE_TEXT." DEFAULT NULL");
     }
 
     public function down()
