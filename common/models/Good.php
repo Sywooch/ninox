@@ -137,7 +137,7 @@ class Good extends \yii\db\ActiveRecord
      * @return GoodTranslation
      */
     public function getTranslationByKey($key){
-        $defaultLang = 'ru_RU';
+        $defaultLang = 'ru-RU';
         $defaultLangModel = new GoodTranslation();
         $currentLangModel = new GoodTranslation();
         foreach($this->translations as $translation){
@@ -150,12 +150,12 @@ class Good extends \yii\db\ActiveRecord
         }
 
         if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
-            foreach($defaultLangModel as $key => $value){
-                $defaultLangModel[$key] = empty($currentLangModel[$key]) ? $value : $currentLangModel[$key];
+            foreach($currentLangModel as $key => $value){
+                $currentLangModel[$key] = empty($currentLangModel[$key]) ? $defaultLangModel[$key] : $value;
             }
         }
 
-        return $defaultLangModel;
+        return $currentLangModel;
     }
 
     /**

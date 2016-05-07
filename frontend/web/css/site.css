@@ -3913,10 +3913,50 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	line-height: 15px;
 }
 
-.personal-account .items{
-	padding-right: 0px;
-	margin-left: 45px;
+.top-menu-content .languages, .top-menu-content .personal-account{
+	display: inline-block;
+	height: 100%;
+	position: relative;
+	line-height: 30px;
 	cursor: pointer;
+}
+
+.top-menu-content .languages{
+	text-transform: uppercase;
+}
+
+.top-menu-content .languages a{
+	color: #fff
+}
+
+.top-menu-content .languages ul{
+	position: absolute;
+	width: 100%;
+	background: #2ba3e1;
+	border-radius: 6px;
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	z-index: 1000;
+	display: none;
+}
+
+.top-menu-content .languages ul:before{
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: -10px;
+	margin-left: -10px;
+	border-width: 0 10px 10px;
+	border-style: solid;
+	border-color: transparent transparent #2ba3e1;
+}
+
+.top-menu-content .languages li, .top-menu-content .languages span{
+	padding: 0 5px;
+}
+
+.top-menu-content .languages:hover ul{
+	display: block;
 }
 
 .items.account-icon a{
@@ -3924,19 +3964,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .personal-account .account-icon:before{
-	content: url("/img/site/account.png");
-	margin-right: -5px;
+	content: '';
+	background: url("/img/site/account.png");
 }
 
-.personal-account .items:after{
-	content: url("/img/site/arrow-bot-menu.png");
-	margin-top: -2px;
-	cursor: pointer;
-}
-
-.top-menu-content .personal-account{
-	float: right;
-	margin-right: 13px;
+.top-menu-content .languages span:after, .top-menu-content .login:after, .top-menu-content .logout:after{
+	content: '';
+	background: url("/img/site/arrow-bot-menu.png") no-repeat 50% 50%;
+	display: inline-block;
+	width: 16px;
+	height: 8px;
 }
 
 .under-menu{
@@ -4149,6 +4186,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .right-side{
 	float: right;
+	height: 100%;
 }
 
 .sticky .phone-number{
@@ -5748,15 +5786,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .popover-arrow .arrow {
 	border-width: 11px;
-}
-
-.popover-arrow .arrow, .popover .arrow::after {
-	position: absolute;
-	display: block;
-	width: 0;
-	height: 0;
-	border-color: transparent;
-	border-style: solid;
 }
 
 .popover-arrow.bottom .arrow::after {

@@ -64,6 +64,8 @@ class SiteController extends Controller
             }
         }
 
+        $this->getLanguagesLinks($this);
+
         $goodsDataProvider = new ActiveDataProvider([
             'query' =>  Good::find()
                 ->where(['`goods`.`Deleted`' => '0'])
@@ -142,9 +144,14 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
+        if($good->link.'-g'.$good->ID != $link){
+            $this->redirect(Url::to(['/tovar/'.$good->link.'-g'.$good->ID, 'language' => \Yii::$app->language]), 301);
+        }
+
         $this->saveGoodInViewed($good);
 
         $this->getBreadcrumbsLinks($good);
+        $this->getLanguagesLinks($good);
 
         (new PriceRuleHelper())->recalc($good, true);
 
@@ -196,6 +203,8 @@ class SiteController extends Controller
         }
 
         \Yii::trace($category->viewFile);
+
+        $this->getLanguagesLinks($category);
 
         switch($category->viewFile){
             case '0':
@@ -276,7 +285,7 @@ class SiteController extends Controller
                 $category = Category::findOne($object->GroupID);
                 $temp = [
                     [
-                        'url'   =>  '/'.$category->link,
+                        'url'   =>  Url::to([$category->link, 'language' => \Yii::$app->language]),
                         'label' =>  $category->name
                     ],
                     [
@@ -292,13 +301,68 @@ class SiteController extends Controller
         if(strlen($category->Code) != 3){
             foreach($category->parents as $parent){
                 $this->getView()->params['breadcrumbs'][] = [
-                    'url'   =>  '/'.$parent->link,
+                    'url'   =>  Url::to(['/'.$parent->link, 'language' => \Yii::$app->language]),
                     'label' =>  $parent->name
                 ];
             }
         }
 
         $this->getView()->params['breadcrumbs'] = array_merge($this->getView()->params['breadcrumbs'], $temp);
+    }
+
+    /**
+     * Собирает ссылки для перехода на другие языковые версии сайта
+     * в зависимости от переданного объекта категории или товара
+     *
+     * @param $object
+     * @throws InvalidConfigException
+     */
+
+    public function getLanguagesLinks($object){
+        $class = get_parent_class($object);
+        $this->getView()->params['languageLinks'] = [];
+        $temp = [];
+        $get = \Yii::$app->request->get();
+        unset($get['_pjax']);
+        unset($get['url']);
+
+        switch($class){
+            case 'common\models\Category':
+                foreach($object->translations as $translation){
+                    if($translation->enabled){
+                        $temp[substr($translation->language, 0, 2)] = $translation->link;//.($get ? '?'.urldecode(http_build_query($get)): ''); TODO: раскомментировать, если нужно будет сохранять гет-параметры
+                    }
+                }
+                break;
+            case 'common\models\Good':
+                foreach($object->translations as $translation){
+                    if($translation->enabled){
+                        $temp[substr($translation->language, 0, 2)] = 'tovar/'.(empty($translation->link) ? $object->link : $translation->link).'-g'.$object->ID;//.($get ? '?'.urldecode(http_build_query($get)): ''); TODO: раскомментировать, если нужно будет сохранять гет-параметры
+                    }
+                }
+                break;
+            case 'yii\web\Controller':
+                $appLanguage = Yii::$app->language;
+                foreach(Yii::$app->urlManager->languages as $code => $language){
+                    $isWildcard = substr($language, -2) === '-*';
+                    if($language === $appLanguage ||
+                        // Also check for wildcard language
+                        $isWildcard && substr($appLanguage, 0, 2) === substr($language, 0, 2)){
+                        continue;   // Exclude the current language
+                    }
+                    if($isWildcard || is_int($code)){
+                        $code = substr($language, 0, 2);
+                    }
+
+                    $temp[$code] = '';
+                }
+                break;
+            default:
+                throw new InvalidParamException("Класс {$class} не предназначен для генерации ссылок перехода на другие языковые версии сайта!");
+                break;
+        }
+
+        $this->getView()->params['languageLinks'] = $temp;
     }
 
     public function actionOrder(){
@@ -556,8 +620,8 @@ class SiteController extends Controller
      */
     function getSearchStatement($string){
         $vowels = array(
-            'ru_RU' => '[аеиоуыэюяьъй]',
-            'uk_UA' => '[аеиіоуєюяїьй]'
+            'ru-RU' => '[аеиоуыэюяьъй]',
+            'uk-UA' => '[аеиіоуєюяїьй]'
         );
         $pattern = $vowels[\Yii::$app->language];
         $pattern = '/'.$pattern.'+?'.$pattern.'$|'.$pattern.'$/';
