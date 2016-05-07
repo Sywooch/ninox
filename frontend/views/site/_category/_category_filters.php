@@ -49,7 +49,7 @@ echo Html::beginTag('div', ['class' => 'filters']).
 					$options = array_merge(
 						[
 							'value'         =>  $value,
-							'label'         =>  $data['label'].'('.$data['count'].')',
+							'label'         =>  $data['label'].' ('.$data['count'].')',
 							'disabled'      =>  $data['count'] == 0
 						],
 						$data['count'] == 0 ? ['labelOptions' => ['class' => 'disabled']] : []

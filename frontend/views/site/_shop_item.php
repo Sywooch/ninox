@@ -63,11 +63,12 @@ echo Html::tag('div',
 			$this->render('_shop_item/_shop_item_wish', ['model' => $model]).
 			Html::tag('span', $model->Code, ['class' => 'item-code']),
 			['class' => 'item-head clear-fix']).
-		Html::a(Html::img($photo,[
-				'class' => 'item-img',
+		Html::a(Html::tag('div', Html::img($photo,[
 				'alt' => $model->Name,
 				'height' => 180,
 				'width' => 230
+			]), [
+				'class' => 'item-img',
 			]).
 			Html::tag('div',
 				Html::tag('span', \Yii::t('shop', 'Быстрый просмотр')),
@@ -91,4 +92,7 @@ echo Html::tag('div',
 		$itemDopInfoBlock($model),
 		['class' => 'inner-sub']) : ''
 	),
-	['class' => 'item']);
+	['class' => 'item '.($model->enabled && ($model->count > 0 || $model->isUnlimited) ?
+			($model->inCart ?
+				'in-cart' : 'available'
+			) : 'out-of-stock')]);
