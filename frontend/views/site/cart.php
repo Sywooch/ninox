@@ -1,6 +1,7 @@
 <?php
 use common\helpers\Formatter;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 echo Html::tag('div',
 	Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
@@ -76,7 +77,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 	]).
 	Html::beginTag('div', ['class' => 'cart-footer-bottom']);
 	$form = \yii\widgets\ActiveForm::begin([
-		'action'	=>	'/order'
+		'action'	=>	Url::to(['/order', 'language' => \Yii::$app->language])
 	]);
 		echo Html::tag('div',
 			Html::tag('div',
@@ -92,7 +93,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 					'clientOptions' =>  [
 						'clearIncomplete'   =>  true,
 						'alias'             =>  'phone',
-						'url'               =>  \yii\helpers\Url::to('/js/phone-codes.json'),
+						'url'               =>  Url::to('/js/phone-codes.json'),
 						'countrycode'       =>  '38',
 						'onBeforePaste'           =>  new \yii\web\JsExpression('
 							function(){
