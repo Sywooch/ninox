@@ -94,7 +94,7 @@ class Banner extends \yii\db\ActiveRecord
      * @return BannerTranslation()
      */
     public function getTranslationByKey($key){
-        $defaultLang = 'ru_RU';
+        $defaultLang = 'ru-RU';
         $defaultTranslation = $needleTranslation = new BannerTranslation();
 
         foreach($this->translations as $translation){
