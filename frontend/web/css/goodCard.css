@@ -16,6 +16,10 @@
     margin: auto;
 }
 
+.item-card .item-photos .slick-slide{
+    margin-bottom: 15px;
+}
+
 /*.catalog-menu .breadcrumb{
     background: none;
     padding: 25px 0px 0px;

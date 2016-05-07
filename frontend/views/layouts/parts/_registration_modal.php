@@ -28,6 +28,7 @@ echo $form->field($model, 'name'),
         'captchaAction' =>  'site/captcharegistermodal',
     ]);
 echo \yii\helpers\Html::button('Регистрация', [
-    'type'  =>  'submit'
+    'type'  =>  'submit',
+    'class' =>  'btn btn-primary'
 ]);
 ActiveForm::end();

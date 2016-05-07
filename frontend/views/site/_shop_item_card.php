@@ -108,7 +108,7 @@ foreach($good->photos as $photo){
                 'height'=>  '355px',
                 'alt'   =>  $good->Name
             ])).
-            (!empty($itemsNav) ? Slick::widget([
+            (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderNav',
                     'class' => 'second'
