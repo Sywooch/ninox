@@ -47,14 +47,16 @@ $('#subscribeForm').on('submit', function(e){
 	
 	var form = $(this);
 	
-    $.ajax({
-        type: 'POST',
-        url: '/subscribe',
-        data: form.serialize(),
-        success: function(){
-        	form.html("спасибо за подписку!");
-        }
-    });
+    if(form.find("#subscribeform-email").val().length != 0){
+		$.ajax({
+			type: 'POST',
+			url: '/subscribe',
+			data: form.serialize(),
+			success: function(){
+				form.html("спасибо за подписку!");
+			}
+		});
+    }
 });
 JS;
 
