@@ -89,12 +89,12 @@ class Category extends \yii\db\ActiveRecord
         }
 
         if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
-            foreach($defaultLangModel as $key => $value){
-                $defaultLangModel[$key] = empty($currentLangModel[$key]) ? $value : $currentLangModel[$key];
+            foreach($currentLangModel as $key => $value){
+                $currentLangModel[$key] = empty($currentLangModel[$key]) ? $defaultLangModel[$key] : $value;
             }
         }
 
-        return $defaultLangModel;
+        return $currentLangModel;
     }
 
     /**

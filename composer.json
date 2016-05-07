@@ -60,8 +60,7 @@
         "kartik-v/yii2-tree-manager": "@dev",
         "yiisoft/yii2-jui": "^2.0",
         "codeception/codeception": "*",
-        "yii2mod/yii2-ion-slider": "*",
-        "codemix/yii2-localeurls": "^1.4"
+        "yii2mod/yii2-ion-slider": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",

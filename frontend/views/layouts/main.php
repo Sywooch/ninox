@@ -21,7 +21,6 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width; 
 $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
-
 /*
  * это нужно?
  */
@@ -275,15 +274,26 @@ $this->beginPage();
 					<div class="items"><a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a></div>
 					<div class="blog items">Блог</div>
 					<div class="items currency-rate">1 USD - 24.2 UAH</div>
-					<div class="personal-account">
-						<div class="items">РУС</div>
-						<?=LanguageDropdown::widget(['name' => 'languages'])?>
+					<div class="right-side">
+						<?=LanguageDropdown::widget([
+							'links'     =>  $this->params['languageLinks'],
+							'params'    =>  ['class' => 'languages']
+						])?>
 						<?php if(\Yii::$app->user->isGuest){
-							echo Html::tag('div', Html::a(\Yii::t('shop', 'Войти'), '#loginModal'), ['class' => 'items']);
+							echo Html::tag('div',
+								Html::a(\Yii::t('shop', 'Войти'), '#loginModal', ['class' => 'login']),
+								['class' => 'personal-account']);
 						}else{
-							echo Html::tag('div', Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('/account')).Html::a(\Yii::t('shop', 'Выйти'), Url::to('/logout'), [
-									'data-method'   =>  'post'
-								]), ['class' => 'items account-icon']);
+							echo Html::tag('div',
+								Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('/account'), ['class' => 'account']).
+								Html::a(\Yii::t('shop', 'Выйти'), Url::to('/logout'),
+									[
+										'data-method'   =>  'post',
+										'class'         =>  'logout'
+									]
+								),
+								['class' => 'personal-account']
+							);
 						} ?>
 					</div>
 				</div>

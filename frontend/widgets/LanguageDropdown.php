@@ -7,56 +7,52 @@
  */
 
 namespace frontend\widgets;
-use kartik\select2\Select2;
+
 use Yii;
+use yii\base\Widget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-class LanguageDropdown extends Select2
+class LanguageDropdown extends Widget
 {
 	private static $_labels;
-
+	private $items;
 	private $_isError;
+
+	public $links;
+	public $params = [];
 
 	public function init()
 	{
-		$route = Yii::$app->controller->route;
 		$appLanguage = Yii::$app->language;
-		$params = $_GET;
-		$this->_isError = $route === Yii::$app->errorHandler->errorAction;
+		$this->_isError = Yii::$app->controller->route === Yii::$app->errorHandler->errorAction;
 
-		array_unshift($params, '/'.$route);
-
-		foreach (Yii::$app->urlManager->languages as $code => $language) {
-			$isWildcard = substr($language, -2)==='-*';
-			if (
-				$language===$appLanguage ||
+		foreach(Yii::$app->urlManager->languages as $code => $language){
+			$isWildcard = substr($language, -2) === '-*';
+			if($language === $appLanguage ||
 				// Also check for wildcard language
-				$isWildcard && substr($appLanguage,0,2)===substr($language,0,2)
-			) {
+				$isWildcard && substr($appLanguage, 0, 2) === substr($language, 0, 2)){
 				continue;   // Exclude the current language
 			}
-			if ($isWildcard) {
-				$language = substr($language,0,2);
+			if($isWildcard || is_int($code)){
+				$code = substr($language, 0, 2);
 			}
-			if(is_string($code)){
-				$language = $code;
-			}
-			$params['language'] = $language;
-			$this->data[] = [
-				'test' => Html::a(self::label($language), Url::to(['/', 'language' => \Yii::$app->language]))
-			];
+
+			isset($this->links[$code]) ? $this->items[] = Html::a(self::label($code), Url::to(['/'.$this->links[$code], 'language' => $language])) : '';
 		}
-		parent::init();
 	}
 
 	public function run()
 	{
 		// Only show this widget if we're not on the error page
-		if ($this->_isError) {
+		if($this->_isError){
 			return '';
-		} else {
-			return parent::run();
+		}else{
+			return Html::tag('div',
+				Html::tag('span', self::label(substr(Yii::$app->language, 0, 2))).
+				($this->items ? Html::ul($this->items, ['encode' => false]) : ''),
+				$this->params
+			);
 		}
 	}
 
