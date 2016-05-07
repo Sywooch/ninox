@@ -79,7 +79,7 @@ echo Html::tag('div',
         ).
         Html::ul($category->subCategories, [
             'item'      =>  function($item){
-                return Html::tag('li', Html::a($item->name, '/'.$item->link));
+                return Html::tag('li', Html::a($item->name, Url::to(['/'.$item->link, 'language' => \Yii::$app->language])));
             },
             'class'     =>  'sub-categories'
         ]).
@@ -180,7 +180,7 @@ echo Html::tag('div',
                 ['class' => 'seo-city']),
             ['class' => 'category-description']),
         ['class' => 'content']),
-    ['class' => $category->viewFile.' clear-fix']
+    ['class' => 'category clear-fix']
 );
 
 \yii\widgets\Pjax::end();

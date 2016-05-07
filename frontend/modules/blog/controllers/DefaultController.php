@@ -19,7 +19,28 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('index', [
+            'lastNews'  =>  new ActiveDataProvider([
+                'query' =>  BlogArticle::find()->orderBy('date DESC'),
+                'pagination'    =>  [
+                    'pageSize'  =>  '5'
+                ]
+            ]),
+            'banners'   =>  BlogArticle::find()->orderBy('date DESC')->offset(5)->limit(5)->all()
+        ]);
+    }
+
+    public function actionLastnews(){
+        $this->layout = 'articleLayout';
+
+        return $this->render('category', [
+            'category'  =>  new BlogCategory([
+                'name'  =>  'Последние новости'
+            ]),
+            'posts'     =>  new ActiveDataProvider([
+                'query' =>  BlogArticle::find()->orderBy('date DESC')
+            ])
+        ]);
     }
 
     public function actionRoute($url){
@@ -49,7 +70,7 @@ class DefaultController extends Controller
         }
 
         $this->layout = 'articleLayout';
-        
+
         return $this->render('category', [
             'category'  =>  $category,
             'posts'     =>  new ActiveDataProvider([

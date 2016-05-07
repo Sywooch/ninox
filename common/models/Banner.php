@@ -26,6 +26,10 @@ class Banner extends \yii\db\ActiveRecord
     const TYPE_GOOD = 3;
     const TYPE_GOOD_IMAGE = 4;
 
+    public static function find(){
+        return parent::find()->with('translations');
+    }
+
     /**
      * @inheritdoc
      */
@@ -78,6 +82,37 @@ class Banner extends \yii\db\ActiveRecord
      */
     public function getBanner()
     {
-        return $this->hasOne(BannerTranslation::className(), ['ID' => 'ID'])->where(['language' => \Yii::$app->language]);
+        return $this->getTranslationByKey(\Yii::$app->language);
+    }
+
+    public function getTranslations(){
+        return $this->hasMany(BannerTranslation::className(), ['ID' => 'ID']);
+    }
+
+    /**
+     * @param $key string
+     * @return BannerTranslation()
+     */
+    public function getTranslationByKey($key){
+        $defaultLang = 'ru-RU';
+        $defaultTranslation = $needleTranslation = new BannerTranslation();
+
+        foreach($this->translations as $translation){
+            if($translation->language == $defaultLang){
+                $defaultTranslation = $translation;
+            }
+
+            if($translation->language == $key){
+                $needleTranslation = $translation;
+            }
+        }
+
+        foreach($needleTranslation as $key => $value){
+            if(empty($needleTranslation->$key) && !empty($defaultTranslation->$key)){
+                $needleTranslation->$key = $defaultTranslation->$key;
+            }
+        }
+
+        return $needleTranslation;
     }
 }

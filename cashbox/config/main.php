@@ -21,7 +21,7 @@ return [
                 '*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@common/messages', // if advanced application, set @frontend/messages
-                    'sourceLanguage' => 'ru_RU',
+                    'sourceLanguage' => 'ru-RU',
                     'fileMap' => [
                         //'main' => 'main.php',
                     ],

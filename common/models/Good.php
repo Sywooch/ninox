@@ -82,6 +82,7 @@ use Yii;
  * @property double $realWholesalePrice
  * @property double $realRetailPrice
  * @property string $categorycode
+ * @property GoodTranslation $realTranslation
  */
 class Good extends \yii\db\ActiveRecord
 {
@@ -107,12 +108,36 @@ class Good extends \yii\db\ActiveRecord
         return $this->_translation;
     }
 
+    public function getRealTranslation(){
+        return $this->getTranslationByKeyReal(\Yii::$app->language);
+    }
+
+    public function getWholesalePrice(){
+        return $this->PriceOut1;
+    }
+
+    public function getRetailPrice(){
+        return $this->PriceOut2;
+    }
+
+    public function getTranslationByKeyReal($key){
+        foreach($this->translations as $translation){
+            if($translation->language == $key){
+                return $translation;
+            }
+        }
+
+        return new GoodTranslation([
+            'ID'    =>  $this->ID
+        ]);
+    }
+
     /**
      * @param $key string
      * @return GoodTranslation
      */
     public function getTranslationByKey($key){
-        $defaultLang = 'ru_RU';
+        $defaultLang = 'ru-RU';
         $defaultLangModel = new GoodTranslation();
         $currentLangModel = new GoodTranslation();
         foreach($this->translations as $translation){
@@ -125,12 +150,12 @@ class Good extends \yii\db\ActiveRecord
         }
 
         if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
-            foreach($defaultLangModel as $key => $value){
-                $defaultLangModel[$key] = empty($currentLangModel[$key]) ? $value : $currentLangModel[$key];
+            foreach($currentLangModel as $key => $value){
+                $currentLangModel[$key] = empty($currentLangModel[$key]) ? $defaultLangModel[$key] : $value;
             }
         }
 
-        return $defaultLangModel;
+        return $currentLangModel;
     }
 
     /**
@@ -244,17 +269,19 @@ class Good extends \yii\db\ActiveRecord
         return $this->translation->enabled;
     }
 
-/*    public function afterFind(){
-        $this->Description = htmlspecialchars_decode($this->Description);
+    public function setEnabled($val){
+        $this->realTranslation->enabled = $val;
+    }
 
-        return parent::afterFind();
+    public function setName($val){
+        $this->realTranslation->name = $val;
     }
 
     public function beforeSave($insert){
-        $this->Description = htmlspecialchars($this->Description);
+        $this->realTranslation->save(false);
 
         return parent::beforeSave($insert);
-    }*/
+    }
 
     /**
      * @inheritdoc

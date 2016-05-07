@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'class' => 'codemix\localeurls\UrlManager',
+    // List all supported languages here
+    // Make sure, you include your app's default language.
+    'languages' => ['ru' => 'ru-RU', 'uk' => 'uk-UA'],
+    'enableLanguagePersistence' => false,
+    'enableLanguageDetection' => false,
     'enablePrettyUrl'   =>  true,
     'showScriptName'    =>  false,
     'rules'             =>  [
@@ -14,6 +20,7 @@ return [
         '<action:(reset-password)>/<token>'      =>   'site/<action>',
         '<module(account|blog)>'          =>  '<module>/default/index',
         '<module(account)>/<action>'          =>  '<module>/default/<action>',
+        '<module(blog)>/<action:(lastnews)>'          =>  '<module>/default/<action>',
         '<module(blog)>/<url:(.*)>'          =>  '<module>/default/route',
         '<url:(.*)>/order-<order:(\w+)>/page-<page:(\d+)>'    =>  'site/renderpage',
         '<url:(.*)>/page-<page:(\d+)>'    =>  'site/renderpage',

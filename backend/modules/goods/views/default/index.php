@@ -1,6 +1,7 @@
 <?php
 use kartik\sortable\Sortable;
 use kartik\dropdown\DropdownX;
+use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -112,14 +113,14 @@ $items = [];
             [
                 'role'      =>  'presentation',
                 'class'     =>  $sf == '' ? 'active' : ''
-            ])?>
-        <?=Html::tag('li',
+            ]),
+        Html::tag('li',
             Html::a('Выключено: '.Html::tag('span', ($goodsCount['all']['disabled']), ['class'=>'label label-danger']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => 'disabled'])),
             [
                 'role'      =>  'presentation',
                 'class'     =>  $sf == 'disabled' ? 'active' : ''
-            ])?>
-        <?=Html::tag('li',
+            ]),
+        Html::tag('li',
             Html::a('Включено: '.Html::tag('span', ($goodsCount['all']['enabled']), ['class'=>'label label-success']), Url::toRoute(['/goods', 'category' => $nowCategory->Code, 'smartfilter' => 'enabled'])),
             [
                 'role'      =>  'presentation',
