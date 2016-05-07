@@ -67,6 +67,77 @@ $("body").on('click', ".changeViewBtn", function(){
     
     $.pjax({url: "/goods" + params, container: '#goods-view-pjax'});
 })
+
+var setPerPageListener = function(){
+    console.log('called setPerPageListener');
+
+    $('#perPageChanger').on('select2:select', function(){
+        var urlVars = queryConvert(),
+            params = '?';
+        
+        for(var i in urlVars){
+            if(i == "per-page"){
+                params += "per-page" + "=" + $(this).val()
+            }else{
+                params += i + "=" + urlVars[i];
+            }
+            
+            params += "&";
+        }
+        
+        if($(this).val().length != 0 && (urlVars['per-page'] == undefined || urlVars['per-page'].length == 0)){
+            params += "per-page" + "=" + $(this).val();
+        }
+    
+        $.pjax({url: "/goods" + params, container: '#goods-view-pjax'});
+    });
+}
+
+
+$('#goods-view-pjax').on('pjax:success', function(){
+    kvInitPlugin(jQuery('#perPageChanger').kvSelector(), function(){
+        var s2oppt = {"themeCss":".select2-container--krajee","sizeCss":"input-sm","doReset":true,"doToggle":false,"doOrder":false};
+
+      if (jQuery('#perPageChanger').data('select2')) { 
+        jQuery('#perPageChanger').select2('destroy'); 
+      }
+      
+      jQuery.when(jQuery('#perPageChanger').select2({
+        "theme":"krajee",
+        "width":"100%",
+        "minimumResultsForSearch":Infinity,
+        "language":"ru_RU"
+      })).done(initS2Loading('perPageChanger','s2oppt'));
+    
+    });
+
+    console.log($("[data-krajee-grid^=kvGridInit]").prop("data-krajee-grid"));
+
+    $.each($("[class^=kv-edcol-]"), function(index, item){
+        console.log($(item).prop('class'));
+    
+        var varriable =  "editable_" + $(item).prop('class').replace(/kv-edcol-/, '').replace(/\s+kv-editable/, '');
+       
+        console.log(varriable);
+        
+        if(window[varriable] == undefined){
+        console.log("window[varriable] is undefined");
+            window[varriable] =  {"valueIfNull":"<em>(не задано)</em>","asPopover":true,"placement":"right","target":".kv-editable-link","displayValueConfig":[],"showAjaxErrors":true,"ajaxSettings":[],"submitOnEnter":true,"encodeOutput":true};
+        }
+       
+        console.log(window[varriable]);               
+        
+        kvInitPlugin(jQuery(item).kvSelector(), function(){
+          jQuery(item).editable(window[varriable]);
+        });
+        
+        //$(item).editable(window[varriable]);
+    });
+
+    setPerPageListener();
+});
+
+setPerPageListener();
 JS;
 
 $this->registerJs($js);
@@ -162,7 +233,22 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
             'class' =>  'btn-group',
             'style' =>  'margin-left: 15px'
         ]
-    );
+    ),
+    Html::tag('div',
+        \kartik\select2\Select2::widget([
+            'data'      =>  [10 => 10, 20 => 20, 50 => 50, 100 => 100, 200 => 200, 500 => 500, 1000 => 1000],
+            'name'      =>  'perPageChanger',
+            'id'        =>  'perPageChanger',
+            'value'     =>  \Yii::$app->request->get("per-page"),
+            'hideSearch'=>  true,
+            'options'   =>  [
+                'style' =>  'width: 100px !important;'
+            ],
+            'size'      =>  'sm'
+        ]),
+        [
+            'style'     =>  'width: 200px; display: inline-block; float: right',
+        ]);
 
     switch(\Yii::$app->request->get("view")){
         case 'list':
@@ -175,22 +261,37 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
                         Html::tag('div', '{items}', ['class' => 'col-xs-12']).
                         Html::tag('div', '{pager}', ['class' => 'col-xs-12', 'align' => 'center']),
                         [
-                            'class' =>  'row',
+                            'class' =>  'row gridView',
                             'style' =>  'margin-top: 20px;'
                         ]),
                     'summary'        =>  Html::tag('span', 'Показаны товары {begin}-{end}, всего товаров {totalCount}', ['style' => 'margin-left: 15px']),
+                    'resizableColumns'=>    false,
+                    'export'        =>  false,
                     'columns'       =>  [
                         [
-                            'attribute' =>  'name'
+                            'class'     =>  \kartik\grid\EditableColumn::className(),
+                            'attribute' =>  'name',
+                            'label'     =>  'Название'
                         ],
                         [
-                            'attribute' =>  'wholesalePrice'
+                            'class'     =>  \kartik\grid\EditableColumn::className(),
+                            'attribute' =>  'wholesalePrice',
+                            'label'     =>  'Оптовая цена',
                         ],
                         [
-                            'attribute' =>  'retailPrice'
+                            'class'     =>  \kartik\grid\EditableColumn::className(),
+                            'attribute' =>  'retailPrice',
+                            'label'     =>  'Розничная цена'
                         ],
                         [
-                            'attribute' =>  'BarCode2'
+                            'class'     =>  \kartik\grid\EditableColumn::className(),
+                            'attribute' =>  'BarCode2',
+                            'label'     =>  'Артикул'
+                        ],
+                        [
+                            'class'     =>  \kartik\grid\EditableColumn::className(),
+                            'attribute' =>  'count',
+                            'label'     =>  'Колличество'
                         ],
                         [
                             'class'     =>  \kartik\grid\ActionColumn::className(),
@@ -221,7 +322,7 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
                     Html::tag('div', '{items}', ['class' => 'col-xs-12']).
                     Html::tag('div', '{pager}', ['class' => 'col-xs-12', 'align' => 'center']),
                     [
-                        'class' =>  'row',
+                        'class' =>  'row listView',
                         'style' =>  'margin-top: 20px;'
                     ]),
                 'summary'        =>  Html::tag('span', 'Показаны товары {begin}-{end}, всего товаров {totalCount}'),

@@ -29,7 +29,7 @@ class GoodSearch extends \common\models\GoodSearch
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
             'pagination'    =>  [
-                'pageSize'  =>  isset($params['pageSize']) ? $params['pageSize'] : 20
+                'pageSize'  =>  isset($params['per-page']) ? $params['per-page'] : (isset($params['view']) && $params['view'] == 'list' ? 100 : 20)
             ]
         ]);
 
