@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
+use common\models\GoodTranslation;
 use common\models\UsersInterests;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
@@ -63,38 +64,48 @@ class SiteController extends Controller
             }
         }
 
+        $goodsDataProvider = new ActiveDataProvider([
+            'query' =>  Good::find()
+                ->where(['`goods`.`Deleted`' => '0'])
+                ->andWhere('`goods`.`count` > 0')
+                ->joinWith('translations')
+                ->andWhere('`'.GoodTranslation::tableName().'`.`enabled` = \'1\'')
+                ->andWhere('`'.GoodTranslation::tableName().'`.`language` = \''.\Yii::$app->language.'\''),
+            'pagination'    =>  [
+                'pageSize'  =>  (!empty(\Yii::$app->request->get("page")) && \Yii::$app->request->get("page") != 1) ? 5 : 4
+            ],
+            'sort'  =>  [
+                'defaultOrder'   =>  [
+                    'vkl_time'  =>  SORT_DESC
+                ]
+            ]
+        ]);
+
         return $this->render('index', [
             'leftBanner'        =>  BannersCategory::findOne(['alias' => 'main_left_banner'])->banners[0],//Banner::getByAlias('main_left_banner', false),
             'rightBanner'       =>  BannersCategory::findOne(['alias' => 'main_right_banner'])->banners[0],//Banner::getByAlias('main_right_banner', false),
             'centralBanners'    =>  BannersCategory::findOne(['alias' => 'slider_v3'])->banners,
             'reviews'           =>  Review::getReviews(),
-            'goodsDataProvider' =>  new ActiveDataProvider([
-                'query' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC'),
-                'pagination'    =>  [
-                    'pageSize'  =>  (!empty(\Yii::$app->request->get("page")) && \Yii::$app->request->get("page") != 1) ? 5 : 4
-                ]
-            ]),
-            /*'goodsDataProvider' =>  new ArrayDataProvider([
-                'models' =>  Good::find()->where(['Deleted' => 0])->orderBy('vkl_time DESC')->limit(40)->all(),
-                'pagination'    =>  [
-                    'pageSize'  =>  4
-                ]
-            ]),*/
-
+            'goodsDataProvider' =>  $goodsDataProvider,
             'questions'         =>  Question::getQuestions(),
         ]);
     }
 
     public function renderGoodsRow($type){
-        $query = Good::find()->where(['Deleted' => 0]);
+        $query = Good::find()
+            ->where(['`goods`.`Deleted`' => 0])
+            ->joinWith('translations')
+            ->andWhere('`goods`.`count` > 0')
+            ->andWhere('`'.GoodTranslation::tableName().'`.`language` = \''.\Yii::$app->language.'\'')
+            ->andWhere('`'.GoodTranslation::tableName().'`.`enabled` = \'1\'');
 
         switch($type){
             case 'sale':
-                $query->andWhere('discountType != 0');
+                $query->andWhere('`goods`.`discountType` != \'0\'');
                 break;
             case 'new':
             default:
-                $query->orderBy('vkl_time DESC');
+                $query->orderBy('`goods`.`vkl_time` DESC');
                 break;
         }
 
@@ -103,7 +114,7 @@ class SiteController extends Controller
                 'query' =>  $query,
                 'pagination'    =>  [
                     'pageSize'  =>  !empty(\Yii::$app->request->get("page")) && \Yii::$app->request->get("page") != 1 ? 5 : 4
-                ]
+                ],
             ]),
             /*'dataProvider'  =>  new ArrayDataProvider([
                 'models'    =>  $query->limit(4)->all()
