@@ -5,16 +5,17 @@ namespace backend\modules\goods\controllers;
 use backend\controllers\SiteController as Controller;
 use backend\models\Good;
 use backend\models\History;
+use backend\models\Category;
 use backend\modules\goods\assets\GoodsModuleAsset;
 use backend\modules\goods\models\GoodAttributesForm;
 use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
+use backend\models\GoodSearch;
 use common\helpers\UploadHelper;
-use backend\models\Category;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
-use common\models\GoodSearch;
+use common\models\GoodTranslation;
 use common\models\GoodUk;
 use common\models\PriceListImport;
 use common\models\UploadPhoto;
@@ -295,10 +296,12 @@ class DefaultController extends Controller
         $item = \Yii::$app->request->get("string");
 
         $goods = Good::find()
-            ->where(['like', 'Name', $item])
-            ->orWhere(['like', 'Code', $item.'%', false])
-            ->orWhere(['like', 'BarCode1', $item])
-            ->orWhere(['like', 'BarCode2', $item])
+            ->where(['like', GoodTranslation::tableName().'.name', $item])
+            ->joinWith('translations')
+            ->andWhere([GoodTranslation::tableName().'.language' => \Yii::$app->language])
+            ->orWhere(['like', 'goods.Code', $item.'%', false])
+            ->orWhere(['like', 'goods.BarCode1', $item])
+            ->orWhere(['like', 'goods.BarCode2', $item])
             ->limit(10);
 
         $return = [];
@@ -310,7 +313,7 @@ class DefaultController extends Controller
                 'photo'     =>  $good->photo,
                 'code'      =>  $good->Code,
                 'ID'        =>  $good->ID,
-                'disabled'  =>  $good->show_img == 0,
+                'disabled'  =>  $good->enabled == 0,
                 'ended'     =>  $good->count <= 0,
                 'sale'      =>  $good->discountType != 0
             ];

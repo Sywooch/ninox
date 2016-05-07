@@ -10,17 +10,16 @@ $this->title = $good->metaTitle;
 $this->registerMetaTag(['name' => 'description', 'content' => $good->metaDescription], 'description');
 $this->registerMetaTag(['name' => 'keywords', 'content' => $good->metaKeywords], 'keywords');
 
-
 $link = '/tovar/'.$good->link.'-g'.$good->ID;
 
 $reviewModal = new Remodal([
-                                               'cancelButton'		=>	false,
-                                               'confirmButton'		=>	false,
-                                               'closeButton'		=>	false,
-                                               'addRandomToID'		=>	false,
-                                               'content'			=>	$this->render('_shop_item/_item_tabs/_write_review'),
-                                               'id'				=>	'reviewModal',
-                                           ]);
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	false,
+    'addRandomToID'		=>	false,
+    'content'			=>	$this->render('_shop_item/_item_tabs/_write_review'),
+    'id'				=>	'reviewModal',
+]);
 
 $js = <<<'JS'
 (function(w,doc) {
@@ -73,23 +72,18 @@ $items = [];
 $itemsNav = [];
 
 foreach($good->photos as $photo){
-    $items[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, ['width'=>'475px',
-        'height'=>'355px']);
-    $itemsNav[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$photo->ico,
-                           ['width'=>'105px', 'height'=>'80px']);
+    $items[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, [
+        'width'=>'475px',
+        'height'=>'355px'
+    ]);
+
+    $itemsNav[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$photo->ico, [
+        'width'=>'105px',
+        'height'=>'80px'
+    ]);
 }
 
 ?>
-<script type="text/javascript">(function(w,doc) {
-        if (!w.__utlWdgt ) {
-            w.__utlWdgt = true;
-            var d = doc, s = d.createElement('script'), g = 'getElementsByTagName';
-            s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
-            s.src = ('https:' == w.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
-            var h=d[g]('body')[0];
-            h.appendChild(s);
-        }})(window,document);
-</script>
 <div class="item item-card" itemscope itemtype="http://schema.org/Product">
     <?=Breadcrumbs::widget(['links' => $this->params['breadcrumbs']])?>
     <div class="item-main">
@@ -107,10 +101,14 @@ foreach($good->photos as $photo){
                         'slidesToScroll' => 1,
                         'asNavFor'       => '#sliderNav',
                     ]
-            ]) : '<img itemprop="image" data-modal-index="0" src="'.\Yii::$app->params['cdn-link']
-            .\Yii::$app->params['img-path'].$good->photo.'"
-            width="475px" height="355px" alt="'.$good->Name.'">').
-            (!empty($itemsNav) ? Slick::widget([
+            ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo, [
+                'itemprop' => 'image',
+                'data-modal-index'  =>  0,
+                'width' =>  '475px',
+                'height'=>  '355px',
+                'alt'   =>  $good->Name
+            ])).
+            (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderNav',
                     'class' => 'second'
@@ -181,9 +179,9 @@ foreach($good->photos as $photo){
                             default:
                                 $dopPrice = '';
                                 break;
-                        }
-                        ?>
-                        <?=Html::tag('div',
+                        };
+
+                        echo Html::tag('div',
                             ($good->enabled ?
                                 ($good->count < 1 ?
                                     \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии')) :
@@ -210,10 +208,9 @@ foreach($good->photos as $photo){
                             ['class' => 'price-list']
                         ).
                         $this->render('_shop_item/_shop_item_counter', ['model' => $good]).
-                        frontend\widgets\ItemBuyButtonWidget::widget(['model' => $good, 'btnClass' => 'large-button'])
-                        ?>
-                        <div class="about-price italic">
-                            <?=($good->customerRule ?
+                        frontend\widgets\ItemBuyButtonWidget::widget(['model' => $good, 'btnClass' => 'large-button']),
+                        Html::tag('div',
+                            ($good->customerRule ?
                                 Html::tag('span', \Yii::t('shop', 'Нашли дешевлее?'), ['class' => 'cheaper blue']) : ''
                             ).
                             Html::tag('span', $good->enabled == 1 ?
@@ -222,9 +219,12 @@ foreach($good->photos as $photo){
                                     'class'     =>  'notification blue'
                                 ]
                             ).
-                            $this->render('_shop_item/_shop_item_wish', ['model' => $good, 'color' => 'blue'])?>
-                        </div>
-                        <?=Html::tag('div',
+                            $this->render('_shop_item/_shop_item_wish', ['model' => $good, 'color' => 'blue']),
+                            [
+                                'class' =>  'about-price italic'
+                            ]
+                        ),
+                        Html::tag('div',
                             $this->render('_shop_item/_shop_item_rate', ['model' => $good, 'link' => $link]),
                             ['class' => 'item-rating']
                         )?>
@@ -256,12 +256,19 @@ foreach($good->photos as $photo){
                         <div><?=\Yii::t('shop', 'Возврат и обмен товара согласно')?></div>
                         <div><?=\Yii::t('shop', 'законодательству Украины')?></div>
                     </div>
-                    <?php if($good->garantyShow == '1'){ ?>
-                    <div class="guarantee">
-                        <div class="minihead"><?=\Yii::t('shop', 'Гарантия 12 месяцев')?></div>
-                        <div>Официальная гарантия от производителя</div>
-                    </div>
-                    <?php } ?>
+                    <?php if($good->garantyShow == '1'){ 
+                        echo Html::tag('div',
+                            Html::tag('div', \Yii::t('shop', 'Гарантия 12 месяцев'),
+                                [
+                                    'class' => 'minihead'
+                                ]
+                            ).
+                            Html::tag('div', \Yii::t('shop', 'Официальная гарантия от производителя')),
+                            [
+                                'class' =>  'guarantee'
+                            ]
+                        ); 
+                    } ?>
                 </div>
             </div>
         </div>

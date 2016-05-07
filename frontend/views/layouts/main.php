@@ -313,7 +313,8 @@ $this->beginPage();
 
 							echo \kartik\typeahead\Typeahead::widget([
 								'name'          => 'string',
-								'options'       => ['placeholder' => \Yii::t('shop', 'Поиск')],
+
+								'options'       => ['placeholder' => \Yii::t('shop', 'Поиск...')],
 								'value'	=>	\Yii::$app->request->get("string"),
 								'scrollable'    => true,
 								'pluginOptions' => [
@@ -368,8 +369,8 @@ $this->beginPage();
 										).
 										Html::tag('div',
 											Html::tag('span', \Yii::t('shop', 'Время работы call-центра:')).
-											Html::tag('span', \Yii::t('shop', 'вт.-вс: с 9.00 до 18.00')).
-											Html::tag('span', \Yii::t('shop', 'пн: с 9.00 до 15.00')),
+											Html::tag('span', \Yii::t('shop', 'вт.-вс: с 8.30 до 17.30')).
+											Html::tag('span', \Yii::t('shop', 'пн: с 09.00 до 15.00')),
 											[
 												'class'	=>	'work-time'
 											]
@@ -446,7 +447,7 @@ $this->beginPage();
 					<span class="phone-numbers"> 044 578 20 16 • 067 507 87 73</span>
 					<?=Html::tag('div',
 						Html::tag('span', \Yii::t('shop', 'Время работы call-центра:')).
-						Html::tag('span', \Yii::t('shop', 'с 8.00 до 17:30, без выходных')),
+						Html::tag('span', \Yii::t('shop', 'с 8.30 до 17:30, без выходных')),
 						[
 							'class'	=>	'hours'
 						]),
@@ -457,7 +458,7 @@ $this->beginPage();
 						'id'           		=>  'callbackModal',
 						'buttonOptions' =>  [
 							'label' =>  'Заказать обратный звонок',
-							'class' =>  'yellow-button large-button',
+							'class' =>  'yellow-button-new large-button',
 						],
 						'content'   =>  $this->render('_callback'),
 

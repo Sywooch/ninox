@@ -202,23 +202,23 @@ $form = \yii\bootstrap\ActiveForm::begin([
                                 </div>
                             </div>
 	                        <div class="price card-discount">
-		                        Скидка по карте (<span class="card-discount-percent"><?=((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : '-'.$customer->discount)?>%</span>)
+		                        <?=\Yii::t('shop', 'Скидка по карте')?> (<span class="card-discount-percent"><?=((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : '-'.$customer->discount)?>%</span>)
 		                        <div class="bold">
 			                        <span class="card-discount-amount"><?=Formatter::getFormattedPrice(((empty($customer) || empty($customer->cardNumber) || empty($customer->discount) || empty(\Yii::$app->cart->cartSumNotDiscounted)) ? 0 : -\Yii::$app->cart->cartSumNotDiscounted / 100 * $customer->discount), true)?></span>
 		                        </div>
 	                        </div>
                             <div class="price commission">
-                                Коммиссия (<span class="commission-percent"></span><span class="commission-static"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>)
+                                <?=\Yii::t('shop', 'Коммиссия')?> (<span class="commission-percent"></span><span class="commission-static"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>)
                                 <div class="bold">
 	                                <span class="commission-amount"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
                             </div>
                         </div>
                         <div class="ordering-body-items-price">
-                            <div class="ordering-body-items-price-sum">Предварительная сумма к оплате</div>
-                            <?=Html::tag('span', '?', [
+                            <?=Html::tag('div', \Yii::t('shop', 'Предварительная сумма к оплате'), ['class' => 'ordering-body-items-price-sum']),
+                            Html::tag('span', '?', [
                                 'data-toggle'       =>  'tooltip',
-                                'title'             =>  'Эта сумма может измениться, в случае если вдруг не будет товаров на складе',
+                                'title'             =>  \Yii::t('shop', 'Эта сумма может измениться, в случае если вдруг не будет товаров на складе'),
                                 'class'             =>  'question-round-button',
                             ])?>
                             <div class="semi-bold">
@@ -226,7 +226,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
                             </div>
                         </div>
                         <div class="ordering-body-order-confirm">
-                            Стоимость доставки согласно <a>тарифам Новой почты</a>
+                            <?=\Yii::t('shop', 'Стоимость доставки согласно <a>тарифам Новой почты</a>')?>
                         </div>
                         <div class="ordering-body-order-confirm-button">
                             <?php
@@ -236,18 +236,17 @@ $form = \yii\bootstrap\ActiveForm::begin([
                             ?>
                         </div>
                         <div class="terms-of-use">
-                            Подтверждая заказ, я принимаю условия
-                            <a>пользовательского соглашение</a>
+                            <?=\Yii::t('shop', 'Подтверждая заказ, я принимаю условия').' '.Html::a(\Yii::t('shop', 'пользовательского соглашения'))?>
                         </div>
-                            <div class="edit-order"><a href="#modalCart">Редактировать заказ</a></div>
+                            <div class="edit-order"><a href="#modalCart"><?=\Yii::t('shop', 'Редактировать заказ')?></a></div>
                             <div class="promotional-code">
                                 <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
-                                    'valueIfNull'   =>  'Ввести промокод'
+                                    'valueIfNull'   =>  \Yii::t('shop', 'Ввести промокод')
                                 ])->label(false).
                                 Html::tag('span', '?', [
                                     'data-toggle'   =>  'popover',
-                                    'data-content'  =>  'Если у вас есть промокод от нас (обычно его можно получить в спаме на почту), вы можете ввести его здесь, и получить скидку. Скидка не суммируется с другими скидками.',
-                                    'data-title'    =>  'Промокод',
+                                    'data-content'  =>  \Yii::t('shop', 'Если у вас есть промокод от нас (обычно его можно получить в спаме на почту), вы можете ввести его здесь, и получить скидку. Скидка не суммируется с другими скидками.'),
+                                    'data-title'    =>  \Yii::t('shop', 'Промокод'),
                                     'class'         =>  'question-round-button',
                                 ])?>
                             </div>

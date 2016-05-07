@@ -187,7 +187,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="btn-group pull-left" role="group" aria-label="...">
-            <?php if($good->show_img != 0 && $good->Deleted != 1){ ?>
+            <?php if($good->enabled != 0 && $good->Deleted != 1){ ?>
                 <a href="https://krasota-style.com.ua/tovar/<?=$good->link?>-g<?=$good->ID?>" class="btn btn-default"><i class="glyphicon glyphicon-globe"></i> Посмотреть на сайте</a>
             <?php } ?>
             <?=\backend\widgets\ChangesWidget::widget([
@@ -200,8 +200,8 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
         <button class="btn btn-success pull-right" type="submit" style="margin-left: 10px;">Сохранить</button>
         <div class="btn-group pull-right" role="group" aria-label="...">
             <button type="button" id="changeTrashState" class="btn btn-info" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>data-attribute-goodID="<?=$good->ID?>"><?=$good->Deleted == "0" ? "Удалить" : "Восттановить";?></button>
-            <button type="button" id="changeState" class="btn btn-info" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>data-attribute-goodID="<?=$good->ID?>"><?=$good->show_img == "1" ? "Отключить" : "Включить";?></button>
-            <a href="/goods/showgood/<?=$good->ID?>" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>type="button" class="btn btn-info">В режим просмотра</a>
+            <button type="button" id="changeState" class="btn btn-info" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>data-attribute-goodID="<?=$good->ID?>"><?=$good->enabled == "1" ? "Отключить" : "Включить";?></button>
+            <a href="/goods/view/<?=$good->ID?>" <?=$good->ID == '' ? 'disabled="disabled" ' : ''?>type="button" class="btn btn-info">В режим просмотра</a>
         </div>
         <div class="clearfix"></div>
     </div>

@@ -15,6 +15,11 @@ return [
 			'schemaCacheDuration' => 3600,
 			'schemaCache' => 'cache',
 		],
+		'dbBlog'	=>	[
+			'enableSchemaCache'	=>	true,
+			'schemaCacheDuration' => 3600,
+			'schemaCache' => 'cache',
+		],
 		'i18n' => [
 			'translations' => [
 				'shop-info-*' => [

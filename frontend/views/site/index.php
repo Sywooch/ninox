@@ -47,14 +47,16 @@ $('#subscribeForm').on('submit', function(e){
 	
 	var form = $(this);
 	
-    $.ajax({
-        type: 'POST',
-        url: '/subscribe',
-        data: form.serialize(),
-        success: function(){
-        	form.html("спасибо за подписку!");
-        }
-    });
+    if(form.find("#subscribeform-email").val().length != 0){
+		$.ajax({
+			type: 'POST',
+			url: '/subscribe',
+			data: form.serialize(),
+			success: function(){
+				form.html("спасибо за подписку!");
+			}
+		});
+    }
 });
 JS;
 
@@ -190,9 +192,11 @@ $this->registerJs($js);
 			<div class="style">
 				<?=$this->render('subscribeForm')?>
 			</div>
-			<div class="style"></div>
+			<div class="style banner-img"></div>
 		</div>
-		<div class="right-block style"></div>
+		<div class="right-block style">
+			<?=$this->render('reviewForm')?>
+		</div>
 		<div></div>
 	</div>
 </div>
@@ -210,5 +214,5 @@ $this->registerJs($js);
 		Интернет-магазин специализируется на продаже оптом, но для удобства покупателей опт разделен на мелкий и крупный.
 		Стомость для мелкого опта позволит обычному покупателю приобрести товар в розницу по минимальной цене, а для крупных оптовиков цены будут еще ниже.
 	</span>
-	<span class="about-main-content-open">Читать полностью</span>
-</div>
+<!--	<span class="about-main-content-open">Читать полностью</span>
+--></div>

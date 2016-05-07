@@ -10,7 +10,7 @@ use app\models\Articles;
 /**
  * ArticlesSearch represents the model behind the search form about `app\models\Articles`.
  */
-class ArticlesSearch extends Articles
+class BlogArticlesSearch extends BlogArticle
 {
     /**
      * @inheritdoc
@@ -42,7 +42,7 @@ class ArticlesSearch extends Articles
      */
     public function search($params)
     {
-        $query = Articles::find();
+        $query = self::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

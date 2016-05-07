@@ -16,7 +16,7 @@ $content = Html::tag('div',
     Html::tag('div',
         Html::tag('h4', '{{name}}',
             ['class' => 'media-heading']).
-        Html::tag('span', '{{#if code}}Код товара: {{code}}{{#if vendorCode}}<br>{{/if}}{{/if}}{{#if vendorCode}}Добавочный код: {{vendorCode}}{{/if}}',
+        Html::tag('span', \Yii::t('shop', '{{#if code}}Код товара: {{code}}{{#if vendorCode}}<br>{{/if}}{{/if}}{{#if vendorCode}}Добавочный код: {{vendorCode}}{{/if}}'),
             ['class' => 'item-code']).
         Html::tag('span', '{{category}}', ['class' => 'category']),
         ['class' => 'media-body']),

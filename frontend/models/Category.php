@@ -13,6 +13,7 @@ namespace frontend\models;
 
 use common\helpers\Formatter;
 use common\models\GoodOptionsValue;
+use yii\data\Sort;
 
 class Category extends \common\models\Category{
 
@@ -37,7 +38,8 @@ class Category extends \common\models\Category{
 
 	    $return = Good::find()
 		    ->where(['in', '`goods`.`GroupID`', $this->groupIDs])
-		    ->with('reviews');
+		    ->with('reviews')
+	        ->joinWith(['translations']);
 
 	    if(!empty($values) && !empty($names)){
 		    $return
@@ -56,8 +58,10 @@ class Category extends \common\models\Category{
 		    $return->andWhere(['<=', '`goods`.`PriceOut1`', $priceMax]);
 	    }
 
-	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
-		    ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\')');
+	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` > 0 AND `goods`.`PriceOut2` > 0)')
+	        ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
+	        ->andWhere(['`item_translations`.`enabled`' => 1])
+		    ->orderBy("IF ((`goods`.`count` <= '0' AND `goods`.`isUnlimited` = '0') OR `item_translations`.`enabled` = '0', 'FIELD(`goods`.`count` DESC)', 'FIELD()')");
 
 	    switch(\Yii::$app->request->get('order')){
 		    case 'asc':
@@ -108,13 +112,22 @@ class Category extends \common\models\Category{
 
 	public function getGroupIDs(){
 		if(empty($this->_groupIDs)){
-			$this->_groupIDs = array_column(self::find()
-				->select('`goodsgroups`.`ID`')
+			foreach(self::find()
 				->joinWith(['translations'])
 				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
 				->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
 				->andWhere(['`category_translations`.`enabled`' => 1])
-				->asArray()->all(), 'ID');
+				->orderBy('`goodsgroups`.`Code`')
+				->all() as $category){
+				if($category->enabled == 1){
+					if(empty($this->_groupIDs)){
+						$this->_groupIDs[$category->Code] = $category->ID;
+					}elseif(isset($this->_groupIDs[substr($category->Code, 0, -3)])){
+						$this->_groupIDs[$category->Code] = $category->ID;
+					}
+				}
+			}
+			$this->_groupIDs = array_values($this->_groupIDs);
 		}
 
 		return $this->_groupIDs;
@@ -220,7 +233,7 @@ class Category extends \common\models\Category{
 					$this->headerOrderNew;
 				break;
 			default:
-				$name = empty($this->h1) ? $this->Name : $this->h1;
+				$name = empty($this->header) ? $this->Name : $this->header;
 				break;
 		}
 
@@ -231,21 +244,21 @@ class Category extends \common\models\Category{
 		switch(\Yii::$app->request->get('order')){
 			case 'asc':
 				$priceType = \Yii::t('shop', 'дешево');
-				$title = $this->titleasc;
+				$title = $this->titleOrderAscending;
 			case 'desc':
 				$priceType = empty($priceType) ? \Yii::t('shop', 'дорого') : $priceType;
 				$title = empty($title) ?
-					(empty($this->titledesc) ?
+					(empty($this->titleOrderDescending) ?
 						\Yii::t('shop',
 							'{name}. Купить {priceType} оптом в интернет-магазине Krasota-Style с доставкой по Украине',
 							[
 								'name'      =>  $this->Name,
 								'priceType' =>  $priceType
 							]
-						) : $this->titledesc) : $title;
+						) : $this->titleOrderDescending) : $title;
 				break;
 			case 'novinki':
-				$title = $this->titlenew;
+				$title = $this->titleOrderNew;
 			default:
 				$title = empty($title) ?
 					(empty($this->title) ?
@@ -262,8 +275,8 @@ class Category extends \common\models\Category{
 		return strip_tags(htmlspecialchars_decode($title));
 	}
 
-	public function getMetaDescription(){
-		if(empty($this->descr)){
+	public function getMetaDescription($count = 0){
+		if(empty($this->translation->metaDescription)){
 			switch(\Yii::$app->request->get('order')){
 				case 'asc':
 					$priceType = \Yii::t('shop', 'дешево');
@@ -287,7 +300,7 @@ class Category extends \common\models\Category{
 							'priceType'     =>  $priceType,
 							'priceType2'    =>  $priceType2,
 							'priceType3'    =>  $priceType3,
-							'count'         =>  $this->getItems()->count()
+							'count'         =>  empty($count) ? $this->getItems()->count() : $count
 						]
 					);
 					break;
@@ -297,18 +310,18 @@ class Category extends \common\models\Category{
 						[
 							'name'      =>  $this->Name,
 							'minprice'  =>  Formatter::getFormattedPrice($this->minPrice),
-							'count'     =>  $this->getItems()->count()
+							'count'     =>  empty($count) ? $this->getItems()->count() : $count
 						]
 					);
 					break;
 			}
 		}else{
-			return strip_tags(htmlspecialchars_decode($this->descr));
+			return strip_tags(htmlspecialchars_decode($this->translation->metaDescription));
 		}
 	}
 
 	public function getMetaKeywords(){
-		if(empty($this->keyword)){
+		if(empty($this->translation->metaKeywords)){
 			switch(\Yii::$app->request->get('order')){
 				case 'asc':
 					$priceType = \Yii::t('shop', 'дешево, недорого, ');
@@ -328,7 +341,7 @@ class Category extends \common\models\Category{
 				]
 			);
 		}else{
-			return strip_tags(htmlspecialchars_decode($this->keyword));
+			return strip_tags(htmlspecialchars_decode($this->translation->metaKeywords));
 		}
 	}
 

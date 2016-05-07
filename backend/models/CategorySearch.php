@@ -9,6 +9,8 @@
 namespace backend\models;
 
 
+use common\models\CategoryTranslation;
+use common\models\GoodTranslation;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
@@ -28,7 +30,8 @@ class CategorySearch extends Category
 
         $query = Category::find()
             ->select(["SUBSTR(`goodsgroups`.`Code`, '1', '{$categoryLength}') AS `codeAlias`"])
-            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`');
+            ->leftJoin('goods', '`goods`.`GroupID` = `goodsgroups`.`ID`')
+            ->leftJoin(CategoryTranslation::tableName(), ['`category_translations`.`ID`' => '`goodsgroups`.`ID`']);
 
         if($categoryLength > 3){
             $tLen = $categoryLength - 3; //когда нельзя сделать эту операцию в скобке :с
@@ -36,12 +39,16 @@ class CategorySearch extends Category
                 ->andWhere("LENGTH(`goodsgroups`.`Code`) > '{$tLen}'");
         }
 
+        if(\Yii::$app->request->get("smartFilter") == 'enabled' || \Yii::$app->request->get("smartFilter") == 'disabled'){
+            $query->leftJoin(GoodTranslation::tableName(), [GoodTranslation::tableName().'.ID' => 'goods.ID']);
+        }
+
         switch(\Yii::$app->request->get("smartFilter")){
             case 'enabled':
-                $query->andWhere(['`goods`.`show_img`' => 1]);
+                $query->andWhere([GoodTranslation::tableName().'.`enabled`' => 1]);
                 break;
             case 'disabled':
-                $query->andWhere(['`goods`.`show_img`' => 0]);
+                $query->andWhere([GoodTranslation::tableName().'.`enabled`' => 0]);
                 break;
             case 'onSale':
                 $query->andWhere("`goods`.`discountType` != '0'");
@@ -53,7 +60,7 @@ class CategorySearch extends Category
         }
 
         $query->groupBy('codeAlias')
-            ->orderBy('`goodsgroups`.`listorder`')
+            ->orderBy('`category_translations`.`sequence`')
             ->addOrderBy('`goodsgroups`.`ID`');
 
         $query = Category::find()
@@ -68,11 +75,11 @@ class CategorySearch extends Category
             ]
         ]);
 
-        $dataProvider->setSort([
+        /*$dataProvider->setSort([
             'defaultOrder' => [
-                'listorder'	=>	SORT_ASC
+                'sequence'	=>	SORT_ASC
             ],
-        ]);
+        ]);*/
 
         /*if(!empty($params["ordersSource"])){
             switch($params["ordersSource"]){

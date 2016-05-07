@@ -90,7 +90,7 @@ class Category extends \yii\db\ActiveRecord
 
         if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
             foreach($currentLangModel as $key => $value){
-                $currentLangModel[$key] = empty($currentLangModel[$key]) ? $defaultLangModel[$key] : $value;
+                $currentLangModel[$key] = $currentLangModel[$key] === '' ? $defaultLangModel[$key] : $value;
             }
         }
 
@@ -145,6 +145,22 @@ class Category extends \yii\db\ActiveRecord
 
     public function getTitleOrderNew(){
         return $this->translation->titleOrderNew;
+    }
+
+    public function getHeader(){
+        return $this->translation->header;
+    }
+
+    public function getHeaderOrderAscending(){
+        return $this->translation->headerOrderAscending;
+    }
+
+    public function getHeaderOrderDescending(){
+        return $this->translation->headerOrderDescending;
+    }
+
+    public function getHeaderOrderNew(){
+        return $this->translation->headerOrderNew;
     }
 
     public function getDescription(){

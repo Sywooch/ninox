@@ -4,7 +4,7 @@ use kartik\editable\Editable;
 $good = $model;
 ?>
 <div class="col-sm-4 col-md-3" style="min-height: 500px">
-    <div class="thumbnail <?=$good->Deleted == "1" ? "bg-very-danger" : ($good->show_img == '1' ? "bg-success" : "bg-danger")?>" data-value-goodID="<?=$good->ID?>"<?=$good->Deleted == "1" ? " data-attribute-deleted=\"1\"" : ""?>>
+    <div class="thumbnail <?=$good->Deleted == "1" ? "bg-very-danger" : ($good->enabled == '1' ? "bg-success" : "bg-danger")?>" data-value-goodID="<?=$good->ID?>"<?=$good->Deleted == "1" ? " data-attribute-deleted=\"1\"" : ""?>>
         <img<?=($good->PriceOut3 != "" && $good->PriceOut3 != "0") ? ' class="good-sale"' : ''?> src="https://krasota-style.com.ua/img/catalog/sm/<?=$good->photo?>" alt="<?=$good->Name?>">
         <div class="caption">
             <dl>
@@ -61,10 +61,10 @@ $good = $model;
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="/goods/view/<?=$good->ID?>?act=edit" data-pjax="0">Редактировать</a></li>
-                        <li id="good-state"><a style="cursor: pointer;" class="changeState-btn"><?=$good->show_img == "1" ? "Отключить" : "Включить"?></a></li>
+                        <li id="good-state"><a style="cursor: pointer;" class="changeState-btn"><?=$good->enabled == "1" ? "Отключить" : "Включить"?></a></li>
                         <li><a style="cursor: pointer;" class="up-btn">Поднять товар</a></li>
                         <li><a style="cursor: pointer;" class="print-btn">Печать</a></li>
-                        <?php if($good->show_img != 0 && $good->Deleted != 1){ ?>
+                        <?php if($good->enabled != 0 && $good->Deleted != 1){ ?>
                             <li><a href="https://krasota-style.com.ua/tovar/<?=$good->link?>-g<?=$good->ID?>">Посмотреть на сайте</a></li>
                         <?php } ?>
                         <li class="divider"></li>

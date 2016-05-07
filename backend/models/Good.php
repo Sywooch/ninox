@@ -42,7 +42,7 @@ class Good extends \common\models\Good{
     }
 
     public function getCategory(){
-        return $this->hasOne(Category::className(), ['GroupID' => 'ID']);
+        return $this->hasOne(Category::className(), ['ID' => 'GroupID']);
     }
 
     public function setDeleted($val){
@@ -51,18 +51,6 @@ class Good extends \common\models\Good{
 
     public function getDeleted(){
         return $this->Deleted;
-    }
-
-    public function setEnabled($val){
-        $this->show_img = $val;
-    }
-
-    public function getEnabled(){
-        return $this->show_img;
-    }
-
-    public function getName(){
-        return $this->Name;
     }
 
     /**

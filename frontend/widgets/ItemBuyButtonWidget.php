@@ -37,7 +37,7 @@ class ItemBuyButtonWidget extends Widget{
 
 		switch($this->btnClass){
 			case 'small-button':
-				$this->value = $this->model->count > 0 || $this->model->isUnlimited ?
+				$this->value = $this->model->enabled && ($this->model->count > 0 || $this->model->isUnlimited) ?
 					($this->model->inCart ?
 						\Yii::t('shop', 'В корзине!') : \Yii::t('shop', 'Купить!')
 					) : \Yii::t('shop', "Нет\r\nв наличии");
@@ -48,7 +48,7 @@ class ItemBuyButtonWidget extends Widget{
 			$this->btnClass .= ' icon-cart';
 				break;
 			default:
-				$this->value = $this->model->count > 0 || $this->model->isUnlimited ?
+				$this->value = $this->model->enabled && ($this->model->count > 0 || $this->model->isUnlimited) ?
 					($this->model->inCart ?
 						\Yii::t('shop', 'В корзине!') : \Yii::t('shop', 'Купить!')
 					) : \Yii::t('shop', "Нет в наличии");
@@ -56,7 +56,7 @@ class ItemBuyButtonWidget extends Widget{
 		}
 
 		$this->options = [
-			'class'         =>  'button '.($this->model->count > 0 || $this->model->isUnlimited ?
+			'class'         =>  'button '.($this->model->enabled && ($this->model->count > 0 || $this->model->isUnlimited) ?
 					($this->model->inCart ?
 						'green-button open-cart ' : 'yellow-button buy '
 					) : 'gray-button out-of-stock ').$this->btnClass,

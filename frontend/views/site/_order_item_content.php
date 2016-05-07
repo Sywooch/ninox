@@ -1,7 +1,7 @@
-<div class="content-data-body-first">
-    <?=$form->field($model, 'customerName'),
-    $form->field($model, 'customerSurname'),
-    $form->field($model, 'deliveryCity'),
+<?=\yii\bootstrap\Html::tag('div',
+    $form->field($model, 'customerName').
+    $form->field($model, 'customerSurname').
+    $form->field($model, 'deliveryCity').
     $form->field($model, 'deliveryRegion')->widget(\kartik\select2\Select2::className(), [
         'data' => $model->regions,
         'language' => \Yii::$app->language,
@@ -9,13 +9,15 @@
         'pluginOptions' => [
             'allowClear' => true
         ],
+    ]).
+    $form->field($model, 'customerEmail').
+    \yii\bootstrap\Html::tag('div', \yii\helpers\Html::button(\Yii::t('shop', 'Далее'), [
+        'class'     =>  'button yellow-button middle-button goToPage',
+        'type'      =>  'button',
+        'data-page' =>  1,
+    ]), [
+        'class' =>  'next-button'
     ]),
-    $form->field($model, 'customerEmail')?>
-    <div class="next-button">
-        <?=\yii\helpers\Html::button('Далее', [
-            'class'     =>  'button yellow-button middle-button goToPage',
-            'type'      =>  'button',
-	        'data-page' =>  1,
-        ]);?>
-    </div>
-</div>
+    [
+        'class' =>  'content-data-body-first'
+    ]);

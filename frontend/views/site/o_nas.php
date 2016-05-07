@@ -39,31 +39,31 @@ $this->registerJs($js);
     <div class="left-side">
         <div class="left-side-menu">
             <div class="left-side-menu-item" >
-                <a id="link" href="#questions-answer">Вопросы и ответы</a>
+                <a href="/pomoshch"><?=\Yii::t('shop', 'Вопросы и ответы')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-work-header">Как мы работаем</a>
+                <a id="link" href="#about-work-header"><?=\Yii::t('shop', 'Как мы работаем')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-delivery-payment-header">Доставка и оплата</a>
+                <a id="link" href="#about-delivery-payment-header"><?=\Yii::t('shop', 'Доставка и оплата')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-return-header">Гарантии и возврат</a>
+                <a id="link" href="#about-return-header"><?=\Yii::t('shop', 'Гарантии и возврат')?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-contacts-header">Контакты</a>
+                <a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a>
             </div>
-            <div class="left-side-menu-item">
-                <a id="link" href="#about-as-header">О нас</a>
+ <!--           <div class="left-side-menu-item">
+                <a id="link" href="#about-as-header"><?/*=\Yii::t('shop', 'О нас')*/?></a>
             </div>
             <div class="left-side-menu-item" href="">
-                <a id="link" href="">Сотрудничество с нами</a>
+                <a id="link" href=""><?/*=\Yii::t('shop', 'Сотрудничество с нами')*/?></a>
             </div>
             <div class="left-side-menu-item" href="">
-                <a id="link" href="">Вакансии</a>
-            </div>
+                <a id="link" href=""><?/*=\Yii::t('shop', 'Вакансии')*/?></a>
+            </div>-->
             <div class="left-side-menu-item" href="#about-TermOfUse-header">
-                <a id="link" href="#about-TermOfUse-header">Условия исп. сайта</a>
+                <a id="link" href="#about-TermOfUse-header"><?=\Yii::t('shop', 'Условия исп. сайта')?></a>
             </div>
         </div>
     </div>
@@ -80,14 +80,14 @@ $this->registerJs($js);
                     <div class="about-as-price-rules-img wholesale-prices"></div>
                     <div class="about-as-price-rules-text">
                         <span class="bold">ОПТОВЫЕ ЦЕНЫ</span>
-                        При заказе на суммуот 1000 грн.
+                        При заказе на сумму от 1000 грн.
                     </div>
                 </div>
                 <div class="about-as-price-rules">
                     <div class="about-as-price-rules-img retail-prices"></div>
                     <div class="about-as-price-rules-text">
                         <span class="bold">РОЗНИЧНЫЕ ЦЕНЫ</span>
-                        При заказе на сумму от 500 до 1000 грн.
+                        При заказе на сумму от 100 до 1000 грн.
                     </div>
                 </div>
             </div>
@@ -99,8 +99,7 @@ $this->registerJs($js);
                     <div class="about-as-order-infogramma-item">
                         <div class="about-as-order-infogramma-item-img decor"></div>
                         <div class="about-as-order-infogramma-item-text">
-                            <span class="bold">ОФОРМЛЕНИЕ</span>
-                            ЧТО-ТО ДА ПИСАТЬ
+                            <span class="bold">ОФОРМЛЕНИЕ ЗАКАЗА</span>
                         </div>
                     </div>
                     <div class="arrow-right"></div>
@@ -138,7 +137,7 @@ $this->registerJs($js);
                     <div class="about-delivery-content-info-delivery">
                         <div class="about-delivery-content-info-delivery-time">
                             <span class="time">24 часа</span>
-                            <span>ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТР</span>
+                            <span>ДОСТАВКА В ОБЛАСНЫЕ ЦЕНТРЫ</span>
                         </div>
                         <div class="about-delivery-content-info-delivery-time">
                             <span class="time">48 часов</span>
@@ -258,10 +257,6 @@ $this->registerJs($js);
                     [
                     'header' => Html::tag('span', 'Гарантийные обязательства (техника)', ['class' => 'content-data-first_1']),
                     'content' =>$this->render('_guarantee_equipment'),
-                    ],
-                    [
-                    'header' => Html::tag('span', 'Гарантийные обязательства (бижутерия)', ['class' => 'content-data-first_1']),
-                    'content' => $this->render('_guarantee_jewelry'),
                     ],
                     ],
                     'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
