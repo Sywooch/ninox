@@ -4,8 +4,8 @@ return [
     'audittrail.table'      =>  'tbl_audit_trail',
 	'domainInfo'            =>  [
 		'id'                    =>  '1',
-		'currencyExchange'      =>  '1',
-		'currencyCode'          =>  'UAH',
+		'currencyExchange'      =>  '12',
+		'currencyCode'          =>  'UAHr',
 		'currencyShortName'     =>  'грн.',
 		'coins'                 =>  '1',
 		'wholesaleThreshold'	=>	'1000',

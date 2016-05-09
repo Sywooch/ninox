@@ -64,8 +64,6 @@ class SiteController extends Controller
             }
         }
 
-        $this->getLanguagesLinks();
-
         $goodsDataProvider = new ActiveDataProvider([
             'query' =>  Good::find()
                 ->where(['`goods`.`Deleted`' => '0'])
@@ -412,7 +410,7 @@ class SiteController extends Controller
             if($order->validate() || \Yii::$app->request->post("orderType") == 1){
                 $order->create();
 
-                $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
+                \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
 
                 return $this->render('order_success', [
                     'model' =>  $order

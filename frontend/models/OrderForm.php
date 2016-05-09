@@ -8,7 +8,6 @@
 
 namespace frontend\models;
 
-use common\models\SborkaItem;
 use yii\base\ErrorException;
 use yii\base\Model;
 use yii\helpers\Json;
@@ -84,7 +83,8 @@ class OrderForm extends Model{
     }
 
     public function setDeliveryInfo($val){
-        $this->_deliveryInfo = $val[$this->deliveryType][$this->deliveryParam];
+        $this->_deliveryInfo = isset($val[$this->deliveryType]) && isset($val[$this->deliveryType][$this->deliveryParam]) ?
+            $val[$this->deliveryType][$this->deliveryParam] : '';
     }
 
     public function rules()
@@ -97,7 +97,7 @@ class OrderForm extends Model{
             [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
             [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
             ['deliveryInfo', 'required',
-                'when' => function(){
+                'when' => function(){//var_dump($this->id); die();
                     return in_array($this->deliveryType, [1, 2]);
                 },
                 'whenClient' => "function(attribute, value){
@@ -290,7 +290,11 @@ class OrderForm extends Model{
         ]);
 
         if(!empty($this->orderProvider)){
-            $order->sourceInfo = $this->orderProvider;
+            $order->orderProvider = $this->orderProvider;
+        }
+
+        if(\Yii::$app->request->post("orderType") == 1){
+            $order->sourceInfo = History::SOURCEINFO_ONECLICK;
         }
 
         if($order->save()){
