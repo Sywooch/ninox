@@ -7,6 +7,7 @@ return [
     'languages' => ['ru' => 'ru-RU', 'uk' => 'uk-UA'],
     'enableLanguagePersistence' => false,
     'enableLanguageDetection' => false,
+    'decodeRedirectUrl' =>  true,
     'enablePrettyUrl'   =>  true,
     'showScriptName'    =>  false,
     'rules'             =>  [
