@@ -771,22 +771,22 @@ class DefaultController extends Controller
 
             switch(\Yii::$app->request->post("action")){
                 case 'changeInOrder':
-                    if(!isset($order->items[\Yii::$app->request->post("itemID")])){
+                    if(!$order->findItem(\Yii::$app->request->post("itemID"))){
                         throw new NotFoundHttpException("Товар не найден в заказе!");
                     }
 
-                    $item = $order->items[\Yii::$app->request->post("itemID")];
+                    $item = $order->findItem(\Yii::$app->request->post("itemID"));
                     $item->inOrder = $item->inOrder == 1 ? 0 : 1;
                     $item->save(false);
 
                     return $item->inOrder == 1 ? 1 : 0;
                     break;
                 case 'changeNotFound':
-                    if(!isset($order->items[\Yii::$app->request->post("itemID")])){
+                    if(!$order->findItem(\Yii::$app->request->post("itemID"))){
                         throw new NotFoundHttpException("Товар не найден в заказе!");
                     }
 
-                    $item = $order->items[\Yii::$app->request->post("itemID")];
+                    $item = $order->findItem(\Yii::$app->request->post("itemID"));
                     $item->notFounded = $item->notFounded == 1 ? 0 : 1;
                     $item->save(false);
 
@@ -794,12 +794,14 @@ class DefaultController extends Controller
                     break;
                 case 'saveItemsCount';
                     foreach(\Yii::$app->request->post("fields") as $item){
-                        if(!isset($order->items[$item['itemID']])){
+                        if(!$order->findItem($item['itemID'])){
                             throw new NotFoundHttpException("Товар не найден в заказе!");
                         }
 
-                        $order->items[$item['itemID']]->setCount($item['count']);
-                        $order->items[$item['itemID']]->save(false);
+                        $itemModel = $order->findItem($item['itemID']);
+
+                        $itemModel->setCount($item['count']);
+                        $itemModel->save(false);
                     }
                     return true;
                     break;
