@@ -159,6 +159,20 @@ $('body').on('click', function(e){
 	$("#basketPopover").hide();
 }).on('mouseout', '#basketPopover', function(){
 	$("#basketPopover").prop('style', '');
+}).on(hasTouch ? 'touchend' : 'click', '.link-hide', function(e){
+    if(hasTouch && isTouchMoved(e)){ 
+    	return false; 
+    }
+    
+    if($(this).attr('data-href')){
+        e.preventDefault();
+        if($(this).attr('data-target') == '_blank'){
+            window.open($(this).attr('data-href'));
+        }else{
+            location.href = $(this).attr('data-href');
+        }
+        return false;
+    }
 });
 JS;
 

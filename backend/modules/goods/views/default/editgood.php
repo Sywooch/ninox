@@ -116,8 +116,8 @@ var changeState = function(e){
         success: function(data){
             if(data.length >= "1"){
                 target.innerHTML = data == "1" ? "Отключить" : "Включить";
-                if(document.querySelector("#good-show_img") != null && document.querySelector("#good-show_img") != undefined){
-                    var el = document.querySelector("#good-show_img");
+                if(document.querySelector("#good-enabled") != null && document.querySelector("#good-enabled") != undefined){
+                    var el = document.querySelector("#good-enabled");
                     el.querySelector("input[value='" + data + "']").checked = true;
                 }
             }
@@ -631,14 +631,14 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
                                     Состояние товара:
                                 </td>
                                 <td>
-                                    <?=$form->field($good, 'show_img', [
+                                    <?=$form->field($good, 'enabled', [
                                         'inline'    =>  true,
                                         'enableLabel'   =>  false
                                     ])->radioList([
                                         '1' =>  'Включен',
                                         '0' =>  'Выключен'
                                     ], [
-                                        'id'    =>  'show_img',
+                                        'id'    =>  'enabled',
                                         'class' =>  'btn-group',
                                         'data-toggle'   =>  'buttons',
                                         'unselect'  =>  null,

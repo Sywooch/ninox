@@ -155,7 +155,7 @@ class GoodMainForm extends Model{
             'code'          =>  'Code',
             'barcode'       =>  'BarCode1',
             'additionalCode'=>  'BarCode2',
-            'enabled'       =>  'show_img',
+            'enabled'       =>  'enabled',
             'measure'       =>  'measure',
             'category'      =>  'GroupID',
             'inPackageAmount'=> 'num_opt',
