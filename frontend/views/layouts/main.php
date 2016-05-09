@@ -272,8 +272,8 @@ $this->beginPage();
 					<div class="items"><a href="/o-nas"><?=\Yii::t('shop', 'О компании')?></a></div>
 					<div class="items"><a href="/pomoshch"><?=\Yii::t('shop', 'Помощь')?></a></div>
 					<div class="items"><a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a></div>
-					<div class="blog items">Блог</div>
-					<div class="items currency-rate">1 USD - 24.2 UAH</div>
+<!--					<div class="blog items">Блог</div>
+					<div class="items currency-rate">1 USD - 24.2 UAH</div>-->
 					<div class="right-side">
 						<?=LanguageDropdown::widget([
 							'links'     =>  $this->params['languageLinks'],
@@ -285,8 +285,8 @@ $this->beginPage();
 								['class' => 'personal-account']);
 						}else{
 							echo Html::tag('div',
-								Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to('/account'), ['class' => 'account']).
-								Html::a(\Yii::t('shop', 'Выйти'), Url::to('/logout'),
+								Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to(['/account', 'language' => \Yii::$app->language]), ['class' => 'account']).
+								Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout', 'language' => \Yii::$app->language]),
 									[
 										'data-method'   =>  'post',
 										'class'         =>  'logout'
@@ -396,7 +396,7 @@ $this->beginPage();
 								Html::tag('span', \Yii::t('shop', 'Желания')),
 								[
 									'class'	=>	'desire',
-									'href'	=>	'/account/wish-list'
+									'href'	=>	Url::to(['/account/wish-list', 'language' => \Yii::$app->language])
 								]).
 							CartWidget::widget(['remodalInstance' => $cartModal]).
 							Html::tag('div',

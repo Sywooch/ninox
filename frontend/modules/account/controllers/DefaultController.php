@@ -8,6 +8,7 @@ use frontend\models\Good;
 use frontend\models\SborkaItem;
 use frontend\models\History;
 use frontend\modules\account\models\ChangePasswordForm;
+use frontend\controllers\SiteController;
 use kartik\form\ActiveForm;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -153,4 +154,11 @@ class DefaultController extends Controller
             'ordersDataProvider'    =>  $ordersDataProvider
         ]);
     }
+
+    public function beforeAction($action){
+        SiteController::getLanguagesLinks();
+
+        return parent::beforeAction($action);
+    }
+
 }

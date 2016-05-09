@@ -151,7 +151,7 @@ class SiteController extends Controller
         $this->saveGoodInViewed($good);
 
         $this->getBreadcrumbsLinks($good);
-        $this->getLanguagesLinks($good);
+        self::getLanguagesLinks($good);
 
         (new PriceRuleHelper())->recalc($good, true);
 
@@ -204,7 +204,7 @@ class SiteController extends Controller
 
         \Yii::trace($category->viewFile);
 
-        $this->getLanguagesLinks($category);
+        self::getLanguagesLinks($category);
 
         switch($category->viewFile){
             case '0':
@@ -318,9 +318,9 @@ class SiteController extends Controller
      * @throws InvalidConfigException
      */
 
-    public function getLanguagesLinks($object = null){
+    public static function getLanguagesLinks($object = null){
         $class = get_parent_class($object);
-        $this->getView()->params['languageLinks'] = [];
+        Yii::$app->getView()->params['languageLinks'] = [];
         $temp = [];
         $get = \Yii::$app->request->get();
         unset($get['_pjax']);
@@ -362,7 +362,7 @@ class SiteController extends Controller
                 break;
         }
 
-        $this->getView()->params['languageLinks'] = $temp;
+        Yii::$app->getView()->params['languageLinks'] = $temp;
     }
 
     public function actionOrder(){
@@ -880,7 +880,7 @@ class SiteController extends Controller
             $this->saveUsersInterestsForm();
         }
 
-        $this->getLanguagesLinks();
+        self::getLanguagesLinks();
 
         return parent::beforeAction($action);
 	}
