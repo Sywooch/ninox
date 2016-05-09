@@ -44,7 +44,6 @@ $form = ActiveForm::begin([
                                     ]
                                 ])
                                 ->widget(\kartik\depdrop\DepDrop::className(), [
-                                    //'type'      =>  \kartik\depdrop\DepDrop::TYPE_SELECT2,
                                     'pluginOptions' =>  [
                                         'depends'   =>  ['deliveryTypeInput'],
                                         'initialize'=>  true,
