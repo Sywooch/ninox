@@ -8,7 +8,6 @@
 
 namespace frontend\models;
 
-use backend\models\SborkaItem;
 use common\helpers\Formatter;
 use common\helpers\PriceHelper;
 use common\models\GoodOptions;

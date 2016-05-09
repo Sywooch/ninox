@@ -64,7 +64,7 @@ class SiteController extends Controller
             }
         }
 
-        $this->getLanguagesLinks($this);
+        $this->getLanguagesLinks();
 
         $goodsDataProvider = new ActiveDataProvider([
             'query' =>  Good::find()
@@ -318,7 +318,7 @@ class SiteController extends Controller
      * @throws InvalidConfigException
      */
 
-    public function getLanguagesLinks($object){
+    public function getLanguagesLinks($object = null){
         $class = get_parent_class($object);
         $this->getView()->params['languageLinks'] = [];
         $temp = [];
@@ -341,7 +341,7 @@ class SiteController extends Controller
                     }
                 }
                 break;
-            case 'yii\web\Controller':
+            case '':
                 $appLanguage = Yii::$app->language;
                 foreach(Yii::$app->urlManager->languages as $code => $language){
                     $isWildcard = substr($language, -2) === '-*';
@@ -354,7 +354,7 @@ class SiteController extends Controller
                         $code = substr($language, 0, 2);
                     }
 
-                    $temp[$code] = '';
+                    $temp[$code] = '/'.\Yii::$app->request->url;
                 }
                 break;
             default:
@@ -413,8 +413,6 @@ class SiteController extends Controller
                 $order->create();
 
                 $email = \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
-
-                \Yii::trace($email);
 
                 return $this->render('order_success', [
                     'model' =>  $order
@@ -881,6 +879,8 @@ class SiteController extends Controller
         if(\Yii::$app->request->post("UsersInterestsForm")){
             $this->saveUsersInterestsForm();
         }
+
+        $this->getLanguagesLinks();
 
         return parent::beforeAction($action);
 	}
