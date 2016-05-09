@@ -51,10 +51,10 @@ class CustomerSearch extends Customer{
         if(\Yii::$app->request->get("smartfilter") != ''){
             switch(\Yii::$app->request->get("smartfilter")){
                 case 'disabled':
-                    $query->andWhere(['show_img' => 0]);
+                    $query->andWhere(['enabled' => 0]);
                     break;
                 case 'enabled':
-                    $query->andWhere(['show_img' => 1]);
+                    $query->andWhere(['enabled' => 1]);
                     break;
             }
         }

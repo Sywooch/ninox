@@ -211,17 +211,22 @@ class Category extends \yii\db\ActiveRecord
         return $withSubcategories ? $this->goodsCountSubcategories : $this->goodsCount;
     }
 
+    /**
+     * @return array Список категорий по их
+     */
     public static function getList(){
-        $cats = Category::find()->select(['ID', 'Name', 'Code'])->all();
-        $r = [];
-        $n = "";
-        foreach($cats as $c){
-            if(strlen($c->Code) == 3){
-                $n = $c->Name;
+        $categories = self::find()->with('translations')->all();
+        $result = [];
+        $name = "";
+
+        foreach($categories as $category){
+            if(strlen($category->Code) == 3){
+                $name = $category->name;
             }
-            $r[$n][$c->ID] = $c->Name;
+            $result[$name][$category->ID] = $category->name;
         }
-        return $r;
+
+        return $result;
     }
 
     public static function getParentsCodes($code){

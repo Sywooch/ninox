@@ -19,6 +19,8 @@ class OrderPreviewForm extends Model
 
     public $deliveryType;
 
+    public $deliveryParam;
+
     public $deliveryInfo;
 
     public $responsibleUser;
@@ -42,7 +44,7 @@ class OrderPreviewForm extends Model
 
     public function rules(){
         return [
-            [['deliveryType', 'responsibleUser', 'paymentType', 'paymentParam', 'id'], 'integer'],
+            [['deliveryType', 'deliveryParam', 'responsibleUser', 'paymentType', 'paymentParam', 'id'], 'integer'],
             [['deliveryInfo', 'nakladna'], 'string'],
             [['actualAmount'], 'number'],
             [['paymentConfirmed', 'globalMoneyPayment'], 'boolean']
@@ -56,6 +58,7 @@ class OrderPreviewForm extends Model
         $this->setAttributes([
             'id'                =>  $order->id,
             'deliveryType'      =>  $order->deliveryType,
+            'deliveryParam'     =>  $order->deliveryParam,
             'deliveryInfo'      =>  $order->deliveryInfo,
             'responsibleUser'   =>  $order->responsibleUserID,
             'nakladna'          =>  $order->nakladna,

@@ -12,6 +12,9 @@ use backend\models\CustomerContacts;
 use backend\models\Good;
 use backend\models\History;
 use backend\models\NovaPoshtaOrder;
+use common\models\DeliveryParam;
+use common\models\DeliveryType;
+use common\models\PaymentType;
 use common\models\Pricerule;
 use backend\models\SborkaItem;
 use common\models\Siteuser;
@@ -19,6 +22,7 @@ use sammaye\audittrail\AuditTrail;
 use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
@@ -86,6 +90,128 @@ class DefaultController extends Controller
             'searchModel'       =>  $historySearch,
             'orders'            =>  $historySearch->search(\Yii::$app->request->get())
         ]);
+    }
+
+    public function actionUpdate(){
+        $order = \Yii::$app->request->post("orderID");
+
+    }
+
+    public function actionGetDeliveries($type = ''){
+        if(empty($type)){
+            if(!\Yii::$app->request->isAjax ){
+                throw new BadRequestHttpException("Данный запрос возможен только через ajax!");
+            }
+
+            \Yii::$app->response->format = 'json';
+
+            $type = \Yii::$app->request->post("type");
+
+            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params")['deliveryTypeInput'])){
+                $type = 'deliveryParam';
+            }
+        }
+
+        switch($type){
+            case 'deliveryType':
+                $query = DeliveryType::find()->where('enabled = 1');
+
+                if(!\Yii::$app->request->isAjax){
+                    return ArrayHelper::map($query->asArray()->all(), 'id', 'description');
+                }
+
+                $results = [];
+
+                foreach($query->each() as $result){
+                    $results[] = ['id' => $result->id, 'name' => $result->description];
+                }
+
+                return $results;
+                break;
+            case 'deliveryParam':
+                $deliveryType = empty(\Yii::$app->request->post("depdrop_all_params")['deliveryTypeInput']) ? \Yii::$app->request->post('deliveryType') : \Yii::$app->request->post("depdrop_all_params")['deliveryTypeInput'];
+
+                $deliveryType = DeliveryType::find()->where(['id' => $deliveryType])->one();
+
+                if(!$deliveryType){
+                    throw new NotFoundHttpException("Не найден переданый тип доставки!");
+                }
+
+                $params = $deliveryType->params;
+
+                if(!is_array($params)){
+                    $params = [$params];
+                }
+
+                $result = [];
+
+                foreach($params as $param){
+                    $result[] = ['id' => $param->id, 'name' => $param->description];
+                }
+
+                return ['output' => $result];
+                break;
+        }
+    }
+
+    public function actionGetPayments($type = ''){
+        if(empty($type)){
+            if(!\Yii::$app->request->isAjax ){
+                throw new BadRequestHttpException("Данный запрос возможен только через ajax!");
+            }
+
+            \Yii::$app->response->format = 'json';
+
+            $type = \Yii::$app->request->post("type");
+
+            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params")['paymentTypeInput'])){
+                $type = 'paymentParam';
+            }
+        }
+
+        switch($type){
+            case 'paymentType':
+                $query = PaymentType::find()->where('enabled = 1');
+
+                if(!\Yii::$app->request->isAjax){
+                    return ArrayHelper::map($query->asArray()->all(), 'id', 'description');
+                }
+
+                $results = [];
+
+                foreach($query->each() as $result){
+                    $results[] = ['id' => $result->id, 'name' => $result->description];
+                }
+
+                return $results;
+                break;
+            case 'paymentParam':
+                $paymentType = empty(\Yii::$app->request->post("depdrop_all_params")['paymentTypeInput']) ? \Yii::$app->request->post('paymentType') : \Yii::$app->request->post("depdrop_all_params")['paymentTypeInput'];
+
+                $paymentType = PaymentType::find()->where(['id' => $paymentType])->one();
+
+                if(!$paymentType){
+                    throw new NotFoundHttpException("Не найден переданый тип оплаты!");
+                }
+
+                $result = [];
+
+                $params = $paymentType->params;
+
+                if(!empty($params)){
+                    if(!is_array($params)){
+                        $params = [$params];
+                    }
+
+                    foreach($params as $param){
+                        $result[] = ['id' => $param->id, 'name' => $param->description];
+                    }
+                }
+
+
+                return ['output' => $result];
+                break;
+        }
     }
 
     /**
