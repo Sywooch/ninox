@@ -17,6 +17,7 @@ use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
+use frontend\models\SborkaItem;
 use frontend\models\SubscribeForm;
 use frontend\models\UsersInterestsForm;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
@@ -93,6 +94,10 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @param $type
+     * @return string
+     */
     public function renderGoodsRow($type){
         $query = Good::find()
             ->where(['`goods`.`Deleted`' => 0])
@@ -102,11 +107,21 @@ class SiteController extends Controller
             ->andWhere('`'.GoodTranslation::tableName().'`.`enabled` = \'1\'');
 
         switch($type){
+            case 'best':
+                default:
+                $query->leftJoin(SborkaItem::tableName(), '`sborka`.`itemID` = `goods`.`ID`')
+                    ->groupBy('`sborka`.`itemID`')
+                    ->orderBy('COUNT(`sborka`.`itemID`)');
+
+                if($query->andWhere("added > '".(time() - 172800)."'")->count() > 0){
+                    $query->andWhere("added > '".(time() - 172800)."'");
+                }
+                break;
             case 'sale':
                 $query->andWhere('`goods`.`discountType` != \'0\'');
                 break;
             case 'new':
-            default:
+            //default:
                 $query->orderBy('`goods`.`vkl_time` DESC');
                 break;
         }
