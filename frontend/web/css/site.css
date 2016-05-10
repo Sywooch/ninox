@@ -821,7 +821,7 @@ h2{
 	position: relative;
 /*	overflow: hidden;*/
 }
-
+/*
 .hovered .item::before{
 	content: '';
 	background: #fff;
@@ -847,16 +847,18 @@ h2{
 
 .hovered .item.out-of-stock::before{
 	background: #75868f;
+	opacity: 0.1;
 }
 
 .hovered .item.in-cart::before{
-	background: #81bb72;
+	background: #8acc5e;
+	opacity: 0.1;
 }
 
 .hovered .item:hover::before{
 	top: 160%;
 	right: 160%;
-}
+}*/
 
 /*.goods-content .hovered::after {
 	content: '';
@@ -2689,11 +2691,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .user-account-data{
 	height: auto;
 	width: 100%;
+	overflow: hidden;
 }
 
 .user-money-discount{
-    width:100%;
-    height:170px;
+    width: 100%;
+    height: auto;
+	overflow: hidden;
 }
 .user-account .myriad{
     font-size: 22px;
@@ -2765,6 +2769,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     border-bottom: 1px solid #dedede;
     margin-bottom: 1px;
     text-shadow: 0px 1px #fbfbfb;
+    /*
+	padding: 10px 25px;
+    */
 }
 
 .menu a.list-group-item, button.list-group-item{
@@ -2906,8 +2913,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .user-data-content .reviews .text{
-    padding-left: 40px;
-    padding-top: 35px;
+	padding: 35px;
 }
 
 .order{
@@ -3261,6 +3267,15 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     */
 }
 
+.left-side-menu .menu{
+	width: 245px;
+}
+
+.left-side-menu .menu .list-group-item{
+	padding: 10px 25px;
+
+}
+
 .left-side-menu-item{
 	border-bottom: 1px slolid #dedede;
 	height: 42px;
@@ -3275,6 +3290,24 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	background: #f1f1f1;
 	cursor: pointer;
 	padding-bottom: 10px;
+}
+
+.left-side-menu-item:hover{
+	color: #1998db;
+	background: #fdfdfd;
+	background: -webkit-linear-gradient(#f6f6f6, #e9e9e9);
+	background: -o-linear-gradient(#f6f6f6, #e9e9e9);
+	background: -moz-linear-gradient(#f6f6f6, #e9e9e9);
+	background: linear-gradient(#f6f6f6, #e9e9e9);
+	border: 1px solid #ebebeb;
+	border-bottom: 1px solid #dedede;
+	margin-bottom: 1px;
+	font-family: OpenSans-Semibold;
+}
+
+.left-side-menu-item a:hover{
+	text-decoration: none;
+	color: #337ab7;
 }
 
 .about{
@@ -3723,7 +3756,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-contacts .map span{
 	display: block;
-	text-align: center;
 	margin-bottom: 20px !important;
 }
 
@@ -3737,7 +3769,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .about-contacts .map .content-data-first_1{
 	color: rgb(25, 152, 219);
-	border-bottom: 1px dashed;
+	border: none;
 }
 
 .about-contacts .map span{
@@ -5696,6 +5728,10 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	width: max-content;
 }
 
+.footer-menu .link-hide:hover{
+	text-decoration: underline;
+}
+
 .footer-menu .feedback-link .link-hide{
 	text-decoration: underline;
 }
@@ -5831,6 +5867,12 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .help-page{
 	color: black;
+}
+
+.help-page .help{
+	overflow: hidden;
+	width: 880px;
+	margin: auto;
 }
 
 .help-page ul{

@@ -10,6 +10,49 @@ use yii\jui\Accordion;
 
 ?>
 <div class="content">
+    <div class="left-side">
+        <div class="left-side-menu">
+            <?=Html::tag('div',
+            \frontend\widgets\ListGroupMenu::widget([
+            'items'    => [
+            [
+            'label' =>  \Yii::t('shop', 'Как мы работаем',[ 'class' =>  'menu']),
+            'href'  =>  '/o-nas/#about-work-header',
+                'class' =>  'adasdmenu'
+            ],
+            [
+            'label' =>  \Yii::t('shop', 'Доставка и оплата'),
+            'href'  =>  '/o-nas/#about-delivery-payment-header'
+            ],
+            [
+            'label' =>  \Yii::t('shop', 'Гарантии и возврат'),
+            'href'  =>  '/o-nas/#about-return-header'
+            ],
+            [
+            'label' =>  \Yii::t('shop', 'Условия исп. сайта'),
+            'href'  =>  '/o-nas/#about-TermOfUse-header'
+            ],
+            [
+            'label' =>  \Yii::t('shop', 'Контакты'),
+            'href'  =>  '/kontakty',
+                'options'=>['class'=>'list-group-item'],
+                'linkOptions'=>['class'=>'item-a-class'],
+            ],
+            [
+            'label' =>  \Yii::t('shop', 'Вопросы и ответы'),
+            'href'  =>  '/pomoshch'
+            ],
+            /*[
+            'label' =>  \Yii::t('shop', 'Ярмарка мастеров'),
+            'href'  =>  '/account/yarmarka-masterov'
+            ],*/
+            ]
+            ]),
+            [
+            'class' =>  'menu'
+            ])?>
+        </div>
+    </div>
 <div class="about-contacts padding-bottom">
             <span class="about-header semi-bold">
                 <a name="about-contacts-header"><h1>Контакты</h1></a>
@@ -33,7 +76,7 @@ use yii\jui\Accordion;
                 по Украине со
                 стационарных бесплатно
                         <span>
-                        044 232 82 20
+                        044 578 20 16
                         </span>
             </div>
             <!--<span>
@@ -62,7 +105,7 @@ use yii\jui\Accordion;
                             Lifecell
                         </span>
                         <span class="right">
-                            063 334 49 15
+                            063 578 20 16
                         </span>
             </div>
         </div>
