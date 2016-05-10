@@ -128,11 +128,11 @@ $js = $this->registerJs($js);
             'options' => ['id' => 'companySearch', 'placeholder' => 'Василий Пупкин'],
             'pluginOptions' => ['minLength' => '2', 'highlight'=>true],
             'scrollable'    =>  true,
-            'limit'     =>  10,
             'dataset' => [
                 [
                     'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
                     'display' => 'value',
+                    'limit'     =>  10,
                     'templates' => [
                         'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
                         'suggestion' => new JsExpression($itemTemplate)
