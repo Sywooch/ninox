@@ -2397,19 +2397,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: table;
 }
 
-#modal-cart .cart-description{
-	text-align: left;
-	font-size: 22px;
-	color: #40403e;
-	padding: 0 0 15px 40px;
-}
-
-#modal-cart .cart-number{
-	color: #c6c6c6;
-	padding-left: 15px;
-	font-family: OpenSans;
-}
-
 #modal-cart .grid-view{
 	max-height: 510px;
 	position: relative;
@@ -2630,6 +2617,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 #modal-cart .one-click-order:disabled{
 	cursor: default;
+}
+
+#modal-cart.empty #cart-gridview-pjax{
+	display: none;
 }
 
 

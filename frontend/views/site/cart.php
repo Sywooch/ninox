@@ -28,12 +28,6 @@ echo Html::tag('div',
 	]), [
 	'class' =>  'cart-caption'
 ]).
-Html::tag('div', \Yii::t('shop', 'Корзина').
-	Html::tag('span', '№'.\Yii::$app->cart->cartCode, [
-		'class' =>  'cart-number'
-	]), [
-	'class' =>  'cart-description semi-bold'
-]).
 $this->render('_cart_items');
 echo Html::beginTag('div', ['class' => 'cart-footer']).
 	Html::tag('div',

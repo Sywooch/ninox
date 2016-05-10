@@ -34,8 +34,12 @@ if($page < $pageCount){
     $this->registerLinkTag(['rel' => 'next', 'href' => urldecode($items->pagination->createUrl($page, null, true))]);
 }
 
-if($page > 1 || !$totalCount || in_array(\Yii::$app->request->get('order'), ['asc', 'desc', 'novivki'])){
+if(!$totalCount || in_array(\Yii::$app->request->get('order'), ['asc', 'desc', 'novivki'])){
     $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
+}
+
+if($page > 1){
+    $this->registerMetaTag(['name' => 'yandex', 'content' => 'noindex, follow'], 'yandex');
 }
 
 $helper = new PriceRuleHelper();
