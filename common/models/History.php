@@ -91,7 +91,7 @@ class History extends \yii\db\ActiveRecord
     const STATUS_NOT_CALLED = 0;    //Не прозвонен
     const STATUS_PROCESS = 1;       //В обработке
     const STATUS_NOT_PAYED = 2;     //Не оплачен
-    const STATUS_WAIT_DELIVERY = 3; //Ожидает доставку
+    const STATUS_WAIT_DELIVERY = 3; //Ожидает отправку
     const STATUS_DELIVERED = 4;     //Отправлен
     const STATUS_DONE = 5;          //Выполнен
 
@@ -122,13 +122,19 @@ class History extends \yii\db\ActiveRecord
             return self::STATUS_NOT_CALLED;
         }
 
-        if($this->paymentType == 2 && $this->moneyConfirmed != 1){
+        if(!$this->done){
+            return self::STATUS_PROCESS;
+        }
+
+        if($this->done && $this->paymentType == 2 && $this->moneyConfirmed != 1){
             return self::STATUS_NOT_PAYED;
         }
 
         $status = self::STATUS_WAIT_DELIVERY;
 
-        if(!empty(preg_replace('/-|\+|\s+/', '', $this->nakladna))){
+        if(!empty(preg_replace('/-|\+|\s+/', '', $this->nakladna)) && $this->moneyConfirmed){
+            $status = self::STATUS_DONE;
+        }elseif(!empty(preg_replace('/-|\+|\s+/', '', $this->nakladna)) && !$this->moneyConfirmed){
             $status = self::STATUS_DELIVERED;
         }
 
