@@ -21,14 +21,6 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width; 
 $this->registerMetaTag(['name' => 'HandheldFriendly', 'content' => 'false']);
 
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/favicon.ico']);
-/*
- * это нужно?
- */
-$userCart = \common\models\Cart::findOne(['cartCode' => \Yii::$app->request->cookies->get('cartCode')]);
-
-if(empty($userCart)){
-	$userCart = new \common\models\Cart();
-}
 
 $cartModal = new \bobroid\remodal\Remodal([
 	'cancelButton'		=>	false,

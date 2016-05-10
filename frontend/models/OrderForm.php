@@ -72,7 +72,7 @@ class OrderForm extends Model{
 
     public function init(){
         if(\Yii::$app->user->isGuest){
-            $this->customerPhone = \Yii::$app->request->cookies->get("customerPhone");
+            $this->customerPhone = \Yii::$app->request->cookies->getValue("customerPhone");
         }
 
         parent::init();
