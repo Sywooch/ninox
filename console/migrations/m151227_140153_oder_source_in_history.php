@@ -53,6 +53,7 @@ class m151227_140153_oder_source_in_history extends Migration
 	    ]);
 
 	    $this->addColumn('history', 'orderSource', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
+	    $this->addColumn('history', 'sourceInfo', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->addColumn('history', 'sourceType', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->addColumn('history', 'deliveryParam', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0 AFTER `deliveryType`');
 	    $this->alterColumn('history', 'deliveryInfo', Schema::TYPE_TEXT.' NOT NULL AFTER `deliveryParam`');
