@@ -15,7 +15,11 @@ class BlogAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-    
+
+    public $css = [
+        'css/blog.css'
+    ];
+
     public $depends = [
         'yii\web\YiiAsset',
         'yii\web\JqueryAsset',

@@ -1,6 +1,8 @@
 <?php use common\models\Siteuser;
 use kartik\form\ActiveForm;
 use kartik\switchinput\SwitchInput;
+use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 $form = ActiveForm::begin([
     'id'            =>  'orderPreview-form-horizontal'.$model->id,
@@ -25,7 +27,42 @@ $form = ActiveForm::begin([
                         Способ доставки:
                     </td>
                     <td style="width: 30%;">
-                        <?=''//$form->field($model, 'deliveryType')->dropDownList(\common\models\DeliveryType::getDeliveryTypes())->label(false); TODO: переделать типы доставки?>
+                        <?=Html::tag('div',
+                            $form->field($model, 'deliveryType', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-4'
+                                ],
+                                'inputOptions'  =>  [
+                                    'id'    =>  'deliveryTypeInput'
+                                ]
+                            ])
+                                ->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-deliveries', ['type' => 'deliveryType']), 'id', 'name')).
+                            $form->field($model, 'deliveryParam',
+                                [
+                                    'options'   =>  [
+                                        'class' =>  'col-xs-8'
+                                    ]
+                                ])
+                                ->widget(\kartik\depdrop\DepDrop::className(), [
+                                    'pluginOptions' =>  [
+                                        'depends'   =>  ['deliveryTypeInput'],
+                                        'initialize'=>  true,
+                                        'params'    =>  [
+                                            'deliveryTypeInput'
+                                        ],
+                                        'emptyMsg'  =>  'варианты отсутствуют',
+                                        'initDepends'=>  ['deliveryTypeInput'],
+                                        'url'       =>  Url::to('/orders/get-deliveries')
+                                    ]
+                                ]).
+                            $form->field($model, 'deliveryInfo',
+                                [
+                                    'options'   =>  [
+                                        'class' =>  'col-xs-4'
+                                    ]
+                                ])
+                                ->label('Склад #')
+                            )?>
                     </td>
                     <td style="width: 20%;">
                         Менеджер:
@@ -45,7 +82,37 @@ $form = ActiveForm::begin([
                         Способ оплаты:
                     </td>
                     <td>
-                        <?=''//$form->field($model, 'paymentType')->dropDownList(\common\models\PaymentType::getPaymentTypes())->label(false); TODO: переделать способы оплаты?>
+                        <?=Html::tag('div',
+                            $form->field($model, 'paymentType', [
+                                'options'   =>  [
+                                    'class' =>  'col-xs-6'
+                                ],
+                                'inputOptions'  =>  [
+                                    'id'    =>  'paymentTypeInput'
+                                ]
+                            ])->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-payments', ['type' => 'paymentType']), 'id', 'name')).
+                            $form->field($model, 'paymentParam',
+                                [
+                                    'options'   =>  [
+                                        'class' =>  'col-xs-6'
+                                    ]
+                                ])
+                                ->widget(\kartik\depdrop\DepDrop::className(), [
+                                    //'type'      =>  \kartik\depdrop\DepDrop::TYPE_SELECT2,
+                                    'pluginOptions' =>  [
+                                        'depends'   =>  ['paymentTypeInput'],
+                                        'initialize'=>  true,
+                                        'params'    =>  [
+                                            'paymentTypeInput'
+                                        ],
+                                        'emptyMsg'  =>  'варианты отсутствуют',
+                                        'initDepends'=>  ['paymentTypeInput'],
+                                        'url'       =>  Url::to('/orders/get-payments')
+                                    ]
+                                ]),
+                            [
+                                'class' =>  'row'
+                            ])?>
                     </td>
                 </tr>
                 <tr>

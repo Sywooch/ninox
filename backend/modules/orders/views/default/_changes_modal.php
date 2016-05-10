@@ -52,7 +52,7 @@
                 if(preg_match('/((-.*)|(.*\w+))(.(jpg|png|gif|jpeg))/', $model->old_value, $match)){
                     $model->old_value = preg_replace('/((-.*)|(.*\w+))(.(jpg|png|gif|jpeg))/', '<img class="img-thumbnail" style="max-width: 200px;" src="/img/catalog/'.$match['0'].'">', $model->old_value);
                 }elseif(in_array($model->field, [
-                    'show_img', 'deleted'
+                    'enabled','show_img', 'deleted'
                 ])){
                     switch($model->field){
                         default:
@@ -73,7 +73,7 @@
                 if(preg_match('/((-.*)|(.*\w+))(.(jpg|png|gif|jpeg))/', $model->new_value, $match)){
                     $model->new_value = preg_replace('/((-.*)|(.*\w+))(.(jpg|png|gif|jpeg))/', '<img class="img-thumbnail" src="/img/catalog/'.$match['0'].'">', $model->new_value);
                 }elseif(in_array($model->field, [
-                    'show_img', 'deleted'
+                    'enabled', 'show_img','deleted'
                 ])){
                     switch($model->field){
                         default:

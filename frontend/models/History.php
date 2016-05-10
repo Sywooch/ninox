@@ -19,7 +19,7 @@ class History extends \common\models\History{
         $this->id = $val;
     }
 
-    public function getItems($returnAll = true){
+    public function getItems(){
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 
@@ -27,6 +27,8 @@ class History extends \common\models\History{
     {
         $this->sourceType = self::SOURCETYPE_INTERNET;
         $this->orderSource = \Yii::$app->params['domainInfo']['id'];
+        $this->currencyCode = \Yii::$app->params['domainInfo']['currencyCode'];
+        $this->currencyExchange = \Yii::$app->params['domainInfo']['currencyExchange'];
 
         return parent::beforeSave($insert);
     }

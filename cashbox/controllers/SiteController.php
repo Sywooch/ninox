@@ -278,7 +278,7 @@ class SiteController extends Controller
         $attribute  = \Yii::$app->request->get("attribute");
         $query      = \Yii::$app->request->get("query");
 
-        $customer   = Customer::find()->select(['ID', 'Company', 'phone', 'cardNumber'])->where(['like', $attribute, $query]);
+        $customer   = Customer::find()->select(['ID', 'Company', 'phone', 'cardNumber'])->where(['like', $attribute, $query])->limit(10);
 
         return $customer->all();
     }

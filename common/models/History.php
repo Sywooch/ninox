@@ -73,6 +73,8 @@ use yii\base\ErrorException;
  * @property string $deliveryReference
  * @property string $deliveryEstimatedDate
  * @property SborkaItem[] $items
+ * @property integer $orderProvider
+ *
  */
 class History extends \yii\db\ActiveRecord
 {
@@ -84,6 +86,8 @@ class History extends \yii\db\ActiveRecord
     const SOURCETYPE_INTERNET = 0;  //Заказ из интернета
     const SOURCETYPE_SHOP = 1;      //Заказ из магазина
 
+    const SOURCEINFO_ONECLICK = 1;  //Заказ в один клик
+
     const STATUS_NOT_CALLED = 0;    //Не прозвонен
     const STATUS_PROCESS = 1;       //В обработке
     const STATUS_NOT_PAYED = 2;     //Не оплачен
@@ -94,7 +98,7 @@ class History extends \yii\db\ActiveRecord
 
     protected $_items;
 
-    public function getItems($returnAll = true){
+    public function getItems(){
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 
@@ -217,7 +221,8 @@ class History extends \yii\db\ActiveRecord
     {
         return [
             [['id', 'deliveryInfo', 'nakladna', 'moneyConfirmedDate', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
-            [['id', 'number', 'added', 'deliveryType', 'deliveryParam', 'customerID', 'paymentType', 'paymentParam', 'callback', 'canChangeItems', 'actualAmount', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'domainId', 'callsCount', 'hasChanges', 'receiverID', 'return', 'orderSource', 'sourceType', 'sourceInfo'], 'integer'],            [['deliveryInfo', 'customerComment'], 'string'],
+            [['id', 'number', 'added', 'deliveryType', 'deliveryParam', 'customerID', 'paymentType', 'paymentParam', 'callback', 'canChangeItems', 'actualAmount', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'domainId', 'callsCount', 'hasChanges', 'receiverID', 'return', 'orderSource', 'sourceType', 'sourceInfo', 'orderProvider'], 'integer'],
+            [['deliveryInfo', 'customerComment'], 'string'],
             [['amountDeductedOrder', 'currencyExchange', 'originalSum', 'deliveryCost'], 'number'],
             [['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate', 'statusChangedDate'], 'safe'],
             [['customerEmail', 'deliveryAddress', 'deliveryRegion', 'deliveryCity', 'coupon', 'deliveryReference', 'deliveryEstimatedDate'], 'string', 'max' => 255],
@@ -297,6 +302,7 @@ class History extends \yii\db\ActiveRecord
             'deliveryCost' => 'Delivery Cost',
             'deliveryReference' => 'Delivery Reference',
             'deliveryEstimatedDate' => 'Delivery Estimated Date',
+            'orderProvider' => 'Order Provider'
         ];
     }
 }

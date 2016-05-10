@@ -6,6 +6,8 @@ use common\helpers\TranslitHelper;
 use Yii;
 use yii\db\Query;
 use yii\helpers\Json;
+use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "goodsgroups".
@@ -74,7 +76,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function getTranslationByKey($key){
-        $defaultLang = 'ru_RU';
+        $defaultLang = 'ru-RU';
         $defaultLangModel = new CategoryTranslation();
         $currentLangModel = new CategoryTranslation();
         foreach($this->translations as $translation){
@@ -87,23 +89,34 @@ class Category extends \yii\db\ActiveRecord
         }
 
         if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
-            foreach($defaultLangModel as $key => $value){
-                $defaultLangModel[$key] = isset($currentLangModel[$key]) && $currentLangModel[$key] === '' ? $value : $currentLangModel[$key];
+            foreach($currentLangModel as $key => $value){
+                $currentLangModel[$key] = $currentLangModel[$key] === '' ? $defaultLangModel[$key] : $value;
             }
         }
 
-        return $defaultLangModel;
+        return $currentLangModel;
     }
 
     /**
      * @param $link string
      * @return Category
+     * @throws NotFoundHttpException
      */
     public static function findByLink($link){
-        return self::find()
+        $category = self::find()
             ->joinWith(['translations'])
             ->where([CategoryTranslation::tableName().'.link' => $link])
             ->one();
+        if(empty($category)){
+            throw new NotFoundHttpException("Категория по ссылке {$link} не найдена!");
+        }
+
+        if(!empty($category->translation->link) && $category->translation->link != $link){
+            \Yii::$app->controller->redirect([$category->translation->link], 301);
+            \Yii::$app->end();
+        }
+
+        return $category;
     }
 
     public function getPhotos(){
@@ -198,17 +211,22 @@ class Category extends \yii\db\ActiveRecord
         return $withSubcategories ? $this->goodsCountSubcategories : $this->goodsCount;
     }
 
+    /**
+     * @return array Список категорий по их
+     */
     public static function getList(){
-        $cats = Category::find()->select(['ID', 'Name', 'Code'])->all();
-        $r = [];
-        $n = "";
-        foreach($cats as $c){
-            if(strlen($c->Code) == 3){
-                $n = $c->Name;
+        $categories = self::find()->with('translations')->all();
+        $result = [];
+        $name = "";
+
+        foreach($categories as $category){
+            if(strlen($category->Code) == 3){
+                $name = $category->name;
             }
-            $r[$n][$c->ID] = $c->Name;
+            $result[$name][$category->ID] = $category->name;
         }
-        return $r;
+
+        return $result;
     }
 
     public static function getParentsCodes($code){
@@ -413,8 +431,6 @@ class Category extends \yii\db\ActiveRecord
     }
 
 	static function buildTree($elements){
-        \Yii::trace('BuildTree is called', __METHOD__);
-
 		$tree = [];
 
 		foreach($elements as $element){

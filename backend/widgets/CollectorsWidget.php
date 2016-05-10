@@ -70,9 +70,10 @@ class CollectorsWidget extends Widget{
     }
 
     .collectors li a{
-        display: inline-block;
+        /*display: inline-block;
         height: 30px;
-        width: 30px;
+        width: 30px;*/
+        padding: 3px 10px;
         background: #ffc76c;
         color: #000;
         border-radius: 3px;

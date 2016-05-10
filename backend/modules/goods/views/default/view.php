@@ -320,7 +320,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                                     Состояние товара:
                                 </td>
                                 <td>
-                                    <?=$good->Deleted == 1 ? "удалён" : ($good->show_img == 1 ? "включен" : "выключен")?>
+                                    <?=$good->Deleted == 1 ? "удалён" : ($good->enabled == 1 ? "включен" : "выключен")?>
                                 </td>
                             </tr>
                         </table>

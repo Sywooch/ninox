@@ -124,6 +124,7 @@ class m151227_140153_oder_source_in_history extends Migration
 			    case '5':
 				    $order->orderSource = '1';
 				    $order->sourceType = '1';
+				    $order->sourceInfo = '1';
 			    case '4':
 				    $order->deliveryParam = '4';
 				    break;
@@ -186,6 +187,9 @@ class m151227_140153_oder_source_in_history extends Migration
 		    $order->save(false);
 		    echo "  > order ".++$i." from ".$orderCount." \r \n";
 	    }
+
+	    common\models\History::updateAll(['sourceInfo' => 1], ['sourceType' => 0, 'orderSource' => 0, 'callback' => -1]);
+	    common\models\History::updateAll(['orderSource' => new \yii\db\Expression('domainId')], ['sourceType' => 0, 'orderSource' => 0]);
     }
 
 	public function down()

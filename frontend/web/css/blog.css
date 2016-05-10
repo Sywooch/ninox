@@ -1,0 +1,27 @@
+.main-menu{
+    width: 100%;
+}
+
+.main-menu li{
+    list-style: none;
+    float: left;
+    justify-content: space-between;
+}
+
+.main-menu li ul{
+    display: none;
+    z-index: 100;
+    position: absolute;
+    max-width: 200px;
+    background: #fff;
+}
+
+.main-menu li:hover ul{
+    display: block;
+}
+
+.main-menu li ul li{
+    display: inline-block;
+    float: none;
+    width: 100%;
+}

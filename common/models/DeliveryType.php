@@ -11,9 +11,15 @@ use Yii;
  * @property string $description
  * @property integer $modifyLabel
  * @property integer $enabled
+ * @property DeliveryParam[] $params
  */
 class DeliveryType extends \yii\db\ActiveRecord
 {
+
+    public function getParams(){
+        return DeliveryParam::find()->where(['in', 'id', DomainDeliveryPayment::find()->select('deliveryParam')->where(['deliveryType' => $this->id])]);
+    }
+
     /**
      * @inheritdoc
      */
