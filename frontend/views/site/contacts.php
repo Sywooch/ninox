@@ -10,6 +10,9 @@ use yii\jui\Accordion;
 
 ?>
 <div class="content">
+    <div class="left-side">
+        <?=$this->render('_left_menu')?>
+    </div>
 <div class="about-contacts padding-bottom">
             <span class="about-header semi-bold">
                 <a name="about-contacts-header"><h1>Контакты</h1></a>
@@ -33,7 +36,7 @@ use yii\jui\Accordion;
                 по Украине со
                 стационарных бесплатно
                         <span>
-                        044 232 82 20
+                        044 578 20 16
                         </span>
             </div>
             <!--<span>
@@ -62,7 +65,7 @@ use yii\jui\Accordion;
                             Lifecell
                         </span>
                         <span class="right">
-                            063 334 49 15
+                            063 578 20 16
                         </span>
             </div>
         </div>
