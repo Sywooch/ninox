@@ -3688,6 +3688,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .about-return-accordion ul{
 	font-size: 13px;
 	color: rgb(103, 103, 103);
+	list-style: inside disc;
+	padding-left: 25px;
 }
 
 .about-return-accordion ul p{
