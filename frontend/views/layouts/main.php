@@ -510,11 +510,11 @@ $this->beginPage();
 					]).
 					Html::tag('span', \Yii::t('shop', 'Оплата и доставка'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/dostavka'
+						'data-href'	=>	'/o-nas#about-delivery-payment-header',
 					]).
 					Html::tag('span', \Yii::t('shop', 'Гарантии и возврат'), [
 						'class'		=>	'link-hide',
-						'data-href'	=>	'/vozvrat-i-obmen'
+						'data-href'	=>	'/o-nas#about-return-header'
 					]),
 					[
 						'class'	=>	'goods-item'

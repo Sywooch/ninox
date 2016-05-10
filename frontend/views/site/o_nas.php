@@ -14,15 +14,20 @@ use yii\jui\Accordion;
 $model = new \frontend\models\UsersInterestsForm();
 $js = <<<'JS'
     function scrollToAnchor(aid){
-       $('html,body').animate({scrollTop: ($("a[name='"+ aid +"']").offset().top - 100)},2000);
+       $('html,body').animate({scrollTop: ($("a[name='"+ aid +"']").offset().top - 120)},2000);
     }
 
     $("body").on('click', '#link', function(e){
         e.preventDefault();
         scrollToAnchor($(this).prop('href').replace(/(.*)\#/, ''));
     });
+
+if(document.location.hash.length==0)
+location.hash='".$anchor."'
+
 JS;
 $this->registerJs($js);
+
 ?>
 <!--<script type="text/javascript">
     function scrollToAnchor(aid){
@@ -36,36 +41,29 @@ $this->registerJs($js);
 
 </script>-->
 <div class="content" xmlns="http://www.w3.org/1999/html">
-    <div class="left-side">
-        <div class="left-side-menu">
+    <div class="left-side left-menu-links">
+        <!--<div class="left-side-menu">
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-work-header"><?=\Yii::t('shop', 'Как мы работаем')?></a>
+                <a id="link" href="#about-work-header"><?/*=\Yii::t('shop', 'Как мы работаем')*/?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-delivery-payment-header"><?=\Yii::t('shop', 'Доставка и оплата')?></a>
+                <a id="link" href="#about-delivery-payment-header"><?/*=\Yii::t('shop', 'Доставка и оплата')*/?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a id="link" href="#about-return-header"><?=\Yii::t('shop', 'Гарантии и возврат')?></a>
+                <a id="link" href="#about-return-header"><?/*=\Yii::t('shop', 'Гарантии и возврат')*/?></a>
             </div>
             <div class="left-side-menu-item" href="#about-TermOfUse-header">
-                <a id="link" href="#about-TermOfUse-header"><?=\Yii::t('shop', 'Условия исп. сайта')?></a>
+                <a id="link" href="#about-TermOfUse-header"><?/*=\Yii::t('shop', 'Условия исп. сайта')*/?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a href="/kontakty" style="text-decoration: underline;"><?=\Yii::t('shop', 'Контакты')?></a>
+                <a href="/kontakty" style="text-decoration: underline;"><?/*=\Yii::t('shop', 'Контакты')*/?></a>
             </div>
             <div class="left-side-menu-item" >
-                <a href="/pomoshch" style="text-decoration: underline;"><?=\Yii::t('shop', 'Вопросы и ответы')?></a>
+                <a href="/pomoshch" style="text-decoration: underline;"><?/*=\Yii::t('shop', 'Вопросы и ответы')*/?></a>
             </div>
- <!--           <div class="left-side-menu-item">
-                <a id="link" href="#about-as-header"><?/*=\Yii::t('shop', 'О нас')*/?></a>
-            </div>
-            <div class="left-side-menu-item" href="">
-                <a id="link" href=""><?/*=\Yii::t('shop', 'Сотрудничество с нами')*/?></a>
-            </div>
-            <div class="left-side-menu-item" href="">
-                <a id="link" href=""><?/*=\Yii::t('shop', 'Вакансии')*/?></a>
-            </div>-->
-        </div>
+        </div>-->
+        <?=$this->render('_left_menu')?>
+
     </div>
     <div class="about">
         <div class="about-as padding-bottom">
@@ -338,88 +336,5 @@ $this->registerJs($js);
                 появиться на других сайтах.
             </span>
         </div>
-<!--        <div class="about-contacts padding-bottom">
-            <span class="about-header semi-bold">
-                <a name="about-contacts-header">Контакты</a>
-            </span>
-            <div class="contacts-inform">
-                <div class="inform">
-                    <span>
-                        02217, Украина, г. Киев
-                        ул.Электротехническая, 2
-                    </span>
-                    <span>
-                        Электронная почта:
-                        info@krasota-style.ua
-                    </span>
-                </div>
-                <div class="inform numbers">
-                    <div>
-                        <span>
-                            0 800 508 208
-                        </span>
-                        по Украине со
-                        стационарных бесплатно
-                        <span>
-                        044 578 20 16
-                        </span>
-                    </div>
-                    <!--<span>
-                        044 232 82 20
-                    </span>-->
-<!--                </div>
-                <div class="inform">
-                    <div>
-                        <span class="operator">
-                            Vodafone
-                        </span>
-                        <span class="right">
-                            050 677 54 56
-                        </span>
-                    </div>
-                    <div>
-                        <span class="operator">
-                            Киевстар
-                        </span>
-                        <span class="right">
-                            067 507 87 73
-                        </span>
-                    </div>
-                    <div>
-                        <span class="operator">
-                            Lifecell
-                        </span>
-                        <span class="right">
-                            063 334 49 15
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="map">-->
-                <?/*=Accordion::widget([
-                    'items' => [
-                        [
-                            'header' => Html::tag('span', 'Как к нам добраться', ['class' => 'content-data-first_1']),
-                            'content' =>  '<script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1
-.0/js/?sid=4hFYumeZNU3DOUuSwFOHsj9YvHKV9fH0&width=880&height=600&scroll=true&lang=ru_UA&sourceType=constructor
-"></script>',
-                        ],
-                    ],
-                    'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
-                ]);*/?>
-<!--            </div>
-            <div class="your-wish">-->
-                <?php /*   $form = \yii\bootstrap\ActiveForm::begin([
-                    'id'            =>  'users-interests-form'
-                ]);
-                */?>
-                <?/*= $form->field($model, 'name')*/?>
-                <?/*= $form->field($model, 'email')*/?>
-                <?/*= $form->field($model, 'text')->textarea()*/?>
-                <?/*= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
-                    'contact-button']) */?>
-                <?php /*$form->end(); */?>
-<!--            </div>
-        </div>-->
     </div>
 </div>

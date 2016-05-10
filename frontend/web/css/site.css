@@ -3732,7 +3732,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	color: #282828;
 	overflow: hidden;
 	width: 880px;
-	margin: auto;
+	float: right;
 /*///////////хз...........*/
 }
 
@@ -5901,6 +5901,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	overflow: hidden;
 	width: 880px;
 	margin: auto;
+	float: right;
 }
 
 .help-page ul{
