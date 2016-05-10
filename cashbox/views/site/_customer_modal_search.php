@@ -71,11 +71,13 @@ $js = $this->registerJs($js);
                 [
                     'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
                     'display' => 'value',
+                    'limit'     =>  10,
                     'templates' => [
                         'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
                         'suggestion' => new JsExpression($itemTemplate)
                     ],
                     'remote' => [
+                        'rateLimitBy'   =>  'throttle',
                         'url' => Url::to(['findcustomer']) . '?attribute=cardNumber&query=%QUERY',
                         'wildcard' => '%QUERY'
                     ]
@@ -94,18 +96,21 @@ $js = $this->registerJs($js);
             'name' => 'Customer[phone]',
             'options' => ['id' => 'phoneSearch', 'placeholder' => '0xx1234567'],
             'scrollable'    =>  true,
-            'pluginOptions' => ['highlight'=>true],
+            'pluginOptions' => ['minLength' => '3', 'highlight'=>true],
             'dataset' => [
                 [
                     'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
-                    'display' => 'value',
+                    'display'   => 'value',
+                    'limit'     =>  10,
                     'templates' => [
                         'notFound' => '<div class="text-danger" style="padding:0 8px">'.\Yii::t('admin', 'По вашему запросу ничего не найдено!').'</div>',
                         'suggestion' => new JsExpression($itemTemplate)
                     ],
                     'remote' => [
-                        'url' => Url::to(['findcustomer']) . '?attribute=phone&query=%QUERY',
-                        'wildcard' => '%QUERY'
+                        'rateLimitBy'   =>  'throttle',
+                        //'rateLimitWait' =>  'throttle',
+                        'url'           => Url::to(['findcustomer']) . '?attribute=phone&query=%QUERY',
+                        'wildcard'      => '%QUERY',
                     ]
                 ]
             ]
@@ -121,8 +126,9 @@ $js = $this->registerJs($js);
         <?=Typeahead::widget([
             'name' => 'Customer[Company]',
             'options' => ['id' => 'companySearch', 'placeholder' => 'Василий Пупкин'],
-            'pluginOptions' => ['highlight'=>true],
+            'pluginOptions' => ['minLength' => '2', 'highlight'=>true],
             'scrollable'    =>  true,
+            'limit'     =>  10,
             'dataset' => [
                 [
                     'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
@@ -132,6 +138,7 @@ $js = $this->registerJs($js);
                         'suggestion' => new JsExpression($itemTemplate)
                     ],
                     'remote' => [
+                        'rateLimitBy'   =>  'throttle',
                         'url' => Url::to(['findcustomer']) . '?attribute=Company&query=%QUERY',
                         'wildcard' => '%QUERY'
                     ]
