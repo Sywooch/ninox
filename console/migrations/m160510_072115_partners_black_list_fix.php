@@ -12,7 +12,7 @@ class m160510_072115_partners_black_list_fix extends Migration
     public function down()
     {
         echo "m160510_072115_partners_black_list_fix cannot be reverted.\n";
-        
+
         return true;
     }
 
