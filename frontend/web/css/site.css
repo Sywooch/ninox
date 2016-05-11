@@ -5041,6 +5041,10 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	height: 215px;
 }
 
+.goods-items .banner-img{
+	padding: 0px;
+}
+
 .goods-item{
 	width: 215px;
 	border-left: 1px solid rgb(236, 236, 236);

@@ -13,6 +13,7 @@ use yii\jui\Accordion;
 
 $model = new \frontend\models\UsersInterestsForm();
 $js = <<<'JS'
+/*
     function scrollToAnchor(aid){
        $('html,body').animate({scrollTop: ($("a[name='"+ aid +"']").offset().top - 120)},2000);
     }
@@ -24,22 +25,12 @@ $js = <<<'JS'
 
 if(document.location.hash.length==0)
 location.hash='".$anchor."'
+*/
 
 JS;
 $this->registerJs($js);
 
 ?>
-<!--<script type="text/javascript">
-    function scrollToAnchor(aid){
-        var aTag = $("a[name='"+ aid +"']");
-        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
-    }
-
-    $("#link").click(function() {
-        scrollToAnchor('#');
-    });
-
-</script>-->
 <div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="left-side left-menu-links">
         <!--<div class="left-side-menu">
@@ -68,7 +59,7 @@ $this->registerJs($js);
     <div class="about">
         <div class="about-as padding-bottom">
             <div class="about-as-header about-header semi-bold">
-                <a name="about-work-header">Как мы работаем</a>
+                <a name="about-work-header" id="about-work-header">Как мы работаем</a>
             </div>
             <div class="bold about-as-center">
                 На сайте krasota-style.ua в некоторых разделах действует 2 типа цен
