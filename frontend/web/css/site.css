@@ -3249,6 +3249,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: 35px;*/ /*было и стало*/
 	float: left;
 	width: 245px;
+/*	position: fixed;*/
 }
 
 .left-side-menu{
