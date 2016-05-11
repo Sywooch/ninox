@@ -52,7 +52,6 @@ ALTER TABLE `history` DROP COLUMN `callState`;");
             ),
             DROP COLUMN `discount`,
             DROP COLUMN `send_cart2`,
-            DROP COLUMN `parent_id`,
             DROP COLUMN `vozvrat`,
             DROP COLUMN `globalMoneyConfirmTime`,
             DROP COLUMN `ttn_date`,
