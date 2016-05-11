@@ -9,7 +9,7 @@ use yii\bootstrap\Html;
 
 $js = <<<JS
 
-/*$(document).ready(function(){
+$(document).ready(function(){
     $(window).scroll(function() {
         var top = $(document).scrollTop();
         if (top < 100) $(".left-side").css({top: '0', position: 'relative'});
@@ -28,7 +28,8 @@ $("body").on('click', '.left-menu-links .menu-link .list-group-item', function(e
 
 $(document).ready(function(){
     scrollToAnchor('about-work-header');
-});*/
+});
+/*
 
 var menu_selector = ".list-group"; // Переменная должна содержать название класса или идентификатора, обертки нашего меню.
 
@@ -68,7 +69,8 @@ $(document).ready(function () {
 
     });
 
-});
+});*/
+
 JS;
 $this->registerJs($js);
 ?>
