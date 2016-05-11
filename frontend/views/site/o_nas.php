@@ -13,62 +13,66 @@ use yii\jui\Accordion;
 
 $model = new \frontend\models\UsersInterestsForm();
 $js = <<<'JS'
-    function scrollToAnchor(aid){
-       $('html,body').animate({scrollTop: ($("a[name='"+ aid +"']").offset().top - 120)},2000);
-    }
-
-    $("body").on('click', '#link', function(e){
-        e.preventDefault();
-        scrollToAnchor($(this).prop('href').replace(/(.*)\#/, ''));
+/*
+var lastId,
+    topMenu = $(".list-group"),
+    topMenuHeight = topMenu.outerHeight()+15,
+    // All list items
+    menuItems = topMenu.find("a"),
+    // Anchors corresponding to menu items
+    scrollItems = menuItems.map(function(){
+      var item = $($(this).attr("href"));
+      if (item.length) { return item; }
     });
 
-if(document.location.hash.length==0)
-location.hash='".$anchor."'
+// Bind click handler to menu items
+// so we can get a fancy scroll animation
+menuItems.click(function(e){
+  var href = $(this).attr("href"),
+      offsetTop = href === "#" ? 0 : $(href).offset().top-topMenuHeight+1;
+  $('html, body').stop().animate({
+      scrollTop: offsetTop
+  }, 300);
+  e.preventDefault();
+});
+
+// Bind to scroll
+$(window).scroll(function(){
+   // Get container scroll position
+   var fromTop = $(this).scrollTop()+topMenuHeight;
+
+   // Get id of current scroll item
+   var cur = scrollItems.map(function(){
+     if ($(this).offset().top < fromTop)
+       return this;
+   });
+   // Get the id of the current element
+   cur = cur[cur.length-1];
+   var id = cur && cur.length ? cur[0].id : "";
+
+   if (lastId !== id) {
+       lastId = id;
+       // Set/remove active class
+       menuItems
+         .removeClass("active")
+         .filter("[href='#"+id+"']").addClass("active");
+   }
+});*/
 
 JS;
 $this->registerJs($js);
 
 ?>
-<!--<script type="text/javascript">
-    function scrollToAnchor(aid){
-        var aTag = $("a[name='"+ aid +"']");
-        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
-    }
-
-    $("#link").click(function() {
-        scrollToAnchor('#');
-    });
-
-</script>-->
 <div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="left-side left-menu-links">
-        <!--<div class="left-side-menu">
-            <div class="left-side-menu-item" >
-                <a id="link" href="#about-work-header"><?/*=\Yii::t('shop', 'Как мы работаем')*/?></a>
-            </div>
-            <div class="left-side-menu-item" >
-                <a id="link" href="#about-delivery-payment-header"><?/*=\Yii::t('shop', 'Доставка и оплата')*/?></a>
-            </div>
-            <div class="left-side-menu-item" >
-                <a id="link" href="#about-return-header"><?/*=\Yii::t('shop', 'Гарантии и возврат')*/?></a>
-            </div>
-            <div class="left-side-menu-item" href="#about-TermOfUse-header">
-                <a id="link" href="#about-TermOfUse-header"><?/*=\Yii::t('shop', 'Условия исп. сайта')*/?></a>
-            </div>
-            <div class="left-side-menu-item" >
-                <a href="/kontakty" style="text-decoration: underline;"><?/*=\Yii::t('shop', 'Контакты')*/?></a>
-            </div>
-            <div class="left-side-menu-item" >
-                <a href="/pomoshch" style="text-decoration: underline;"><?/*=\Yii::t('shop', 'Вопросы и ответы')*/?></a>
-            </div>
-        </div>-->
+
         <?=$this->render('_left_menu')?>
 
     </div>
     <div class="about">
         <div class="about-as padding-bottom">
             <div class="about-as-header about-header semi-bold">
-                <a name="about-work-header">Как мы работаем</a>
+                <a id="about-work-header">Как мы работаем</a>
             </div>
             <div class="bold about-as-center">
                 На сайте krasota-style.ua в некоторых разделах действует 2 типа цен
@@ -127,7 +131,7 @@ $this->registerJs($js);
         </div>
         <div class="about-delivery padding-bottom">
             <div class="about-delivery-header about-header semi-bold">
-                <a name="about-delivery-payment-header">Доставка</a>
+                <a id="about-delivery-payment-header">Доставка</a>
             </div>
             <div class="about-delivery-content">
                 <div class="about-delivery-content-img"></div>
@@ -155,7 +159,7 @@ $this->registerJs($js);
         </div>
         <div class="about-payment padding-bottom">
             <div class="about-payment-header about-header semi-bold">
-                <a name="about-payment-header">Оплата</a>
+                <a id="about-payment-header">Оплата</a>
             </div>
             <span class="bold">
                 Оплата на карту «Приват Банка»
@@ -201,7 +205,7 @@ $this->registerJs($js);
         </div>
         <div class="about-return padding-bottom">
             <div class="about-return-header about-header semi-bold">
-                <a name="about-return-header">Гарантия и возврат</a>
+                <a id="about-return-header">Гарантия и возврат</a>
             </div>
             <span>
                 Товары, приобретенные в интернет-магазине krasota-style.ua, можно вернуть в течении 14 дней с момента получения заказа.
@@ -264,7 +268,7 @@ $this->registerJs($js);
         </div>
         <div class="about-TermsOfUse padding-bottom">
             <div class="about-TermsOfUse-header about-header semi-bold">
-                <a name="about-TermOfUse-header">Условия использования сайта</a>
+                <a id="about-TermOfUse-header">Условия использования сайта</a>
             </div>
             <span>
                 Внимание! Перед просмотром сайта внимательно прочитайте данные условия.

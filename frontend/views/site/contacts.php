@@ -12,6 +12,48 @@ use yii\jui\Accordion;
 <div class="content">
     <div class="left-side">
         <?=$this->render('_left_menu')?>
+<!--        <div class="left-side-menu">
+            <?/*=Html::tag('div',
+                \frontend\widgets\ListGroupMenu::widget([
+                    'items'    => [
+                        [
+                            'label' =>  \Yii::t('shop', 'Как мы работаем'),
+                            'href'  =>  '/o-nas#about-work-header'
+                        ],
+                        [
+                            'label' =>  \Yii::t('shop', 'Доставка и оплата'),
+                            'href'  =>  '/o-nas#about-delivery-payment-header'
+                        ],
+                        [
+                            'label' =>  \Yii::t('shop', 'Гарантии и возврат'),
+                            'href'  =>  '/o-nas#about-return-header'
+                        ],
+                        [
+                            'label' =>  \Yii::t('shop', 'Условия исп. сайта'),
+                            'href'  =>  '/o-nas#about-TermOfUse-header'
+                        ],
+                    ]
+                ]),
+                [
+                    'class' =>  'menu menu-link',
+                ]).
+            Html::tag('div',
+                \frontend\widgets\ListGroupMenu::widget([
+                    'items'    => [
+                        [
+                            'label' =>  \Yii::t('shop', 'Контакты'),
+                            'href'  =>  '/kontakty',
+                        ],
+                        [
+                            'label' =>  \Yii::t('shop', 'Вопросы и ответы'),
+                            'href'  =>  '/pomoshch'
+                        ],
+                    ]
+                ]),
+                [
+                    'class' =>  'menu'
+                ])*/?>
+        </div>-->
     </div>
 <div class="about-contacts padding-bottom">
             <span class="about-header semi-bold">
