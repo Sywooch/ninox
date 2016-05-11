@@ -5860,6 +5860,9 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	margin-left: 10px;
 }
 
+.block-2x2-placeholder .slick-dots{
+	bottom: 0;
+}
 
 .site-request-password-reset{
 	width: 1170px;

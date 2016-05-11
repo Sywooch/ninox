@@ -175,7 +175,7 @@ class BannerHelper extends Component
         }
 
         return Html::tag('div', $content, [
-            'class'	=>	'goods-item img'
+            'class'	=>	'goods-item banner-img'
         ]);
     }
 
