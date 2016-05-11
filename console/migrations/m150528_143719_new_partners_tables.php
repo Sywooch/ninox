@@ -89,7 +89,8 @@ FROM `partners`");
     {
         $this->dropTable('partnersAddresses');
         $this->dropTable('partnersContacts');
-        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR");
+        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR_TO_STR");
+        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR_TO_INT");
 
         echo 'reverted!';
     }
