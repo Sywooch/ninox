@@ -11,6 +11,7 @@ class m150615_131000_modify_sborka_table extends Migration
 	    $this->dropColumn('sborka', 'updated');
 	    $this->dropColumn('sborka', 'updatedUser');
 	    $this->dropColumn('sborka', 'discountPrice');
+	    $this->execute("DELETE FROM `sborka` WHERE `itemID` > 20999999");
         $this->execute("ALTER TABLE `sborka`
             CHANGE `realyCountInOrder` `realyCount` INT(10),
             CHANGE `itemid` `itemID` INT(10),
@@ -23,6 +24,8 @@ class m150615_131000_modify_sborka_table extends Migration
         $this->execute("DROP INDEX `historyid` ON `sborka`; CREATE INDEX `orderID` ON `sborka` (`orderID`, `added`) USING BTREE;");
 	    $this->execute("DELETE FROM `sborka` WHERE `itemID` = 0");
         $this->execute("UPDATE `sborka`,`goods` SET `sborka`.`itemID` = `goods`.`ID` WHERE `sborka`.`itemID` = `goods`.`Code`");
+        $this->execute("UPDATE `sborka`,`goods` SET `sborka`.`itemID` = `goods`.`ID` WHERE `sborka`.`itemID` = `goods`.`BarCode1`");
+	    $this->execute("DELETE FROM `sborka` WHERE `itemID` > 99999");
         $this->execute("UPDATE `sborka` SET `originalPrice` = `price`");
         $this->dropColumn('sborka', 'price');
         $this->execute("UPDATE `sborka`, `operations` SET `sborka`.`originalCount` = `operations`.`Qtty` WHERE `sborka`.`orderID` = `operations`.`Acct` AND `sborka`.`itemID` = `operations`.`GoodID`");
