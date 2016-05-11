@@ -21,7 +21,7 @@ class m160320_151506_update_domain_config_options extends Migration
             ]);
         $this->update('domains_delivery_payments',
             [
-                'options' => '{"content":"address","commissions":{"static":"2","percent":"1"}}'
+                'options' => '{"content":"address","commissions":{"static":"0","percent":"0"}}'
             ],
             [
                 'domainId' => 1,
@@ -43,7 +43,7 @@ class m160320_151506_update_domain_config_options extends Migration
             ]);
         $this->update('domains_delivery_payments',
             [
-                'options' => '{"content":"department","commissions":{"static":"2","percent":"1"}}'
+                'options' => '{"content":"department","commissions":{"static":"0","percent":"0"}}'
             ],
             [
                 'domainId' => 1,
@@ -54,7 +54,7 @@ class m160320_151506_update_domain_config_options extends Migration
             ]);
         $this->update('domains_delivery_payments',
             [
-                'options' => '{"content":"stock","commissions":{"static":"2","percent":"1"}}'
+                'options' => '{"content":"stock","commissions":{"static":"0","percent":"0"}}'
             ],
             [
                 'domainId' => 1,
