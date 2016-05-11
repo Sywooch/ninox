@@ -2666,7 +2666,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     /*
     width: 1250px;
     */
+    /*
 	overflow: auto;
+    */
 	width: 1170px;
     margin: 0 auto;
 	padding-top: 30px;
@@ -3247,6 +3249,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: 35px;*/ /*было и стало*/
 	float: left;
 	width: 245px;
+/*	position: fixed;*/
 }
 
 .left-side-menu{
@@ -5041,6 +5044,10 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	height: 215px;
 }
 
+.goods-items .banner-img{
+	padding: 0px;
+}
+
 .goods-item{
 	width: 215px;
 	border-left: 1px solid rgb(236, 236, 236);
@@ -5854,6 +5861,9 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	margin-left: 10px;
 }
 
+.block-2x2-placeholder .slick-dots{
+	bottom: 0;
+}
 
 .site-request-password-reset{
 	width: 1170px;
