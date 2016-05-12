@@ -9,7 +9,32 @@ use yii\bootstrap\Html;
 ?>
 <div class="content help-page">
     <div class="left-side">
-        <?=$this->render('_left_menu')?>
+        <?=Html::tag('div',
+            \frontend\widgets\ListGroupMenu::widget([
+                'items'    => [
+                    [
+                        'label' =>  \Yii::t('shop', 'Как мы работаем'),
+                        'href'  =>  'o-nas#about-work-header'
+                    ],
+                    [
+                        'label' =>  \Yii::t('shop', 'Доставка и оплата'),
+                        'href'  =>  'o-nas#about-delivery-payment-header'
+                    ],
+                    [
+                        'label' =>  \Yii::t('shop', 'Гарантии и возврат'),
+                        'href'  =>  'o-nas#about-return-header'
+                    ],
+                    [
+                        'label' =>  \Yii::t('shop', 'Условия исп. сайта'),
+                        'href'  =>  'o-nas#about-TermOfUse-header'
+                    ],
+                ]
+            ]),
+            [
+                'class' =>  'menu',
+            ]),
+        $this->render('_left_menu')
+        ?>
     </div>
     <div class="help">
         <h1>Вопросы и ответы</h1>

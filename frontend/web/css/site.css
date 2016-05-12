@@ -3272,11 +3272,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     */
 }
 
-.left-side-menu .menu{
+.left-side .menu{
 	width: 245px;
 }
 
-.left-side-menu .menu .list-group-item{
+.left-side .menu .list-group-item{
 	padding: 10px 25px;
 
 }
@@ -5914,6 +5914,14 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .help-page{
 	color: black;
+}
+
+.help-page .menu-link{
+	display: none;
+}
+
+.contact .menu-link{
+	display: none;
 }
 
 .help-page .help{
