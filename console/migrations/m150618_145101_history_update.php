@@ -70,7 +70,7 @@ ALTER TABLE `history` DROP COLUMN `callState`;");
             DROP COLUMN `ttn_floor_count`,
             DROP COLUMN `ttn_original`");
 
-        $this->execute("UPDATE `history` SET `originalSum` = (SELECT SUM(`originalPrice` * `originalCount`) FROM `sborka` WHERE `sborka`.`orderID` = `history`.`id` GROUP BY `orderID`)");
+        $this->execute("UPDATE `history` SET `originalSum` = IF((SELECT SUM(`originalPrice` * `originalCount`) FROM `sborka` WHERE `sborka`.`orderID` = `history`.`id` GROUP BY `orderID`) > 0, (SELECT SUM(`originalPrice` * `originalCount`) FROM `sborka` WHERE `sborka`.`orderID` = `history`.`id` GROUP BY `orderID`), 0)");
     }
 
     public function down()
