@@ -66,6 +66,10 @@ class m151120_090447_GUID_using_in_history_sborka extends Migration
 	    $this->dropColumn('sborka', 'id');
 	    $this->addPrimaryKey('id', 'sborka', ['orderID', 'itemID']);
 
+	    $this->renameColumn('partners', 'PaymentType', 'paymentType');
+	    $this->renameColumn('partners', 'ShippingType', 'deliveryType');
+	    $this->alterColumn('partners', 'paymentType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
+	    $this->alterColumn('partners', 'deliveryType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
 	    $this->renameColumn('partners', 'Discount', 'discount');
 
 	    $withChild = [];

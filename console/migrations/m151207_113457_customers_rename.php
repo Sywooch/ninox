@@ -35,7 +35,6 @@ class m151207_113457_customers_rename extends Migration
         $this->renameColumn('partners', 'UserRealTime', 'registrationTime');
         $this->renameColumn('partners', 'Deleted', 'deleted');
         $this->renameColumn('partners', 'CardNumber', 'cardNumber');
-        $this->renameColumn('partners', 'ShippingType', 'shippingType');
         $this->renameColumn('partners', 'black', 'blackList');
         $this->renameColumn('partners', 'blackDate', 'blackListAddedTime');
         $this->addColumn('partners', 'password_reset_token', \yii\db\Schema::TYPE_STRING.' DEFAULT NULL');
