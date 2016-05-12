@@ -3045,7 +3045,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .user-account .review div:last-of-type{
 	margin-right: 0px;
 }
- 
+   
 .review .items{
     background-color: #ffffff;
     width: 125px;
