@@ -30,7 +30,6 @@ class m151207_113457_customers_rename extends Migration
         $this->renameColumn('partners', 'Phone', 'phone');
         $this->renameColumn('partners', 'eMail', 'email');
         $this->renameColumn('partners', 'PriceGroup', 'priceGroup');
-        $this->renameColumn('partners', 'Discount', 'discount');
         $this->renameColumn('partners', 'Type', 'type');
         $this->renameColumn('partners', 'GroupID', 'groupID');
         $this->renameColumn('partners', 'UserRealTime', 'registrationTime');

@@ -66,6 +66,8 @@ class m151120_090447_GUID_using_in_history_sborka extends Migration
 	    $this->dropColumn('sborka', 'id');
 	    $this->addPrimaryKey('id', 'sborka', ['orderID', 'itemID']);
 
+	    $this->renameColumn('partners', 'Discount', 'discount');
+
 	    $withChild = [];
 
 	    foreach(\backend\models\History::find()->where(['>', 'parent_id', 0])->each(100) as $item){
