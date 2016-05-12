@@ -72,7 +72,7 @@ $this->registerJs($js);
     <div class="about">
         <div class="about-as padding-bottom">
             <div class="about-as-header about-header semi-bold">
-                <a id="about-work-header">Как мы работаем</a>
+                <a id="#o-nas#about-work-header">Как мы работаем</a>
             </div>
             <div class="bold about-as-center">
                 На сайте krasota-style.ua в некоторых разделах действует 2 типа цен

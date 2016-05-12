@@ -73,7 +73,6 @@ $(document).ready(function(){
 
 // Cache selectors
 
-
 /*$(function(){
     $(window).scroll(function() {
         var top = $(document).scrollTop();
@@ -91,7 +90,7 @@ $this->registerJs($js);
             'items'    => [
                 [
                     'label' =>  \Yii::t('shop', 'Как мы работаем'),
-                    'href'  =>  '#about-work-header'
+                    'href'  =>  'o-nas#about-work-header'
                 ],
                 [
                     'label' =>  \Yii::t('shop', 'Доставка и оплата'),

@@ -23,7 +23,7 @@ $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'ro
             <div class="col-lg-5">
                 <?php $form = ActiveForm::begin(['id' => 'reset-password-form']);
 
-                    echo $form->field($model, 'пароль')->passwordInput(),
+                    echo $form->field($model, 'password')->passwordInput(),
                         Html::tag('div',
                             Html::submitButton(\Yii::t('shop', 'сохранить'), ['class' => 'btn btn-primary']),
                             [
