@@ -6,11 +6,12 @@ class m150920_074105_reviews extends Migration
 {
     public function up()
     {
-	    $this->execute("ALTER TABLE `reviews`
-            DROP COLUMN `question2`,
-			DROP COLUMN `client_face`,
-			DROP COLUMN `position`,
-			CHANGE COLUMN `parentId` `target`  int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `customerType`;");
+        $this->dropColumn('reviews', 'question2');
+        $this->dropColumn('reviews', 'client_face');
+        $this->dropColumn('reviews', 'position');
+        $this->renameColumn('reviews', 'parentId', 'target');
+        $this->execute("UPDATE `reviews` SET `target` = 0 WHERE `target` IS NULL");
+        $this->alterColumn('reviews', 'target', \yii\db\Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
     }
 
     public function down()
