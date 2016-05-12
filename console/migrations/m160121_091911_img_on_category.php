@@ -7,7 +7,7 @@ class m160121_091911_img_on_category extends Migration
 {
     public function up()
     {
-        $this->addColumn('goodsgroups', 'imgSrc', Schema::TYPE_TEXT.' NOT NULL');
+        $this->addColumn('goodsgroups', 'imgSrc', Schema::TYPE_TEXT.' NULL');
         $this->update('goodsgroups', ['imgSrc' => 'data:image/svg+xml;base64,
 PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjwh
 LS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8pIC0tPgoK

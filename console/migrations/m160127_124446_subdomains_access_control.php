@@ -11,7 +11,7 @@ class m160127_124446_subdomains_access_control extends Migration
 		    'id'                =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
 		    'name'              =>  Schema::TYPE_STRING.' NOT NULL',
 		    'autologin'         =>  Schema::TYPE_SMALLINT.' UNSIGNED NOT NULL DEFAULT 0',
-		    'autologinParams'   =>  Schema::TYPE_TEXT.' NOT NULL',
+		    'autologinParams'   =>  Schema::TYPE_TEXT.' NULL',
 		    'cashboxId'         =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0'
 	    ]);
 
