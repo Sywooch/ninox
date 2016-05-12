@@ -15,15 +15,15 @@ $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'ro
 <div class="content">
     <div class="site-reset-password">
         <?=
-            Html::tag('h1', Html::encode($this->title)).
-            Html::tag('p', \Yii::t('shop', 'Пожалуйста введите Ваш новый пароль:'))
+            Html::tag('h1', Html::encode($this->title))
+/*            Html::tag('p', \Yii::t('shop', 'Пожалуйста введите Ваш новый пароль:'))*/
         ?>
 
         <div class="row">
             <div class="col-lg-5">
                 <?php $form = ActiveForm::begin(['id' => 'reset-password-form']);
 
-                    echo $form->field($model, 'пароль')->passwordInput(),
+                    echo $form->field($model, 'password')->passwordInput(),
                         Html::tag('div',
                             Html::submitButton(\Yii::t('shop', 'сохранить'), ['class' => 'btn btn-primary']),
                             [

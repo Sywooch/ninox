@@ -61,4 +61,10 @@ class ResetPasswordForm extends Model
 
         return $user->save(false);
     }
+
+    public function attributeLabels(){
+        return [
+            'password'           =>  \Yii::t('shop', 'Пожалуйста введите Ваш новый пароль:'),
+        ];
+    }
 }
