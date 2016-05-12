@@ -24,9 +24,9 @@ class m160427_121508_category_translations extends Migration
             'headerOrderAscending'  =>  Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'',
             'headerOrderDescending' =>  Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'',
             'headerOrderNew'        =>  Schema::TYPE_STRING.'(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'',
-            'metaDescription'       =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci',
-            'metaKeywords'          =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci',
-            'categoryDescription'   =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci',
+            'metaDescription'       =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci NULL',
+            'metaKeywords'          =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci NULL',
+            'categoryDescription'   =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci NULL',
             'sequence'              =>  Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0'
         ], 'ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci');
 
