@@ -6,6 +6,7 @@ class m160316_154734_banners extends Migration
 {
     public function up()
     {
+        $this->alterColumn('banners_type', 'category', \yii\db\Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
         foreach(['2x2', '1x1.1', '1x1.2', '1x1.3', '1x1.4', '1x2'] as $item){
             $model = new \common\models\BannerType([
                 'alias'         =>  $item,
