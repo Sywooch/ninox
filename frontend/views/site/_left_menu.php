@@ -90,7 +90,7 @@ $this->registerJs($js);
             'items'    => [
                 [
                     'label' =>  \Yii::t('shop', 'Как мы работаем'),
-                    'href'  =>  'o-nas#about-work-header'
+                    'href'  =>  '#about-work-header'
                 ],
                 [
                     'label' =>  \Yii::t('shop', 'Доставка и оплата'),
