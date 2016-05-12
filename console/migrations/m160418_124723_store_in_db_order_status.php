@@ -9,9 +9,13 @@ class m160418_124723_store_in_db_order_status extends Migration
         $this->addColumn('history', 'status', \yii\db\Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
         $this->addColumn('history', 'statusChangedDate', \yii\db\Schema::TYPE_DATETIME);
 
-        foreach(\backend\models\History::find()->each() as $order){
+        $count = \backend\models\History::find()->count();
+        $i = 1;
+        foreach(\backend\models\History::find(200)->each() as $order){
             $order->status = $order->getCurrentStatus();
             $order->save(false);
+            echo "    > {$i} order from {$count} orders\r\n";
+            $i++;
         }
     }
 

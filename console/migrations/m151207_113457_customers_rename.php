@@ -1,6 +1,7 @@
 <?php
 
 use yii\db\Migration;
+use yii\db\Schema;
 
 class m151207_113457_customers_rename extends Migration
 {
@@ -27,6 +28,11 @@ class m151207_113457_customers_rename extends Migration
         $this->dropColumn('partners', 'PaymentDays');
         $this->dropColumn('partners', 'utma');
         $this->dropColumn('partners', 'cityID');
+        $this->renameColumn('partners', 'PaymentType', 'paymentType');
+        $this->renameColumn('partners', 'ShippingType', 'deliveryType');
+        $this->alterColumn('partners', 'paymentType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
+        $this->alterColumn('partners', 'deliveryType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
+        $this->renameColumn('partners', 'Discount', 'discount');
         $this->renameColumn('partners', 'Phone', 'phone');
         $this->renameColumn('partners', 'eMail', 'email');
         $this->renameColumn('partners', 'PriceGroup', 'priceGroup');
