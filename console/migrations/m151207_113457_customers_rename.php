@@ -41,8 +41,6 @@ class m151207_113457_customers_rename extends Migration
         $this->renameColumn('partners', 'black', 'blackList');
         $this->renameColumn('partners', 'blackDate', 'blackListAddedTime');
         $this->addColumn('partners', 'password_reset_token', \yii\db\Schema::TYPE_STRING.' DEFAULT NULL');
-        $this->alterColumn('partners', 'PaymentType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
-        $this->alterColumn('partners', 'shippingType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
     }
 
     public function down()
