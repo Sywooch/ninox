@@ -15,7 +15,7 @@ $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'ro
 <div class="content">
     <div class="site-reset-password">
         <?=
-            Html::tag('h1', Html::encode($this->title)).
+            Html::tag('h1', Html::encode($this->title))
 /*            Html::tag('p', \Yii::t('shop', 'Пожалуйста введите Ваш новый пароль:'))*/
         ?>
 
