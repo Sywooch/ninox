@@ -25,7 +25,12 @@ class m151014_135349_goods_discount extends Migration
 	    	`discountSize` = `PriceOut3` - `PriceOut1`,
 	    	`PriceOut1` = `PriceOut3`,
 	    	`PriceOut2` = 1.5 * `PriceOut3`,
-	    	`PriceOut3` = '0' WHERE `PriceOut3` != '0'");
+	    	`PriceOut3` = '0' WHERE `PriceOut3` != '0' AND `PriceOut3` - `PriceOut1` >= 0");
+
+	    $this->execute("UPDATE `goods` SET
+	    	`discountType` = '0',
+	    	`discountSize` = '0',
+	    	`PriceOut3` = '0' WHERE `PriceOut3` != '0' AND `PriceOut3` - `PriceOut1` < 0");
     }
 
     public function down()
