@@ -6,6 +6,7 @@ class m160421_144959_item_unlimited_fix extends Migration
 {
     public function up()
     {
+        $this->execute("UPDATE `goods` SET `isUnlimited` = 0 WHERE `isUnlimited` IS NULL");
         $this->alterColumn('goods', 'isUnlimited', \yii\db\Schema::TYPE_SMALLINT.' UNSIGNED NOT NULL DEFAULT 0');
     }
 

@@ -34,6 +34,8 @@ class m160427_121508_category_translations extends Migration
         $this->createIndex('language', 'category_translations', 'language');
         $this->createIndex('link', 'category_translations', 'link');
 
+
+
         $categories = [];
         $categoryRU = Category::find()->count();
         $i = 0;
@@ -83,6 +85,17 @@ class m160427_121508_category_translations extends Migration
             $categories
         );
 
+        $this->execute("UPDATE `goodsgroups_uk` SET `Name` = '' WHERE `Name` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `title` = '' WHERE `title` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `titlenew` = '' WHERE `titlenew` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `titleasc` = '' WHERE `titleasc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `titledesc` = '' WHERE `titledesc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `h1` = '' WHERE `h1` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `h1new` = '' WHERE `h1new` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `h1asc` = '' WHERE `h1asc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `h1desc` = '' WHERE `h1desc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_uk` SET `listorder` = 0 WHERE `listorder` IS NULL");
+
         $categories = [];
         $categoryUA = CategoryUk::find()->count();
         $i = 0;
@@ -131,6 +144,18 @@ class m160427_121508_category_translations extends Migration
             'sequence'],
             $categories
         );
+
+        $this->execute("UPDATE `goodsgroups_be` SET `Name` = '' WHERE `Name` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `title` = '' WHERE `title` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `titlenew` = '' WHERE `titlenew` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `titleasc` = '' WHERE `titleasc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `titledesc` = '' WHERE `titledesc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `h1` = '' WHERE `h1` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `h1new` = '' WHERE `h1new` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `h1asc` = '' WHERE `h1asc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `h1desc` = '' WHERE `h1desc` IS NULL");
+        $this->execute("UPDATE `goodsgroups_be` SET `listorder` = 0 WHERE `listorder` IS NULL");
+
 
         $categories = [];
         $categoryBY = CategoryBe::find()->count();
