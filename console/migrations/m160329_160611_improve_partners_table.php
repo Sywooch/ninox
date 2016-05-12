@@ -14,8 +14,6 @@ class m160329_160611_improve_partners_table extends Migration
 
         $this->renameColumn('partners', 'PaymentType', 'paymentType');
         $this->renameColumn('partners', 'ShippingType', 'deliveryType');
-        $this->alterColumn('partners', 'paymentType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
-        $this->alterColumn('partners', 'deliveryType', Schema::TYPE_INTEGER.' UNSIGNED DEFAULT NULL');
     }
 
 
