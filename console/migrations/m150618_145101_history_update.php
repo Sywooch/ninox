@@ -7,7 +7,7 @@ class m150618_145101_history_update extends Migration
 {
     public function up()
     {
-        $this->execute("UPDATE `history` SET `dostavka` = '2' WHERE `dostavka` = 'Новая почта';
+        $this->execute("UPDATE `history` SET `dostavka` = '2' WHERE `dostavka` = 'Новая почта' OR `dostavka` = '';
 UPDATE `history` SET `plateg` = '1' WHERE `plateg` = 'наложенный платеж' OR `plateg` = 'наложенным платежом' OR `plateg` = 'РЅР°Р»РѕР¶РµРЅРЅС‹Рј РїР»Р°С‚РµР¶РѕРј';
 UPDATE `history` SET `plateg` = '2' WHERE `plateg` = 'на банковскую карту' OR `plateg` = 'РЅР° Р±Р°РЅРєРѕРІСЃРєСѓСЋ РєР°СЂС‚Сѓ';
 UPDATE `history` SET `plateg` = '0' WHERE `plateg` = '' OR `plateg` = 'способ платежа не выбран';
