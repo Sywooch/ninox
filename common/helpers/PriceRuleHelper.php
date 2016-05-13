@@ -162,40 +162,42 @@ class PriceRuleHelper extends Component{
 
 	protected function checkCategory($terms, $cat, &$termsCount, &$discount){
 		foreach($terms as $term){
-			$termsCount++;
-			foreach($term as $gg){
-				switch($gg['type']){
-					case '=':
-						if($cat == $gg['term']){
-							$discount++;
-							break 2;
-						}
-						break;
-					case '>=':
-						if(strlen($cat) != strlen($gg['term'])){
-							$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
-						}else{
-							$cat0 = $cat;
-						}
-						if($cat0 == $gg['term']){
-							$discount++;
-							break 2;
-						}
-						break;
-					case '<=':
-					case '!=':
-						if(strlen($cat) != strlen($gg['term'])){
-							$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
-						}else{
-							$cat0 = $cat;
-						}
-						if($cat0 != $gg['term']){
-							$discount++;
-							break 2;
-						}
-						break;
-					default:
-						break;
+			if($termsCount == $discount){
+				$termsCount++;
+				foreach($term as $gg){
+					switch($gg['type']){
+						case '=':
+							if($cat == $gg['term']){
+								$discount++;
+								break 2;
+							}
+							break;
+						case '>=':
+							if(strlen($cat) != strlen($gg['term'])){
+								$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+							}else{
+								$cat0 = $cat;
+							}
+							if($cat0 == $gg['term']){
+								$discount++;
+								break 2;
+							}
+							break;
+						case '<=':
+						case '!=':
+							if(strlen($cat) != strlen($gg['term'])){
+								$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+							}else{
+								$cat0 = $cat;
+							}
+							if($cat0 != $gg['term']){
+								$discount++;
+								break 2;
+							}
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		}
@@ -203,14 +205,16 @@ class PriceRuleHelper extends Component{
 
 	protected function checkDate($terms, &$termsCount, &$discount){
 		foreach($terms as $term){
-			$termsCount++;
-			date_default_timezone_set('Europe/Kiev');
-			$now = new DateTime(date('Y-m-d'));
-			foreach($term as $date){
-				$dt = new DateTime($date['term']);
-				if(($date['type'] == '=' && $now->diff($dt)->days == 0) || ($date['type'] == '>=' && $dt->diff($now)->days >= 0 && $dt->diff($now)->invert == 0) || ($date['type'] == '<=' && $now->diff($dt)->days >= 0 && $now->diff($dt)->invert == 0)){
-					$discount++;
-					break;
+			if($termsCount == $discount){
+				$termsCount++;
+				date_default_timezone_set('Europe/Kiev');
+				$now = new DateTime(date('Y-m-d'));
+				foreach($term as $date){
+					$dt = new DateTime($date['term']);
+					if(($date['type'] == '=' && $now->diff($dt)->days == 0) || ($date['type'] == '>=' && $dt->diff($now)->days >= 0 && $dt->diff($now)->invert == 0) || ($date['type'] == '<=' && $now->diff($dt)->days >= 0 && $now->diff($dt)->invert == 0)){
+						$discount++;
+						break;
+					}
 				}
 			}
 		}
@@ -218,11 +222,13 @@ class PriceRuleHelper extends Component{
 
 	protected function checkDocumentSumm($terms, &$termsCount, &$discount){
 		foreach($terms as $term){
-			$termsCount++;
-			foreach($term as $ds){
-				if(($this->cartSumm == $ds['term'] && $ds['type'] == '=') || ($this->cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($this->cartSumm <= $ds['term'] && $ds['type'] == '<=')){
-					$discount += 1;
-					break;
+			if($termsCount == $discount){
+				$termsCount++;
+				foreach($term as $ds){
+					if(($this->cartSumm == $ds['term'] && $ds['type'] == '=') || ($this->cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($this->cartSumm <= $ds['term'] && $ds['type'] == '<=')){
+						$discount += 1;
+						break;
+					}
 				}
 			}
 		}
