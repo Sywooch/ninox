@@ -480,9 +480,7 @@ class SiteController extends Controller
 				];
 			}
 	    }
-        \Yii::trace('realSumm: '.\Yii::$app->cart->cartRealSumm);
-        \Yii::trace('minimalOrderSum: '.\Yii::$app->params['domainInfo']['minimalOrderSum']);
-        \Yii::trace('wholesaleThreshold: '.\Yii::$app->params['domainInfo']['wholesaleThreshold']);
+
 	    return [
 		    'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
 			'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),

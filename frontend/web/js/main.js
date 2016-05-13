@@ -144,7 +144,7 @@ function cartScroll(){
 	$('#modal-cart .grid-view').perfectScrollbar({maxScrollbarLength:20});
 }
 
-function updateCart(data){console.log(data);
+function updateCart(data){
 	for(var i in data){
 		switch(i){
 			case 'wholesale':
