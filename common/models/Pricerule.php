@@ -53,19 +53,27 @@ class Pricerule extends \yii\db\ActiveRecord
 		$actions = $parts[1];
 		$terms = preg_replace('/IF/', '', $terms);
 		$terms = explode('AND', $terms);
+
 		foreach($terms as $termt){
 			$termt = explode('OR', $termt);
+			$key = '';
+			$tempArray = [];
 			foreach($termt as $term){
 				$term = preg_replace('/\(|\)/', '', $term);
 				preg_match($termPattern, $term, $matches);
 				if(!empty($matches)){
 					$tTerm = explode($matches[0], $term);
 					if(!empty($tTerm[1])){
-						$this->_terms[$tTerm[0]][] = array('term' => $tTerm[1], 'type' => $matches[0]);
+						$key = $tTerm[0];
+						$tempArray[] = array('term' => $tTerm[1], 'type' => $matches[0]);
 					}
 				}
 			}
+			if(!empty($key) && !empty($tempArray)){
+				$this->_terms[$key][] = $tempArray;
+			}
 		}
+
 		$actions = explode('AND', $actions);
 		foreach($actions as $action){
 			$action = explode('=', $action);
