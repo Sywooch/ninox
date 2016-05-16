@@ -12,62 +12,11 @@ use yii\jui\Accordion;
  */
 
 $model = new \frontend\models\UsersInterestsForm();
-$js = <<<'JS'
-/*
-var lastId,
-    topMenu = $(".list-group"),
-    topMenuHeight = topMenu.outerHeight()+15,
-    // All list items
-    menuItems = topMenu.find("a"),
-    // Anchors corresponding to menu items
-    scrollItems = menuItems.map(function(){
-      var item = $($(this).attr("href"));
-      if (item.length) { return item; }
-    });
-
-// Bind click handler to menu items
-// so we can get a fancy scroll animation
-menuItems.click(function(e){
-  var href = $(this).attr("href"),
-      offsetTop = href === "#" ? 0 : $(href).offset().top-topMenuHeight+1;
-  $('html, body').stop().animate({
-      scrollTop: offsetTop
-  }, 300);
-  e.preventDefault();
-});
-
-// Bind to scroll
-$(window).scroll(function(){
-   // Get container scroll position
-   var fromTop = $(this).scrollTop()+topMenuHeight;
-
-   // Get id of current scroll item
-   var cur = scrollItems.map(function(){
-     if ($(this).offset().top < fromTop)
-       return this;
-   });
-   // Get the id of the current element
-   cur = cur[cur.length-1];
-   var id = cur && cur.length ? cur[0].id : "";
-
-   if (lastId !== id) {
-       lastId = id;
-       // Set/remove active class
-       menuItems
-         .removeClass("active")
-         .filter("[href='#"+id+"']").addClass("active");
-   }
-});*/
-
-JS;
-$this->registerJs($js);
 
 ?>
 <div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="left-side left-menu-links">
-
         <?=$this->render('_left_menu')?>
-
     </div>
     <div class="about">
         <div class="about-as padding-bottom">
@@ -186,10 +135,6 @@ $this->registerJs($js);
 
                 ])?>
             </div>
-            <!--<span>
-                При оплате на карту взымается комиссия в размере 1% от суммы заказа (она уже входит в стоимость, указанную в смс).
-                В отделении «Новой Почты», Вам нужно оплатить лишь стоимость пересылки.
-            </span>-->
             <span class="bold">
                 Оплата при получении
             </span>

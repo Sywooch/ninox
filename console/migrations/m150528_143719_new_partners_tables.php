@@ -29,40 +29,68 @@ class m150528_143719_new_partners_tables extends Migration
             'primary'       =>  Schema::TYPE_SMALLINT.' NOT NULL DEFAULT 0'
         ]);
 
-        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR;
-			CREATE FUNCTION SPLIT_STR(
+        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR_TO_STR;
+			CREATE FUNCTION SPLIT_STR_TO_STR(
 			  x VARCHAR(255),
 			  delim VARCHAR(12),
 			  pos INT
 			)
 			RETURNS VARCHAR(255)
-			RETURN TRIM(REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
+			BEGIN
+			DECLARE s VARCHAR(255);
+			SELECT TRIM(REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
 			       CHAR_LENGTH(SUBSTRING_INDEX(x, delim, pos - 1)) + 1),
-       delim, ''));");
+       delim, '')) INTO s;
+            IF(s = '') THEN
+                RETURN NULL;
+            ELSE
+                RETURN s;
+            END IF;
+            END;
 
-        $this->execute("INSERT INTO `partnersAddresses` SELECT '' AS `ID`,
+            DROP FUNCTION IF EXISTS SPLIT_STR_TO_INT;
+			CREATE FUNCTION SPLIT_STR_TO_INT(
+			  x VARCHAR(255),
+			  delim VARCHAR(12),
+			  pos INT
+			)
+			RETURNS VARCHAR(255)
+			BEGIN
+			DECLARE s VARCHAR(255);
+			SELECT TRIM(REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
+			       CHAR_LENGTH(SUBSTRING_INDEX(x, delim, pos - 1)) + 1),
+       delim, '')) INTO s;
+            IF(LENGTH(s) > 1 OR s = '') THEN
+                RETURN NULL;
+            ELSE
+                RETURN s;
+            END IF;
+            END;");
+
+        $this->execute("INSERT INTO `partnersAddresses` SELECT NULL AS `ID`,
 `ID` AS `partnerID`,
 '' AS `country`,
-SPLIT_STR(`City`, ',', 2) AS `city`,
-SPLIT_STR(`City`, ',', 1) AS `region`,
+SPLIT_STR_TO_STR(`City`, ',', 2) AS `city`,
+SPLIT_STR_TO_STR(`City`, ',', 1) AS `region`,
 `Address` AS `address`,
-SPLIT_STR(`ShippingType`, ',', 1) AS `shippingType`,
-SPLIT_STR(`ShippingType`, ',', 2) AS `shippingParam`,
-SPLIT_STR(`PaymentType`, ',', 1) AS `paymentType`,
-SPLIT_STR(`PaymentType`, ',', 2) AS `paymentParam`,
+SPLIT_STR_TO_INT(`ShippingType`, ',', 1) AS `shippingType`,
+SPLIT_STR_TO_INT(`ShippingType`, ',', 2) AS `shippingParam`,
+SPLIT_STR_TO_INT(`PaymentType`, ',', 1) AS `paymentType`,
+SPLIT_STR_TO_INT(`PaymentType`, ',', 2) AS `paymentParam`,
 '0' AS `primary`
 FROM `partners`");
 
 
-        $this->execute("INSERT INTO `partnersContacts` SELECT '' AS `ID`, `partners`.`ID` AS `partnerID`, '1' AS `type`, `email` AS `value`, '1' AS `primary` FROM `partners` WHERE `email` != ''");
-        $this->execute("INSERT INTO `partnersContacts` SELECT '' AS `ID`, `partners`.`ID` AS `partnerID`, '2' AS `type`, `Phone` AS `value`, '1' AS `primary` FROM `partners` WHERE `Phone` != ''");
+        $this->execute("INSERT INTO `partnersContacts` SELECT NULL AS `ID`, `partners`.`ID` AS `partnerID`, '1' AS `type`, `email` AS `value`, '1' AS `primary` FROM `partners` WHERE `email` != ''");
+        $this->execute("INSERT INTO `partnersContacts` SELECT NULL AS `ID`, `partners`.`ID` AS `partnerID`, '2' AS `type`, `Phone` AS `value`, '1' AS `primary` FROM `partners` WHERE `Phone` != ''");
     }
 
     public function down()
     {
         $this->dropTable('partnersAddresses');
         $this->dropTable('partnersContacts');
-        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR");
+        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR_TO_STR");
+        $this->execute("DROP FUNCTION IF EXISTS SPLIT_STR_TO_INT");
 
         echo 'reverted!';
     }

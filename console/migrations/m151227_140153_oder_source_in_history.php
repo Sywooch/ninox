@@ -56,8 +56,9 @@ class m151227_140153_oder_source_in_history extends Migration
 	    $this->addColumn('history', 'sourceInfo', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->addColumn('history', 'sourceType', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
 	    $this->addColumn('history', 'deliveryParam', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0 AFTER `deliveryType`');
-	    $this->alterColumn('history', 'deliveryInfo', Schema::TYPE_TEXT.' NOT NULL AFTER `deliveryParam`');
+	    $this->alterColumn('history', 'deliveryInfo', Schema::TYPE_TEXT.' NULL AFTER `deliveryParam`');
 	    $this->renameColumn('history', 'paymentInfo', 'paymentParam');
+	    $this->execute("UPDATE `history` SET `paymentParam` = '1' WHERE `paymentParam` = 'терминал' OR `paymentParam` = 'Приват24' OR `paymentParam` = 'касса' OR `paymentParam` = 'Оплата через сайт' OR `paymentParam` = ''");
 	    $this->alterColumn('history', 'paymentParam', Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
 
 	    $this->renameTable('domains_shipping_payments', 'domains_delivery_payments');

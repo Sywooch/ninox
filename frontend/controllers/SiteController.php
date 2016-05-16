@@ -480,6 +480,7 @@ class SiteController extends Controller
 				];
 			}
 	    }
+
 	    return [
 		    'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
 			'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),

@@ -73,7 +73,6 @@ $(document).ready(function(){
 
 // Cache selectors
 
-
 /*$(function(){
     $(window).scroll(function() {
         var top = $(document).scrollTop();

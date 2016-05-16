@@ -14,7 +14,7 @@ class m160503_151119_item_translations extends Migration
             'enabled'               =>  Schema::TYPE_SMALLINT.' UNSIGNED NOT NULL DEFAULT 0',
             'name'                  =>  Schema::TYPE_STRING."(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",
             'link'                  =>  Schema::TYPE_STRING."(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",
-            'description'           =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci',
+            'description'           =>  Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci NULL',
         ], 'ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci');
 
         $this->addPrimaryKey('pk_id_language', 'item_translations', ['ID', 'language']);
@@ -23,9 +23,9 @@ class m160503_151119_item_translations extends Migration
         $this->createIndex('language', 'item_translations', 'language');
         $this->createIndex('link', 'item_translations', 'link');
 
-        $this->alterColumn('goods', 'Description', Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci');
-        $this->alterColumn('goods_uk', 'Description', Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci');
-        $this->alterColumn('goods_be', 'Description', Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci');
+        $this->alterColumn('goods', 'Description', Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci NULL');
+        $this->alterColumn('goods_uk', 'Description', Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci NULL');
+        $this->alterColumn('goods_be', 'Description', Schema::TYPE_TEXT.' CHARACTER SET utf8 COLLATE utf8_general_ci NULL');
 
         $items = [];
         $itemRU = Good::find()->count();

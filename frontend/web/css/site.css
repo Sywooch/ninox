@@ -3036,12 +3036,26 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     margin-top: 30px;
 }
 
+.user-account .review div{
+	margin-right: 10px;
+	overflow: hidden;
+	float: left;
+}
+
+.user-account .review div:last-of-type{
+	margin-right: 0px;
+}
+
 .review .items{
     background-color: #ffffff;
     width: 125px;
     height: 150px;
     float: left;
     margin-right: 15px;
+}
+
+.review .items:last-child{
+	margin-right: 0;
 }
 
 .review .image{
@@ -3054,7 +3068,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .review .write-review{
     font-size: 14px;
     text-align: center;
-    margin-top: 100px;
     width: 100px;
     padding-left: 25px;
 }
@@ -3133,9 +3146,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 .items .image{
     width: 100%;
-    height: 90px;
-    float: left;
-    text-align: center;
+    height: auto;
+	display: block;
 }
 
 .image{
@@ -3260,11 +3272,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     */
 }
 
-.left-side-menu .menu{
+.left-side .menu{
 	width: 245px;
 }
 
-.left-side-menu .menu .list-group-item{
+.left-side .menu .list-group-item{
 	padding: 10px 25px;
 
 }
@@ -3946,6 +3958,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	position: relative;
 	line-height: 30px;
 	cursor: pointer;
+}
+
+.personal-account .account{
+	margin-right: 10px;
 }
 
 .top-menu-content .languages{
@@ -5898,6 +5914,14 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .help-page{
 	color: black;
+}
+
+.help-page .menu-link{
+	display: none;
+}
+
+.contact .menu-link{
+	display: none;
 }
 
 .help-page .help{
