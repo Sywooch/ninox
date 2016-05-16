@@ -241,23 +241,21 @@ $js = <<<'JS'
             }
         });
     }, getSelectedGoods = function(){
-        var items = [],
-            orderItems = document.querySelectorAll(".oneOrderItem.orderItemSelected");
+        var items = [];
 
-        for(var i = 0; i < orderItems.length; i++){
-            items.push(orderItems[i].getAttribute('data-key'));
-        }
+        $.each($(".oneOrderItem.orderItemSelected"), function(index, item){
+            items.push(item.attr('data-key'));
+        })
 
-        document.querySelector("#discountSelectedItems").value = JSON.stringify(items);
+        $("#discountSelectedItems").val(JSON.stringify(items));
     }, disableItemInOrder = function(button){
-        data = JSON.parse(button[0].parentNode.parentNode.parentNode.getAttribute('data-key'));
-
-        data.param = 'inorder';
-
         $.ajax({
             type: 'POST',
             url: '/orders/changeiteminorderstate',
-            data: data,
+            data: {
+                'ID': button[0].parentNode.parentNode.parentNode.getAttribute('data-key'),
+                'param': 'inorder'
+            },
             success: function(data){
                 var parentRow = $(button[0].parentNode.parentNode.parentNode);
 
@@ -266,14 +264,13 @@ $js = <<<'JS'
             }
         });
     }, deleteItemInOrder = function(button){
-        data = JSON.parse(button[0].parentNode.parentNode.parentNode.getAttribute('data-key'));
-
-        data.param = 'deleted';
-
         $.ajax({
             type: 'POST',
             url: '/orders/changeiteminorderstate',
-            data: data,
+            data: {
+                'ID': button[0].parentNode.parentNode.parentNode.getAttribute('data-key'),
+                'param':    'deleted'
+            },
             success: function(data){
                 var parentRow = $(button[0].parentNode.parentNode.parentNode);
 
@@ -285,7 +282,9 @@ $js = <<<'JS'
         $.ajax({
             type: 'POST',
             url: '/orders/restoreitemdata',
-            data: JSON.parse(button[0].parentNode.parentNode.parentNode.getAttribute('data-key')),
+            data: {
+                'ID': button[0].parentNode.parentNode.parentNode.getAttribute('data-key')
+            },
             success: function(data){
                 $.pjax.reload({container: '#orderItems-pjax'});
             }
@@ -330,12 +329,12 @@ $js = <<<'JS'
         modal[0].innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
         modal.remodal().open();
 
-        var data = JSON.parse($(this)[0].parentNode.parentNode.parentNode.getAttribute('data-key'));
+        var data = JSON.parse($(this)[0].parentNode.parentNode.parentNode.getAttribute('data-itemID'));
 
         $.ajax({
             type: 'POST',
             data: {
-                itemID: data.itemID,
+                itemID: data,
                 action: 'getEditItemForm'
             },
             success: function(data){
@@ -709,7 +708,8 @@ $thiss = $this;
         $classes[] = 'oneOrderItem';
 
         return [
-            'class' =>  implode(' ', $classes)
+            'class'     =>  implode(' ', $classes),
+            'data-itemID'  =>  $model->itemID
         ];
     },
     'resizableColumns'  =>  false,
@@ -730,9 +730,44 @@ $thiss = $this;
             'value'     =>  function($model){
                 $ico = 'http://krasota-style.com.ua/img/catalog/sm/'.$model->photo;
 
-                return Html::tag('div', Html::img($ico, ['class' => 'img-rounded col-xs-4']).Html::tag('div', Html::tag('div', Html::a($model->name.'<br>Код товара: '.$model->good->Code, \yii\helpers\Url::to([
-                    '/goods/view/'.$model->itemID
-                ]))), ['class'  =>  'col-xs-8']), ['class' =>   'row-responsive']);
+                $anotherOrder = '';
+
+                $anotherOrders = [];
+
+                foreach($model->parentOrders as $parentOrder){
+                    $anotherOrders[] = Html::a('Из заказа '.$parentOrder->number, '/orders/showorder/'.$parentOrder->id, [
+                        'class'     => 'label label-info no-pjax',
+                        'style'     => 'margin-right: 10px',
+                        'data-pjax' =>  0
+                    ]);
+                }
+
+                if(!empty($anotherOrders)){
+                    $anotherOrder = Html::tag('div', implode('', $anotherOrders));
+                }
+
+                return Html::tag('div',
+                    Html::img($ico,
+                        [
+                            'class' => 'img-rounded col-xs-4'
+                        ]).
+                    Html::tag('div',
+                        Html::tag('div',
+                            Html::a($model->name.'<br>Код товара: '.$model->good->Code,
+                                \yii\helpers\Url::to([
+                                    '/goods/view/'.$model->itemID
+                                ], [
+                                    'data-pjax' => 0
+                                ])
+                            ).
+                            $anotherOrder
+                        ), [
+                            'class'  =>  'col-xs-8'
+                        ]
+                    ), [
+                        'class' =>   'row-responsive'
+                    ]
+                );
             }
         ],
         [

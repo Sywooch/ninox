@@ -8,6 +8,9 @@
 
 namespace backend\models;
 
+use sammaye\audittrail\AuditTrail;
+use yii\helpers\ArrayHelper;
+
 class SborkaItem extends \common\models\SborkaItem{
 
     public $priceModified = false;
@@ -78,6 +81,12 @@ class SborkaItem extends \common\models\SborkaItem{
         }
 
         return 0;
+    }
+
+    public function getParentOrders(){
+        $parentOrders = ArrayHelper::getColumn(AuditTrail::find()->select("old_value")->where(['model_id' => $this->ID, 'field' => 'orderID'])->andWhere(['like', 'model', 'SborkaItem'])->asArray()->all(), 'old_value');
+
+        return History::find()->where(['in', 'ID', $parentOrders])->all();
     }
 
 }

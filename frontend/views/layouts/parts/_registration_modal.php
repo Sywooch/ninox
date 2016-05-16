@@ -29,6 +29,6 @@ echo $form->field($model, 'name'),
     ]);
 echo \yii\helpers\Html::button('Регистрация', [
     'type'  =>  'submit',
-    'class' =>  'btn btn-primary'
+    'class' =>  'middle-button modal-blue-button'
 ]);
 ActiveForm::end();
