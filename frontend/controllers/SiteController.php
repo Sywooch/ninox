@@ -877,6 +877,7 @@ class SiteController extends Controller
 	public function beforeAction($action){
 		$domainInfo = Domain::findOne(['name' => \Yii::$app->request->getServerName()]);
         Yii::trace('Domain is: '.\Yii::$app->request->getServerName());
+        echo '<pre>'; var_dump($_SERVER); die();
 		\Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;
 
         if(\Yii::$app->request->post("ReturnForm")){
