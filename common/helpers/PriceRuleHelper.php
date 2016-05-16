@@ -180,7 +180,7 @@ class PriceRuleHelper extends Component{
 							}
 							if($cat0 == $gg['term']){
 								$discount++;
-								break 2;
+								break 2;    
 							}
 							break;
 						case '<=':
