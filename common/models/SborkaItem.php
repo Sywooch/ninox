@@ -8,7 +8,7 @@ use yii\web\NotFoundHttpException;
 /**
  * This is the model class for table "sborka".
  *
- * @property integer $id
+ * @property integer $ID
  * @property integer $itemID
  * @property integer $orderID
  * @property string $name
@@ -51,8 +51,6 @@ class SborkaItem extends \yii\db\ActiveRecord
     }
 
     public function afterFind(){
-        parent::afterFind();
-
         switch($this->discountType){
             case '1':
                 //Размер скидки в деньгах
@@ -66,6 +64,8 @@ class SborkaItem extends \yii\db\ActiveRecord
                 $this->price = $this->originalPrice;
                 break;
         }
+
+        return parent::afterFind();
     }
 
     public function returnToStore($deleteItem = true){
@@ -95,17 +95,17 @@ class SborkaItem extends \yii\db\ActiveRecord
             $this->good->count += $this->addedCount;
         }
 
-        return parent::beforeSave(true);
+        return parent::beforeSave($insert);
     }
 
     public function __set($name, $value){
-        parent::__set($name, $value);
-
         switch($name){
             case 'count':
                 $this->addedCount = $value - $this->getOldAttribute('count');
                 break;
         }
+
+        return parent::__set($name, $value);
     }
 
     /**

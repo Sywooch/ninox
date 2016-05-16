@@ -475,7 +475,7 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $item = SborkaItem::findOne(['itemID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+        $item = SborkaItem::findOne(['ID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
 
         if(!$item){
             throw new NotFoundHttpException("Товар ".\Yii::$app->request->post("itemID")." в заказе ".\Yii::$app->request->post("orderID")." не найден!");

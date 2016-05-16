@@ -325,6 +325,8 @@ class Customer extends \yii\db\ActiveRecord
             $this->recipient->save(false); //TODO: в миграции m160131_110736_default_cashboxes вывалилась ошибка при
             // создании дефолтных оптового и розничного покупателей, что метод save вызывается не на объекте
         }
+
+        return parent::afterFind();
     }
 
     /**
