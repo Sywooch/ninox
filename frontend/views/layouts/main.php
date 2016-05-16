@@ -45,6 +45,9 @@ $loginModal = new \bobroid\remodal\Remodal([
 	'addRandomToID'		=>	false,
 	'content'			=>	$this->render('parts/_login_modal'),
 	'id'				=>	'loginModal',
+	'options'			=>  [
+		'class'			=>  'login-modal'
+	]
 ]);
 
 $registrationModal = new \bobroid\remodal\Remodal([
