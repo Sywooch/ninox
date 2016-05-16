@@ -37,6 +37,7 @@ class LoginForm extends Model
         return [
             'phone'         =>  'Номер телефона',
             'password'      =>  'Пароль',
+            'rememberMe'    =>  'Запомнить меня'
         ];
     }
 
