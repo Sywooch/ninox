@@ -29,7 +29,7 @@ class GoodSearch extends Good{
             'query' =>  $query,
             'pagination'    =>  [
                 'pageSize'  =>  isset($params['pageSize']) ? $params['pageSize'] : 20
-            ]
+            ],
         ]);
 
         if(\Yii::$app->request->get("smartfilter") != ''){

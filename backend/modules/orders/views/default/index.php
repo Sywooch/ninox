@@ -618,21 +618,21 @@ echo Html::tag('div', OrdersSearchWidget::widget([
                 'id'        =>  'source-internet',
             ],
             'active'    =>  true,
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'internet', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'   =>  'Магазин',
             'options'   =>  [
                 'id'        =>  'source-local_store',
             ],
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'   =>  'Все',
             'options'   =>  [
                 'id'        =>  'source-all',
             ],
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all', 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'all', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'     =>  'Результаты поиска',

@@ -144,6 +144,10 @@ class HistorySearch extends History{
             $query->andWhere('deleted = 0');
         }
 
+        if(isset($params['responsibleUser'])){
+            $query->andWhere(['responsibleUserID' => $params['responsibleUser']]);
+        }
+
         if (!($this->load($params) && $this->validate())) {
             return $onlyQuery ? $query : $dataProvider;
         }
@@ -156,7 +160,6 @@ class HistorySearch extends History{
         $this->addCondition($query, 'deliveryCity', true);
         $this->addCondition($query, 'nakladna', true);
         $this->addCondition($query, 'actualAmount');
-        $this->addCondition($query, 'responsibleUserID');
 
         return $onlyQuery ? $query : $dataProvider;
     }
