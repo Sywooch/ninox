@@ -3,6 +3,7 @@
 namespace backend\modules\orders\controllers;
 
 use backend\models\HistorySearch;
+use backend\models\OrderCommentForm;
 use backend\models\OrdersStats;
 use backend\modules\orders\models\OrderPreviewForm;
 use common\helpers\PriceRuleHelper;
@@ -368,6 +369,16 @@ class DefaultController extends Controller
             $order->save();
 
             $item->save();
+        }
+
+        if(\Yii::$app->request->post("OrderCommentForm")){
+            $commentModel = new OrderCommentForm([
+                'model' =>  $order
+            ]);
+
+            $commentModel->load(\Yii::$app->request->post());
+
+            $commentModel->save();
         }
 
         if(\Yii::$app->request->post("History")){

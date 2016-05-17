@@ -290,9 +290,6 @@ $js = <<<'JS'
             }
         });
     }
-
-
-
     
     $(".oneOrderItem input:checkbox").change(function(){
         setTimeout(getSelectedGoods, 100);
@@ -369,7 +366,6 @@ $npJS = <<<'JS'
 
             myWindow.document.appendChild(script);
         }
-
     }
 
     $("body").on('click', '.printMark', function(){
@@ -458,6 +454,19 @@ $goodEditModal = new Remodal([
     'id'				=>	'goodEditModal',
 ]);
 
+$orderCommentsModal = new Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'addRandomToID'		=>	false,
+    'options'           =>  [
+        //'hashTracking'  =>  'false',
+        'id'            =>  'orderCommentsModal'
+    ],
+    'id'				=>	'orderCommentsModal',
+]);
+
+echo $orderCommentsModal->renderModal($this->render('_order_comments', ['order' => $order]));
+
 echo $goodEditModal->renderModal();
 
 echo Html::tag('div', '', [
@@ -469,7 +478,7 @@ echo Html::tag('div', '', [
 <div class="row">
     <div class="col-xs-4">
         <div>
-            <h1 id="orderID" data-orderID="<?=$order->id?>">№<?=$order->number?></h1>
+            <h1 id="orderID" data-orderID="<?=$order->id?>">№<?=$order->number?> <?=Html::a(FA::i('comment'.(sizeof($order->comments) <= 0 ? '-o' : '')), '#orderCommentsModal', ['class' => 'roundedItem btn btn-default', 'title' => 'Комментарий к заказу', 'style' => 'padding: 3px;'])?></h1>
         </div>
         <div>
             <h4><?=$order->orderSumm()?> грн. > <?=$deliveryType?></h4>

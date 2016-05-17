@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use backend\components\Sms;
+use common\models\Comment;
 use common\models\Siteuser;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -92,6 +93,18 @@ class History extends \common\models\History
                 return $this->sendSms();
                 break;
         }
+    }
+
+    public function getComments(){
+        $className = self::className();
+
+        if(sizeof(explode('\\', $className)) > 1){
+            $t = explode('\\', $className);
+            $t = array_reverse($t);
+            $className = $t[0];
+        }
+
+        return $this->hasMany(Comment::className(), ['modelID' => 'ID'])->with('commenter')->andWhere(['model' => $className]);
     }
 
     public function getResponsibleUser(){
