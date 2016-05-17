@@ -235,6 +235,7 @@ class History extends \yii\db\ActiveRecord
             [['customerName', 'customerSurname', 'customerPhone', 'customerFathername'], 'string', 'max' => 64],
             [['nakladna'], 'string', 'max' => 50],
             [['currencyCode'], 'string', 'max' => 3],
+            [['paymentParam'], 'default', 'value' => 0],
         ];
     }
 
