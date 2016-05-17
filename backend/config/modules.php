@@ -21,6 +21,7 @@ return [
     'test'          =>  'backend\modules\test\Module',
     'promocodes'    =>  'backend\modules\promocodes\Module',
     'export'        =>  'backend\modules\export\Module',
+    'payments'      =>  'backend\modules\payments\Module',
     'gridview'      =>  '\kartik\grid\Module',
     'treemanager'   =>  '\kartik\tree\Module',
     'debug' => [

@@ -551,6 +551,10 @@ $this->beginPage() ?>
                                 'url'   =>  Url::to('/pricerules/index')
                             ],
                             [
+                                'label' =>  'Подтверждение оплаты',
+                                'url'   =>  Url::to('/payments/index')
+                            ],
+                            [
                                 'label' =>  'Отчёты',
                                 'url'   =>  '#',
                                 'items' =>  [
