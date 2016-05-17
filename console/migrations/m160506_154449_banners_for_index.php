@@ -29,7 +29,7 @@ class m160506_154449_banners_for_index extends Migration
                 'state'     =>  1,
                 'value'     =>  $image['value'],
                 'link'      =>  isset($image['link']) ? $image['link'] : '',
-                'language'  =>  'ru_RU'
+                'language'  =>  'ru-RU'
             ]);
 
             if($bannerTranslation->save(false)){
