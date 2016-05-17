@@ -101,7 +101,7 @@ class Good extends \common\models\Good{
 
     public function beforeSave($insert)
     {
-        if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name){
+        if($this->isNewRecord || $this->translation->oldAttributes['name'] != $this->Name){
             $this->link = TranslitHelper::to($this->Name);
         }
 
