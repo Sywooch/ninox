@@ -3800,6 +3800,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	float: left;
 }
 
+.contacts-inform .home-number{
+	padding-top: 3px !important;
+}
+
 .contacts-inform .inform div{
 	overflow: auto;
 }
@@ -4005,9 +4009,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-left: 10px;
 }
 
-.personal-account .account-icon:before{
+.personal-account .account:before{
 	content: '';
 	background: url("/img/site/account.png");
+	display: inline-block;
+	width: 17px;
+	height: 12px;
+	margin-right: 4px;
 }
 
 .top-menu-content .languages span:after, .top-menu-content .login:after, .top-menu-content .logout:after{
