@@ -107,6 +107,7 @@ class Banner extends \yii\db\ActiveRecord
             }
         }
 
+
         foreach($needleTranslation as $key => $value){
             if(empty($needleTranslation->$key) && !empty($defaultTranslation->$key)){
                 $needleTranslation->$key = $defaultTranslation->$key;
