@@ -4913,15 +4913,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .main-content .arrow-bottom:before{
-	content: url("/img/site/white-arrow.png");
-	text-align: center;
-	display: block;
-    /*
-	padding-top: 23px;
-    */
-}
-
-.main-content .arrow-bottom/*:hover:*/:before{
 	content: '';
 	text-align: center;
 	display: block;
@@ -4931,7 +4922,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	position: absolute;
 	left: 24%;
 	top: 50%;
-/*	margin: -6px 0 0 -15px;*/
 	animation: 1s ease-in-out infinite alternate down;
 	-webkit-animation: 1s ease-in-out infinite alternate down;
 }
