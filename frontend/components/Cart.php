@@ -42,6 +42,9 @@ class Cart extends Component{
             $this->cartCode = \Yii::$app->request->cookies->getValue("cartCode");
         }
 
+	    \Yii::trace('code1: '.$this->cartCode);
+	    \Yii::trace('code2: '.$_COOKIE['cartCode']);
+
         $this->load();
 
         if(!empty($this->cartCode)) {
