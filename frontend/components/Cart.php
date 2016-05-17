@@ -40,10 +40,14 @@ class Cart extends Component{
 
         if(\Yii::$app->request->cookies->has("cartCode")){
             $this->cartCode = \Yii::$app->request->cookies->getValue("cartCode");
+        }elseif(!empty($_COOKIE['cartCode'])){
+	        $this->cartCode = $_COOKIE['cartCode'];
+	        \Yii::$app->response->cookies->add(new Cookie([
+		        'name'      =>  'cartCode',
+		        'value'     =>  $this->cartCode,
+		        'expire'    =>  (time() + 86400 * 365)
+	        ]));
         }
-
-	    \Yii::trace('code1: '.$this->cartCode);
-	    \Yii::trace('code2: '.$_COOKIE['cartCode']);
 
         $this->load();
 
