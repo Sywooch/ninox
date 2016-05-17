@@ -193,6 +193,10 @@ class History extends \common\models\History
             $this->statusChangedDate = date('Y-m-d H:i:s');
         }
 
+        if($this->paymentParam == null){
+            $this->paymentParam = 0;
+        }
+
         //$this->status = $this->getCurrentStatus();
 
         $this->hasChanges = 1;
