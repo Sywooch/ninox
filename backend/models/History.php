@@ -195,7 +195,9 @@ class History extends \common\models\History
             $this->paymentParam = 0;
         }
 
-        //$this->status = $this->getCurrentStatus();
+        if($this->deliveryParam == null){
+            $this->deliveryParam = 0;
+        }
 
         $this->hasChanges = 1;
 

@@ -509,19 +509,9 @@ class DefaultController extends Controller
 
         if($order){
             $order->hasChanges = 1;
-            $orderItems = SborkaItem::findAll(['orderID' => $orderID]);
-            $orderGoodsIDs = $orderItemsArray = [];
 
-            foreach($orderItems as $item){
-                $orderGoodsIDs[] = $item->itemID;
-                $orderItemsArray[$item->itemID] = $item;
-            }
-
-            $orderGoods = Good::find()->where(['in', 'ID', $orderGoodsIDs])->all();
-
-            foreach($orderGoods as $good){
-                $good->count += $orderItemsArray[$good->ID]->count;
-                $good->save(false);
+            foreach(SborkaItem::findAll(['orderID' => $orderID]) as $item){
+                $item->returnToStore($order->orderSource);
             }
 
             $order->deleted = 1;
