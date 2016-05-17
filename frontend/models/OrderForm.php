@@ -95,7 +95,7 @@ class OrderForm extends Model{
             [['deliveryParam', 'paymentParam'], 'integer'],
             [['customerID', 'customerName', 'customerSurname', 'customerFathername', 'customerEmail', 'customerPhone', 'deliveryCountry', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryType', 'deliveryInfo', 'paymentType', 'paymentInfo', 'customerComment', 'promoCode', 'canChangeItems'], 'safe'],
             [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
-            [['customerName', 'customerSurname', 'customerPhone', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
+            [['customerName', 'customerSurname', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
             ['deliveryInfo', 'required',
                 'when' => function(){//var_dump($this->id); die();
                     return in_array($this->deliveryType, [1, 2]);
