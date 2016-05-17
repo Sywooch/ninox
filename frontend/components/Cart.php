@@ -40,6 +40,13 @@ class Cart extends Component{
 
         if(\Yii::$app->request->cookies->has("cartCode")){
             $this->cartCode = \Yii::$app->request->cookies->getValue("cartCode");
+        }elseif(!empty($_COOKIE['cartCode'])){//TODO: убрать примерно в конце лета или через год
+	        $this->cartCode = $_COOKIE['cartCode'];
+	        \Yii::$app->response->cookies->add(new Cookie([
+		        'name'      =>  'cartCode',
+		        'value'     =>  $this->cartCode,
+		        'expire'    =>  (time() + 86400 * 365)
+	        ]));
         }
 
         $this->load();

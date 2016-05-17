@@ -129,12 +129,9 @@ class History extends \common\models\History
                 $messageID = Sms::MESSAGE_CANT_CALL_ID;
                 break;
             case self::STATUS_NOT_PAYED:
-                //$messageID = Sms::MESSAGE_CANT_CALL_ID;
-                //отправить смс с номером карты
                 break;
             case self::STATUS_WAIT_DELIVERY:
                 $messageID = Sms::MESSAGE_ORDER_WAIT_DELIVERY_ID;
-                //
                 break;
             case self::STATUS_DELIVERED:
                 //$messageID = Sms::MESSAGE_CANT_CALL_ID;
@@ -159,6 +156,7 @@ class History extends \common\models\History
             case self::STATUS_PROCESS:
                 break;
             case self::STATUS_NOT_PAYED:
+                $messageID = Sms::MESSAGE_ORDER_DONE_ID;
                 break;
             case self::STATUS_WAIT_DELIVERY:
                 $messageID = Sms::MESSAGE_PAYMENT_CONFIRMED_ID;
