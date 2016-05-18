@@ -209,7 +209,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
         <div class="row">
             <div class="col-xs-4">
                 <?php //TODO: refactor this ?>
-                <?php if($good->photo != ''){?><img class="img-thumbnail" id="good-main-photo" src="http://krasota-style.com.ua/img/catalog/<?=$good->photo?>">
+                <?php if($good->photo != ''){?><img class="img-thumbnail" id="good-main-photo" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/<?=$good->photo?>">
                 <br style="margin-top: 10px; display: block;">
                 <?php } ?>
                 <div id="updateGoodPhoto" class="clearfix">
@@ -339,7 +339,7 @@ $this->title = $good->Name == "" ? "Добавление товара" : "Тов
                             'itemOptions' => ['class' => 'image-thumb-mask'],
                             'itemView' => function ($model, $key, $index, $widget) {
                                 return '<div class="image">
-                                <img class="img-thumbnail" src="http://krasota-style.com.ua/img/catalog/'.$model->ico.'">
+                                <img class="img-thumbnail" src="'.\Yii::$app->params['cdn-link'].'/img/catalog/'.$model->ico.'">
                             </div>
                             <div class="overlay">
                                 <button class="btn btn-sm btn-danger rmAdditionalPhoto" data-attribute-id="'.$model->id.'"><i class="glyphicon glyphicon-trash"></i></button>

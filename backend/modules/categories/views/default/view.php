@@ -54,7 +54,7 @@ $this->registerCss($css);
                 <?php if($category->cat_img != ''){ ?>
                     <div class="panel panel-info">
                         <div class="panel-body">
-                            <img class="img-thumbnail" src="http://krasota-style.com.ua/img/catalog/<?=$category->cat_img?>">
+                            <img class="img-thumbnail" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/<?=$category->cat_img?>">
                         </div>
                         <div class="panel-footer">
                             Фотография категории

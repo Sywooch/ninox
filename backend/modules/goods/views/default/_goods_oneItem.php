@@ -5,7 +5,7 @@ $good = $model;
 ?>
 <div class="col-sm-4 col-md-3" style="min-height: 500px">
     <div class="thumbnail <?=$good->Deleted == "1" ? "bg-very-danger" : ($good->enabled == '1' ? "bg-success" : "bg-danger")?>" data-value-goodID="<?=$good->ID?>"<?=$good->Deleted == "1" ? " data-attribute-deleted=\"1\"" : ""?>>
-        <img<?=($good->PriceOut3 != "" && $good->PriceOut3 != "0") ? ' class="good-sale"' : ''?> src="https://krasota-style.com.ua/img/catalog/sm/<?=$good->photo?>" alt="<?=$good->Name?>">
+        <img<?=($good->PriceOut3 != "" && $good->PriceOut3 != "0") ? ' class="good-sale"' : ''?> src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/sm/<?=$good->photo?>" alt="<?=$good->Name?>">
         <div class="caption">
             <dl>
                 <dt>Название:</dt>

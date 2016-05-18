@@ -737,7 +737,7 @@ $thiss = $this;
             'header'    =>  'Товар',
             'format'    =>  'html',
             'value'     =>  function($model){
-                $ico = 'http://krasota-style.com.ua/img/catalog/sm/'.$model->photo;
+                $ico = \Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$model->photo;
 
                 $anotherOrder = '';
 

@@ -11,7 +11,6 @@ return [
 		'wholesaleThreshold'	=>	'1000',
 		'minimalOrderSum'		=>	'100'
 	],
-    'cdn-link'              =>  'https://krasota-style.com.ua',
 	'img-path'				=>	'/img/catalog/',
 	'small-img-path'		=>  '/img/catalog/sm/',
 ];

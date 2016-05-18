@@ -106,7 +106,7 @@ $form = ActiveForm::begin([
     <div class="panel-body">
         <div class="row">
             <div class="col-xs-4">
-                <?php if($category->cat_img != ''){?><img class="img-thumbnail" id="good-main-photo" src="http://krasota-style.com.ua/img/catalog/<?=$category->cat_img?>">
+                <?php if($category->cat_img != ''){?><img class="img-thumbnail" id="good-main-photo" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/<?=$category->cat_img?>">
                  <br style="margin-top: 10px; display: block;">
                 <?php } ?>
                 <div id="updateGoodPhoto" class="clearfix">
