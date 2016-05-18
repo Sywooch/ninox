@@ -660,7 +660,7 @@ class SiteController extends Controller
         $name = $this->getSearchStatement($suggestion);
 
         $goodsQuery = Good::find()
-            ->select("*, (MATCH(`item_translations`.`name`) AGAINST('{$name}' IN BOOLEAN MODE)) AS `relevant`")
+            ->select("`goods`.*, (MATCH(`item_translations`.`name`) AGAINST('{$name}' IN BOOLEAN MODE)) AS `relevant`")
             ->leftJoin('category_translations', '`goods`.`GroupID` = `category_translations`.`ID`')
             ->joinWith(['translations'])
             ->where("MATCH(`item_translations`.`name`) AGAINST('{$name}' IN BOOLEAN MODE)")
@@ -684,7 +684,7 @@ class SiteController extends Controller
                     'price'     =>  $good->wholesalePrice,
                     'price2'    =>  $good->retailPrice,
                     'link'      =>  $good->link,
-                    'name'      =>  $good->Name,
+                    'name'      =>  $good->name,
                     'photo'     =>  $good->photo
                 ];
 
