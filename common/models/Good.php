@@ -254,7 +254,7 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function getName(){
-        return $this->translation->name;
+        return htmlspecialchars_decode($this->translation->name);
     }
 
     public function getLink(){
@@ -262,7 +262,7 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function getDescription(){
-        return $this->translation->description;
+        return htmlspecialchars_decode($this->translation->description);
     }
 
     public function getEnabled(){
