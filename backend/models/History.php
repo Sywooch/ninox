@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use backend\components\Sms;
+use common\models\Comment;
 use common\models\Siteuser;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -94,6 +95,18 @@ class History extends \common\models\History
         }
     }
 
+    public function getComments(){
+        $className = self::className();
+
+        if(sizeof(explode('\\', $className)) > 1){
+            $t = explode('\\', $className);
+            $t = array_reverse($t);
+            $className = $t[0];
+        }
+
+        return $this->hasMany(Comment::className(), ['modelID' => 'ID'])->with('commenter')->andWhere(['model' => $className]);
+    }
+
     public function getResponsibleUser(){
         if(empty($this->_responsibleUser)){
             $user = Siteuser::findOne($this->responsibleUserID);
@@ -116,12 +129,9 @@ class History extends \common\models\History
                 $messageID = Sms::MESSAGE_CANT_CALL_ID;
                 break;
             case self::STATUS_NOT_PAYED:
-                //$messageID = Sms::MESSAGE_CANT_CALL_ID;
-                //отправить смс с номером карты
                 break;
             case self::STATUS_WAIT_DELIVERY:
                 $messageID = Sms::MESSAGE_ORDER_WAIT_DELIVERY_ID;
-                //
                 break;
             case self::STATUS_DELIVERED:
                 //$messageID = Sms::MESSAGE_CANT_CALL_ID;
@@ -146,6 +156,7 @@ class History extends \common\models\History
             case self::STATUS_PROCESS:
                 break;
             case self::STATUS_NOT_PAYED:
+                $messageID = Sms::MESSAGE_ORDER_DONE_ID;
                 break;
             case self::STATUS_WAIT_DELIVERY:
                 $messageID = Sms::MESSAGE_PAYMENT_CONFIRMED_ID;
@@ -197,7 +208,9 @@ class History extends \common\models\History
             $this->paymentParam = 0;
         }
 
-        //$this->status = $this->getCurrentStatus();
+        if($this->deliveryParam == null){
+            $this->deliveryParam = 0;
+        }
 
         $this->hasChanges = 1;
 

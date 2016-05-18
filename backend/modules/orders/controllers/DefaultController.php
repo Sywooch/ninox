@@ -3,6 +3,7 @@
 namespace backend\modules\orders\controllers;
 
 use backend\models\HistorySearch;
+use backend\models\OrderCommentForm;
 use backend\models\OrdersStats;
 use backend\modules\orders\models\OrderPreviewForm;
 use common\helpers\PriceRuleHelper;
@@ -370,6 +371,16 @@ class DefaultController extends Controller
             $item->save();
         }
 
+        if(\Yii::$app->request->post("OrderCommentForm")){
+            $commentModel = new OrderCommentForm([
+                'model' =>  $order
+            ]);
+
+            $commentModel->load(\Yii::$app->request->post());
+
+            $commentModel->save();
+        }
+
         if(\Yii::$app->request->post("History")){
             $order->load(\Yii::$app->request->post());
             $order->save(false);
@@ -509,19 +520,9 @@ class DefaultController extends Controller
 
         if($order){
             $order->hasChanges = 1;
-            $orderItems = SborkaItem::findAll(['orderID' => $orderID]);
-            $orderGoodsIDs = $orderItemsArray = [];
 
-            foreach($orderItems as $item){
-                $orderGoodsIDs[] = $item->itemID;
-                $orderItemsArray[$item->itemID] = $item;
-            }
-
-            $orderGoods = Good::find()->where(['in', 'ID', $orderGoodsIDs])->all();
-
-            foreach($orderGoods as $good){
-                $good->count += $orderItemsArray[$good->ID]->count;
-                $good->save(false);
+            foreach(SborkaItem::findAll(['orderID' => $orderID]) as $item){
+                $item->returnToStore($order->orderSource);
             }
 
             $order->deleted = 1;

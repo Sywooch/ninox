@@ -320,6 +320,7 @@ class OrderForm extends Model{
                     'priceRuleID'   =>  $good->priceRuleID,
                     'categoryCode'  =>  $good->categoryCode,
                     'customerRule'  =>  $good->customerRule,
+                    'storeID'       =>  1
                 ]);
 
                 if($orderItem->save()){

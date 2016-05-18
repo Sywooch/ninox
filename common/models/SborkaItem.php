@@ -36,7 +36,8 @@ class SborkaItem extends \yii\db\ActiveRecord
 
     public $price;
     public $addedCount = 0;
-    
+    public $storeID = 0;
+
     public function getGood(){
         return $this->hasOne(Good::className(), ['ID' => 'itemID']);
     }
@@ -68,11 +69,15 @@ class SborkaItem extends \yii\db\ActiveRecord
         return parent::afterFind();
     }
 
-    public function returnToStore($deleteItem = true){
+    public function returnToStore($storeID = 0){
         $this->good->count += $this->count;
-
-        if($deleteItem){
-            return $this->delete();
+        $this->good->save(false);
+        if(!empty($storeID)){
+            $shopGood = ShopGood::find()->where(['shopID' => $storeID, 'itemID' => $this->good->ID])->one();
+            if($shopGood){
+                $shopGood->count += $this->count;
+                $shopGood->save(false);
+            }
         }
 
         return true;
@@ -93,9 +98,22 @@ class SborkaItem extends \yii\db\ActiveRecord
 
         if($this->isAttributeChanged('count')){
             $this->good->count += $this->addedCount;
+            $this->good->save(false);
+            if(!empty($this->storeID)){
+                $shopGood = ShopGood::find()->where(['shopID' => $this->storeID, 'itemID' => $this->good->ID])->one();
+                if($shopGood){
+                    $shopGood->count += $this->addedCount;
+                    $shopGood->save(false);
+                }
+            }
         }
 
         return parent::beforeSave($insert);
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        return parent::save($runValidation, $attributeNames);
     }
 
     public function __set($name, $value){
