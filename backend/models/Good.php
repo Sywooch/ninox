@@ -132,7 +132,8 @@ class Good extends \common\models\Good{
                 'itemID'        =>  $this->ID,
                 'orderID'       =>  $order->id,
                 'name'          =>  $this->Name,
-                'originalPrice' =>  $order->isWholesale() ? $this->wholesalePrice : $this->retailPrice
+                'originalPrice' =>  $order->isWholesale() ? $this->wholesalePrice : $this->retailPrice,
+                'categoryCode'  =>  $this->categorycode
             ]);
         }
 

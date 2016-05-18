@@ -14,4 +14,4 @@ echo Html::tag('div',
         Html::tag('span', 'good name').
         Html::tag('span', Formatter::getFormattedPrice(0), ['class' => 'price'])
 ).
-    Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'));
+    Html::tag('div', Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'));

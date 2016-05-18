@@ -8,7 +8,7 @@ $dateTo = ($model->dateTo != '0000-00-00 00:00:00' ? $formatter->asDatetime($mod
 
 $a = '<div class="row">
     <div class="col-xs-4">
-        <img src="https://krasota-style.com.ua/'.($model->type == $model::TYPE_HTML ? 'template/img/banner_html.jpg' : $model->banner->value).'" class="img-thumbnail" style="max-height: 200px;">
+        <img src="'.\Yii::$app->params['cdn-link'].'/'.($model->type == $model::TYPE_HTML ? 'template/img/banner_html.jpg' : $model->banner->value).'" class="img-thumbnail" style="max-height: 200px;">
     </div>
     <div class="col-xs-8">'.''.'
         <br>
@@ -23,7 +23,7 @@ $a = '<div class="row">
 <div class="clearfix"></div>';
 
 //echo $a;
-echo Html::tag('div', Html::tag('div', Html::img('http://krasota-style.com.ua/'.($model->type == $model::TYPE_IMAGE ? $model->banner->value : 'template/img/banner_html.jpg'), [
+echo Html::tag('div', Html::tag('div', Html::img(\Yii::$app->params['cdn-link'].'/'.($model->type == $model::TYPE_IMAGE ? $model->banner->value : 'template/img/banner_html.jpg'), [
 'class' =>  'img-thumbnail',
     'style' =>  'max-height: 200px;',
 ]), [

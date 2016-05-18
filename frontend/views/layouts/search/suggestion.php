@@ -5,7 +5,7 @@ use yii\bootstrap\Html;
 $content = Html::tag('div',
     Html::tag('div',
         Html::tag('div',
-            Html::img('http://krasota-style.com.ua/img/{{#if photo}}catalog/{{photo}}{{else}}noimage.png{{/if}}',
+            Html::img(\Yii::$app->params['cdn-link'].'/img/{{#if photo}}catalog/{{photo}}{{else}}noimage.png{{/if}}',
                 ['class' => 'media-object']),
             [
                 'style' =>  'max-width: 40px; overflow: hidden'

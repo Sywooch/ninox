@@ -408,12 +408,18 @@ class DefaultController extends Controller
             ]
         ]);
 
+        $customer = $order->customer;
+
+        if(empty($customer)){
+            $customer = new Customer();
+        }
+
         return $this->render('order', [
             'order'                 =>  $order,
             'items'                 =>  $order->items,
             'itemsDataProvider'     =>  $itemsDataProvider,
             'priceRules'            =>  Pricerule::find()->orderBy('priority')->all(),
-            'customer'              =>  $order->customer
+            'customer'              =>  $customer
         ]);
     }
 

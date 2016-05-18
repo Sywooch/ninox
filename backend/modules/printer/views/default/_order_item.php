@@ -26,7 +26,7 @@ echo Html::tag('td',
                         Html::tag('td',
                             Html::tag('div',
                                 Html::tag('span',
-                                    Html::img('http://krasota-style.com.ua/img/catalog/'.$item->photo,
+                                    Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$item->photo,
                                         [
                                             'alt'   =>  $item->name,
                                         ]

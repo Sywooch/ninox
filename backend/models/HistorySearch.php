@@ -125,7 +125,10 @@ class HistorySearch extends History{
             switch($params['ordersStatus']){
                 case self::STATUS_WAIT_DELIVERY:
                 case 'delivery':
-                    $query->andWhere(['status' => self::STATUS_WAIT_DELIVERY]);
+                    $query
+	                    ->andWhere(['status' => self::STATUS_WAIT_DELIVERY])
+                        ->andWhere(['in', 'deliveryType', [1, 2]])
+                        ->andWhere(['deleted' => 0]);
                     break;
                 case 'done':
                 case self::STATUS_DONE:

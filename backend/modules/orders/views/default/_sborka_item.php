@@ -2,7 +2,7 @@
 
 use yii\bootstrap\Html;
 
-echo Html::tag('div', Html::img('http://krasota-style.com.ua/img/catalog/'.$item->photo).Html::tag('div', '', ['class' => 'ico']), [
+echo Html::tag('div', Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$item->photo).Html::tag('div', '', ['class' => 'ico']), [
         'class' =>  'image'.($item->inOrder ? ' access' : ($item->notFounded ? ' denied' : ''))
     ]),
     Html::tag('div',
