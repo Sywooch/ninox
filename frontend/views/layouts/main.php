@@ -14,6 +14,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\popover\PopoverX;
+use yii\web\View;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
 $this->registerMetaTag(['name' => 'MobileOptimized', 'content' => '1240']);
@@ -144,34 +145,45 @@ $js = <<<JS
 	    $("[data-toggle='popover']").popover();
 	});
 
-$('body').on('click', function(e){
-	if(!$(e.target).closest('.phone-number').length && $(e.target).parents('.popover').length == 0){
-		$(".popover").popoverX('hide');
-	}
-}).on('complete', '#registrationForm #signupform-phone', function(){ 
-	$("#registrationForm #countryCode").val($(this).inputmask("getmetadata").cc); 
-}).on('click', '#continueShopping', function(){
-	$("#basketPopover").hide();
-}).on('mouseout', '#basketPopover', function(){
-	$("#basketPopover").prop('style', '');
-}).on(hasTouch ? 'touchend' : 'click', '.link-hide', function(e){
-    if(hasTouch && isTouchMoved(e)){ 
-    	return false; 
-    }
-    
-    if($(this).attr('data-href')){
-        e.preventDefault();
-        if($(this).attr('data-target') == '_blank'){
-            window.open($(this).attr('data-href'));
-        }else{
-            location.href = $(this).attr('data-href');
-        }
-        return false;
-    }
-});
+	$('body').on('click', function(e){
+		if(!$(e.target).closest('.phone-number').length && $(e.target).parents('.popover').length == 0){
+			$(".popover").popoverX('hide');
+		}
+	}).on('complete', '#registrationForm #signupform-phone', function(){
+		$("#registrationForm #countryCode").val($(this).inputmask("getmetadata").cc);
+	}).on('click', '#continueShopping', function(){
+		$("#basketPopover").hide();
+	}).on('mouseout', '#basketPopover', function(){
+		$("#basketPopover").prop('style', '');
+	}).on(hasTouch ? 'touchend' : 'click', '.link-hide', function(e){
+	    if(hasTouch && isTouchMoved(e)){
+	        return false;
+	    }
+
+	    if($(this).attr('data-href')){
+	        e.preventDefault();
+	        if($(this).attr('data-target') == '_blank'){
+	            window.open($(this).attr('data-href'));
+	        }else{
+	            location.href = $(this).attr('data-href');
+	        }
+	        return false;
+	    }
+	});
+JS;
+
+$GTM = <<<JS
+        <!-- Google Tag Manager -->
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-MLV949');
+        <!-- End Google Tag Manager -->
 JS;
 
 $this->registerJs($js);
+$this->registerJs($GTM, View::POS_BEGIN);
 $typeaheadStyles = <<<'CSS'
 
 
@@ -270,7 +282,8 @@ $this->beginPage();
 	    <?php $this->head() ?>
 	</head>
 	<body>
-		<?php $this->beginBody();
+		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MLV949" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<?php $this->beginBody();
 		if(\Yii::$app->request->get("serviceMenu") == 'true' && \Yii::$app->request->get("secretKey") == \Yii::$app->params['secretAdminPanelKey']){
 			echo $this->render('_admin_menu');
 		}
