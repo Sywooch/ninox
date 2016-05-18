@@ -518,7 +518,7 @@ echo Html::tag('div', '', [
 
                     <?php Modal::end(); ?>
                     <!--<span class="roundedItem icon-heart"></span>-->
-                    <?=Html::tag('span', '', ['class' => 'roundedItem icon-percent'.($order->customer->discount > 0 ? ' background-green' : '')]),
+                    <?=Html::tag('span', '', ['class' => 'roundedItem icon-percent'.($customer->discount > 0 ? ' background-green' : '')]),
                         Html::tag('span', $customer->lang, ['class' => 'roundedItem item-lang']),
                         Html::tag('h4', \Yii::$app->formatter->asPhone($order->customerPhone))?>
                 </h3>
