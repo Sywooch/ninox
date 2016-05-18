@@ -40,6 +40,31 @@ class History extends \common\models\History
 
     private $_responsibleUser = null;
 
+    /**
+     * @param History $order
+     */
+    public function mergeWith($order){
+        foreach($this->items as $item){
+            $delegatedItem = $order->findItem($item->itemID);
+
+            if($delegatedItem){
+                $delegatedItem->count += $item->count;
+
+                if($delegatedItem->save(false)){
+                    $item->delete(false);
+                }
+            }else{
+                $item->orderID = $order->id;
+
+                $item->save(false);
+            }
+        }
+
+        $this->deleted = 1;
+
+        $this->save(false);
+    }
+
     public static function find()
     {
         return parent::find()->with('items')->with('customer');

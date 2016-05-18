@@ -330,6 +330,15 @@ class DefaultController extends Controller
 
         if(\Yii::$app->request->isAjax && !\Yii::$app->request->get("_pjax")){
             switch(\Yii::$app->request->post("action")){
+                case 'merge':
+                    $targetOrder = History::findOne(\Yii::$app->request->post("target"));
+
+                    if(!$targetOrder){
+                        throw new NotFoundHttpException("Целевой заказ не найден!");
+                    }
+
+                    return $order->mergeWith($targetOrder);
+                    break;
                 case 'getEditItemForm':
                     $item = $order->findItem(\Yii::$app->request->post("itemID"));
 

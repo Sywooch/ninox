@@ -19,13 +19,16 @@ echo \kartik\grid\GridView::widget([
     'dataProvider'  =>  History::ordersDataProvider([
         'thisOrder'  =>  $order->id
     ]),
-    'summary'  =>  '',
+    'id'        =>  'mergeOrdersTable',
+    'summary'  =>  false,
     'hover'     =>  true,
     'striped'   =>  true,
-    'rowOptions'    =>  [
-        'class' =>  'orderRow',
-        'data-attribute-itemID'    =>  ''
-    ],
+    'rowOptions'    =>  function($model){
+        return [
+            'class' =>  'orderRow',
+            'data-attribute-orderNumber'    =>  $model->number,
+        ];
+    },
     'bordered'  =>  false,
     'columns'   =>  [
         [

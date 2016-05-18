@@ -353,6 +353,33 @@ $js = <<<'JS'
             }
         });
     });
+    
+    $("body").on('click', '#mergeOrdersTable tr.orderRow', function(){
+        var order = $(this);
+    
+        swal({
+            title: "Объединить заказы?",
+            text: "Переместить товары из текущего заказа в заказ №" + order.find("td[data-col-seq=0]").html() + "?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Да, переместить",
+            cancelButtonText: "отмена",
+            closeOnConfirm: false
+        },
+        function(){
+            $.ajax({
+                type: 'POST',
+                data: {
+                    action: 'merge',
+                    target: order.attr('data-key')
+                },
+                success: function(data){
+                    swal("Объединены!", "Товары из текущего заказа перемещены в заказ №" + order.find("td[data-col-seq=0]").html(), "success");
+                    location.href = '/orders/showorder/' + order.attr('data-key');
+                }
+            });
+        });
+    });
 JS;
 
 $npJS = <<<'JS'
