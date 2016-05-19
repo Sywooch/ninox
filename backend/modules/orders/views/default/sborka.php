@@ -16,10 +16,10 @@ var setDefaultState = function(item){
     item.find("button.notFoundItem").css('display', 'block').html("НЕ МОГУ НАЙТИ").removeClass('gray-button').removeClass('red-button').addClass('red-button').removeAttr('disabled');
     item.find(".fromOrder").css('display', 'none');
 }, parseField = function(field){
-    var parent = $(field[0].parentNode.parentNode.parentNode),
-        data = JSON.parse(parent[0].getAttribute('data-key'));
+    var parent = field.parent().parent().parent(),
+        data = parent.attr('data-key');
 
-        return {itemID: data.itemID, count: parent.find(".inOrderCount").val()};
+        return {itemID: data, count: parent.find(".inOrderCount").val()};
 }, saveItemsCount = function(fields){
     var data = {},
         createdData = new Array;
@@ -53,19 +53,18 @@ $("body").on('click', 'button.saveCount', function(){
         return false;
     }
 
-    var toOrderButton = $($(this)[0].parentNode).find("button.toOrder"),
-        parent = $($(this)[0].parentNode.parentNode.parentNode),
-        data = JSON.parse(parent[0].getAttribute('data-key'));
+    var toOrderButton = $(this).parent().find("button.toOrder"),
+        parent = $(this).parent().parent().parent();
 
-    data.action = 'changeNotFound';
 
     $.ajax({
         type: 'POST',
-        data: data,
+        data: {
+            action: 'changeNotFound',
+            itemID: parent.attr('data-key')
+        },
         success: function(data){
             parent.find("div.image").toggleClass('denied');
-
-            console.log(data);
 
             switch(data){
                 case 1:
@@ -78,26 +77,21 @@ $("body").on('click', 'button.saveCount', function(){
             }
         }
     });
-
-    console.log($(this));
 }).on('click', 'button.toOrder, button.fromOrder', function(e){
     if($(this).disabled){
         return false;
     }
-
-    console.log($(e.currentTarget));
-
-    var notFoundButton = $($(this)[0].parentNode).find("button.notFoundItem"),
-        parent = $($(this)[0].parentNode.parentNode.parentNode),
-        data = JSON.parse(parent[0].getAttribute('data-key'));
-
-    data.action = 'changeInOrder';
-
-    button = $(this);
+    
+    var button = $(this), 
+        notFoundButton = button.parent().find("button.notFoundItem"),
+        parent = button.parent().parent().parent();
 
     $.ajax({
         type: 'POST',
-        data: data,
+        data: {
+            action: 'changeInOrder',
+            itemID: parent.attr('data-key')
+        },
         success: function(data){
             parent.find("div.image").toggleClass('access');
 

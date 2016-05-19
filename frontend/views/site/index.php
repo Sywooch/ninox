@@ -29,6 +29,18 @@ $this->registerMetaTag(
 
 $sliderBanners = \frontend\helpers\SliderHelper::renderItems($centralBanners);
 
+$reviewModal = new \bobroid\remodal\Remodal([
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'closeButton'		=>	true,
+	'addRandomToID'		=>	false,
+	'content'			=>	$this->render('_review_modal'),
+	'id'				=>	'reviewModal',
+	'options'			=>  [
+		'class'			=>  'review-modal'
+	]
+
+]);
 
 $js = <<<'JS'
 $(".arrow-bottom").on('click', function(){
@@ -77,9 +89,6 @@ $this->registerJs($js);
 				'slidesToScroll'=> 1,
 				'autoplay' 		=> true,
 				'autoplaySpeed'	=> 3000,
-
-
-
 			]
 	]) : '<div style="height: 370px;"></div>'
 	?>
@@ -165,13 +174,13 @@ $this->registerJs($js);
 			<span class="news-events-header">Новости и акции</span>
 			<div class="news">
 				<span class="news-header">
-					Распродажа зонтов, расчесок и маникюрных наборов Zinger
+					Новый дизайн сайта
 				</span>
 				<span>
-					Каждый покупатель акционных ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
+					Уважаемые посетители! Мы запустили новую версию нашего сайта. Приносим свои извинения за временные неудобства и технические сбои. Мы работает над устранением всех возникших проблем.
 				</span>
 			</div>
-			<div class="news">
+<!--			<div class="news">
 				<span class="news-header">
 					Распродажа зонтов, расчесок и маникюрных наборов Zinger
 				</span>
@@ -187,7 +196,7 @@ $this->registerJs($js);
 					Каждый покупатель акционных ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
 				</span>
 			</div>
-			<span class="all-news-events">Все новости ></span>
+			<span class="all-news-events">Все новости ></span>-->
 		</div>
 		<div class="subscribe style">
 			<div class="style">
@@ -217,3 +226,6 @@ $this->registerJs($js);
 	</span>
 <!--	<span class="about-main-content-open">Читать полностью</span>
 --></div>
+<?=
+$reviewModal->renderModal()
+?>

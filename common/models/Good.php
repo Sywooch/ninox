@@ -265,6 +265,14 @@ class Good extends \yii\db\ActiveRecord
         return htmlspecialchars_decode($this->translation->description);
     }
 
+    public function setDescription($val){
+        $this->realTranslation->description = $val;
+    }
+
+    public function setName($val){
+        $this->realTranslation->name = $val;
+    }
+
     public function getEnabled(){
         return $this->translation->enabled;
     }
@@ -273,11 +281,15 @@ class Good extends \yii\db\ActiveRecord
         $this->realTranslation->enabled = $val;
     }
 
-    public function setName($val){
-        $this->realTranslation->name = $val;
-    }
-
     public function beforeSave($insert){
+        if($this->isNewRecord && empty($this->ID)){
+            $this->ID = (self::find()->max("ID") + 1);
+
+            if(empty($this->realTranslation->ID)){
+                $this->realTranslation->ID = $this->ID;
+            }
+        }
+
         $this->realTranslation->save(false);
 
         return parent::beforeSave($insert);

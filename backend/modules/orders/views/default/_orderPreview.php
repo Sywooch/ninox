@@ -146,7 +146,8 @@ $form = ActiveForm::begin([
                                 'onText' => 'Да',
                                 'offText' => 'Нет',
                             ]
-                        ]);?>
+                        ])?>
+                        <?=''//Html::button('Сообщить об оплате', ['class' => 'btn btn-default pull-right informPayment'])?>
                     </td>
                 </tr>
                 <tr>

@@ -6,6 +6,7 @@ use kartik\tabs\TabsX;
 use yii\helpers\Html;
 use evgeniyrru\yii2slick\Slick;
 
+
 $this->title = $good->metaTitle;
 $this->registerMetaTag(['name' => 'description', 'content' => $good->metaDescription], 'description');
 $this->registerMetaTag(['name' => 'keywords', 'content' => $good->metaKeywords], 'keywords');
@@ -20,6 +21,8 @@ $reviewModal = new Remodal([
     'content'			=>	$this->render('_shop_item/_item_tabs/_write_review'),
     'id'				=>	'reviewModal',
 ]);
+
+
 
 $js = <<<'JS'
 (function(w,doc) {
@@ -77,37 +80,55 @@ foreach($good->photos as $photo){
         'height'=>'355px'
     ]);
 
+    $itemsModal[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, [
+        'width' =>  '950px',
+        'height'=>  '710px',
+    ]);
+
     $itemsNav[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$photo->ico, [
         'width'=>'105px',
         'height'=>'80px'
     ]);
 }
 
+$imgModal = new \bobroid\remodal\Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	true,
+    'addRandomToID'		=>	false,
+    'content'			=>	$this->render('_img_modal', ['good' => $good, 'itemsModal' => $itemsModal, 'itemsNav' => $itemsNav]),
+    'id'				=>	'imgModal',
+    'options'			=>  [
+        'class'			=>  'img-modal'
+    ]
+
+]);
 ?>
 <div class="item item-card" itemscope itemtype="http://schema.org/Product">
     <?=Breadcrumbs::widget(['links' => $this->params['breadcrumbs']])?>
     <div class="item-main">
         <div class="item-photos">
-            <?=(!empty($items) ? Slick::widget([
+            <?=Html::a((!empty($items) ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderFor',
                     'class' => 'first'
                 ],
                 'items' =>  $items,
                 'clientOptions' => [
-                        'arrows'         => false,
-                        'fade'           => true,
-                        'slidesToShow'   => 1,
-                        'slidesToScroll' => 1,
-                        'asNavFor'       => '#sliderNav',
-                    ]
-            ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo, [
+                    'arrows'         => false,
+                    'fade'           => true,
+                    'slidesToShow'   => 1,
+                    'slidesToScroll' => 1,
+                    'asNavFor'       => '#sliderNav',
+                ]
+            ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
+                [
                 'itemprop' => 'image',
                 'data-modal-index'  =>  0,
                 'width' =>  '475px',
                 'height'=>  '355px',
-                'alt'   =>  $good->Name
-            ])).
+                'alt'   =>  $good->Name,
+            ])), '#imgModal').
             (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderNav',
@@ -115,16 +136,16 @@ foreach($good->photos as $photo){
                 ],
                 'items' =>  $itemsNav,
                 'clientOptions' => [
-                        'arrows'         => false,
-                        'focusOnSelect'  => true,
-                        'infinite'       => true,
-                        'slidesToShow'   => 4,
-                        'slidesToScroll' => 1,
-                        'asNavFor'       => '#sliderFor',
-                        'cssEase'        => 'linear',
+                    'arrows'         => false,
+                    'focusOnSelect'  => true,
+                    'infinite'       => true,
+                    'slidesToShow'   => 4,
+                    'slidesToScroll' => 1,
+                    'asNavFor'       => '#sliderFor',
+                    'cssEase'        => 'linear',
                 ]
-            ]) : '').
-            $this->render('_shop_item/_shop_item_labels', ['model' => $good])?>
+            ]) : '')
+            ?>
         </div>
         <div class="item-info">
             <h1 class="title" itemprop="name"><?=$good->Name?></h1>
@@ -422,5 +443,8 @@ foreach($good->photos as $photo){
     <!--<div class="SeoCity">
         <p><?=$good->Name.' '.\Yii::t('shop', 'на заказ по всей территории Украины: Киев, Харьков, Одесса, Львов, Днепропетровск, Донецк, Винница, Луганск, Луцк, Житомир, Запорожье, Ивано-Франковск, Николаев, Полтава, Ровно, Сумы, Тернополь, Ужгород, Херсон, Хмельницкий, Черкассы, Чернигов, Черновцы. Самовывоз товара со склада или доставка "Новой почтой".')?></p>
     </div>-->
+    <?=
+    $imgModal->renderModal()
+    ?>
 </div>
 

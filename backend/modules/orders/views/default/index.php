@@ -214,10 +214,10 @@ var sendSms = function(order, type, button){
 
 $("body").on('click', "button.sms-order", function(){
     sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'sms', $(this));
-});
-
-$("body").on('click', "button.sms-card", function(){
+}).on('click', "button.sms-card", function(){
     sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card', $(this));
+}).on('click', 'button.informPayment', function(){
+    
 });
 JS;
 $css = <<<'CSS'
@@ -426,6 +426,8 @@ $css = <<<'CSS'
     .ordersStats .description h1{
         font-size: 28px;
         line-height: 40px;
+        max-width: 134px;
+        overflow: hidden;
         padding: 0;
         margin: 0;
     }

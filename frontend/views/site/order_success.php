@@ -1,6 +1,6 @@
 <?php
-
 use backend\models\History;
+use yii\helpers\Html;
 use yii\web\View;
 
 $order = History::find()->where(['ID' => $model->createdOrder])->one();
@@ -52,4 +52,4 @@ $eCommerce .= '}];';
 
 $this->registerJs($eCommerce, View::POS_BEGIN);
 
-echo \Yii::t('shop', 'Ваш заказ оформлен! Спасибо!');
+echo Html::tag('div', \Yii::t('shop', 'Ваш заказ оформлен! Спасибо!'), ['class' => 'content']);

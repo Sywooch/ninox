@@ -71,4 +71,8 @@ class DefaultController extends Controller
             'dataProvider'  =>  $dataProvider
         ]);
     }
+
+    public function actionControl(){
+
+    }
 }

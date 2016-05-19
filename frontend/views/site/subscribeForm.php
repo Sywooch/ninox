@@ -19,7 +19,7 @@ echo $form->field($model, 'email', [
     ])->label(false),
     Html::button(\Yii::t('shop', 'Подписаться'), [
         'type'  =>  'submit',
-        'class' =>  'blue-button small-button ',
+        'class' =>  'brown-button midi-button',
     ]);
 
     ActiveForm::end();
