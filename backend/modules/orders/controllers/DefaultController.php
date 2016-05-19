@@ -403,7 +403,10 @@ class DefaultController extends Controller
         }
 
         $itemsDataProvider = new ActiveDataProvider([
-            'query' =>  $order->getItems(false),
+            'query'     =>  $order->getItems(false),
+            'pagination'=>  [
+                'pageSize'  =>  100
+            ]
         ]);
 
         $itemsDataProvider->setSort([
@@ -465,10 +468,12 @@ class DefaultController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        $item = SborkaItem::findOne(['itemID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+        $itemID = \Yii::$app->request->post("ID");
+
+        $item = SborkaItem::findOne(['ID' => $itemID]);
 
         if(!$item){
-            throw new NotFoundHttpException("Товар ".\Yii::$app->request->post("itemID")." в заказе ".\Yii::$app->request->post("orderID")." не найден!");
+            throw new NotFoundHttpException("Товар {$itemID} не найден!");
         }
 
         $order = History::findOne(['id' => $item->orderID]);
@@ -501,10 +506,12 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $item = SborkaItem::findOne(['ID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+        $itemID = \Yii::$app->request->post("ID");
+
+        $item = SborkaItem::findOne(['ID' => $itemID]);
 
         if(!$item){
-            throw new NotFoundHttpException("Товар ".\Yii::$app->request->post("itemID")." в заказе ".\Yii::$app->request->post("orderID")." не найден!");
+            throw new NotFoundHttpException("Товар {$itemID} не найден!");
         }
 
         switch(\Yii::$app->request->post("param")){
@@ -665,7 +672,7 @@ class DefaultController extends Controller
                 case 'add':
                     $requestedItemID = \Yii::$app->request->post("itemID");
 
-                    $good = Good::find()->where(['or', ['ID' => $requestedItemID], ['Code' => $requestedItemID], ['BarCode1' => $requestedItemID]])->one();
+                    $good = Good::find()->where(['or', ['BarCode2' => $requestedItemID], ['ID' => $requestedItemID], ['Code' => $requestedItemID], ['BarCode1' => $requestedItemID]])->one();
 
                     if(empty($good)){
                         throw new NotFoundHttpException("Товар с идентификатором {$requestedItemID} не найден!");

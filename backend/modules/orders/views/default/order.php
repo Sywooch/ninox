@@ -244,8 +244,10 @@ $js = <<<'JS'
         var items = [];
 
         $.each($(".oneOrderItem.orderItemSelected"), function(index, item){
-            items.push(item.attr('data-key'));
+            items.push($(item).attr('data-key'));
         })
+
+        console.log(items);
 
         $("#discountSelectedItems").val(JSON.stringify(items));
     }, disableItemInOrder = function(button){
@@ -253,11 +255,11 @@ $js = <<<'JS'
             type: 'POST',
             url: '/orders/changeiteminorderstate',
             data: {
-                'ID': button[0].parentNode.parentNode.parentNode.getAttribute('data-key'),
+                'ID': button.parent().parent().parent().attr('data-key'),
                 'param': 'inorder'
             },
             success: function(data){
-                var parentRow = $(button[0].parentNode.parentNode.parentNode);
+                var parentRow = button.parent().parent().parent();
 
                 button.toggleClass('btn-warning');
                 parentRow.toggleClass('warning');
@@ -268,11 +270,11 @@ $js = <<<'JS'
             type: 'POST',
             url: '/orders/changeiteminorderstate',
             data: {
-                'ID': button[0].parentNode.parentNode.parentNode.getAttribute('data-key'),
+                'ID': button.parent().parent().parent().attr('data-key'),
                 'param':    'deleted'
             },
             success: function(data){
-                var parentRow = $(button[0].parentNode.parentNode.parentNode);
+                var parentRow = button.parent().parent().parent();
 
                 button.toggleClass('btn-danger');
                 parentRow.toggleClass('danger');
@@ -283,7 +285,7 @@ $js = <<<'JS'
             type: 'POST',
             url: '/orders/restoreitemdata',
             data: {
-                'ID': button[0].parentNode.parentNode.parentNode.getAttribute('data-key')
+                'ID': button.parent().parent().parent().attr('data-key')
             },
             success: function(data){
                 $.pjax.reload({container: '#orderItems-pjax'});
