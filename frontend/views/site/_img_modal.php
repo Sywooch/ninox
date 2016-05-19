@@ -9,26 +9,20 @@ use yii\helpers\Html;
 use evgeniyrru\yii2slick\Slick;
 ?>
 
-    <?=(!empty($itemsModal) ? Slick::widget([
+    <?=Slick::widget([
         'containerOptions' => [
             'id'    => 'modalSliderFor',
             'class' => 'first'
         ],
         'items' =>  $itemsModal,
         'clientOptions' => [
-            'arrows'         => false,
+            'arrows'         => true,
             'fade'           => false,
             'slidesToShow'   => 1,
             'slidesToScroll' => 1,
             'asNavFor'       => '#modalSliderNav',
         ]
-    ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo, [
-        'itemprop' => 'image',
-        'data-modal-index'  =>  0,
-        'width' =>  '950px',
-        'height'=>  '710px',
-        'alt'   =>  $good->Name
-    ])).
+    ]).
     (sizeof($itemsNav) > 1 ? Slick::widget([
         'containerOptions' => [
             'id'    => 'modalSliderNav',
