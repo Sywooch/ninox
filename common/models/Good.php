@@ -265,6 +265,14 @@ class Good extends \yii\db\ActiveRecord
         return htmlspecialchars_decode($this->translation->description);
     }
 
+    public function setDescription($val){
+        $this->realTranslation->description = $val;
+    }
+
+    public function setName($val){
+        $this->realTranslation->name = $val;
+    }
+
     public function getEnabled(){
         return $this->translation->enabled;
     }
@@ -272,11 +280,7 @@ class Good extends \yii\db\ActiveRecord
     public function setEnabled($val){
         $this->realTranslation->enabled = $val;
     }
-
-    public function setName($val){
-        $this->realTranslation->name = $val;
-    }
-
+    
     public function beforeSave($insert){
         $this->realTranslation->save(false);
 

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\TranslitHelper;
 use Yii;
 
 /**
@@ -52,6 +53,19 @@ class GoodTranslation extends \yii\db\ActiveRecord
             'link' => 'Link',
             'description' => 'Description',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if($this->isNewRecord || $this->oldAttributes['name'] != $this->name){
+            $this->link = TranslitHelper::to($this->name);
+        }
+
+        if(empty($this->link)){
+            $this->link = '-';
+        }
+
+        return parent::beforeSave($insert);
     }
 
     /**
