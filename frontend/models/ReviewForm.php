@@ -25,12 +25,21 @@ class ReviewForm extends Model
     public $question;
 
     public function rules(){
+        if(\Yii::$app->user->isGuest) {
         return [
             [['name', 'city', 'review'], 'required'],
             [['name', 'city', 'customerType'], 'string', 'max' => 255],
             [['review'], 'string'],
             [['question'], 'boolean']
-        ];
+        ];}
+        else{
+            return [
+                [['review'], 'required'],
+                [['name', 'city', 'customerType'], 'string', 'max' => 255],
+                [['review'], 'string'],
+                [['question'], 'boolean']
+            ];
+        }
     }
 
     public function getCustomerTypes(){
