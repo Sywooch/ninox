@@ -90,7 +90,6 @@ class Siteuser extends \yii\db\ActiveRecord
             ->select(['COUNT(id) as totalOrders', 'SUM(done) as completedOrders', 'responsibleUserID'])
             ->from(History::tableName())
             ->where(['in', 'responsibleUserID', $collectorsIDs])
-            ->andWhere('added >= '.$timeFrom)
             ->andWhere(['deleted' => 0])
             ->groupBy(['responsibleUserID']);
 

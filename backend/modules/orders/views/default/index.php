@@ -217,7 +217,7 @@ $("body").on('click', "button.sms-order", function(){
 }).on('click', "button.sms-card", function(){
     sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card', $(this));
 }).on('click', 'button.informPayment', function(){
-    //swal();
+    
 });
 JS;
 $css = <<<'CSS'
