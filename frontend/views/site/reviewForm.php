@@ -16,7 +16,8 @@ use yii\bootstrap\Html;
     ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
 </span>
 <a href="">Читать все отзывы</a>
-<?= Html::button('Оставить отзыв', [
+<?= Html::a(Html::button('Оставить отзыв', [
 'type'  =>  'submit',
 'class' =>  'green-button-new middle-button ',
-]);?>
+    'data-target' => '#reviewModal'
+]), '#reviewModal');?>

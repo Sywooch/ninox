@@ -17,6 +17,7 @@ use frontend\models\ItemRate;
 use frontend\models\OrderForm;
 use frontend\models\PaymentConfirmForm;
 use frontend\models\ReturnForm;
+use frontend\models\ReviewForm;
 use frontend\models\SborkaItem;
 use frontend\models\SubscribeForm;
 use frontend\models\UsersInterestsForm;
@@ -874,6 +875,18 @@ class SiteController extends Controller
         return true;
     }
 
+    public function saveReviewForm(){
+        $model = new ReviewForm();
+
+        $model->load(\Yii::$app->request->post());
+
+        if(!$model->save()){
+            return $model->getErrors();
+        }
+
+        return true;
+    }
+
 	public function beforeAction($action){
         $domainName = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : \Yii::$app->request->getServerName();
 		$domainInfo = Domain::findOne(['name' => $domainName]);
@@ -894,6 +907,10 @@ class SiteController extends Controller
 
         if(\Yii::$app->request->post("UsersInterestsForm")){
             $this->saveUsersInterestsForm();
+        }
+
+        if(\Yii::$app->request->post("ReviewForm")){
+            $this->saveReviewForm();
         }
 
         self::getLanguagesLinks();

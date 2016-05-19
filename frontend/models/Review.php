@@ -19,6 +19,8 @@ class Review extends \common\models\Review{
     public function beforeSave($insert){
         if(!\Yii::$app->user->isGuest){
             $this->customerID = \Yii::$app->user->identity->id;
+            $this->name       = \Yii::$app->user->identity->name;
+            $this->city       = \Yii::$app->user->identity->city;
         }
 
         $this->date = date('Y-m-d H:i:s');

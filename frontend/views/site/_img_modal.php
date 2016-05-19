@@ -16,7 +16,7 @@ use evgeniyrru\yii2slick\Slick;
         ],
         'items' =>  $itemsModal,
         'clientOptions' => [
-            'arrows'         => true,
+            'arrows'         => false,
             'fade'           => false,
             'slidesToShow'   => 1,
             'slidesToScroll' => 1,
@@ -29,21 +29,21 @@ use evgeniyrru\yii2slick\Slick;
         'height'=>  '710px',
         'alt'   =>  $good->Name
     ])).
-    Slick::widget([
+    (sizeof($itemsNav) > 1 ? Slick::widget([
         'containerOptions' => [
             'id'    => 'modalSliderNav',
             'class' => 'second'
         ],
         'items' =>  $itemsNav,
         'clientOptions' => [
-            'arrows'         => false,
+            'arrows'         => true,
             'focusOnSelect'  => true,
             'infinite'       => true,
-            'slidesToShow'   => 6,
+            'slidesToShow'   => 8,
             'slidesToScroll' => 1,
             'asNavFor'       => '#modalSliderFor',
             'cssEase'        => 'linear',
         ]
-    ])
+    ]) : '')
 ?>
 

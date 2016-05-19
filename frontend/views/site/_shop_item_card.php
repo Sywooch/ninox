@@ -94,7 +94,7 @@ foreach($good->photos as $photo){
 $imgModal = new \bobroid\remodal\Remodal([
     'cancelButton'		=>	false,
     'confirmButton'		=>	false,
-    'closeButton'		=>	false,
+    'closeButton'		=>	true,
     'addRandomToID'		=>	false,
     'content'			=>	$this->render('_img_modal', ['good' => $good, 'itemsModal' => $itemsModal, 'itemsNav' => $itemsNav]),
     'id'				=>	'imgModal',
