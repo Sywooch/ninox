@@ -14,6 +14,6 @@ echo $form->field($model, 'name'),
     $form->field($model, 'phone'),
     $form->field($model, 'email');
 
-echo \yii\bootstrap\Html::button(\Yii::t('shop', 'Сохранить'), ['type' => 'submit', 'class' => 'btn btn-primary']);
+echo \yii\bootstrap\Html::button(\Yii::t('shop', 'Сохранить'), ['type' => 'submit', 'class' => 'middle-button modal-blue-button']);
 
 $form->end();

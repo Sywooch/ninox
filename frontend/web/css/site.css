@@ -4607,6 +4607,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	-moz-transition: height 1s;
 	transition: height 1s;
 	overflow: hidden;
+/*	margin-bottom: 30px;
+	z-index: 0;
+	position: relative;*/
 }
 
 .sticky .header-menu{
@@ -4621,6 +4624,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: block;
 	background: url("/img/site/shadow_2.png") repeat;
 	width: 100%;
+	position: absolute;
+    /*
+	top: 78px;
+    */
 }
 /*
 
@@ -4726,9 +4733,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header-menu-item:hover .header-menu-item-content{
+    /*
 	display: block;
+    */
 	z-index: 100;
 	max-height: 500px;
+	opacity: 1;
+	visibility: visible;
 }
 
 .header-menu-item .svg{
@@ -4754,7 +4765,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .header-menu-item-content{
 	background: #f1f1f1 none repeat scroll 0% 0%;
+    /*
 	display: none;
+    */
 	left: 2px;
 	right: 0px;
 	letter-spacing: normal;
@@ -4766,6 +4779,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-right: auto;
 	z-index: 0;
 	text-align: left;
+	opacity: 0;
+	visibility: hidden;
+	transition: all .3s ease .15s;
 }
 
 .header-menu-item-content-list{
@@ -4869,6 +4885,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .main-content{
 	padding-bottom: 515px;
 	overflow: auto;
+	position: relative;
     /*
 	padding-top: 10px;хз!!!!
     */
@@ -5876,6 +5893,21 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .block-2x2-placeholder .slick-dots{
 	bottom: 0;
+	text-align: left;
+	padding-left: 25px;
+	padding-bottom: 20px;
+
+}
+
+.block-2x2-placeholder .slick-dots li button::before{
+	color: #7d8d95;
+	opacity: 1;
+	font-size: 15px;
+}
+
+.block-2x2-placeholder .slick-dots li.slick-active button::before{
+	color: #45b1ea;
+	opacity: 1;
 }
 
 .site-request-password-reset{
@@ -6088,4 +6120,25 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 #loginModal{
 	width: 515px;
+}
+
+.img-modal{
+	max-width: 1025px;
+	height: 875px;
+}
+
+.img-modal #modalSliderNav .slick-track{
+	margin: auto;
+}
+
+.img-modal #modalSliderNav .slick-slide img{
+	margin: auto;
+}
+
+.img-modal #modalSliderFor .slick-slide img{
+	margin: auto;
+}
+
+.img-modal .slick-slide{
+	margin-bottom: 15px;
 }
