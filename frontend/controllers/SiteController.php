@@ -672,7 +672,7 @@ class SiteController extends Controller
             ->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
             ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC'); //TODO: Пофиксить поиск, бо це глина
 
-        if(\Yii::$app->request->isAjax){
+        if(\Yii::$app->request->isAjax && !\Yii::$app->request->get('page')){
             \Yii::$app->response->format = 'json';
 
             $goods = [];
