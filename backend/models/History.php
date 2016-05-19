@@ -40,6 +40,31 @@ class History extends \common\models\History
 
     private $_responsibleUser = null;
 
+    /**
+     * @param History $order
+     */
+    public function mergeWith($order){
+        foreach($this->items as $item){
+            $delegatedItem = $order->findItem($item->itemID);
+
+            if($delegatedItem){
+                $delegatedItem->count += $item->count;
+
+                if($delegatedItem->save(false)){
+                    $item->delete(false);
+                }
+            }else{
+                $item->orderID = $order->id;
+
+                $item->save(false);
+            }
+        }
+
+        $this->deleted = 1;
+
+        $this->save(false);
+    }
+
     public static function find()
     {
         return parent::find()->with('items')->with('customer');
@@ -52,6 +77,16 @@ class History extends \common\models\History
     public function findItem($itemID){
         foreach($this->items as $item){
             if($item->itemID == $itemID){
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
+    public function findItemByUniqID($uniqID){
+        foreach($this->items as $item){
+            if($item->ID == $uniqID){
                 return $item;
             }
         }
@@ -426,11 +461,11 @@ class History extends \common\models\History
     }
 
     public function controlItem($itemID, $count = 1){
-        if(!isset($this->items[$itemID])){
+        $item = $this->findItem($itemID);
+
+        if(!$item){
             throw new NotFoundHttpException("Товар с ID {$itemID} не найден в заказе #{$this->number} (ID {$this->ID})");
         }
-
-        $item = $this->items[$itemID];
 
         if($item->controlled){
             throw new ConflictHttpException("Нельзя подтвердить подтверждённый товар дважды!");

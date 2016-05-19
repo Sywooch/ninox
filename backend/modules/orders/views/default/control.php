@@ -160,7 +160,7 @@ echo Html::tag('h1', $this->title, ['class' => 'page-title', 'data-attribute-ord
                 'vAlign'    =>  GridView::ALIGN_MIDDLE,
                 'format'    =>  'raw',
                 'value'     =>  function($model){
-                    return Html::img('/img/catalog/sm/'.$model->photo, ['alt' => $model->name]);
+                    return Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$model->photo, ['alt' => $model->name]);
                 }
             ],
             [

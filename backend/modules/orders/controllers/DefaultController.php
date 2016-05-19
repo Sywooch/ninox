@@ -330,6 +330,15 @@ class DefaultController extends Controller
 
         if(\Yii::$app->request->isAjax && !\Yii::$app->request->get("_pjax")){
             switch(\Yii::$app->request->post("action")){
+                case 'merge':
+                    $targetOrder = History::findOne(\Yii::$app->request->post("target"));
+
+                    if(!$targetOrder){
+                        throw new NotFoundHttpException("Целевой заказ не найден!");
+                    }
+
+                    return $order->mergeWith($targetOrder);
+                    break;
                 case 'getEditItemForm':
                     $item = $order->findItem(\Yii::$app->request->post("itemID"));
 
@@ -394,7 +403,10 @@ class DefaultController extends Controller
         }
 
         $itemsDataProvider = new ActiveDataProvider([
-            'query' =>  $order->getItems(false),
+            'query'     =>  $order->getItems(false),
+            'pagination'=>  [
+                'pageSize'  =>  100
+            ]
         ]);
 
         $itemsDataProvider->setSort([
@@ -456,10 +468,12 @@ class DefaultController extends Controller
 
         \Yii::$app->response->format = 'json';
 
-        $item = SborkaItem::findOne(['itemID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+        $itemID = \Yii::$app->request->post("ID");
+
+        $item = SborkaItem::findOne(['ID' => $itemID]);
 
         if(!$item){
-            throw new NotFoundHttpException("Товар ".\Yii::$app->request->post("itemID")." в заказе ".\Yii::$app->request->post("orderID")." не найден!");
+            throw new NotFoundHttpException("Товар {$itemID} не найден!");
         }
 
         $order = History::findOne(['id' => $item->orderID]);
@@ -492,10 +506,12 @@ class DefaultController extends Controller
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
         }
 
-        $item = SborkaItem::findOne(['ID' => \Yii::$app->request->post("itemID"), 'orderID' => \Yii::$app->request->post("orderID")]);
+        $itemID = \Yii::$app->request->post("ID");
+
+        $item = SborkaItem::findOne(['ID' => $itemID]);
 
         if(!$item){
-            throw new NotFoundHttpException("Товар ".\Yii::$app->request->post("itemID")." в заказе ".\Yii::$app->request->post("orderID")." не найден!");
+            throw new NotFoundHttpException("Товар {$itemID} не найден!");
         }
 
         switch(\Yii::$app->request->post("param")){
@@ -656,9 +672,9 @@ class DefaultController extends Controller
                 case 'add':
                     $requestedItemID = \Yii::$app->request->post("itemID");
 
-                    $good = Good::find()->where(['or', ['ID' => $requestedItemID], ['Code' => $requestedItemID], ['BarCode1' => $requestedItemID]])->one();
+                    $good = Good::find()->where(['or', ['BarCode2' => $requestedItemID], ['ID' => $requestedItemID], ['Code' => $requestedItemID], ['BarCode1' => $requestedItemID]])->one();
 
-                    if(!$good){
+                    if(empty($good)){
                         throw new NotFoundHttpException("Товар с идентификатором {$requestedItemID} не найден!");
                     }
 
@@ -778,22 +794,22 @@ class DefaultController extends Controller
 
             switch(\Yii::$app->request->post("action")){
                 case 'changeInOrder':
-                    if(!$order->findItem(\Yii::$app->request->post("itemID"))){
+                    if(!$order->findItemByUniqID(\Yii::$app->request->post("itemID"))){
                         throw new NotFoundHttpException("Товар не найден в заказе!");
                     }
 
-                    $item = $order->findItem(\Yii::$app->request->post("itemID"));
+                    $item = $order->findItemByUniqID(\Yii::$app->request->post("itemID"));
                     $item->inOrder = $item->inOrder == 1 ? 0 : 1;
                     $item->save(false);
 
                     return $item->inOrder == 1 ? 1 : 0;
                     break;
                 case 'changeNotFound':
-                    if(!$order->findItem(\Yii::$app->request->post("itemID"))){
+                    if(!$order->findItemByUniqID(\Yii::$app->request->post("itemID"))){
                         throw new NotFoundHttpException("Товар не найден в заказе!");
                     }
 
-                    $item = $order->findItem(\Yii::$app->request->post("itemID"));
+                    $item = $order->findItemByUniqID(\Yii::$app->request->post("itemID"));
                     $item->notFounded = $item->notFounded == 1 ? 0 : 1;
                     $item->save(false);
 
@@ -801,11 +817,11 @@ class DefaultController extends Controller
                     break;
                 case 'saveItemsCount';
                     foreach(\Yii::$app->request->post("fields") as $item){
-                        if(!$order->findItem($item['itemID'])){
+                        if(!$order->findItemByUniqID($item['itemID'])){
                             throw new NotFoundHttpException("Товар не найден в заказе!");
                         }
 
-                        $itemModel = $order->findItem($item['itemID']);
+                        $itemModel = $order->findItemByUniqID($item['itemID']);
 
                         $itemModel->setCount($item['count']);
                         $itemModel->save(false);
