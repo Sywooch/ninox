@@ -461,11 +461,11 @@ class History extends \common\models\History
     }
 
     public function controlItem($itemID, $count = 1){
-        if(!isset($this->items[$itemID])){
+        $item = $this->findItem($itemID);
+
+        if(!$item){
             throw new NotFoundHttpException("Товар с ID {$itemID} не найден в заказе #{$this->number} (ID {$this->ID})");
         }
-
-        $item = $this->items[$itemID];
 
         if($item->controlled){
             throw new ConflictHttpException("Нельзя подтвердить подтверждённый товар дважды!");

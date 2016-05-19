@@ -667,7 +667,7 @@ class DefaultController extends Controller
 
                     $good = Good::find()->where(['or', ['ID' => $requestedItemID], ['Code' => $requestedItemID], ['BarCode1' => $requestedItemID]])->one();
 
-                    if(!$good){
+                    if(empty($good)){
                         throw new NotFoundHttpException("Товар с идентификатором {$requestedItemID} не найден!");
                     }
 
