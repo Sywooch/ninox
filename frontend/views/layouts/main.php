@@ -309,7 +309,7 @@ $this->beginPage();
 								['class' => 'personal-account']);
 						}else{
 							echo Html::tag('div',
-								Html::a(\Yii::t('shop', 'Личный кабинет'), Url::to(['/account', 'language' => \Yii::$app->language]), ['class' => 'account']).
+								Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to(['/account', 'language' => \Yii::$app->language]), ['class' => 'account']).
 								Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout', 'language' => \Yii::$app->language]),
 									[
 										'data-method'   =>  'post',
