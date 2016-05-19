@@ -424,6 +424,11 @@ h2{
 	height: 45px;
 }
 
+.midi-button{
+	width: 115px;
+	height: 35px;
+}
+
 .middle-button{
 	width: 155px;
 	height: 40px;
@@ -4894,8 +4899,8 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .main-content-slider .slick-slide img{
 	margin: auto;
-	width: 1170px;
-	height: 400px;
+	width: auto;
+	height: auto;
 }
 
 .main-content-slider .main-slider{
@@ -5441,9 +5446,8 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	line-height: 16px;
 	padding-right: 15px;
 	text-shadow: 1px 0px #bdbdbd;
-	max-height: 32px;
 	overflow: hidden;
-	line-height: 14px;
+	line-height: 15px;
 	padding-bottom: 1px;
 }
 
@@ -5502,16 +5506,79 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	color: #bbbcbc;
 }
 
-.subscribe .subscribe-email .blue-button{
-	height: 35px;
-	width: 115px;
+.brown-button{
 	border: none;
 	float: right;
 	margin: 0px;
 	background: #8b6c00;
 	box-shadow: none;
 	border-radius: 3px;
+	font-size: 14px;
+	font-family: OpenSans-Semibold;
+	color: white;
+	position: relative;
+/*	overflow: hidden;
+	z-index: 2;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	-moz-transition-property: color, border;
+	-o-transition-property: color, border;
+	-webkit-transition-property: color, border;
+	transition-property: color, border;
+	-moz-transition-duration: 0.4s;
+	-o-transition-duration: 0.4s;
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	-moz-transition-timing-function: linear;
+	transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-webkit-transition-timing-function: linear;
+	transition-timing-function: linear;*/
 }
+/*
+.brown-button:hover::after, .brown-button:focus::after{
+	height: 103%;
+	filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+	opacity: 1;
+}
+
+.brown-button:hover::after{
+	height: 100%;
+	filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+	opacity: 1;
+}
+
+.brown-button:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	height: 0;
+	background: #ffc600;
+	z-index: -1;
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	opacity: 0;
+	-moz-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	-moz-transition-property: height, opacity;
+	-o-transition-property: height, opacity;
+	-webkit-transition-property: height, opacity;
+	transition-property: height, opacity;
+	-moz-transition-duration: 0.2s;
+	-o-transition-duration: 0.2s;
+	-webkit-transition-duration: 0.2s;
+	transition-duration: 0.2s;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-webkit-transition-timing-function: linear;
+	transition-timing-function: linear;
+	border-radius: 3px;
+
+}*/
 
 .subscribe .subscribe-email{
 	overflow: hidden;
@@ -5565,6 +5632,66 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	bottom: 23px;
 	left: 28px;
 	width: 160px;
+	overflow: hidden;
+	z-index: 2;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	-moz-transition-property: color, border;
+	-o-transition-property: color, border;
+	-webkit-transition-property: color, border;
+	transition-property: color, border;
+	-moz-transition-duration: 0.4s;
+	-o-transition-duration: 0.4s;
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	-moz-transition-timing-function: linear;
+	transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-webkit-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+
+.green-button-new:hover::after, .green-button-new:focus::after{
+	height: 103%;
+	filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+	opacity: 1;
+}
+
+.green-button-new:hover::after{
+	height: 100%;
+	filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+	opacity: 1;
+}
+
+.green-button-new:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	height: 0;
+	background: #ffc600;
+	z-index: -1;
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	opacity: 0;
+	-moz-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	-moz-transition-property: height, opacity;
+	-o-transition-property: height, opacity;
+	-webkit-transition-property: height, opacity;
+	transition-property: height, opacity;
+	-moz-transition-duration: 0.2s;
+	-o-transition-duration: 0.2s;
+	-webkit-transition-duration: 0.2s;
+	transition-duration: 0.2s;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-webkit-transition-timing-function: linear;
+	transition-timing-function: linear;
+	border-radius: 2px;
 }
 
 .subscribe-email input[type='text']{
@@ -5994,7 +6121,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	font-family: OpenSans-Semibold;
 	position: relative;
 	overflow: hidden;
-
 	z-index: 2;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -6012,8 +6138,6 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	-o-transition-timing-function: linear;
 	-webkit-transition-timing-function: linear;
 	transition-timing-function: linear;
-
-
 }
 
 .modal-blue-button:hover::after, .modal-blue-button:focus::after{
@@ -6142,4 +6266,9 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .img-modal .slick-slide{
 	margin-bottom: 15px;
+}
+
+.img-modal .remodal-close{
+	left: unset;
+	right: 0;
 }

@@ -155,8 +155,7 @@ echo Html::tag('div',
         ]).
     $form->field($model, 'nakladna').
     Html::tag('span', '3. '.\Yii::t('shop', 'Ваш комментарий (не обязательно)'), ['class' => 'cap']).
-    $form->field($model, 'comment')
-        ->textarea().
+    $form->field($model, 'comment')->textarea().
     Html::tag('div',
         Html::tag('div',
             Html::tag('span',
