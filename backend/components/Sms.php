@@ -31,8 +31,9 @@ class Sms extends \common\components\Sms{
         $message->params = [
             ['key' => 'ORDERID', 'value' => $order->number],
             ['key' => 'ACTUALAMOUNT', 'value' => $order->actualAmount],
-            ['key' => 'BANKNAME', 'value' => $order->paymentParam],
-            ['key' => 'CARDNUMBER', 'value' => $order->paymentParam],
+            ['key' => 'BANKNAME', 'value' => $order->paymentParamInfo->description],
+            ['key' => 'CARDNUMBER', 'value' => $order->paymentParamInfo->value],
+            ['key' => 'CARDHOLDER', 'value' => $order->paymentParamInfo->options],
         ];
 
         return $this->send([
