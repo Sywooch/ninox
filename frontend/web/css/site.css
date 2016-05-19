@@ -48,7 +48,9 @@ h2{
 	height: 200px;
 	z-index: 10;
 	position: relative;/*хз????????????*/
+    /*
 	margin-bottom: 30px;
+    */
 }
 
 /* Header style
@@ -4551,7 +4553,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .sticky-wrapper{
 	height: auto !important;
+    /*
 	margin-bottom: 30px;
+    */
 }
 
 .sticky .header-menu:after{
@@ -5613,7 +5617,13 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	display: block;
 	line-height: 16px;
 	padding-bottom: 10px;
+	max-height: 210px;
+	overflow: hidden;
+}
 
+.news-and-events  .right-block .read-all-reviews{
+	position: absolute;
+	bottom: 75px;
 }
 
 .news-and-events  .right-block a{
