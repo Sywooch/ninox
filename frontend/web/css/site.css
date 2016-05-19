@@ -2676,7 +2676,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     */
 	width: 1170px;
     margin: 0 auto;
+    /*
 	padding-top: 30px;
+    */
 }
 
 .user-data-content{
