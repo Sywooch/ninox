@@ -280,8 +280,16 @@ class Good extends \yii\db\ActiveRecord
     public function setEnabled($val){
         $this->realTranslation->enabled = $val;
     }
-    
+
     public function beforeSave($insert){
+        if($this->isNewRecord && empty($this->ID)){
+            $this->ID = (self::find()->max("ID") + 1);
+
+            if(empty($this->realTranslation->ID)){
+                $this->realTranslation->ID = $this->ID;
+            }
+        }
+
         $this->realTranslation->save(false);
 
         return parent::beforeSave($insert);
