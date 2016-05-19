@@ -48,6 +48,7 @@ h2{
 	height: 200px;
 	z-index: 10;
 	position: relative;/*хз????????????*/
+	margin-bottom: 30px;
 }
 
 /* Header style

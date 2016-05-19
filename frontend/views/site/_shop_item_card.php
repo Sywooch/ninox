@@ -108,7 +108,7 @@ $imgModal = new \bobroid\remodal\Remodal([
     <?=Breadcrumbs::widget(['links' => $this->params['breadcrumbs']])?>
     <div class="item-main">
         <div class="item-photos">
-            <?=(!empty($items) ? Slick::widget([
+            <?=Html::a((!empty($items) ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderFor',
                     'class' => 'first'
@@ -121,14 +121,14 @@ $imgModal = new \bobroid\remodal\Remodal([
                     'slidesToScroll' => 1,
                     'asNavFor'       => '#sliderNav',
                 ]
-            ]) : Html::tag('a',Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
+            ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
                 [
                 'itemprop' => 'image',
                 'data-modal-index'  =>  0,
                 'width' =>  '475px',
                 'height'=>  '355px',
-                'alt'   =>  $good->Name
-            ]),'#imgModal')).
+                'alt'   =>  $good->Name,
+            ])), '#imgModal').
             (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderNav',

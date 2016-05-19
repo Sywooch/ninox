@@ -29,7 +29,7 @@ use evgeniyrru\yii2slick\Slick;
         'height'=>  '710px',
         'alt'   =>  $good->Name
     ])).
-    (sizeof($itemsNav) > 1 ? Slick::widget([
+    Slick::widget([
         'containerOptions' => [
             'id'    => 'modalSliderNav',
             'class' => 'second'
@@ -44,6 +44,6 @@ use evgeniyrru\yii2slick\Slick;
             'asNavFor'       => '#modalSliderFor',
             'cssEase'        => 'linear',
         ]
-    ]) : '')
+    ])
 ?>
 
