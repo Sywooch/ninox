@@ -84,6 +84,16 @@ class History extends \common\models\History
         return false;
     }
 
+    public function findItemByUniqID($uniqID){
+        foreach($this->items as $item){
+            if($item->ID == $uniqID){
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
     public function getID(){
         return $this->id;
     }
