@@ -426,6 +426,8 @@ $css = <<<'CSS'
     .ordersStats .description h1{
         font-size: 28px;
         line-height: 40px;
+        max-width: 134px;
+        overflow: hidden;
         padding: 0;
         margin: 0;
     }
