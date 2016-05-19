@@ -81,11 +81,59 @@ echo \kartik\grid\GridView::widget([
         ],
         [
             'attribute' =>  'nomer_id',
-            'label'     =>  'Номер заказа'
+            'label'     =>  'Номер заказа',
+            'format'    =>  'raw',
+            'value'     =>  function($model){
+                if(!empty($model->order)){
+                    return \yii\bootstrap\Html::a($model->nomer_id, '/orders/showorder/'.$model->order->ID);
+                }
+
+                return $model->nomer_id;
+            }
+        ],
+        [
+            'label'     =>  'Дата оформления',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return \Yii::$app->formatter->asDatetime($model->order->added, 'php: d.m.Y H:i');
+            }
+        ],
+        [
+            'label'     =>  'ФИО',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return $model->order->customerSurname.' '.$model->order->customerName;
+            }
         ],
         [
             'attribute' =>  'summ',
             'label'     =>  'Сумма'
+        ],
+        [
+            'label'     =>  'Город',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return $model->order->deliveryCity;
+            }
+        ],
+        [
+            'label'     =>  'Телефон',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return \Yii::$app->formatter->asPhone($model->order->customerPhone);
+            }
         ],
         [
             'attribute' =>  'data_oplaty',
