@@ -4624,13 +4624,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 
 .header-menu:after{
-	overflow: auto;
+	/*overflow: auto;
 	height: 38px;
 	content: "";
 	display: block;
 	background: url("/img/site/shadow_2.png") repeat;
 	width: 100%;
-	position: absolute;
+	position: absolute;*/
     /*
 	top: 78px;
     */
