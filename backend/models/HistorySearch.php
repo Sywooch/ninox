@@ -136,7 +136,8 @@ class HistorySearch extends History{
                         ->andWhere(['deleted' => 0]);
                     break;
                 case 'notPayedOnCard':
-                    $query->andWhere(['moneyConfirmed' => 0, 'paymentType' => 2]);
+                    $query->andWhere(['moneyConfirmed' => 0, 'paymentType' => 2])
+                        ->andWhere('`actualAmount` != \'0\'');
                     break;
                 case 'done':
                 case self::STATUS_DONE:
