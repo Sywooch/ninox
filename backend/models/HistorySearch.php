@@ -38,6 +38,16 @@ class HistorySearch extends History{
             ]
         ]);
 
+        if(empty($params['ordersSource'])){
+            $params['ordersSource'] = null;
+            $ignoreFilters['ordersSource'] = true;
+            $ignoreFilters['ordersStatus'] = true;
+        }
+
+        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
+            $params['showDates'] = 'alltime';
+        }
+
         if(!empty($params["ordersSource"]) && !isset($ignoreFilters['ordersSource'])){
 	        switch($params["ordersSource"]){
 		        case 'all':
@@ -89,11 +99,6 @@ class HistorySearch extends History{
 		    }
 	    }
 
-
-        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
-            $params['showDates'] = 'alltime';
-        }
-
         if((!empty($params["showDates"])  && !isset($ignoreFilters['showDates'])) || (empty($params['HistorySearch'])  && !isset($ignoreFilters['HistorySearch']))){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
@@ -119,7 +124,7 @@ class HistorySearch extends History{
             }
         }
 
-        if(!isset($ignoreFilters['ordersStatus'])){
+        if(!isset($ignoreFilters['ordersStatus']) && $params['ordersSource'] != 'search'){
             $params['ordersStatus'] = !empty($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
 
             switch($params['ordersStatus']){
@@ -143,7 +148,7 @@ class HistorySearch extends History{
             }
         }
 
-        if((!empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted')){
+        if((!empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted') && $params['ordersSource'] != 'search'){
             $query->andWhere('deleted = 0');
         }
 
