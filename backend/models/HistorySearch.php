@@ -15,6 +15,10 @@ class HistorySearch extends History{
     public function search($params, $onlyQuery = false, $ignoreFilters = []){
         $query = History::find();
 
+        if(empty($params['ordersSource'])){
+            $params['ordersSource'] = null;
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
             'pagination'    =>  [
@@ -119,7 +123,7 @@ class HistorySearch extends History{
             }
         }
 
-        if(!isset($ignoreFilters['ordersStatus'])){
+        if(!isset($ignoreFilters['ordersStatus']) && $params['ordersSource'] != 'search'){
             $params['ordersStatus'] = !empty($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
 
             switch($params['ordersStatus']){
@@ -143,7 +147,7 @@ class HistorySearch extends History{
             }
         }
 
-        if((!empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted')){
+        if((!empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted') && $params['ordersSource'] != 'search'){
             $query->andWhere('deleted = 0');
         }
 
