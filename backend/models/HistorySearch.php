@@ -40,6 +40,7 @@ class HistorySearch extends History{
 
         if(empty($params['ordersSource'])){
             $params['ordersSource'] = null;
+        }elseif($params['ordersSource'] == 'search'){
             $ignoreFilters['ordersSource'] = true;
             $ignoreFilters['ordersStatus'] = true;
         }
@@ -152,8 +153,10 @@ class HistorySearch extends History{
             }
         }
 
-        if((!empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted') && $params['ordersSource'] != 'search'){
+        if((empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && $params['ordersSource'] != 'search'){
             $query->andWhere('deleted = 0');
+        }elseif(!empty($params['ordersSource']) && $params["ordersSource"] == 'deleted'){
+            $query->andWhere('deleted = 1');
         }
 
         if(isset($params['responsibleUser'])){
@@ -172,6 +175,8 @@ class HistorySearch extends History{
         $this->addCondition($query, 'deliveryCity', true);
         $this->addCondition($query, 'nakladna', true);
         $this->addCondition($query, 'actualAmount');
+
+        \Yii::trace($query);
 
         return $onlyQuery ? $query : $dataProvider;
     }
