@@ -48,9 +48,9 @@ h2{
 	height: 200px;
 	z-index: 10;
 	position: relative;/*хз????????????*/
-    /*
-	margin-bottom: 30px;
-    */
+		/*
+		margin-bottom: 30px;
+		*/
 }
 
 /* Header style
@@ -4885,10 +4885,13 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .header-menu-item-content-slider img{
-	width: 100%;
+	width: auto;
     /*
 	opacity: 0.5;
     */
+	height: 100%;
+	margin: auto;
+	display: block;
 }
 /*========* END HEADER MENU *=========*/
 
@@ -6274,10 +6277,15 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 .img-modal #modalSliderFor .slick-slide img{
 	margin: auto;
+	max-height: 710px;
+	max-width: 955px;
+	height: 100%;
 }
 
 .img-modal .slick-slide{
 	margin-bottom: 15px;
+	height: 710px;
+	width: 955px;
 }
 
 .img-modal .slick-prev::before, .slick-next::before {
@@ -6303,4 +6311,9 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .img-modal .remodal-close{
 	left: unset;
 	right: 0;
+}
+
+.review-modal a:hover{
+	text-decoration: none;
+	cursor: pointer;
 }
