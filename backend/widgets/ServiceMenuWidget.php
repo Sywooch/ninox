@@ -73,6 +73,13 @@ class ServiceMenuWidget extends Widget{
             ]
         ],
         [
+            'label' =>  'Не оплаченые на карту',
+            'link'  =>  'notPayedOnCard',
+            'options'   =>  [
+                'class' =>  'btn btn-default btn-sm',
+            ]
+        ],
+        [
             'label' =>  'Все',
             'link'  =>  'all',
             'options'   =>  [

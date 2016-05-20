@@ -135,6 +135,9 @@ class HistorySearch extends History{
                         ->andWhere(['in', 'deliveryType', [1, 2]])
                         ->andWhere(['deleted' => 0]);
                     break;
+                case 'notPayedOnCard':
+                    $query->andWhere(['moneyConfirmed' => 0, 'paymentType' => 2]);
+                    break;
                 case 'done':
                 case self::STATUS_DONE:
                     $query->andWhere(['or', ['status' => self::STATUS_DONE], ['status' => self::STATUS_DELIVERED]]);
