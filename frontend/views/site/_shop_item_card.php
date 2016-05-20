@@ -91,12 +91,15 @@ foreach($good->photos as $photo){
     ]);
 }
 
+    /*(!empty($itemsModal) ? $itemsModal : 'dfsdf');*/
+
 $imgModal = new \bobroid\remodal\Remodal([
     'cancelButton'		=>	false,
     'confirmButton'		=>	false,
     'closeButton'		=>	true,
     'addRandomToID'		=>	false,
-    'content'			=>	$this->render('_img_modal', ['good' => $good, 'itemsModal' => $itemsModal, 'itemsNav' => $itemsNav]),
+    'content'			=>	$this->render('_img_modal', ['good' => $good, 'itemsModal' => (!empty($itemsModal) ?
+        $itemsModal : ['На данный момент изображение товара отсутствует, приносим свои извинения']), 'itemsNav' => $itemsNav]),
     'id'				=>	'imgModal',
     'options'			=>  [
         'class'			=>  'img-modal'
@@ -128,7 +131,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                 'width' =>  '475px',
                 'height'=>  '355px',
                 'alt'   =>  $good->Name,
-            ])), '#imgModal').
+            ])), (!empty($itemsModal) ? '#imgModal' : '')).
             (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderNav',
