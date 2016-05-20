@@ -135,7 +135,10 @@ echo Html::tag('div', Html::tag('div', Html::a('К заказам', '/', [
     ]).
     \yii\widgets\ListView::widget([
         'dataProvider'  =>  new \yii\data\ActiveDataProvider([
-            'query' =>  $order->getItems(false)
+            'query' =>  $order->getItems(false),
+            'pagination'    =>  [
+                'pageSize'  =>  0
+            ]
         ]),
         'summary'   =>  false,
         'itemOptions'   =>  [

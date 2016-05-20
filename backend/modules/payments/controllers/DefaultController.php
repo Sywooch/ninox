@@ -73,6 +73,6 @@ class DefaultController extends Controller
     }
 
     public function actionControl(){
-
+        return $this->render('control');
     }
 }

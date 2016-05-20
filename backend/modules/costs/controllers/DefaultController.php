@@ -4,8 +4,8 @@ namespace backend\modules\costs\controllers;
 
 use backend\modules\costs\models\CostFilter;
 use backend\modules\costs\models\CostForm;
+use backend\controllers\SiteController as Controller;
 use common\models\CostsType;
-use yii\web\Controller;
 
 /**
  * Default controller for the `costs` module
