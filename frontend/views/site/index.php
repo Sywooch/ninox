@@ -205,7 +205,7 @@ $this->registerJs($js);
 			<div class="style banner-img"></div>
 		</div>
 		<div class="right-block style">
-			<?=$this->render('reviewForm')?>
+			<?=$this->render('reviewForm', ['model' => $this])?>
 		</div>
 		<div></div>
 	</div>

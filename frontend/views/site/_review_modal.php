@@ -20,8 +20,7 @@ $model = new \frontend\models\ReviewForm();
         $form->field($model, 'city');
     } else{
     echo Html::tag('div',
-        Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname/*.'
-        '.!empty($sliderBanners).' ? '.\Yii::$app->user->identity->city.' : '.$form->field($model, 'city')*/));
+        Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname));
 }
 ?>
 <?= $form->field($model, 'review')->textarea()?>
