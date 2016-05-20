@@ -81,8 +81,8 @@ foreach($good->photos as $photo){
     ]);
 
     $itemsModal[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, [
-        'width' =>  '950px',
-        'height'=>  '710px',
+        'width' =>  'auto',
+        'height'=>  'auto',
     ]);
 
     $itemsNav[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$photo->ico, [
@@ -90,8 +90,6 @@ foreach($good->photos as $photo){
         'height'=>'80px'
     ]);
 }
-
-    /*(!empty($itemsModal) ? $itemsModal : 'dfsdf');*/
 
 $imgModal = new \bobroid\remodal\Remodal([
     'cancelButton'		=>	false,
