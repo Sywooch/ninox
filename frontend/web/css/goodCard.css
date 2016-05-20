@@ -285,6 +285,7 @@
 .product-characteristics .option-value{
     float: left;
     width: 40%;
+    line-height: normal;
 }
 
 .customer-reviews{

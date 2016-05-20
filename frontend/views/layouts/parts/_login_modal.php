@@ -13,7 +13,7 @@ $form = ActiveForm::begin([
 
 echo
     Html::tag('div', \Yii::t('shop', 'Для добавления товаров в избранное пожалуйста, войдите в личный кабинет или').
-        Html::a(\Yii::t('shop', ' заригестрируйтесь'), '#registrationModal'), [
+        Html::a(\Yii::t('shop', ' зарегистрируйтесь'), '#registrationModal'), [
         'class'		=>	'login-modal-title',
     ]).
     $form->field($model, 'phone'),
