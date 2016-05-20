@@ -74,13 +74,34 @@ class DefaultController extends Controller
 
     public function actionControl($param = null){
         if(!empty($param)){
+            $param = \Yii::$app->formatter->asDate($param, 'php:Y-m-d');
+
             $query = History::find();
+
+            switch(\Yii::$app->request->get("type")){
+                case 'shop':
+                    $query->andWhere("FROM_UNIXTIME(`added`, '%Y-%m-%d') = '{$param}'")
+                        ->andWhere(['sourceType' => History::SOURCETYPE_SHOP]);
+                    break;
+                case 'selfDelivered':
+                    $query->andWhere("STR_TO_DATE(`moneyConfirmedDate`, '%Y-%m-%d') = '{$param}'")
+                        ->andWhere(['deliveryType' => '3', 'sourceType' => History::SOURCETYPE_INTERNET]);
+                    break;
+                default:
+                    //$query->andWhere(['or', ])
+                    break;
+            }
 
             return $this->render('viewDay',
                 [
                     'param' =>  $param,
                     'dataProvider'  =>  new ActiveDataProvider([
-                        'query' =>  $query
+                        'query' =>  $query,
+                        'sort'  =>  [
+                            'defaultOrder'  =>  [
+                                'number'    =>  SORT_DESC
+                            ]
+                        ]
                     ])
                 ]);
         }

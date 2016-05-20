@@ -134,7 +134,7 @@ echo "</div>", \yii\bootstrap\Html::tag('div',
                     $sells = sizeof($model->selfDelivered);
 
                     if(!empty($sells)){
-                        return \yii\bootstrap\Html::a($sells, ['/payments/control/'.\Yii::$app->formatter->asDate($model->added, 'php:Y-m-d'), 'type' => 'selfDelivered']);
+                        return \yii\bootstrap\Html::a($sells, ['/payments/control/'.\Yii::$app->formatter->asDate($model->date, 'php:Y-m-d'), 'type' => 'selfDelivered']);
                     }
 
                     return $sells;
