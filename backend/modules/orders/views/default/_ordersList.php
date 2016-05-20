@@ -103,6 +103,9 @@ echo \kartik\grid\GridView::widget([
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '80px',
+            'value'     =>  function($model){
+                return \Yii::$app->formatter->asPhone($model->customerPhone);
+            }
         ],
         [
             'attribute' =>  'deliveryCity',
