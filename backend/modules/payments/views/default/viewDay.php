@@ -117,7 +117,12 @@ echo GridView::widget([
             }
         ],
         [
-            //'class'     =>  \kartik\grid\EditableColumn::className(),
+            'class'     =>  \kartik\grid\EditableColumn::className(),
+            'editableOptions'   =>  [
+                'ajaxSettings'  =>  [
+                    'url'   =>  \yii\helpers\Url::to(['/orders/editable-edit'])
+                ]
+            ],
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '150px',
