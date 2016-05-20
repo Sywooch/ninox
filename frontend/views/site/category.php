@@ -58,10 +58,10 @@ $this->registerJS($js);
     'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a',
     'timeout'       =>  '5000'
 ]);
-
 echo Html::tag('div',
     ($totalCount ?
         $this->render('_category/_category_filters', [
+            'category'   =>  $category,
             'filters'   =>  $category->filters,
             'min'       =>  $category->minPrice,
             'max'       =>  $category->maxPrice,
