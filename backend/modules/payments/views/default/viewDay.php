@@ -90,7 +90,11 @@ echo GridView::widget([
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'attribute' =>  'number',
             'label'     =>  'ID',
-            'width'     =>  '40px'
+            'width'     =>  '40px',
+            'format'    =>  'html',
+            'value'     =>  function($model){
+                return \yii\bootstrap\Html::a($model->number, ['/orders/showorder/'.$model->id]);
+            }
         ],
         [
             'hAlign'    =>  GridView::ALIGN_CENTER,
@@ -113,6 +117,7 @@ echo GridView::widget([
             }
         ],
         [
+            //'class'     =>  \kartik\grid\EditableColumn::className(),
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '150px',
@@ -155,7 +160,7 @@ echo GridView::widget([
                             ]);
                         }
 
-                        return \yii\bootstrap\Html::button('Оплата подтверждена<br>пользователь: '.$moneyCollector->name, ['class' => 'btn btn-default', 'disabled' => 'disabled']);
+                        return \yii\bootstrap\Html::button('Оплата подтверждена<br>'.\Yii::$app->formatter->asDatetime($model->moneyConfirmedDate).'<br>пользователь: '.$moneyCollector->name, ['class' => 'btn btn-default', 'disabled' => 'disabled']);
                     }
 
                     return \yii\bootstrap\Html::button('Подтвердить оплату', ['class' => 'btn btn-default confirmPayment']);
