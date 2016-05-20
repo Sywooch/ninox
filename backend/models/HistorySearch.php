@@ -15,10 +15,6 @@ class HistorySearch extends History{
     public function search($params, $onlyQuery = false, $ignoreFilters = []){
         $query = History::find();
 
-        if(empty($params['ordersSource'])){
-            $params['ordersSource'] = null;
-        }
-
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
             'pagination'    =>  [
@@ -41,6 +37,16 @@ class HistorySearch extends History{
                 'responsibleUserID'
             ]
         ]);
+
+        if(empty($params['ordersSource'])){
+            $params['ordersSource'] = null;
+            $ignoreFilters['ordersSource'] = true;
+            $ignoreFilters['ordersStatus'] = true;
+        }
+
+        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
+            $params['showDates'] = 'alltime';
+        }
 
         if(!empty($params["ordersSource"]) && !isset($ignoreFilters['ordersSource'])){
 	        switch($params["ordersSource"]){
@@ -92,11 +98,6 @@ class HistorySearch extends History{
 				    break;
 		    }
 	    }
-
-
-        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
-            $params['showDates'] = 'alltime';
-        }
 
         if((!empty($params["showDates"])  && !isset($ignoreFilters['showDates'])) || (empty($params['HistorySearch'])  && !isset($ignoreFilters['HistorySearch']))){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
