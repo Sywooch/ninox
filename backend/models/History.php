@@ -238,7 +238,10 @@ class History extends \common\models\History
         if($this->isAttributeChanged('moneyConfirmed') && $this->moneyConfirmed == 1){
             $this->moneyCollectorUserId = \Yii::$app->user->identity->id;
             $this->moneyConfirmedDate = date('Y-m-d H:i:s');
-            \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
+
+            if($this->sourceType != self::SOURCETYPE_SHOP && $this->deliveryType != 3){
+                \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
+            }
         }
 
         if($this->status != $this->getCurrentStatus()) {

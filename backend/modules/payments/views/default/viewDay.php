@@ -5,7 +5,7 @@ use kartik\grid\GridView;
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
 $js = <<<'JS'
-$(".confirmPayment").on('click', function(){
+$("body").on('click', ".confirmPayment", function(){
     var button = $(this); 
     
     swal({
