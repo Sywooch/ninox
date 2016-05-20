@@ -75,6 +75,10 @@ class History extends \common\models\History
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 
+    public function getMoneyCollector(){
+        return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
+    }
+
     public function findItem($itemID){
         foreach($this->items as $item){
             if($item->itemID == $itemID){
@@ -232,7 +236,8 @@ class History extends \common\models\History
         }
 
         if($this->isAttributeChanged('moneyConfirmed') && $this->moneyConfirmed == 1){
-            $this->moneyConfirmed = date('Y-m-d H:i:s');
+            $this->moneyCollectorUserId = \Yii::$app->user->identity->id;
+            $this->moneyConfirmedDate = date('Y-m-d H:i:s');
             \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
         }
 

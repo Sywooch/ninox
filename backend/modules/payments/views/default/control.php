@@ -56,6 +56,19 @@ echo "</div>", \yii\bootstrap\Html::tag('div',
                 ],
             ]
         ],
+        'rowOptions'        =>  function($model){
+            if($model->selfDeliveredAccepted + $model->selfDeliveredNotAccepted + $model->shopAccepted + $model->shopNotAccepted == $model->selfDeliveredAccepted + $model->shopAccepted){
+                $class = 'success';
+            }elseif($model->selfDeliveredAccepted + $model->shopAccepted == 0){
+                $class = 'danger';
+            }else{
+                $class = 'warning';
+            }
+
+            return [
+                'class' => $class
+            ];
+        },
         'resizableColumns'  =>  false,
         'columns'   =>  [
             [

@@ -79,6 +79,11 @@ echo \yii\bootstrap\Html::tag('h1', $this->title);
 echo \kartik\grid\GridView::widget([
     'dataProvider'  =>  $dataProvider,
     'summary'       =>      false,
+    'rowOptions'    =>  function($model){
+        return [
+            //'class' =>  ($model->moneyConfirmed == 1 ? 'success' : 'warning')
+        ];
+    },
     'columns'       =>  [
         [
             'class' =>  \yii\grid\SerialColumn::className()

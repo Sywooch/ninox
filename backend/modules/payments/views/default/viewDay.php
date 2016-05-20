@@ -2,6 +2,42 @@
 
 use kartik\grid\GridView;
 
+\bobroid\sweetalert\SweetalertAsset::register($this);
+
+$js = <<<'JS'
+$(".confirmPayment").on('click', function(){
+    var button = $(this); 
+    
+    swal({
+        title: "Подтвердить оплату?",
+        text: "Вы уверены, что хотите подтвердить оплату?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Подтвердить!",
+        cancelButtonText: "Отмена",
+        closeOnConfirm: false
+    },
+    function(){    
+        $.ajax({
+            type: 'POST',
+            url: '/payments/confirm',
+            data: {
+                action: 'confirm',
+                id: button.parent().parent().attr('data-key')
+            },
+            success: function(){
+                $.pjax.reload({container: '#dailyReportGrid-pjax'});
+                swal("Подтверждено!", "Оплата успешно подтверждена!", "success");
+            }
+        });
+    });
+    console.log($(this));
+});
+JS;
+
+$this->registerJs($js);
+
 $this->title = 'Отчёт за '.\Yii::$app->formatter->asDate($param);
 
 $this->params['breadcrumbs'][] = [
@@ -34,6 +70,14 @@ echo \yii\helpers\Html::tag('h1', $pageHeader);
 echo GridView::widget([
     'dataProvider'  =>  $dataProvider,
     'summary'       =>  false,
+    'id'            =>  'dailyReportGrid',
+    'pjax'          =>  true,
+    'export'        =>  false,
+    'rowOptions'    =>  function($model){
+        return [
+            'class' =>  ($model->moneyConfirmed == 1 ? 'success' : 'danger')
+        ];
+    },
     'columns'       =>  [
         [
             'hAlign'    =>  GridView::ALIGN_CENTER,
@@ -71,6 +115,7 @@ echo GridView::widget([
         [
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
+            'width'     =>  '150px',
             'label'     =>  'Фактическая сумма',
             'attribute' =>  'actualAmount',
             'value'     =>  function($model){
@@ -88,6 +133,7 @@ echo GridView::widget([
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'label'     =>  'Телефон клиента',
             'attribute' =>  'customerPhone',
+            'width'     =>  '100px',
             'value'     =>  function($model){
                 if(empty($model->customerPhone)){
                     return '';
@@ -96,5 +142,26 @@ echo GridView::widget([
                 return \Yii::$app->formatter->asPhone($model->customerPhone);
             }
         ],
+        [
+            'class'     =>  \kartik\grid\ActionColumn::className(),
+            'buttons'   =>  [
+                'accept'    =>  function($param, $model){
+                    if($model->moneyConfirmed == 1){
+                        $moneyCollector = $model->moneyCollector;
+
+                        if(empty($moneyCollector)){
+                            $moneyCollector = new \common\models\Siteuser([
+                                'name'  =>  '(неизвестно)'
+                            ]);
+                        }
+
+                        return \yii\bootstrap\Html::button('Оплата подтверждена<br>пользователь: '.$moneyCollector->name, ['class' => 'btn btn-default', 'disabled' => 'disabled']);
+                    }
+
+                    return \yii\bootstrap\Html::button('Подтвердить оплату', ['class' => 'btn btn-default confirmPayment']);
+                },
+            ],
+            'template'  =>  '{accept}'
+        ]
     ]
 ]);

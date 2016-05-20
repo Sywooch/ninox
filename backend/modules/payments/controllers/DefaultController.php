@@ -7,6 +7,7 @@ use backend\models\SendedPayment;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -72,11 +73,33 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionConfirm(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+        }
+
+        $order = History::findOne(['id' => \Yii::$app->request->post("id")]);
+
+        \Yii::$app->response->format = 'json';
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ не найден!");
+        }
+
+        switch(\Yii::$app->request->post("action")){
+            case 'confirm':
+                $order->moneyConfirmed = '1';
+                break;
+        }
+
+        return $order->save(false);
+    }
+
     public function actionControl($param = null){
         if(!empty($param)){
             $param = \Yii::$app->formatter->asDate($param, 'php:Y-m-d');
 
-            $query = History::find();
+            $query = History::find()->with('moneyCollector');
 
             switch(\Yii::$app->request->get("type")){
                 case 'shop':
