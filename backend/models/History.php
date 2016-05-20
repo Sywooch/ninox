@@ -4,6 +4,7 @@ namespace backend\models;
 
 use backend\components\Sms;
 use common\models\Comment;
+use common\models\PaymentParam;
 use common\models\Siteuser;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -177,6 +178,7 @@ class History extends \common\models\History
 
         if($result == 200){
             $this->smsSendDate = date('Y-m-d H:i:s');
+            $this->save(true);
         }
 
         return $result;
@@ -184,13 +186,15 @@ class History extends \common\models\History
 
     public function sendCardSms(){
         $messageID = 0;
-
         switch($this->status){
             case self::STATUS_NOT_CALLED:
                 break;
             case self::STATUS_PROCESS:
                 break;
             case self::STATUS_NOT_PAYED:
+                if(empty($this->paymentParamInfo)){
+                    return false;
+                }
                 $messageID = Sms::MESSAGE_ORDER_DONE_ID;
                 break;
             case self::STATUS_WAIT_DELIVERY:
@@ -201,9 +205,10 @@ class History extends \common\models\History
         }
 
         $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
-
+        //TODO: SmS state and date;
         if($result == 200){
             $this->smsSendDate = date('Y-m-d H:i');
+            $this->save(true);
         }
 
         return $result;
@@ -588,6 +593,10 @@ class History extends \common\models\History
         }
 
         return $r;
+    }
+
+    public function getPaymentParamInfo(){
+        return $this->hasOne(PaymentParam::className(), ['id' => 'paymentParam']);
     }
 
 }

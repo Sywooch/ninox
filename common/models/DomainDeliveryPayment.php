@@ -17,6 +17,7 @@ use yii\helpers\Json;
  * @property integer $paymentParam
  * @property string $options
  * @property integer $enabled
+ * @property integer $default
  */
 class DomainDeliveryPayment extends \yii\db\ActiveRecord
 {
@@ -53,6 +54,7 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
             'paymentParam' => Yii::t('shop', 'Payment Param'),
             'options' => Yii::t('shop', 'Options'),
             'enabled' => Yii::t('shop', 'Enabled'),
+            'default' => Yii::t('shop', 'Default'),
         ];
     }
 
@@ -97,19 +99,26 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 				$options = Json::decode($config->options, false);
 				$array['deliveryTypes'][$config->deliveryType]['name'] = $config->deliveryTypes->description;
 				$array['deliveryTypes'][$config->deliveryType]['value'] = $config->deliveryTypes->id;
+				$array['deliveryTypes'][$config->deliveryType]['default'] = empty($array['deliveryTypes'][$config->deliveryType]['default']) ?
+					$config->default : $array['deliveryTypes'][$config->deliveryType]['default'];
 				$array['deliveryTypes'][$config->deliveryType]['modifyLabel'] = $config->deliveryTypes->modifyLabel;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['name'] = $config->deliveryParams->description;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['label'] =
 					empty($config->deliveryParams->options) ?
 						$config->deliveryParams->description : Html::img($config->deliveryParams->options);
+				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['default'] = empty($array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['default']) ?
+					$config->default : $array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['default'];
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentTypes'][$config->paymentType] = $config->paymentType;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['paymentParams'][$config->paymentParam] = $options->commissions;
 				$array['deliveryTypes'][$config->deliveryType]['params'][$config->deliveryParam]['content'] = $options->content;
 
 				$array['paymentTypes'][$config->paymentType]['name'] = $config->paymentTypes->description;
 				$array['paymentTypes'][$config->paymentType]['value'] = $config->paymentTypes->id;
+				$array['paymentTypes'][$config->paymentType]['default'] = empty($array['paymentTypes'][$config->paymentType]['default']) ?
+					$config->default : $array['paymentTypes'][$config->paymentType]['default'];
 				$array['paymentTypes'][$config->paymentType]['modifyLabel'] = $config->paymentTypes->modifyLabel;
 				$array['paymentTypes'][$config->paymentType]['params'][$config->paymentParam]['name'] = !empty($config->paymentParams) ? $config->paymentParams->description : 'Default Param';
+				$array['paymentTypes'][$config->paymentType]['params'][$config->paymentParam]['default'] = $config->default;
 			}
 
 			foreach($array as $type => $value){
@@ -129,7 +138,6 @@ class DomainDeliveryPayment extends \yii\db\ActiveRecord
 					}
 				}
 			}
-
 		}
 		return $array;
 	}

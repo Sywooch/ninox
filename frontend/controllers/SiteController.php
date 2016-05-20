@@ -641,7 +641,7 @@ class SiteController extends Controller
         $return = $r1 = $r2 = '';
         $string = mb_strtolower($string, 'UTF-8');
         //$string = preg_replace('/\w/', '', $string); allow latin symbols
-        $string = preg_replace('/[.,;\'*"]/', ' ', $string);
+        $string = preg_replace('/[\[{(.,;\'*")}\]]/', ' ', $string);
         $words = explode(' ', $string);
         foreach($words as $word){
             $word = trim($word, ' ');
