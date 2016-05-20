@@ -17,23 +17,25 @@ class DailyReport extends ActiveRecord
 
     private $_shopSells = null;
     private $_selfDelivered = null;
+    public $findedDate;
 
     public static function tableName(){
         return History::tableName();
     }
 
     public static function find(){
-        return parent::find()->select("*, DATE_FORMAT(FROM_UNIXTIME(`added`), '%Y-%m-%d') as `date`")->groupBy('date')->orderBy('added DESC');
+        return parent::find()->select("FROM_UNIXTIME(`added`, '%Y-%m-%d') as `findedDate`")->groupBy('findedDate')->orderBy('added DESC');
     }
 
+
     public function getDate(){
-        return \Yii::$app->formatter->asDate($this->added, 'php:Y-m-d');
+        return $this->findedDate;
     }
 
     public function getShopSells(){
         if(empty($this->_shopSells)){
             $this->_shopSells = parent::find()
-                ->where("DATE_FORMAT(FROM_UNIXTIME(`added`), '%Y-%m-%d') = '{$this->date}'")
+                ->where("FROM_UNIXTIME(`added`, '%Y-%m-%d') = '{$this->date}'")
                 ->andWhere(['sourceType' => History::SOURCETYPE_SHOP])
                 ->all();
         }

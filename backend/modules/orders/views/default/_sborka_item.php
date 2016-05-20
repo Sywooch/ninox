@@ -6,7 +6,7 @@ echo Html::tag('div', Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$
         'class' =>  'image'.($item->inOrder ? ' access' : ($item->notFounded ? ' denied' : ''))
     ]),
     Html::tag('span', $item->name, [
-        'style' =>  'display: inline-block; margin-top: 20px; padding: 0px 30px;'
+        'style' =>  'display: inline-block; margin-top: 20px; padding: 0px 30px; overflow: hidden; max-width: 340px; max-height: 18px;'
     ]),
     Html::tag('div',
         Html::tag('div',

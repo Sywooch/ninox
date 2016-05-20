@@ -72,7 +72,19 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function actionControl(){
+    public function actionControl($param = null){
+        if(!empty($param)){
+            $query = History::find();
+
+            return $this->render('viewDay',
+                [
+                    'param' =>  $param,
+                    'dataProvider'  =>  new ActiveDataProvider([
+                        'query' =>  $query
+                    ])
+                ]);
+        }
+
         return $this->render('control');
     }
 }

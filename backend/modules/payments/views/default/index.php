@@ -2,6 +2,10 @@
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
+$this->title = 'Оплаты';
+
+$this->params['breadcrumbs'][] = $this->title;
+
 $js = <<<'JS'
 $("body").on('click', ".pGroup button.confirm", function(){
     var elem = $(this);
@@ -66,7 +70,7 @@ $this->registerJs($js);
 $this->title = 'Подтверждение оплат';
 
 
-echo \yii\bootstrap\Html::tag('h1', 'Оплаты');
+echo \yii\bootstrap\Html::tag('h1', $this->title);
 
 \yii\widgets\Pjax::begin([
     'id'    =>  'paymentConfirmGrid'
