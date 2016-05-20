@@ -4885,10 +4885,13 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .header-menu-item-content-slider img{
-	width: 100%;
+	width: auto;
     /*
 	opacity: 0.5;
     */
+	height: 100%;
+	margin: auto;
+	display: block;
 }
 /*========* END HEADER MENU *=========*/
 
