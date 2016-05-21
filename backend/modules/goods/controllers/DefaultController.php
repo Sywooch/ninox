@@ -2,6 +2,7 @@
 
 namespace backend\modules\goods\controllers;
 
+use backend\components\S3Uploader;
 use backend\controllers\SiteController as Controller;
 use backend\models\Good;
 use backend\models\History;
@@ -11,6 +12,7 @@ use backend\modules\goods\models\GoodAttributesForm;
 use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
 use backend\models\GoodSearch;
+use common\helpers\TranslitHelper;
 use common\helpers\UploadHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
@@ -337,17 +339,6 @@ class DefaultController extends Controller
         $good = new Good();
         $category = \Yii::$app->request->get("category");
 
-        /*if(\Yii::$app->request->post("Good")){
-            //$m = new Good();
-            //$m->attributes = \Yii::$app->request->post("Good");
-            if($m->save()){
-                $mUk = new GoodUk();
-                $mUk->attributes = \Yii::$app->request->post("GoodUk");
-                $mUk->ID = $m->ID;
-                $mUk->save(false);
-            }
-        }*/
-
         if(isset($category)){
             $category = Category::findOne($category);
 
@@ -388,16 +379,68 @@ class DefaultController extends Controller
         }
 
         $goodMainForm = new GoodMainForm();
-        $goodAttributesForm = new GoodAttributesForm();
         $goodExportForm = new GoodExportForm();
 
         $goodMainForm->loadGood($good);
 
-        $this->getView()->title = 'Добавление нового товара';
+        if(\Yii::$app->request->post("GoodMainForm")){
+            $goodMainForm->load(\Yii::$app->request->post());
+
+            if($goodMainForm->save()) {
+                $good = $goodMainForm->good;
+
+                $goodMainForm = new GoodMainForm(['isSaved' => true]);
+            }
+        }
+
+        $goodAttributesForm = new GoodAttributesForm();
+
+        if($good){
+            $goodAttributesForm->loadGood($good);
+        }
+
+        if(\Yii::$app->request->post("GoodOption") && !empty($good->ID)){
+            $options = $deleteOptions = [];
+
+            foreach(\Yii::$app->request->post("GoodOption") as $optionArray){
+                if(!empty($optionArray['value'])){
+                    $options[$optionArray['option']] = $optionArray['value'];
+                }
+            }
+
+            foreach($good->options as $optionArray){
+                if(!isset($options[$optionArray['optionID']])){
+                    $deleteOptions[] = $optionArray['optionID'];
+                }
+            }
+
+            foreach($options as $option => $value){
+                $tOption = GoodOptionsValue::findOne(['good' => $good->ID, 'option' => $option]);
+
+                if(!$tOption){
+                    $tOption = new GoodOptionsValue([
+                        'good'      =>  $good->ID,
+                        'option'    =>  $option,
+                        'value'     =>  $value
+                    ]);
+                }else{
+                    $tOption->value = $value;
+                }
+
+                $tOption->save(false);
+
+                unset($options[$option]);
+            }
+
+            GoodOptionsValue::deleteAll(['and', ['in', 'option', $deleteOptions], ['good' => $good->ID]]);
+
+            $good->getOptions(true);
+        }
+
+        $this->getView()->title = 'Добавление товара';
 
         return $this->render('edit', [
             'good'              =>  $good,
-            //'goodUk'          =>  $goodUK,
             'goodMainForm'      =>  $goodMainForm,
             'goodAttributesForm'=>  $goodAttributesForm,
             'goodExportForm'    =>  $goodExportForm,
@@ -463,9 +506,21 @@ class DefaultController extends Controller
      * @return mixed
      */
     public function addPhoto($file, $good){
-        $file = UploadHelper::__upload($file);
+        //$file = UploadHelper::__upload($file);
 
-        return $good->addPhoto($file);
+        $uploader = new S3Uploader();
+
+        if(!empty($good->name)){
+            $filename = substr(TranslitHelper::to($good->name), 0, 32);
+        }else{
+            $filename = \Yii::$app->security->generateRandomString(32);
+        }
+
+        $filename .= "-".\Yii::$app->security->generateRandomString(8);
+
+        return $good->addPhoto($uploader->upload($file, [
+            'name' => $uploader->setName($filename, $file)
+        ]));
     }
 
     /**
@@ -506,7 +561,6 @@ class DefaultController extends Controller
 
         $request = \Yii::$app->request;
 
-        $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good->category, $good);
 
         if($request->get("act") == "edit"){
             $goodMainForm = new GoodMainForm();
@@ -514,12 +568,19 @@ class DefaultController extends Controller
             $goodExportForm = new GoodExportForm();
 
             $goodMainForm->loadGood($good);
-            $goodAttributesForm->loadGood($good);
-            $goodExportForm->loadGood($good);
 
             if($request->post("GoodMainForm") && $goodMainForm->load($request->post())){
                 $goodMainForm->save();
+
+                $good = Good::findOne($param);
+
+                $goodMainForm->loadGood($good);
             }
+
+            $goodAttributesForm->loadGood($good);
+            $goodExportForm->loadGood($good);
+
+
 
             if($request->post("GoodOption")){
                 $options = $deleteOptions = [];
@@ -558,6 +619,8 @@ class DefaultController extends Controller
 
                 $good->getOptions(true);
             }
+
+            $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good->category, $good);
 
             return $this->render('edit', [
                 'good'              =>  $good,

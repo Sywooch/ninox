@@ -4,6 +4,16 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
 	'timeZone'	=>	'UTC',
     'components' => [
+		's3' => [
+			'class' => 'frostealth\yii2\aws\s3\Service',
+			'credentials' => [
+				'key' 		=> 'AKIAIALHOP4U7PDKIYTA',
+				'secret' 	=> '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',
+			],
+			'region' 		=> 'eu-central-1',
+			'defaultBucket' => 'krasota-style',
+			'defaultAcl' 	=> 'public-read',
+		],
 		'formatter' =>  [
 			'class' =>  'common\components\Formatter'
 		],
@@ -33,7 +43,7 @@ return [
 				'*' => [
 					'class' => 'yii\i18n\PhpMessageSource',
 					'basePath' => '@common/messages', // if advanced application, set @frontend/messages
-					'sourceLanguage' => 'ru_RU',
+					'sourceLanguage' => 'ru-RU',
 					'fileMap' => [
 						//'main' => 'main.php',
 					],

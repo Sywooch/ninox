@@ -87,7 +87,7 @@ class BannerHelper extends Component
 
         return Html::tag('div', Html::tag('div',
                // Html::tag('span', '', ['class' => 'icons-fav-bask']).
-                Html::tag('div', html::tag('span', '',
+                Html::tag('div', Html::tag('span', '',
                     ['class' => 'item-wish desire-ico ico'.
                         (\Yii::$app->user->isGuest ? ' is-guest' : '').
                         (\Yii::$app->user->isGuest ?

@@ -41,29 +41,35 @@ $css = <<<'CSS'
 CSS;
 
 $js = <<<'JS'
-    $("#goodmainform-isunlimited").on('change', function(e){
-        var elem = $("#goodmainform-count")[0];
+    var recalcRetailPrice = function(input){
+        $(".retailPrice input").val(parseInt(input.val()) + parseInt((input.val() / 100 * $("#categoryPercent").val())));
+    }
+
+    $("body").on("keyup", "#goodmainform-anothercurrencyvalue", function(){
+        if($(this).val().length != 0){
+            var val = parseFloat($(this).val()) * parseFloat($("#usd-site-value").val());
+        
+            $(".wholesalePrice input").val(Math.ceil(val));
+            recalcRetailPrice($(".wholesalePrice input"));
+        }
+    }).on('keyup', ".wholesalePrice input", function(){
+        recalcRetailPrice($(this));
+    }).on('change', "#goodmainform-undefinedpackageamount", function(e){
+        var elem = $("#goodmainform-inpackageamount");
         if(e.currentTarget.checked){
-            elem.setAttribute('disabled', 'disabled');
+            elem.attr('disabled', 'disabled');
         }else{
-            elem.removeAttribute('disabled');
+            elem.removeAttr('disabled');
+        }  
+    }).on('change', "#goodmainform-isunlimited", function(e){
+        var elem = $("#goodmainform-count");
+                
+        if($(this).prop('checked')){
+            elem.attr('disabled', 'disabled');
+        }else{
+            elem.removeAttr('disabled');
         }
     });
-
-    $("#goodmainform-undefinedpackageamount").on('change', function(e){
-        var elem = $("#goodmainform-inpackageamount")[0];
-        if(e.currentTarget.checked){
-            elem.setAttribute('disabled', 'disabled');
-        }else{
-            elem.removeAttribute('disabled');
-        }
-    });
-
-    $(".wholesalePrice input").on('keyup', function(){
-        var retailPrice = (parseInt($(this).val()) + parseInt(($(this).val() / 100 * $("#categoryPercent").val())));
-
-        $(".retailPrice input").val(retailPrice);
-    })
 JS;
 
 $this->registerJs($js);
@@ -72,7 +78,7 @@ $this->registerCss($css);
 
 echo Html::input('hidden', 'c', $category->retailPercent, ['id' => 'categoryPercent', 'style' => 'display: none']);
 
-$form = new ActiveForm([
+$form = ActiveForm::begin([
     'options'   =>  [
         'class' =>  'goodEditForm',
     ],
@@ -80,8 +86,6 @@ $form = new ActiveForm([
     'validateOnType'    =>  true,
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL]
 ]);
-
-$form->begin();
 
 if(empty($model->getErrors()) && $model->isSaved){
     echo Html::tag('div', Html::tag('b', 'Успех!').' Основная информация о товаре сохранена!', [

@@ -8,8 +8,8 @@ use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use backend\controllers\SiteController as Controller;
 
 /**
  * Default controller for the `payments` module
