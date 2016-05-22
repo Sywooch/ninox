@@ -112,6 +112,7 @@ $css = <<<'CSS'
     }
     .block-span span{
     display: block;
+    line-height: 28px;
     }
     .blue-line{
     width: 58px;
@@ -133,6 +134,37 @@ $css = <<<'CSS'
     .order-history ul{
         padding: 0px;
         list-style: inside;
+    }
+    .order-sum:hover + .order-sum-block{
+        display: block;
+    }
+    .order-sum-block{
+    display: none;
+    width: 320px;
+    height: 245px;
+    background: white;
+    position: absolute;
+    margin-top: -18px;
+    border-radius: 5px;
+    z-index: 1;
+    box-shadow: 0px 0px 10px black;
+    padding: 30px;
+padding-right: 53px;
+    }
+    .order-sum-block span{ line-height: 28px;}
+    .order-sum-block:hover{
+    display: block;
+    }
+    .order-sum-block .blue-line{
+    width: 100%;
+    }
+    .accordion .ui-accordion-header{
+    background: none;
+    border: none;
+    }
+    .accordion .ui-accordion-content{
+    background: none;
+    border: none;
     }
 CSS;
 
@@ -568,7 +600,7 @@ echo Html::tag('div', '', [
     echo Html::a('История клиента', Url::to(['/printer/invoice/'.$order->id]), [
         'class' =>  'btn btn-default'
     ]).
-Html::a('История заказа', '#orderHistory', [
+    Html::a('История заказа', '#orderHistory', [
         'class' =>  'btn btn-default'
     ])
     ?>
@@ -580,13 +612,22 @@ Html::a('История заказа', '#orderHistory', [
           <div class="blue-line"></div>
           <span>Елемананна Стиракафаканонцова</span>
           <span>+38(063)503-55-89</span>
-          <span><b><l>Сумма заказа 1850 грн</l></b></span>
+          <span class="order-sum"><b><l>Сумма заказа 1850 грн</l></b></span>
+          <div class="order-sum-block">
+              <b>Сума заказа</b>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <div class="blue-line"></div>
+              <b>Сума к оплате</b>
+          </div>
 <?php
 echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->id]), [
     'class' =>  'btn btn-default'
 ]). Html::tag('span', 'На карту', [
         'class' =>  'label label-info',
-        'style' =>  'display: inline-block; border-radius: 10px;'
+        'style' =>  'display: inline-block; border-radius: 10px; line-height: normal;'
     ])
 ?>
       </div>
@@ -616,7 +657,7 @@ echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->
       </div>
     </div>
 <hr>
-<div class="row">
+<div class="row accordion">
     <?=Accordion::widget([
         'items' => [
             [
