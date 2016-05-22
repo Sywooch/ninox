@@ -239,6 +239,7 @@ class GoodMainForm extends Model{
     public function rules(){
         return [
             [['inPackageAmount'], 'default', 'value' => 1],
+            [['name', 'code', 'barcode', 'additionalCode', 'inPackageAmount', 'count', 'wholesalePrice', 'retailPrice'], 'trim'],
             [['name', 'code', 'additionalCode', 'measure', 'anotherCurrencyTag'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['enabled', 'anotherCurrencyPeg', 'isOriginal', 'haveGuarantee', 'isUnlimited', 'undefinedPackageAmount'],
