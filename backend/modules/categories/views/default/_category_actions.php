@@ -27,11 +27,11 @@ use yii\helpers\Url;
                     'items'     =>  [
                         [
                             'label'     =>  'Товар',
-                            'url'       =>  Url::toRoute(['/good/add', 'category' => $nowCategory->ID])
+                            'url'       =>  Url::toRoute(['/goods/add', 'category' => $nowCategory->ID])
                         ],
                         [
                             'label'     =>  'Несколько товаров',
-                            'url'       =>  Url::toRoute(['/good/add', 'category' => $nowCategory->ID, 'mode' => 'lot'])
+                            'url'       =>  Url::toRoute(['/goods/add', 'category' => $nowCategory->ID, 'mode' => 'lot'])
                         ],
                         '<li class="divider"></li>',
                         [
