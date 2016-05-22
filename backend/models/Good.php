@@ -164,6 +164,10 @@ class Good extends \common\models\Good{
             $this->p_photo = '';
         }
 
+        if(empty($this->rate)){
+            $this->rate = 0;
+        }
+
         if(empty($this->listorder)){
             $this->listorder = (self::find()->where(['GroupID' => $this->GroupID])->max("listorder") + 1);
         }
