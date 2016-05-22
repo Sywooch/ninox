@@ -7,6 +7,7 @@
  */
 use yii\helpers\Html;
 
+
 ?>
 <div class="col-xs-12 col-sm-6 col-md-8 block-span" style="text-align: left">
     <b>История заказа</b>
@@ -19,6 +20,7 @@ use yii\helpers\Html;
     <span><b>sdfgd</b>dfgdfg</span>
     <span><b>sdfgd</b>dfgdfg</span>
     <div class="blue-line"></div>
+
     <span style="float: left"><b>sdfgd</b>dfgdfg</span>
     <?php
     echo Html::tag('span', 'SMS', [
@@ -26,6 +28,7 @@ use yii\helpers\Html;
             'style' =>  'display: inline-block; border-radius: 10px; line-height: normal;'
         ])
     ?>
+
 
 
 </div>

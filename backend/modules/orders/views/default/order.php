@@ -112,7 +112,9 @@ $css = <<<'CSS'
     }
     .block-span span{
     display: block;
+
     line-height: 28px;
+
     }
     .blue-line{
     width: 58px;
@@ -135,6 +137,7 @@ $css = <<<'CSS'
         padding: 0px;
         list-style: inside;
     }
+
     .order-sum:hover + .order-sum-block{
         display: block;
     }
@@ -166,6 +169,7 @@ padding-right: 53px;
     background: none;
     border: none;
     }
+
 CSS;
 
 $js = <<<'JS'
@@ -600,7 +604,7 @@ echo Html::tag('div', '', [
     echo Html::a('История клиента', Url::to(['/printer/invoice/'.$order->id]), [
         'class' =>  'btn btn-default'
     ]).
-    Html::a('История заказа', '#orderHistory', [
+Html::a('История заказа', '#orderHistory', [
         'class' =>  'btn btn-default'
     ])
     ?>
@@ -612,6 +616,7 @@ echo Html::tag('div', '', [
           <div class="blue-line"></div>
           <span>Елемананна Стиракафаканонцова</span>
           <span>+38(063)503-55-89</span>
+
           <span class="order-sum"><b><l>Сумма заказа 1850 грн</l></b></span>
           <div class="order-sum-block">
               <b>Сума заказа</b>
@@ -692,6 +697,7 @@ echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->
         </div>
 
         <div class="clearfix"></div>
+
     </div>
     </div>
     <div class="col-md-6">
