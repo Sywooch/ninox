@@ -435,6 +435,32 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionEditableEdit(){
+        if(!\Yii::$app->request->isAjax){
+            throw new NotFoundHttpException("Данный метод возможен только через ajax!");
+        }elseif(empty(\Yii::$app->request->post("hasEditable"))){
+            throw new BadRequestHttpException("Данный метод предназначен для работы editable виджета!");
+        }
+
+        $orderID = \Yii::$app->request->post("editableKey");
+
+        $order = History::findOne(['id' => $orderID]);
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
+
+        $attribute = \Yii::$app->request->post("editableAttribute");
+        $data = \Yii::$app->request->post("History");
+        $data = $data[\Yii::$app->request->post("editableIndex")];
+
+        $order->$attribute = $data[$attribute];
+
+        $order->save(false);
+
+        return $order->$attribute;
+    }
+
     public function actionShowlist($context = false, $ordersSource = false){
         if(!\Yii::$app->request->isAjax && !$context){
             throw new BadRequestHttpException("Этот метод доступен только через ajax!");
@@ -450,7 +476,9 @@ class DefaultController extends Controller
             'searchModel'       =>  $historySearch,
             'orderSource'       =>  $ordersSource,
             'orders'            =>  $historySearch->search(
-                $ordersSource == 'search' ? [] :
+                $ordersSource == 'search' ? [
+                    'ordersSource'  =>  'search'
+                ] :
                     $ordersSource != false ? array_merge(['ordersSource' => $ordersSource], \Yii::$app->request->get()) : \Yii::$app->request->get())
         ]);
 

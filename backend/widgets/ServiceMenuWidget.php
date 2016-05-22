@@ -73,6 +73,13 @@ class ServiceMenuWidget extends Widget{
             ]
         ],
         [
+            'label' =>  'Не оплаченые на карту',
+            'link'  =>  'notPayedOnCard',
+            'options'   =>  [
+                'class' =>  'btn btn-default btn-sm',
+            ]
+        ],
+        [
             'label' =>  'Все',
             'link'  =>  'all',
             'options'   =>  [
@@ -195,7 +202,7 @@ class ServiceMenuWidget extends Widget{
 
     private function renderLeftBlock(){
         $data = '';
-        $date = strftime("%d %B %Y", time());
+        $date = \Yii::$app->formatter->asDate(time());
 
         if($this->showFilterButtons){
             $data .= $this->renderFilterButtons();

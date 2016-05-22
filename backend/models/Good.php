@@ -8,6 +8,7 @@
 
 namespace backend\models;
 
+use backend\components\S3Uploader;
 use common\helpers\TranslitHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
@@ -96,7 +97,15 @@ class Good extends \common\models\Good{
             throw new NotFoundHttpException("Такой фотографии не найдено!");
         }
 
-        return $photo->delete();
+        if($photo->delete()){
+            $s3 = new S3Uploader();
+
+            $s3->remove($photo->ico);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

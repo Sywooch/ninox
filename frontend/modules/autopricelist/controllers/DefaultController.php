@@ -44,18 +44,18 @@ class DefaultController extends Controller
             $categoriesByCodes[$category->Code] = $category;
         }
 
-        $items = Good::find()->where(['in', 'GroupID', $priceList->categories]);
+        $items = Good::find()->joinWith('translations')->where(['in', '`goods`.`GroupID`', $priceList->categories]);
 
         if(isset($priceList->options['unlimited']) && !$priceList->options['unlimited']){
-            $items->andWhere(['isUnlimited' => 0]);
+            $items->andWhere(['`goods`.`isUnlimited`' => 0]);
         }
 
         if(isset($priceList->options['deleted']) && !$priceList->options['deleted']){
-            $items->andWhere(['Deleted' =>  0]);
+            $items->andWhere(['`goods`.`Deleted`' =>  0]);
         }
 
         if(isset($priceList->options['available']) && $priceList->options['available']){
-            $items->andWhere(['show_img' =>  1])->andWhere('count > 0');
+            $items->andWhere(['`item_translations`.`enabled`' =>  1])->andWhere('`goods`.`count` > 0');
         }
 
         return $this->render('index', [

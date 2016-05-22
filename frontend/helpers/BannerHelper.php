@@ -87,7 +87,7 @@ class BannerHelper extends Component
 
         return Html::tag('div', Html::tag('div',
                // Html::tag('span', '', ['class' => 'icons-fav-bask']).
-                Html::tag('div', html::tag('span', '',
+                Html::tag('div', Html::tag('span', '',
                     ['class' => 'item-wish desire-ico ico'.
                         (\Yii::$app->user->isGuest ? ' is-guest' : '').
                         (\Yii::$app->user->isGuest ?
@@ -98,7 +98,7 @@ class BannerHelper extends Component
                 Html::a(Html::tag('span', $good->Name), '/tovar/'.$good->link.'-g'.$good->ID).
                 Html::tag('span', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'price'])
             ).
-            Html::tag('div', Html::a(Html::img('http://krasota-style.com.ua/img/catalog/'.$good->photo), '/tovar/'.$good->link.'-g'.$good->ID)), [
+            Html::tag('div', Html::a(Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$good->photo), '/tovar/'.$good->link.'-g'.$good->ID)), [
             'class' => 'goods-item'
         ]);
     }

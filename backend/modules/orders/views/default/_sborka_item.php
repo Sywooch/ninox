@@ -5,12 +5,16 @@ use yii\bootstrap\Html;
 echo Html::tag('div', Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$item->photo).Html::tag('div', '', ['class' => 'ico']), [
         'class' =>  'image'.($item->inOrder ? ' access' : ($item->notFounded ? ' denied' : ''))
     ]),
+    Html::tag('span', $item->name, [
+        'style' =>  'display: inline-block; margin-top: 20px; padding: 0px 30px; overflow: hidden; max-width: 340px; max-height: 18px;'
+    ]),
     Html::tag('div',
         Html::tag('div',
             Html::input('string', null, $item->count, ['class' => 'inOrderCount']).
             Html::button('ОК', ['class' => 'btn btn-link saveCount']).
             Html::tag('div',
                 Html::tag('span', $item->code).
+                (!empty($item->good->BarCode2) ? Html::tag('small', $item->good->BarCode2) : '').
                 Html::tag('span', "{$item->good->count} ШТ."),
                 [
                     'class' => 'count'

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\models\Good;
 use Yii;
 
 /**
@@ -34,6 +35,10 @@ class Cart extends \yii\db\ActiveRecord
             [['date'], 'safe'],
             [['cartCode'], 'string', 'max' => 15],
         ];
+    }
+
+    public function getGood(){
+        return $this->hasOne(Good::className(), ['ID' => 'itemID']);
     }
 
     /**

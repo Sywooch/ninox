@@ -9,8 +9,14 @@
 use yii\helpers\Html;
 use yii2mod\slider\IonSlider;
 
-echo Html::beginTag('div', ['class' => 'filters']).
-	 Html::img('/img/site/sale_2.png').
+echo Html::beginTag('div', ['class' => 'filters']);
+
+if(substr($category->Code,0,3) == 'AAB'){
+	echo Html::img('/img/site/sale_2.png');
+}
+	else {
+		echo '';
+}
 	Html::tag('div',
 		Html::tag('div', \Yii::t('shop', 'Цена'), ['class' => 'filter-head']).
 		Html::tag('div',

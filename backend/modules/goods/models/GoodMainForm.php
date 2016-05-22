@@ -56,7 +56,7 @@ class GoodMainForm extends Model{
     /**
      * @type integer колличество в упаковке
      */
-    public $inPackageAmount;
+    public $inPackageAmount = 1;
 
     /**
      * @type bool известно-ли колличество в упаковке
@@ -135,6 +135,8 @@ class GoodMainForm extends Model{
      * @param $good Good
      */
 
+    public $good;
+
     public function loadGood($good){
         foreach($this->modelAttributes() as $new => $old){
             $this->$new = $good->$old;
@@ -149,25 +151,25 @@ class GoodMainForm extends Model{
 
     public function modelAttributes(){
         return [
-            'id'            =>  'ID',
-            'name'          =>  'Name',
-            'description'   =>  'Description',
-            'code'          =>  'Code',
-            'barcode'       =>  'BarCode1',
-            'additionalCode'=>  'BarCode2',
-            'enabled'       =>  'enabled',
-            'measure'       =>  'measure',
-            'category'      =>  'GroupID',
-            'inPackageAmount'=> 'num_opt',
-            'wholesalePrice'=>  'PriceOut1',
-            'retailPrice'   =>  'PriceOut2',
+            'id'                =>  'ID',
+            'name'              =>  'Name',
+            'description'       =>  'Description',
+            'code'              =>  'Code',
+            'barcode'           =>  'BarCode1',
+            'additionalCode'    =>  'BarCode2',
+            'enabled'           =>  'enabled',
+            'measure'           =>  'measure',
+            'category'          =>  'GroupID',
+            'inPackageAmount'   => 'num_opt',
+            'wholesalePrice'    =>  'PriceOut1',
+            'retailPrice'       =>  'PriceOut2',
             'anotherCurrencyTag'    =>  'anotherCurrencyTag',
             'anotherCurrencyPeg'    =>  'anotherCurrencyPeg',
             'anotherCurrencyValue'  =>  'anotherCurrencyValue',
-            'count'         =>  'count',
-            'isOriginal'    =>  'originalGood',
-            'haveGuarantee' =>  'garantyShow',
-            'isUnlimited'   =>  'isUnlimited'
+            'count'             =>  'count',
+            'isOriginal'        =>  'originalGood',
+            'haveGuarantee'     =>  'garantyShow',
+            'isUnlimited'       =>  'isUnlimited'
         ];
     }
 
@@ -181,6 +183,10 @@ class GoodMainForm extends Model{
             $good = Good::findOne($this->id);
         }
 
+        if($this->undefinedPackageAmount){
+            $this->inPackageAmount = 0;
+        }
+
         foreach($this->modelAttributes() as $newAttribute => $oldAttribute){
             if(is_bool($this->$newAttribute)){
                 $good->$oldAttribute = $this->$newAttribute ? 1 : 0;
@@ -190,6 +196,7 @@ class GoodMainForm extends Model{
         }
 
         if($this->validate() && $good->save(false)){
+            $this->good = $good;
             return $this->afterSave();
         }else{
             foreach($this->modelAttributes() as $newAttribute => $oldAttribute){
@@ -208,34 +215,36 @@ class GoodMainForm extends Model{
     public function attributeLabels()
     {
         return [
-            'id'            =>  'ID',
-            'name'          =>  'Название',
-            'description'   =>  'Описание',
-            'code'          =>  'Код',
-            'barcode'       =>  'Штрихкод',
-            'additionalCode'=>  'Добавочный код',
-            'enabled'       =>  'Включен',
-            'measure'       =>  'measure',
-            'category'      =>  'Категория',
-            'inPackageAmount'=> 'штук в упаковке',
-            'wholesalePrice'=>  'Оптовая цена',
-            'retailPrice'   =>  'Розничная цена',
+            'id'                =>  'ID',
+            'name'              =>  'Название',
+            'description'       =>  'Описание',
+            'code'              =>  'Код',
+            'barcode'           =>  'Штрихкод',
+            'additionalCode'    =>  'Добавочный код',
+            'enabled'           =>  'Включен',
+            'measure'           =>  'measure',
+            'category'          =>  'Категория',
+            'inPackageAmount'   => 'штук в упаковке',
+            'wholesalePrice'    =>  'Оптовая цена',
+            'retailPrice'       =>  'Розничная цена',
             'anotherCurrencyTag'    =>  'Валюта',
             'anotherCurrencyValue'  =>  'Цена в валюте',
             'anotherCurrencyPeg'    =>  '',
-            'count'          =>  'Количество',
-            'isOriginal'     =>  'Оригинальный товар',
-            'haveGuarantee'  =>  'Есть гарантия',
+            'count'             =>  'Количество',
+            'isOriginal'        =>  'Оригинальный товар',
+            'haveGuarantee'     =>  'Есть гарантия',
         ];
     }
 
     public function rules(){
         return [
+            [['inPackageAmount'], 'default', 'value' => 1],
             [['name', 'code', 'additionalCode', 'measure', 'anotherCurrencyTag'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['enabled', 'anotherCurrencyPeg', 'isOriginal', 'haveGuarantee', 'isUnlimited', 'undefinedPackageAmount'],
                 'boolean'],
             [['id', 'barcode', 'category', 'inPackageAmount', 'count'], 'integer'],
+            [['wholesalePrice', 'retailPrice', 'name'], 'required'],
             [['wholesalePrice', 'retailPrice', 'anotherCurrencyValue'], 'double'],
         ];
     }

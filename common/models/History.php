@@ -227,9 +227,9 @@ class History extends \yii\db\ActiveRecord
     {
         return [
             [['id', 'deliveryInfo', 'nakladna', 'moneyConfirmedDate', 'takeOrderDate', 'takeTTNMoneyDate'], 'required'],
-            [['id', 'number', 'added', 'deliveryType', 'deliveryParam', 'customerID', 'paymentType', 'paymentParam', 'callback', 'canChangeItems', 'actualAmount', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'domainId', 'callsCount', 'hasChanges', 'receiverID', 'return', 'orderSource', 'sourceType', 'sourceInfo', 'orderProvider'], 'integer'],
+            [['id', 'number', 'added', 'deliveryType', 'deliveryParam', 'customerID', 'paymentType', 'paymentParam', 'callback', 'canChangeItems', 'moneyCollectorUserId', 'globalmoney', 'nakladnaSendState', 'done', 'responsibleUserID', 'confirmed', 'moneyConfirmed', 'confirm_otd', 'processed', 'smsState', 'deleted', 'takeOrder', 'takeTTNMoney', 'boxesCount', 'isNew', 'transactionSended', 'domainId', 'callsCount', 'hasChanges', 'receiverID', 'return', 'orderSource', 'sourceType', 'sourceInfo', 'orderProvider'], 'integer'],
             [['deliveryInfo', 'customerComment'], 'string'],
-            [['amountDeductedOrder', 'currencyExchange', 'originalSum', 'deliveryCost'], 'number'],
+            [['amountDeductedOrder', 'currencyExchange', 'originalSum', 'deliveryCost', 'actualAmount'], 'number'],
             [['moneyConfirmedDate', 'doneDate', 'sendDate', 'receivedDate', 'takeOrderDate', 'takeTTNMoneyDate', 'deleteDate', 'confirmedDate', 'smsSendDate', 'nakladnaSendDate', 'statusChangedDate'], 'safe'],
             [['customerEmail', 'deliveryAddress', 'deliveryRegion', 'deliveryCity', 'coupon', 'deliveryReference', 'deliveryEstimatedDate'], 'string', 'max' => 255],
             [['customerName', 'customerSurname', 'customerPhone', 'customerFathername'], 'string', 'max' => 64],

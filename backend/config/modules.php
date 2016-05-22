@@ -24,6 +24,9 @@ return [
     'payments'      =>  'backend\modules\payments\Module',
     'gridview'      =>  '\kartik\grid\Module',
     'treemanager'   =>  '\kartik\tree\Module',
+    'carts' => [
+        'class' => 'backend\modules\carts\Module',
+    ],
     'debug' => [
         'class' => 'yii\debug\Module',
         'allowedIPs' => ['80.78.45.114', '127.0.0.1', '::1'],

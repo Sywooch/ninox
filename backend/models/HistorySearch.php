@@ -38,6 +38,17 @@ class HistorySearch extends History{
             ]
         ]);
 
+        if(empty($params['ordersSource'])){
+            $params['ordersSource'] = null;
+        }elseif($params['ordersSource'] == 'search'){
+            $ignoreFilters['ordersSource'] = true;
+            $ignoreFilters['ordersStatus'] = true;
+        }
+
+        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
+            $params['showDates'] = 'alltime';
+        }
+
         if(!empty($params["ordersSource"]) && !isset($ignoreFilters['ordersSource'])){
 	        switch($params["ordersSource"]){
 		        case 'all':
@@ -89,11 +100,6 @@ class HistorySearch extends History{
 		    }
 	    }
 
-
-        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
-            $params['showDates'] = 'alltime';
-        }
-
         if((!empty($params["showDates"])  && !isset($ignoreFilters['showDates'])) || (empty($params['HistorySearch'])  && !isset($ignoreFilters['HistorySearch']))){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
@@ -119,7 +125,7 @@ class HistorySearch extends History{
             }
         }
 
-        if(!isset($ignoreFilters['ordersStatus'])){
+        if(!isset($ignoreFilters['ordersStatus']) && $params['ordersSource'] != 'search'){
             $params['ordersStatus'] = !empty($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
 
             switch($params['ordersStatus']){
@@ -129,6 +135,10 @@ class HistorySearch extends History{
 	                    ->andWhere(['status' => self::STATUS_WAIT_DELIVERY])
                         ->andWhere(['in', 'deliveryType', [1, 2]])
                         ->andWhere(['deleted' => 0]);
+                    break;
+                case 'notPayedOnCard':
+                    $query->andWhere(['moneyConfirmed' => 0, 'paymentType' => 2])
+                        ->andWhere('`actualAmount` != \'0\'');
                     break;
                 case 'done':
                 case self::STATUS_DONE:
@@ -143,8 +153,10 @@ class HistorySearch extends History{
             }
         }
 
-        if((!empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && (!empty($params['ordersSource']) && $params["ordersSource"] != 'deleted')){
+        if((empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && $params['ordersSource'] != 'search'){
             $query->andWhere('deleted = 0');
+        }elseif(!empty($params['ordersSource']) && $params["ordersSource"] == 'deleted'){
+            $query->andWhere('deleted = 1');
         }
 
         if(isset($params['responsibleUser'])){
@@ -163,6 +175,8 @@ class HistorySearch extends History{
         $this->addCondition($query, 'deliveryCity', true);
         $this->addCondition($query, 'nakladna', true);
         $this->addCondition($query, 'actualAmount');
+
+        \Yii::trace($query);
 
         return $onlyQuery ? $query : $dataProvider;
     }

@@ -33,6 +33,7 @@ class GoodTranslation extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['language'], 'default', 'value' => 'ru-RU'],
             [['ID', 'language'], 'required'],
             [['ID', 'enabled'], 'integer'],
             [['language'], 'string', 'max' => 5],
@@ -57,6 +58,10 @@ class GoodTranslation extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
+        if(empty($this->name) && empty($this->description)){
+            return false;
+        }
+
         if($this->isNewRecord || $this->oldAttributes['name'] != $this->name){
             $this->link = TranslitHelper::to($this->name);
         }

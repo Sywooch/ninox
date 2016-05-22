@@ -2,6 +2,10 @@
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
 
+$this->title = 'Оплаты';
+
+$this->params['breadcrumbs'][] = $this->title;
+
 $js = <<<'JS'
 $("body").on('click', ".pGroup button.confirm", function(){
     var elem = $(this);
@@ -66,7 +70,7 @@ $this->registerJs($js);
 $this->title = 'Подтверждение оплат';
 
 
-echo \yii\bootstrap\Html::tag('h1', 'Оплаты');
+echo \yii\bootstrap\Html::tag('h1', $this->title);
 
 \yii\widgets\Pjax::begin([
     'id'    =>  'paymentConfirmGrid'
@@ -75,17 +79,70 @@ echo \yii\bootstrap\Html::tag('h1', 'Оплаты');
 echo \kartik\grid\GridView::widget([
     'dataProvider'  =>  $dataProvider,
     'summary'       =>      false,
+    'rowOptions'    =>  function($model){
+        return [
+            //'class' =>  ($model->moneyConfirmed == 1 ? 'success' : 'warning')
+        ];
+    },
     'columns'       =>  [
         [
             'class' =>  \yii\grid\SerialColumn::className()
         ],
         [
             'attribute' =>  'nomer_id',
-            'label'     =>  'Номер заказа'
+            'label'     =>  'Номер заказа',
+            'format'    =>  'raw',
+            'value'     =>  function($model){
+                if(!empty($model->order)){
+                    return \yii\bootstrap\Html::a($model->nomer_id, '/orders/showorder/'.$model->order->ID);
+                }
+
+                return $model->nomer_id;
+            }
+        ],
+        [
+            'label'     =>  'Дата оформления',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return \Yii::$app->formatter->asDatetime($model->order->added, 'php: d.m.Y H:i');
+            }
+        ],
+        [
+            'label'     =>  'ФИО',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return $model->order->customerSurname.' '.$model->order->customerName;
+            }
         ],
         [
             'attribute' =>  'summ',
             'label'     =>  'Сумма'
+        ],
+        [
+            'label'     =>  'Город',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return $model->order->deliveryCity;
+            }
+        ],
+        [
+            'label'     =>  'Телефон',
+            'value'     =>  function($model){
+                if(empty($model->order)){
+                    return '(заказ не найден)';
+                }
+
+                return \Yii::$app->formatter->asPhone($model->order->customerPhone);
+            }
         ],
         [
             'attribute' =>  'data_oplaty',

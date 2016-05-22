@@ -140,13 +140,7 @@ $form = ActiveForm::begin([
                         Оплата:
                     </td>
                     <td>
-                        <?=$form->field($model, 'paymentConfirmed')->widget(SwitchInput::classname(), [
-                            'type'  =>  SwitchInput::CHECKBOX,
-                            'pluginOptions' => [
-                                'onText' => 'Да',
-                                'offText' => 'Нет',
-                            ]
-                        ])?>
+                        <?=$form->field($model, 'paymentConfirmed')->checkbox()?>
                         <?=''//Html::button('Сообщить об оплате', ['class' => 'btn btn-default pull-right informPayment'])?>
                     </td>
                 </tr>
@@ -161,13 +155,7 @@ $form = ActiveForm::begin([
                         Платёж Global Money:
                     </td>
                     <td>
-                        <?=$form->field($model, 'globalMoneyPayment')->widget(SwitchInput::classname(), [
-                            'type'  =>  SwitchInput::CHECKBOX,
-                            'pluginOptions' => [
-                                'onText' => 'Да',
-                                'offText' => 'Нет',
-                            ]
-                        ]);?>
+                        <?=$form->field($model, 'globalMoneyPayment')->checkbox();?>
                     </td>
                 </tr>
             </tbody>

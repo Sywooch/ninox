@@ -108,8 +108,8 @@ $css = <<<'CSS'
 
 .sborka .items-count{
     width: 100%;
-    height: 146px;
-    padding: 50px;
+    height: 106px;
+    padding: 30px 30px;
 }
 
 .sborka .items-count input{
@@ -142,7 +142,6 @@ $css = <<<'CSS'
 .sborka .items-count .count{
     float: right;
     height: 42px;
-    overflow: hidden;
     line-height: initial;
 }
 
