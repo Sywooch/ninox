@@ -110,6 +110,10 @@ class History extends \common\models\History
     }
 
     public function getNewCustomer(){
+        if(empty($this->customer)){
+            return false;
+        }
+
         return sizeof($this->customer->orders) > 1;
     }
 

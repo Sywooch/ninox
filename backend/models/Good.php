@@ -138,6 +138,11 @@ class Good extends \common\models\Good{
         return $item->save(false);
     }
 
+    /**
+     * TODO: пожалуйста, пофиксите эту хуйню через базу данных
+     * @param bool $insert
+     * @return bool
+     */
     public function beforeSave($insert)
     {
         if(empty($this->dimensions)){
