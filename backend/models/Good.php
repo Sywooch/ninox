@@ -160,6 +160,10 @@ class Good extends \common\models\Good{
             $this->diameter = '';
         }
 
+        if(empty($this->p_photo)){
+            $this->p_photo = '';
+        }
+
         if(empty($this->listorder)){
             $this->listorder = (self::find()->where(['GroupID' => $this->GroupID])->max("listorder") + 1);
         }
