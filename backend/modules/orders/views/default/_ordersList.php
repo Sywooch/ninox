@@ -47,6 +47,14 @@ echo \kartik\grid\GridView::widget([
                 break;
         }
 
+        if($model->newCustomer){
+            $class .= ' newCustomer';
+        }
+
+        if(!empty($model->sumDiscount)){
+            $class .= ' hasDiscount';
+        }
+
         return ['class' => $class];
     },
     'hover'         =>  true,
