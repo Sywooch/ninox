@@ -181,7 +181,7 @@ class Good extends \common\models\Good{
         }
 
         if(empty($this->otgruzka)){
-            $this->photodate = '0000-00-00 00:00:00';
+            $this->otgruzka = '0000-00-00 00:00:00';
         }
 
         $this->tovupdate = date('Y-m-d H:i:s');
