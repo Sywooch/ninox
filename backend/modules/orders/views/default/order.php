@@ -542,25 +542,54 @@ echo Html::tag('div', '', [
     'style'                 =>  'display: none',
     'data-attribute-orderID'=>  $order->id,
     'id'                    =>  'orderInfo'
-])
+]);
+
+$labels = [];
+
+$paymentLabel = '';
+
+switch($order->paymentType){
+    case 1:
+        $paymentLabel = Html::tag('span', 'Наложеный платёж ', [
+            'class' =>  'label label-danger',
+            'style' =>  'display: inline-block; border-radius: 10px; float: left;'
+        ]);
+        break;
+    case 2:
+        $paymentLabel = Html::tag('span', 'На карту', [
+            'class' =>  'label label-info',
+            'style' =>  'display: inline-block; border-radius: 10px; float: left;'
+        ]);
+        break;
+    case 3:
+        $paymentLabel = Html::tag('span', 'Наличными', [
+            'class' =>  'label label-success',
+            'style' =>  'display: inline-block; border-radius: 10px; float: left;'
+        ]);
+        break;
+}
+
+if(!empty($order->sendDate)){
+    $labels[] = Html::tag('span', Html::tag('b', 'Заказ отправлен').' '.\Yii::$app->formatter->asDate($order->sendDate, 'php:d.m.Y'));
+}
+
+if(!empty($order->nakladna)){
+    $labels[] = Html::tag('span', Html::tag('b', 'ТТН').' '.$order->nakladna);
+}
+
+if(!empty($order->responsibleUser)){
+    $labels[] = Html::tag('span', Html::tag('b', 'Менеджер').' '.$order->responsibleUser->name);
+}
+
+$labels[] = $paymentLabel;
+
 ?>
 
 
 <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-8">
-        <h1 style="margin-top: 0px;">33792</h1>
-        <div>
-            <?php
-            echo Html::tag('span', 'На карту', [
-                    'class' =>  'label label-info',
-                    'style' =>  'display: inline-block; border-radius: 10px; float: left;'
-                ])
-            ?>
-            <div class="col-xs-6 col-sm-3"><b>dsafsdf</b>sfsdf</div>
-            <div class="col-xs-6 col-sm-3"><b>dsafsdf</b>sfsdf</div>
-            <div class="col-xs-6 col-sm-3"><b>dsafsdf</b>sfsdf</div>
-
-        </div>
+        <h1 style="margin-top: 0px;"><?=$order->number?></h1>
+        <?=Html::tag('div', implode('', $labels))?>
     </div>
 
 <div class="col-xs-6 col-md-4">
@@ -578,16 +607,13 @@ Html::a('История заказа', '#orderHistory', [
     <div class="row block-span">
       <div class="col-md-4">
           <div class="blue-line"></div>
-          <span>Елемананна Стиракафаканонцова</span>
-          <span>+38(063)503-55-89</span>
-          <span><b><l>Сумма заказа 1850 грн</l></b></span>
+          <span><?=$order->customerName?> <?=$order->customerSurname?></span>
+          <span><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></span>
+          <span><b><l>Сумма заказа <?=!empty($order->actualAmount) ? $order->actualAmount : $order->originalSum?> грн</l></b></span>
 <?php
 echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->id]), [
     'class' =>  'btn btn-default'
-]). Html::tag('span', 'На карту', [
-        'class' =>  'label label-info',
-        'style' =>  'display: inline-block; border-radius: 10px;'
-    ])
+]). $paymentLabel
 ?>
       </div>
       <div class="col-md-4">
@@ -605,8 +631,8 @@ echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->
       <div class="col-md-4">
           <div class="blue-line"></div>
 
-          <span><b>255 грн. на счету</b></span>
-          <span>Старый клиент (15 заказов - 155 000 грн)</span>
+          <span><b><?=$customer->money?> грн. на счету</b></span>
+          <span><?=sizeof($customer->orders) >= 2 ? 'Старый' : 'Новый'?> клиент (<?=\Yii::t('admin', '{count} заказов', ['count' => sizeof($customer->orders)])?> - 155 000 грн)</span>
           <span>Возвратов нет, <b>2 заказа не оплачено</b></span>
           <?php
           echo Html::a('Изменить', Url::to(['/printer/invoice/'.$order->id]), [
