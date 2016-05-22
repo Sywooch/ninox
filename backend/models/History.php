@@ -262,6 +262,10 @@ class History extends \common\models\History
             $this->deliveryParam = 0;
         }
 
+        if(empty($this->dimensions)){
+            $this->dimensions = '';
+        }
+
         $this->hasChanges = 1;
 
         return parent::beforeSave($insert);
