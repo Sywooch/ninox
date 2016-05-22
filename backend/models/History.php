@@ -422,7 +422,7 @@ class History extends \common\models\History
         $sumCustomerDiscount = 0;
 
         foreach($this->availableItems as $item){
-            if($item->discountSize == $this->customer->getDiscount() && $item->discountType == 2 && $item->priceRuleID == 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
+            if(!empty($this->customer) && $item->discountSize == $this->customer->getDiscount() && $item->discountType == 2 && $item->priceRuleID == 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
                 $sumCustomerDiscount += ($item->originalPrice - $item->price) * $item->count;
             }
         }
@@ -434,7 +434,7 @@ class History extends \common\models\History
         $discountSum = 0;
 
         foreach($this->availableItems as $item){
-            if(($item->discountSize != $this->customer->getDiscount() && $item->discountType == 2) && $item->priceRuleID != 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
+            if((!empty($this->customer) && $item->discountSize != $this->customer->getDiscount() && $item->discountType == 2) && $item->priceRuleID != 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
                 $discountSum += ($item->originalPrice - $item->price) * $item->count;
             }
         }
