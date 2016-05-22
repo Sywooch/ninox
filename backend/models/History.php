@@ -17,6 +17,8 @@ use yii\web\NotFoundHttpException;
  * @author  Nikolai Gilko   <n.gilko@gmail.com>
  * @property Customer $customer
  * @property Siteuser $responsibleUser
+ * @property SborkaItem[] $availableItems
+ * @property SborkaItem[] $missedItems
  */
 class History extends \common\models\History
 {
@@ -367,9 +369,20 @@ class History extends \common\models\History
         return $this->isWholesale;
     }
 
+
+
+    /**
+     * @return mixed
+     */
     public function getOrderSum(){
         if(empty($this->sum)){
-            $this->sum = SborkaItem::find()->select("SUM((`originalPrice` * `originalCount`))")->where(['orderID' => $this->id])->scalar();
+            $sum = 0;
+
+            foreach($this->items as $item){
+                $sum += $item->originalPrice * $item->originalCount;
+            }
+
+            $this->sum = $sum;
         }
 
         return $this->sum;
@@ -388,15 +401,75 @@ class History extends \common\models\History
      * @deprecated use $this->getRealSum() or $this->realSum
      */
     public function orderRealSumm(){
-        if(!empty($this->real_summ)){
-            return $this->real_summ;
+        return $this->realSum;
+    }
+
+    public function getSumWithoutDiscount(){
+        $sumWithoutDiscount = 0;
+
+        foreach($this->items as $item){
+            $sumWithoutDiscount += ($item->originalPrice * $item->count);
         }
 
-        foreach(SborkaItem::findAll(['orderID' => $this->id]) as $item){
-            $this->real_summ += ($item->price * $item->count);
+        return $sumWithoutDiscount;
+    }
+
+    public function getSumCustomerDiscount(){
+        $sumCustomerDiscount = 0;
+
+        foreach($this->availableItems as $item){
+            if($item->discountSize == $this->customer->getDiscount() && $item->discountType == 2 && $item->priceRuleID == 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
+                $sumCustomerDiscount += ($item->originalPrice - $item->price) * $item->count;
+            }
         }
 
-        return $this->real_summ;
+        return $sumCustomerDiscount;
+    }
+
+    public function getSumDiscount(){
+        $discountSum = 0;
+
+        foreach($this->availableItems as $item){
+            if(($item->discountSize != $this->customer->getDiscount() && $item->discountType == 2) && $item->priceRuleID != 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
+                $discountSum += ($item->originalPrice - $item->price) * $item->count;
+            }
+        }
+
+        return $discountSum;
+    }
+
+    public function getAvailableItems(){
+        $availableItems = [];
+
+        foreach($this->items as $item){
+            if($item->nalichie == 1){
+                $availableItems[] = $item;
+            }
+        }
+
+        return $availableItems;
+    }
+
+    public function getMissingItems(){
+        $missing = [];
+
+        foreach($this->items as $item){
+            if($item->nalichie == 0){
+                $missing[] = $item;
+            }
+        }
+
+        return $missing;
+    }
+
+    public function getMissingItemsSum(){
+        $missingItemsSum = 0;
+
+        foreach($this->missingItems as $item){
+            $missingItemsSum += $item->price * $item->count;
+        }
+
+        return $missingItemsSum;
     }
 
     /**
@@ -405,14 +478,12 @@ class History extends \common\models\History
      * @return double
      */
     public function getRealSum(){
-        if(!empty($this->real_summ)){
-            return $this->real_summ;
-        }
+        if(empty($this->real_summ)){
+            $this->real_summ = 0;
 
-        $this->real_summ = 0;
-
-        foreach($this->items as $item){
-            $this->real_summ += ($item->price * $item->count);
+            foreach($this->availableItems as $item){
+                $this->real_summ += ($item->price * $item->count);
+            }
         }
 
         return $this->real_summ;
