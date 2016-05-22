@@ -5,6 +5,7 @@ namespace backend\modules\orders\controllers;
 use backend\models\HistorySearch;
 use backend\models\OrderCommentForm;
 use backend\models\OrdersStats;
+use backend\modules\orders\models\CustomerCommentForm;
 use backend\modules\orders\models\OrderPreviewForm;
 use common\helpers\PriceRuleHelper;
 use backend\models\Customer;
@@ -395,30 +396,14 @@ class DefaultController extends Controller
             $order->save(false);
         }
 
-        $st = [];
-        $sborkaItems = SborkaItem::findAll(['orderID' => $order->id]);
+        $customerComment = new CustomerCommentForm();
 
-        foreach($sborkaItems as $sItem){
-            $st[] = $sItem->itemID;
+        $customerComment->loadOrder($order);
+
+        if(\Yii::$app->request->post("CustomerCommentForm")){
+            $customerComment->load(\Yii::$app->request->post());
+            $customerComment->save();
         }
-
-        $itemsDataProvider = new ActiveDataProvider([
-            'query'     =>  $order->getItems(false),
-            'pagination'=>  [
-                'pageSize'  =>  100
-            ]
-        ]);
-
-        $itemsDataProvider->setSort([
-            'defaultOrder' => [
-                'added'	=>	SORT_ASC
-            ],
-            'attributes' => [
-                'added' => [
-                    'default' => SORT_ASC
-                ],
-            ]
-        ]);
 
         $customer = $order->customer;
 
@@ -429,8 +414,24 @@ class DefaultController extends Controller
         return $this->render('order', [
             'order'                 =>  $order,
             'items'                 =>  $order->items,
-            'itemsDataProvider'     =>  $itemsDataProvider,
-            'priceRules'            =>  Pricerule::find()->orderBy('priority')->all(),
+            'itemsDataProvider'     =>  new ActiveDataProvider([
+                'query'     =>  $order->getItems(),
+                'pagination'=>  [
+                    'pageSize'  =>  100
+                ],
+                'sort'  =>  [
+                    'defaultOrder' => [
+                        'added'	=>	SORT_ASC
+                    ],
+                    'attributes' => [
+                        'added' => [
+                            'default' => SORT_ASC
+                        ],
+                    ]
+                ]
+            ]),
+            'customerComment'       =>  $customerComment,
+            'priceRules'            =>  Pricerule::find()->where(['enabled' => 1])->orderBy('priority')->all(),
             'customer'              =>  $customer
         ]);
     }
