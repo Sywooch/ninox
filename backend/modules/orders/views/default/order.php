@@ -112,6 +112,9 @@ $css = <<<'CSS'
     }
     .block-span span{
     display: block;
+
+    line-height: 28px;
+
     }
     .blue-line{
     width: 58px;
@@ -134,6 +137,39 @@ $css = <<<'CSS'
         padding: 0px;
         list-style: inside;
     }
+
+    .order-sum:hover + .order-sum-block{
+        display: block;
+    }
+    .order-sum-block{
+    display: none;
+    width: 320px;
+    height: 245px;
+    background: white;
+    position: absolute;
+    margin-top: -18px;
+    border-radius: 5px;
+    z-index: 1;
+    box-shadow: 0px 0px 10px black;
+    padding: 30px;
+padding-right: 53px;
+    }
+    .order-sum-block span{ line-height: 28px;}
+    .order-sum-block:hover{
+    display: block;
+    }
+    .order-sum-block .blue-line{
+    width: 100%;
+    }
+    .accordion .ui-accordion-header{
+    background: none;
+    border: none;
+    }
+    .accordion .ui-accordion-content{
+    background: none;
+    border: none;
+    }
+
 CSS;
 
 $js = <<<'JS'
@@ -609,7 +645,16 @@ Html::a('История заказа', '#orderHistory', [
           <div class="blue-line"></div>
           <span><?=$order->customerName?> <?=$order->customerSurname?></span>
           <span><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></span>
-          <span><b><l>Сумма заказа <?=!empty($order->actualAmount) ? $order->actualAmount : $order->originalSum?> грн</l></b></span>
+          <span class="order-sum"><b><l>Сумма заказа <?=!empty($order->actualAmount) ? $order->actualAmount : $order->originalSum?> грн</l></b></span>
+          <div class="order-sum-block">
+              <b>Сума заказа</b>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <div class="blue-line"></div>
+              <b>Сума к оплате</b>
+          </div>
 <?php
 echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->id]), [
     'class' =>  'btn btn-default'
@@ -619,9 +664,9 @@ echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->
       <div class="col-md-4">
           <div class="blue-line"></div>
 
-          <span><b>Адресная доставка</b></span>
-          <span>+Івано-Франківськ, Івано-Франківська обл.,</span>
-          <span>вул. Долбойобів-бабтистів, 13, кв. 666</span>
+          <span><?=Html::tag('b', $deliveryType)?></span>
+          <span><?=$order->deliveryCity?>, <?=$order->deliveryRegion?></span>
+          <span><?=$deliveryParam?>, <?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></span>
           <?php
           echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->id]), [
               'class' =>  'btn btn-default'
@@ -642,7 +687,7 @@ echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->
       </div>
     </div>
 <hr>
-<div class="row">
+<div class="row accordion">
     <?=Accordion::widget([
         'items' => [
             [
@@ -677,6 +722,7 @@ echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->
         </div>
 
         <div class="clearfix"></div>
+
     </div>
     </div>
     <div class="col-md-6">
