@@ -60,6 +60,7 @@ echo \kartik\grid\GridView::widget([
 						break;
 				}
 				return Html::tag('div', $model->Name, ['class' => 'item-name blue']).
+				Html::tag('div', 'Код товара: '.$model->Code, ['class' => 'item-name']).
 				Html::tag('div',
 					Html::tag('span',
 						Formatter::getFormattedPrice($model->retailPrice),
@@ -69,7 +70,7 @@ echo \kartik\grid\GridView::widget([
 						Formatter::getFormattedPrice($model->wholesalePrice),
 						['class' => 'item-price-wholesale semi-bold']
 					).
-					Html::tag('sup',
+					Html::tag('div',
 						$discount,
 						['class' => 'item-price-discount'.($model->discountSize ? '' : ' disabled')]),
 					['class' => 'item-prices'.($model->discountSize ? ' discounted' : '')]

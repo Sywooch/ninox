@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 echo Html::tag('div',
+	Html::tag('span', 'Корзина №', [
+		'class'	=>  'number-of-order'
+	]).
 	Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
 		'class' =>  'cart-message cart-message-empty semi-bold'
 	]).
@@ -19,7 +22,7 @@ echo Html::tag('div',
 	Html::tag('div', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), [
 		'class' =>  'cart-message cart-message-wholesale semi-bold'
 	]).
-	Html::tag('div', \Yii::t('shop', 'Продолжить покупки').
+	Html::tag('div', \Yii::t('shop', '').
 		Html::tag('div', '', [
 			'class'   =>  'cross'
 		]), [
@@ -76,7 +79,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 		echo Html::tag('div',
 			Html::tag('div',
 				Html::tag('div',
-					\Yii::t('shop', 'Введите ваш телефон:'), [
+					\Yii::t('shop', 'Ваш телефон:'), [
 					'class' =>  'phone-number-text'
 				]).
 				\frontend\widgets\MaskedInput::widget([
@@ -112,18 +115,18 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 		]).
 		Html::tag('div',
 			Html::tag('div',
-				Html::button(\Yii::t('shop', 'Оформить заказ'), [
-					'type'	    =>	'submit',
-					'name'	    =>	'orderType',
-					'value'	    =>	'0',
-					'class'	    =>	'button yellow-button cart-button form-order',
-					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
-				]).
 				Html::button(\Yii::t('shop', 'Заказать в 1 клик'), [
 					'type'	    =>	'submit',
 					'name'	    =>	'orderType',
 					'value'	    =>	'1',
 					'class'	    =>	'cart-button one-click-order',
+					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+				]).
+				Html::button(\Yii::t('shop', 'Оформить заказ'), [
+					'type'	    =>	'submit',
+					'name'	    =>	'orderType',
+					'value'	    =>	'0',
+					'class'	    =>	'button yellow-button cart-button form-order',
 					'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
 				]), [
 					'class' =>  'cart-buttons'
