@@ -18,7 +18,7 @@ class PriceRuleHelper extends Component{
 	public $pricerules = [];
 
 	public function init(){
-		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
+		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority` DESC')->all();
 	}
 
 	public function recalc(&$model, $category = false){

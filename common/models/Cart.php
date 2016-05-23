@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use backend\models\Good;
+//use backend\models\Good;
 use Yii;
 
 /**
