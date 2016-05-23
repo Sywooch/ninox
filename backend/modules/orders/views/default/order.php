@@ -7,6 +7,7 @@ use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\jui\Accordion;
 use yii\web\JsExpression;
 
 $this->title = 'Заказ #'.$order->number;
@@ -109,6 +110,66 @@ $css = <<<'CSS'
     .orderItemSelected{
         background: rgba(200, 200, 200, 0.2) !important;
     }
+    .block-span span{
+    display: block;
+
+    line-height: 28px;
+
+    }
+    .blue-line{
+    width: 58px;
+    height: 4px;
+    background: #00bfe8;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    }
+    .order-history ul li{
+        font-size: 30px;
+        color: #dbdbdb;
+        line-height: 25px;
+    }
+    .order-history ul span{
+        font-size: 16px;
+        vertical-align: middle;
+        color: black;
+    }
+    .order-history ul{
+        padding: 0px;
+        list-style: inside;
+    }
+
+    .order-sum:hover + .order-sum-block{
+        display: block;
+    }
+    .order-sum-block{
+    display: none;
+    width: 320px;
+    height: 245px;
+    background: white;
+    position: absolute;
+    margin-top: -18px;
+    border-radius: 5px;
+    z-index: 1;
+    box-shadow: 0px 0px 10px black;
+    padding: 30px;
+padding-right: 53px;
+    }
+    .order-sum-block span{ line-height: 28px;}
+    .order-sum-block:hover{
+    display: block;
+    }
+    .order-sum-block .blue-line{
+    width: 100%;
+    }
+    .accordion .ui-accordion-header{
+    background: none;
+    border: none;
+    }
+    .accordion .ui-accordion-content{
+    background: none;
+    border: none;
+    }
+
 CSS;
 
 $js = <<<'JS'
@@ -494,6 +555,21 @@ $orderCommentsModal = new Remodal([
     'id'				=>	'orderCommentsModal',
 ]);
 
+
+$orderHistory = new \bobroid\remodal\Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	true,
+    'addRandomToID'		=>	false,
+    'content'			=>	$this->render('_order_history'),
+    'id'				=>	'orderHistory',
+    'options'			=>  [
+        'class'			=>  'order-history'
+    ]
+
+]);
+
+
 echo $orderCommentsModal->renderModal($this->render('_order_comments', ['order' => $order]));
 
 echo $goodEditModal->renderModal();
@@ -504,114 +580,160 @@ echo Html::tag('div', '', [
     'id'                    =>  'orderInfo'
 ])
 ?>
-<div class="row">
-    <div class="col-xs-4">
-        <div>
-            <h1 id="orderID" data-orderID="<?=$order->id?>">№<?=$order->number?> <?=Html::a(FA::i('comment'.(sizeof($order->comments) <= 0 ? '-o' : '')), '#orderCommentsModal', ['class' => 'roundedItem btn btn-default', 'title' => 'Комментарий к заказу', 'style' => 'padding: 3px;'])?></h1>
-        </div>
-        <div>
-            <h4><?=$order->orderSumm()?> грн. > <?=$deliveryType?></h4>
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <div>
-            <h3 title="Реальная сумма - <?=$order->orderRealSumm()?>">Фактическая сумма - <?=$order->actualAmount?> грн.</h3>
-        </div>
-        <br style="margin-top: 13px; padding: 0; height: 10px; display: block;">
-        <div>
-            <h4>Дисконт - <?=$customer->discount?>%</h4>
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <?=Html::tag('ul', implode($orderHistory), ['class' => 'data-items'])?>
-    </div>
-</div>
-<hr>
-<div class="row">
-    <div>
-        <div class="col-xs-7">
-            <div>
-                <h3><?=$order->customerName?> <?=$order->customerSurname?>
-                    <?php Modal::begin([
-                        'header' => 'Комментарии к клиенту '.$order->customerName.' '.$order->customerSurname,
-                        'options'   =>  [
-                            'style' =>  'color: black'
-                        ],
-                        'toggleButton' => [
-                            'tag'       =>  'span',
-                            'label'     =>  '',
-                            'class'     =>  'roundedItem icon-chat background-red'
-                        ],
-                        'size'  =>  Modal::SIZE_DEFAULT,
-                    ]); ?>
 
-                    <?php Modal::end(); ?>
-                    <!--<span class="roundedItem icon-heart"></span>-->
-                    <?=Html::tag('span', '', ['class' => 'roundedItem icon-percent'.($customer->discount > 0 ? ' background-green' : '')]),
-                        Html::tag('span', $customer->lang, ['class' => 'roundedItem item-lang']),
-                        Html::tag('h4', \Yii::$app->formatter->asPhone($order->customerPhone))?>
-                </h3>
-                <h4><?=$order->deliveryCity?>, <?=$order->deliveryRegion?>, <?=$deliveryType?> <small>(<?=$deliveryParam?>)</small><?=$order->deliveryInfo != '' ? ' ('.$order->deliveryInfo.')' : ''?></h4>
-                <?=Remodal::widget([
-                    'cancelButton'		=>	false,
-                    'confirmButton'		=>	false,
-                    'addRandomToID'		=>	false,
-                    'content'			=>	$this->render('_order_edit', ['order' => $order]),
-                    'id'                =>	'orderEdit',
-                    'buttonOptions'     =>  [
-                        'label' =>  'редактировать',
-                        'tag'   =>  'a',
-                        'style' =>  'margin-bottom: 20px; display: inline-block'
-                    ],
-                ]);?>
-            </div>
-        </div>
-        <div class="col-xs-5">
-            <div class="btn-toolbar pull-right">
-                <?php
-                if($order->deliveryType == 2){
-                    echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#novaPoshtaModal' : '#novaPoshtaModal'), ['class' => 'btn btn-default', /*(!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true'*/]);
-                }
-                echo Html::a('Накладная', Url::to(['/printer/invoice/'.$order->id]), [
-                    'class' =>  'btn btn-default'
-                ]),
-                Html::a('Транспортный лист', Url::to(['/printer/transport_list/'.$order->id]), [
-                    'class' =>  'btn btn-default'
-                ]),
-                Html::a('Заказ', Url::to(['/printer/order/'.$order->id]), [
-                    'class' =>  'btn btn-default'
-                ]);
 
-                ?>
-            </div>
-            <div style="margin-top: 10px;" class="btn-toolbar pull-right">
-                <button class="btn btn-link">Выслать накладную</button>
-                <?=Html::a('Скачать накладную', "/export/excel/{$order->id}", [
-                    'class' =>  'btn btn-link'
-                ])?>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    <div>
-        <div class="col-xs-7">
+<div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-8">
+        <h1 style="margin-top: 0px;">33792</h1>
+        <div>
             <?php
-            if(!empty($customerOrders)){
-                echo \yii\bootstrap\Collapse::widget([
-                    'items' =>  [
-                        [
-                            'label'     =>  'Заказов '.$customerOrdersSummary['count'].' на сумму '.$customerOrdersSummary['summ'].' грн.',
-                            'content'   =>  $customerOrders,
-                        ],
-                    ]
-                ]);
+            echo Html::tag('span', 'На карту', [
+                    'class' =>  'label label-info',
+                    'style' =>  'display: inline-block; border-radius: 10px; float: left;'
+                ])
+            ?>
+            <div class="col-xs-6 col-sm-3"><b>dsafsdf</b>sfsdf</div>
+            <div class="col-xs-6 col-sm-3"><b>dsafsdf</b>sfsdf</div>
+            <div class="col-xs-6 col-sm-3"><b>dsafsdf</b>sfsdf</div>
+
+        </div>
+    </div>
+
+<div class="col-xs-6 col-md-4">
+    <?php
+    echo Html::a('История клиента', Url::to(['/printer/invoice/'.$order->id]), [
+        'class' =>  'btn btn-default'
+    ]).
+Html::a('История заказа', '#orderHistory', [
+        'class' =>  'btn btn-default',
+        'style' =>  'float: right;'
+    ])
+    ?>
+</div>
+</div>
+    <hr>
+    <div class="row block-span">
+      <div class="col-md-4">
+          <div class="blue-line"></div>
+          <span>Елемананна Стиракафаканонцова</span>
+          <span>+38(063)503-55-89</span>
+
+          <span class="order-sum"><b><l>Сумма заказа 1850 грн</l></b></span>
+          <div class="order-sum-block">
+              <b>Сума заказа</b>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <span>sdfdf</span>
+              <div class="blue-line"></div>
+              <b>Сума к оплате</b>
+          </div>
+<?php
+echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->id]), [
+    'class' =>  'btn btn-default'
+]). Html::tag('span', 'На карту', [
+        'class' =>  'label label-info',
+        'style' =>  'display: inline-block; border-radius: 10px; line-height: normal;'
+    ])
+?>
+      </div>
+      <div class="col-md-4">
+          <div class="blue-line"></div>
+
+          <span><b>Адресная доставка</b></span>
+          <span>+Івано-Франківськ, Івано-Франківська обл.,</span>
+          <span>вул. Долбойобів-бабтистів, 13, кв. 666</span>
+          <?php
+          echo Html::a('Редактировать', Url::to(['/printer/invoice/'.$order->id]), [
+              'class' =>  'btn btn-default'
+          ])
+          ?>
+      </div>
+      <div class="col-md-4">
+          <div class="blue-line"></div>
+
+          <span><b>255 грн. на счету</b></span>
+          <span>Старый клиент (15 заказов - 155 000 грн)</span>
+          <span>Возвратов нет, <b>2 заказа не оплачено</b></span>
+          <?php
+          echo Html::a('Изменить', Url::to(['/printer/invoice/'.$order->id]), [
+              'class' =>  'btn btn-default'
+          ])
+          ?>
+      </div>
+    </div>
+<hr>
+<div class="row accordion">
+    <?=Accordion::widget([
+        'items' => [
+            [
+                'header' => Html::tag('span', 'Есть комментарий клиента', ['class' => 'title']),
+                'content' =>$this->render('_review_accordion'),
+            ],
+        ],
+        'clientOptions' => ['collapsible' => true, 'active' => false, 'heightStyle' => 'content'],
+    ]);?>
+</div>
+    <hr>
+<div class="row">
+    <div class="col-md-6">
+    <div class="">
+        <label for="">Печать</label>
+        <div class="btn-toolbar">
+            <?php
+            if($order->deliveryType == 2){
+                echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#novaPoshtaModal' : '#novaPoshtaModal'), ['class' => 'btn btn-default', /*(!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true'*/]);
             }
+            echo Html::a('Накладная', Url::to(['/printer/invoice/'.$order->id]), [
+                'class' =>  'btn btn-default'
+            ]),
+            Html::a('Транспортный лист', Url::to(['/printer/transport_list/'.$order->id]), [
+                'class' =>  'btn btn-default'
+            ]),
+            Html::a('Заказ', Url::to(['/printer/order/'.$order->id]), [
+                'class' =>  'btn btn-default'
+            ]);
+
             ?>
         </div>
-        <?=Html::tag('div', Html::a('Сборка', '/orders/sborka/'.$order->ID, ['class' => 'btn btn-lg btn-success btn-block']), ['class' => 'col-xs-5'])?>
+
+        <div class="clearfix"></div>
+
     </div>
+    </div>
+    <div class="col-md-6">
+    <div class="">
+        <label for="">Отправка сообщений</label>
+        <div class="btn-toolbar ">
+            <?php
+            if($order->deliveryType == 2){
+                echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#novaPoshtaModal' : '#novaPoshtaModal'), ['class' => 'btn btn-default', /*(!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true'*/]);
+            }
+            echo Html::a('Накладная', Url::to(['/printer/invoice/'.$order->id]), [
+                'class' =>  'btn btn-default'
+            ]),
+            Html::a('Транспортный лист', Url::to(['/printer/transport_list/'.$order->id]), [
+                'class' =>  'btn btn-default'
+            ]),
+            Html::a('Заказ', Url::to(['/printer/order/'.$order->id]), [
+                'class' =>  'btn btn-default'
+            ]);
+
+            ?>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+        </div>
 </div>
-<hr>
+    <hr>
+<div class="row">
+    <?=Html::tag('div', Html::a('Сборка заказа', '/orders/sborka/'.$order->ID, ['class' => 'btn btn-lg btn-info
+    btn-block']), ['class' => 'col-xs-6'])?>
+    <?=Html::tag('div', Html::a('Контроль заказа', '/orders/sborka/'.$order->ID, ['class' => 'btn btn-lg btn-success
+    btn-block']), ['class' => 'col-xs-6'])?>
+</div>
+    <hr>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="collapse navbar-collapse">
@@ -721,6 +843,9 @@ echo Html::tag('div', '', [
     </nav>
 <?php
 $thiss = $this;
+?>
+<?=
+$orderHistory->renderModal()
 ?>
 <?=\kartik\grid\GridView::widget([
     'id'    =>  'orderItems',
