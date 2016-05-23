@@ -166,7 +166,7 @@ $js = <<<JS
 	            window.open($(this).attr('data-href'));
 	        }else{
 	            location.href = $(this).attr('data-href');
-	        } 
+	        }
 	        return false;
 	    }
 	});
