@@ -276,9 +276,8 @@ $this->beginPage();
 ?>
 <!DOCTYPE html>
 <html lang="<?=Yii::$app->language?>">
-<head>
-	<meta name="viewport" content="width=device-width">
-	<?=Html::csrfMetaTags()?>
+	<head>
+	    <?=Html::csrfMetaTags()?>
 	    <title><?=Html::encode($this->title)?></title>
 	    <?php $this->head() ?>
 	</head>
