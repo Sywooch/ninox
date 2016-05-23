@@ -796,7 +796,7 @@ class DefaultController extends Controller
         $items = SborkaItem::findAll(['orderID' => $order->id]);
 
         $priceRuleHelper = new PriceRuleHelper();
-        $priceRuleHelper->cartSumm = $order->originalSum;
+        $priceRuleHelper->cartSumm = $order->orderSum;
 
         foreach($items as $item){
             $priceRuleHelper->recalcSborkaItem($item, $priceRule);

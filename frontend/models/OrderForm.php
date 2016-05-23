@@ -300,7 +300,7 @@ class OrderForm extends Model{
         if($order->save()){
             $this->createdOrder = $order->id;
 
-            foreach(\Yii::$app->cart->goods as $good){\Yii::trace('cartSumm = '.\Yii::$app->cart->cartSumm);
+            foreach(\Yii::$app->cart->goods as $good){
                 if(!empty($customer->cardNumber) && $good->discountSize == 0){
                     $good->setAttributes([
                         'discountSize'  =>  2,
