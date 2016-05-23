@@ -6,14 +6,14 @@ class m160520_134800_change_foreign_key extends Migration
 {
     public function up()
     {
-        $this->dropForeignKey('goods_ibfk_1', \common\models\Good::tableName());
-        $this->addForeignKey('goods_ibfk_1', \common\models\GoodTranslation::tableName(), 'ID', \common\models\Good::tableName(), 'ID');
+        $this->dropForeignKey('fk_item_item_translations', \common\models\Good::tableName());
+        $this->addForeignKey('fk_item_item_translations', \common\models\GoodTranslation::tableName(), 'ID', \common\models\Good::tableName(), 'ID');
     }
 
     public function down()
     {
-        $this->dropForeignKey('goods_ibfk_1', \common\models\GoodTranslation::tableName());
-        $this->addForeignKey('goods_ibfk_1', \common\models\Good::tableName(), 'ID', \common\models\GoodTranslation::tableName(), 'ID');
+        $this->dropForeignKey('fk_item_item_translations', \common\models\GoodTranslation::tableName());
+        $this->addForeignKey('fk_item_item_translations', \common\models\Good::tableName(), 'ID', \common\models\GoodTranslation::tableName(), 'ID');
     }
 
     /*
