@@ -170,6 +170,11 @@ $js = <<<JS
 	        return false;
 	    }
 	});
+/*горизонтальная прокрутка менюшки он*/
+	$(window).scroll(function(){
+  $('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
+});
+
 JS;
 
 $GTM = <<<JS
@@ -277,8 +282,8 @@ $this->beginPage();
 <!DOCTYPE html>
 <html lang="<?=Yii::$app->language?>">
 <head>
-	<meta name="viewport" content="width=device-width">
-	<?=Html::csrfMetaTags()?>
+<!--	<meta name="viewport" content="width=1170px">
+-->	<?=Html::csrfMetaTags()?>
 	    <title><?=Html::encode($this->title)?></title>
 	    <?php $this->head() ?>
 	</head>

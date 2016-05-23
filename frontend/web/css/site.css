@@ -2,11 +2,14 @@ html{
 	height: 100%;
 }
 
+/*
 @-ms-viewport { width: 1170px; }
 @-webkit-viewport { width: 1170px; }
 @-moz-viewport { width: 1170px; }
 @-o-viewport { width: 1170px; }
 @viewport { width: 1170px; }
+*/
+
 
 
 body{
@@ -5926,6 +5929,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	margin: auto;
 	padding-top: 40px;
 	overflow: auto;
+	background: white;
 }
 
 .footer-menu .goods-item{
@@ -5971,6 +5975,8 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .feedback-block{
 	border-bottom: 1px solid rgb(239, 239, 239);
 	padding-bottom: 20px;
+	overflow: hidden;
+	background: white;
 }
 
 .footer-content .left{
