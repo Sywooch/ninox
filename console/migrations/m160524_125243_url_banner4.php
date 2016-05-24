@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m160524_122532_url_banner4 extends Migration
+class m160524_125243_url_banner4 extends Migration
 {
     public function up()
     {
@@ -21,7 +21,7 @@ class m160524_122532_url_banner4 extends Migration
             $banner->save(false);
         }
 
-        echo "m160524_122532_url_banner4 cannot be reverted.\n";
+        echo "m160524_125243_url_banner4 cannot be reverted.\n";
 
         return false;
     }
