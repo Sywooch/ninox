@@ -552,9 +552,9 @@ class Cashbox extends Component{
         $this->items[$itemID]->count = $count;
 
         if($this->items[$itemID]->save(false)){
-
             $this->recalculate();
-
+            $this->calcDiscount();
+            $this->recalculate();
             $this->save();
 
             return true;
@@ -783,10 +783,9 @@ class Cashbox extends Component{
             $this->goods[$itemID] = $good;
         }
 
-        $this->calcDiscount();
-
         $this->recalculate();
-
+        $this->calcDiscount();
+        $this->recalculate();
         $this->save();
 
         return $this->items[$itemID];
