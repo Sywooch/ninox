@@ -250,7 +250,7 @@ class DefaultController extends Controller
         $orderForm->loadOrder($order);
 
         if(\Yii::$app->request->post("OrderPreviewForm") && $orderForm->load(\Yii::$app->request->post()) && \Yii::$app->request->post("action") == "save"){
-            $orderForm->save();
+            $orderForm->save(false);
         }
 
         return $this->renderAjax('_orderPreview', [
