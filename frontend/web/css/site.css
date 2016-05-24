@@ -2503,10 +2503,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: none;
 }
 
-#modal-cart .item-prices span{
+#modal-cart .item-prices span:not(.item-price-discount){
 	padding: 0 7px;
 	border-radius: 5px;
 	font-size: 18px;
+	font-family: OpenSans-Semibold;
 }
 
 #modal-cart .item-price-amount{
@@ -2518,33 +2519,22 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 #modal-cart .item-prices .item-price-discount{
+	margin-left: 5px;
+	font-size: 18px;
+	font-family: OpenSans-Semibold;
 	color: #14bbe9;
-	font-size: 18px;
-	padding-left: 5px;
-	text-decoration: none;
-	font-family: OpenSans-Semibold;
-	display: inline-block;
 }
 
-#modal-cart.retail .item-prices span{
-	background: #14bbe9;
-	color: #ffffff;
-	font-size: 18px;
-	font-family: OpenSans-Semibold;
-}
-
-#modal-cart.wholesale .item-prices span{
+#modal-cart.wholesale .item-prices span:not(.item-price-discount){
 	background: #88cb60;
 	color: #ffffff;
-	font-size: 18px;
-	font-family: OpenSans-Semibold;
 }
 
-#modal-cart .item-prices.discounted span{
+#modal-cart.retail .item-prices span:not(.item-price-discount),
+#modal-cart .item-prices.discounted span:not(.item-price-discount),
+#modal-cart.wholesale .item-prices.one-price span:not(.item-price-discount){
 	background: #14bbe9;
 	color: #ffffff;
-	font-size: 18px;
-	font-family: OpenSans-Semibold;
 }
 
 #modal-cart td[data-col-seq="1"]{
@@ -2633,7 +2623,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 13px;
 }
 
-#modal-cart .phone-number-block{
+#modal-cart .phone-number-block input:before{
+	content: 'sdfdf';
 
 }
 
@@ -4970,9 +4961,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	padding-bottom: 515px;
 	overflow: auto;
 	position: relative;
-    /*
-	padding-top: 10px;хз!!!!
-    */
+	padding-top: 10px;
 }
 
 .main-content-slider .slick-slide img{

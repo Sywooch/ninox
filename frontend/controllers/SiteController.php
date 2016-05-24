@@ -474,8 +474,16 @@ class SiteController extends Controller
                         break;
                 }
 				$items[$good->ID] = [
-					'retail'      =>  Formatter::getFormattedPrice($good->retailPrice),
-					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesalePrice),
+					'retail'      =>  $good->retailPrice == $good->wholesalePrice ?
+                        Formatter::getFormattedPrice($good->retailPrice) :
+                        \Yii::t('shop', 'розн. {price}',
+                            ['price' => Formatter::getFormattedPrice($good->retailPrice)]
+                        ),
+					'wholesale'   =>  $good->retailPrice == $good->wholesalePrice ?
+                        Formatter::getFormattedPrice($good->wholesalePrice) :
+                        \Yii::t('shop', 'опт. {price}',
+                            ['price' => Formatter::getFormattedPrice($good->wholesalePrice)]
+                        ),
 					'discount'    =>  $discount,
 					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesalePrice : $good->retailPrice) * $good->inCart),
 				];
