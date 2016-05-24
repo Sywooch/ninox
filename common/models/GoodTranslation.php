@@ -56,9 +56,8 @@ class GoodTranslation extends \yii\db\ActiveRecord
         ];
     }
 
-    public function beforeSave($insert)
-    {
-        if(empty($this->name) && empty($this->description)){
+    public function beforeSave($insert){
+        if(empty($this->name)){
             return false;
         }
 
