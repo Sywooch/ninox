@@ -96,7 +96,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                         'itemOptions' => ['class' => 'image-thumb-mask'],
                         'summary'   =>  '',
                         'itemView' => function ($model) {
-                            return Html::img('http://krasota-style.com.ua/img/catalog/'.$model->ico, [
+                            return Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$model->ico, [
                                 'class' =>  'img-thumbnail',
                                 'style' =>  'margin-bottom: 15px'
                             ]);
