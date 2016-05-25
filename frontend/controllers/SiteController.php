@@ -263,7 +263,7 @@ class SiteController extends Controller
             'items'             =>  new ActiveDataProvider([
                 'query'         =>  $category->getItems(),
                 'pagination'    =>  [
-                    'pageSize'          =>  '15',
+                    'pageSize'          =>  '20',
                     'forcePageParam'    =>  false,
                     'pageSizeParam'     =>  false,
                     'params'            =>  $pageParams
