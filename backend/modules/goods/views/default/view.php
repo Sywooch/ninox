@@ -52,6 +52,10 @@ var hideAdditionalPhotos = function(){
     }
 };
 
+$("body").on('click', '.printBarcode', function(){
+    var myWindow = window.open('/printer/good-barcode/' + $("body #itemID").attr('data-attribute-itemID'), 'window', 'menubar=no,toolbar=no,status=no,scrollbars=no', true);
+});
+
 hideAdditionalPhotos();
 JS;
 
@@ -60,7 +64,7 @@ $this->registerJs($js);
 
 $this->title = 'Товар "'.$good->Name.'"';
 ?>
-<h1><?=$good->Name?> <?=isset($good->category) ? Html::tag('small', $good->category->Name) : ''?></h1>
+<h1 id="itemID" data-attribute-itemID="<?=$good->ID?>"><?=$good->Name?> <?=isset($good->category) ? Html::tag('small', $good->category->Name) : ''?></h1>
 <div class="panel panel-info">
     <div class="panel-heading">
         <?=$this->render('_showgood_heading', [
@@ -96,7 +100,7 @@ $this->title = 'Товар "'.$good->Name.'"';
                         'itemOptions' => ['class' => 'image-thumb-mask'],
                         'summary'   =>  '',
                         'itemView' => function ($model) {
-                            return Html::img('http://krasota-style.com.ua/img/catalog/'.$model->ico, [
+                            return Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$model->ico, [
                                 'class' =>  'img-thumbnail',
                                 'style' =>  'margin-bottom: 15px'
                             ]);

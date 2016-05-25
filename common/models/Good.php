@@ -93,14 +93,14 @@ class Good extends \yii\db\ActiveRecord
     private $_translation;
     private $_realTranslation;
 
-    public function init(){
+/*    public function init(){
         if($this->isNewRecord){
             $this->realTranslation = new GoodTranslation([
                 'ID'        =>  $this->ID,
                 'language'  =>  'ru-RU'
             ]);
         }
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery
