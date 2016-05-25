@@ -28,6 +28,20 @@ $css = <<<'CSS'
     position: relative;
     font-family: Arial,serif;
 }
+
+#barcodeTarget{
+    position: relative;
+}
+
+#barcodeTarget div:last-of-type{
+    position: absolute;
+    bottom: 0;
+    width: auto !important;
+    left: 50%;
+    margin-left: -29px;
+    padding: 0 5px;
+}
+
 CSS;
 
 $this->registerCss($css);
