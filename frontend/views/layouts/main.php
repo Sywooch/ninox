@@ -170,6 +170,11 @@ $js = <<<JS
 	        return false;
 	    }
 	});
+/*горизонтальная прокрутка менюшки он*/
+	$(window).scroll(function(){
+  $('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
+});
+
 JS;
 
 $GTM = <<<JS
