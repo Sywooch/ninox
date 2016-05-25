@@ -490,6 +490,9 @@ $this->beginPage();
 							'class' =>  'yellow-button-new large-button',
 						],
 						'content'   =>  $this->render('_callback'),
+						'options'			=>  [
+							'class'			=>  'callback-modal'
+						]
 
 					])
 					?>

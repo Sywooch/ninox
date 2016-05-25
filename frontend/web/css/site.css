@@ -2669,7 +2669,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	vertical-align: sub;
 }
 
-#modal-cart .phone-number{
+/*#modal-cart */.phone-number-input-modal{
 	width: 225px;
 	height: 45px;
 	border-radius: 5px;

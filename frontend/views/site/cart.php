@@ -97,7 +97,7 @@ echo Html::tag('div',
 				\frontend\widgets\MaskedInput::widget([
 					'name'			=>	'phone',
 					'options'		=>	[
-						'class'			=>	'phone-number',
+						'class'			=>	'phone-number-input-modal',
 					],
 					'clientOptions' =>  [
 						'clearIncomplete'   =>  true,
