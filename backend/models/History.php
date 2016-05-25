@@ -180,7 +180,8 @@ class History extends \common\models\History
                 $messageID = Sms::MESSAGE_ORDER_WAIT_DELIVERY_ID;
                 break;
             case self::STATUS_DELIVERED:
-                //$messageID = Sms::MESSAGE_CANT_CALL_ID;
+            case self::STATUS_DONE:
+                $messageID = Sms::MESSAGE_ORDER_DELIVERED;
                 break;
         }
 
@@ -241,11 +242,11 @@ class History extends \common\models\History
             $this->takeTTNMoneyDate = date('Y-m-d H:i:s');
         }
 
-        if($this->isAttributeChanged('moneyConfirmed') && $this->moneyConfirmed == 1){
+        if($this->oldAttributes['moneyConfirmed'] != $this->moneyConfirmed && $this->moneyConfirmed == 1){
             $this->moneyCollectorUserId = \Yii::$app->user->identity->id;
             $this->moneyConfirmedDate = date('Y-m-d H:i:s');
 
-            if($this->sourceType != self::SOURCETYPE_SHOP && $this->deliveryType != 3){
+            if($this->sourceType != self::SOURCETYPE_SHOP && $this->deliveryType != 3 && $this->paymentType == 2){
                 \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
             }
         }
