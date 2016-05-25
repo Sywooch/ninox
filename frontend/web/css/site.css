@@ -2264,7 +2264,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-right: 3px;
 }
 
-#modal_close{ 
+#modal_close{
 	border: 5px solid #FFF;
 
 }
