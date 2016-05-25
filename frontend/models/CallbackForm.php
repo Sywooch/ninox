@@ -41,7 +41,7 @@ class CallbackForm extends Model
     {
         return [
             ['captcha', 'captcha'],
-            [['name', 'phone', 'question', 'captcha'], 'required'],
+            [['phone'], 'required'],
             [['phone', 'question', 'name'], 'string'],
         ];
     }
@@ -61,7 +61,7 @@ class CallbackForm extends Model
 
     public function attributeLabels(){
         return [
-            'phone'           =>  \Yii::t('shop', 'Ваш телефон'),
+            'phone'           =>  \Yii::t('shop', 'Телефон:'),
             'question'        =>  \Yii::t('shop', 'Сообщение'),
             'name'            =>  \Yii::t('shop', 'Имя и фамилия'),
             'captcha'         =>  \Yii::t('shop', 'Введите код с картинки'),
