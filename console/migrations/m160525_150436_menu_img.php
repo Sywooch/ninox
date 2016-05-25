@@ -28,10 +28,10 @@ class m160525_150436_menu_img extends Migration
         }
         $catPhoto = \common\models\CategoryPhoto::findOne(['categoryID' => 367, 'order' => 1]);
         if($catPhoto){
-            $catPhoto->photo = 'pudra.png';
+            $catPhoto->photo = 'manikurniy-nabor.png';
             $catPhoto->save(false);
         }
-        $catPhoto = \common\models\CategoryPhoto::findOne(['categoryID' => 367, 'order' => 2]);
+        $catPhoto = \common\models\CategoryPhoto::findOne(['categoryID' => 367, 'order' => 3]);
         if($catPhoto){
             $catPhoto->photo = 'rascheska.png';
             $catPhoto->save(false);
@@ -71,9 +71,9 @@ class m160525_150436_menu_img extends Migration
             $catPhoto->photo = 'mozaika.png';
             $catPhoto->save(false);
         }
-        $catPhoto = \common\models\CategoryPhoto::findOne(['categoryID' => 367, 'order' => 2]);
+        $catPhoto = \common\models\CategoryPhoto::findOne(['categoryID' => 367, 'order' => 3]);
         if($catPhoto){
-            $catPhoto->photo = 'pudra.png';
+            $catPhoto->photo = 'manikurniy-nabor.png';
             $catPhoto->save(false);
         }
         $catPhoto = \common\models\CategoryPhoto::findOne(['categoryID' => 367, 'order' => 1]);
