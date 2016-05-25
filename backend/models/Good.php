@@ -77,7 +77,6 @@ class Good extends \common\models\Good{
             }
         }
 
-
         if($photo->save(false)){
             $this->photodate = date('Y-m-d H:i:s');
             $this->tovupdate = date('Y-m-d H:i:s');
@@ -219,7 +218,9 @@ class Good extends \common\models\Good{
                 'class' => 'sammaye\audittrail\LoggableBehavior',
                 'ignored' => [
                     'Name2',
-                    'ID'
+                    'ID',
+                    'photodate',
+                    'tovupdate',
                 ],
             ]
         ];
