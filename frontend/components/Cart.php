@@ -146,7 +146,7 @@ class Cart extends Component{
      *
      * @return bool
      */
-	public function remove($itemID){
+	public function remove($itemID, $recalc = true){
 		unset($this->items[$itemID]);
 		unset($this->goods[$itemID]);
 		$item = \frontend\models\Cart::findOne(['cartCode' => $this->cartCode, 'itemID' => $itemID]);
@@ -155,7 +155,11 @@ class Cart extends Component{
 			$item->delete();
 		}
 		$this->save();
-		$this->recalcCart();
+
+		if($recalc){
+			$this->recalcCart();
+		}
+
 		return true;
 	}
 

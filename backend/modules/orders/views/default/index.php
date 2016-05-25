@@ -445,6 +445,14 @@ $css = <<<'CSS'
     .ordersStats .icon{
         float: left;
     }
+    
+    tr.newCustomer td:first-child{
+        background-color: #89C4F4 !important;
+    }
+    
+    tr.hasDiscount td:nth-child(2){
+        background-color: #EB9532 !important;
+    }
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);

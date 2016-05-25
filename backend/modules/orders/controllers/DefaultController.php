@@ -250,7 +250,7 @@ class DefaultController extends Controller
         $orderForm->loadOrder($order);
 
         if(\Yii::$app->request->post("OrderPreviewForm") && $orderForm->load(\Yii::$app->request->post()) && \Yii::$app->request->post("action") == "save"){
-            $orderForm->save();
+            $orderForm->save(false);
         }
 
         return $this->renderAjax('_orderPreview', [
@@ -796,7 +796,7 @@ class DefaultController extends Controller
         $items = SborkaItem::findAll(['orderID' => $order->id]);
 
         $priceRuleHelper = new PriceRuleHelper();
-        $priceRuleHelper->cartSumm = $order->originalSum;
+        $priceRuleHelper->cartSumm = $order->orderSum;
 
         foreach($items as $item){
             $priceRuleHelper->recalcSborkaItem($item, $priceRule);

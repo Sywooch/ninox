@@ -92,7 +92,6 @@ class Good extends \yii\db\ActiveRecord
 
     private $_translation;
     private $_realTranslation;
-    private $_realTranslationFinded = false;
 
     public function init(){
         if($this->isNewRecord){
@@ -119,7 +118,7 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function getRealTranslation(){
-        if(empty($this->_realTranslation) || !$this->_realTranslationFinded){
+        if(empty($this->_realTranslation)){
             $this->_realTranslation = $this->getTranslationByKeyReal(\Yii::$app->language);
         }
 
@@ -359,8 +358,7 @@ class Good extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public function afterSave($insert, $changedAttributes)
-    {
+    public function afterSave($insert, $changedAttributes){
         if($this->realTranslation->isNewRecord){
             $this->realTranslation->ID = $this->ID;
         }
@@ -389,6 +387,7 @@ class Good extends \yii\db\ActiveRecord
             [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2'], 'safe'],
             [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'discountSize', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
             [['link'], 'string'],
+            [['dimensions'], 'default', 'value' => ''],
             [['Code', 'BarCode1', 'BarCode2', 'BarCode3', 'Catalog1', 'Catalog2', 'Catalog3', 'Name', 'Name2', 'dimensions', 'measure', 'Measure2', 'anotherCurrencyTag', 'video'], 'string', 'max' => 255],
             [['width', 'height', 'length', 'diameter'], 'string', 'max' => 20],
             [['num_opt'], 'string', 'max' => 50],

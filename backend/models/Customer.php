@@ -16,4 +16,17 @@ class Customer extends \common\models\Customer{
 
         return parent::init();
     }
+
+    public function getReturns(){
+        return [];
+        //return $this->hasMany()
+    }
+
+    public function getNotPayedOrders(){
+        return $this->hasMany(History::className(), ['customerID' => 'ID'])->andWhere(['moneyConfirmed' => 0, 'deleted' => 0]);
+    }
+
+    public function getDiscount(){
+        return !empty($this->cardNumber) ? 2 : 0;
+    }
 }

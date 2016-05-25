@@ -11,7 +11,6 @@ namespace backend\modules\goods\models;
 
 use backend\models\Good;
 use yii\base\Model;
-use yii\base\Object;
 
 class GoodMainForm extends Model{
 

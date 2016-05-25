@@ -2,16 +2,6 @@ html{
 	height: 100%;
 }
 
-/*
-@-ms-viewport { width: 1170px; }
-@-webkit-viewport { width: 1170px; }
-@-moz-viewport { width: 1170px; }
-@-o-viewport { width: 1170px; }
-@viewport { width: 1170px; }
-*/
-
-
-
 body{
 	height: auto !important;
 	height: 100%;
@@ -20,7 +10,6 @@ body{
 	font-family: OpenSans;
 	color: #75868f;
 	padding: 0px !important;/*надеюсь ничего не поедет поедет*/
-	min-width: 1170px;
 }
 
 p{
