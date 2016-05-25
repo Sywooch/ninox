@@ -78,7 +78,14 @@ class Good extends \common\models\Good{
         }
 
 
-        return $photo->save(false);
+        if($photo->save(false)){
+            $this->photodate = date('Y-m-d H:i:s');
+            $this->tovupdate = date('Y-m-d H:i:s');
+            $this->save(false);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
