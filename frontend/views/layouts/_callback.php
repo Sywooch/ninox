@@ -88,12 +88,14 @@ $model = new \frontend\models\CallbackForm();
         'id'            =>  'callback-form'
     ]);
     ?>
-    <span class="head">Запрос на перезвон</span>
+    <span class="head">Хотите мы вам перезвоним?</span>
+
         <?= $form->field($model, 'name')?>
         <?= $form->field($model, 'phone')?>
         <?= $form->field($model, 'question')->textarea()?>
-        <?=$form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className());?>
-        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+        <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className());?>
+        <?= Html::submitButton('Перезвоните мне', ['class' => 'yellow-button-modal',
+            'name' =>
         'callback-button']) ?>
 </div>
 <?php $form->end(); ?>

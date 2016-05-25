@@ -7,9 +7,9 @@ echo Html::tag('div',
 	Html::tag('span', 'Корзина №', [
 		'class'	=>  'number-of-order'
 	]).
-	Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
+	/*Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
 		'class' =>  'cart-message cart-message-empty semi-bold'
-	]).
+	]).*/
 	Html::tag('div',
 		\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} до опта', [
 			'wholesaleRemind'   =>  Html::tag('span',
@@ -32,8 +32,20 @@ echo Html::tag('div',
 	'class' =>  'cart-caption'
 ]).
 $this->render('_cart_items');
-echo Html::beginTag('div', ['class' => 'cart-footer']).
-	Html::tag('div',
+echo Html::tag('div',
+	Html::tag('div', \Yii::t('shop', 'Ваша корзинка пуста :('), [
+		'class' =>  'cart-message cart-message-empty semi-bold'
+	]). Html::button(\Yii::t('shop', 'За покупками!'), [
+	'type'	    =>	'submit',
+	'name'	    =>	'orderType',
+	'value'	    =>	'1',
+	'class'	    =>	'button yellow-button-modal',
+	'data-remodal-action'   =>  'close'
+]), [
+			'class' =>  'empty'
+		]).
+	Html::beginTag('div', ['class' => 'cart-footer']).
+		Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
 				\Yii::t('shop', 'Ваша скидка {discount}', [
@@ -91,7 +103,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 						'clearIncomplete'   =>  true,
 						'alias'             =>  'phone',
 						'url'               =>  Url::to('/js/phone-codes.json'),
-						'countrycode'       =>  '38',
+						'countrycode'       =>  '',
 /*						'onBeforePaste'           =>  new \yii\web\JsExpression('
 							function(){
 								return true;
@@ -108,7 +120,10 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 						\Yii::$app->user->identity->phone :
 							(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
 								\Yii::$app->request->cookies->getValue("customerPhone") : '')
-				]), [
+				]).Html::tag('label', '', [
+						'class' =>  '',
+					'for'		=>  'w4'
+					]), [
 				'class' =>  'phone-number-block'
 			]), [
 			'class' =>  'left'

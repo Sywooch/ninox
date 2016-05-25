@@ -2336,6 +2336,17 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	line-height: 21px;
 }
 
+#modal-cart .empty{
+	padding-bottom: 43px;
+	padding-top: 25px;
+	display: none;
+}
+
+#modal-cart .empty .cart-message{
+	float: none;
+	margin-bottom: 20px;
+}
+
 #modal-cart .cart-message{
 	float: left;
 	color: #9a9a9a;
@@ -2343,6 +2354,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding: 0 15px;
 	display: none;
 	text-decoration: underline;
+	margin-top: 6px;
 }
 
 #modal-cart .number-of-order{
@@ -2560,8 +2572,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: none;
 }
 
+#modal-cart.empty  .empty{
+	display: block;
+}
+
 #modal-cart .cart-footer-top{
-	margin-bottom: 15px;
 	border-bottom: 1px solid #e0e0e0;
 	padding: 20px 40px;
 }
@@ -2623,9 +2638,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 13px;
 }
 
-#modal-cart .phone-number-block input:before{
-	content: 'sdfdf';
-
+#modal-cart .phone-number-block label:after{
+	position: absolute;
+	left: 192px;
+	color: rgb(218, 218, 218);
+	content: '';
+	font-size: 22px;
+	margin-top: 6px;
 }
 
 #modal-cart .phone-number-text{
@@ -2668,6 +2687,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 20px;
 	font-family: OpenSans-Semibold;
 	border: none;
+	float: left;
 }
 
 #modal-cart .one-click-order:disabled{
@@ -2690,6 +2710,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-transform: none;
 	text-shadow: none;
 	margin-left: 20px;
+	float: right;
 }
 
 
@@ -6374,4 +6395,18 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .review-modal a:hover{
 	text-decoration: none;
 	cursor: pointer;
+}
+
+.yellow-button-modal{
+	background: #ffc20e;
+	width: 218px;
+	height: 45px;
+	border-radius: 3px;
+	box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2);
+	color: #fff;
+	font-size: 20px;
+	font-family: OpenSans-Semibold;
+	text-transform: none;
+	text-shadow: none;
+	border: none;
 }
