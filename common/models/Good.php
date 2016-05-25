@@ -92,7 +92,6 @@ class Good extends \yii\db\ActiveRecord
 
     private $_translation;
     private $_realTranslation;
-    private $_realTranslationFinded = false;
 
     public function init(){
         if($this->isNewRecord){
@@ -119,7 +118,7 @@ class Good extends \yii\db\ActiveRecord
     }
 
     public function getRealTranslation(){
-        if(empty($this->_realTranslation) || !$this->_realTranslationFinded){
+        if(empty($this->_realTranslation)){
             $this->_realTranslation = $this->getTranslationByKeyReal(\Yii::$app->language);
         }
 
@@ -359,8 +358,7 @@ class Good extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public function afterSave($insert, $changedAttributes)
-    {
+    public function afterSave($insert, $changedAttributes){
         if($this->realTranslation->isNewRecord){
             $this->realTranslation->ID = $this->ID;
         }

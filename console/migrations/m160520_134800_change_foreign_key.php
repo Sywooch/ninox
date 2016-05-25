@@ -7,13 +7,13 @@ class m160520_134800_change_foreign_key extends Migration
     public function up()
     {
         $this->dropForeignKey('fk_item_item_translations', \common\models\Good::tableName());
-        $this->addForeignKey('fk_item_item_translations', \common\models\GoodTranslation::tableName(), 'ID', \common\models\Good::tableName(), 'ID');
+        $this->addForeignKey('fk_item_item_translations', \common\models\GoodTranslation::tableName(), 'ID', \common\models\Good::tableName(), 'ID', 'NO ACTION', 'NO ACTION');
     }
 
     public function down()
     {
         $this->dropForeignKey('fk_item_item_translations', \common\models\GoodTranslation::tableName());
-        $this->addForeignKey('fk_item_item_translations', \common\models\Good::tableName(), 'ID', \common\models\GoodTranslation::tableName(), 'ID');
+        $this->addForeignKey('fk_item_item_translations', \common\models\Good::tableName(), 'ID', \common\models\GoodTranslation::tableName(), 'ID', 'CASCADE', 'RESTRICT');
     }
 
     /*
