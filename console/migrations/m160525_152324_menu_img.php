@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m160525_150436_menu_img extends Migration
+class m160525_152324_menu_img extends Migration
 {
     public function up()
     {
@@ -92,7 +92,8 @@ class m160525_150436_menu_img extends Migration
             $catPhoto->save(false);
         }
 
-        echo "m160525_150436_menu_img cannot be reverted.\n";
+
+     echo "m160525_152324_menu_img cannot be reverted.\n";
 
         return false;
     }
