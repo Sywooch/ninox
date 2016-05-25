@@ -60,19 +60,27 @@ echo \kartik\grid\GridView::widget([
 						break;
 				}
 				return Html::tag('div', $model->Name, ['class' => 'item-name blue']).
+				Html::tag('div', 'Код товара: '.$model->Code, ['class' => 'item-name']).
 				Html::tag('div',
-					Html::tag('span',
-						Formatter::getFormattedPrice($model->retailPrice),
-						['class' => 'item-price-retail semi-bold']
+					Html::tag('span', $model->retailPrice == $model->wholesalePrice ?
+						Formatter::getFormattedPrice($model->retailPrice) :
+						\Yii::t('shop', 'розн. {price}',
+							['price' => Formatter::getFormattedPrice($model->retailPrice)]
+						),
+						['class' => 'item-price-retail']
+					).
+					Html::tag('span', $model->retailPrice == $model->wholesalePrice ?
+						Formatter::getFormattedPrice($model->wholesalePrice) :
+						\Yii::t('shop', 'опт. {price}',
+							['price' => Formatter::getFormattedPrice($model->wholesalePrice)]
+						),
+						['class' => 'item-price-wholesale']
 					).
 					Html::tag('span',
-						Formatter::getFormattedPrice($model->wholesalePrice),
-						['class' => 'item-price-wholesale semi-bold']
-					).
-					Html::tag('sup',
 						$discount,
 						['class' => 'item-price-discount'.($model->discountSize ? '' : ' disabled')]),
-					['class' => 'item-prices'.($model->discountSize ? ' discounted' : '')]
+					['class' => 'item-prices'.($model->retailPrice == $model->wholesalePrice ? ' one-price' : '').
+						($model->discountSize ? ' discounted' : '')]
 				);
 			}
 		],
