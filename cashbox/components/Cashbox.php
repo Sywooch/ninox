@@ -108,7 +108,7 @@ class Cashbox extends Component{
      */
     public $goods = [];
     public $itemsCount = 0;
-    public $priceType = 0;
+    public $priceType = 1;
 
     /**
      * @deprecated
@@ -155,7 +155,7 @@ class Cashbox extends Component{
 
         //Если в куках хранится текущая ценовая группа заказа, записываем это в заказ
         if($cookies->has('cashboxPriceType')){
-            $this->priceType = $cookies->getValue('cashboxPriceType', 0);
+            $this->priceType = $cookies->getValue('cashboxPriceType', $this->priceType);
         }
 
         //Если в куках хранится номер заказа, сохраняем его в заказе
@@ -468,7 +468,7 @@ class Cashbox extends Component{
      * Очищает заказ от всего
      */
     public function clear(){
-        $this->priceType = 1;
+        $this->priceType = 0;
 
         $this->changePriceType();
 
