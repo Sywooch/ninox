@@ -145,7 +145,8 @@ class Good extends \yii\db\ActiveRecord
         }
 
         return new GoodTranslation([
-            'ID'    =>  $this->ID
+            'ID'    =>  $this->ID,
+            'language'  =>  'ru-RU'
         ]);
     }
 

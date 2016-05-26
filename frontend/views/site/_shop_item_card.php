@@ -153,7 +153,7 @@ $imgModal = new \bobroid\remodal\Remodal([
             <div class="code blue"><?=\Yii::t('shop', 'Код:').$good->Code?></div>
             <div class="item-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <div class="item-main-info">
-                    <div class="pricelist-content <?=($good->enabled ? 'available' : 'not-available').
+                    <div class="pricelist-content <?=($good->canBuy ? 'available' : 'not-available').
                     ($good->discountType && $good->customerRule ? ' vip' :
                         ($good->discountType && !$good->customerRule ? ' discounted' : ''))?>">
                         <?php
@@ -204,7 +204,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                         };
 
                         echo Html::tag('div',
-                            ($good->enabled ?
+                            ($good->canBuy ?
                                 ($good->count < 1 ?
                                     \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии')) :
                                 \Yii::t('shop', 'Нет в наличии')),

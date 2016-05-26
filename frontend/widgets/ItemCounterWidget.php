@@ -66,7 +66,7 @@ class ItemCounterWidget extends Widget{
 	}
 
 	public function run(){
-		return $this->model->enabled && ($this->model->count > 0 || $this->model->isUnlimited) ?
+		return $this->model->canBuy ?
 			Html::tag('div',
 				$this->renderMinus().$this->renderInput().$this->renderPlus(),
 				[

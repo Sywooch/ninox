@@ -9,7 +9,7 @@
 use frontend\widgets\ItemCounterWidget;
 use yii\helpers\Html;
 
-if($model->enabled){
+if($model->canBuy){
 	if($model->isUnlimited || $model->count > 9){
 		$name = \Yii::t('shop', 'достаточно');
 		$class = 'green';
