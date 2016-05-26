@@ -20,7 +20,8 @@ $css = <<<'CSS'
     text-align: center;
     width: 100%;
     font-family: Arial,serif;
-    display: inline-block;
+    display: block;
+    padding: 3px 0;
 }
 
 .barcode-article{
@@ -41,11 +42,14 @@ $css = <<<'CSS'
 #barcodeTarget div:last-of-type{
     position: absolute;
     bottom: 0;
-    width: auto !important;
+    /*width: auto !important;
     left: 50%;
     margin-left: -24px;
-    padding: 0 5px;
+    padding: 0 5px;*/
     font-size: 2.2mm !important;
+    margin-bottom: -2px;
+    background-color: rgba(0, 0, 0, 0) !important;
+    text-shadow: #fff 1px 0px, #fff 1px 1px, #fff 0px 1px, #fff -1px 1px, #fff -1px 0px, #fff -1px -1px, #fff 0px -1px, #fff 1px -1px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px;
 }
 
 CSS;
@@ -57,13 +61,14 @@ echo Html::tag('div',
         Html::tag('span', $good->name, ['class' => 'barcode-title']).
         Html::tag('hr').
         Html::tag('span', "Арт. {$good->Code}\\{$good->wholesalePrice}", ['class' => 'barcode-article']).
-        Html::tag('div', '', ['id' => 'barcodeTarget', 'style' => 'margin: 0px auto; max-height: 30px']).
+        Html::tag('div', '', ['id' => 'barcodeTarget', 'style' => 'margin: 0px auto']).
         \barcode\barcode\BarcodeGenerator::widget([
             'elementId' =>  'barcodeTarget',
             'type'      =>  'ean8',
             'value'     =>  $good->Code,
             'settings'  =>  [
-                'output'=>  'css',
+                'output'    =>  'css',
+                'barHeight'    =>  '34',
             ]
         ]),
         [
