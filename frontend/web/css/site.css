@@ -2687,12 +2687,12 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 85px;*/
 }
 
-#modal-cart .one-click-order{
-/*	background: none;
+/*#modal-cart .one-click-order{
+!*	background: none;
 	border: none;
 	text-decoration: underline;
 	cursor: pointer;
-	margin-left: 40px;*/
+	margin-left: 40px;*!
 	background: #e7e7e7;
 	width: 218px;
 	height: 45px;
@@ -2703,10 +2703,20 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 	border: none;
 	float: left;
-}
+}*/
 
-#modal-cart .one-click-order:disabled{
+#modal-cart .cart-button:disabled{
 	cursor: default;
+	background: #e7e7e7;
+	width: 218px;
+	height: 45px;
+	border-radius: 3px;
+	box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2);
+	color: #949494;
+	font-size: 20px;
+	font-family: OpenSans-Semibold;
+	border: none;
+	float: left;
 }
 
 #modal-cart.empty #cart-gridview-pjax{

@@ -128,7 +128,7 @@ echo Html::tag('div',
 			]), [
 			'class' =>  'left'
 		]).
-		Html::tag('div',
+		/*Html::tag('div',
 			Html::tag('div',
 				Html::button(\Yii::t('shop', 'Заказать в 1 клик'), [
 					'type'	    =>	'submit',
@@ -147,7 +147,27 @@ echo Html::tag('div',
 					'class' =>  'cart-buttons'
 				]), [
 			'class' =>  'right'
-		]);
+		]);*/
+			Html::tag('div',
+				Html::tag('div',
+					Html::button(\Yii::t('shop', 'Оформить заказ'), [
+						'type'	    =>	'submit',
+						'name'	    =>	'orderType',
+						'value'	    =>	'0',
+						'class'	    =>	'button yellow-button cart-button form-order',
+						'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+					]).
+					Html::button(\Yii::t('shop', 'Заказать в 1 клик'), [
+						'type'	    =>	'submit',
+						'name'	    =>	'orderType',
+						'value'	    =>	'1',
+						'class'	    =>	'button yellow-button cart-button one-click-order',
+						'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+					]), [
+						'class' =>  'cart-buttons'
+					]), [
+					'class' =>  'right'
+				]);
 	$form->end();
 echo Html::endTag('div').
 Html::endTag('div');
