@@ -7,17 +7,11 @@
  */
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 $css = <<<'CSS'
 
 .callback {
 text-align: left;
-}
-
-.callback-modal{
-    width: 520px;
-    padding: 0px;
 }
 
 .callback .form-group textarea{
@@ -28,29 +22,19 @@ text-align: left;
 }
 
 .callback .head{
-    font-size: 22px;
-    padding-bottom: 30px;
-    display: block;
-    color: #4f4f4f;
-    padding: 35px;
-    border-bottom: 1px solid #e0e0e0;
-    font-family: OpenSans-Semibold;
-
+    font-size: 30px;
+padding-bottom: 30px;
+display: block;
+color: #4f4f4f;
 }
 
 .callback .form-group{
     overflow: auto;
-    width: 50%;
-float: left;
 }
 
 .callback .form-group input{
-    /*
     width: 50%;
-    */
-    width: 227px;
-height: 45px;
-float: left;
+    float: right;
 }
 
 .callback .form-group label{
@@ -92,77 +76,25 @@ padding-bottom: 25px;
     margin-left: 30px;
 }
 
-.callback-content{
-padding: 30px;
-overflow: hidden;
-}
-
-.callback .yellow-button-modal{
-    float: right;
-    margin-top: 39px;
-}
-
 CSS;
 
 $this->registerCss($css);
 
 $model = new \frontend\models\CallbackForm();
 
-Html::tag('div', \Yii::t('shop', '').
-    Html::tag('div', '', [
-        'class'   =>  'cross'
-    ]), [
-    'class'                 =>  'cart-close',
-    'data-remodal-action'   =>  'close'
-])
-
 ?>
 <div class="callback">
     <?php    $form = \yii\bootstrap\ActiveForm::begin([
         'id'            =>  'callback-form'
     ]);
-
     ?>
-    <span class="head">Хотите мы вам перезвоним?</span>
-
-<!--        --><?/*= $form->field($model, 'name')*/?>
-        <?= Html::tag('div',
-/*        $form->field($model, 'phone', \frontend\widgets\MaskedInput::widget([
-            'name'			=>	'phone',
-            'options'		=>	[
-                'class'			=>	'phone-number-input-modal',
-            ],
-            'clientOptions' =>  [
-                'clearIncomplete'   =>  true,
-                'alias'             =>  'phone',
-                'url'               =>  Url::to('/js/phone-codes.json'),
-                'countrycode'       =>  '',
-            ],
-
-        ])).*//*($model, 'phone')->input(\frontend\widgets\MaskedInput::widget([
-            'name'			=>	'phone',
-            'options'		=>	[
-                'class'			=>	'phone-number-input-modal',
-            ],
-            'clientOptions' =>  [
-                'clearIncomplete'   =>  true,
-                'alias'             =>  'phone',
-                'url'               =>  Url::to('/js/phone-codes.json'),
-                'countrycode'       =>  '',
-            ],
-            'value'         =>  !\Yii::$app->user->isGuest ?
-                \Yii::$app->user->identity->phone :
-                (\Yii::$app->request->cookies->getValue("customerPhone", false) ?
-                    \Yii::$app->request->cookies->getValue("customerPhone") : '')
-        ])).*/
-            $form->field($model, 'phone').
-
-/*$form->field($model, 'question')->textarea().*/
-/*= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className());*/
-        Html::submitButton('Перезвоните мне', ['class' => 'yellow-button-modal',
-            'name' => 'callback-button']), [
-            'class' => 'callback-content'
-        ]); ?>
+    <span class="head">Запрос на перезвон</span>
+        <?= $form->field($model, 'name')?>
+        <?= $form->field($model, 'phone')?>
+        <?= $form->field($model, 'question')->textarea()?>
+        <?=$form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className());?>
+        <?= Html::submitButton('Отправить', ['class' => 'about-inform-button yellow-button large-button', 'name' =>
+        'callback-button']) ?>
 </div>
 <?php $form->end(); ?>
 
