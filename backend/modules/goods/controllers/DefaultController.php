@@ -643,21 +643,18 @@ class DefaultController extends Controller
         if($request->get("act") == 'edit'){
             return $this->render('edit', [
                 'good'              =>  $good,
-                //'goodUk'          =>  $goodUK,
+                'nowCategory'       =>  $category,
                 'goodMainForm'      =>  $goodMainForm,
                 'goodAttributesForm'=>  $goodAttributesForm,
                 'goodExportForm'    =>  $goodExportForm,
-                'nowCategory'       =>  $category,
             ]);
         }
 
         return $this->render('view', [
-            'good'       => $good,
-            'goodUk'     => new GoodUk(),
-            'nowCategory' => $category,
-            'uploadPhoto'  =>  new UploadPhoto(),
+            'good'              => $good,
+            'nowCategory'       => $category,
             'additionalPhotos'  =>  new ArrayDataProvider([
-                'models'    =>  $good->photos
+                'models'            =>  $good->photos
             ])
         ]);
     }

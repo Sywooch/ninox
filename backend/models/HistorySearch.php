@@ -66,6 +66,10 @@ class HistorySearch extends History{
 	        }
         }
 
+        if(!empty($params["sourceID"]) && !isset($ignoreFilters['sourceID'])){
+	        $query->andWhere(['orderSource' => $params['sourceID']]);
+        }
+
 	    if(!empty($params["smartFilter"]) && !isset($ignoreFilters['smartFilter'])){
 		    switch($params["smartFilter"]){
 			    case 'shipping':

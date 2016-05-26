@@ -4,6 +4,7 @@ namespace backend\modules\payments\controllers;
 
 use backend\models\History;
 use backend\models\SendedPayment;
+use common\models\MoneyExchange;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -71,6 +72,31 @@ class DefaultController extends Controller
         return $this->render('index', [
             'dataProvider'  =>  $dataProvider
         ]);
+    }
+
+    public function actionUpdateExchange(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
+
+        $exchange = MoneyExchange::findOne(['date' => \Yii::$app->request->get('date')]);
+
+        if(!$exchange){
+            $exchange = new MoneyExchange([
+                'date'  =>  \Yii::$app->request->get('date')
+            ]);
+        }
+
+        $exchange->load(\Yii::$app->request->post());
+
+        \Yii::$app->response->format = 'json';
+
+
+        if(!$exchange->save()){
+            return $exchange->getErrors();
+        }
+
+        return $exchange;
     }
 
     public function actionConfirm(){
