@@ -35,14 +35,15 @@ $css = <<<'CSS'
 
 #barcodeTarget{
     position: relative;
+    overflow: hidden !important;
 }
 
 #barcodeTarget div:last-of-type{
     position: absolute;
     bottom: 0;
     width: auto !important;
-    left: 25%;
-    margin-left: -10%;
+    left: 50%;
+    margin-left: -24px;
     padding: 0 5px;
     font-size: 2.2mm !important;
 }
