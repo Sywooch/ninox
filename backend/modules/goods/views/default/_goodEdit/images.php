@@ -3,7 +3,7 @@ use kartik\file\FileInput;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
-\kartik\sortable\SortableAsset::register($this);
+//\kartik\sortable\SortableAsset::register($this);
 
 $css = <<<'CSS'
 .file-preview{
@@ -75,6 +75,7 @@ foreach($good->photos as $photo){
 
 echo FileInput::widget([
     'name' => 'goodPhoto[]',
+    'id'        =>  'photosFileInput',
     'language' => \Yii::$app->language,
     'options' => [
         'multiple' => true
@@ -84,6 +85,15 @@ echo FileInput::widget([
         'initialPreviewConfig'  =>  $photos,
         'uploadExtraData'       =>  [
             'key'               =>  $good->ID
+        ],
+        'fileActionSettings'    =>  [
+            'dragSettings'  =>  [
+                'forcePlaceholderSize'  =>  true,
+                'items'                 =>  '.file-preview-frame',
+                'placeholderClass'      =>  'imagesPlaceholder',
+                'showHandle'            =>  true,
+                'type'                  =>  'grid'
+            ]
         ],
         'showCaption'           =>  false,
         'showRemove'            =>  false,
@@ -96,27 +106,21 @@ echo FileInput::widget([
 ]);
 
 $js = <<<'JS'
-$(".file-preview-thumbnails").sortable({
-    forcePlaceholderSize: true,
-    items: '.file-preview-frame',
-    placeholderClass: 'imagesPlaceholder',
-    showHandle: true,
-    type: 'grid'
-}).bind('sortupdate', function(e, ui){
-    var firstImage = $(".file-preview-thumbnails:first-child");
+$("#photosFileInput").on('filesorted', function(e){
+    $("#goodMainPhoto").attr('src', $(".file-preview-thumbnails:first-child img").prop('src'));
 
-    $("#goodMainPhoto")[0].src = firstImage.find("img")[0].src;
-
-    var a = $(".file-preview-thumbnails div img"),
+    var a = $(".file-preview-thumbnails div.kv-file-content"),
         items = new Array(),
         good = null;
 
 
-    for(var i = 0; i < a.length; i++){
-        items.push(a[i].getAttribute("data-order"));
-        good = a[i].getAttribute("data-itemID");
-        a[i].setAttribute("data-order", i + 1);
-    }
+    $.each(a, function(index, item){
+        item = $(item).find('img');
+        
+        items.push(item.attr('data-order'));
+        good = item.attr("data-itemID");
+        item.attr("data-order", (index + 1));
+    })
 
     $.ajax({
 		type: 'POST',
@@ -126,9 +130,26 @@ $(".file-preview-thumbnails").sortable({
 		    key: good
 		}
 	});
+}).on('fileuploaded', function(event, data, previewId, index){
+
+    var image = $("#" + previewId);
+    
+    image.find(".file-thumb-progress")
+        .addClass('hide');
+    
+    image.find(".file-upload-indicator")
+        .replaceWith('<span class="file-drag-handle drag-handle-init text-info" title="Move / Rearrange"><i class="glyphicon glyphicon-menu-hamburger"></i></span>');
+    
+    image.find(".kv-file-content img")
+        .attr('data-itemid', '123')
+        .attr('data-order', ($(".file-preview-thumbnails .file-preview-frame").length + 1));
+        
+    $(".file-input .file-initial-thumbs").append(image);
+    
+    $("#photosFileInput").sortable();
+}).on('filedeleted', function(){
+    $("#goodMainPhoto").attr('src', $(".file-preview-thumbnails:first-child img").prop('src'));
 });
-
-
 JS;
 
 $this->registerJs($js);

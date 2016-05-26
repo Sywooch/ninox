@@ -19,7 +19,7 @@ JS;
 $this->registerJs($js);
 
 if(!$good->isNewRecord){
-    echo Html::tag('h1', $good->Name.' '.Html::tag('small', 'редактирование'));
+    echo Html::tag('h1', $good->Name.' '.Html::tag('small', 'редактирование'), ['data-itemID' => $good->ID]);
 }else{
     echo Html::tag('h1', 'Добавление товара '.(!empty($nowCategory) ? Html::tag('small', $nowCategory->Name) : ''));
 }

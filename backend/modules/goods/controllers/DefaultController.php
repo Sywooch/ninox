@@ -876,6 +876,7 @@ class DefaultController extends Controller
     /**
      * @return bool|string
      * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
      * @deprecated
      */
     public function actionWorkwithtrash(){
