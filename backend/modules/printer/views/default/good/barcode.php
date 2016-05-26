@@ -39,9 +39,17 @@ $css = <<<'CSS'
     overflow: hidden !important;
 }
 
+@media print {
+    #barcodeTarget div:last-of-type{
+        -webkit-filter: drop-shadow(1px 0 0 #fff) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px 1px 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(-1px -1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(1px -1px 0 #fff) drop-shadow(0 0 4px #fff);
+    }
+}
+
 #barcodeTarget div:last-of-type{
     position: absolute;
     bottom: 0;
+    /* -webkit-print-color-adjust:exact;
+    -webkit-filter:opacity(1);
     /*width: auto !important;
     left: 50%;
     margin-left: -24px;

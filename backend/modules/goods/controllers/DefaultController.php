@@ -437,6 +437,10 @@ class DefaultController extends Controller
             $good->getOptions(true);
         }
 
+        if(\Yii::$app->request->get("mode") != 'lot' && $goodMainForm->isSaved){
+            $this->redirect('/goods/view/'.$good->ID);
+        }
+
         $this->getView()->title = 'Добавление товара';
 
         return $this->render('edit', [
