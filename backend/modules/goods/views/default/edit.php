@@ -42,7 +42,7 @@ if(!$good->isNewRecord){
                     'label'     =>  'Основное',
                     'content'   =>  $this->render('_goodEdit/main', [
                         'model'     =>  $goodMainForm,
-                        'category'  =>  $good->category,
+                        'category'  =>  $nowCategory,
                         'good'      =>  $good
                     ])
                 ],[

@@ -65,6 +65,8 @@ $this->registerJs($js);
 $this->title = 'Товар "'.$good->Name.'"';
 ?>
 <h1 id="itemID" data-attribute-itemID="<?=$good->ID?>"><?=$good->Name?> <?=isset($good->category) ? Html::tag('small', $good->category->Name) : ''?></h1>
+<?=Html::a('Добавить товар в эту же категорию', ['/goods/default/add', 'category' => $good->GroupID], ['class' => 'btn btn-info'])?>
+<br><br>
 <div class="panel panel-info">
     <div class="panel-heading">
         <?=$this->render('_showgood_heading', [
