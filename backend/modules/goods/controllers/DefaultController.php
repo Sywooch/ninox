@@ -634,6 +634,12 @@ class DefaultController extends Controller
 
         $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good->category, $good);
 
+        $category = $good->category;
+
+        if($category instanceof Category == false){
+            $category = new Category();
+        }
+
         if($request->get("act") == 'edit'){
             return $this->render('edit', [
                 'good'              =>  $good,
@@ -641,14 +647,14 @@ class DefaultController extends Controller
                 'goodMainForm'      =>  $goodMainForm,
                 'goodAttributesForm'=>  $goodAttributesForm,
                 'goodExportForm'    =>  $goodExportForm,
-                'nowCategory'       =>  $good->category,
+                'nowCategory'       =>  $category,
             ]);
         }
 
         return $this->render('view', [
             'good'       => $good,
             'goodUk'     => new GoodUk(),
-            'nowCategory' => $good->category,
+            'nowCategory' => $category,
             'uploadPhoto'  =>  new UploadPhoto(),
             'additionalPhotos'  =>  new ArrayDataProvider([
                 'models'    =>  $good->photos
