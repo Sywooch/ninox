@@ -105,6 +105,7 @@ Html::tag('fieldset',
                     ]
                 ])
             .Html::tag('div',
+                Html::hiddenInput('deliveryParamInput', $order->deliveryParam, ['id' => 'deliveryParamInput']).
                 $form->field($order, 'deliveryParam',
                     [
                         'options'   =>  [
@@ -117,7 +118,8 @@ Html::tag('fieldset',
                             'depends'   =>  ['deliveryTypeInput'],
                             'initialize'=>  true,
                             'params'    =>  [
-                                'deliveryTypeInput'
+                                'deliveryTypeInput',
+                                'deliveryParamInput'
                             ],
                             'emptyMsg'  =>  'варианты отсутствуют',
                             'initDepends'=>  ['deliveryTypeInput'],
@@ -147,6 +149,7 @@ Html::tag('fieldset',
                     ]
                 ])
             .Html::tag('div',
+                Html::hiddenInput('paymentParamInput', $order->paymentParam, ['id' => 'paymentParamInput']).
                 $form->field($order, 'paymentType', [
                     'options'   =>  [
                         'class' =>  'col-xs-6'
@@ -167,7 +170,8 @@ Html::tag('fieldset',
                             'depends'   =>  ['paymentTypeInput'],
                             'initialize'=>  true,
                             'params'    =>  [
-                                'paymentTypeInput'
+                                'paymentTypeInput',
+                                'paymentParamInput'
                             ],
                             'emptyMsg'  =>  'варианты отсутствуют',
                             'initDepends'=>  ['paymentTypeInput'],

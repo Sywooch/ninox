@@ -150,7 +150,7 @@ class DefaultController extends Controller
                     $result[] = ['id' => $param->id, 'name' => $param->description];
                 }
 
-                return ['output' => $result];
+                return ['output' => $result, 'selected' => empty(\Yii::$app->request->post("depdrop_all_params")['deliveryParamInput']) ? 0 : \Yii::$app->request->post("depdrop_all_params")['deliveryParamInput']];
                 break;
         }
     }
@@ -210,7 +210,7 @@ class DefaultController extends Controller
                 }
 
 
-                return ['output' => $result];
+                return ['output' => $result, 'selected' => empty(\Yii::$app->request->post("depdrop_all_params")['paymentParamInput']) ? 0 : \Yii::$app->request->post("depdrop_all_params")['paymentParamInput']];
                 break;
         }
     }
