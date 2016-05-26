@@ -630,9 +630,11 @@ class DefaultController extends Controller
 
                 $good->getOptions(true);
             }
+        }
 
-            $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good->category, $good);
+        $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good->category, $good);
 
+        if($request->get("act") == 'edit'){
             return $this->render('edit', [
                 'good'              =>  $good,
                 //'goodUk'          =>  $goodUK,

@@ -39,26 +39,14 @@ $css = <<<'CSS'
     overflow: hidden !important;
 }
 
-@media print {
-    #barcodeTarget div:last-of-type{
-        -webkit-filter: drop-shadow(1px 0 0 #fff) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px 1px 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(-1px -1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(1px -1px 0 #fff) drop-shadow(0 0 4px #fff);
-    }
-}
-
 #barcodeTarget div:last-of-type{
     position: absolute;
     bottom: 0;
-    /* -webkit-print-color-adjust:exact;
-    -webkit-filter:opacity(1);
-    /*width: auto !important;
-    left: 50%;
-    margin-left: -24px;
-    padding: 0 5px;*/
+    color: transparent !important;
     font-size: 2.2mm !important;
     margin-bottom: -2px;
-    background-color: rgba(0, 0, 0, 0) !important;
-    text-shadow: #fff 1px 0px, #fff 1px 1px, #fff 0px 1px, #fff -1px 1px, #fff -1px 0px, #fff -1px -1px, #fff 0px -1px, #fff 1px -1px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px, #fff 0 0 4px;
-}
+    background-color: transparent !important;
+    }
 
 CSS;
 
@@ -68,7 +56,7 @@ echo Html::tag('div',
     Html::tag('div',
         Html::tag('span', $good->name, ['class' => 'barcode-title']).
         Html::tag('hr').
-        Html::tag('span', "Арт. {$good->Code}\\{$good->wholesalePrice}", ['class' => 'barcode-article']).
+        Html::tag('span', "Арт. {$good->BarCode1}\\{$good->wholesalePrice}", ['class' => 'barcode-article']).
         Html::tag('div', '', ['id' => 'barcodeTarget', 'style' => 'margin: 0px auto']).
         \barcode\barcode\BarcodeGenerator::widget([
             'elementId' =>  'barcodeTarget',
