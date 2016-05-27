@@ -4,10 +4,6 @@ use kartik\form\ActiveForm;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
-$model = new \backend\modules\orders\models\OrderDeliveryForm();
-
-$model->loadOrder($order);
-
 $form = ActiveForm::begin([
     'id' => 'login-form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
@@ -16,7 +12,7 @@ $form = ActiveForm::begin([
 
 echo Html::tag('h4', 'Редактирование инфо о доставке в заказе', ['style' => 'margin-top: -15px; padding-bottom: 10px']),
     $form->field($model, 'city'),
-    $form->field($model, 'region'),
+    $form->field($model, 'region')->dropDownList((new \common\models\History())->getRegions()),
     Html::tag('hr'),
     $form->field($model, 'deliveryType', [
         'inputOptions'  =>  [
@@ -40,6 +36,6 @@ echo Html::tag('h4', 'Редактирование инфо о доставке 
         ]),
     $form->field($model, 'deliveryInfo');
 
-echo Html::button('Сохранить', ['class' => 'btn btn-success btn-lg']);
+echo Html::button('Сохранить', ['class' => 'btn btn-success btn-lg', 'type' => 'success']);
 
 $form->end();

@@ -565,7 +565,7 @@ $orderHistory = new \bobroid\remodal\Remodal([
     'confirmButton'		=>	false,
     'closeButton'		=>	true,
     'addRandomToID'		=>	false,
-    'content'			=>	$this->render('_order_history'),
+    'content'			=>	$this->render('_order_history', ['order' => $order]),
     'id'				=>	'orderHistory',
     'options'			=>  [
         'class'			=>  'order-history'
@@ -663,7 +663,7 @@ Html::a('История заказа', '#orderHistory', [
         'cancelButton'		=>	false,
         'confirmButton'		=>	false,
         'addRandomToID'		=>	false,
-        'content'			=>	$this->render('_order_customerInfoEdit', ['order' => $order]),
+        'content'			=>	$this->render('_order_customerInfoEdit', ['model' => $customerForm]),
         'id'                =>	'orderEdit',
         'buttonOptions'     =>  [
             'label' =>  'Редактировать',
@@ -679,14 +679,14 @@ Html::a('История заказа', '#orderHistory', [
       <div class="col-md-4">
           <div class="blue-line"></div>
 
-          <span><?=Html::tag('b', $deliveryType)?></span>
+          <?=Html::tag('span', Html::tag('b', $deliveryType))?>
           <span><?=$order->deliveryCity?>, <?=$order->deliveryRegion?></span>
           <span><?=$deliveryParam?>, <?=$order->deliveryInfo != '' ? ($order->deliveryType == 2 ? 'склад №' : '').$order->deliveryInfo : ''?></span>
           <?=Remodal::widget([
               'cancelButton'		=>	false,
               'confirmButton'		=>	false,
               'addRandomToID'		=>	false,
-              'content'			=>	$this->render('_order_deliveryInfoEdit', ['order' => $order]),
+              'content'			=>	$this->render('_order_deliveryInfoEdit', ['model' => $deliveryForm]),
               'id'                =>	'deliveryInfoEdit',
               'buttonOptions'     =>  [
                   'label' =>  'Редактировать',

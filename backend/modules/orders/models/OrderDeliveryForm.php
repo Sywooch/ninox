@@ -11,6 +11,7 @@ namespace backend\modules\orders\models;
 
 use common\models\History;
 use yii\base\Model;
+use yii\web\BadRequestHttpException;
 
 class OrderDeliveryForm extends Model
 {
@@ -41,6 +42,13 @@ class OrderDeliveryForm extends Model
         ];
     }
 
+    public function rules(){
+        return [
+            [['city', 'region', 'deliveryInfo'], 'string'],
+            [['deliveryType', 'deliveryParam'], 'number']
+        ];
+    }
+
     /**
      * @param History $order
      */
@@ -56,8 +64,24 @@ class OrderDeliveryForm extends Model
         ]);
     }
 
-    public function save(){
+    public function getOrder(){
+        return $this->order;
+    }
 
+    public function save(){
+        if($this->order instanceof History == false){
+            throw new BadRequestHttpException("Невозможно сохранить заказ, не передав в него заказ о_О");
+        }
+
+        $this->order->setAttributes([
+            'deliveryCity'  =>  $this->city,
+            'deliveryRegion'=>  $this->region,
+            'deliveryType'  =>  $this->deliveryType,
+            'deliveryParam' =>  $this->deliveryParam,
+            'deliveryInfo'  =>  $this->deliveryInfo
+        ]);
+
+        return $this->order->save();
     }
     
 }

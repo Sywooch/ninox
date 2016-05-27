@@ -11,6 +11,7 @@ namespace backend\modules\orders\models;
 
 use backend\models\History;
 use yii\base\Model;
+use yii\web\BadRequestHttpException;
 
 class OrderCustomerForm extends Model
 {
@@ -83,8 +84,28 @@ class OrderCustomerForm extends Model
         ]);
     }
 
-    public function save(){
+    public function getOrder(){
+        return $this->order;
+    }
 
+    public function save(){
+        if($this->order instanceof History == false){
+            throw new BadRequestHttpException("Невозможно сохранить заказ, не передав в него заказ о_О");
+        }
+
+        $this->order->setAttributes([
+            'customerName'      =>  $this->name,
+            'customerSurname'   =>  $this->surname,
+            'phone'             =>  $this->phone,
+            'email'             =>  $this->email,
+            'paymentType'       =>  $this->paymentType,
+            'paymentParam'      =>  $this->paymentParam,
+            'coupon'            =>  $this->coupon,
+            'added'             =>  $this->added,
+            'number'            =>  $this->number
+        ]);
+
+        return $this->order->save();
     }
 
 }

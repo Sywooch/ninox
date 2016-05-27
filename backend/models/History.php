@@ -259,6 +259,10 @@ class History extends \common\models\History
             $this->statusChangedDate = date('Y-m-d H:i:s');
         }
 
+        if($this->status == self::STATUS_WAIT_DELIVERY && (empty($this->sendDate) || $this->sendDate == '0000-00-00 00:00:00')){
+            $this->sendDate = date('Y-m-d H:i:s');
+        }
+
         if($this->paymentParam == null){
             $this->paymentParam = 0;
         }

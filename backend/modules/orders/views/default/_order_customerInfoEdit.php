@@ -4,10 +4,6 @@ use kartik\form\ActiveForm;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
-$model = new \backend\modules\orders\models\OrderCustomerForm();
-
-$model->loadOrder($order);
-
 $form = ActiveForm::begin([
     'id' => 'login-form-horizontal',
     'type' => ActiveForm::TYPE_HORIZONTAL,
@@ -44,6 +40,6 @@ $form->field($model, 'paymentParam')
         ]
     ]);
 
-echo Html::button('Сохранить', ['class' => 'btn btn-success btn-lg']);
+echo Html::button('Сохранить', ['class' => 'btn btn-success btn-lg', 'type' => 'success']);
 
 $form->end();
