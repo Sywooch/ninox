@@ -125,43 +125,11 @@ Html::tag('div', \Yii::t('shop', '').
     ?>
     <span class="head">Хотите мы вам перезвоним?</span>
 
-    <!--        --><?/*= $form->field($model, 'name')*/?>
     <?= Html::tag('div',
-        /*        $form->field($model, 'phone', \frontend\widgets\MaskedInput::widget([
-                    'name'			=>	'phone',
-                    'options'		=>	[
-                        'class'			=>	'phone-number-input-modal',
-                    ],
-                    'clientOptions' =>  [
-                        'clearIncomplete'   =>  true,
-                        'alias'             =>  'phone',
-                        'url'               =>  Url::to('/js/phone-codes.json'),
-                        'countrycode'       =>  '',
-                    ],
-
-                ])).*//*($model, 'phone')->input(\frontend\widgets\MaskedInput::widget([
-            'name'			=>	'phone',
-            'options'		=>	[
-                'class'			=>	'phone-number-input-modal',
-            ],
-            'clientOptions' =>  [
-                'clearIncomplete'   =>  true,
-                'alias'             =>  'phone',
-                'url'               =>  Url::to('/js/phone-codes.json'),
-                'countrycode'       =>  '',
-            ],
-            'value'         =>  !\Yii::$app->user->isGuest ?
-                \Yii::$app->user->identity->phone :
-                (\Yii::$app->request->cookies->getValue("customerPhone", false) ?
-                    \Yii::$app->request->cookies->getValue("customerPhone") : '')
-        ])).*/
         $form->field($model, 'phone')->textInput(['value' => !\Yii::$app->user->isGuest ?
             \Yii::$app->user->identity->phone :
             (\Yii::$app->request->cookies->getValue("customerPhone", false) ?
                 \Yii::$app->request->cookies->getValue("customerPhone") : '')]).
-
-        /*$form->field($model, 'question')->textarea().*/
-        /*= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::className());*/
         Html::submitButton('Перезвоните мне', ['class' => 'yellow-button-modal',
             'name' => 'callback-button']), [
             'class' => 'callback-content'
