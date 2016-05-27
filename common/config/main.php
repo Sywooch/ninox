@@ -2,7 +2,7 @@
 return [
     'language'  =>  'ru-RU',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-	'timeZone'	=>	'UTC',
+	'timeZone'	=>	'Kiev\Europe',
     'components' => [
 		's3' => [
 			'class' => \frostealth\yii2\aws\s3\Storage::className(),

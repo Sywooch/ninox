@@ -50,11 +50,6 @@ use Yii;
 class Customer extends \yii\db\ActiveRecord
 {
     /**
-     * @type History[]
-     */
-    private $_orders = [];
-
-    /**
      * @type CustomerContacts[]
      */
     private $_phones = [];

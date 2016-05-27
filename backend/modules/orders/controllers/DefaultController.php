@@ -5,6 +5,9 @@ namespace backend\modules\orders\controllers;
 use backend\models\HistorySearch;
 use backend\models\OrderCommentForm;
 use backend\models\OrdersStats;
+use backend\modules\orders\models\CustomerCommentForm;
+use backend\modules\orders\models\OrderCustomerForm;
+use backend\modules\orders\models\OrderDeliveryForm;
 use backend\modules\orders\models\OrderPreviewForm;
 use common\helpers\PriceRuleHelper;
 use backend\models\Customer;
@@ -390,35 +393,36 @@ class DefaultController extends Controller
             $commentModel->save();
         }
 
-        if(\Yii::$app->request->post("History")){
-            $order->load(\Yii::$app->request->post());
-            $order->save(false);
+        $orderCustomerForm = new OrderCustomerForm();
+        $orderDeliveryForm = new OrderDeliveryForm();
+        $customerComment = new CustomerCommentForm();
+
+        $orderCustomerForm->loadOrder($order);
+
+        if(\Yii::$app->request->post("OrderCustomerForm")){
+            $orderCustomerForm->load(\Yii::$app->request->post());
+
+            if($orderCustomerForm->save()){
+                $order = $orderCustomerForm->order;
+            }
         }
 
-        $st = [];
-        $sborkaItems = SborkaItem::findAll(['orderID' => $order->id]);
+        $orderDeliveryForm->loadOrder($order);
 
-        foreach($sborkaItems as $sItem){
-            $st[] = $sItem->itemID;
+        if(\Yii::$app->request->post("OrderDeliveryForm")){
+            $orderDeliveryForm->load(\Yii::$app->request->post());
+
+            if($orderDeliveryForm->save()){
+                $order = $orderDeliveryForm->order;
+            }
         }
 
-        $itemsDataProvider = new ActiveDataProvider([
-            'query'     =>  $order->getItems(false),
-            'pagination'=>  [
-                'pageSize'  =>  100
-            ]
-        ]);
+        $customerComment->loadOrder($order);
 
-        $itemsDataProvider->setSort([
-            'defaultOrder' => [
-                'added'	=>	SORT_ASC
-            ],
-            'attributes' => [
-                'added' => [
-                    'default' => SORT_ASC
-                ],
-            ]
-        ]);
+        if(\Yii::$app->request->post("CustomerCommentForm")){
+            $customerComment->load(\Yii::$app->request->post());
+            $customerComment->save();
+        }
 
         $customer = $order->customer;
 
@@ -427,10 +431,28 @@ class DefaultController extends Controller
         }
 
         return $this->render('order', [
+            'customerForm'          =>  $orderCustomerForm,
+            'deliveryForm'          =>  $orderDeliveryForm,
             'order'                 =>  $order,
             'items'                 =>  $order->items,
-            'itemsDataProvider'     =>  $itemsDataProvider,
-            'priceRules'            =>  Pricerule::find()->orderBy('priority')->all(),
+            'itemsDataProvider'     =>  new ActiveDataProvider([
+                'query'     =>  $order->getItems(),
+                'pagination'=>  [
+                    'pageSize'  =>  100
+                ],
+                'sort'  =>  [
+                    'defaultOrder' => [
+                        'added'	=>	SORT_ASC
+                    ],
+                    'attributes' => [
+                        'added' => [
+                            'default' => SORT_ASC
+                        ],
+                    ]
+                ]
+            ]),
+            'customerComment'       =>  $customerComment,
+            'priceRules'            =>  Pricerule::find()->where(['enabled' => 1])->orderBy('priority')->all(),
             'customer'              =>  $customer
         ]);
     }
