@@ -76,6 +76,12 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Клиент с таким идентификатором не найден!");
         }
 
+        $attr = \Yii::$app->request->post("attribute");
+
+        $customer->$attr = \Yii::$app->request->post("value");
+
+        $customer->save();
+
         \Yii::$app->response->format = 'json';
 
         return $customer;

@@ -513,11 +513,12 @@ $js = <<<'JS'
                 type: 'POST',
                 url: '/customers/manipulate',
                 data: {
-                    customerID: $("#customerID").prop('data-attribute-customerID'),
+                    customerID: $("#customerID").attr('data-attribute-customerID'),
                     attribute: 'money',
                     value: inputValue
                 },
                 success: function(data){
+                    $("#customerMoneyValue").html(inputValue);
                     swal("Успех!", "У клиента на счету теперь " + inputValue + " грн.", "success");
                 }
             });
@@ -808,7 +809,7 @@ Html::a('История заказа', '#orderHistory', [
         <label for="">Отправка сообщений</label>
         <div class="btn-toolbar ">
             <?php
-            echo Html::a('Накладная на почту', '#', [
+            echo Html::a('Скачать накладную', "/export/excel/{$order->id}", [
                 'class' =>  'btn btn-default button-size'
             ]);
 
