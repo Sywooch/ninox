@@ -326,26 +326,47 @@ class SiteController extends Controller
         $this->getView()->params['breadcrumbs'] = array_merge($this->getView()->params['breadcrumbs'], $temp);
     }
 
-    public function getCategoryPhoneNumber($object){
-        $class = get_parent_class($object);
-        switch($class){
-            case 'common\models\Category':
-                $category = $object;
-                break;
-            case 'common\models\Good':
-                $category = Category::findOne($object->GroupID);
-                break;
-            default:
-                throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
-                break;
-        }
+    public function getCategoryPhoneNumber($object = null){
+        if($object !== null){
+            $class = get_parent_class($object);
 
-        if(strlen($category->Code) != 3){
-            foreach($category->parents as $parent){
-                if(!empty($parent->phoneNumber)){
-                    $this->getView()->params['categoryPhoneNumber'] = $parent->phoneNumber;
-                    break;
+            try{
+                switch($class::className()){
+                    case 'common\models\Category':
+                        $category = $object;
+                        break;
+                    case 'common\models\Good':
+                        $category = Category::findOne($object->GroupID);
+                        break;
+                    case '':
+                        \Yii::$app->params['categoryPhoneNumber'] = '(044) 578 20 16';
+                        return;
+                        break;
+                    default:
+                        throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
+                        break;
                 }
+
+                \Yii::trace('place 1');
+
+                if(strlen($category->Code) != 3){
+                    \Yii::trace('place 2');
+
+                    foreach($category->parents as $parent){
+                        \Yii::trace('finded parent');
+
+                        if(!empty($parent->phoneNumber)){
+                            \Yii::trace($parent->phoneNumber);
+
+                            \Yii::$app->params['categoryPhoneNumber'] = $parent->phoneNumber;
+                            break;
+                        }
+                    }
+                }else{
+                    \Yii::$app->params['categoryPhoneNumber'] = $category->phoneNumber;
+                }
+            }catch (\Error $e){
+
             }
         }
     }
@@ -948,8 +969,7 @@ class SiteController extends Controller
         }
 
         self::getLanguagesLinks();
-
-        Yii::$app->getView()->params['categoryPhoneNumber'] = '(044) 578 20 16';
+        self::getCategoryPhoneNumber();
 
         return parent::beforeAction($action);
     }

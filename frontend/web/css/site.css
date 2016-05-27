@@ -2364,7 +2364,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 #modal-cart .cart-message{
 	float: left;
-	color: #9a9a9a;
+	color: #e0e0e0;
 	font-size: 14px;
 	padding: 0 15px;
 	display: none;
@@ -2375,8 +2375,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 #modal-cart .number-of-order{
 	float: left;
 	font-size: 22px;
-	font-family: OpenSans-Semibold;
-
+	font-weight: 600;
+	font-family: 'Open Sans';
 }
 
 #modal-cart.retail .cart-message-retail,
@@ -2460,7 +2460,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 #modal-cart .grid-view tr:not(:first-child){
-	border-top: 1px solid #c6c6c6;
+	border-top: 1px dashed #e0e0e0;
 }
 
 #modal-cart .grid-view td{
@@ -2566,6 +2566,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 #modal-cart td[data-col-seq="1"]{
 	text-align: left;
+	width: 470px;
+}
+
+#modal-cart td[data-col-seq="3"]{
+	width: 175px;
 }
 
 #modal-cart td[data-col-seq="2"], #modal-cart td[data-col-seq="3"]{
@@ -2616,6 +2621,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 #modal-cart .cart-footer .left{
 	float: left;
 	text-align: left;
+	line-height: 22px;
+	margin-top: 5px;
 }
 
 #modal-cart .cart-footer .right{
@@ -2624,7 +2631,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 #modal-cart .amount-cart-discount{
-	font-family: OpenSans-Bold;
+	font-family: OpenSans-Semibold;
 	font-size: 20px;
 }
 
@@ -2639,10 +2646,11 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 #modal-cart .amount-cart-text .text{
-	width: 120px;
+	width: 132px;
 	margin-right: 20px;
-	font-size: 13px;
+	font-size: 14px;
 	display: inline-block;
+	line-height: 16px;
 }
 
 #modal-cart .amount-cart-text .question-round-button{
@@ -2689,6 +2697,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 #modal-cart .one-click-order {
 	float: left;
+	background: #e7e7e7;
+	color: #949494;
 }
 
 #modal-cart .cart-button:disabled{
@@ -4207,9 +4217,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: auto;
 }
 
-.under-menu-content .tt-menu *{
-	max-width: none !important;
-}
+
 
 .under-menu-content .tt-menu .tt-suggestion .item-code{
 	top: auto;

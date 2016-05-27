@@ -158,6 +158,8 @@ class DefaultController extends Controller
     public function beforeAction($action){
         SiteController::getLanguagesLinks();
 
+        SiteController::getCategoryPhoneNumber();
+
         return parent::beforeAction($action);
     }
 
