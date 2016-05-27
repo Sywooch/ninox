@@ -114,6 +114,9 @@ $css = <<<'CSS'
     .orderItemSelected{
         background: rgba(200, 200, 200, 0.2) !important;
     }
+    .block-span{
+
+    }
     .block-span span{
 display: block;
 line-height: 32px;
@@ -124,7 +127,6 @@ font-size: 16px;
     width: 58px;
     height: 4px;
     background: #00bfe8;
-    margin-top: 20px;
     margin-bottom: 10px;
     }
     .order-history ul li{
@@ -162,7 +164,6 @@ transition: all .3s ease .15s;
 overflow: hidden;
 position: absolute;
     width: 320px;
-    height: 245px;
     background: white;
     position: absolute;
     margin-top: -18px;
@@ -179,6 +180,18 @@ padding-right: 53px;
     .order-sum-block .blue-line{
     width: 100%;
     }
+
+
+    .white{
+    background: white;
+    border-radius: 5px;
+    padding: 25px;
+    }
+
+    .accordion{
+    padding: 0px;
+    }
+
     .accordion .ui-accordion-header{
     background: none;
     border: none;
@@ -672,7 +685,7 @@ Html::a('История заказа', '#orderHistory', [
 </div>
 </div>
     <hr>
-    <div class="row block-span">
+    <div class="row block-span white">
         <div class="col-md-4">
             <div class="blue-line"></div>
             <span><?=$order->customerName?> <?=$order->customerSurname?></span>
@@ -746,7 +759,7 @@ Html::a('История заказа', '#orderHistory', [
       </div>
     </div>
 <hr>
-<div class="row accordion">
+<div class="row accordion white">
     <?=Accordion::widget([
         'items' => [
             [
@@ -758,7 +771,7 @@ Html::a('История заказа', '#orderHistory', [
     ]);?>
 </div>
     <hr>
-<div class="row">
+<div class="row white">
     <div class="col-md-6">
     <div class="">
         <label for="">Печать</label>
