@@ -43,8 +43,12 @@ echo \kartik\grid\GridView::widget([
                 break;
             case $model::STATUS_NOT_CALLED:
             default:
-                $class = 'danger';
+                $class = 'new';
                 break;
+        }
+
+        if($model->sourceType == $model::SOURCETYPE_INTERNET && $model->sourceInfo == 1 && $model->status == $model::STATUS_NOT_CALLED){
+            $class = 'danger';
         }
 
         if($model->newCustomer){
@@ -55,7 +59,7 @@ echo \kartik\grid\GridView::widget([
             $class .= ' hasDiscount';
         }
 
-        return ['class' => $class];
+        return ['class' => 'orderRow '.$class];
     },
     'hover'         =>  true,
     'columns'       =>  [
@@ -63,7 +67,7 @@ echo \kartik\grid\GridView::widget([
             'attribute' =>  'id',
             'format'    =>  'html',
             'label'     =>  '№',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
+            'hAlign'    =>  GridView::ALIGN_LEFT,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '40px',
             'options'   =>  function($model){
@@ -81,7 +85,7 @@ echo \kartik\grid\GridView::widget([
         [
             'attribute' =>  'added',
             'label'     =>  'Дата',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
+            'hAlign'    =>  GridView::ALIGN_LEFT,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '40px',
             'format'    =>  'html',
@@ -97,7 +101,7 @@ echo \kartik\grid\GridView::widget([
         [
             'attribute' =>  'customerName',
             'label'     =>  'Ф.И.О.',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
+            'hAlign'    =>  GridView::ALIGN_LEFT,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '140px',
             'format'    =>  'html',
@@ -108,7 +112,7 @@ echo \kartik\grid\GridView::widget([
         [
             'attribute' =>  'customerPhone',
             'label'     =>  'Телефон',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
+            'hAlign'    =>  GridView::ALIGN_LEFT,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'width'     =>  '80px',
             'value'     =>  function($model){
@@ -120,7 +124,7 @@ echo \kartik\grid\GridView::widget([
             'label'     =>  'Город/Область',
             'format'    =>  'html',
             'width'     =>  '140px',
-            'hAlign'    =>  GridView::ALIGN_CENTER,
+            'hAlign'    =>  GridView::ALIGN_LEFT,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
                 if(strlen($model->deliveryCity) >= 20){
@@ -128,13 +132,13 @@ echo \kartik\grid\GridView::widget([
                     $model->deliveryCity = implode(', ', $a);
                 }
 
-                return Html::tag('b', $model->deliveryCity).'<br>'.$model->deliveryRegion;
+                return Html::tag('b', $model->deliveryCity).'<br>'.Html::tag('small', $model->deliveryRegion);
             }
         ],
         [
             'header'    =>  'Статус',
             'vAlign'    =>  \kartik\grid\GridView::ALIGN_MIDDLE,
-            'hAlign'    =>  \kartik\grid\GridView::ALIGN_CENTER,
+            'hAlign'    =>  \kartik\grid\GridView::ALIGN_LEFT,
             'format'    =>  'html',
             'noWrap'    =>  true,
             'attribute' =>  'status',
@@ -148,7 +152,13 @@ echo \kartik\grid\GridView::widget([
                     $status2 = '';
                 }
 
-                return Html::tag('div', Html::tag('div', $model->statusDescription, [
+                $d = $model->statusDescription;
+
+                if($model->status == $model::STATUS_NOT_PAYED || $model->status == $model::STATUS_WAIT_DELIVERY){
+                    $d = Html::tag('b', $model->statusDescription);
+                }
+
+                return Html::tag('div', Html::tag('div', $d, [
                         'style' =>  'width: 100%; height: 40%',
                         'class' =>  'mainStatus'
                     ]).Html::tag('small', $status2), [
@@ -188,7 +198,7 @@ echo \kartik\grid\GridView::widget([
             }
         ],
         [
-            'hAlign'    =>  GridView::ALIGN_CENTER,
+            'hAlign'    =>  GridView::ALIGN_LEFT,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'attribute' =>  'actualAmount',
             'label'     =>  'К оплате',
@@ -209,7 +219,7 @@ echo \kartik\grid\GridView::widget([
         [
             'header'    =>  'СМС',
             'class'     =>  \kartik\grid\ActionColumn::className(),
-            'hAlign'    =>  GridView::ALIGN_CENTER,
+            'hAlign'    =>  GridView::ALIGN_LEFT,
             'width'     =>  '90px',
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'buttons'   =>  [
