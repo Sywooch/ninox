@@ -163,7 +163,26 @@ echo \kartik\grid\GridView::widget([
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
-                return $model->originalSum.' грн.';
+                $class = '';
+                $value = '';
+                switch($model->paymentType){
+                    case 1:
+                        $value = 'наложка';
+                        $class = ' cash-on-delivery';
+                        break;
+                    case 2:
+                        $value = 'на карту';
+                        $class = ' cash-on-card';
+                        break;
+                    case 3:
+                        $value = 'наличка';
+                        $class = ' cash';
+                        break;
+                    default:
+                        break;
+                }
+                return Html::tag('div', $model->originalSum.' грн.').
+                    Html::tag('span', $value, ['class' => 'payment-type'.$class]);
             }
         ],
         [

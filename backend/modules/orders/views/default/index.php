@@ -453,6 +453,25 @@ $css = <<<'CSS'
     tr.hasDiscount td:nth-child(2){
         background-color: #EB9532 !important;
     }
+
+    .payment-type{
+        font-size: 12px;
+        border-radius: 10px;
+        padding: 0 10px;
+        color: #fff;
+    }
+
+    .payment-type.cash-on-delivery{
+        background: #cc7e3b;
+    }
+
+    .payment-type.cash-on-card{
+        background: #1ba019;
+    }
+
+    .payment-type.cash{
+        background: #385698;
+    }
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
