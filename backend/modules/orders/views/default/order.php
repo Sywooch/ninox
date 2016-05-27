@@ -200,6 +200,11 @@ padding-right: 53px;
     background: none;
     border: none;
     }
+
+    .status-label{
+    margin-left: 20px;
+    }
+
     .on-map{
     display: inline-block !important;
 border-radius: 10px;
