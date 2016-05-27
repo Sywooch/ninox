@@ -32,12 +32,17 @@ class Sms extends \common\components\Sms{
         $message->params = [
             ['key' => 'ORDERID', 'value' => $order->number],
             ['key' => 'ACTUALAMOUNT', 'value' => $order->actualAmount],
-            ['key' => 'BANKNAME', 'value' => $order->paymentParamInfo->description],
-            ['key' => 'CARDNUMBER', 'value' => $order->paymentParamInfo->value],
-            ['key' => 'CARDHOLDER', 'value' => $order->paymentParamInfo->options],
             ['key' => 'TTN', 'value' => $order->nakladna],
             ['key' => 'NOVAPOSHTA', 'value' => $order->deliveryInfo],
         ];
+
+        if($order->paymentType == 2){
+            $message->params = array_merge($message->params, [
+                ['key' => 'BANKNAME', 'value' => $order->paymentParamInfo->description],
+                ['key' => 'CARDNUMBER', 'value' => $order->paymentParamInfo->value],
+                ['key' => 'CARDHOLDER', 'value' => $order->paymentParamInfo->options],
+            ]);
+        }
 
         return $this->send([
             'action'    =>  'message',
