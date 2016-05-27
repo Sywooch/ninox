@@ -2,16 +2,17 @@
 
 use yii\db\Migration;
 
-class m160519_112150_fix_send_pay_table extends Migration
+class m160523_110508_fix_goods_original extends Migration
 {
     public function up()
     {
-        $this->alterColumn('send_pay', 'kvitanciya', \yii\db\Schema::TYPE_STRING."(255) NOT NULL DEFAULT ''");
+        $this->alterColumn('goods', 'originalGood', \yii\db\Schema::TYPE_SMALLINT." UNSIGNED NOT NULL DEFAULT 0");
     }
 
     public function down()
     {
-        echo "m160519_112150_fix_send_pay_table cannot be reverted.\n";
+        echo "m160523_110508_fix_goods_original cannot be reverted.\n";
+
         return true;
     }
 

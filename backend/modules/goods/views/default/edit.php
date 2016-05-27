@@ -19,7 +19,7 @@ JS;
 $this->registerJs($js);
 
 if(!$good->isNewRecord){
-    echo Html::tag('h1', $good->Name.' '.Html::tag('small', 'редактирование'));
+    echo Html::tag('h1', $good->Name.' '.Html::tag('small', 'редактирование'), ['data-itemID' => $good->ID]);
 }else{
     echo Html::tag('h1', 'Добавление товара '.(!empty($nowCategory) ? Html::tag('small', $nowCategory->Name) : ''));
 }
@@ -28,7 +28,7 @@ if(!$good->isNewRecord){
 <div class="row">
     <div class="col-xs-4">
         <div class="well well-sm">
-            <img src="http://krasota-style.com.ua/img/catalog/<?=$good->photo?>" id="goodMainPhoto" alt="<?=$good->name?>" class="col-xs-12">
+            <img src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/<?=$good->photo?>" id="goodMainPhoto" alt="<?=$good->name?>" class="col-xs-12">
             <div class="clearfix"></div>
         </div>
     </div>
@@ -42,7 +42,8 @@ if(!$good->isNewRecord){
                     'label'     =>  'Основное',
                     'content'   =>  $this->render('_goodEdit/main', [
                         'model'     =>  $goodMainForm,
-                        'category'  =>  $good->category
+                        'category'  =>  $nowCategory,
+                        'good'      =>  $good
                     ])
                 ],[
                     'label'     =>  'Аттрибуты',

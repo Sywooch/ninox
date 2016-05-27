@@ -10,6 +10,7 @@
         'modalHeader'        =>  'Добавить товар "'.$good->Name.'" в заказ',
         'itemID'             =>     $good->ID
     ])?>
+    <button class="btn btn-default printBarcode"><?=\rmrevin\yii\fontawesome\FA::i('barcode')?></button>
 </div>
 
 <div class="btn-group pull-right" role="group" aria-label="...">

@@ -41,7 +41,7 @@ class Email extends \common\components\Email{
                 'quantity'          =>  $item->count,
                 'externalItemId'    =>  $item->good->Code,
                 'url'               =>  'https://krasota-style.com.ua/tovar/-g'.$item->itemID,
-                'imageUrl'          =>  'https://krasota-style.com.ua/img/catalog/sm/'.$item->photo,
+                'imageUrl'          =>  'https:'.\Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$item->photo,
             ];
         }
 

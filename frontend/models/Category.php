@@ -146,6 +146,10 @@ class Category extends \common\models\Category{
 	}
 
 	public function getFilters(){
+		if(substr($this->Code, 0, 3) == 'AAB'){
+			return [];
+		}
+
 		if(empty($this->_filters)){
 			$filters = [];
 			$varCount = [];

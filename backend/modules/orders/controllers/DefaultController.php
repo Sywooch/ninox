@@ -151,7 +151,7 @@ class DefaultController extends Controller
                     $result[] = ['id' => $param->id, 'name' => $param->description];
                 }
 
-                return ['output' => $result];
+                return ['output' => $result, 'selected' => empty(\Yii::$app->request->post("depdrop_all_params")['deliveryParamInput']) ? 0 : \Yii::$app->request->post("depdrop_all_params")['deliveryParamInput']];
                 break;
         }
     }
@@ -211,7 +211,7 @@ class DefaultController extends Controller
                 }
 
 
-                return ['output' => $result];
+                return ['output' => $result, 'selected' => empty(\Yii::$app->request->post("depdrop_all_params")['paymentParamInput']) ? 0 : \Yii::$app->request->post("depdrop_all_params")['paymentParamInput']];
                 break;
         }
     }
@@ -251,7 +251,7 @@ class DefaultController extends Controller
         $orderForm->loadOrder($order);
 
         if(\Yii::$app->request->post("OrderPreviewForm") && $orderForm->load(\Yii::$app->request->post()) && \Yii::$app->request->post("action") == "save"){
-            $orderForm->save();
+            $orderForm->save(false);
         }
 
         return $this->renderAjax('_orderPreview', [
@@ -797,7 +797,7 @@ class DefaultController extends Controller
         $items = SborkaItem::findAll(['orderID' => $order->id]);
 
         $priceRuleHelper = new PriceRuleHelper();
-        $priceRuleHelper->cartSumm = $order->originalSum;
+        $priceRuleHelper->cartSumm = $order->orderSum;
 
         foreach($items as $item){
             $priceRuleHelper->recalcSborkaItem($item, $priceRule);

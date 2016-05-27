@@ -4,14 +4,12 @@ use yii\bootstrap\Html;
 
 $model = new \cashbox\models\CustomerForm();
 
-$form = new ActiveForm([
+$form = ActiveForm::begin([
     'formConfig'    =>  ['labelSpan' => 4, 'deviceSize' => ActiveForm::SIZE_SMALL],
     'id'            =>  'newCustomerForm',
     'type' => ActiveForm::TYPE_VERTICAL,
     'validateOnType'=>true,
 ]);
-
-$form->begin();
 
 echo Html::tag('h3', 'Добавление нового клиента:', ['style' => 'margin-top: 0']);
 

@@ -24,7 +24,6 @@ class Good extends \common\models\Good{
 	public $priceForOneItem = 0;            //Цена за единицу товара
 	public $priceModified = false;          //Триггер, срабатывающий на модификацию цен ценовым правилом
 	public $isNew = false;                  //Флаг-новинка
-    public $canBuy = true;
 	public $customerRule = 0;               //Персональное правило
 
     private $_options = [];
@@ -98,6 +97,10 @@ class Good extends \common\models\Good{
 
         return $this->_options = $options;
     }
+
+	public function getCanBuy(){
+		return $this->enabled && ($this->count > 0 || $this->isUnlimited) && $this->PriceOut1 > 0 && $this->PriceOut2 > 0;
+	}
 
     protected function getDefaultOptions(){
         $options = [];

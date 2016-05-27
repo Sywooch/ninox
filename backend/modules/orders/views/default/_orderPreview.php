@@ -27,7 +27,8 @@ $form = ActiveForm::begin([
                         Способ доставки:
                     </td>
                     <td style="width: 30%;">
-                        <?=Html::tag('div',
+                        <?=Html::hiddenInput('deliveryParamInput', $model->deliveryParam, ['id' => 'deliveryParamInput']).
+                            Html::tag('div',
                             $form->field($model, 'deliveryType', [
                                 'options'   =>  [
                                     'class' =>  'col-xs-4'
@@ -48,7 +49,8 @@ $form = ActiveForm::begin([
                                         'depends'   =>  ['deliveryTypeInput'],
                                         'initialize'=>  true,
                                         'params'    =>  [
-                                            'deliveryTypeInput'
+                                            'deliveryTypeInput',
+                                            'deliveryParamInput'
                                         ],
                                         'emptyMsg'  =>  'варианты отсутствуют',
                                         'initDepends'=>  ['deliveryTypeInput'],
@@ -82,7 +84,8 @@ $form = ActiveForm::begin([
                         Способ оплаты:
                     </td>
                     <td>
-                        <?=Html::tag('div',
+                        <?=Html::hiddenInput('paymentParamInput', $model->paymentParam, ['id' => 'paymentParamInput']).
+                        Html::tag('div',
                             $form->field($model, 'paymentType', [
                                 'options'   =>  [
                                     'class' =>  'col-xs-6'
@@ -103,7 +106,8 @@ $form = ActiveForm::begin([
                                         'depends'   =>  ['paymentTypeInput'],
                                         'initialize'=>  true,
                                         'params'    =>  [
-                                            'paymentTypeInput'
+                                            'paymentTypeInput',
+                                            'paymentParamInput'
                                         ],
                                         'emptyMsg'  =>  'варианты отсутствуют',
                                         'initDepends'=>  ['paymentTypeInput'],

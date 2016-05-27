@@ -2,16 +2,18 @@
 
 use yii\db\Migration;
 
-class m160519_112150_fix_send_pay_table extends Migration
+class m160525_144802_item_lang_fix extends Migration
 {
     public function up()
     {
-        $this->alterColumn('send_pay', 'kvitanciya', \yii\db\Schema::TYPE_STRING."(255) NOT NULL DEFAULT ''");
+        \common\models\GoodTranslation::updateAll([
+            'language' => 'ru-RU'
+        ], ['language' => 'ru_RU']);
     }
 
     public function down()
     {
-        echo "m160519_112150_fix_send_pay_table cannot be reverted.\n";
+        echo "m160525_144802_item_lang_fix cannot be reverted.\n";
         return true;
     }
 

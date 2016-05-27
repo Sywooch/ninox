@@ -2,16 +2,18 @@
 
 use yii\db\Migration;
 
-class m160519_112150_fix_send_pay_table extends Migration
+class m160527_124934_off_price_rule_39 extends Migration
 {
     public function up()
     {
-        $this->alterColumn('send_pay', 'kvitanciya', \yii\db\Schema::TYPE_STRING."(255) NOT NULL DEFAULT ''");
+        \common\models\Pricerule::updateAll(['Enabled' => 0], ['ID' => 39]);
     }
 
     public function down()
     {
-        echo "m160519_112150_fix_send_pay_table cannot be reverted.\n";
+        \common\models\Pricerule::updateAll(['Enabled' => 1], ['ID' => 39]);
+
+        echo "m160527_124934_off_price_rule_39 was successfully reverted.\n";
         return true;
     }
 

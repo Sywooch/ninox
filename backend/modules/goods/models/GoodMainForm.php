@@ -11,7 +11,6 @@ namespace backend\modules\goods\models;
 
 use backend\models\Good;
 use yii\base\Model;
-use yii\base\Object;
 
 class GoodMainForm extends Model{
 
@@ -239,6 +238,9 @@ class GoodMainForm extends Model{
     public function rules(){
         return [
             [['inPackageAmount'], 'default', 'value' => 1],
+            [['inPackageAmount'], 'required', 'when' => function(){
+                return $this->undefinedPackageAmount == false;
+            }],
             [['name', 'code', 'barcode', 'additionalCode', 'inPackageAmount', 'count', 'wholesalePrice', 'retailPrice'], 'trim'],
             [['name', 'code', 'additionalCode', 'measure', 'anotherCurrencyTag'], 'string', 'max' => 255],
             [['description'], 'string'],

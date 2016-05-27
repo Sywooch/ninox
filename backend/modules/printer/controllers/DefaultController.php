@@ -74,6 +74,23 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * @param integer $param - ID товара
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionGoodBarcode($param){
+        $good = Good::findOne($param);
+
+        if(!$good){
+            throw new NotFoundHttpException("Товар с идентификатором {$param} не найден!");
+        }
+
+        return $this->render('good/barcode', [
+            'good'  =>  $good
+        ]);
+    }
+
     public function actionTransport_list($param){
         $order = History::findOne($param);
 
