@@ -25,12 +25,12 @@ class CallbackForm extends Model
     /**
      * @type string
      */
-    public $question;
+    public $question = '';
 
     /**
      * @type string
      */
-    public $name;
+    public $name = '';
 
     /**
      * @type string
@@ -43,6 +43,7 @@ class CallbackForm extends Model
             ['captcha', 'captcha'],
             [['phone'], 'required'],
             [['phone', 'question', 'name'], 'string'],
+            [['question', 'name'], 'default', 'value' => ''],
         ];
     }
 
