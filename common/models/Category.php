@@ -175,8 +175,8 @@ class Category extends \yii\db\ActiveRecord
         return empty($this->translation->sequence) ? 0 : $this->translation->sequence;
     }
 
-    public function getCategoryPhone(){
-        return empty($this->translation->categoryPhone) ? null : $this->translation->categoryPhone;
+    public function getPhoneNumber(){
+        return empty($this->translation->phoneNumber) ? \Yii::$app->params['categoryPhoneNumber'] : $this->translation->phoneNumber;
     }
 
     /**
