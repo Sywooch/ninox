@@ -326,7 +326,7 @@ class SiteController extends Controller
         $this->getView()->params['breadcrumbs'] = array_merge($this->getView()->params['breadcrumbs'], $temp);
     }
 
-    public function getCategoryPhoneNumber($object){
+    public function getCategoryPhoneNumber($object = null){
         $class = get_parent_class($object);
         switch($class){
             case 'common\models\Category':
@@ -334,6 +334,10 @@ class SiteController extends Controller
                 break;
             case 'common\models\Good':
                 $category = Category::findOne($object->GroupID);
+                break;
+            case '':
+                Yii::$app->getView()->params['categoryPhoneNumber'] = '(044) 578 20 16';
+                return;
                 break;
             default:
                 throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
@@ -948,8 +952,7 @@ class SiteController extends Controller
         }
 
         self::getLanguagesLinks();
-
-        Yii::$app->getView()->params['categoryPhoneNumber'] = '(044) 578 20 16';
+        self::getCategoryPhoneNumber();
 
         return parent::beforeAction($action);
     }
