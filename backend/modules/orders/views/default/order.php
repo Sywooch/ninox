@@ -138,11 +138,25 @@ font-size: 16px;
         list-style: inside;
     }
 
-    .order-sum:hover + .order-sum-block{
-        display: block;
+    .order-sum{
+    display: inline-block;
+    cursor: pointer;
+    }
+
+    .order-sum:hover .order-sum-block{
+opacity: 1;
+visibility: visible;
+    }
+    .order-sum-block:hover{
+    opacity: 1;
+visibility: visible;
     }
     .order-sum-block{
-    display: none;
+opacity: 0;
+visibility: hidden;
+transition: all .3s ease .15s;
+overflow: hidden;
+position: absolute;
     width: 320px;
     height: 245px;
     background: white;
@@ -659,16 +673,17 @@ Html::a('История заказа', '#orderHistory', [
             <div class="blue-line"></div>
             <span><?=$order->customerName?> <?=$order->customerSurname?></span>
             <span><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></span>
-            <span class="order-sum"><b>Сумма заказа <?=!empty($order->actualAmount) ? $order->actualAmount : $order->originalSum?> грн.</b></span>
-            <div class="order-sum-block">
-                <b>Сума заказа: <?=$order->sumWithoutDiscount?> грн.</b>
-                <?=!empty($order->sumCustomerDiscount) ? Html::tag('span', "Дисконт (-{$order->customer->getDiscount()}%): {$order->sumCustomerDiscount} грн.") : ''?>
-                <?=!empty($order->amountDeductedOrder) ? Html::tag('span', "Списано со счёта: {$order->amountDeductedOrder} грн.") : ''?>
-                <?=!empty($order->sumDiscount) ? Html::tag('span', "Скидка по акции: {$order->sumDiscount} грн.") : ''?>
-                <?=!empty($order->missingItems) ? Html::tag('span', sizeof($order->missingItems)." товаров отсутствует: {$order->missingItemsSum} грн.") : ''?>
-                <div class="blue-line"></div>
-                <b>Сума к оплате <u><?=!empty($order->actualAmount) ? $order->actualAmount : $order->realSum?> грн.</u></b>
-          </div>
+            <span class="order-sum"><b>Сумма заказа <?=!empty($order->actualAmount) ? $order->actualAmount : $order->originalSum?> грн.</b>
+                      <div class="order-sum-block">
+                          <b>Сума заказа: <?=$order->sumWithoutDiscount?> грн.</b>
+                          <?=!empty($order->sumCustomerDiscount) ? Html::tag('span', "Дисконт (-{$order->customer->getDiscount()}%): {$order->sumCustomerDiscount} грн.") : ''?>
+                          <?=!empty($order->amountDeductedOrder) ? Html::tag('span', "Списано со счёта: {$order->amountDeductedOrder} грн.") : ''?>
+                          <?=!empty($order->sumDiscount) ? Html::tag('span', "Скидка по акции: {$order->sumDiscount} грн.") : ''?>
+                          <?=!empty($order->missingItems) ? Html::tag('span', sizeof($order->missingItems)." товаров отсутствует: {$order->missingItemsSum} грн.") : ''?>
+                          <div class="blue-line"></div>
+                          <b>Сума к оплате <u><?=!empty($order->actualAmount) ? $order->actualAmount : $order->realSum?> грн.</u></b>
+                      </div></span>
+
 <?=Remodal::widget([
         'cancelButton'		=>	false,
         'confirmButton'		=>	false,
