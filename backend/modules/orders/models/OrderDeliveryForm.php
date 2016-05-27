@@ -80,8 +80,12 @@ class OrderDeliveryForm extends Model
             'deliveryParam' =>  $this->deliveryParam,
             'deliveryInfo'  =>  $this->deliveryInfo
         ]);
+        
+        if(!$this->validate()){
+            return false;
+        }
 
-        return $this->order->save();
+        return $this->order->save(false);
     }
     
 }

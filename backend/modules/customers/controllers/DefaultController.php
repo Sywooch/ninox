@@ -8,6 +8,8 @@ use backend\models\History;
 use sammaye\audittrail\AuditTrail;
 use yii\data\ActiveDataProvider;
 use backend\controllers\SiteController as Controller;
+use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
@@ -61,5 +63,21 @@ class DefaultController extends Controller
             ]),
             'lastOrder'     =>  History::find()->where(['customerID' => $customer->ID, 'confirmed' => 1])->orderby('ID desc')->one()
         ]);
+    }
+
+    public function actionManipulate(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+        }
+
+        $customer = Customer::findOne(['ID' => \Yii::$app->request->post("customerID")]);
+
+        if(!$customer){
+            throw new NotFoundHttpException("Клиент с таким идентификатором не найден!");
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        return $customer;
     }
 }

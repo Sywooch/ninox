@@ -105,7 +105,11 @@ class OrderCustomerForm extends Model
             'number'            =>  $this->number
         ]);
 
-        return $this->order->save();
+        if(!$this->validate()){
+            return false;
+        }
+
+        return $this->order->save(false);
     }
 
 }

@@ -493,10 +493,11 @@ $js = <<<'JS'
             
             $.ajax({
                 type: 'POST',
-                url: '',
+                url: '/customers/manipulate',
                 data: {
-                    action: 'merge',
-                    target: order.attr('data-key')
+                    customerID: $("#customerID").prop('data-attribute-customerID'),
+                    attribute: 'money',
+                    value: inputValue
                 },
                 success: function(data){
                     swal("Успех!", "У клиента на счету теперь " + inputValue + " грн.", "success");
@@ -675,7 +676,7 @@ Html::a('История заказа', '#orderHistory', [
     <div class="row block-span">
         <div class="col-md-4">
             <div class="blue-line"></div>
-            <span><?=$order->customerName?> <?=$order->customerSurname?></span>
+            <span data-attribute-customerID="<?=$order->customerID?>" id="customerID"><?=$order->customerName?> <?=$order->customerSurname?></span>
             <span><?=\Yii::$app->formatter->asPhone($order->customerPhone)?></span>
             <span class="order-sum"><b>Сумма заказа <?=!empty($order->actualAmount) ? $order->actualAmount : $order->originalSum?> грн.</b>
                       <div class="order-sum-block">
