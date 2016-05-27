@@ -650,15 +650,15 @@ switch($order->paymentType){
 }
 
 if(!empty($order->sendDate)){
-    $labels[] = Html::tag('span', Html::tag('b', 'Заказ отправлен').' '.\Yii::$app->formatter->asDate($order->sendDate, 'php:d.m.Y'));
+    $labels[] = Html::tag('span', Html::tag('b', 'Заказ отправлен').' '.\Yii::$app->formatter->asDate($order->sendDate, 'php:d.m.Y'), ['class' => 'status-label']);
 }
 
 if(!empty($order->nakladna)){
-    $labels[] = Html::tag('span', Html::tag('b', 'ТТН').' '.$order->nakladna);
+    $labels[] = Html::tag('span', Html::tag('b', 'ТТН').' '.$order->nakladna, ['class' => 'status-label']);
 }
 
 if(!empty($order->responsibleUser)){
-    $labels[] = Html::tag('span', Html::tag('b', 'Менеджер').' '.$order->responsibleUser->name);
+    $labels[] = Html::tag('span', Html::tag('b', 'Менеджер').' '.$order->responsibleUser->name, ['class' => 'status-label']);
 }
 
 $labels[] = $paymentLabel;
