@@ -124,8 +124,6 @@ Html::tag('div', \Yii::t('shop', '').
 
     ?>
     <span class="head">Хотите мы вам перезвоним?</span>
-
-    <!--        --><?/*= $form->field($model, 'name')*/?>
     <?= Html::tag('div',
         /*        $form->field($model, 'phone', \frontend\widgets\MaskedInput::widget([
                     'name'			=>	'phone',
