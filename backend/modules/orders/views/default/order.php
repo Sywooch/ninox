@@ -446,6 +446,36 @@ $js = <<<'JS'
                 }
             });
         });
+    }).on('click', '#customerChangeMoney', function(){
+        swal({
+            title: "Изменение счёта клиента",
+            text: "Какую сумму записать в счёт клиента (сумма будет перезаписана!)",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputValue: $("#customerMoneyValue").html()
+        },
+        function(inputValue){
+            if (inputValue === false) return false;
+            
+            if (inputValue === "") {
+              swal.showInputError("Необходимо заполнить!");
+              return false
+            }
+            
+            $.ajax({
+                type: 'POST',
+                url: '',
+                data: {
+                    action: 'merge',
+                    target: order.attr('data-key')
+                },
+                success: function(data){
+                    swal("Успех!", "У клиента на счету теперь " + inputValue + " грн.", "success");
+                }
+            });
+        });
     });
 JS;
 
@@ -502,36 +532,6 @@ if($order->deliveryType == 2){
     echo $novaPoshtaModal->renderModal();
 
 }
-
-/**
- * TODO: желательно блок ниже переместить в какое-нибудь другое, более предназначеное для этого место
- */
-
-$orderHistory = [];
-
-if($order->confirmed == 1){
-    $orderHistory[] = Html::tag('li', "Заказ подтверждён: {$order->confirmedDate}");
-}
-
-if($order->done == 1){
-    $orderHistory[] = Html::tag('li', "Заказ собран: {$order->doneDate}");
-}
-
-if($order->smsState == 1){
-    $orderHistory[] = Html::tag('li', "Смс с № карты отправлена: {$order->smsSendDate}");
-}
-
-if($order->moneyConfirmed == 1){
-    $orderHistory[] = Html::tag('li', "Заказ оплачен: {$order->smsSendDate}");
-}
-
-if($order->nakladnaSendState == 1){
-    $orderHistory[] = Html::tag('li', "ТТН {$order->nakladna} отправлена {$order->nakladnaSendDate}");
-}
-
-/**
- * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- */
 
 $goodEditModal = new Remodal([
     'cancelButton'		=>	false,
@@ -657,7 +657,7 @@ Html::a('История заказа', '#orderHistory', [
                 <?=!empty($order->sumDiscount) ? Html::tag('span', "Скидка по акции: {$order->sumDiscount} грн.") : ''?>
                 <?=!empty($order->missingItems) ? Html::tag('span', sizeof($order->missingItems)." товаров отсутствует: {$order->missingItemsSum} грн.") : ''?>
                 <div class="blue-line"></div>
-                <b>Сума к оплате <u><?=!empty($order->actualAmount) ? $order->actualAmount : $order->realSum?> грн.</u></b>
+                <b>Сума к оплате <cite><?=!empty($order->actualAmount) ? $order->actualAmount : $order->realSum?> грн.</cite></b>
           </div>
 <?=Remodal::widget([
         'cancelButton'		=>	false,
@@ -703,14 +703,15 @@ Html::a('История заказа', '#orderHistory', [
           <?php
           if(!empty($order->customer)){
           ?>
-              <span><b><?=$customer->money?> грн. на счету</b></span>
+              <span><b><?=Html::tag('span', $customer->money, ['id' => 'customerMoneyValue', 'style' => 'display: inline'])?> грн. на счету</b></span>
               <span><?=sizeof($customer->orders) >= 2 ? 'Старый' : 'Новый'?> клиент (<?=\Yii::t('admin', '{count} заказов', ['count' => sizeof($customer->orders)])?> - <?=number_format($customerOrdersSummary['summ'], 0, '.', ' ')?> грн.)</span>
               <span>Возвратов <?=sizeof($customer->returns) >= 1 ? sizeof($customer->returns) : 'нет'?>, <b><?=\Yii::t('admin', '{count} заказов', ['count' => sizeof($customer->notPayedOrders)])?> не оплачено</b></span>
           <?php
           }
 
           echo Html::a('Изменить', '#', [
-              'class' =>  'btn btn-default'
+              'class'   =>  'btn btn-default',
+              'id'      =>  'customerChangeMoney'
           ])
           ?>
       </div>
