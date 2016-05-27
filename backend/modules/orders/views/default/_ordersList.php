@@ -140,9 +140,9 @@ echo \kartik\grid\GridView::widget([
             'attribute' =>  'status',
             'value'     =>  function($model){
 
-                if($model->status == $model::STATUS_DONE || $model->status == $model::STATUS_NOT_PAYED){
+                if($model->status == $model::STATUS_DONE || $model->status == $model::STATUS_NOT_PAYED || $model->status == $model::STATUS_WAIT_DELIVERY && $model->paymentType == 1){
                     $status2 = 'Выполнено '.\Yii::$app->formatter->asDate($model->doneDate);
-                }elseif(($model->status == $model::STATUS_WAIT_DELIVERY) && $model->paymentType == 2){
+                }elseif($model->status == $model::STATUS_WAIT_DELIVERY && $model->paymentType == 2){
                     $status2 = 'Оплачено '.\Yii::$app->formatter->asDate($model->moneyConfirmedDate);
                 }else{
                     $status2 = '';
