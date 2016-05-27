@@ -228,6 +228,22 @@ $("body").on('click', "button.sms-order", function(){
 });
 JS;
 $css = <<<'CSS'
+.orderRow.warning td{
+    background: #ff9966 !important;
+}
+
+.orderRow.success td{
+    background: #66cc00 !important;
+}
+
+.orderRow.new td{
+    background: #ff9966 !important;
+}
+
+.orderRow.danger td{
+    background: #ff0000 !important;
+}
+
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
     border: 3px solid #000;
@@ -463,6 +479,25 @@ $css = <<<'CSS'
     tr.hasDiscount td:nth-child(2){
         background-color: #EB9532 !important;
     }
+
+    .payment-type{
+        font-size: 10px;
+        border-radius: 10px;
+        padding: 0 10px;
+        color: #fff;
+    }
+
+    .payment-type.cash-on-delivery{
+        background: #f5780e;
+    }
+
+    .payment-type.cash-on-card{
+        background: #1ba019;
+    }
+
+    .payment-type.cash{
+        background: #385698;
+    }
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
@@ -520,13 +555,13 @@ $this->registerJs($accordionJs, 3);
 $this->title = 'Заказы';
 
 
-echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
+/*echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
     'model' =>  $ordersStatsModel
 ]),
 \backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
-]);
+]);*/
 
 echo Html::tag('div', OrdersSearchWidget::widget([
     'searchModel'   =>  $searchModel,
