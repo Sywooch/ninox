@@ -328,29 +328,44 @@ class SiteController extends Controller
 
     public function getCategoryPhoneNumber($object = null){
         $class = get_parent_class($object);
-        switch($class){
-            case 'common\models\Category':
-                $category = $object;
-                break;
-            case 'common\models\Good':
-                $category = Category::findOne($object->GroupID);
-                break;
-            case '':
-                Yii::$app->getView()->params['categoryPhoneNumber'] = '(044) 578 20 16';
-                return;
-                break;
-            default:
-                throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
-                break;
-        }
 
-        if(strlen($category->Code) != 3){
-            foreach($category->parents as $parent){
-                if(!empty($parent->phoneNumber)){
-                    $this->getView()->params['categoryPhoneNumber'] = $parent->phoneNumber;
+        try{
+            switch($class::className()){
+                case 'common\models\Category':
+                    $category = $object;
                     break;
-                }
+                case 'common\models\Good':
+                    $category = Category::findOne($object->GroupID);
+                    break;
+                case '':
+                    \Yii::$app->params['categoryPhoneNumber'] = '(044) 578 20 16';
+                    return;
+                    break;
+                default:
+                    throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
+                    break;
             }
+
+            \Yii::trace('place 1');
+
+            if(strlen($category->Code) != 3){
+                \Yii::trace('place 2');
+
+                foreach($category->parents as $parent){
+                    \Yii::trace('finded parent');
+
+                    if(!empty($parent->phoneNumber)){
+                        \Yii::trace($parent->phoneNumber);
+
+                        \Yii::$app->params['categoryPhoneNumber'] = $parent->phoneNumber;
+                        break;
+                    }
+                }
+            }else{
+                \Yii::$app->params['categoryPhoneNumber'] = $category->phoneNumber;
+            }
+        }catch (\Error $e){
+
         }
     }
 

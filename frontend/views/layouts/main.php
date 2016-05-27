@@ -371,7 +371,7 @@ $this->beginPage();
 					</div>
 					<?=Html::tag('div',
 						Html::tag('div',
-							Html::tag('span', $this->params['categoryPhoneNumber'], ['class' => 'number']).
+							Html::tag('span', \Yii::$app->params['categoryPhoneNumber'], ['class' => 'number']).
 							Html::tag('div',
 								Html::tag('div',
 									Html::tag('div', '', ['class' => 'arrow']).
