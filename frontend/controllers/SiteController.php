@@ -107,7 +107,7 @@ class SiteController extends Controller
 
         switch($type){
             case 'best':
-                default:
+            default:
                 $query->leftJoin(SborkaItem::tableName(), '`sborka`.`itemID` = `goods`.`ID`')
                     ->groupBy('`sborka`.`itemID`')
                     ->orderBy('COUNT(`sborka`.`itemID`)');
@@ -120,7 +120,7 @@ class SiteController extends Controller
                 $query->andWhere('`goods`.`discountType` != \'0\'');
                 break;
             case 'new':
-            //default:
+                //default:
                 $query->orderBy('`goods`.`vkl_time` DESC');
                 break;
         }
@@ -165,6 +165,8 @@ class SiteController extends Controller
         $this->saveGoodInViewed($good);
 
         $this->getBreadcrumbsLinks($good);
+        $this->getCategoryPhoneNumber($good);
+
         self::getLanguagesLinks($good);
 
         (new PriceRuleHelper())->recalc($good, true);
@@ -216,8 +218,6 @@ class SiteController extends Controller
             throw new NotFoundHttpException("Страница не найдена!");
         }
 
-        \Yii::trace($category->viewFile);
-
         self::getLanguagesLinks($category);
 
         switch($category->viewFile){
@@ -252,6 +252,8 @@ class SiteController extends Controller
         }
 
         $this->getBreadcrumbsLinks($category);
+        $this->getCategoryPhoneNumber($category);
+
 
         $pageParams = \Yii::$app->request->get();
         unset($pageParams['_pjax']);
@@ -322,6 +324,30 @@ class SiteController extends Controller
         }
 
         $this->getView()->params['breadcrumbs'] = array_merge($this->getView()->params['breadcrumbs'], $temp);
+    }
+
+    public function getCategoryPhoneNumber($object){
+        $class = get_parent_class($object);
+        switch($class){
+            case 'common\models\Category':
+                $category = $object;
+                break;
+            case 'common\models\Good':
+                $category = Category::findOne($object->GroupID);
+                break;
+            default:
+                throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
+                break;
+        }
+
+        if(strlen($category->Code) != 3){
+            foreach($category->parents as $parent){
+                if(!empty($parent->phoneNumber)){
+                    $this->getView()->params['categoryPhoneNumber'] = $parent->phoneNumber;
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -418,8 +444,8 @@ class SiteController extends Controller
         }
 
         if($customer){
-	        Cart::updateAll(['customerID' => $customer->ID], '`cartCode` = \''.\Yii::$app->cart->cartCode.'\'');
-	        $order->loadCustomer($customer);
+            Cart::updateAll(['customerID' => $customer->ID], '`cartCode` = \''.\Yii::$app->cart->cartCode.'\'');
+            $order->loadCustomer($customer);
         }
 
         if((\Yii::$app->request->post("OrderForm") && $order->load(\Yii::$app->request->post())) || \Yii::$app->request->post("orderType") == 1){
@@ -436,12 +462,12 @@ class SiteController extends Controller
 
         $this->layout = 'order';
 
-	    $domainConfiguration = DomainDeliveryPayment::getConfigArray();
+        $domainConfiguration = DomainDeliveryPayment::getConfigArray();
 
         return $this->render('order2', [
             'model'                 =>  $order,
-			'domainConfiguration'   =>  $domainConfiguration,
-	        'customer'              =>  $customer
+            'domainConfiguration'   =>  $domainConfiguration,
+            'customer'              =>  $customer
         ]);
     }
 
@@ -455,13 +481,13 @@ class SiteController extends Controller
 
     public function actionModifycart(){
         \Yii::$app->response->format = 'json';
-	    $itemID = \Yii::$app->request->post("itemID");
+        $itemID = \Yii::$app->request->post("itemID");
         $count = \Yii::$app->request->post("count");
-	    $wholesaleBefore = \Yii::$app->cart->wholesale;
-		$item = $count == 0 ? \Yii::$app->cart->remove($itemID) : \Yii::$app->cart->put($itemID, $count);
-	    $items = [];
-	    foreach(\Yii::$app->cart->goods as $good){
-			if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){
+        $wholesaleBefore = \Yii::$app->cart->wholesale;
+        $item = $count == 0 ? \Yii::$app->cart->remove($itemID) : \Yii::$app->cart->put($itemID, $count);
+        $items = [];
+        foreach(\Yii::$app->cart->goods as $good){
+            if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){
                 $discount = 0;
                 switch($good->discountType){
                     case 1:
@@ -473,29 +499,37 @@ class SiteController extends Controller
                     default:
                         break;
                 }
-				$items[$good->ID] = [
-					'retail'      =>  Formatter::getFormattedPrice($good->retailPrice),
-					'wholesale'   =>  Formatter::getFormattedPrice($good->wholesalePrice),
-					'discount'    =>  $discount,
-					'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesalePrice : $good->retailPrice) * $good->inCart),
-				];
-			}
-	    }
+                $items[$good->ID] = [
+                    'retail'      =>  $good->retailPrice == $good->wholesalePrice ?
+                        Formatter::getFormattedPrice($good->retailPrice) :
+                        \Yii::t('shop', 'розн. {price}',
+                            ['price' => Formatter::getFormattedPrice($good->retailPrice)]
+                        ),
+                    'wholesale'   =>  $good->retailPrice == $good->wholesalePrice ?
+                        Formatter::getFormattedPrice($good->wholesalePrice) :
+                        \Yii::t('shop', 'опт. {price}',
+                            ['price' => Formatter::getFormattedPrice($good->wholesalePrice)]
+                        ),
+                    'discount'    =>  $discount,
+                    'amount'      =>  Formatter::getFormattedPrice((\Yii::$app->cart->wholesale ? $good->wholesalePrice : $good->retailPrice) * $good->inCart),
+                ];
+            }
+        }
 
-	    return [
-		    'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
-			'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),
-	        'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm),
-		    'remind'        =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
-		    'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
-		    'wholesale'     =>  \Yii::$app->cart->wholesale,
-		    'count'         =>  \Yii::$app->cart->itemsCount,
-		    'count-ext'     =>  \Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
+        return [
+            'discount'      =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount - \Yii::$app->cart->cartSumm),
+            'real'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount),
+            'cart'          =>  Formatter::getFormattedPrice(\Yii::$app->cart->cartSumm),
+            'remind'        =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
+            'button'        =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1,
+            'wholesale'     =>  \Yii::$app->cart->wholesale,
+            'count'         =>  \Yii::$app->cart->itemsCount,
+            'count-ext'     =>  \Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
 									товара}	many{# товаров} other{# товар}}', [
-                                    'n'	=>	\Yii::$app->cart->itemsCount
-                                ]),
-		    'items'         =>  $items,
-	    ];
+                'n'	=>	\Yii::$app->cart->itemsCount
+            ]),
+            'items'         =>  $items,
+        ];
     }
 
     public function actionSetitemrate(){
@@ -887,11 +921,11 @@ class SiteController extends Controller
         return true;
     }
 
-	public function beforeAction($action){
+    public function beforeAction($action){
         $domainName = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : \Yii::$app->request->getServerName();
-		$domainInfo = Domain::findOne(['name' => $domainName]);
+        $domainInfo = Domain::findOne(['name' => $domainName]);
 
-		\Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;
+        \Yii::$app->params['domainInfo'] = empty($domainInfo) ? \Yii::$app->params['domainInfo'] : $domainInfo;
 
         if(\Yii::$app->request->post("ReturnForm")){
             $this->saveReturnForm();
@@ -915,8 +949,10 @@ class SiteController extends Controller
 
         self::getLanguagesLinks();
 
+        Yii::$app->getView()->params['categoryPhoneNumber'] = '(044) 578 20 16';
+
         return parent::beforeAction($action);
-	}
+    }
 
     public function actionPay()
     {
