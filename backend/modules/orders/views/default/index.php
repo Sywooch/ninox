@@ -228,6 +228,22 @@ $("body").on('click', "button.sms-order", function(){
 });
 JS;
 $css = <<<'CSS'
+.orderRow.warning td{
+    background: #ff9966 !important;
+}
+
+.orderRow.success td{
+    background: #66cc00 !important;
+}
+
+.orderRow.new td{
+    background: #ff9966 !important;
+}
+
+.orderRow.danger td{
+    background: #ff0000 !important;
+}
+
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
     border: 3px solid #000;
@@ -465,14 +481,14 @@ $css = <<<'CSS'
     }
 
     .payment-type{
-        font-size: 12px;
+        font-size: 10px;
         border-radius: 10px;
         padding: 0 10px;
         color: #fff;
     }
 
     .payment-type.cash-on-delivery{
-        background: #cc7e3b;
+        background: #f5780e;
     }
 
     .payment-type.cash-on-card{
