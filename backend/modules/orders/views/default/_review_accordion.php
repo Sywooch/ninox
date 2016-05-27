@@ -13,7 +13,7 @@ $form = \kartik\form\ActiveForm::begin([]);
 echo $form->field($model, 'customerComment', ['inputOptions' => ['style' => 'border: 1px solid #eceef2; height: 114px; resize: none'],'options' => ['class' => 'col-xs-10']])->textarea()->label(false),
     Html::tag('div',
         Html::button('Сохранить', [
-            'class' =>  'btn btn-default',
+            'class' =>  'btn btn-default button-size',
             'type'  =>  'submit'
         ]),
         [
