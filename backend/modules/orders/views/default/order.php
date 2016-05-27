@@ -54,6 +54,10 @@ foreach($priceRules as $rule){
 }
 
 $css = <<<'CSS'
+    body{
+        background: #ebecf0;
+    }
+
     .data-items{
         list-style: none;
         line-height: 14px;
@@ -659,12 +663,15 @@ Html::a('История заказа', '#orderHistory', [
         'cancelButton'		=>	false,
         'confirmButton'		=>	false,
         'addRandomToID'		=>	false,
-        'content'			=>	$this->render('_order_edit', ['order' => $order]),
+        'content'			=>	$this->render('_order_customerInfoEdit', ['order' => $order]),
         'id'                =>	'orderEdit',
         'buttonOptions'     =>  [
             'label' =>  'Редактировать',
             'tag'   =>  'a',
             'class' =>  'btn btn-default'
+        ],
+        'options'           =>   [
+            'style' =>  'max-width: 500px;'
         ]
     ]). $paymentLabel
 ?>
@@ -675,11 +682,21 @@ Html::a('История заказа', '#orderHistory', [
           <span><?=Html::tag('b', $deliveryType)?></span>
           <span><?=$order->deliveryCity?>, <?=$order->deliveryRegion?></span>
           <span><?=$deliveryParam?>, <?=$order->deliveryInfo != '' ? ($order->deliveryType == 2 ? 'склад №' : '').$order->deliveryInfo : ''?></span>
-          <?php
-          echo Html::a('Редактировать', '#orderEdit', [
-              'class' =>  'btn btn-default'
-          ])
-          ?>
+          <?=Remodal::widget([
+              'cancelButton'		=>	false,
+              'confirmButton'		=>	false,
+              'addRandomToID'		=>	false,
+              'content'			=>	$this->render('_order_deliveryInfoEdit', ['order' => $order]),
+              'id'                =>	'deliveryInfoEdit',
+              'buttonOptions'     =>  [
+                  'label' =>  'Редактировать',
+                  'tag'   =>  'a',
+                  'class' =>  'btn btn-default'
+              ],
+              'options'           =>   [
+                  'style' =>  'max-width: 500px;'
+              ]
+          ])?>
       </div>
       <div class="col-md-4">
           <div class="blue-line"></div>
@@ -718,7 +735,7 @@ Html::a('История заказа', '#orderHistory', [
         <div class="btn-toolbar">
             <?php
             if($order->deliveryType == 2){
-                echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 34px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#novaPoshtaModal' : '#novaPoshtaModal'), ['class' => 'btn btn-default', /*(!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true'*/]);
+                echo Html::a(Html::img('/img/novapochta.png', ['style' => 'max-height: 19px']), (!empty(trim($order->nakladna)) && $order->nakladna != '-' ? '#novaPoshtaModal' : '#novaPoshtaModal'), ['class' => 'btn btn-default', /*(!empty(trim($order->nakladna)) && $order->nakladna != '-' ? 'disabled' : 'enabled') => 'true'*/]);
             }
             echo Html::a('Накладная', Url::to(['/printer/invoice/'.$order->id]), [
                 'class' =>  'btn btn-default'
