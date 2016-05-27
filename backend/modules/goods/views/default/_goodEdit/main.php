@@ -88,7 +88,7 @@ $form = ActiveForm::begin([
 ]);
 
 if(empty($model->getErrors()) && $model->isSaved){
-    echo Html::tag('div', Html::tag('b', 'Успех!').' Основная информация о товаре сохранена!', [
+    echo Html::tag('div', Html::tag('b', 'Успех!')." Товар {$good->name} добавлен! <a href=\"/goods/view/{$good->ID}\">Перейти</a>", [
         'class' =>  'alert bg-success alert-success'
     ]);
 }
@@ -128,23 +128,6 @@ $form->field($model, 'description')->widget(\bobroid\imperavi\Widget::className(
         'table',
     ]
 ]),
-$form->field($model, 'wholesalePrice', ['options' => ['class' => 'form-group wholesalePrice'],'addon' => ['prepend' => ['content' => '₴']]]),
-$form->field($model, 'retailPrice', ['options' => ['class' => 'form-group retailPrice'],'addon' => ['prepend' => ['content' => '₴']]]),
-$form->field($model, 'inPackageAmount', [
-    'template'      =>  '{label}'.Html::tag('div', '{input}'.$form
-                ->field($model, 'undefinedPackageAmount', ['options' => ['class' => 'col-xs-3']])
-                ->checkbox(['label' => 'неизвестно']), ['style' => 'margin-left: -15px;', 'class' => 'col-xs-8']),
-    'inputOptions'  =>  [
-        'class' =>  'col-xs-6'
-    ]
-])->widget(TouchSpin::classname(), [
-    'options'   =>  [
-        'disabled'  =>  empty($model->inPackageAmount)
-    ],
-    'pluginOptions' =>  [
-        'max'   =>  10000
-    ]
-]),
 $form->field($model, 'anotherCurrencyValue', [
     'addon' => [
         'prepend'   => [
@@ -160,6 +143,23 @@ $form->field($model, 'anotherCurrencyValue', [
                 'class' =>  'anotherCurrencyTagAddOn'
             ]
         ]
+    ]
+]),
+$form->field($model, 'wholesalePrice', ['options' => ['class' => 'form-group wholesalePrice'],'addon' => ['prepend' => ['content' => '₴']]]),
+$form->field($model, 'retailPrice', ['options' => ['class' => 'form-group retailPrice'],'addon' => ['prepend' => ['content' => '₴']]]),
+$form->field($model, 'inPackageAmount', [
+    'template'      =>  '{label}'.Html::tag('div', '{input}'.$form
+                ->field($model, 'undefinedPackageAmount', ['options' => ['class' => 'col-xs-3']])
+                ->checkbox(['label' => 'неизвестно']), ['style' => 'margin-left: -15px;', 'class' => 'col-xs-8']),
+    'inputOptions'  =>  [
+        'class' =>  'col-xs-6'
+    ]
+])->widget(TouchSpin::classname(), [
+    'options'   =>  [
+        'disabled'  =>  empty($model->inPackageAmount)
+    ],
+    'pluginOptions' =>  [
+        'max'   =>  10000
     ]
 ]),
 $form->field($model, 'count', [

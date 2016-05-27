@@ -18,13 +18,13 @@ class PriceRuleHelper extends Component{
 	public $pricerules = [];
 
 	public function init(){
-		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority`')->all();
+		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority` DESC')->all();
 	}
 
 	public function recalc(&$model, $category = false){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
-				if($this->recalcItem($model, $rule, $category)){
+				if(self::recalcItem($model, $rule, $category)){
 					return;
 				}
 			}
@@ -44,7 +44,6 @@ class PriceRuleHelper extends Component{
 	 * @param $model
 	 * @param $rule
 	 * @return bool
-	 * @deprecated
 	 */
 	public function recalcSborkaItem($model, $rule){
 		return $this->recalcItem($model, $rule, false);

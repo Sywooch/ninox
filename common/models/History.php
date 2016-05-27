@@ -132,7 +132,7 @@ class History extends \yii\db\ActiveRecord
 
         $status = self::STATUS_WAIT_DELIVERY;
 
-        if(!empty(preg_replace('/-|\+|\s+/', '', $this->nakladna)) && $this->moneyConfirmed){
+        if((!empty(preg_replace('/-|\+|\s+/', '', $this->nakladna)) || $this->deliveryType == 3) && $this->moneyConfirmed){
             $status = self::STATUS_DONE;
         }elseif(!empty(preg_replace('/-|\+|\s+/', '', $this->nakladna)) && !$this->moneyConfirmed){
             $status = self::STATUS_DELIVERED;

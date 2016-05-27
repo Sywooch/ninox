@@ -59,7 +59,7 @@ $this->registerJS($js);
     'timeout'       =>  '5000'
 ]);
 echo Html::tag('div',
-    ($totalCount ?
+    (!empty($category->filters) ? ($totalCount ?
         $this->render('_category/_category_filters', [
             'category'   =>  $category,
             'filters'   =>  $category->filters,
@@ -68,7 +68,7 @@ echo Html::tag('div',
             'from'      =>  \Yii::$app->request->get('minPrice') ? \Yii::$app->request->get('minPrice') : $category->minPrice,
             'to'        =>  \Yii::$app->request->get('maxPrice') ? \Yii::$app->request->get('maxPrice') : $category->maxPrice,
         ]) : ''
-    ).
+    ) : '').
     Html::tag('div',
         Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]).
         Html::tag('div',
@@ -127,7 +127,7 @@ echo Html::tag('div',
                 'class'             =>  ScrollPager::className(),
                 'triggerTemplate'   =>
                     Html::tag('div',
-                        Html::tag('div', \Yii::t('shop', 'Ещё 15 товаров'),
+                        Html::tag('div', \Yii::t('shop', 'Ещё '.(empty($category->filters) ? 20 : 15).' товаров'),
                             [
                                 'class' => 'load-more'
                             ]
@@ -187,7 +187,7 @@ echo Html::tag('div',
                 ),
                 ['class' => 'seo-city']),
             ['class' => 'category-description']),
-        ['class' => 'content']),
+        ['class' => 'content cols-'.(empty($category->filters) ? 4 : 3)]),
     ['class' => 'category clear-fix']
 );
 

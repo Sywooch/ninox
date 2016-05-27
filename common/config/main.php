@@ -5,14 +5,17 @@ return [
 	'timeZone'	=>	'UTC',
     'components' => [
 		's3' => [
-			'class' => 'frostealth\yii2\aws\s3\Service',
+			'class' => \frostealth\yii2\aws\s3\Storage::className(),
 			'credentials' => [
 				'key' 		=> 'AKIAIALHOP4U7PDKIYTA',
 				'secret' 	=> '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',
 			],
 			'region' 		=> 'eu-central-1',
-			'defaultBucket' => 'krasota-style',
+			'bucket' => 'krasota-style',
 			'defaultAcl' 	=> 'public-read',
+			'options' => [
+				'scheme' => 'http',
+			],
 		],
 		'formatter' =>  [
 			'class' =>  'common\components\Formatter'

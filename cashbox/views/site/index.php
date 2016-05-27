@@ -22,10 +22,11 @@ $js = <<<JS
             },
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
-
-                if(data.wholesaleSum >= 500 && data.priceType != 1){
+ 
+                /*if(data.wholesaleSum >= 500 && data.priceType != 1){
+                    console.log('recalc');
                     changeCashboxType();
-                }
+                }*/
 
                 summary.update(data);
 
@@ -56,9 +57,9 @@ $js = <<<JS
 
                 summary.update(data);
 
-                if(data.wholesaleSum < 500 && data.priceType == 1){
+                /*if(data.wholesaleSum < 500 && data.priceType == 1){
                     changeCashboxType();
-                }
+                }*/
 
                 $(".removeGood > *").on('click', function(e){
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
@@ -84,9 +85,9 @@ $js = <<<JS
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
-                if((data.wholesaleSum >= 500 && data.priceType != 1) || (data.wholesaleSum < 500 && data.priceType == 1)){
+                /*if((data.wholesaleSum >= 500 && data.priceType != 1) || (data.wholesaleSum < 500 && data.priceType == 1)){
                     changeCashboxType();
-                }
+                }*/
 
                 summary.update(data);
             },
@@ -466,7 +467,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     </div>
                 </div>
             </div>
-            <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', 0) == 0 ? 'bg-danger' : 'bg-success'?>">
+            <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', \Yii::$app->cashbox->priceType) == 0 ? 'bg-danger' : 'bg-success'?>">
                 <p style="font-size: 14px;">Сумма: <?=Html::tag('span', \Yii::$app->cashbox->sum, ['class' => 'summ'])?> грн. Скидка: <span class="discount"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
                 <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=\Yii::$app->cashbox->toPay?></span> грн.</h2>
                 <p class="wholesale-block">Сумма по опту: <span class="wholesale-sum" style="display: inline"><?=\Yii::$app->cashbox->wholesaleSum?></span></p>
@@ -588,8 +589,8 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 <a class="btn btn-default btn-lg" href="/returns">Возвраты</a>
             </div>
             <div class="right">
-                <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 1 ? 'Опт' : 'Розница'), [
-                    'class' =>  'btn btn-lg btn-'.(\Yii::$app->request->cookies->getValue("cashboxPriceType", 0) == 0 ? 'danger' : 'success'),
+                <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", \Yii::$app->cashbox->priceType) == 1 ? 'Опт' : 'Розница'), [
+                    'class' =>  'btn btn-lg btn-'.(\Yii::$app->request->cookies->getValue("cashboxPriceType", \Yii::$app->cashbox->priceType) == 0 ? 'danger' : 'success'),
                     'id'    =>  'changeCashboxType',
                 ])?>
             </div>

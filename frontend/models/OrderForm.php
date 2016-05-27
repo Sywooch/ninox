@@ -323,10 +323,13 @@ class OrderForm extends Model{
                     'storeID'       =>  1
                 ]);
 
-                if($orderItem->save()){
-                    \Yii::$app->cart->remove($good->ID);
+                if($orderItem->save(false)){
+                    \Yii::$app->cart->remove($good->ID, false);
                 }
             }
+
+            \Yii::$app->cart->recalcCart();
+            \Yii::$app->cart->save();
 
             $customer->setAttributes([
                 'name'          =>  $this->customerName,
