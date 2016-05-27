@@ -111,9 +111,9 @@ $css = <<<'CSS'
         background: rgba(200, 200, 200, 0.2) !important;
     }
     .block-span span{
-    display: block;
-
-    line-height: 28px;
+display: block;
+line-height: 32px;
+font-size: 16px;
 
     }
     .blue-line{
@@ -121,7 +121,7 @@ $css = <<<'CSS'
     height: 4px;
     background: #00bfe8;
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     }
     .order-history ul li{
         font-size: 30px;
@@ -168,6 +168,19 @@ padding-right: 53px;
     .accordion .ui-accordion-content{
     background: none;
     border: none;
+    }
+    .on-map{
+    display: inline-block !important;
+border-radius: 10px;
+height: 20px;
+line-height: normal !important;
+width: 87px;
+font-size: 14px !important;
+float: left;
+    }
+
+    .button-size{
+    width: 154px;
     }
 
 CSS;
@@ -593,8 +606,8 @@ switch($order->paymentType){
         break;
     case 2:
         $paymentLabel = Html::tag('span', 'На карту', [
-            'class' =>  'label label-info',
-            'style' =>  'display: inline-block; border-radius: 10px; float: left;'
+            'class' =>  'label label-info on-map',
+
         ]);
         break;
     case 3:
@@ -631,10 +644,11 @@ $labels[] = $paymentLabel;
 <div class="col-xs-6 col-md-4">
     <?php
     echo Html::a('История клиента', '#', [
-        'class' =>  'btn btn-default'
+        'class' =>  'btn btn-default button-size'
     ]).
 Html::a('История заказа', '#orderHistory', [
-        'class' =>  'btn btn-default'
+        'class' =>  'btn btn-default button-size',
+        'style' =>  'float: right;'
     ])
     ?>
 </div>
@@ -664,7 +678,8 @@ Html::a('История заказа', '#orderHistory', [
         'buttonOptions'     =>  [
             'label' =>  'Редактировать',
             'tag'   =>  'a',
-            'class' =>  'btn btn-default'
+            'class' =>  'btn btn-default button-size',
+            'style' =>  'margin-right: 10px; float: left;'
         ]
     ]). $paymentLabel
 ?>
@@ -677,7 +692,7 @@ Html::a('История заказа', '#orderHistory', [
           <span><?=$deliveryParam?>, <?=$order->deliveryInfo != '' ? ($order->deliveryType == 2 ? 'склад №' : '').$order->deliveryInfo : ''?></span>
           <?php
           echo Html::a('Редактировать', '#orderEdit', [
-              'class' =>  'btn btn-default'
+              'class' =>  'btn btn-default button-size'
           ])
           ?>
       </div>
@@ -693,7 +708,7 @@ Html::a('История заказа', '#orderHistory', [
           }
 
           echo Html::a('Изменить', '#', [
-              'class' =>  'btn btn-default'
+              'class' =>  'btn btn-default button-size'
           ])
           ?>
       </div>
@@ -743,18 +758,18 @@ Html::a('История заказа', '#orderHistory', [
         <div class="btn-toolbar ">
             <?php
             echo Html::a('Накладная на почту', '#', [
-                'class' =>  'btn btn-default'
+                'class' =>  'btn btn-default button-size'
             ]);
 
             if($order->paymentType == 2){
                 echo Html::a('Смс с картой', '#', [
-                    'class' =>  'btn btn-default'
+                    'class' =>  'btn btn-default button-size'
                 ]);
             }
 
             if($order->deliveryType == 2){
                 echo Html::a('Повторно ТТН', '#', [
-                    'class' =>  'btn btn-default'
+                    'class' =>  'btn btn-default button-size'
                 ]);
             }
 
@@ -939,7 +954,7 @@ $orderHistory->renderModal()
                 foreach($model->parentOrders as $parentOrder){
                     $anotherOrders[] = Html::a('Из заказа '.$parentOrder->number, '/orders/showorder/'.$parentOrder->id, [
                         'class'     => 'label label-info no-pjax',
-                        'style'     => 'margin-right: 10px',
+                        'style'     => 'margin-right: 10px; ',
                         'data-pjax' =>  0
                     ]);
                 }
