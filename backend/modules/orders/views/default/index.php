@@ -539,13 +539,13 @@ $this->registerJs($accordionJs, 3);
 $this->title = 'Заказы';
 
 
-echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
+/*echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
     'model' =>  $ordersStatsModel
 ]),
 \backend\widgets\CollectorsWidget::widget([
     'showUnfinished'    =>  $showUnfinished,
     'items'             =>  $collectors
-]);
+]);*/
 
 echo Html::tag('div', OrdersSearchWidget::widget([
     'searchModel'   =>  $searchModel,
