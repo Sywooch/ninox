@@ -213,12 +213,48 @@ echo "</div>", \yii\bootstrap\Html::tag('div',
                 //'attribute' =>  'ID'
             ],
             [
-                'label' =>  'Сумма<br>размена',
+                'class'     =>  \kartik\grid\ActionColumn::className(),
+                'header'     =>  'Размен',
+                'buttons'   =>  [
+                    'editable'  =>  function($key, $model){
+                        return \kartik\editable\Editable::widget([
+                            'model'         =>  $model->moneyExchange,
+                            'attribute'     =>  'summ',
+                            'inputFieldConfig'  =>  [
+                                'options'   =>  [
+                                    'id'            =>  'moneyExchange-'.strtotime($model->date),
+                                ]
+                            ],
+                            'options'   =>  [
+                                'id'            =>  'moneyExchange-'.strtotime($model->date),
+                            ],
+                            'valueIfNull'   =>  0,
+                            'ajaxSettings'       =>  [
+                                'url'   =>  \yii\helpers\Url::to(['/payments/default/update-exchange?date='.$model->date]),
+                            ]
+                        ]);
+                    }
+                ],
+                'template'  =>  '{editable}'
+            ],
+            /*[
+                'class'     =>  \kartik\grid\EditableColumn::className(),
+                'editableOptions'   =>  [
+                    'editableKey'   =>  'date',
+                    'ajaxSettings'  =>  [
+                        'url'   =>  \yii\helpers\Url::to(['/orders/editable-edit'])
+                    ]
+                ],
                 'hAlign'    =>  GridView::ALIGN_CENTER,
                 'vAlign'    =>  GridView::ALIGN_MIDDLE,
+                'width'     =>  '150px',
+                'label'     =>  'Сумма<br>размена',
+                'attribute' =>  'moneyExchange',
                 'encodeLabel'   =>  false,
-                //'attribute' =>  'ID'
-            ],
+                'value'     =>  function($model){
+                    return $model->actualAmount.' грн.';
+                }
+            ],*/
             [
                 'hAlign'    =>  GridView::ALIGN_CENTER,
                 'vAlign'    =>  GridView::ALIGN_MIDDLE,

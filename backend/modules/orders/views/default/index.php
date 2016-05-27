@@ -163,14 +163,16 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
            if(response.length == 0 || response == false){
                return false;
            }
+  
    
-           var tr = $('div[data-attribute-type="ordersGrid"] tr[data-key="' + response.id + '"]')[0],
-               responsibleUser = tr.querySelector('small.responsibleUser'),
-               actualAmount = tr.querySelector('span.actualAmount');
+   
+           /*var tr = ,
+               responsibleUser = tr.find('small.responsibleUser'),
+               actualAmount = tr.find('span.actualAmount');
    
            if(responsibleUser != null){
                if(response.responsibleUserID != 0){
-                   responsibleUser.innerHTML = response.responsibleUserID;
+                   responsibleUser.html(response.responsibleUserID);
                }else{
                    responsibleUser.remove();
                }
@@ -178,10 +180,15 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
                var node = document.createElement('small');
                node.innerHTML = response.responsibleUserID;
                node.setAttribute('class', 'responsibleUser');
-               tr.querySelector('td[data-col-seq="7"]').appendChild(node);
+               tr.find('td[data-col-seq="7"]')[0].appendChild(node);
            }
    
            actualAmount.innerHTML = response.actualAmount + ' грн.';
+           
+           console.log(tr);
+           console.log(tr.find(".kv-expand-row"));*/
+           
+           $('div[data-attribute-type="ordersGrid"] tr[data-key="' + form.parent().parent().parent().attr('data-key') + '"]').find(".kv-expand-row").trigger('click');
        }
    });
 
@@ -290,6 +297,10 @@ $css = <<<'CSS'
 	margin-right: 0;
 }
 
+.ordersGrid {
+
+}
+
 #accordion .panel.active .panelContent{
     display: inline-block;
 }
@@ -333,7 +344,6 @@ $css = <<<'CSS'
     margin-right: 9px;
     margin-bottom: 0;
     max-height: 37px;
-    overflow: hidden;
 }
 
 .nav.nav-tabs li a{
@@ -654,7 +664,33 @@ echo Html::tag('div', OrdersSearchWidget::widget([
             'options'   =>  [
                 'id'        =>  'source-local_store',
             ],
-            'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+            'items'  =>  [
+                [
+                    'label' =>  'Все',
+                    'options'   =>  [
+                        'id'    =>  'source-local_store-all'
+                    ],
+                    'content'   =>  '',
+                    'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+                ],
+                [
+                    'label' =>  'Хмельницкий',
+                    'options'   =>  [
+                        'id'    =>  'source-local_store-hm'
+                    ],
+                    'content'   =>  '',
+                    'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'sourceID' => '2', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+                ],
+                [
+                    'label' =>  'Троещина',
+                    'options'   =>  [
+                        'id'    =>  'source-local_store-tr'
+                    ],
+                    'content'   =>  '',
+                    'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'sourceID' => '1', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+                ],
+            ],
+            //'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
         [
             'label'   =>  'Все',

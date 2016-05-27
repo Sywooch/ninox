@@ -65,6 +65,8 @@ $this->registerJs($js);
 $this->title = 'Товар "'.$good->Name.'"';
 ?>
 <h1 id="itemID" data-attribute-itemID="<?=$good->ID?>"><?=$good->Name?> <?=isset($good->category) ? Html::tag('small', $good->category->Name) : ''?></h1>
+<?=Html::a('Добавить товар в эту же категорию', ['/goods/default/add', 'category' => $good->GroupID], ['class' => 'btn btn-info'])?>
+<br><br>
 <div class="panel panel-info">
     <div class="panel-heading">
         <?=$this->render('_showgood_heading', [
@@ -135,26 +137,6 @@ $this->title = 'Товар "'.$good->Name.'"';
                                 </td>
                                 <td>
                                     '.$good->Description.'
-                                </td>
-                            </tr>
-                        </table>'
-                                ],[
-                                    'label' =>  'Українська мова',
-                                    'content'   =>  '<table class="table good-table">
-                            <tr>
-                                <td>
-                                    Назва:
-                                </td>
-                                <td>
-                                    '.$goodUk->Name.'
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Опис:
-                                </td>
-                                <td>
-                                    '.$goodUk->Description.'
                                 </td>
                             </tr>
                         </table>'

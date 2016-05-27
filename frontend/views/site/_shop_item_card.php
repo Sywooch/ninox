@@ -124,12 +124,12 @@ $imgModal = new \bobroid\remodal\Remodal([
                 ]
             ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
                 [
-                'itemprop' => 'image',
-                'data-modal-index'  =>  0,
-                'width' =>  '475px',
-                'height'=>  '355px',
-                'alt'   =>  $good->Name,
-            ])), (!empty($itemsModal) ? '#imgModal' : '')).
+                    'itemprop' => 'image',
+                    'data-modal-index'  =>  0,
+                    'width' =>  '475px',
+                    'height'=>  '355px',
+                    'alt'   =>  $good->Name,
+                ])), (!empty($itemsModal) ? '#imgModal' : '')).
             (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderNav',
@@ -153,7 +153,7 @@ $imgModal = new \bobroid\remodal\Remodal([
             <div class="code blue"><?=\Yii::t('shop', 'Код:').$good->Code?></div>
             <div class="item-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <div class="item-main-info">
-                    <div class="pricelist-content <?=($good->canBuy ? 'available' : 'not-available').
+                    <div class="pricelist-content <?=($good->enabled ? 'available' : 'not-available').
                     ($good->discountType && $good->customerRule ? ' vip' :
                         ($good->discountType && !$good->customerRule ? ' discounted' : ''))?>">
                         <?php
@@ -204,33 +204,33 @@ $imgModal = new \bobroid\remodal\Remodal([
                         };
 
                         echo Html::tag('div',
-                            ($good->canBuy ?
-                                ($good->count < 1 ?
-                                    \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии')) :
-                                \Yii::t('shop', 'Нет в наличии')),
-                            [
-                                'class'     =>  'availability',
-                                'itemprop'  =>  'availability',
-                                'href'      =>  'http://schema.org/InStock'
-                            ]
-                        ).
-                        Html::tag('div',
-                            ($good->discountType && !$good->customerRule ?
-                                Html::tag('div',
-                                    \Yii::t('shop', 'старая цена: {oldPrice}', [
-                                        'oldPrice' => Html::tag('div', Formatter::getFormattedPrice($good->realWholesalePrice),
-                                            ['class' => 'old-wholesale-price']
-                                        )
-                                    ]),
-                                    ['class' => 'old-price']
-                                ) : ''
+                                ($good->enabled ?
+                                    ($good->count < 1 ?
+                                        \Yii::t('shop', 'Под заказ.') : \Yii::t('shop', 'Есть в наличии')) :
+                                    \Yii::t('shop', 'Нет в наличии')),
+                                [
+                                    'class'     =>  'availability',
+                                    'itemprop'  =>  'availability',
+                                    'href'      =>  'http://schema.org/InStock'
+                                ]
                             ).
-                            Html::tag('div', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'wholesale-price']).
-                            $dopPrice,
-                            ['class' => 'price-list']
-                        ).
-                        $this->render('_shop_item/_shop_item_counter', ['model' => $good]).
-                        frontend\widgets\ItemBuyButtonWidget::widget(['model' => $good, 'btnClass' => 'large-button']),
+                            Html::tag('div',
+                                ($good->discountType && !$good->customerRule ?
+                                    Html::tag('div',
+                                        \Yii::t('shop', 'старая цена: {oldPrice}', [
+                                            'oldPrice' => Html::tag('div', Formatter::getFormattedPrice($good->realWholesalePrice),
+                                                ['class' => 'old-wholesale-price']
+                                            )
+                                        ]),
+                                        ['class' => 'old-price']
+                                    ) : ''
+                                ).
+                                Html::tag('div', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'wholesale-price']).
+                                $dopPrice,
+                                ['class' => 'price-list']
+                            ).
+                            $this->render('_shop_item/_shop_item_counter', ['model' => $good]).
+                            frontend\widgets\ItemBuyButtonWidget::widget(['model' => $good, 'btnClass' => 'large-button']),
                         Html::tag('div',
                             ($good->customerRule ?
                                 Html::tag('span', \Yii::t('shop', 'Нашли дешевлее?'), ['class' => 'cheaper blue']) : ''
@@ -278,7 +278,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                         <div><?=\Yii::t('shop', 'Возврат и обмен товара согласно')?></div>
                         <div><?=\Yii::t('shop', 'законодательству Украины')?></div>
                     </div>
-                    <?php if($good->garantyShow == '1'){ 
+                    <?php if($good->garantyShow == '1'){
                         echo Html::tag('div',
                             Html::tag('div', \Yii::t('shop', 'Гарантия 12 месяцев'),
                                 [
@@ -289,7 +289,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                             [
                                 'class' =>  'guarantee'
                             ]
-                        ); 
+                        );
                     } ?>
                 </div>
             </div>
@@ -301,11 +301,11 @@ $imgModal = new \bobroid\remodal\Remodal([
     </div>
     <div class="about-item">
         <?=TabsX::widget([
-                'items' =>  $tabsItems
+            'items' =>  $tabsItems
         ])?>
     </div>
 
-<?php /*
+    <?php /*
 <div class="goodsCard" itemscope itemtype="http://schema.org/Product">
 
 

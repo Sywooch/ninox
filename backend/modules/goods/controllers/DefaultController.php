@@ -437,6 +437,10 @@ class DefaultController extends Controller
             $good->getOptions(true);
         }
 
+        if(\Yii::$app->request->get("mode") != 'lot' && $goodMainForm->isSaved){
+            $this->redirect('/goods/view/'.$good->ID);
+        }
+
         $this->getView()->title = 'Добавление товара';
 
         return $this->render('edit', [
@@ -626,26 +630,31 @@ class DefaultController extends Controller
 
                 $good->getOptions(true);
             }
+        }
 
-            $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good->category, $good);
+        $this->getView()->params['breadcrumbs'] = $this->buildBreadcrumbs($good->category, $good);
 
+        $category = $good->category;
+
+        if($category instanceof Category == false){
+            $category = new Category();
+        }
+
+        if($request->get("act") == 'edit'){
             return $this->render('edit', [
                 'good'              =>  $good,
-                //'goodUk'          =>  $goodUK,
+                'nowCategory'       =>  $category,
                 'goodMainForm'      =>  $goodMainForm,
                 'goodAttributesForm'=>  $goodAttributesForm,
                 'goodExportForm'    =>  $goodExportForm,
-                'nowCategory'       =>  $good->category,
             ]);
         }
 
         return $this->render('view', [
-            'good'       => $good,
-            'goodUk'     => new GoodUk(),
-            'nowCategory' => $good->category,
-            'uploadPhoto'  =>  new UploadPhoto(),
+            'good'              => $good,
+            'nowCategory'       => $category,
             'additionalPhotos'  =>  new ArrayDataProvider([
-                'models'    =>  $good->photos
+                'models'            =>  $good->photos
             ])
         ]);
     }

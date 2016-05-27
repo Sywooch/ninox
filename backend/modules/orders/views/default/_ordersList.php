@@ -33,11 +33,11 @@ echo \kartik\grid\GridView::widget([
     'rowOptions'    =>  function($model){
         switch($model->status){
             case $model::STATUS_PROCESS:
-            case $model::STATUS_WAIT_DELIVERY:
                 $class = 'warning';
                 break;
-            case $model::STATUS_NOT_PAYED:
             case $model::STATUS_DELIVERED:
+            case $model::STATUS_NOT_PAYED:
+            case $model::STATUS_WAIT_DELIVERY:
             case $model::STATUS_DONE:
                 $class = 'success';
                 break;
@@ -140,10 +140,12 @@ echo \kartik\grid\GridView::widget([
             'attribute' =>  'status',
             'value'     =>  function($model){
 
-                if($model->status == $model::STATUS_DONE){
-                    $status2 = 'Выполнено '.\Yii::$app->formatter->asDatetime($model->doneDate, 'php:d.m.Y');
+                if($model->status == $model::STATUS_DONE || $model->status == $model::STATUS_NOT_PAYED){
+                    $status2 = 'Выполнено '.\Yii::$app->formatter->asDate($model->doneDate);
+                }elseif(($model->status == $model::STATUS_WAIT_DELIVERY) && $model->paymentType == 2){
+                    $status2 = 'Оплачено '.\Yii::$app->formatter->asDate($model->moneyConfirmedDate);
                 }else{
-                    $status2 = 'Не выполнено';
+                    $status2 = '';
                 }
 
                 return Html::tag('div', Html::tag('div', $model->statusDescription, [

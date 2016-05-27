@@ -60,7 +60,6 @@ $registrationModal = new \bobroid\remodal\Remodal([
 	'id'				=>	'registrationModal',
 ]);
 
-
 $js = <<<JS
 	if(hasTouch){
 		$('body').on('touchmove', function(e){
@@ -229,6 +228,7 @@ $typeaheadStyles = <<<'CSS'
 .tt-menu .media-left img{
     max-width: 80px;
     max-height: 80px;
+    margin: auto;
 }
 
 .tt-menu{
@@ -279,99 +279,99 @@ $this->registerCss($typeaheadStyles);
 
 $this->beginPage();
 ?>
-<!DOCTYPE html>
-<html lang="<?=Yii::$app->language?>">
+	<!DOCTYPE html>
+	<html lang="<?=Yii::$app->language?>">
 	<head>
-	    <?=Html::csrfMetaTags()?>
-	    <title><?=Html::encode($this->title)?></title>
-	    <?php $this->head() ?>
+		<?=Html::csrfMetaTags()?>
+		<title><?=Html::encode($this->title)?></title>
+		<?php $this->head() ?>
 	</head>
 	<body>
-		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MLV949" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MLV949" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<?php $this->beginBody();
-		if(\Yii::$app->request->get("serviceMenu") == 'true' && \Yii::$app->request->get("secretKey") == \Yii::$app->params['secretAdminPanelKey']){
-			echo $this->render('_admin_menu');
-		}
-		?>
-		<div class="header">
-			<div class="top-menu">
-				<div class="top-menu-content">
-					<div class="items"><a href="/o-nas"><?=\Yii::t('shop', 'О компании')?></a></div>
-					<div class="items"><a href="/pomoshch"><?=\Yii::t('shop', 'Помощь')?></a></div>
-					<div class="items"><a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a></div>
-					<!--<div class="blog items">Блог</div>
-					<div class="items currency-rate">1 USD - 24.2 UAH</div>-->
-<!--					<div class="personal-account">
-						<div class="items">РУС</div>-->
-					<div class="right-side">
-						<?=LanguageDropdown::widget([
-							'links'     =>  $this->params['languageLinks'],
-							'params'    =>  ['class' => 'languages']
-						])?>
-						<?php if(\Yii::$app->user->isGuest){
-							echo Html::tag('div',
-								Html::a(\Yii::t('shop', 'Войти'), '#loginModal', ['class' => 'login']),
-								['class' => 'personal-account']);
-						}else{
-							echo Html::tag('div',
-								Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to(['/account', 'language' => \Yii::$app->language]), ['class' => 'account']).
-								Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout', 'language' => \Yii::$app->language]),
-									[
-										'data-method'   =>  'post',
-										'class'         =>  'logout'
-									]
-								),
-								['class' => 'personal-account']
-							);
-						} ?>
-					</div>
+	if(\Yii::$app->request->get("serviceMenu") == 'true' && \Yii::$app->request->get("secretKey") == \Yii::$app->params['secretAdminPanelKey']){
+		echo $this->render('_admin_menu');
+	}
+	?>
+	<div class="header">
+		<div class="top-menu">
+			<div class="top-menu-content">
+				<div class="items"><a href="/o-nas"><?=\Yii::t('shop', 'О компании')?></a></div>
+				<div class="items"><a href="/pomoshch"><?=\Yii::t('shop', 'Помощь')?></a></div>
+				<div class="items"><a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a></div>
+				<!--<div class="blog items">Блог</div>
+                <div class="items currency-rate">1 USD - 24.2 UAH</div>-->
+				<!--					<div class="personal-account">
+                                        <div class="items">РУС</div>-->
+				<div class="right-side">
+					<?=LanguageDropdown::widget([
+						'links'     =>  $this->params['languageLinks'],
+						'params'    =>  ['class' => 'languages']
+					])?>
+					<?php if(\Yii::$app->user->isGuest){
+						echo Html::tag('div',
+							Html::a(\Yii::t('shop', 'Войти'), '#loginModal', ['class' => 'login']),
+							['class' => 'personal-account']);
+					}else{
+						echo Html::tag('div',
+							Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to(['/account', 'language' => \Yii::$app->language]), ['class' => 'account']).
+							Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout', 'language' => \Yii::$app->language]),
+								[
+									'data-method'   =>  'post',
+									'class'         =>  'logout'
+								]
+							),
+							['class' => 'personal-account']
+						);
+					} ?>
 				</div>
 			</div>
-			<div class="sticky-on-scroll">
-				<div class="under-menu">
-					<div class="under-menu-content">
-						<a href="/"><div class="logo"></div></a>
-						<div class="input-style-main">
-							<?php
-							$form = new \kartik\form\ActiveForm([
-								'action'	=>	Url::to(['/search']),
-								'method'	=>	'get'
-							]);
+		</div>
+		<div class="sticky-on-scroll">
+			<div class="under-menu">
+				<div class="under-menu-content">
+					<a href="/"><div class="logo"></div></a>
+					<div class="input-style-main">
+						<?php
+						$form = new \kartik\form\ActiveForm([
+							'action'	=>	Url::to(['/search']),
+							'method'	=>	'get'
+						]);
 
-							$form->begin();
+						$form->begin();
 
-							echo \kartik\typeahead\Typeahead::widget([
-								'name'          => 'string',
+						echo \kartik\typeahead\Typeahead::widget([
+							'name'          => 'string',
 
-								'options'       => ['placeholder' => \Yii::t('shop', 'Поиск...')],
-								'value'	=>	\Yii::$app->request->get("string"),
-								'scrollable'    => true,
-								'pluginOptions' => [
-									'highlight'     =>  true
-								],
-								'dataset' => [
-									[
-										'remote' => [
-											'url' => Url::to(['/search']).'/%QUERY',
-											'wildcard' => '%QUERY'
-										],
-										'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
-										'display'   => 	'value',
-										'limit'		=>	'6',
-										'templates' => [
-											'notFound'      => $this->render('search/notFound'),
-											'footer'		=> new JsExpression("Handlebars.compile('".$this->render('search/footer')."')"),
-											'suggestion'    => new JsExpression("Handlebars.compile('".$this->render('search/suggestion')."')")
-										]
+							'options'       => ['placeholder' => \Yii::t('shop', 'Поиск...')],
+							'value'	=>	\Yii::$app->request->get("string"),
+							'scrollable'    => true,
+							'pluginOptions' => [
+								'highlight'     =>  true
+							],
+							'dataset' => [
+								[
+									'remote' => [
+										'url' => Url::to(['/search']).'/%QUERY',
+										'wildcard' => '%QUERY'
+									],
+									'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
+									'display'   => 	'value',
+									'limit'		=>	'6',
+									'templates' => [
+										'notFound'      => $this->render('search/notFound'),
+										'footer'		=> new JsExpression("Handlebars.compile('".$this->render('search/footer')."')"),
+										'suggestion'    => new JsExpression("Handlebars.compile('".$this->render('search/suggestion')."')")
 									]
 								]
-							]);
-							$form->end();
-							?>
-						</div>
-						<?=Html::tag('div',
-							Html::tag('div',
-							Html::tag('span', '(044) 578 20 16', ['class' => 'number']).
+							]
+						]);
+						$form->end();
+						?>
+					</div>
+					<?=Html::tag('div',
+						Html::tag('div',
+							Html::tag('span', $this->params['categoryPhoneNumber'], ['class' => 'number']).
 							Html::tag('div',
 								Html::tag('div',
 									Html::tag('div', '', ['class' => 'arrow']).
@@ -459,147 +459,147 @@ $this->beginPage();
 							[
 								'class'	=>	'desire-basket'
 							]),
-							[
-								'class'	=>	'right-side'
-							])?>
-					</div>
+						[
+							'class'	=>	'right-side'
+						])?>
 				</div>
+			</div>
 			<?=\frontend\widgets\MainMenuWidget::widget([
 				'items'	=>	Category::getMenu()
 			])?>
+		</div>
+	</div>
+	<?=Html::tag('div', $content, ['class' => 'main-content'])?>
+	<div class="footer">
+		<div class="blue-line">
+			<div class="footer-content">
+				<span class="phone-numbers"> 044 578 20 16 • 067 507 87 73</span>
+				<?=Html::tag('div',
+					Html::tag('span', \Yii::t('shop', 'Время работы call-центра:')).
+					Html::tag('span', \Yii::t('shop', 'с 8.30 до 17:30, без выходных')),
+					[
+						'class'	=>	'hours'
+					]),
+				Remodal::widget([
+					'cancelButton'		=>	false,
+					'confirmButton'		=>	false,
+					'addRandomToID'		=>	false,
+					'id'           		=>  'callbackModal',
+					'buttonOptions' =>  [
+						'label' =>  'Заказать обратный звонок',
+						'class' =>  'yellow-button-new large-button',
+					],
+					'content'   =>  $this->render('_callback'),
+					'options'			=>  [
+						'class'			=>  'callback-modal'
+					]
+
+				])
+				?>
 			</div>
 		</div>
-		<?=Html::tag('div', $content, ['class' => 'main-content'])?>
-		<div class="footer">
-			<div class="blue-line">
-				<div class="footer-content">
-					<span class="phone-numbers"> 044 578 20 16 • 067 507 87 73</span>
-					<?=Html::tag('div',
-						Html::tag('span', \Yii::t('shop', 'Время работы call-центра:')).
-						Html::tag('span', \Yii::t('shop', 'с 8.30 до 17:30, без выходных')),
-						[
-							'class'	=>	'hours'
-						]),
-					Remodal::widget([
-						'cancelButton'		=>	false,
-						'confirmButton'		=>	false,
-						'addRandomToID'		=>	false,
-						'id'           		=>  'callbackModal',
-						'buttonOptions' =>  [
-							'label' =>  'Заказать обратный звонок',
-							'class' =>  'yellow-button-new large-button',
-						],
-						'content'   =>  $this->render('_callback'),
-						'options'			=>  [
-							'class'			=>  'callback-modal'
-						]
-
-					])
-					?>
-				</div>
-			</div>
-			<?=Html::tag('div',
-				Html::tag('div',
-					Html::tag('span', \Yii::t('shop', 'О компании'), [
-						'class'		=>	'link-hide',
-						'data-href'	=>	'/o-nas'
-					]).
-					Html::tag('span', \Yii::t('shop', 'Контакты'), [
-						'class'		=>	'link-hide',
-						'data-href'	=>	'/kontakty'
-					]).
-					Html::tag('span', \Yii::t('shop', 'Отзывы о магазине'), [
-						'class'		=>	'link-hide',
-						'data-href'	=>	'/otzyvy'
-					]).
-					Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
-						'class'		=>	'link-hide',
-						'href'		=>	'/map'
-					]),
-					[
-						'class'	=>	'goods-item'
-					]).
-				Html::tag('div',
-					Html::tag('span', \Yii::t('shop', 'Новости и акции'), [
-						'class'		=>	'link-hide',
-						'data-href'	=>	'/akcii'
-					]).
-					Html::tag('span', \Yii::t('shop', 'Оплата и доставка'), [
-						'class'		=>	'link-hide',
-						'data-href'	=>	'/o-nas#about-delivery-payment-header',
-					]).
-					Html::tag('span', \Yii::t('shop', 'Гарантии и возврат'), [
-						'class'		=>	'link-hide',
-						'data-href'	=>	'/o-nas#about-return-header'
-					]),
-					[
-						'class'	=>	'goods-item'
-					]).
-				Html::tag('div',
-					Html::tag('span', \Yii::t('shop', 'Проблемы с заказом?'), [
-						'class'		=>	'link-hide',
-						'data-href'	=>	'/kontakty'//хз
-					]),
-					[
-						'class'	=>	'goods-item feedback-link'
-					]),
+		<?=Html::tag('div',
+			Html::tag('div',
+				Html::tag('span', \Yii::t('shop', 'О компании'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/o-nas'
+				]).
+				Html::tag('span', \Yii::t('shop', 'Контакты'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/kontakty'
+				]).
+				Html::tag('span', \Yii::t('shop', 'Отзывы о магазине'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/otzyvy'
+				]).
+				Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
+					'class'		=>	'link-hide',
+					'href'		=>	'/map'
+				]),
 				[
-					'class'	=>	'footer-menu'
+					'class'	=>	'goods-item'
 				]).
 			Html::tag('div',
-				Html::tag('div',
-					Html::tag('div',
-						Html::img('/img/site/visa-icon.png').
-						Html::img('/img/site/mastercard-icon.png').
-						Html::img('/img/site/privat24-icon.png'),
-						[
-							'class'	=>	'card'
-						]).
-					Html::tag('div',
-						SocialButtonWidget::widget([
-							'items' => [
-								['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
-								['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
-								['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
-								['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
-								['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
-							]
-						]),
-						[
-							'class'	=>	'socialNetworks'
-						]),
-					[
-						'class'	=>	'footer-content'
-					]),
+				Html::tag('span', \Yii::t('shop', 'Новости и акции'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/akcii'
+				]).
+				Html::tag('span', \Yii::t('shop', 'Оплата и доставка'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/o-nas#about-delivery-payment-header',
+				]).
+				Html::tag('span', \Yii::t('shop', 'Гарантии и возврат'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/o-nas#about-return-header'
+				]),
 				[
-					'class'	=>	'feedback-block'
+					'class'	=>	'goods-item'
 				]).
 			Html::tag('div',
-				Html::tag('span',
-					\Yii::t('shop', '© Интернет-магазин «krasota-style™» 2011–{year}', ['year' => date('Y')]),
+				Html::tag('span', \Yii::t('shop', 'Проблемы с заказом?'), [
+					'class'		=>	'link-hide',
+					'data-href'	=>	'/kontakty'//хз
+				]),
+				[
+					'class'	=>	'goods-item feedback-link'
+				]),
+			[
+				'class'	=>	'footer-menu'
+			]).
+		Html::tag('div',
+			Html::tag('div',
+				Html::tag('div',
+					Html::img('/img/site/visa-icon.png').
+					Html::img('/img/site/mastercard-icon.png').
+					Html::img('/img/site/privat24-icon.png'),
 					[
-						'class' => 'left'
-					]
-				).'&nbsp;'.
-				Html::tag('span',
-					\Yii::t('shop', 'Дизайн и разработка сайта “krasota-style.ua”',
-						[
-							'class' => 'right'
+						'class'	=>	'card'
+					]).
+				Html::tag('div',
+					SocialButtonWidget::widget([
+						'items' => [
+							['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
+							['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
+							['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
+							['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
+							['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
 						]
-					)
-				),
+					]),
+					[
+						'class'	=>	'socialNetworks'
+					]),
 				[
 					'class'	=>	'footer-content'
+				]),
+			[
+				'class'	=>	'feedback-block'
+			]).
+		Html::tag('div',
+			Html::tag('span',
+				\Yii::t('shop', '© Интернет-магазин «krasota-style™» 2011–{year}', ['year' => date('Y')]),
+				[
+					'class' => 'left'
 				]
-			)?>
-		</div>
-		<?=$cartModal->renderModal(),
-		$loginModal->renderModal(),
-		$registrationModal->renderModal();
+			).'&nbsp;'.
+			Html::tag('span',
+				\Yii::t('shop', 'Дизайн и разработка сайта “krasota-style.ua”',
+					[
+						'class' => 'right'
+					]
+				)
+			),
+			[
+				'class'	=>	'footer-content'
+			]
+		)?>
+	</div>
+	<?=$cartModal->renderModal(),
+	$loginModal->renderModal(),
+	$registrationModal->renderModal();
 
-		RuLangAsset::register($this);
+	RuLangAsset::register($this);
 
-		$this->endBody() ?>
+	$this->endBody() ?>
 	</body>
-</html>
+	</html>
 <?php $this->endPage() ?>

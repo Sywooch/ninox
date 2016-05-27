@@ -2687,33 +2687,29 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	height: 85px;*/
 }
 
-#modal-cart .one-click-order{
-/*	background: none;
-	border: none;
-	text-decoration: underline;
-	cursor: pointer;
-	margin-left: 40px;*/
-	background: #e7e7e7;
-	width: 218px;
-	height: 45px;
-	border-radius: 3px;
-	box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2);
-	color: #949494;
-	font-size: 20px;
-	font-family: OpenSans-Semibold;
-	border: none;
+#modal-cart .one-click-order {
 	float: left;
 }
 
-#modal-cart .one-click-order:disabled{
+#modal-cart .cart-button:disabled{
 	cursor: default;
+	background: #e7e7e7;
+	border-radius: 3px;
+	box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2);
+	color: #949494;
+
 }
 
 #modal-cart.empty #cart-gridview-pjax{
 	display: none;
 }
 
-#modal-cart .yellow-button{
+#modal-cart .cart-buttons .form-order{
+	margin-left: 20px;
+
+}
+
+/*#modal-cart .yellow-button{
 	background: #ffc20e;
 	width: 218px;
 	height: 45px;
@@ -2726,7 +2722,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	text-shadow: none;
 	margin-left: 20px;
 	float: right;
-}
+}*/
 
 
 /*========* END CART *=========*/
@@ -3367,6 +3363,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	float: left;
 	width: 245px;
 /*	position: fixed;*/
+    /*
+	left: auto !important;
+    */
 }
 
 .left-side-menu{
@@ -4654,6 +4653,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     */
 }
 
+.sticky-wrapper .sticky-on-scroll{
+	min-width: 1170px !important;
+}
+
 .sticky .header-menu:after{
 	background: none;
 	display: none;
@@ -4998,6 +5001,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	overflow: auto;
 	position: relative;
 	padding-top: 10px;
+	min-width: 1170px;
 }
 
 .main-content-slider .slick-slide img{
@@ -5863,9 +5867,10 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 /*========* FOOTER  *=========*/
 
 .footer{
-	width: 100%;
+	min-width: 1170px;
 	bottom: 0;
 	position: absolute;
+	width: 100%;
 }
 
 .footer .blue-line{

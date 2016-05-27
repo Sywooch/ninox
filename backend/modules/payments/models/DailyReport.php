@@ -10,6 +10,7 @@ namespace backend\modules\payments\models;
 
 
 use backend\models\History;
+use common\models\MoneyExchange;
 use yii\db\ActiveRecord;
 
 class DailyReport extends ActiveRecord
@@ -27,6 +28,17 @@ class DailyReport extends ActiveRecord
         return parent::find()->select("FROM_UNIXTIME(`added`, '%Y-%m-%d') as `findedDate`")->groupBy('findedDate')->orderBy('added DESC');
     }
 
+    public function getMoneyExchange(){
+        $exchange = MoneyExchange::findOne(['date' => \Yii::$app->formatter->asDate($this->date, 'php:Y-m-d')]);
+        
+        if(empty($exchange)){
+            $exchange = new MoneyExchange([
+                'date'  =>  \Yii::$app->formatter->asDate($this->date, 'php:Y-m-d')
+            ]);
+        }
+        
+        return $exchange;
+    }
 
     public function getDate(){
         return $this->findedDate;
