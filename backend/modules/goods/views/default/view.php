@@ -140,26 +140,6 @@ $this->title = 'Товар "'.$good->Name.'"';
                                 </td>
                             </tr>
                         </table>'
-                                ],[
-                                    'label' =>  'Українська мова',
-                                    'content'   =>  '<table class="table good-table">
-                            <tr>
-                                <td>
-                                    Назва:
-                                </td>
-                                <td>
-                                    '.$goodUk->Name.'
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Опис:
-                                </td>
-                                <td>
-                                    '.$goodUk->Description.'
-                                </td>
-                            </tr>
-                        </table>'
                                 ]
                             ],
                             'encodeLabels'  =>  'false'

@@ -10,10 +10,51 @@ $.urlParam = function(name){
 
 (function($){
     $.fn.orderPreviewListeners = function() {
-        if($(this).find("input[data-krajee-bootstrapswitch]").data("bootstrapSwitch")){
-            $(this).find("input[data-krajee-bootstrapswitch]").bootstrapSwitch("destroy");
-        }
+        var selector = this.selector + ".kv-expand-detail-row";
 
-        $(this).find("input[data-krajee-bootstrapswitch]").bootstrapSwitch({"onText":"Да","offText":"Нет","animate":true,"indeterminate":false,"disabled":false,"readonly":false});
+        kvInitPlugin(selector + ' #orderpreviewform-deliveryparam', function(){
+            if (jQuery(selector + ' #orderpreviewform-deliveryparam').data('depdrop')) {
+                jQuery(selector + ' #orderpreviewform-deliveryparam').depdrop('destroy');
+            }
+
+            jQuery(selector + ' #orderpreviewform-deliveryparam').depdrop({
+                "depends":[
+                    "deliveryTypeInput"
+                ],
+                "initialize": true,
+                "params": [
+                    "deliveryTypeInput",
+                    "deliveryParamInput"
+                ],
+                "emptyMsg": "варианты отсутствуют",
+                "initDepends":[
+                    "deliveryTypeInput"
+                ],
+                "url":'/orders/get-deliveries'
+            });
+        });
+
+
+        kvInitPlugin(selector + ' #orderpreviewform-paymentparam', function(){
+            if (jQuery(selector + ' #orderpreviewform-paymentparam').data('depdrop')) {
+                jQuery(selector + ' #orderpreviewform-paymentparam').depdrop('destroy');
+            }
+
+            jQuery(selector + ' #orderpreviewform-paymentparam').depdrop({
+                "depends":[
+                    "paymentTypeInput"
+                ],
+                "initialize": true,
+                "params":[
+                    "paymentTypeInput",
+                    "paymentParamInput"
+                ],
+                "emptyMsg":"варианты отсутствуют",
+                "initDepends":[
+                    "paymentTypeInput"
+                ],
+                "url":'/orders/get-payments'
+            });
+        });
     };
 })(jQuery);
