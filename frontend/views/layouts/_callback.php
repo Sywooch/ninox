@@ -124,7 +124,6 @@ Html::tag('div', \Yii::t('shop', '').
 
     ?>
     <span class="head">Хотите мы вам перезвоним?</span>
-
     <?= Html::tag('div',
         $form->field($model, 'phone')->textInput(['value' => !\Yii::$app->user->isGuest ?
             \Yii::$app->user->identity->phone :
