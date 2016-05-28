@@ -302,7 +302,7 @@ class OrderForm extends Model{
                     'storeID'       =>  1
                 ]);
 
-                $orderSuperRealPrice += $orderItem->price;
+                $orderSuperRealPrice += ($orderItem->price * $orderItem->count);
 
                 if($orderItem->save(false)){
                     \Yii::$app->cart->remove($good->ID, false);
