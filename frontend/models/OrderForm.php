@@ -8,7 +8,6 @@
 
 namespace frontend\models;
 
-use common\models\History;
 use yii\base\ErrorException;
 use yii\base\Model;
 use yii\helpers\Json;
@@ -138,7 +137,7 @@ class OrderForm extends Model{
     }
 
     public function getRegions(){
-        $order = new History();
+        $order = new \common\models\History();
 
         return $order->regions;
     }
