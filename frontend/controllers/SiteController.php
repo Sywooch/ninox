@@ -432,7 +432,6 @@ class SiteController extends Controller
         if(\Yii::$app->user->isGuest){
             if(!empty(\Yii::$app->request->post("phone"))){
                 $customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
-
                 if(\Yii::$app->request->cookies->getValue("customerPhone") != $customerPhone){
                     \Yii::$app->response->cookies->add(new Cookie([
                         'name'      =>  'customerPhone',
