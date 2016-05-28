@@ -71,8 +71,8 @@ class OrderForm extends Model{
     public $orderProvider = null;
 
     public function init(){
-        if(\Yii::$app->user->isGuest){
-            $this->customerPhone = \Yii::$app->request->cookies->getValue("customerPhone");
+        if(\Yii::$app->user->isGuest && !empty(\Yii::$app->request->post("phone"))){
+            $this->customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
         }
 
         parent::init();

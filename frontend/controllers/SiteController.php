@@ -432,7 +432,6 @@ class SiteController extends Controller
         if(\Yii::$app->user->isGuest){
             if(!empty(\Yii::$app->request->post("phone"))){
                 $customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
-
                 if(\Yii::$app->request->cookies->getValue("customerPhone") != $customerPhone){
                     \Yii::$app->response->cookies->add(new Cookie([
                         'name'      =>  'customerPhone',
@@ -472,7 +471,7 @@ class SiteController extends Controller
         if((\Yii::$app->request->post("OrderForm") && $order->load(\Yii::$app->request->post())) || \Yii::$app->request->post("orderType") == 1){
             if($order->validate() || \Yii::$app->request->post("orderType") == 1){
                 $order->create();
-                
+
                 \Yii::$app->email->orderEmail(History::findOne($order->createdOrder));
 
                 return $this->render('order_success', [
