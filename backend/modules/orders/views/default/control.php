@@ -201,7 +201,7 @@ echo Html::tag('h1', $this->title, ['class' => 'page-title', 'data-attribute-ord
             ]
         ],
         'dataProvider'  =>  new \yii\data\ArrayDataProvider([
-            'models'    =>  $order->items
+            'models'    =>  $order->availableItems
         ])
 ]).
     Html::tag('div', Html::tag('div',

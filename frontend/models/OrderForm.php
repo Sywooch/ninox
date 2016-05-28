@@ -276,6 +276,9 @@ class OrderForm extends Model{
         if($order->save()){
             $this->createdOrder = $order->id;
 
+            $orderSuperRealPrice = 0;
+
+
             foreach(\Yii::$app->cart->goods as $good){
                 if(!empty($customer->cardNumber) && $good->discountSize == 0){
                     $good->setAttributes([
@@ -299,10 +302,16 @@ class OrderForm extends Model{
                     'storeID'       =>  1
                 ]);
 
+                $orderSuperRealPrice += $orderItem->price;
+
                 if($orderItem->save(false)){
                     \Yii::$app->cart->remove($good->ID, false);
                 }
             }
+
+            /* TODO: чистой воды костыль */
+            $order->originalSum = $orderSuperRealPrice;
+            $order->save(false);
 
             \Yii::$app->cart->recalcCart();
             \Yii::$app->cart->save();

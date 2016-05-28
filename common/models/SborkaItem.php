@@ -28,13 +28,17 @@ use yii\web\NotFoundHttpException;
 class SborkaItem extends \yii\db\ActiveRecord
 {
 
+    const DISCOUNT_TYPE_UNDEFINED = 0;
+    const DISCOUNT_TYPE_SUM = 1;
+    const DISCOUNT_TYPE_PERCENT = 2;
+    const DISCOUNT_TYPE_FIXED_SUM = 3;
+
     public static $DISCOUNT_TYPES = [
-        '0' =>  'Не выбрано',
-        '1' =>  'Отнять сумму',
-        '2' =>  'Отнять процент'
+        self::DISCOUNT_TYPE_UNDEFINED =>  'Не выбрано',
+        self::DISCOUNT_TYPE_SUM =>  'Отнять сумму',
+        self::DISCOUNT_TYPE_PERCENT =>  'Отнять процент',
     ];
 
-    public $price;
     public $addedCount = 0;
     public $storeID = 0;
 
@@ -46,27 +50,30 @@ class SborkaItem extends \yii\db\ActiveRecord
         return $this->hasOne(Category::className(), ['Code' => 'categoryCode']);
     }
 
-    public function getPhoto(){
-        \Yii::trace($this->itemID);
-        return $this->good->photo;
-    }
-
-    public function afterFind(){
+    public function getPrice(){
         switch($this->discountType){
-            case '1':
+            case self::DISCOUNT_TYPE_SUM:
                 //Размер скидки в деньгах
-                $this->price = $this->originalPrice - $this->discountSize;
+                $price = $this->originalPrice - $this->discountSize;
                 break;
-            case '2':
+            case self::DISCOUNT_TYPE_PERCENT:
                 //Размер скидки в процентах
-                $this->price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
+                $price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
+                break;
+            case self::DISCOUNT_TYPE_FIXED_SUM:
+                $price = $this->discountSize;
                 break;
             default:
-                $this->price = $this->originalPrice;
+                $price = $this->originalPrice;
                 break;
         }
 
-        return parent::afterFind();
+        return $price;
+    }
+
+    public function getPhoto(){
+        \Yii::trace($this->itemID);
+        return $this->good->photo;
     }
 
     public function returnToStore($storeID = 0){

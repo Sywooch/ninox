@@ -91,6 +91,16 @@ class History extends \common\models\History
         return false;
     }
 
+    public function findAvailableItem($itemID){
+        foreach($this->availableItems as $item){
+            if($item->itemID == $itemID){
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
     public function findItemByUniqID($uniqID){
         foreach($this->items as $item){
             if($item->ID == $uniqID){
@@ -509,7 +519,7 @@ class History extends \common\models\History
     public function getNotControlledGoods(){
         $items = [];
 
-        foreach($this->items as $item){
+        foreach($this->availableItems as $item){
             if(!$item->controlled){
                 $items[] = $item;
             }
@@ -535,7 +545,7 @@ class History extends \common\models\History
     public function getControlledGoods(){
         $items = [];
 
-        foreach($this->items as $item){
+        foreach($this->availableItems as $item){
             if($item->controlled){
                 $items[] = $item;
             }
@@ -554,7 +564,7 @@ class History extends \common\models\History
     }
 
     public function controlItem($itemID, $count = 1){
-        $item = $this->findItem($itemID);
+        $item = $this->findAvailableItem($itemID);
 
         if(!$item){
             throw new NotFoundHttpException("Товар с ID {$itemID} не найден в заказе #{$this->number} (ID {$this->ID})");
