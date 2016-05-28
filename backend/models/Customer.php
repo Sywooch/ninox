@@ -9,6 +9,12 @@
 namespace backend\models;
 
 
+/**
+ * Class Customer
+ * @package backend\models
+ * @property History $notPayedOrders
+ */
+
 class Customer extends \common\models\Customer{
 
     public function init(){

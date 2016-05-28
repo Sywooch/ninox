@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "goods".
@@ -82,9 +83,12 @@ use Yii;
  * @property double $realWholesalePrice
  * @property double $realRetailPrice
  * @property string $categorycode
+ * @property integer $code
  * @property GoodTranslation $realTranslation
+ * @property GoodTranslation[] $translations
+ * @property GoodTranslation $translation
  */
-class Good extends \yii\db\ActiveRecord
+class Good extends ActiveRecord
 {
 
     const STATE_ENABLED = 1;
@@ -92,15 +96,6 @@ class Good extends \yii\db\ActiveRecord
 
     private $_translation;
     private $_realTranslation;
-
-/*    public function init(){
-        if($this->isNewRecord){
-            $this->realTranslation = new GoodTranslation([
-                'ID'        =>  $this->ID,
-                'language'  =>  'ru-RU'
-            ]);
-        }
-    }*/
 
     /**
      * @return \yii\db\ActiveQuery
@@ -158,6 +153,7 @@ class Good extends \yii\db\ActiveRecord
         $defaultLang = 'ru-RU';
         $defaultLangModel = new GoodTranslation();
         $currentLangModel = new GoodTranslation();
+
         foreach($this->translations as $translation){
             if($translation->language == $defaultLang){
                 $defaultLangModel = $translation;
@@ -168,8 +164,8 @@ class Good extends \yii\db\ActiveRecord
         }
 
         if($key != $defaultLang && !empty($defaultLangModel) && !empty($currentLangModel)){
-            foreach($currentLangModel as $key => $value){
-                $currentLangModel[$key] = empty($currentLangModel[$key]) ? $defaultLangModel[$key] : $value;
+            foreach($currentLangModel as $foreachKey => $value){
+                $currentLangModel[$foreachKey] = empty($currentLangModel[$foreachKey]) ? $defaultLangModel[$foreachKey] : $value;
             }
         }
 
@@ -209,7 +205,7 @@ class Good extends \yii\db\ActiveRecord
      * @return string
      */
     public function getMainPhoto(){
-        return isset($this->photos[0]) ? $this->photos[0] : new GoodsPhoto();
+        return array_key_exists(0, $this->photos) ? $this->photos[0] : new GoodsPhoto();
     }
 
     /**
@@ -244,9 +240,9 @@ class Good extends \yii\db\ActiveRecord
      * @param array $params
      * @deprecated Проверить на использование и удалить
      *
-     * @return array|\yii\db\ActiveRecord[]
+     * @return array|ActiveRecord[]
      */
-    public static function searchGoods($string, $params = []){
+    public static function searchGoods($string, array $params = []){
         if(empty($params) || $string == ''){
             return [];
         }
@@ -254,7 +250,7 @@ class Good extends \yii\db\ActiveRecord
         $query = self::find()->select('a.*, b.Name as categoryname')->from([self::tableName().' a', Category::tableName().' b']);
         $terms = [];
 
-        if(sizeof($params) > 1){
+        if(count($params) > 1){
             $terms[] = 'or';
             foreach($params as $p){
                 $terms[] = [
@@ -304,14 +300,14 @@ class Good extends \yii\db\ActiveRecord
         $code = $this->ID;
 
         for($i = 1; $i < $needleZeros; $i++){
-            $code = "0".$code;
+            $code = '0'.$code;
         }
 
-        return "2".$code;
+        return '2'.$code;
     }
 
     public function getBarcode(){
-        $code = str_pad($this->code, 12, "0", STR_PAD_LEFT);
+        $code = str_pad($this->code, 12, '0', STR_PAD_LEFT);
 
         $sum = 0;
 
@@ -319,10 +315,10 @@ class Good extends \yii\db\ActiveRecord
             $sum += (($i % 2) * 2 + 1) * $code[$i];
         }
 
+        $checksum = 0;
+
         if(($sum % 10) != 0){
             $checksum = (10 - ($sum % 10));
-        }else{
-            $checksum = 0;
         }
 
         return $this->code.$checksum;
@@ -332,8 +328,8 @@ class Good extends \yii\db\ActiveRecord
         if($this->isNewRecord){
             if(empty($this->ID)){
                 if(empty($this->realTranslation->ID)){
-                    $maxTranslationID = (GoodTranslation::find()->where(['language' => 'ru-RU'])->max("ID") + 1);
-                    $maxID = (Good::find()->max("ID") + 1);
+                    $maxTranslationID = (GoodTranslation::find()->where(['language' => 'ru-RU'])->max('ID') + 1);
+                    $maxID = (Good::find()->max('ID') + 1);
                     $this->ID = $maxID > $maxTranslationID ? $maxID : $maxTranslationID;
 
                     $this->realTranslation->ID = $this->ID;

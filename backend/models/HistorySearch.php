@@ -12,13 +12,13 @@ use yii\data\ActiveDataProvider;
 
 class HistorySearch extends History{
 
-    public function search($params, $onlyQuery = false, $ignoreFilters = []){
+    public function search($params, $onlyQuery = false, array $ignoreFilters = []){
         $query = History::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
             'pagination'    =>  [
-                'pageSize'  =>  isset($params['pageSize']) ? $params['pageSize'] : 50,
+                'pageSize'  =>  array_key_exists('pageSize', $params) ? $params['pageSize'] : 50,
             ]
         ]);
 
@@ -45,12 +45,12 @@ class HistorySearch extends History{
             $ignoreFilters['ordersStatus'] = true;
         }
 
-        if(empty(\Yii::$app->request->get("ordersStatus")) && empty($params['showDates'])){
+        if(array_key_exists('showDates', $params) && empty($params['showDates'] && empty(\Yii::$app->request->get('ordersStatus')))){
             $params['showDates'] = 'alltime';
         }
 
-        if(!empty($params["ordersSource"]) && !isset($ignoreFilters['ordersSource'])){
-	        switch($params["ordersSource"]){
+        if(!array_key_exists('ordersSource', $ignoreFilters) && array_key_exists('ordersSource', $params) && !empty($params['ordersSource'])){
+	        switch($params['ordersSource']){
 		        case 'all':
 			        break;
 		        case 'market':
@@ -66,12 +66,12 @@ class HistorySearch extends History{
 	        }
         }
 
-        if(!empty($params["sourceID"]) && !isset($ignoreFilters['sourceID'])){
+        if(!array_key_exists('sourceID', $ignoreFilters) && !empty($params['sourceID'])){
 	        $query->andWhere(['orderSource' => $params['sourceID']]);
         }
 
-	    if(!empty($params["smartFilter"]) && !isset($ignoreFilters['smartFilter'])){
-		    switch($params["smartFilter"]){
+	    if(!array_key_exists('smartFilter', $ignoreFilters) && !empty($params['smartFilter'])){
+		    switch($params['smartFilter']){
 			    case 'shipping':
 					$query->andWhere(
 						[
@@ -104,21 +104,21 @@ class HistorySearch extends History{
 		    }
 	    }
 
-        if((!empty($params["showDates"])  && !isset($ignoreFilters['showDates'])) || (empty($params['HistorySearch'])  && !isset($ignoreFilters['HistorySearch']))){
+        if((!empty($params['showDates'])  && !array_key_exists('showDates', $ignoreFilters)) || (empty($params['HistorySearch'])  && !array_key_exists('HistorySearch', $ignoreFilters))){
             $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
 
             $params['showDates'] = empty($params['showDates']) ? 'alltime' : $params['showDates'];
 
-            switch($params["showDates"]){
+            switch($params['showDates']){
                 case 'yesterday':
                     $query->andWhere('added <= '.$date.' AND added >= '.($date - 86400));
                     break;
                 case 'thisweek':
-                    $query->andWhere('added >= '.($date - (date("N") - 1) * 86400));
+                    $query->andWhere('added >= '.($date - (date('N') - 1) * 86400));
                     break;
                 case 'thismonth':
-                    $query->andWhere('added >= '.($date - (date("j") - 1) * 86400));
+                    $query->andWhere('added >= '.($date - (date('j') - 1) * 86400));
                     break;
                 case 'today':
                     $query->andWhere('added >= '.$date);
@@ -129,7 +129,7 @@ class HistorySearch extends History{
             }
         }
 
-        if(!isset($ignoreFilters['ordersStatus']) && $params['ordersSource'] != 'search'){
+        if(!array_key_exists('ordersStatus', $ignoreFilters) && $params['ordersSource'] != 'search'){
             $params['ordersStatus'] = !empty($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
 
             switch($params['ordersStatus']){
@@ -157,13 +157,13 @@ class HistorySearch extends History{
             }
         }
 
-        if((empty($params["showDeleted"]) && !isset($ignoreFilters['showDeleted'])) && $params['ordersSource'] != 'search'){
+        if((!array_key_exists('showDeleted', $ignoreFilters) && empty($params['showDeleted'])) && $params['ordersSource'] != 'search'){
             $query->andWhere('deleted = 0');
-        }elseif(!empty($params['ordersSource']) && $params["ordersSource"] == 'deleted'){
+        }elseif(!empty($params['ordersSource']) && $params['ordersSource'] == 'deleted'){
             $query->andWhere('deleted = 1');
         }
 
-        if(isset($params['responsibleUser'])){
+        if(array_key_exists('responsibleUser', $params)){
             $query->andWhere(['responsibleUserID' => $params['responsibleUser']]);
         }
 
@@ -179,8 +179,6 @@ class HistorySearch extends History{
         $this->addCondition($query, 'deliveryCity', true);
         $this->addCondition($query, 'nakladna', true);
         $this->addCondition($query, 'actualAmount');
-
-        \Yii::trace($query);
 
         return $onlyQuery ? $query : $dataProvider;
     }

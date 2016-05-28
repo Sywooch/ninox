@@ -472,9 +472,9 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
         }
 
-        $attribute = \Yii::$app->request->post("editableAttribute");
-        $data = \Yii::$app->request->post("History");
-        $data = $data[\Yii::$app->request->post("editableIndex")];
+        $attribute = \Yii::$app->request->post('editableAttribute');
+        $data = \Yii::$app->request->post('History');
+        $data = $data[\Yii::$app->request->post('editableIndex')];
 
         $order->$attribute = $data[$attribute];
 
@@ -485,11 +485,11 @@ class DefaultController extends Controller
 
     public function actionShowlist($context = false, $ordersSource = false){
         if(!\Yii::$app->request->isAjax && !$context){
-            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+            throw new BadRequestHttpException('Этот метод доступен только через ajax!');
         }
 
         if(!$context){
-            $context = !empty(\Yii::$app->request->get("context")) ? true : false;
+            $context = !empty(\Yii::$app->request->get('context')) ? true : false;
         }
 
         $historySearch = new HistorySearch();
@@ -513,12 +513,12 @@ class DefaultController extends Controller
 
     public function actionRestoreitemdata(){
         if(!\Yii::$app->request->isAjax){
-            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+            throw new UnsupportedMediaTypeHttpException('Этот запрос возможен только через ajax!');
         }
 
         \Yii::$app->response->format = 'json';
 
-        $itemID = \Yii::$app->request->post("ID");
+        $itemID = \Yii::$app->request->post('ID');
 
         $item = SborkaItem::findOne(['ID' => $itemID]);
 
@@ -529,18 +529,18 @@ class DefaultController extends Controller
         $order = History::findOne(['id' => $item->orderID]);
 
         if(!$order){
-            throw new NotFoundHttpException("Заказ ".$item->orderID." не найден!");
+            throw new NotFoundHttpException("Заказ {$item->orderID} не найден!");
         }
 
         $good = Good::findOne(['id' => $item->itemID]);
 
         if(!$good){
-            throw new NotFoundHttpException("Товар ".$item->itemID." не найден!");
+            throw new NotFoundHttpException("Товар {$item->itemID} не найден!");
         }
 
         $item->name = $good->Name;
         //$item->count = $item->originalCount;
-        $item->originalPrice = $order->isWholesale() ? $good->PriceOut1 : $good->PriceOut2;
+        $item->originalPrice = $order->isWholesale ? $good->PriceOut1 : $good->PriceOut2;
 
         if($item->save(false)){
             //$good->count = $good->count - $item->addedCount;

@@ -333,7 +333,6 @@ class DefaultController extends Controller
     /**
      * @return string
      * Метод добавляет товары на сайт
-     * @deprecated метод actionGood должен позволять редактировать и создавать товар
      */
     public function actionAdd(){
         $good = new Good();
@@ -350,7 +349,7 @@ class DefaultController extends Controller
                     'url'   =>  Url::toRoute(['/categories'])
                 ];
 
-                if (sizeof($category->parents) >= 1) {
+                if (count($category->parents) >= 1) {
                     $parents = array_reverse($category->parents);
 
                     foreach($parents as $parentCategory) {
@@ -867,45 +866,6 @@ class DefaultController extends Controller
 
         return $return;
     }
-
-    /**
-     * @return mixed
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionChangestate(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Good::changeState(\Yii::$app->request->post("GoodID"));
-    }
-
-
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @throws NotFoundHttpException
-     * @deprecated
-     */
-    public function actionWorkwithtrash(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        $goodID = \Yii::$app->request->post("goodID");
-
-        $good = Good::findOne($goodID);
-        
-        if(empty($good)){
-            throw new NotFoundHttpException("Товар с идентификатором {$goodID} не найден!");
-        }
-        
-        $good->deleted = empty(\Yii::$app->request->post("state")) ? ($good->deleted == 1 ? 0 : 1) : \Yii::$app->request->post("state");
-
-        return $good->save(false);
-    }
-
 
     public function actionChangegoodvalue(){
         if(!\Yii::$app->request->isAjax){

@@ -154,15 +154,4 @@ class CashboxItem extends \yii\db\ActiveRecord
 
         return parent::beforeSave($insert);
     }
-
-    public function afterSave($insert, $changedAttributes){
-        if($this->changedValue != 0){
-            $good = Good::findOne(['ID' => $this->itemID]);
-            $good->count -= $this->changedValue;
-
-            $good->save(false);
-        }
-
-        return parent::afterSave($insert, $changedAttributes);
-    }
 }

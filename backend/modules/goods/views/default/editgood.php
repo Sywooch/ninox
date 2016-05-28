@@ -109,9 +109,10 @@ var changeState = function(e){
     var target = e.currentTarget;
     $.ajax({
         type: 'POST',
-        url: '/goods/changestate',
+        url: '/goods/toggle',
         data: {
-            'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
+            'goodID': e.currentTarget.getAttribute("data-attribute-goodID"),
+            'attribute': 'enabled'
         },
         success: function(data){
             if(data.length >= "1"){
@@ -127,9 +128,10 @@ var changeState = function(e){
     var target = e.currentTarget;
     $.ajax({
         type: 'POST',
-        url: '/goods/workwithtrash',
+        url: '/goods/toggle',
         data: {
-            'GoodID': e.currentTarget.getAttribute("data-attribute-goodID")
+            'goodID': e.currentTarget.getAttribute("data-attribute-goodID"),
+            'attribute': 'Deleted'
         },
         success: function(data){
             if(data.length >= "1"){
