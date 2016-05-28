@@ -81,8 +81,10 @@ class History extends \common\models\History
         return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
     }
 
-    public function findItem($itemID){
-        foreach($this->items as $item){
+    public function findItem($itemID, $onlyAvailable = false){
+        $items = $onlyAvailable ? $this->availableItems : $this->items;
+
+        foreach($items as $item){
             if($item->itemID == $itemID){
                 return $item;
             }
@@ -92,17 +94,13 @@ class History extends \common\models\History
     }
 
     public function findAvailableItem($itemID){
-        foreach($this->availableItems as $item){
-            if($item->itemID == $itemID){
-                return $item;
-            }
-        }
-
-        return false;
+        return $this->findItem($itemID, true);
     }
 
-    public function findItemByUniqID($uniqID){
-        foreach($this->items as $item){
+    public function findItemByUniqID($uniqID, $onlyAvailable = false){
+        $items = $onlyAvailable ? $this->availableItems : $this->items;
+
+        foreach($items as $item){
             if($item->ID == $uniqID){
                 return $item;
             }
@@ -124,7 +122,7 @@ class History extends \common\models\History
             return false;
         }
 
-        return sizeof($this->customer->orders) > 1;
+        return sizeof($this->customer->orders) <= 1;
     }
 
     public function getPayOnCard(){

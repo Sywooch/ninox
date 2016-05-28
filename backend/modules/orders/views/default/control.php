@@ -26,13 +26,13 @@ var setCount = function(data){
     $(".goodsCount")[0].innerHTML = data.goods;
 
     if(data.items == 0){
-        $(".print-invoice-btn").removeClass('btn-success');
-        $(".print-invoice-btn").removeClass('btn-danger');
-        $(".print-invoice-btn").toggleClass('btn-success');
+        $(".print-invoice-btn").removeClass('btn-success')
+            .removeClass('btn-danger')
+            .toggleClass('btn-success');
     }else{
-        $(".print-invoice-btn").removeClass('btn-success');
-        $(".print-invoice-btn").removeClass('btn-danger');
-        $(".print-invoice-btn").toggleClass('btn-danger');
+        $(".print-invoice-btn").removeClass('btn-success')
+            .removeClass('btn-danger')
+            .toggleClass('btn-danger');
     }
 
 }, controlItem = function(identifier){

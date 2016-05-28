@@ -860,10 +860,10 @@ class DefaultController extends Controller
                     }
 
                     $item = $order->findItemByUniqID(\Yii::$app->request->post("itemID"));
-                    $item->notFounded = $item->notFounded == 1 ? 0 : 1;
+                    $item->nalichie = $item->nalichie == 1 ? 0 : 1;
                     $item->save(false);
 
-                    return $item->notFounded == 1 ? 1 : 0;
+                    return $item->nalichie == 1 ? 1 : 0;
                     break;
                 case 'saveItemsCount';
                     foreach(\Yii::$app->request->post("fields") as $item){
