@@ -81,8 +81,10 @@ class History extends \common\models\History
         return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
     }
 
-    public function findItem($itemID){
-        foreach($this->items as $item){
+    public function findItem($itemID, $onlyAvailable = false){
+        $items = $onlyAvailable ? $this->availableItems : $this->items;
+
+        foreach($items as $item){
             if($item->itemID == $itemID){
                 return $item;
             }
@@ -91,8 +93,14 @@ class History extends \common\models\History
         return false;
     }
 
-    public function findItemByUniqID($uniqID){
-        foreach($this->items as $item){
+    public function findAvailableItem($itemID){
+        return $this->findItem($itemID, true);
+    }
+
+    public function findItemByUniqID($uniqID, $onlyAvailable = false){
+        $items = $onlyAvailable ? $this->availableItems : $this->items;
+
+        foreach($items as $item){
             if($item->ID == $uniqID){
                 return $item;
             }
@@ -114,7 +122,7 @@ class History extends \common\models\History
             return false;
         }
 
-        return sizeof($this->customer->orders) > 1;
+        return sizeof($this->customer->orders) <= 1;
     }
 
     public function getPayOnCard(){
@@ -509,7 +517,7 @@ class History extends \common\models\History
     public function getNotControlledGoods(){
         $items = [];
 
-        foreach($this->items as $item){
+        foreach($this->availableItems as $item){
             if(!$item->controlled){
                 $items[] = $item;
             }
@@ -535,7 +543,7 @@ class History extends \common\models\History
     public function getControlledGoods(){
         $items = [];
 
-        foreach($this->items as $item){
+        foreach($this->availableItems as $item){
             if($item->controlled){
                 $items[] = $item;
             }
@@ -554,7 +562,7 @@ class History extends \common\models\History
     }
 
     public function controlItem($itemID, $count = 1){
-        $item = $this->findItem($itemID);
+        $item = $this->findAvailableItem($itemID);
 
         if(!$item){
             throw new NotFoundHttpException("Товар с ID {$itemID} не найден в заказе #{$this->number} (ID {$this->ID})");

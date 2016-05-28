@@ -26,13 +26,13 @@ var setCount = function(data){
     $(".goodsCount")[0].innerHTML = data.goods;
 
     if(data.items == 0){
-        $(".print-invoice-btn").removeClass('btn-success');
-        $(".print-invoice-btn").removeClass('btn-danger');
-        $(".print-invoice-btn").toggleClass('btn-success');
+        $(".print-invoice-btn").removeClass('btn-success')
+            .removeClass('btn-danger')
+            .toggleClass('btn-success');
     }else{
-        $(".print-invoice-btn").removeClass('btn-success');
-        $(".print-invoice-btn").removeClass('btn-danger');
-        $(".print-invoice-btn").toggleClass('btn-danger');
+        $(".print-invoice-btn").removeClass('btn-success')
+            .removeClass('btn-danger')
+            .toggleClass('btn-danger');
     }
 
 }, controlItem = function(identifier){
@@ -201,7 +201,7 @@ echo Html::tag('h1', $this->title, ['class' => 'page-title', 'data-attribute-ord
             ]
         ],
         'dataProvider'  =>  new \yii\data\ArrayDataProvider([
-            'models'    =>  $order->items
+            'models'    =>  $order->availableItems
         ])
 ]).
     Html::tag('div', Html::tag('div',

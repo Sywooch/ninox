@@ -53,6 +53,42 @@ class Category extends \yii\db\ActiveRecord
     private $goodsCount = null;
     private $goodsCountSubcategories = null;
 
+    public function getTitleasc(){
+        return $this->translation->titleOrderAscending;
+    }
+
+    public function getTitledesc(){
+        return $this->translation->titleOrderDescending;
+    }
+
+    public function getTitlenew(){
+        return $this->translation->titleOrderNew;
+    }
+
+    public function getH1(){
+        return $this->translation->header;
+    }
+
+    public function getH1new(){
+        return $this->translation->headerOrderNew;
+    }
+
+    public function getH1desc(){
+        return $this->translation->headerOrderDescending;
+    }
+
+    public function getH1asc(){
+        return $this->translation->headerOrderAscending;
+    }
+
+    public function getDescr(){
+        return $this->translation->metaDescription;
+    }
+
+    public function getText2(){
+        return $this->translation->categoryDescription;
+    }
+
     public function getParents(){
         if(!empty($this->parents)){
             return $this->parents;
