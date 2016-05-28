@@ -206,7 +206,7 @@ class PriceRuleHelper extends Component{
 		foreach($terms as $term){
 			if($termsCount == $discount){
 				$termsCount++;
-				date_default_timezone_set('Europe/Kiev');
+				//\Yii::$app->setTimeZone('Europe/Kiev'); TODO: надо только, если будут использоваться другие часовые пояса
 				$now = new DateTime(date('Y-m-d'));
 				foreach($term as $date){
 					$dt = new DateTime($date['term']);
