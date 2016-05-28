@@ -17,16 +17,16 @@ $(".goToPage").on(hasTouch ? 'touchend' : 'click', function(e){
     $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-deliverycity');
     $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-deliveryregion');
     $('#orderForm').yiiActiveForm('validateAttribute', 'orderform-customeremail');
+    setTimeout(nextStep, 200);
 });
 
-$('#orderForm').on('afterValidateAttribute', function(e, attr){
-    if(attr.id == 'orderform-customeremail'){
-        if(page == 1 && $('#orderForm .content-data-body-first').find('.has-error').length > 0){
-            return false;
-        }
-        $('#accordion').accordion('option', 'active', page);
+function nextStep(){
+    if(page == 1 && $('#orderForm .content-data-body-first').find('.form-group.has-error').length > 0){
+        return false;
     }
-});
+    $('#accordion').accordion('option', 'active', page);
+    $('.ordering-body-order-confirm-button').removeClass('invisible');
+}
 
 $('#orderForm').on('beforeSubmit', function(){
     $('.load').append('<img src="img/site/jquery-preloader.gif" alt=Загрузка..." id="loading">');
@@ -102,7 +102,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
     'enableAjaxValidation' => false,
 ]);
 ?>
-<div class="content">
+<div class="content clear-fix">
     <div id="modal_form"><!-- Сaмo oкнo -->
         <span id="modal_close">
             <a>
@@ -228,7 +228,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         <div class="ordering-body-order-confirm">
                             <?=\Yii::t('shop', 'Стоимость доставки согласно <a>тарифам Новой почты</a>')?>
                         </div>
-                        <div class="ordering-body-order-confirm-button">
+                        <div class="ordering-body-order-confirm-button invisible">
                             <?php
                                 echo Html::submitButton('Оформить заказ', [
                                     'class' =>  'button yellow-button large-button'

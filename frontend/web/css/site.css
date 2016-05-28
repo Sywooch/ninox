@@ -1733,7 +1733,7 @@ footer{
 	font-size: 14px;
 }
 
-.content-data .control-label{
+.content-data-body-first .control-label, .tab-content .control-label{
 	float: left;
 	line-height: 34px;
 	width: 100px;

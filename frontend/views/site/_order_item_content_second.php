@@ -285,4 +285,4 @@ $form->field($model, 'paymentType')->radioList($domainConfiguration['paymentType
 		    ])->label(false);
     }
 ])->label(false),
-Html::tag('div', \Yii::t('shop', 'Добавить коментарий к заказу'), ['class' => 'add-comment']);
+$form->field($model, 'customerComment')->textarea();
