@@ -195,11 +195,19 @@ class HistorySearch extends History{
             $query->andWhere(['responsibleUserID' => $params['responsibleUser']]);
         }
 
-        if(array_key_exists('actualAmountStatus', $params)){
+        if(array_key_exists('actualAmountStatus', $params) && $params['actualAmountStatus'] != ''){
             if($params['actualAmountStatus'] == 1){
                 $query->andWhere('`actualAmount` > \'0\'');
             }elseif($params['actualAmountStatus'] == 0){
                 $query->andWhere('`actualAmount` < \'1\'');
+            }
+        }
+
+        if(array_key_exists('nakladnaStatus', $params) && $params['nakladnaStatus'] != ''){
+            if($params['nakladnaStatus'] == 1){
+                $query->andWhere('`nakladna` != \'\' AND `nakladna` != \'-\'');
+            }elseif($params['nakladnaStatus'] == 0){
+                $query->andWhere('`nakladna` = \'\' OR `nakladna` = \'-\' OR `nakladna` IS NULL');
             }
         }
 
@@ -220,8 +228,12 @@ class HistorySearch extends History{
         }
 
         $this->addCondition($query, 'deliveryCity', true);
-        $this->addCondition($query, 'nakladna', true);
-        $this->addCondition($query, 'actualAmount');
+        if(!array_key_exists('nakladnaStatus', $params)){
+            $this->addCondition($query, 'nakladna', true);
+        }
+        if(!array_key_exists('actualAmountStatus', $params)){
+            $this->addCondition($query, 'actualAmount');
+        }
         $this->addCondition($query, 'status');
 
         return $onlyQuery ? $query : $dataProvider;
@@ -230,7 +242,7 @@ class HistorySearch extends History{
     public function rules()
     {
         return [
-            [['actualAmountStatus', 'nakladnaStatus', 'status', 'id', 'number', 'customerPhone', 'customerSurname', 'customerEmail', 'deliveryCity', 'nakladna', 'actualAmount', 'responsibleUserID', 'moneyConfirmed', 'paymentType'], 'safe']
+            [['showDeleted', 'actualAmountStatus', 'nakladnaStatus', 'status', 'id', 'number', 'customerPhone', 'customerSurname', 'customerEmail', 'deliveryCity', 'nakladna', 'actualAmount', 'responsibleUserID', 'moneyConfirmed', 'paymentType'], 'safe']
         ];
     }
 

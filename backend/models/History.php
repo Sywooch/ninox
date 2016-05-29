@@ -20,6 +20,9 @@ use yii\web\NotFoundHttpException;
  * @property SborkaItem[] $availableItems
  * @property SborkaItem[] $missedItems
  * @property boolean $isWholesale
+ * @property SborkaItem[] notControlledGoods
+ * @property string $confirmDate
+ * @property string $statusChangedDate
  */
 class History extends \common\models\History
 {
@@ -394,7 +397,7 @@ class History extends \common\models\History
 
         return false;
     }
-    
+
     public function clearControl(){
         foreach($this->items as $item) {
             $item->realyCount = 0;
