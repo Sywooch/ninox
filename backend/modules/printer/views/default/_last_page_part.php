@@ -7,6 +7,12 @@ $paymentSum = empty($order->actualAmount) ? $order->realSum : $order->actualAmou
 
 $barcodeID = \Yii::$app->security->generateRandomString(8);
 
+$responsibleUser = $order->responsibleUser;
+
+if(empty($responsibleUser)){
+    $responsibleUser = new \common\models\Siteuser();
+}
+
 switch($order->deliveryType){
     case 1:
         $delivery = Html::tag('span', 'Адресная доставка', ['class' => 'bold smalltext', 'style' => 'display: block']).
@@ -109,7 +115,7 @@ echo Html::tag('table',
                 Html::tag('tr',
                     Html::tag('td',
                         Html::tag('span', 'Менеджер: ', ['class' => 'displayblock smalltext']).
-                        Html::tag('span', $order->responsibleUser->name, ['class' => 'displayblock smalltext'])
+                        Html::tag('span', $responsibleUser->name, ['class' => 'displayblock smalltext'])
                     ).
                     Html::tag('td',
                         Html::tag('span', 'Дата поступления: '.\Yii::$app->formatter->asDatetime($order->added, 'php:d.m.Y H:i'), ['class' => 'displayblock smalltext']).
