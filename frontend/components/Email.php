@@ -9,9 +9,12 @@
 namespace frontend\components;
 
 
+use frontend\models\Customer;
 use frontend\models\History;
 
 class Email extends \common\components\Email{
+
+    const PASSWORD_RESET_MESSAGE = '445326';
 
     private $defaultSubscribeGroup = '340381';
 
@@ -72,6 +75,36 @@ class Email extends \common\components\Email{
         //$order->statusDescriptsion = "test";  // Дополнительное описание статуса заказа.*/
     }
 
+    /**
+     * @param Customer $customer
+     * @return int|string
+     */
+    public function resetPasswordEmail($customer){
+        $passwordEmail = new \stdClass();
+
+        $passwordEmail->params = [
+            [
+                'key'   =>  'FIRSTNAME',
+                'value' =>  $customer->name,
+            ],
+            [
+                'key'   =>  'LASTNAME',
+                'value' =>  $customer->surname,
+            ],
+            [
+                'key'   =>  'token',
+                'value' =>  $customer->password_reset_token
+            ],
+        ];
+
+        $passwordEmail->recipients = [$customer->email];
+
+        return $this->send([
+            'action'    =>  'message/'.self::PASSWORD_RESET_MESSAGE.'/send',
+            'data'      =>  $passwordEmail
+        ]);
+    }
+    
     /**
      * Подписывает клиента на нас :)
      *

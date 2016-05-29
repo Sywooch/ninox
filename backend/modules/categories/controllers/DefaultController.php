@@ -13,6 +13,7 @@ use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
+use yii\widgets\Pjax;
 
 /**
  * Default controller for the `categories` module
@@ -22,6 +23,7 @@ class DefaultController extends Controller
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\base\InvalidParamException
      */
     public function actionIndex(){
         $breadcrumbs = $goodsCount = [];
@@ -46,6 +48,36 @@ class DefaultController extends Controller
             'goodsCount'    =>  $this->getGoodsCount($category),
             'nowCategory'   =>  $category
         ]);
+    }
+
+    public function actionManipulate(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException('Данный метод доступен только через ajax!');
+        }
+
+        $categoryID = \Yii::$app->request->post('category');
+
+        $category = Category::findOne($categoryID);
+
+        if(!$category){
+            throw new NotFoundHttpException("Категория с идентификатором {$categoryID} не найдена!");
+        }
+
+        $attribute = \Yii::$app->request->post('attribute');
+
+        $value = \Yii::$app->request->post('value');
+
+        if(empty($value)){
+            $value = $category->$attribute == 1 ? 0 : 1;
+        }
+
+        $category->$attribute = $value;
+
+        if(!$category->save(false)){
+            return false;
+        }
+
+        return $category->$attribute;
     }
 
     /**

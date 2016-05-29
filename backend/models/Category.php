@@ -59,10 +59,10 @@ class Category extends \common\models\Category
             foreach($prices as $price){
                 switch($type){
                     case 1:
-                        $good->$price = $good->$price + $size;
+                        $good->$price += $size;
                         break;
                     case 2:
-                        $good->$price = $good->$price + ($good->$price / 100 * $size);
+                        $good->$price += $good->$price / 100 * $size;
                         break;
                 }
             }

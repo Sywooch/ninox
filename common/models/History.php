@@ -145,8 +145,8 @@ class History extends ActiveRecord
         return $status;
     }
 
-    public function getStatusDescription(){
-        $statuses = [
+    public function getStatuses(){
+        return [
             'Не прозвонен',
             'В обработке',
             'Не оплачен',
@@ -154,6 +154,10 @@ class History extends ActiveRecord
             'Отправлен',
             'Выполнен'
         ];
+    }
+
+    public function getStatusDescription(){
+        $statuses = $this->statuses;
 
         if(!array_key_exists($this->status, $statuses)){
             return '';
