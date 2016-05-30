@@ -510,6 +510,10 @@ class Category extends \yii\db\ActiveRecord
             $this->viewOptions = Json::encode($this->viewOptions);
         }
 
+        if(empty($this->cat_img)){
+            $this->cat_img = '';
+        }
+
         $this->viewFile = empty($this->viewFile) ? 'category' : $this->viewFile;
 
         return parent::beforeSave($insert);
