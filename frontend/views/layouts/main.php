@@ -15,6 +15,7 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\popover\PopoverX;
 use yii\web\View;
+use yii\widgets\Pjax;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
 $this->registerMetaTag(['name' => 'MobileOptimized', 'content' => '1240']);
@@ -37,6 +38,18 @@ $cartModal = new \bobroid\remodal\Remodal([
 	'events'			=>	[
 		'opening'	    =>	new \yii\web\JsExpression("getCart()")
 	]
+]);
+
+$callbackSuccessModal = new \bobroid\remodal\Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	false,
+    'addRandomToID'		=>	false,
+    'content'			=>	$this->render('_callback_success'),
+    'id'				=>	'callbackSuccessModal',
+    'options'			=>  [
+        'class'			=>  'callback-success--modal'
+    ]
 ]);
 
 $loginModal = new \bobroid\remodal\Remodal([
@@ -515,6 +528,7 @@ $this->beginPage();
 					[
 						'class'	=>	'hours'
 					]),
+  /*                  Pjax::begin(['id' => 'callback']),*/
 				Remodal::widget([
 					'cancelButton'		=>	false,
 					'confirmButton'		=>	false,
@@ -529,8 +543,9 @@ $this->beginPage();
 						'class'			=>  'callback-modal'
 					]
 
-				])
-				?>
+				]);
+               /*  Pjax::end()*/
+                ?>
 			</div>
 		</div>
 		<?=Html::tag('div',
@@ -629,7 +644,8 @@ $this->beginPage();
 		)?>
 	</div>
 	<?=$cartModal->renderModal(),
-	$loginModal->renderModal(),
+    $callbackSuccessModal->renderModal(),
+    $loginModal->renderModal(),
 	$registrationModal->renderModal();
 
 	RuLangAsset::register($this);

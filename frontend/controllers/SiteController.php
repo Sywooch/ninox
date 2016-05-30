@@ -894,6 +894,11 @@ class SiteController extends Controller
     public function saveCallbackForm(){
         $model = new CallbackForm();
 
+  /*      if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            $model = new CallbackForm();
+        }*/
+
         $model->load(\Yii::$app->request->post());
 
         if(!$model->save()){

@@ -36,6 +36,10 @@ $cartModal = new \bobroid\remodal\Remodal([
 		        'query' =>  \Yii::$app->cart->goodsQuery()
 	        ])
     ]),
+    'options'           =>  [
+        'id'            =>  'modal-cart',
+        'class'         =>  \Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'wholesale' : 'retail') : 'empty'
+    ],
     'id'	=>	'modalCart',
     'addRandomToID'		=>	false,
     'events'			=>	[

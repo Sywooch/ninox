@@ -238,7 +238,8 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         <div class="terms-of-use">
                             <?=\Yii::t('shop', 'Подтверждая заказ, я принимаю условия').' '.Html::a(\Yii::t('shop', 'пользовательского соглашения'))?>
                         </div>
-                            <div class="edit-order"><a href="#modalCart"><?=\Yii::t('shop', 'Редактировать заказ')?></a></div>
+                            <div class="edit-order"><!--<a href="">--><?=Html::a(\Yii::t('shop', 'Редактировать
+                            заказ'), '#modalCart')?></a></div>
                             <div class="promotional-code">
                                 <?=$form->field($model, 'promoCode')->widget(\kartik\editable\Editable::className(), [
                                     'valueIfNull'   =>  \Yii::t('shop', 'Ввести промокод')
