@@ -628,13 +628,12 @@ class DefaultController extends Controller
 
         $order = \Yii::$app->request->post("OrderID");
 
+
         return $this->renderAjax('_changes_modal', [
             'order'         =>  $order,
             'dataProvider'  =>  new ActiveDataProvider([
                 'query'     =>  AuditTrail::find()
-                                    ->where(['model'  =>  History::className(), 'model_id'    =>  $order])
-                                    ->orderBy('id desc')
-                                    ->orWhere(['and', ['model' => SborkaItem::className()], ['in', 'model_id', SborkaItem::find()->select('id')->where(['orderID' => $order])]]),
+                                    ->where(['like', 'model', '%History', false]),
                 'pagination'    =>  [
                     'pageSize'  =>  '20'
                 ]

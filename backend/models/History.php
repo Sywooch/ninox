@@ -572,19 +572,15 @@ class History extends \common\models\History
     }
 
     public function behaviors(){
-        if(!$this->isNewRecord){
-            return [
-                'LoggableBehavior' => [
-                    'class' => 'sammaye\audittrail\LoggableBehavior',
-                    'ignored' => [
-                        'Name2',
-                        'added'
-                    ],
-                ]
-            ];
-        }else{
-            return [];
-        }
+        return [
+            'LoggableBehavior' => [
+                'class' => 'sammaye\audittrail\LoggableBehavior',
+                'ignored' => [
+                    'Name2',
+                    'added'
+                ],
+            ]
+        ];
     }
 
     public static function ordersQuery(array $options = []){
