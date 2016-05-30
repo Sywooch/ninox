@@ -96,8 +96,8 @@ class OrderCustomerForm extends Model
         $this->order->setAttributes([
             'customerName'      =>  $this->name,
             'customerSurname'   =>  $this->surname,
-            'phone'             =>  $this->phone,
-            'email'             =>  $this->email,
+            'customerPhone'     =>  $this->phone,
+            'customerEmail'     =>  $this->email,
             'paymentType'       =>  $this->paymentType,
             'paymentParam'      =>  $this->paymentParam,
             'coupon'            =>  $this->coupon,
