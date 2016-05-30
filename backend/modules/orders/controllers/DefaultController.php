@@ -634,7 +634,8 @@ class DefaultController extends Controller
             'order'         =>  $order,
             'dataProvider'  =>  new ActiveDataProvider([
                 'query'     =>  AuditTrail::find()
-                                    ->where(['like', 'model', '%History', false]),
+                                    ->where(['like', 'model', '%History', false])
+                                    ->orWhere(['and', ['like', 'model', '%SborkaItem', false], ['in', 'model_id', SborkaItem::find()->select('ID')->where(['orderID' => $order])]]),
                 'pagination'    =>  [
                     'pageSize'  =>  '20'
                 ]

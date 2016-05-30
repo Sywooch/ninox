@@ -10,6 +10,7 @@ echo GridView::widget([
     'columns'       =>  [
         [
             'attribute' =>  'model',
+            'format'    =>  'html',
             'value'     =>  function($model){
                 switch($model->model){
                     case 'backend\models\History':
