@@ -61,9 +61,8 @@ class Good extends \common\models\Good{
             ->all();
     }
 
-    public function getRealRetailPrice()
-    {
-        return $this->priceRuleID == 0 && $this->discountType > 0 ? parent::getRealWholesalePrice() : parent::getRealRetailPrice();
+    public function getRealRetailPrice(){
+        return $this->priceRuleID == 0 && $this->discountType > 0 && $this->customerRule == 0 ? parent::getRealWholesalePrice() : parent::getRealRetailPrice();
     }
 
     public function afterFind(){
