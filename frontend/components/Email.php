@@ -11,6 +11,8 @@ namespace frontend\components;
 
 use frontend\models\Customer;
 use frontend\models\History;
+use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 class Email extends \common\components\Email{
 
@@ -92,8 +94,11 @@ class Email extends \common\components\Email{
                 'value' =>  $customer->surname,
             ],
             [
-                'key'   =>  'token',
-                'value' =>  $customer->password_reset_token
+                'key'   =>  'LINK',
+                'value' =>  Html::a('ссылке.', \Yii::$app->urlManager->createAbsoluteUrl(['site/reset-password', 'token' => $customer->password_reset_token]), [
+                    'style'     =>  'color: #02A7D4; font-size: 14px; font-weight: bold',
+                    'target'    =>  '_blank'
+                ])
             ],
         ];
 

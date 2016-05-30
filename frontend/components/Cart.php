@@ -206,6 +206,12 @@ class Cart extends Component{
         return $this->items[$itemID];
     }
 
+
+	/**
+	 * @param int $barrier
+	 * @return bool
+	 * @deprecated
+	 */
     public function isWholesale($barrier = 800){
         return $this->cartWholesaleSumm >= $barrier;
     }

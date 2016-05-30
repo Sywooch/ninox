@@ -124,14 +124,6 @@ class Good extends ActiveRecord
         $this->_realTranslation = $val;
     }
 
-    public function getWholesalePrice(){
-        return $this->PriceOut1;
-    }
-
-    public function getRetailPrice(){
-        return $this->PriceOut2;
-    }
-
     public function getTranslationByKeyReal($key){
         foreach($this->translations as $translation){
             if($translation->language == $key){
@@ -170,6 +162,22 @@ class Good extends ActiveRecord
         }
 
         return $currentLangModel;
+    }
+
+    /**
+     * @return float
+     * @deprecated Use getRealWholesalePrice() instead
+     */
+    public function getWholesalePrice(){
+        return $this->PriceOut1;
+    }
+
+    /**
+     * @return float
+     * @deprecated Use getRealRetailPrice() instead
+     */
+    public function getRetailPrice(){
+        return $this->PriceOut2;
     }
 
     /**
