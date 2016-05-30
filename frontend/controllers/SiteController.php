@@ -819,6 +819,7 @@ class SiteController extends Controller
      * Requests password reset.
      *
      * @return mixed
+     * @throws \yii\base\InvalidParamException
      */
     public function actionRequestPasswordReset()
     {
@@ -843,6 +844,7 @@ class SiteController extends Controller
      *
      * @param string $token
      * @return mixed
+     * @throws \yii\base\InvalidParamException
      * @throws BadRequestHttpException
      */
     public function actionResetPassword($token)
