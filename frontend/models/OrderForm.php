@@ -283,14 +283,14 @@ class OrderForm extends Model{
 
             $orderSuperRealPrice = 0;
 
-
             foreach(\Yii::$app->cart->goods as $good){
                 if(!empty($customer->cardNumber) && $good->discountSize == 0){
                     $good->setAttributes([
                         'discountSize'  =>  2,
                         'discountType'  =>  2,
-                        'customerRule'  =>  '-1'
-                    ]);
+                    ], false);
+
+                    $good->customerRule = -1;
                 }
 
                 $orderItem = new SborkaItem([
@@ -298,7 +298,7 @@ class OrderForm extends Model{
                     'itemID'        =>  $good->ID,
                     'name'          =>  $good->Name,
                     'count'         =>  \Yii::$app->cart->has($good->ID),
-                    'originalPrice' =>  \Yii::$app->cart->isWholesale() ? $good->realWholesalePrice : $good->realRetailPrice,
+                    'originalPrice' =>  \Yii::$app->cart->wholesale ? $good->realWholesalePrice : $good->realRetailPrice,
                     'discountSize'  =>  $good->discountSize,
                     'discountType'  =>  $good->discountType,
                     'priceRuleID'   =>  $good->priceRuleID,

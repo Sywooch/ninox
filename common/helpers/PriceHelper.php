@@ -24,10 +24,6 @@ trait PriceHelper
         return $this->calcPrice($this->realRetailPrice);
     }
 
-    final public function getPrice(){
-        return $this->calcPrice($this->originalPrice);
-    }
-
     protected function calcPrice($price){
         switch($this->discountType){
             case $this->_discountTypePercent:
