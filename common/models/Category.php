@@ -514,6 +514,10 @@ class Category extends \yii\db\ActiveRecord
             $this->cat_img = '';
         }
 
+        if(empty($this->yandexName)){
+            $this->yandexName = '';
+        }
+
         $this->viewFile = empty($this->viewFile) ? 'category' : $this->viewFile;
 
         return parent::beforeSave($insert);
