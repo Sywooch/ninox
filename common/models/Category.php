@@ -144,7 +144,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function getTitleasc(){
-        return $this->titleOrderAscending;
+        return $this->translation->titleOrderAscending;
     }
 
     public function getTitledesc(){
@@ -183,12 +183,24 @@ class Category extends \yii\db\ActiveRecord
         return $this->translation->Name;
     }
 
+    public function setName($val){
+        return $this->translation->Name = $val;
+    }
+
     public function getLink(){
         return $this->translation->link;
     }
 
+    public function setLink($value){
+        $this->translation->link = $value;
+    }
+
     public function getTitle(){
         return $this->translation->title;
+    }
+
+    public function setTitle($value){
+        $this->translation->title = $value;
     }
 
     public function getTitleOrderAscending(){
@@ -220,7 +232,19 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function getDescription(){
-        return $this->translation->categoryDescription;
+        return htmlspecialchars_decode($this->translation->categoryDescription);
+    }
+
+    public function setDescription($value){
+        $this->translation->categoryDescription = htmlspecialchars($value);
+    }
+
+    public function getMetaDescription(){
+        return htmlspecialchars_decode($this->translation->metaDescription);
+    }
+
+    public function setMetaDescription($value){
+        $this->translation->metaDescription = htmlspecialchars($value);
     }
 
     public function getEnabled(){
@@ -237,6 +261,14 @@ class Category extends \yii\db\ActiveRecord
 
     public function getPhoneNumber(){
         return empty($this->translation->phoneNumber) ? \Yii::$app->params['categoryPhoneNumber'] : $this->translation->phoneNumber;
+    }
+
+    public function getKeywords(){
+        return $this->translation->metaKeywords;
+    }
+
+    public function setKeywords($val){
+        $this->translation->metaKeywords = $val;
     }
 
     /**
@@ -475,7 +507,6 @@ class Category extends \yii\db\ActiveRecord
 
     public function beforeSave($insert){
         if(is_array($this->viewOptions)){
-            \Yii::trace($this->viewOptions);
             $this->viewOptions = Json::encode($this->viewOptions);
         }
 
