@@ -6,6 +6,7 @@ use backend\controllers\SiteController as Controller;
 use backend\models\Category;
 use backend\models\Good;
 use backend\models\CategorySearch;
+use backend\modules\categories\models\CategoryForm;
 use common\models\CategoryTranslation;
 use common\models\CategoryUk;
 use common\models\GoodTranslation;
@@ -119,6 +120,7 @@ class DefaultController extends Controller
      * @param $param int - ID категории
      *
      * @return mixed|string
+     * @throws \yii\base\InvalidParamException
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionView($param){
@@ -127,15 +129,30 @@ class DefaultController extends Controller
         if(!$category){
             throw new NotFoundHttpException("Категория с идентификатором {$param} не найдена!");
         }
-
+        
+        $request = \Yii::$app->request;
+        
         $this->getView()->params['breadcrumbs'] = $this->createBreadcrumbs($category, false);
 
-        if(\Yii::$app->request->get('act') == 'edit'){
+        $categoryForm = new CategoryForm();
+
+        if($request->get('act') == 'edit'){
+            $categoryForm->loadCategory($category);
+
+            if($request->post('CategoryForm')){
+                $categoryForm->load($request->post());
+
+                if($categoryForm->save()){
+                    $category = $categoryForm->category;
+                }
+            }
+        }
+
+        if($request->get('act') == 'edit'){
             $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Редактирование');
 
-            if(\Yii::$app->request->post("Category")){
-                $r = \Yii::$app->request;
-                $c = Category::findOne(['ID' => $param]);
+            if($request->post('Category')){
+                $category = Category::findOne(['ID' => $param]);
 
                 if(isset($r->post("Category")['keywords'])){
                     $r->post("Category")['keywords'] = implode(", ", $r->post("Category")['keywords']);
@@ -159,8 +176,9 @@ class DefaultController extends Controller
             $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Просмотр');
         }
 
-        return $this->render(\Yii::$app->request->get("act") == "edit" ? 'edit' : 'view', [
+        return $this->render(\Yii::$app->request->get('act') == 'edit' ? 'edit' : 'view', [
             'category'      =>  $category,
+            'categoryForm'  =>  $categoryForm,
             'subCats'       =>  $category->subCategories,
             'parentCategory'=>  Category::getParentCategory($category->Code),
             'categoryUk'    =>  CategoryUk::findOne(['ID' => $category->ID])
@@ -193,6 +211,18 @@ class DefaultController extends Controller
                 if(!empty($b)){
                     $breadcrumbs[] = $b->Name;
                 }
+            }
+        }
+
+        $request = \Yii::$app->request;
+
+        $categoryForm = new CategoryForm();
+
+        if($request->post('CategoryForm')){
+            $categoryForm->load($request->post());
+
+            if($categoryForm->save() && empty($request->get('multiply'))){
+                $this->redirect(Url::to('/categories/view/'.$categoryForm->category->ID));
             }
         }
 
@@ -237,6 +267,7 @@ class DefaultController extends Controller
 
         return $this->render('edit', [
             'category'      =>  $c,
+            'categoryForm'  =>  $categoryForm,
             'breadcrumbs'   =>  [],
             'parentCategory'=>  $ct == '' ? new Category : Category::findOne(['ID' => $ct]),
             'categoryUk'    =>  $cUk

@@ -25,9 +25,20 @@ dl dt{
 }
 STYLE;
 
+$keywords = [];
+
+if(isset($category->keyword) && strlen($category->keyword) >= 1){
+    $a = explode(', ', strip_tags($category->keyword));
+    if(sizeof($a) >= 1 && $a['0'] != ""){
+        foreach($a as $aa){
+            $keywords[] = '<span class="label label-success">'.$aa.'</span>';
+        }
+    }
+}
+
 $this->registerCss($css);
 ?>
-<h1><?=$category->Name?>&nbsp;<small>Категория</small></h1>
+<h1><?=$category->name?>&nbsp;<small>Категория</small></h1>
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="btn-group pull-left">
@@ -37,7 +48,7 @@ $this->registerCss($css);
             <?=\yii\helpers\Html::a('<i class="glyphicon glyphicon-th-large"></i> Товары категории', \yii\helpers\Url::toRoute(['/categories', 'category' => $category->Code, 'onlyGoods' => true]), ['class' => 'btn btn-default'])?>
             <?=\backend\widgets\ChangesWidget::widget([
                 'model'         =>  $category,
-                'header'        =>  'Изменения по категории '.$category->Name
+                'header'        =>  'Изменения по категории '.$category->name
             ])?>
         </div>
         <div class="btn-group pull-right" role="group" aria-label="...">
@@ -68,7 +79,7 @@ $this->registerCss($css);
                         </div>
                         <div class="panel-body">
                             <?php foreach($subCats as $sc){ ?>
-                            <a class="list-group-item <?=$sc->enabled == "1" ? "list-group-item-success" : "list-group-item-danger"?>" href="/category/view/<?=$sc->ID?>"><?=$sc->Name?></a>
+                            <a class="list-group-item <?=$sc->enabled == "1" ? "list-group-item-success" : "list-group-item-danger"?>" href="/category/view/<?=$sc->ID?>"><?=$sc->name?></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -81,30 +92,75 @@ $this->registerCss($css);
             <?php
             } ?>
                 <div class="table-responsive">
-                    <?=\kartik\tabs\TabsX::widget([
-                            'items' => [
-                                [
-                                    'label' =>  'Русский язык',
-                                    'content'   =>  $this->render('_view_catinfo', [
-                                        'category'  =>  $category
-                                    ])
-                                ],
-                                [
-                                    'label' =>  'Українська мова',
-                                    'content'   =>  $this->render('_view_catinfo', [
-                                        'category'  =>  $categoryUk
-                                    ])
-                                ]
-                            ]
-                        ]);
-                    ?>
+                    <table class="table table-responsive good-table">
+                        <tbody>
+                        <tr>
+                            <td>Название</td>
+                            <td><?=$category->name?></td>
+                        </tr>
+                        <tr>
+                            <td><abbr title="Title категории">Тег "title"</abbr></td>
+                            <td><?=$category->title?></td>
+                        </tr>
+                        <tr>
+                            <td><abbr title="SEO для title">SEO для тега "title"</abbr></td>
+                            <td>
+                                <dl>
+                                    <dt>"Дёшево":</dt>
+                                    <dd><?=$category->titleasc == "" ? "-" : $category->titleasc?></dd>
+                                    <dt>"Дорого":</dt>
+                                    <dd><?=$category->titledesc == "" ? "-" : $category->titledesc?></dd>
+                                    <dt>"Новинки":</dt>
+                                    <dd><?=$category->titlenew == "" ? "-" : $category->titlenew?></dd>
+                                </dl>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><abbr title="H1 категории">Тег "H1"</abbr></td>
+                            <td><?=$category->h1?></td>
+                        </tr>
+                        <tr>
+                            <td><abbr title="SEO для H1">SEO для тега "H1"</abbr></td>
+                            <td>
+                                <dl>
+                                    <dt>"Дёшево":</dt>
+                                    <dd><?=$category->h1asc == "" ? "-" : $category->h1asc?></dd>
+                                    <dt>"Дорого":</dt>
+                                    <dd><?=$category->h1desc == "" ? "-" : $category->h1desc?></dd>
+                                    <dt>"Новинки":</dt>
+                                    <dd><?=$category->h1new == "" ? "-" : $category->h1new?></dd>
+                                </dl>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Описание</td>
+                            <td>
+                                <div style="max-height: 280px; overflow-y: auto;">
+                                    <?=\yii\helpers\Html::decode($category->descr)?>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Текст</td>
+                            <td>
+                                <div style="max-height: 280px; overflow-y: auto;">
+                                    <?=\yii\helpers\Html::decode($category->text2)?>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ключевые слова</td>
+                            <td><?php if(sizeof($keywords) >= 1){ echo implode(' ', $keywords); } ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <table class="table table-responsive good-table">
                         <tbody>
                             <?php if(!empty($parentCategory)){
                             ?>
                             <tr>
                                 <td>Категория-родитель</td>
-                                <td><a href="/categories/view/<?=$parentCategory->ID?>"><?=$parentCategory->Name?></a></td>
+                                <td><a href="/categories/view/<?=$parentCategory->ID?>"><?=$parentCategory->name?></a></td>
                             </tr>
                             <?php
                             }
