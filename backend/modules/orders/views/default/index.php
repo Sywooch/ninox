@@ -3,6 +3,7 @@ use backend\modules\orders\widgets\OrdersSearchWidget;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\jui\Accordion;
 
 $js = <<<'JS'
 $("body").on('click', '.sms-buttons button', function(){
@@ -225,6 +226,12 @@ $("body").on('click', "button.sms-order", function(){
     sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card', $(this));
 }).on('click', 'button.informPayment', function(){
     
+}).on('submit', '#extendedSearch', function(e){
+    e.preventDefault();
+    $("#searchResults").tab('show');
+    $("#searchResults").css('display', 'block');
+    url = '/orders/showlist?ordersSource=search&context=true&' + $(this).serialize();
+    $.pjax({url: url, container: '#ordersGridView_search-pjax', push: false, replace: false, timeout: 10000,scrollTo: true});
 });
 JS;
 $css = <<<'CSS'
@@ -590,6 +597,21 @@ echo Html::tag('div', OrdersSearchWidget::widget([
     'style' =>  'margin: 0 10px 10px 0',
     'class' =>  'row well well-lg'
 ]),
+Accordion::widget([
+    'items' => [
+        [
+            'header' => Html::tag('span', 'Расширеный поиск по заказам', ['class' => 'title']),
+            'content' =>Html::tag('div',
+                $this->render('_extendedSearch', ['model' => $searchModel]),
+                [
+                    'class' =>  'row'
+                ]
+            ),
+        ],
+    ],
+    'clientOptions' => ['collapsible' => true, 'active' => true, 'heightStyle' => 'content'],
+]),
+    Html::tag('br'),
 \kartik\tabs\TabsX::widget([
     'id'            =>  'ordersSourcesTabs',
     'encodeLabels'  =>  false,
