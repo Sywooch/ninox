@@ -274,7 +274,8 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
         }
 
-        $order->callback = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
+        \Yii::$app->request->post("confirm") == "true" ? $order->callback = 1 : ($order->callback ? $order->callback++ : $order->callback = 2);
+        $order->confirmed = $order->callback == 1 ? 1 : 0;
 
         $order->save(false);
 

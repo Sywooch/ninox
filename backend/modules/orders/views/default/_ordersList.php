@@ -272,17 +272,17 @@ echo \kartik\grid\GridView::widget([
                 },
                 'call'  =>  function($url, $model, $key){
                     switch($model->callback){
-                        case '2':
-                            $subclass = 'btn-danger';
-                            $title = 'Клиент не отвечает';
+                        case '0':
+                            $subclass = 'btn-default';
+                            $title = 'Не звонили';
                             break;
                         case '1':
                             $subclass = 'btn-success';
                             $title = 'Звонили';
                             break;
                         default:
-                            $subclass = 'btn-default';
-                            $title = 'Не звонили';
+                            $subclass = 'btn-danger';
+                            $title = 'Клиент не отвечает';
                     }
 
                     if($model->callback == '0'){
