@@ -58,6 +58,7 @@ $this->registerJS($js);
     'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a',
     'timeout'       =>  '5000'
 ]);
+
 echo Html::tag('div',
     (!empty($category->filters) ? ($totalCount ?
         $this->render('_category/_category_filters', [
@@ -81,9 +82,9 @@ echo Html::tag('div',
                 ['class' => 'category-items-count']),
             ['class' => 'category-label']
         ).
-        Html::ul($category->subCategories, [
+       Html::ul($category->subCategories, [
             'item'      =>  function($item){
-                return  /*Html::tag('li', 'sdfsdf'). */Html::tag('li', Html::a($item->name, Url::to(['/'.$item->link,
+                    return Html::tag('li', Html::a($item->name, Url::to(['/'.$item->link,
                     'language' =>
                     \Yii::$app->language])));
             },

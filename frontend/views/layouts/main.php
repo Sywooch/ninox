@@ -200,14 +200,20 @@ $typeaheadStyles = <<<'CSS'
 }
 
 .tt-menu *{
-    color: #000 !important;
+    color: #3e77aa !important;
     font-family: "Open Sans"
 }
 
 .tt-menu h4.media-heading{
-    font-size: 13px;
+    font-size: 14px;
+    /*
     white-space: nowrap;
+    */
     margin-bottom: 0;
+    white-space: normal;
+    margin-top: 15px;
+    max-height: 32px;
+    overflow: hidden;
 }
 
 .tt-menu .typeahead-list-item .name{
@@ -226,9 +232,13 @@ $typeaheadStyles = <<<'CSS'
 }
 
 .tt-menu .media-left img{
-    max-width: 80px;
+/*    max-width: 80px;
     max-height: 80px;
+    margin: auto;*/
+    max-width: 120px;
+    max-height: 82px;
     margin: auto;
+    padding: 7px;
 }
 
 .tt-menu{
@@ -239,8 +249,19 @@ $typeaheadStyles = <<<'CSS'
 .tt-menu .tt-suggestion{
     border-bottom: none;
     padding: 2px;
+    /*
     height: 56px;
+    */
     cursor: pointer !important;
+    height: 85px;
+border-bottom: 1px dashed #e0e0e0;
+}
+
+.tt-menu .tt-suggestion .price{
+	font-size: 16px;
+	margin-top: 5px;
+	display: block;
+	color: #3a3a3a !important;
 }
 
 .tt-menu .tt-suggestion .item-code{
@@ -269,6 +290,20 @@ $typeaheadStyles = <<<'CSS'
     background: -webkit-linear-gradient(left, rgba(245,245,245,0) 0%,rgba(245,245,245,1) 20%,rgba(245,245,245,1) 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to right, rgba(245,245,245,0) 0%,rgba(245,245,245,1) 20%,rgba(245,245,245,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00f5f5f5', endColorstr='#f5f5f5',GradientType=1 ); /* IE6-9 */
+}
+
+.tt-menu .tt-suggestion.tt-cursor, .tt-menu .tt-suggestion.tt-selectable:hover{
+    background-color: #fff;
+}
+
+.tt-suggestion.tt-selectable:hover .media-heading, .tt-suggestion.tt-selectable:hover .tt-highlight {
+    color: #f6a218 !important;
+    text-decoration: underline;
+}
+
+.tt-menu .typeahead-list-item:hover .media-heading{
+    color: #f6a218 !important;
+    text-decoration: underline;
 }
 
 CSS;
