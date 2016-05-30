@@ -21,7 +21,6 @@ use yii\web\NotFoundHttpException;
  * @property SborkaItem[] $missedItems
  * @property boolean $isWholesale
  * @property SborkaItem[] notControlledGoods
- * @property string $confirmDate
  * @property string $statusChangedDate
  */
 class History extends \common\models\History
@@ -522,7 +521,7 @@ class History extends \common\models\History
 
     public function beforeSave($insert){
         if($this->confirmed == 1 && $this->isAttributeChanged('confirmed')){
-            $this->confirmDate = date('Y-m-d H:i:s');
+            $this->confirmedDate = date('Y-m-d H:i:s');
         }
 
         if($this->done == 1 && $this->isAttributeChanged('done')){
