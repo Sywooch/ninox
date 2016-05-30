@@ -24,6 +24,14 @@ trait PriceHelper
         return $this->calcPrice($this->realRetailPrice);
     }
 
+    /**
+     * @return float
+     * deprecated Unknown method or variable, use one of two method above
+     */
+    final public function getPrice(){
+        return $this->calcPrice($this->originalPrice);
+    }
+
     protected function calcPrice($price){
         switch($this->discountType){
             case $this->_discountTypePercent:

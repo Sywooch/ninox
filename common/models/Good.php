@@ -165,6 +165,22 @@ class Good extends ActiveRecord
     }
 
     /**
+     * @return float
+     * deprecated Use getRealWholesalePrice() instead
+     */
+    public function getWholesalePrice(){
+        return $this->PriceOut1;
+    }
+
+    /**
+     * @return float
+     * deprecated Use getRealRetailPrice() instead
+     */
+    public function getRetailPrice(){
+        return $this->PriceOut2;
+    }
+
+    /**
      * Возвращает оптовую цену товара
      *
      * @return float
