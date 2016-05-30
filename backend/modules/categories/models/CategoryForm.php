@@ -43,7 +43,7 @@ class CategoryForm extends Model
 
     public $enabled = false;
 
-    public $retailPercent;
+    public $retailPercent = 20;
 
     public $onePrice = false;
 
@@ -98,8 +98,12 @@ class CategoryForm extends Model
     }
 
     public function save(){
-        if(!$this->validate()){
+        /*if(!$this->validate()){
             return false;
+        }*/
+
+        if(empty($this->category)){
+            $this->category = new Category();
         }
 
         $this->category->setAttributes([
@@ -120,8 +124,8 @@ class CategoryForm extends Model
             'headerOrderAscending'=>  $this->headerAsc,
             'headerOrderDescending'=>  $this->headerDesc,
             'headerOrderNew'    =>  $this->headerNew,
-            'categoryDescription'=> $this->description,
-            'metaDescription'   =>  $this->metaDescription,
+            'categoryDescription'=> htmlspecialchars($this->description),
+            'metaDescription'   =>  strip_tags($this->metaDescription),
         ], false);
 
         return $this->category->save(false);

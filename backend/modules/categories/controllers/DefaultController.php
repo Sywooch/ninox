@@ -214,6 +214,18 @@ class DefaultController extends Controller
             }
         }
 
+        $request = \Yii::$app->request;
+
+        $categoryForm = new CategoryForm();
+
+        if($request->post('CategoryForm')){
+            $categoryForm->load($request->post());
+
+            if($categoryForm->save() && empty($request->get('multiply'))){
+                $this->redirect(Url::to('/categories/view/'.$categoryForm->category->ID));
+            }
+        }
+
         if(\Yii::$app->request->post() && \Yii::$app->request->post("parent_category") != ''){
             $m = new Category();
             $mUk = new CategoryUk();
@@ -255,6 +267,7 @@ class DefaultController extends Controller
 
         return $this->render('edit', [
             'category'      =>  $c,
+            'categoryForm'  =>  $categoryForm,
             'breadcrumbs'   =>  [],
             'parentCategory'=>  $ct == '' ? new Category : Category::findOne(['ID' => $ct]),
             'categoryUk'    =>  $cUk
