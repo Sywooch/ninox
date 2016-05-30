@@ -195,6 +195,7 @@ class DefaultController extends Controller
                             $added += $thisAdded;
                             $updated++;
                         }
+                        $updated++;
                     }
                 }
 
