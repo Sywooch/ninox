@@ -111,6 +111,7 @@ class CategoryForm extends Model
             'onePrice'      =>  $this->onePrice,
             'ymlExport'     =>  $this->umlExport,
             'canBuy'        =>  $this->sellProducts,
+            'Code'          =>  Category::createCategoryCode($this->parentCategory)
         ], false);
 
         $this->category->translation->setAttributes([
