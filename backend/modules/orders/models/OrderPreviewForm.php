@@ -75,6 +75,7 @@ class OrderPreviewForm extends Model
     public function save(){
         $this->order->setAttributes([
             'deliveryType'      =>  $this->deliveryType,
+            'deliveryParam'     =>  $this->deliveryParam,
             'deliveryInfo'      =>  $this->deliveryInfo,
             'responsibleUserID' =>  $this->responsibleUser,
             'nakladna'          =>  $this->nakladna,

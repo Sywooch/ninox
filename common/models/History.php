@@ -132,12 +132,20 @@ class History extends ActiveRecord
             return self::STATUS_NOT_PAYED;
         }
 
-        $status = self::STATUS_WAIT_DELIVERY;
-
-        if($this->moneyConfirmed){
+        if(empty($this->nakladna)){
             if($this->deliveryType == 3){
+                if($this->moneyConfirmed == 1){
+                    $status = self::STATUS_DONE;
+                }else{
+                    $status = self::STATUS_NOT_PAYED;
+                }
+            }else{
+                $status = self::STATUS_WAIT_DELIVERY;
+            }
+        }else{
+            if($this->paymentType == 2 || ($this->paymentType == 1 && $this->moneyConfirmed == 1)){
                 $status = self::STATUS_DONE;
-            }elseif(!empty($this->nakladna)){
+            }elseif($this->paymentType == 1 && $this->moneyConfirmed != 1){
                 $status = self::STATUS_DELIVERED;
             }
         }
