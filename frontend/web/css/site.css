@@ -1637,9 +1637,8 @@ footer{
 
 .order-logo{
 	width: 50%;
-	background-repeat: no-repeat;
 	height: 60px;
-	background-image: url("/img/site/shop-logo.png");
+	background: url("/img/site/logo.png") no-repeat;
 	margin-bottom: 30px;
 }
 
@@ -4209,7 +4208,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	width: 100%;
 }
 
-.under-menu-content .tt-scrollable-menu .tt-menu{
+/*.under-menu-content .tt-scrollable-menu .tt-menu{
 	z-index: 1300 !important;
 }
 
@@ -4226,7 +4225,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .under-menu-content .tt-menu h4.media-heading{
 	white-space: normal;
-}
+}*/
 
 .input-style-main input[type='text'] {
 	background: url("/img/site/search.png") no-repeat 10px 7px;

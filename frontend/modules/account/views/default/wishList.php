@@ -55,7 +55,7 @@ echo Html::tag('div',
                 ]);
             },
             'layout'        =>
-                Html::tag('div', '{items}', ['class' => 'items-grid clear-fix']).
+                Html::tag('div', '{items}', ['class' => 'items-grid clear-fix cols-3']).
                 Html::tag('div', '{pager}', ['class' => 'pagination-wrapper']),
             'itemOptions'   =>  [
                 'class'     =>  'hovered'

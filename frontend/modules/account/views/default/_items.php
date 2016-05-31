@@ -8,10 +8,12 @@
 
 use yii\bootstrap\Html;
 
-echo Html::tag('div', Html::tag('div',
-        Html::img(\Yii::$app->params['frontend'].'/img/catalog/'.$model->photo), [
-            'class' => 'image'
-        ]).
+$photo = \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->photo;
+
+echo Html::tag('div', Html::tag('div', Html::img($photo,[
+        ]), [
+        'class' => 'image',
+    ]).
     Html::tag('div',
         Html::tag('div',
             Html::a($model->name, '/tovar/'.$model->good->link.'-g'.$model->itemID).
