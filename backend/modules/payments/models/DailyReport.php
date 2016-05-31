@@ -13,6 +13,11 @@ use backend\models\History;
 use common\models\MoneyExchange;
 use yii\db\ActiveRecord;
 
+/**
+ * @property string $date
+ * @property History[] selfDelivered
+ * @property History[] shopSells
+ */
 class DailyReport extends ActiveRecord
 {
 
@@ -48,6 +53,7 @@ class DailyReport extends ActiveRecord
         if(empty($this->_shopSells)){
             $this->_shopSells = parent::find()
                 ->where("FROM_UNIXTIME(`added`, '%Y-%m-%d') = '{$this->date}'")
+                ->andWhere(['orderSource'   =>  \Yii::$app->params['configuration']->id])
                 ->andWhere(['sourceType' => History::SOURCETYPE_SHOP])
                 ->all();
         }

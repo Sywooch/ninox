@@ -14,16 +14,71 @@ $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'hre
 \frontend\assets\AppAsset::register($this);
 \yii\bootstrap\BootstrapAsset::register($this);
 
-$js = <<< 'SCRIPT'
-/* To initialize BS3 tooltips set this below */
-$(function () {
-    $("[data-toggle='tooltip']").tooltip();
-});
-/* To initialize BS3 popovers set this below */
-$(function () {
-    $("[data-toggle='popover']").popover();
-});
-SCRIPT;
+$js = <<<JS
+	if(hasTouch){
+		$('body').on('touchmove', function(e){
+			e.target.isTouchMoved = true;
+		});
+	}
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-counter .minus:not(.inhibit), .item-counter .plus:not(.inhibit), .remove-item', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		changeItemCount($(e.currentTarget));
+	});
+
+	$('body').on('keydown', '.count', function(e){
+        // Allow: backspace, delete, tab, escape, enter and .
+        if($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)){
+	            if(keysdown[e.keyCode]){
+	                return;
+	            }
+                keysdown[e.keyCode] = true;
+                return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)){
+            e.preventDefault();
+        }else{
+            if(keysdown[e.keyCode]){
+                e.preventDefault();
+                return;
+            }
+            keysdown[e.keyCode] = true;
+        }
+	});
+
+	$('body').on('keyup', '.count', function(e){
+		if(keysdown[e.keyCode]){
+			delete keysdown[e.keyCode];
+			changeItemCount($(e.currentTarget));
+        }
+	});
+
+	$(document).on('pjax:complete', function(){
+		cartScroll();
+	});
+
+	cartScroll();
+
+	/* To initialize BS3 tooltips set this below */
+	$(function () {
+	    $("[data-toggle='tooltip']").tooltip();
+	});
+	/* To initialize BS3 popovers set this below */
+	$(function () {
+	    $("[data-toggle='popover']").popover();
+	});
+
+JS;
+
+\frontend\assets\PerfectScrollbarAsset::register($this);
+
+
 // Register tooltip/popover initialization javascript
 $this->registerJs($js);
 
@@ -36,6 +91,10 @@ $cartModal = new \bobroid\remodal\Remodal([
 		        'query' =>  \Yii::$app->cart->goodsQuery()
 	        ])
     ]),
+    'options'           =>  [
+        'id'            =>  'modal-cart',
+        'class'         =>  \Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'wholesale' : 'retail') : 'empty'
+    ],
     'id'	=>	'modalCart',
     'addRandomToID'		=>	false,
     'events'			=>	[

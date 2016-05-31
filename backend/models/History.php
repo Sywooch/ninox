@@ -6,7 +6,7 @@ use backend\components\Sms;
 use common\models\Comment;
 use common\models\PaymentParam;
 use common\models\Siteuser;
-use Yii;
+use yii;
 use yii\data\ActiveDataProvider;
 use yii\web\ConflictHttpException;
 use yii\web\NotFoundHttpException;
@@ -19,12 +19,14 @@ use yii\web\NotFoundHttpException;
  * @property Siteuser $responsibleUser
  * @property SborkaItem[] $availableItems
  * @property SborkaItem[] $missedItems
+ * @property boolean $isWholesale
+ * @property SborkaItem[] notControlledGoods
+ * @property string $statusChangedDate
  */
 class History extends \common\models\History
 {
 
     private $real_summ;
-    private $isWholesale;
     public $summ;
 
 
@@ -41,10 +43,387 @@ class History extends \common\models\History
     public $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
     public $status_10    =   'Ожидает отправки';
 
-    private $_responsibleUser = null;
+
+    public static function find()
+    {
+        return parent::find()->with('items')->with('customer');
+    }
+
+    /**
+     * Товары заказа
+     *
+     * @param bool $returnAll
+     * @return yii\db\ActiveQuery
+     */
+    public function getItems($returnAll = true){
+        return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
+    }
+
+    /**
+     * Пользователь, забравший деньги
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getMoneyCollector(){
+        return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
+    }
+
+    /**
+     * Клиент, оформивший заказ
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getCustomer(){
+        return $this->hasOne(Customer::className(), ['ID' => 'customerID']);
+    }
+
+    /**
+     * Комментарии к заказу
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getComments(){
+        $className = self::className();
+
+        if(count(explode('\\', $className)) > 1){
+            $t = explode('\\', $className);
+            $t = array_reverse($t);
+            $className = $t[0];
+        }
+
+        return $this->hasMany(Comment::className(), ['modelID' => 'ID'])->with('commenter')->andWhere(['model' => $className]);
+    }
+
+    /**
+     * Менеджер заказа
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getResponsibleUser(){
+        return $this->hasOne(Siteuser::className(), ['ID' => 'responsibleUserID']);
+    }
+    
+    /**
+     * Параметр оплаты
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getPaymentParamInfo(){
+        return $this->hasOne(PaymentParam::className(), ['id' => 'paymentParam']);
+    }
+
+    /**
+     * Возвращает ID заказа
+     *
+     * @return integer
+     */
+    public function getID(){
+        return $this->id;
+    }
+
+    /**
+     * Возвращает статус, новый-ли покупатель
+     *
+     * @return bool
+     */
+    public function getNewCustomer(){
+        if(empty($this->customer)){
+            return false;
+        }
+
+        return count($this->customer->orders) <= 1;
+    }
+
+    /**
+     * Товар оформлен с оплатой  на карту?
+     *
+     * @return bool
+     */
+    public function getPayOnCard(){
+        switch($this->paymentType){
+            case 2:
+                return true;
+                break;
+            case 1:
+            case 3:
+            default:
+                return false;
+                break;
+        }
+    }
+
+    /**
+     * Оптовый-ли заказ
+     *
+     * @return bool
+     */
+    public function getIsWholesale(){
+        return $this->orderSum >= 800;
+    }
+
+    /**
+     * Возвращает изначальную сумму заказа (без скидки и добавленых товаров)
+     * 
+     * @return double
+     */
+    public function getOrderSum(){
+        if(empty($this->sum)){
+            $sum = 0;
+
+            foreach($this->items as $item){
+                $sum += $item->originalPrice * $item->originalCount;
+            }
+
+            $this->sum = $sum;
+        }
+
+        return $this->sum;
+    }
+
+    /**
+     * Возвращает сумму заказа (без скидки)
+     * 
+     * @return double
+     */
+    public function getSumWithoutDiscount(){
+        $sumWithoutDiscount = 0;
+
+        foreach($this->items as $item){
+            $sumWithoutDiscount += ($item->originalPrice * $item->count);
+        }
+
+        return $sumWithoutDiscount;
+    }
+
+    /**
+     * Возвращает сумму клиентской скидки в заказе
+     * 
+     * @return double
+     */
+    public function getSumCustomerDiscount(){
+        $sumCustomerDiscount = 0;
+
+        foreach($this->availableItems as $item){
+            if($item->customerDiscounted){
+                $sumCustomerDiscount += ($item->originalPrice - $item->price) * $item->count;
+            }
+        }
+
+        return $sumCustomerDiscount;
+    }
+
+    /**
+     * Возвращает сумму скидки (без клиентского дисконта) в заказе
+     *
+     * @return double
+     */
+    public function getSumDiscount(){
+        $discountSum = 0;
+
+        foreach($this->availableItems as $item){
+            if(!$item->customerDiscounted){
+                $discountSum += ($item->originalPrice - $item->price) * $item->count;
+            }
+        }
+
+        return $discountSum;
+    }
+
+    /**
+     * Возвращает итемы, которые сборщики смогли найти
+     *
+     * @return SborkaItem[]
+     */
+    public function getAvailableItems(){
+        $availableItems = [];
+
+        foreach($this->items as $item){
+            if($item->nalichie == 1){
+                $availableItems[] = $item;
+            }
+        }
+
+        return $availableItems;
+    }
+
+    /**
+     * Возвращает итемы, которые сборщики не смогли найти
+     *
+     * @return SborkaItem[]
+     */
+    public function getMissingItems(){
+        $missing = [];
+
+        foreach($this->items as $item){
+            if($item->nalichie == 0){
+                $missing[] = $item;
+            }
+        }
+
+        return $missing;
+    }
+
+    /**
+     * Возвращает сумму товаров, которые не смогли найти сборщики
+     *
+     * @return double
+     */
+    public function getMissingItemsSum(){
+        $missingItemsSum = 0;
+
+        foreach($this->missingItems as $item){
+            $missingItemsSum += $item->price * $item->count;
+        }
+
+        return $missingItemsSum;
+    }
+
+    /**
+     * Возвращает реальную стоимость заказа
+     *
+     * @return double
+     */
+    public function getRealSum(){
+        if(empty($this->real_summ)){
+            $this->real_summ = 0;
+
+            foreach($this->availableItems as $item){
+                $this->real_summ += ($item->price * $item->count);
+            }
+        }
+
+        return $this->real_summ;
+    }
+
+    /**
+     * Возвращает непроконтролированые товары в заказе
+     *
+     * @return array
+     */
+    public function getNotControlledGoods(){
+        $items = [];
+
+        foreach($this->availableItems as $item){
+            if(!$item->controlled){
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Возвращает колличество непроконтролированых товаров (позиций)
+     *
+     * @return integer
+     */
+    public function getNotControlledGoodsCount(){
+        return count($this->notControlledGoods);
+    }
+
+    /**
+     * Колличество непроконтролированых товаров
+     *
+     * @return int
+     */
+    public function getNotControlledItemsCount(){
+        $count = 0;
+
+        foreach($this->notControlledGoods as $item){
+            $count += ($item->originalCount - $item->realyCount);
+        }
+
+        return $count;
+    }
+
+    /**
+     * Возвращает проконтролированые товары
+     *
+     * @return SborkaItem[]
+     */
+    public function getControlledGoods(){
+        $items = [];
+
+        foreach($this->availableItems as $item){
+            if($item->controlled){
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Проконтролирован-ли заказ
+     *
+     * @return bool
+     */
+    public function getControlled(){
+        return count($this->notControlledGoods) > 0;
+    }
+
+    /**
+     * Находит товар в заказе
+     *
+     * @param integer $itemID ID товара
+     * @param bool $onlyAvailable возвращает только включеный товар
+     * @return SborkaItem|bool
+     */
+    public function findItem($itemID, $onlyAvailable = false){
+        $items = $onlyAvailable ? $this->availableItems : $this->items;
+
+        foreach($items as $item){
+            if($item->itemID == $itemID){
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
+    public function findAvailableItem($itemID){
+        return $this->findItem($itemID, true);
+    }
+
+    public function findItemByUniqID($uniqID, $onlyAvailable = false){
+        $items = $onlyAvailable ? $this->availableItems : $this->items;
+
+        foreach($items as $item){
+            if($item->ID == $uniqID){
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
+    public function clearControl(){
+        foreach($this->items as $item) {
+            $item->realyCount = 0;
+
+            $item->save(false);
+        }
+    }
+
+    public function controlItem($itemID, $count = 1){
+        $item = $this->findAvailableItem($itemID);
+
+        if(!$item){
+            throw new NotFoundHttpException("Товар с ID {$itemID} не найден в заказе #{$this->number} (ID {$this->ID})");
+        }
+
+        if($item->controlled){
+            throw new ConflictHttpException('Нельзя подтвердить подтверждённый товар дважды!');
+        }
+
+        $item->realyCount += $count;
+        $item->save(false);
+    }
 
     /**
      * @param History $order
+     * @throws \Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function mergeWith($order){
         foreach($this->items as $item){
@@ -68,67 +447,6 @@ class History extends \common\models\History
         $this->save(false);
     }
 
-    public static function find()
-    {
-        return parent::find()->with('items')->with('customer');
-    }
-
-    public function getItems($returnAll = true){
-        return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
-    }
-
-    public function getMoneyCollector(){
-        return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
-    }
-
-    public function findItem($itemID){
-        foreach($this->items as $item){
-            if($item->itemID == $itemID){
-                return $item;
-            }
-        }
-
-        return false;
-    }
-
-    public function findItemByUniqID($uniqID){
-        foreach($this->items as $item){
-            if($item->ID == $uniqID){
-                return $item;
-            }
-        }
-
-        return false;
-    }
-
-    public function getID(){
-        return $this->id;
-    }
-
-    public function getCustomer(){
-        return $this->hasOne(Customer::className(), ['ID' => 'customerID']);
-    }
-
-    public function getNewCustomer(){
-        if(empty($this->customer)){
-            return false;
-        }
-
-        return sizeof($this->customer->orders) > 1;
-    }
-
-    public function getPayOnCard(){
-        switch($this->paymentType){
-            case 2:
-                return true;
-                break;
-            case 1:
-            case 3:
-            default:
-                return false;
-                break;
-        }
-    }
 
     public function sendMessage($type){
         switch($type){
@@ -139,37 +457,13 @@ class History extends \common\models\History
                 return $this->sendSms();
                 break;
         }
-    }
 
-    public function getComments(){
-        $className = self::className();
-
-        if(sizeof(explode('\\', $className)) > 1){
-            $t = explode('\\', $className);
-            $t = array_reverse($t);
-            $className = $t[0];
-        }
-
-        return $this->hasMany(Comment::className(), ['modelID' => 'ID'])->with('commenter')->andWhere(['model' => $className]);
-    }
-
-    public function getResponsibleUser(){
-        if(empty($this->_responsibleUser)){
-            $user = Siteuser::findOne($this->responsibleUserID);
-
-            if(!$user){
-                $user = new Siteuser();
-            }
-
-            $this->_responsibleUser = $user;
-        }
-
-        return $this->_responsibleUser;
+        return false;
     }
 
     public function sendSms(){
         $messageID = 0;
-
+        $result = 0;
         switch($this->status){
             case self::STATUS_NOT_CALLED:
                 $messageID = Sms::MESSAGE_CANT_CALL_ID;
@@ -185,11 +479,13 @@ class History extends \common\models\History
                 break;
         }
 
-        $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
-
-        if($result == 200){
-            $this->smsSendDate = date('Y-m-d H:i:s');
-            $this->save(true);
+        if($messageID){
+            $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+            //TODO: SmS state and date;
+            if($result == 200){
+                $this->smsSendDate = date('Y-m-d H:i');
+                $this->save(true);
+            }
         }
 
         return $result;
@@ -197,6 +493,7 @@ class History extends \common\models\History
 
     public function sendCardSms(){
         $messageID = 0;
+        $result = 0;
         switch($this->status){
             case self::STATUS_NOT_CALLED:
                 break;
@@ -215,34 +512,36 @@ class History extends \common\models\History
                 break;
         }
 
-        $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
-        //TODO: SmS state and date;
-        if($result == 200){
-            $this->smsSendDate = date('Y-m-d H:i');
-            $this->save(true);
+        if($messageID){
+            $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+            //TODO: SmS state and date;
+            if($result == 200){
+                $this->smsSendDate = date('Y-m-d H:i');
+                $this->save(true);
+            }
         }
-
+        
         return $result;
     }
 
     public function beforeSave($insert){
-        if($this->isAttributeChanged('confirmed') && $this->confirmed == 1){
-            $this->confirmDate = date('Y-m-d H:i:s');
+        if($this->confirmed == 1 && $this->isAttributeChanged('confirmed')){
+            $this->confirmedDate = date('Y-m-d H:i:s');
         }
 
-        if($this->isAttributeChanged('done') && $this->done == 1){
+        if($this->done == 1 && $this->isAttributeChanged('done')){
             $this->doneDate = date('Y-m-d H:i:s');
         }
 
-        if($this->isAttributeChanged('takeOrder') && $this->takeOrder == 1){
+        if($this->takeOrder == 1 && $this->isAttributeChanged('takeOrder')){
             $this->takeOrderDate = date('Y-m-d H:i:s');
         }
 
-        if($this->isAttributeChanged('takeTTNMoney') && $this->takeTTNMoney == 1){
+        if($this->takeTTNMoney == 1 && $this->isAttributeChanged('takeTTNMoney')){
             $this->takeTTNMoneyDate = date('Y-m-d H:i:s');
         }
 
-        if($this->oldAttributes['moneyConfirmed'] != $this->moneyConfirmed && $this->moneyConfirmed == 1){
+        if($this->moneyConfirmed == 1 && $this->oldAttributes['moneyConfirmed'] != $this->moneyConfirmed){
             $this->moneyCollectorUserId = \Yii::$app->user->identity->id;
             $this->moneyConfirmedDate = date('Y-m-d H:i:s');
 
@@ -277,55 +576,53 @@ class History extends \common\models\History
     }
 
     public function behaviors(){
-        if(!$this->isNewRecord){
-            return [
-                'LoggableBehavior' => [
-                    'class' => 'sammaye\audittrail\LoggableBehavior',
-                    'ignored' => [
-                        'Name2',
-                        'added'
-                    ],
-                ]
-            ];
-        }else{
-            return [];
-        }
+        return [
+            'LoggableBehavior' => [
+                'class' => 'sammaye\audittrail\LoggableBehavior',
+                'ignored' => [
+                    'Name2',
+                    'added'
+                ],
+            ]
+        ];
     }
 
-    public static function ordersQuery($options = []){
+    public static function ordersQuery(array $options = []){
         $query = self::find()->orderBy('id DESC');
 
-        if(isset($options['thisOrder'])){
+        if(array_key_exists('thisOrder', $options)){
             $query->andWhere('id != '.$options['thisOrder']);
         }
 
-        if(isset($options['queryParts']) && !empty($options['queryParts'])){
+        if(array_key_exists('queryParts', $options) && !empty($options['queryParts'])){
+            if(!is_array($options['queryParts'])){
+                $options['queryParts'] = [$options['queryParts']];
+            }
+
             foreach($options['queryParts'] as $part){
                 $query->andWhere($part);
             }
         }
 
-        if(isset($options['where'])){
+        if(array_key_exists('where', $options)){
             $query->andWhere($options['where']);
         }
 
         return $query;
     }
 
-    public static function ordersDataProvider($options = []){
+    public static function ordersDataProvider(array $options = []){
         $query = self::ordersQuery($options);
 
         $ADPConfig = [
             'query' =>  $query,
         ];
 
-        if(isset($options['limit'])){
+        if(array_key_exists('limit', $options)){
             $ADPConfig['pagination']['pageSize'] = $options['limit'];
         }
 
-        $ordersDataProvider = new ActiveDataProvider($ADPConfig);
-
-        return $ordersDataProvider;
+        return new ActiveDataProvider($ADPConfig);
     }
 
     /**
@@ -358,221 +655,10 @@ class History extends \common\models\History
     }
 
     /**
-     * @deprecated
-     * @return bool
-     */
-    public function isOpt(){
-        return $this->isWholesale();
-    }
-
-    /**
-     * Возвращает, оптовый-ли заказ
-     *
-     * @return bool
-     */
-    public function isWholesale(){
-        if(empty($this->isWholesale)){
-           $this->isWholesale = ($this->orderSum >= 800);
-        }
-
-        return $this->isWholesale;
-    }
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getOrderSum(){
-        if(empty($this->sum)){
-            $sum = 0;
-
-            foreach($this->items as $item){
-                $sum += $item->originalPrice * $item->originalCount;
-            }
-
-            $this->sum = $sum;
-        }
-
-        return $this->sum;
-    }
-
-    /**
-     * @deprecated
-     * @return double
-     */
-    public function orderSumm(){
-        return $this->orderSum;
-    }
-
-    /**
-     * @return mixed
-     * @deprecated use $this->getRealSum() or $this->realSum
-     */
-    public function orderRealSumm(){
-        return $this->realSum;
-    }
-
-    public function getSumWithoutDiscount(){
-        $sumWithoutDiscount = 0;
-
-        foreach($this->items as $item){
-            $sumWithoutDiscount += ($item->originalPrice * $item->count);
-        }
-
-        return $sumWithoutDiscount;
-    }
-
-    public function getSumCustomerDiscount(){
-        $sumCustomerDiscount = 0;
-
-        foreach($this->availableItems as $item){
-            if(!empty($this->customer) && $item->discountSize == $this->customer->getDiscount() && $item->discountType == 2 && $item->priceRuleID == 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
-                $sumCustomerDiscount += ($item->originalPrice - $item->price) * $item->count;
-            }
-        }
-
-        return $sumCustomerDiscount;
-    }
-
-    public function getSumDiscount(){
-        $discountSum = 0;
-
-        foreach($this->availableItems as $item){
-            if((!empty($this->customer) && $item->discountSize != $this->customer->getDiscount() && $item->discountType == 2) && $item->priceRuleID != 0){ //TODO: находить, что скидка именно присвоена пользователю за карту
-                $discountSum += ($item->originalPrice - $item->price) * $item->count;
-            }
-        }
-
-        return $discountSum;
-    }
-
-    public function getAvailableItems(){
-        $availableItems = [];
-
-        foreach($this->items as $item){
-            if($item->nalichie == 1){
-                $availableItems[] = $item;
-            }
-        }
-
-        return $availableItems;
-    }
-
-    public function getMissingItems(){
-        $missing = [];
-
-        foreach($this->items as $item){
-            if($item->nalichie == 0){
-                $missing[] = $item;
-            }
-        }
-
-        return $missing;
-    }
-
-    public function getMissingItemsSum(){
-        $missingItemsSum = 0;
-
-        foreach($this->missingItems as $item){
-            $missingItemsSum += $item->price * $item->count;
-        }
-
-        return $missingItemsSum;
-    }
-
-    /**
-     * Возвращает реальную стоимость заказа
-     *
-     * @return double
-     */
-    public function getRealSum(){
-        if(empty($this->real_summ)){
-            $this->real_summ = 0;
-
-            foreach($this->availableItems as $item){
-                $this->real_summ += ($item->price * $item->count);
-            }
-        }
-
-        return $this->real_summ;
-    }
-
-    public function clearControl(){
-        foreach($this->items as $item) {
-            $item->realyCount = 0;
-
-            $item->save(false);
-        }
-    }
-
-    public function getNotControlledGoods(){
-        $items = [];
-
-        foreach($this->items as $item){
-            if(!$item->controlled){
-                $items[] = $item;
-            }
-        }
-
-        return $items;
-    }
-
-    public function getNotControlledGoodsCount(){
-        return sizeof($this->notControlledGoods);
-    }
-
-    public function getNotControlledItemsCount(){
-        $count = 0;
-
-        foreach($this->notControlledGoods as $item){
-            $count += ($item->originalCount - $item->realyCount);
-        }
-
-        return $count;
-    }
-
-    public function getControlledGoods(){
-        $items = [];
-
-        foreach($this->items as $item){
-            if($item->controlled){
-                $items[] = $item;
-            }
-        }
-
-        return $items;
-    }
-
-
-    public function getControlled(){
-        if(sizeof($this->notControlledGoods) > 0){
-            return false;
-        }
-
-        return true;
-    }
-
-    public function controlItem($itemID, $count = 1){
-        $item = $this->findItem($itemID);
-
-        if(!$item){
-            throw new NotFoundHttpException("Товар с ID {$itemID} не найден в заказе #{$this->number} (ID {$this->ID})");
-        }
-
-        if($item->controlled){
-            throw new ConflictHttpException("Нельзя подтвердить подтверждённый товар дважды!");
-        }
-
-        $item->realyCount += $count;
-        $item->save(false);
-    }
-
-
-    /**
      *
      * Возвращает колл-во заказов, сделаных из магазина и из сайта
-     *
+     * @param null $period
+     * @return array
      */
     //TODO
     public static function getShopSiteOrdersCount($period = null){
@@ -585,11 +671,11 @@ class History extends \common\models\History
             ->where('deliveryType != 5');
 
         if($period != null){
-            if(isset($period['min'])){
+            if(array_key_exists('min', $period)){
                 $q->andWhere('added > '.strtotime($period['min']));
                 $b->andWhere('added > '.strtotime($period['min']));
             }
-            if(isset($period['max'])){
+            if(array_key_exists('max', $period)){
                 $q->andWhere('added < '.strtotime($period['max']));
                 $b->andWhere('added < '.strtotime($period['max']));
             }
@@ -601,8 +687,8 @@ class History extends \common\models\History
             ->all();
 
         return [
-            'shop'  =>  isset($q['0']['a']) ? $q['0']['a'] : 0,
-            'site'  =>  isset($q['1']['a']) ? $q['1']['a'] : 0
+            'shop'  =>  array_key_exists('a', $q['0']) ? $q['0']['a'] : 0,
+            'site'  =>  array_key_exists('a', $q['1']) ? $q['1']['a'] : 0
         ];
     }
 
@@ -615,10 +701,10 @@ class History extends \common\models\History
             ->groupBy('paymentType');
 
         if($period != null){
-            if(isset($period['min'])){
+            if(array_key_exists('min', $period)){
                 $q->andWhere('added > '.strtotime($period['min']));
             }
-            if(isset($period['max'])){
+            if(array_key_exists('max', $period)){
                 $q->andWhere('added < '.strtotime($period['max']));
             }
         }
@@ -641,10 +727,10 @@ class History extends \common\models\History
             ->groupBy('b.GroupID');
 
         if($period != null){
-            if(isset($period['min'])){
+            if(array_key_exists('min', $period)){
                 $q->andWhere('UNIX_TIMESTAMP(`a`.`Date`) > '.strtotime($period['min']));
             }
-            if(isset($period['max'])){
+            if(array_key_exists('max', $period)){
                 $q->andWhere('UNIX_TIMESTAMP(`a`.`Date`) < '.strtotime($period['max']));
             }
         }
@@ -656,7 +742,12 @@ class History extends \common\models\History
         return $r;
     }
 
-    //TODO
+    /**
+     * Используется в /modules/charts
+     *
+     * @param null $period
+     * @return array
+     */
     public static function getStatsByCategoriesWithCategoryName($period = null){
         $q = self::getStatsByCategories($period);
 
@@ -675,7 +766,7 @@ class History extends \common\models\History
 
         foreach($q as $k => $v){
             $r[] = [
-                'name'  =>  isset($n[$k]) ? $n[$k] : '',
+                'name'  =>  array_key_exists($k, $n) ? $n[$k] : '',
                 'count' =>  $v
             ];
         }
@@ -683,8 +774,5 @@ class History extends \common\models\History
         return $r;
     }
 
-    public function getPaymentParamInfo(){
-        return $this->hasOne(PaymentParam::className(), ['id' => 'paymentParam']);
-    }
 
 }

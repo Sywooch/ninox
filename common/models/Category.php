@@ -41,17 +41,27 @@ use yii\web\NotFoundHttpException;
  * @property string $catNameVinitelny2
  * @property integer $ymlExport
  * @property Category[]|null $parents
+ * @property CategoryTranslation translation
+ * @property CategoryTranslation[] translations
  */
 class Category extends \yii\db\ActiveRecord
 {
 
-    var $parentCategory;
+    //var $parentCategory;
 	protected $items;
 
     private $_translation;
     private $parents = [];
     private $goodsCount = null;
     private $goodsCountSubcategories = null;
+
+    public function getTranslations(){
+        return $this->hasMany(CategoryTranslation::className(), ['ID' => 'ID']);
+    }
+
+    public function getPhotos(){
+        return $this->hasMany(CategoryPhoto::className(), ['categoryID' => 'ID'])->orderBy('order');
+    }
 
     public function getParents(){
         if(!empty($this->parents)){
@@ -61,10 +71,6 @@ class Category extends \yii\db\ActiveRecord
         $this->parents = self::getParentCategories($this->Code);
 
         return $this->parents;
-    }
-
-    public function getTranslations(){
-        return $this->hasMany(CategoryTranslation::className(), ['ID' => 'ID']);
     }
 
     public function getTranslation(){
@@ -97,123 +103,6 @@ class Category extends \yii\db\ActiveRecord
         return $currentLangModel;
     }
 
-    /**
-     * @param $link string
-     * @return Category
-     * @throws NotFoundHttpException
-     */
-    public static function findByLink($link){
-        $category = self::find()
-            ->joinWith(['translations'])
-            ->where([CategoryTranslation::tableName().'.link' => $link])
-            ->one();
-        if(empty($category)){
-            throw new NotFoundHttpException("Категория по ссылке {$link} не найдена!");
-        }
-
-        if(!empty($category->translation->link) && $category->translation->link != $link){
-            \Yii::$app->controller->redirect([$category->translation->link], 301);
-            \Yii::$app->end();
-        }
-
-        return $category;
-    }
-
-    public function getPhotos(){
-        return $this->hasMany(CategoryPhoto::className(), ['categoryID' => 'ID'])->orderBy('order');
-    }
-
-    public function getName(){
-        return $this->translation->Name;
-    }
-
-    public function getLink(){
-        return $this->translation->link;
-    }
-
-    public function getTitle(){
-        return $this->translation->title;
-    }
-
-    public function getTitleOrderAscending(){
-        return $this->translation->titleOrderAscending;
-    }
-
-    public function getTitleOrderDescending(){
-        return $this->translation->titleOrderDescending;
-    }
-
-    public function getTitleOrderNew(){
-        return $this->translation->titleOrderNew;
-    }
-
-    public function getHeader(){
-        return $this->translation->header;
-    }
-
-    public function getHeaderOrderAscending(){
-        return $this->translation->headerOrderAscending;
-    }
-
-    public function getHeaderOrderDescending(){
-        return $this->translation->headerOrderDescending;
-    }
-
-    public function getHeaderOrderNew(){
-        return $this->translation->headerOrderNew;
-    }
-
-    public function getDescription(){
-        return $this->translation->categoryDescription;
-    }
-
-    public function getEnabled(){
-        return empty($this->translation->enabled) ? 0 : $this->translation->enabled;
-    }
-
-    public function getSequence(){
-        return empty($this->translation->sequence) ? 0 : $this->translation->sequence;
-    }
-
-    public function getPhoneNumber(){
-        return empty($this->translation->phoneNumber) ? \Yii::$app->params['categoryPhoneNumber'] : $this->translation->phoneNumber;
-    }
-
-    /**
-     * @param bool $withSubcategories
-     * @return int|null
-     * @deprecated
-     */
-
-    public function goodsCount($withSubcategories = false){
-        if(!$withSubcategories && $this->goodsCount != null){
-            return $this->goodsCount;
-        }elseif($withSubcategories && $this->goodsCountSubcategories != null){
-            return $this->goodsCountSubcategories;
-        }
-
-        $q = new Query();
-        $q = $q->select('COUNT(*)')
-            ->from([Category::tableName().' a', Good::tableName().' b'])
-            ->andWhere('a.ID = b.GroupID')
-            ->andWhere('b.show_img = 1 AND b.deleted = 0 AND (b.PriceOut1 != 0 AND b.PriceOut2 != 0)');
-
-        if($withSubcategories){
-            $q->andWhere(['like', 'a.Code', $this->Code.'%', false]);
-        }
-
-        $q = $q->scalar();
-
-        $q = intval($q);
-
-        if($withSubcategories){
-            $this->goodsCountSubcategories = $q;
-        }else{
-            $this->goodsCount = $q;
-        }
-
-        return $withSubcategories ? $this->goodsCountSubcategories : $this->goodsCount;
-    }
 
     /**
      * @return array Список категорий по их
@@ -254,6 +143,194 @@ class Category extends \yii\db\ActiveRecord
         return $categories;
     }
 
+    public function getTitleasc(){
+        return $this->translation->titleOrderAscending;
+    }
+
+    public function getTitledesc(){
+        return $this->translation->titleOrderDescending;
+    }
+
+    public function getTitlenew(){
+        return $this->translation->titleOrderNew;
+    }
+
+    public function getH1(){
+        return $this->translation->header;
+    }
+
+    public function getH1new(){
+        return $this->translation->headerOrderNew;
+    }
+
+    public function getH1desc(){
+        return $this->translation->headerOrderDescending;
+    }
+
+    public function getH1asc(){
+        return $this->translation->headerOrderAscending;
+    }
+
+    public function getDescr(){
+        return $this->translation->metaDescription;
+    }
+
+    public function getText2(){
+        return $this->translation->categoryDescription;
+    }
+
+    public function getName(){
+        return $this->translation->Name;
+    }
+
+    public function setName($val){
+        return $this->translation->Name = $val;
+    }
+
+    public function getLink(){
+        return $this->translation->link;
+    }
+
+    public function setLink($value){
+        $this->translation->link = $value;
+    }
+
+    public function getTitle(){
+        return $this->translation->title;
+    }
+
+    public function setTitle($value){
+        $this->translation->title = $value;
+    }
+
+    public function getTitleOrderAscending(){
+        return $this->translation->titleOrderAscending;
+    }
+
+    public function getTitleOrderDescending(){
+        return $this->translation->titleOrderDescending;
+    }
+
+    public function getTitleOrderNew(){
+        return $this->translation->titleOrderNew;
+    }
+
+    public function getHeader(){
+        return $this->translation->header;
+    }
+
+    public function getHeaderOrderAscending(){
+        return $this->translation->headerOrderAscending;
+    }
+
+    public function getHeaderOrderDescending(){
+        return $this->translation->headerOrderDescending;
+    }
+
+    public function getHeaderOrderNew(){
+        return $this->translation->headerOrderNew;
+    }
+
+    public function getDescription(){
+        return htmlspecialchars_decode($this->translation->categoryDescription);
+    }
+
+    public function setDescription($value){
+        $this->translation->categoryDescription = htmlspecialchars($value);
+    }
+
+    public function getMetaDescription(){
+        return htmlspecialchars_decode($this->translation->metaDescription);
+    }
+
+    public function setMetaDescription($value){
+        $this->translation->metaDescription = htmlspecialchars($value);
+    }
+
+    public function getEnabled(){
+        return empty($this->translation->enabled) ? 0 : $this->translation->enabled;
+    }
+
+    public function setEnabled($value){
+        $this->translation->enabled = $value;
+    }
+
+    public function getSequence(){
+        return empty($this->translation->sequence) ? 0 : $this->translation->sequence;
+    }
+
+    public function getPhoneNumber(){
+        return empty($this->translation->phoneNumber) ? \Yii::$app->params['categoryPhoneNumber'] : $this->translation->phoneNumber;
+    }
+
+    public function getKeywords(){
+        return $this->translation->metaKeywords;
+    }
+
+    public function setKeywords($val){
+        $this->translation->metaKeywords = $val;
+    }
+
+    /**
+     * @param $link string
+     * @return Category
+     * @throws NotFoundHttpException
+     */
+    public static function findByLink($link){
+        $category = self::find()
+            ->joinWith(['translations'])
+            ->where([CategoryTranslation::tableName().'.link' => $link])
+            ->one();
+        if(empty($category)){
+            throw new NotFoundHttpException("Категория по ссылке {$link} не найдена!");
+        }
+
+        if(!empty($category->translation->link) && $category->translation->link != $link){
+            \Yii::$app->controller->redirect([$category->translation->link], 301);
+            \Yii::$app->end();
+        }
+
+        return $category;
+    }
+
+
+    /**
+     * @param bool $withSubcategories
+     * @return int|null
+     * @deprecated
+     */
+
+    public function goodsCount($withSubcategories = false){
+        if(!$withSubcategories && $this->goodsCount != null){
+            return $this->goodsCount;
+        }elseif($withSubcategories && $this->goodsCountSubcategories != null){
+            return $this->goodsCountSubcategories;
+        }
+
+        $q = new Query();
+        $q = $q->select('COUNT(*)')
+            ->from([Category::tableName().' a', Good::tableName().' b'])
+            ->andWhere('a.ID = b.GroupID')
+            ->andWhere('b.show_img = 1 AND b.deleted = 0 AND (b.PriceOut1 != 0 AND b.PriceOut2 != 0)');
+
+        if($withSubcategories){
+            $q->andWhere(['like', 'a.Code', $this->Code.'%', false]);
+        }
+
+        $q = $q->scalar();
+
+        $q = intval($q);
+
+        if($withSubcategories){
+            $this->goodsCountSubcategories = $q;
+        }else{
+            $this->goodsCount = $q;
+        }
+
+        return $withSubcategories ? $this->goodsCountSubcategories : $this->goodsCount;
+    }
+
+
     public static function createCategoryCode($parentCategory){
         if($parentCategory == ''){
             return false;
@@ -285,27 +362,6 @@ class Category extends \yii\db\ActiveRecord
         }
 
         return $c;
-    }
-
-    public function getCategoryLink($category){
-        if(filter_var($category, FILTER_VALIDATE_INT)){
-            $c = Category::findOne(['ID' => $category]);
-            $category = $c->Code;
-        }
-
-        $c = Category::getParentCategories($category);
-
-        if(empty($c)){
-            return false;
-        }
-
-        $links = [];
-
-        foreach($c as $cc){
-            $links[] = TranslitHelper::to($cc->Name);
-        }
-
-        return implode('/', $links);
     }
 
     public static function change($id, $param){
@@ -360,7 +416,8 @@ class Category extends \yii\db\ActiveRecord
                 'class' => 'sammaye\audittrail\LoggableBehavior',
                 'ignored' => [
                     'Name2',
-                    'ID'
+                    'ID',
+                    'viewOptions'
                 ],
             ]
         ];
@@ -428,8 +485,23 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function beforeSave($insert){
-        $this->pageType = $this->pageType == '' ? 0 : $this->pageType;
-        $this->listorder = $this->listorder == '' ? 0 : $this->listorder;
+        if($this->isNewRecord){
+            $this->setAttribute('Code', Category::createCategoryCode($this->parentCategory));
+        }
+
+        if(is_array($this->viewOptions)){
+            $this->viewOptions = Json::encode($this->viewOptions);
+        }
+
+        if(empty($this->cat_img)){
+            $this->cat_img = '';
+        }
+
+        if(empty($this->yandexName)){
+            $this->yandexName = '';
+        }
+
+        $this->viewFile = empty($this->viewFile) ? 'category' : $this->viewFile;
 
         return parent::beforeSave($insert);
     }
@@ -485,5 +557,16 @@ class Category extends \yii\db\ActiveRecord
         $this->viewOptions = Json::decode($this->viewOptions);
 
         return parent::afterFind();
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if(empty($this->translation->ID)){
+            $this->translation->ID = $this->ID;
+        }
+
+        $this->translation->save(false);
+
+        parent::afterSave($insert, $changedAttributes); // TODO: Change the autogenerated stub
     }
 }

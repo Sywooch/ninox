@@ -9,8 +9,6 @@
 namespace frontend\helpers;
 
 
-use frontend\models\Pricerule;
-
 class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
 
     public function init(){

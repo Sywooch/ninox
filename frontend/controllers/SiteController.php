@@ -327,47 +327,31 @@ class SiteController extends Controller
     }
 
     public function getCategoryPhoneNumber($object = null){
-        if($object !== null){
-            $class = get_parent_class($object);
+        $class = get_parent_class($object);
+        switch($class){
+            case 'common\models\Category':
+                $category = $object;
+                break;
+            case 'common\models\Good':
+                $category = Category::findOne($object->GroupID);
+                break;
+            case '':
+                return;
+                break;
+            default:
+                throw new InvalidParamException("Класс {$class} не предназначен для вывода номера телефона категории!");
+                break;
+        }
 
-            try{
-                switch($class::className()){
-                    case 'common\models\Category':
-                        $category = $object;
-                        break;
-                    case 'common\models\Good':
-                        $category = Category::findOne($object->GroupID);
-                        break;
-                    case '':
-                        \Yii::$app->params['categoryPhoneNumber'] = '(044) 578 20 16';
-                        return;
-                        break;
-                    default:
-                        throw new InvalidParamException("Класс {$class} не предназначен для генерации хлебных крошек!");
-                        break;
+        if(strlen($category->Code) != 3){
+            foreach($category->parents as $parent){
+                if(!empty($parent->phoneNumber)){
+                    \Yii::$app->params['categoryPhoneNumber'] = $parent->phoneNumber;
+                    break;
                 }
-
-                \Yii::trace('place 1');
-
-                if(strlen($category->Code) != 3){
-                    \Yii::trace('place 2');
-
-                    foreach($category->parents as $parent){
-                        \Yii::trace('finded parent');
-
-                        if(!empty($parent->phoneNumber)){
-                            \Yii::trace($parent->phoneNumber);
-
-                            \Yii::$app->params['categoryPhoneNumber'] = $parent->phoneNumber;
-                            break;
-                        }
-                    }
-                }else{
-                    \Yii::$app->params['categoryPhoneNumber'] = $category->phoneNumber;
-                }
-            }catch (\Error $e){
-
             }
+        }else{
+            \Yii::$app->params['categoryPhoneNumber'] = $category->phoneNumber;
         }
     }
 
@@ -432,7 +416,6 @@ class SiteController extends Controller
         if(\Yii::$app->user->isGuest){
             if(!empty(\Yii::$app->request->post("phone"))){
                 $customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
-
                 if(\Yii::$app->request->cookies->getValue("customerPhone") != $customerPhone){
                     \Yii::$app->response->cookies->add(new Cookie([
                         'name'      =>  'customerPhone',
@@ -711,7 +694,7 @@ class SiteController extends Controller
     }
 
     public function actionSearch(){
-        $suggestion = \Yii::$app->request->get("string");
+        $suggestion = \Yii::$app->request->get('string');
 
         $name = $this->getSearchStatement($suggestion);
 
@@ -726,6 +709,8 @@ class SiteController extends Controller
             ->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
             ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
             ->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
+            ->andWhere(['`category_translations`.`enabled`' =>  1])
+            ->andWhere(['`item_translations`.`enabled`' =>  1])
             ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC'); //TODO: Пофиксить поиск, бо це глина
 
         if(\Yii::$app->request->isAjax && !\Yii::$app->request->get('page')){
@@ -836,6 +821,7 @@ class SiteController extends Controller
      * Requests password reset.
      *
      * @return mixed
+     * @throws \yii\base\InvalidParamException
      */
     public function actionRequestPasswordReset()
     {
@@ -860,6 +846,7 @@ class SiteController extends Controller
      *
      * @param string $token
      * @return mixed
+     * @throws \yii\base\InvalidParamException
      * @throws BadRequestHttpException
      */
     public function actionResetPassword($token)
@@ -908,6 +895,11 @@ class SiteController extends Controller
 
     public function saveCallbackForm(){
         $model = new CallbackForm();
+
+  /*      if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            $model = new CallbackForm();
+        }*/
 
         $model->load(\Yii::$app->request->post());
 

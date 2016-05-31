@@ -8,7 +8,6 @@
 
 namespace frontend\models;
 
-use common\models\History;
 use yii\base\ErrorException;
 use yii\base\Model;
 use yii\helpers\Json;
@@ -73,7 +72,11 @@ class OrderForm extends Model{
 
     public function init(){
         if(\Yii::$app->user->isGuest){
-            $this->customerPhone = \Yii::$app->request->cookies->getValue("customerPhone");
+            if(!empty(\Yii::$app->request->post("phone"))){
+                $this->customerPhone = preg_replace('/\D+/', '', \Yii::$app->request->post("phone"));
+            }elseif(!empty(\Yii::$app->request->cookies->getValue("customerPhone"))){
+                $this->customerPhone = \Yii::$app->request->cookies->getValue("customerPhone");
+            }
         }
 
         parent::init();
@@ -95,10 +98,10 @@ class OrderForm extends Model{
             [['anotherReceiver', 'anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'safe'],
             [['deliveryParam', 'paymentParam'], 'integer'],
             [['customerID', 'customerName', 'customerSurname', 'customerFathername', 'customerEmail', 'customerPhone', 'deliveryCountry', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryType', 'deliveryInfo', 'paymentType', 'paymentInfo', 'customerComment', 'promoCode', 'canChangeItems'], 'safe'],
-            [['customerName', 'customerSurname', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo'], 'string'],
-            [['customerName', 'customerSurname', 'customerEmail', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
+            [['customerName', 'customerSurname', 'customerEmail', 'customerFathername', 'deliveryCity', 'deliveryRegion', 'deliveryAddress', 'deliveryInfo', 'customerComment'], 'string'],
+            [['customerName', 'customerSurname', 'deliveryCity', 'deliveryRegion', 'deliveryType'], 'required'],
             ['deliveryInfo', 'required',
-                'when' => function(){//var_dump($this->id); die();
+                'when' => function(){
                     return in_array($this->deliveryType, [1, 2]);
                 },
                 'whenClient' => "function(attribute, value){
@@ -109,7 +112,7 @@ class OrderForm extends Model{
                 'when' => function(){
                     return $this->anotherReceiver != 0;
                 },
-                'whenClient' => "function(attribute, value){console.log(attribute);
+                'whenClient' => "function(attribute, value){
                     return $(attribute.input).parents('.tab-pane.active').length;
                 }"
             ],
@@ -124,21 +127,22 @@ class OrderForm extends Model{
 
     public function attributeLabels(){
         return [
-            'customerName'           =>  \Yii::t('shop', 'Имя'),
-            'customerSurname'        =>  \Yii::t('shop', 'Фамилия'),
-            'customerPhone'          =>  \Yii::t('shop', 'Телефон'),
-            'customerEmail'          =>  \Yii::t('shop', 'Эл. почта'),
-            'deliveryCity'           =>  \Yii::t('shop', 'Город'),
-            'deliveryRegion'         =>  \Yii::t('shop', 'Область'),
-            'deliveryInfo'           =>  \Yii::t('shop', 'Данные о доставке'),
-            'anotherReceiverName'    =>  \Yii::t('shop', 'Имя'),
-            'anotherReceiverSurname' =>  \Yii::t('shop', 'Фамилия'),
-            'anotherReceiverPhone'   =>  \Yii::t('shop', 'Телефон'),
+            'customerName'              =>  \Yii::t('shop', 'Имя'),
+            'customerSurname'           =>  \Yii::t('shop', 'Фамилия'),
+            'customerPhone'             =>  \Yii::t('shop', 'Телефон'),
+            'customerEmail'             =>  \Yii::t('shop', 'Эл. почта'),
+            'deliveryCity'              =>  \Yii::t('shop', 'Город'),
+            'deliveryRegion'            =>  \Yii::t('shop', 'Область'),
+            'deliveryInfo'              =>  \Yii::t('shop', 'Данные о доставке'),
+            'anotherReceiverName'       =>  \Yii::t('shop', 'Имя'),
+            'anotherReceiverSurname'    =>  \Yii::t('shop', 'Фамилия'),
+            'anotherReceiverPhone'      =>  \Yii::t('shop', 'Телефон'),
+            'customerComment'           =>  \Yii::t('shop', 'Добавить коментарий к заказу'),
         ];
     }
 
     public function getRegions(){
-        $order = new History();
+        $order = new \common\models\History();
 
         return $order->regions;
     }
@@ -277,13 +281,16 @@ class OrderForm extends Model{
         if($order->save()){
             $this->createdOrder = $order->id;
 
+            $orderSuperRealPrice = 0;
+
             foreach(\Yii::$app->cart->goods as $good){
                 if(!empty($customer->cardNumber) && $good->discountSize == 0){
                     $good->setAttributes([
                         'discountSize'  =>  2,
                         'discountType'  =>  2,
-                        'customerRule'  =>  '-1'
-                    ]);
+                    ], false);
+
+                    $good->customerRule = -1;
                 }
 
                 $orderItem = new SborkaItem([
@@ -291,7 +298,7 @@ class OrderForm extends Model{
                     'itemID'        =>  $good->ID,
                     'name'          =>  $good->Name,
                     'count'         =>  \Yii::$app->cart->has($good->ID),
-                    'originalPrice' =>  \Yii::$app->cart->isWholesale() ? $good->realWholesalePrice : $good->realRetailPrice,
+                    'originalPrice' =>  \Yii::$app->cart->wholesale ? $good->realWholesalePrice : $good->realRetailPrice,
                     'discountSize'  =>  $good->discountSize,
                     'discountType'  =>  $good->discountType,
                     'priceRuleID'   =>  $good->priceRuleID,
@@ -300,10 +307,16 @@ class OrderForm extends Model{
                     'storeID'       =>  1
                 ]);
 
+                $orderSuperRealPrice += ($orderItem->price * $orderItem->count);
+
                 if($orderItem->save(false)){
                     \Yii::$app->cart->remove($good->ID, false);
                 }
             }
+
+            /* TODO: чистой воды костыль */
+            $order->originalSum = $orderSuperRealPrice;
+            $order->save(false);
 
             \Yii::$app->cart->recalcCart();
             \Yii::$app->cart->save();
@@ -318,7 +331,7 @@ class OrderForm extends Model{
                 'deliveryParam' =>  $this->deliveryParam,
                 'paymentType'   =>  $this->paymentType,
                 'paymentParam'  =>  $this->paymentParam,
-                'paymentInfo'   =>  $this->paymentInfo
+                'paymentInfo'   =>  $this->paymentInfo,
             ]);
 
             $customer->save(false);

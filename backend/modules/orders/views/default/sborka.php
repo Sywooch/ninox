@@ -67,10 +67,10 @@ $("body").on('click', 'button.saveCount', function(){
             parent.find("div.image").toggleClass('denied');
 
             switch(data){
-                case 1:
+                case 0:
                     toOrderButton.removeClass('green-button').addClass('gray-button').attr('disabled', true);
                     break;
-                case 0:
+                case 1:
                 default:
                     setDefaultState(parent);
                     break;

@@ -11,6 +11,11 @@ namespace backend\models;
 use sammaye\audittrail\AuditTrail;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class SborkaItem
+ * @package backend\models
+ * @property double $discountSum
+ */
 class SborkaItem extends \common\models\SborkaItem{
 
     public $priceModified = false;
@@ -76,7 +81,7 @@ class SborkaItem extends \common\models\SborkaItem{
     }
 
     public function getCustomerDiscountSum(){
-        if(!empty($this->discountSize) && $this->customerRule < 0){
+        if($this->customerDiscounted){
             return $this->discountSum;
         }
 
@@ -84,7 +89,7 @@ class SborkaItem extends \common\models\SborkaItem{
     }
 
     public function getParentOrders(){
-        $parentOrders = ArrayHelper::getColumn(AuditTrail::find()->select("old_value")->where(['model_id' => $this->ID, 'field' => 'orderID'])->andWhere(['like', 'model', 'SborkaItem'])->asArray()->all(), 'old_value');
+        $parentOrders = ArrayHelper::getColumn(AuditTrail::find()->select('old_value')->where(['model_id' => $this->ID, 'field' => 'orderID'])->andWhere(['like', 'model', 'SborkaItem'])->asArray()->all(), 'old_value');
 
         return History::find()->where(['in', 'ID', $parentOrders])->all();
     }

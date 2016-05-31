@@ -274,7 +274,8 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
         }
 
-        $order->callback = \Yii::$app->request->post("confirm") == "true" ? 1 : 2;
+        \Yii::$app->request->post("confirm") == "true" ? $order->callback = 1 : ($order->callback ? $order->callback++ : $order->callback = 2);
+        $order->confirmed = $order->callback == 1 ? 1 : 0;
 
         $order->save(false);
 
@@ -472,9 +473,9 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
         }
 
-        $attribute = \Yii::$app->request->post("editableAttribute");
-        $data = \Yii::$app->request->post("History");
-        $data = $data[\Yii::$app->request->post("editableIndex")];
+        $attribute = \Yii::$app->request->post('editableAttribute');
+        $data = \Yii::$app->request->post('History');
+        $data = $data[\Yii::$app->request->post('editableIndex')];
 
         $order->$attribute = $data[$attribute];
 
@@ -485,11 +486,11 @@ class DefaultController extends Controller
 
     public function actionShowlist($context = false, $ordersSource = false){
         if(!\Yii::$app->request->isAjax && !$context){
-            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+            throw new BadRequestHttpException('Этот метод доступен только через ajax!');
         }
 
         if(!$context){
-            $context = !empty(\Yii::$app->request->get("context")) ? true : false;
+            $context = !empty(\Yii::$app->request->get('context')) ? true : false;
         }
 
         $historySearch = new HistorySearch();
@@ -513,12 +514,12 @@ class DefaultController extends Controller
 
     public function actionRestoreitemdata(){
         if(!\Yii::$app->request->isAjax){
-            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+            throw new UnsupportedMediaTypeHttpException('Этот запрос возможен только через ajax!');
         }
 
         \Yii::$app->response->format = 'json';
 
-        $itemID = \Yii::$app->request->post("ID");
+        $itemID = \Yii::$app->request->post('ID');
 
         $item = SborkaItem::findOne(['ID' => $itemID]);
 
@@ -529,18 +530,18 @@ class DefaultController extends Controller
         $order = History::findOne(['id' => $item->orderID]);
 
         if(!$order){
-            throw new NotFoundHttpException("Заказ ".$item->orderID." не найден!");
+            throw new NotFoundHttpException("Заказ {$item->orderID} не найден!");
         }
 
         $good = Good::findOne(['id' => $item->itemID]);
 
         if(!$good){
-            throw new NotFoundHttpException("Товар ".$item->itemID." не найден!");
+            throw new NotFoundHttpException("Товар {$item->itemID} не найден!");
         }
 
         $item->name = $good->Name;
         //$item->count = $item->originalCount;
-        $item->originalPrice = $order->isWholesale() ? $good->PriceOut1 : $good->PriceOut2;
+        $item->originalPrice = $order->isWholesale ? $good->PriceOut1 : $good->PriceOut2;
 
         if($item->save(false)){
             //$good->count = $good->count - $item->addedCount;
@@ -628,13 +629,13 @@ class DefaultController extends Controller
 
         $order = \Yii::$app->request->post("OrderID");
 
+
         return $this->renderAjax('_changes_modal', [
             'order'         =>  $order,
             'dataProvider'  =>  new ActiveDataProvider([
                 'query'     =>  AuditTrail::find()
-                                    ->where(['model'  =>  History::className(), 'model_id'    =>  $order])
-                                    ->orderBy('id desc')
-                                    ->orWhere(['and', ['model' => SborkaItem::className()], ['in', 'model_id', SborkaItem::find()->select('id')->where(['orderID' => $order])]]),
+                                    ->where(['like', 'model', '%History', false])
+                                    ->orWhere(['and', ['like', 'model', '%SborkaItem', false], ['in', 'model_id', SborkaItem::find()->select('ID')->where(['orderID' => $order])]]),
                 'pagination'    =>  [
                     'pageSize'  =>  '20'
                 ]
@@ -860,10 +861,10 @@ class DefaultController extends Controller
                     }
 
                     $item = $order->findItemByUniqID(\Yii::$app->request->post("itemID"));
-                    $item->notFounded = $item->notFounded == 1 ? 0 : 1;
+                    $item->nalichie = $item->nalichie == 1 ? 0 : 1;
                     $item->save(false);
 
-                    return $item->notFounded == 1 ? 1 : 0;
+                    return $item->nalichie == 1 ? 1 : 0;
                     break;
                 case 'saveItemsCount';
                     foreach(\Yii::$app->request->post("fields") as $item){

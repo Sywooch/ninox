@@ -21,6 +21,7 @@ use Yii;
  * @property array $items
  * @property integer $postpone
  * @property string $promoCode
+ * @property int $source
  */
 class CashboxOrder extends \yii\db\ActiveRecord
 {
@@ -126,6 +127,10 @@ class CashboxOrder extends \yii\db\ActiveRecord
     }
 
     public function beforeSave($insert){
+        if(empty($this->source)){
+            $this->source = \Yii::$app->params['configuration']->ID;
+        }
+
         if($this->isNewRecord){
             \Yii::trace('new record!');
             $this->id = hexdec(uniqid());

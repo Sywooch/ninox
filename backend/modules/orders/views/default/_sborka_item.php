@@ -3,7 +3,7 @@
 use yii\bootstrap\Html;
 
 echo Html::tag('div', Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$item->photo).Html::tag('div', '', ['class' => 'ico']), [
-        'class' =>  'image'.($item->inOrder ? ' access' : ($item->notFounded ? ' denied' : ''))
+        'class' =>  'image'.($item->inOrder ? ' access' : ($item->nalichie != 1 ? ' denied' : ''))
     ]),
     Html::tag('span', $item->name, [
         'style' =>  'display: inline-block; margin-top: 20px; padding: 0px 30px; overflow: hidden; max-width: 340px; max-height: 18px;'
@@ -42,8 +42,8 @@ echo Html::tag('div', Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$
             Html::button(($item->inOrder ? 'В ЗАКАЗЕ '.$item->count.' ШТ' : 'В ЗАКАЗ'),
                 [
                     'type'  =>  'button',
-                    'class' =>  'medium-button button toOrder '.($item->notFounded == 1 ? 'gray-button' : 'green-button'),
-                    ($item->notFounded == 1 ? 'disabled' : 'enabled') => 'true'
+                    'class' =>  'medium-button button toOrder '.($item->nalichie != 1 ? 'gray-button' : 'green-button'),
+                    ($item->nalichie != 1 ? 'disabled' : 'enabled') => 'true'
                 ]
             ), [
                 'class' => 'buttons'

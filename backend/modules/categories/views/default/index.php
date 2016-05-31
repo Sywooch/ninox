@@ -44,9 +44,10 @@ function updSort(){
 function changeCategoryState(e){
     $.ajax({
 		type: 'POST',
-		url: '/categories/changecategorystate',
+		url: '/categories/manipulate',
 		data: {
-		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
+		    category: $(e.target).parent().attr("data-attribute-categoryID"),
+		    attribute: 'enabled'
 		},
 		success: function(data){
 			e.target.innerHTML = data == 1 ? "Выключить" : "Включить";
@@ -65,7 +66,8 @@ function changeCategoryCanBuy(e){
 		type: 'POST',
 		url: '/goods/changecategorycanbuy',
 		data: {
-		    'category': e.target.parentNode.getAttribute("data-attribute-categoryID")
+		    category: $(e.target).parent().attr("data-attribute-categoryID"),
+		    attribute: 'canBuy'
 		},
 		success: function(data){
 			e.target.innerHTML = data == 1 ? "Не продавать" : "Продавать";

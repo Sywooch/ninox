@@ -285,7 +285,7 @@ class SiteController extends Controller
 
     public function actionChecks(){
         $dataProvider = new ActiveDataProvider([
-            'query'     =>  CashboxOrder::find()->where(['postpone' => 1]),
+            'query'     =>  CashboxOrder::find()->where(['postpone' => 1])->andWhere(['source' => \Yii::$app->params['configuration']->ID]),
             'sort'      =>  [
                 'defaultOrder'  =>  ['createdTime' =>  SORT_DESC]
             ]
@@ -309,7 +309,7 @@ class SiteController extends Controller
     }
 
     public function actionReturns(){
-        $orders = CashboxOrder::find()->where(['return' => 1]);
+        $orders = CashboxOrder::find()->where(['return' => 1])->andWhere(['source' => \Yii::$app->params['configuration']->ID]);
 
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
@@ -423,7 +423,7 @@ class SiteController extends Controller
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query'     =>  $orders->andWhere(['return' => 0]),
+            'query'     =>  $orders->andWhere(['return' => 0])->andWhere(['source' => \Yii::$app->params['configuration']->ID]),
             'sort'      =>  [
                 'defaultOrder'  =>  ['doneTime' =>  SORT_DESC]
             ]

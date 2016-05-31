@@ -9,11 +9,9 @@
 namespace backend\models;
 
 use backend\components\S3Uploader;
-use common\helpers\TranslitHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
-use common\models\GoodsPhoto;
 use yii\db\Query;
 use yii\web\NotFoundHttpException;
 
@@ -57,14 +55,14 @@ class Good extends \common\models\Good{
     /**
      * Добавляет фото
      *
-     * @param string $photo ссылка на фото
+     * @param string $photoLink ссылка на фото
      * @param int $order позиция
      *
      * @return bool добавлена-ли фотография
      */
-    public function addPhoto($photo, $order = 0){
+    public function addPhoto($photoLink, $order = 0){
         $photo = new GoodPhoto([
-            'ico'       =>  $photo,
+            'ico'       =>  $photoLink,
             'itemid'    =>  $this->ID
         ]);
 
@@ -93,6 +91,7 @@ class Good extends \common\models\Good{
      * @param int $order порядок
      *
      * @return bool
+     * @throws \yii\db\StaleObjectException
      * @throws \Exception
      * @throws \yii\web\NotFoundHttpException
      */
@@ -100,7 +99,7 @@ class Good extends \common\models\Good{
         $photo = GoodPhoto::findOne(['itemid' => $this->ID, 'order' => $order]);
 
         if(!$photo){
-            throw new NotFoundHttpException("Такой фотографии не найдено!");
+            throw new NotFoundHttpException('Такой фотографии не найдено!');
         }
 
         if($photo->delete()){
@@ -120,11 +119,12 @@ class Good extends \common\models\Good{
      * @param $count integer Колличество
      *
      * @return bool Добавлен-ли товар в заказ
+     * @throws \BadFunctionCallException
      * @throws \yii\web\NotFoundHttpException
      */
     public function addToOrder($order, $count = 1){
         if(empty($order)){
-            throw new \BadFunctionCallException("Невозможно пользоваться данным методом, не передав заказ!");
+            throw new \BadFunctionCallException('Невозможно пользоваться данным методом, не передав заказ!');
         }
 
         $item = SborkaItem::findOne(['orderID' => $order->id, 'itemID' => $this->ID]);
@@ -134,7 +134,7 @@ class Good extends \common\models\Good{
                 'itemID'        =>  $this->ID,
                 'orderID'       =>  $order->id,
                 'name'          =>  $this->Name,
-                'originalPrice' =>  $order->isWholesale() ? $this->wholesalePrice : $this->retailPrice,
+                'originalPrice' =>  $order->isWholesale ? $this->wholesalePrice : $this->retailPrice,
                 'categoryCode'  =>  $this->categorycode
             ]);
         }
@@ -180,7 +180,7 @@ class Good extends \common\models\Good{
         }
 
         if(empty($this->listorder)){
-            $this->listorder = (self::find()->where(['GroupID' => $this->GroupID])->max("listorder") + 1);
+            $this->listorder = (self::find()->where(['GroupID' => $this->GroupID])->max('listorder') + 1);
         }
 
         if(empty($this->otkl_time)){

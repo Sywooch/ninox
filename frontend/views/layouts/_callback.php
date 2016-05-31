@@ -124,14 +124,21 @@ Html::tag('div', \Yii::t('shop', '').
 
     ?>
     <span class="head">Хотите мы вам перезвоним?</span>
+<<<<<<< HEAD
 
     <?= Html::tag('div',
 
+=======
+    <?= Html::tag('div',
+>>>>>>> 55ea51c4f3bc75c1d3b4123d93759b41cc208f29
         $form->field($model, 'phone')->textInput(['value' => !\Yii::$app->user->isGuest ?
             \Yii::$app->user->identity->phone :
             (\Yii::$app->request->cookies->getValue("customerPhone", false) ?
                 \Yii::$app->request->cookies->getValue("customerPhone") : '')]).
+<<<<<<< HEAD
 
+=======
+>>>>>>> 55ea51c4f3bc75c1d3b4123d93759b41cc208f29
         Html::submitButton('Перезвоните мне', ['class' => 'yellow-button-modal',
             'name' => 'callback-button']), [
             'class' => 'callback-content'

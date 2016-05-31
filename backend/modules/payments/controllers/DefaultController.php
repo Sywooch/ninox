@@ -20,6 +20,8 @@ class DefaultController extends Controller
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\base\InvalidParamException
      * @throws NotFoundHttpException
      * @throws \Exception
      */
@@ -37,7 +39,7 @@ class DefaultController extends Controller
         if(\Yii::$app->request->isAjax){
             \Yii::$app->response->format = 'json';
 
-            $id = \Yii::$app->request->post("id");
+            $id = \Yii::$app->request->post('id');
 
             $model = SendedPayment::findOne(['id' => $id]);
 
@@ -45,12 +47,12 @@ class DefaultController extends Controller
                 throw new NotFoundHttpException("Заказ с идентификатором {$id} не найден!");
             }
 
-            switch(\Yii::$app->request->post("action")){
-                case "delete":
+            switch(\Yii::$app->request->post('action')){
+                case 'delete':
                     $model->delete();
                     return true;
                     break;
-                case "confirm":
+                case 'confirm':
                     if(!empty($model->order)){
                         $model->order->moneyConfirmed = 1;
 
@@ -76,7 +78,7 @@ class DefaultController extends Controller
 
     public function actionUpdateExchange(){
         if(!\Yii::$app->request->isAjax){
-            throw new BadRequestHttpException("Данный метод доступен только через ajax!");
+            throw new BadRequestHttpException('Данный метод доступен только через ajax!');
         }
 
         $exchange = MoneyExchange::findOne(['date' => \Yii::$app->request->get('date')]);
@@ -101,18 +103,18 @@ class DefaultController extends Controller
 
     public function actionConfirm(){
         if(!\Yii::$app->request->isAjax){
-            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+            throw new BadRequestHttpException('Этот метод доступен только через ajax!');
         }
 
-        $order = History::findOne(['id' => \Yii::$app->request->post("id")]);
+        $order = History::findOne(['id' => \Yii::$app->request->post('id')]);
 
         \Yii::$app->response->format = 'json';
 
         if(!$order){
-            throw new NotFoundHttpException("Заказ не найден!");
+            throw new NotFoundHttpException('Заказ не найден!');
         }
 
-        switch(\Yii::$app->request->post("action")){
+        switch(\Yii::$app->request->post('action')){
             case 'confirm':
                 $order->moneyConfirmed = '1';
                 break;
@@ -121,6 +123,12 @@ class DefaultController extends Controller
         return $order->save(false);
     }
 
+    /**
+     * @param mixed $param
+     * @return string
+     * @throws \yii\base\InvalidParamException
+     * @throws \yii\base\InvalidConfigException
+     */
     public function actionControl($param = null){
         if(!empty($param)){
             $param = \Yii::$app->formatter->asDate($param, 'php:Y-m-d');
@@ -130,6 +138,7 @@ class DefaultController extends Controller
             switch(\Yii::$app->request->get("type")){
                 case 'shop':
                     $query->andWhere("FROM_UNIXTIME(`added`, '%Y-%m-%d') = '{$param}'")
+                        ->andWhere(['orderSource'   =>  \Yii::$app->params['configuration']->id])
                         ->andWhere(['sourceType' => History::SOURCETYPE_SHOP]);
                     break;
                 case 'selfDelivered':

@@ -2,8 +2,8 @@
 
 namespace common\models;
 
-use Yii;
-use yii\web\NotFoundHttpException;
+use yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "sborka".
@@ -24,17 +24,26 @@ use yii\web\NotFoundHttpException;
  * @property integer $discountSize
  * @property integer $discountType
  * @property Good $good
+ * @property double $price
+ * @property boolean $controlled
+ * @property integer $priceRuleID
+ * @property integer $customerDiscounted
+ * @property integer $customerRule
  */
-class SborkaItem extends \yii\db\ActiveRecord
+class SborkaItem extends ActiveRecord
 {
 
+    const DISCOUNT_TYPE_UNDEFINED = 0;
+    const DISCOUNT_TYPE_SUM = 1;
+    const DISCOUNT_TYPE_PERCENT = 2;
+    const DISCOUNT_TYPE_FIXED_SUM = 3;
+
     public static $DISCOUNT_TYPES = [
-        '0' =>  'Не выбрано',
-        '1' =>  'Отнять сумму',
-        '2' =>  'Отнять процент'
+        self::DISCOUNT_TYPE_UNDEFINED =>  'Не выбрано',
+        self::DISCOUNT_TYPE_SUM =>  'Отнять сумму',
+        self::DISCOUNT_TYPE_PERCENT =>  'Отнять процент',
     ];
 
-    public $price;
     public $addedCount = 0;
     public $storeID = 0;
 
@@ -46,38 +55,49 @@ class SborkaItem extends \yii\db\ActiveRecord
         return $this->hasOne(Category::className(), ['Code' => 'categoryCode']);
     }
 
-    public function getPhoto(){
-        \Yii::trace($this->itemID);
-        return $this->good->photo;
+    public function getCustomerDiscounted(){
+        return $this->customerRule == '-1';
     }
 
-    public function afterFind(){
+    public function getPrice(){
         switch($this->discountType){
-            case '1':
-                //Размер скидки в деньгах
-                $this->price = $this->originalPrice - $this->discountSize;
+            case self::DISCOUNT_TYPE_SUM:
+                $price = $this->originalPrice - $this->discountSize;
                 break;
-            case '2':
-                //Размер скидки в процентах
-                $this->price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
+            case self::DISCOUNT_TYPE_PERCENT:
+                $price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
+                break;
+            case self::DISCOUNT_TYPE_FIXED_SUM:
+                $price = $this->discountSize;
                 break;
             default:
-                $this->price = $this->originalPrice;
+                $price = $this->originalPrice;
                 break;
         }
 
-        return parent::afterFind();
+        return $price;
     }
 
+    public function getPhoto(){
+        return $this->good->photo;
+    }
+
+    /**
+     * @todo: добавить в этом месте возвращение товаров на склад
+     * @param int $storeID
+     * @return bool
+     */
     public function returnToStore($storeID = 0){
+        if(empty($this->good)){
+            return false;
+        }
+
         $this->good->count += $this->count;
         $this->good->save(false);
+
         if(!empty($storeID)){
-            $shopGood = ShopGood::find()->where(['shopID' => $storeID, 'itemID' => $this->good->ID])->one();
-            if($shopGood){
-                $shopGood->count += $this->count;
-                $shopGood->save(false);
-            }
+            /*$this->good->count += $this->count;
+            $this->good->save(false);*/
         }
 
         return true;
@@ -96,15 +116,13 @@ class SborkaItem extends \yii\db\ActiveRecord
             $this->originalCount = $this->count;
         }
 
-        if($this->isAttributeChanged('count')){
-            $this->good->count += $this->addedCount;
+        if(!empty($this->good) && $this->isAttributeChanged('count')){
+            $this->good->count -= $this->addedCount;
             $this->good->save(false);
+
             if(!empty($this->storeID)){
-                $shopGood = ShopGood::find()->where(['shopID' => $this->storeID, 'itemID' => $this->good->ID])->one();
-                if($shopGood){
-                    $shopGood->count += $this->addedCount;
-                    $shopGood->save(false);
-                }
+                /*$this->good->count += $this->addedCount;
+                $this->good->save(false);*/
             }
         }
 

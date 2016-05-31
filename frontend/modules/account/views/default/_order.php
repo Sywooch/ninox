@@ -66,7 +66,7 @@ if($model->deleted){
             </div>
             <div class="delivery">
                 <div class="delivery-type">
-                    Доставка (Курьер по вашему адресу)
+<!--                    Доставка (Курьер по вашему адресу)-->
                 </div>
                 <div class="delivery-coast">
                     50 грн

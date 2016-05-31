@@ -95,21 +95,24 @@ class DefaultController extends Controller
      * Импорт прайслистов
      *
      * @return array|bool|string
+     * @throws \yii\base\InvalidParamException
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionImport(){
-        $priceList = PriceListImport::findOne(\Yii::$app->request->get("fileid"));
+        $priceList = PriceListImport::findOne(\Yii::$app->request->get('fileid'));
 
         if(\Yii::$app->request->isAjax){
-            switch(\Yii::$app->request->post("action")){
+            switch(\Yii::$app->request->post('action')){
                 case 'renameFile':
-                    $file = PriceListImport::findOne(\Yii::$app->request->post("id"));
+                    $file = PriceListImport::findOne(\Yii::$app->request->post('id'));
 
                     if(!$file){
-                        throw new NotFoundHttpException("Такой файл не найден!");
+                        throw new NotFoundHttpException('Такой файл не найден!');
                     }
 
-                    $file->name = \Yii::$app->request->post("value");
+                    $file->name = \Yii::$app->request->post('value');
                     $file->save(false);
                     break;
             }
@@ -121,23 +124,108 @@ class DefaultController extends Controller
             $xls = \PHPExcel_IOFactory::load(\Yii::getAlias('@webroot').'/files/importedPrices/'.$priceList->file);
 
             $models = $xls->getActiveSheet()->toArray();
+            $generatedModels = [];
 
-            $dataProvider = new ArrayDataProvider();
-
-            if(isset($priceList->configuration['withHeaders'])){
+            if(array_key_exists('withHeaders', $priceList->configuration)){
                 $header = $models[0];
                 unset($models[0]);
+                sort($models);
+            }else{
+                $header = [];
+                $highestCol = $xls->getActiveSheet()->getHighestColumn();
+                for($i = 'A'; $i <= $highestCol; $i++){
+                    $header[] = $i;
+                }
             }
-            //TODO: сделать чтобы заголовки отображались заголовками таблицы
 
-            $dataProvider->setModels($models);
+            $i = 0;
 
-            if(\Yii::$app->request->post("PriceListImportTable")){
+            while(count($models) != $i){
+                $createdModel = new \stdClass();
+
+                foreach($models[$i] as $key => $value) {
+                    if ($value == null) {
+                        $value = '';
+                    }
+
+                    $param = $header[$key];
+
+                    $createdModel->$param = $value;
+                }
+
+                $generatedModels[] = $createdModel;
+
+                $i++;
+
+                if($i == count($models)){
+                    break;
+                }
+            }
+
+            $dataProvider = new ArrayDataProvider();
+            $dataProvider->setModels($generatedModels);
+
+            if(\Yii::$app->request->post('PriceListImportTable')){
+                $keys = $keysValues = $attributes = [];
+                $replaceExisting = false;
+                $keysCount = $added = $updated = 0;
+
+                $columns = \Yii::$app->request->post('PriceListImportTable')['columns'];
+
+                foreach($columns as $key => $subarray){
+                    if(!empty($subarray['key'])){
+                        $keys[$key] = $subarray['attribute'];
+                    }
+
+                    if(!empty($subarray['attribute'])){
+                        $attributes[$key] = $subarray['attribute'];
+                    }
+                }
+
+                if(!empty($keys)){
+                    $keysCount = count($keys);
+                    $replaceExisting = true;
+                }
+
+                $query = Good::find();
+
+                foreach($keys as $keyKey => $keyAttribute){
+                    $keysValues = [];
+
+                    $keysModels = [];
+
+                    foreach($dataProvider->getModels() as $model){
+                        $param = $header[$keyKey];
+
+                        if(isset($model->$param)){
+                            $keysModels[$keyAttribute][$model->$param] = $model;
+                            $keysValues[] = $model->$param;
+                        }
+
+                        $key = $keyAttribute;
+                    }
+
+                    if(!empty($keysValues)){
+                        $query->andWhere(['in', $key, $keysValues]);
+                    }
+                }
+
+                //Обновление уже существующих товаров
+                if(!empty($query->where)){
+                    foreach($query->each() as $good){
+                        
+                    }
+                }
+
+
+            }
+
+            /*if(\Yii::$app->request->post('PriceListImportTable')){
                 $keys = $attributes = [];
                 $replaceExisting = false;
                 $keysCount = $added = $updated = 0;
 
-                $columns = \Yii::$app->request->post("PriceListImportTable")['columns'];
+                $columns = \Yii::$app->request->post('PriceListImportTable')['columns'];
 
                 foreach($columns as $key => $subarray){
                     if(!empty($subarray['key'])){
@@ -208,7 +296,7 @@ class DefaultController extends Controller
                 $priceList->importedDate = date('Y-m-d H:i:s');
 
                 $priceList->save(false);
-            }
+            }*/
 
             return $this->render('import_table', [
                 'data'          =>  $data,
@@ -333,7 +421,6 @@ class DefaultController extends Controller
     /**
      * @return string
      * Метод добавляет товары на сайт
-     * @deprecated метод actionGood должен позволять редактировать и создавать товар
      */
     public function actionAdd(){
         $good = new Good();
@@ -350,7 +437,7 @@ class DefaultController extends Controller
                     'url'   =>  Url::toRoute(['/categories'])
                 ];
 
-                if (sizeof($category->parents) >= 1) {
+                if (count($category->parents) >= 1) {
                     $parents = array_reverse($category->parents);
 
                     foreach($parents as $parentCategory) {
@@ -867,45 +954,6 @@ class DefaultController extends Controller
 
         return $return;
     }
-
-    /**
-     * @return mixed
-     * @throws MethodNotAllowedHttpException
-     * @deprecated
-     */
-    public function actionChangestate(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        return Good::changeState(\Yii::$app->request->post("GoodID"));
-    }
-
-
-    /**
-     * @return bool|string
-     * @throws MethodNotAllowedHttpException
-     * @throws NotFoundHttpException
-     * @deprecated
-     */
-    public function actionWorkwithtrash(){
-        if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод работает только через ajax!");
-        }
-
-        $goodID = \Yii::$app->request->post("goodID");
-
-        $good = Good::findOne($goodID);
-        
-        if(empty($good)){
-            throw new NotFoundHttpException("Товар с идентификатором {$goodID} не найден!");
-        }
-        
-        $good->deleted = empty(\Yii::$app->request->post("state")) ? ($good->deleted == 1 ? 0 : 1) : \Yii::$app->request->post("state");
-
-        return $good->save(false);
-    }
-
 
     public function actionChangegoodvalue(){
         if(!\Yii::$app->request->isAjax){

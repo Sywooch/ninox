@@ -46,6 +46,7 @@ use Yii;
  * @property integer $paymentParam
  * @property string $paymentInfo
  * @property CustomerAddresses $recipient
+ * @property History[] $orders
  */
 class Customer extends \yii\db\ActiveRecord
 {
@@ -341,7 +342,7 @@ class Customer extends \yii\db\ActiveRecord
             [['ID', 'blackList'], 'required'],
             [['ID', 'Code', 'priceGroup', 'type', 'groupID', 'deleted', 'deliveryType', 'paymentType', 'blackList', 'money', 'deliveryParam', 'paymentParam'], 'integer'],
             [['discount'], 'number'],
-            [['registrationTime', 'blackListAddedTime', 'birthday', 'giveFeedbackClosed'], 'safe'],
+            [['registrationTime', 'blackListAddedTime', 'birthday', 'giveFeedbackClosed', 'name', 'surname', 'city', 'region'], 'safe'],
             [['password', 'lang'], 'string'],
             [['Company', 'City', 'City2', 'Address', 'phone', 'Phone2', 'email', 'cardNumber', 'Note2', 'recipientID', 'auth_key', 'password_reset_token', 'deliveryInfo', 'paymentInfo'], 'string', 'max' => 255],
         ];
