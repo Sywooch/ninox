@@ -110,8 +110,7 @@ class CategoryForm extends Model
             'retailPercent' =>  $this->retailPercent,
             'onePrice'      =>  $this->onePrice,
             'ymlExport'     =>  $this->umlExport,
-            'canBuy'        =>  $this->sellProducts,
-            'Code'          =>  Category::createCategoryCode($this->parentCategory)
+            'canBuy'        =>  $this->sellProducts
         ], false);
 
         $this->category->translation->setAttributes([
