@@ -1,9 +1,16 @@
-<button class="remodal-close" data-remodal-action="close"></button>
-<?=\yii\grid\GridView::widget([
+<?php
+use kartik\grid\GridView;
+use rmrevin\yii\fontawesome\FA;
+use yii\bootstrap\Html;
+
+echo Html::button('', ['class' => 'remodal-close', 'data-remodal-action' => 'close']);
+
+echo GridView::widget([
     'dataProvider'  =>  $dataProvider,
     'columns'       =>  [
         [
             'attribute' =>  'model',
+            'format'    =>  'html',
             'value'     =>  function($model){
                 switch($model->model){
                     case 'backend\models\History':
@@ -28,13 +35,13 @@
                 switch($model->action){
                     case 'CREATE':
                     case 'SET':
-                        $p = '<i class="glyphicon glyphicon-plus" title="Добавилось"></i>';
+                        $p = FA::i('plus', ['title' => 'Добавилось']);
                         break;
                     case 'CHANGE':
-                        $p = '<i class="glyphicon glyphicon-pencil" title="Редактировалось"></i>';
+                        $p = FA::i('pencil', ['title' => 'Редактировалось']);
                         break;
                     case 'DELETE':
-                        $p = '<i class="glyphicon glyphicon-trash" title="Было удалено"></i>';
+                        $p = FA::i('deleted', ['title' => 'Удалилось']);
                         break;
                     default:
                         $p = $model->action;

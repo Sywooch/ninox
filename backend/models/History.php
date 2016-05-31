@@ -463,7 +463,7 @@ class History extends \common\models\History
 
     public function sendSms(){
         $messageID = 0;
-
+        $result = 0;
         switch($this->status){
             case self::STATUS_NOT_CALLED:
                 $messageID = Sms::MESSAGE_CANT_CALL_ID;
@@ -479,11 +479,13 @@ class History extends \common\models\History
                 break;
         }
 
-        $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
-
-        if($result == 200){
-            $this->smsSendDate = date('Y-m-d H:i:s');
-            $this->save(true);
+        if($messageID){
+            $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+            //TODO: SmS state and date;
+            if($result == 200){
+                $this->smsSendDate = date('Y-m-d H:i');
+                $this->save(true);
+            }
         }
 
         return $result;
@@ -491,6 +493,7 @@ class History extends \common\models\History
 
     public function sendCardSms(){
         $messageID = 0;
+        $result = 0;
         switch($this->status){
             case self::STATUS_NOT_CALLED:
                 break;
@@ -509,13 +512,15 @@ class History extends \common\models\History
                 break;
         }
 
-        $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
-        //TODO: SmS state and date;
-        if($result == 200){
-            $this->smsSendDate = date('Y-m-d H:i');
-            $this->save(true);
+        if($messageID){
+            $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+            //TODO: SmS state and date;
+            if($result == 200){
+                $this->smsSendDate = date('Y-m-d H:i');
+                $this->save(true);
+            }
         }
-
+        
         return $result;
     }
 
@@ -571,19 +576,15 @@ class History extends \common\models\History
     }
 
     public function behaviors(){
-        if(!$this->isNewRecord){
-            return [
-                'LoggableBehavior' => [
-                    'class' => 'sammaye\audittrail\LoggableBehavior',
-                    'ignored' => [
-                        'Name2',
-                        'added'
-                    ],
-                ]
-            ];
-        }else{
-            return [];
-        }
+        return [
+            'LoggableBehavior' => [
+                'class' => 'sammaye\audittrail\LoggableBehavior',
+                'ignored' => [
+                    'Name2',
+                    'added'
+                ],
+            ]
+        ];
     }
 
     public static function ordersQuery(array $options = []){

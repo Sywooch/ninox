@@ -694,7 +694,7 @@ class SiteController extends Controller
     }
 
     public function actionSearch(){
-        $suggestion = \Yii::$app->request->get("string");
+        $suggestion = \Yii::$app->request->get('string');
 
         $name = $this->getSearchStatement($suggestion);
 
@@ -709,6 +709,8 @@ class SiteController extends Controller
             ->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` != 0 AND `goods`.`PriceOut2` != 0)')
             ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
             ->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
+            ->andWhere(['`category_translations`.`enabled`' =>  1])
+            ->andWhere(['`item_translations`.`enabled`' =>  1])
             ->orderBy('IF (`goods`.`count` <= \'0\' AND `goods`.`isUnlimited` = \'0\', \'FIELD(`goods`.`count` DESC)\', \'FIELD()\'), `relevant` DESC'); //TODO: Пофиксить поиск, бо це глина
 
         if(\Yii::$app->request->isAjax && !\Yii::$app->request->get('page')){
