@@ -124,15 +124,16 @@ Html::tag('div', \Yii::t('shop', '').
 
     ?>
     <span class="head">Хотите мы вам перезвоним?</span>
-    <?= Html::tag('div',
+    <?=Html::tag('div',
         $form->field($model, 'phone')->textInput(['value' => !\Yii::$app->user->isGuest ?
             \Yii::$app->user->identity->phone :
             (\Yii::$app->request->cookies->getValue("customerPhone", false) ?
                 \Yii::$app->request->cookies->getValue("customerPhone") : '')]).
+
         Html::submitButton('Перезвоните мне', ['class' => 'yellow-button-modal',
             'name' => 'callback-button']), [
             'class' => 'callback-content'
-        ]); ?>
+        ])?>
 </div>
 <?php $form->end(); ?>
 

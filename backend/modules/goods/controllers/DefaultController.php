@@ -119,57 +119,25 @@ class DefaultController extends Controller
         }
 
         if($priceList){
-            $data = $importInfo = [];
+            $data = $importInfo = $generatedModels = $columns = $keys = $attributes = [];
 
             $xls = \PHPExcel_IOFactory::load(\Yii::getAlias('@webroot').'/files/importedPrices/'.$priceList->file);
 
-            $models = $xls->getActiveSheet()->toArray();
-            $generatedModels = [];
+            $tableRows = $xls->getActiveSheet()->toArray();
 
             if(array_key_exists('withHeaders', $priceList->configuration)){
-                $header = $models[0];
-                unset($models[0]);
-                sort($models);
+                $header = $tableRows[0];
+                unset($tableRows[0]);
+                sort($tableRows);
             }else{
                 $header = [];
                 $highestCol = $xls->getActiveSheet()->getHighestColumn();
-                for($i = 'A'; $i <= $highestCol; $i++){
-                    $header[] = $i;
+                for($letter = 'A'; $letter <= $highestCol; $letter++){
+                    $header[] = $letter;
                 }
             }
-
-            $i = 0;
-
-            while(count($models) != $i){
-                $createdModel = new \stdClass();
-
-                foreach($models[$i] as $key => $value) {
-                    if ($value == null) {
-                        $value = '';
-                    }
-
-                    $param = $header[$key];
-
-                    $createdModel->$param = $value;
-                }
-
-                $generatedModels[] = $createdModel;
-
-                $i++;
-
-                if($i == count($models)){
-                    break;
-                }
-            }
-
-            $dataProvider = new ArrayDataProvider();
-            $dataProvider->setModels($generatedModels);
 
             if(\Yii::$app->request->post('PriceListImportTable')){
-                $keys = $keysValues = $attributes = [];
-                $replaceExisting = false;
-                $keysCount = $added = $updated = 0;
-
                 $columns = \Yii::$app->request->post('PriceListImportTable')['columns'];
 
                 foreach($columns as $key => $subarray){
@@ -181,6 +149,46 @@ class DefaultController extends Controller
                         $attributes[$key] = $subarray['attribute'];
                     }
                 }
+
+                $header = $attributes;
+            }
+
+
+            $i = 0;
+
+            while(count($tableRows) != $i){
+                $createdModel = new \stdClass();
+
+                foreach($tableRows[$i] as $key => $value) {
+                    if ($value == null) {
+                        $value = '';
+                    }
+
+                    if(array_key_exists($key, $header)){
+                        $param = $header[$key];
+
+                        if(!empty($param)){
+                            $createdModel->$param = $value;
+                        }
+                    }
+                }
+
+                $generatedModels[] = $createdModel;
+
+                $i++;
+
+                if($i == count($tableRows)){
+                    break;
+                }
+            }
+
+            $dataProvider = new ArrayDataProvider();
+            $dataProvider->setModels($generatedModels);
+
+            if(\Yii::$app->request->post('PriceListImportTable')){
+                $keysValues = [];
+                $replaceExisting = false;
+                $keysCount = $added = $updated = 0;
 
                 if(!empty($keys)){
                     $keysCount = count($keys);
@@ -201,19 +209,25 @@ class DefaultController extends Controller
                             $keysModels[$keyAttribute][$model->$param] = $model;
                             $keysValues[] = $model->$param;
                         }
-
-                        $key = $keyAttribute;
                     }
 
                     if(!empty($keysValues)){
-                        $query->andWhere(['in', $key, $keysValues]);
+                        $query->andWhere(['in', $keyAttribute, $keysValues]);
                     }
                 }
 
                 //Обновление уже существующих товаров
                 if(!empty($query->where)){
-                    foreach($query->each() as $good){
-                        
+                    foreach($query->all() as $good){
+
+
+
+
+                        var_dump($keys);
+                        die();
+                        foreach($attributes as $key)
+
+                        $good->save(false);
                     }
                 }
 

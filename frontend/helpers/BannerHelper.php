@@ -51,7 +51,7 @@ class BannerHelper extends Component
         $banner = '';
 
         switch($model->type){
-            case $model::TYPE_IMAGE:
+                case $model::TYPE_IMAGE:
                 $banner = self::renderImageBanner($model, $withBlock);
                 break;
             case $model::TYPE_HTML:
