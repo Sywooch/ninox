@@ -8,7 +8,7 @@ $content = Html::tag('div',
             Html::img(\Yii::$app->params['cdn-link'].'/img/{{#if photo}}catalog/{{photo}}{{else}}noimage.png{{/if}}',
                 ['class' => 'media-object']),
             [
-                'style' =>  'width: 101px; overflow: hidden'
+                'style' =>  'width: 140px; overflow: hidden'
             ]),
         [
             'class' =>  'media-left',
@@ -18,7 +18,7 @@ $content = Html::tag('div',
             ['class' => 'media-heading']).
         /*Html::tag('span', \Yii::t('shop', '{{#if code}}Код товара: {{code}}{{#if vendorCode}}<br>{{/if}}{{/if}}{{#if vendorCode}}Добавочный код: {{vendorCode}}{{/if}}'),
             ['class' => 'item-code']),*/
-        Html::tag('span', '{{price}} грн.', ['class' => 'price']),
+        Html::tag('b', '{{price}} грн.', ['class' => 'price']),
         ['class' => 'media-body']),
     [
         'class' =>  'media '
