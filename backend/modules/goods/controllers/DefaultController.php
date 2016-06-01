@@ -165,19 +165,21 @@ class DefaultController extends Controller
 
                     if(array_key_exists($key, $header)){
                         $param = $header[$key];
-
-                        if(in_array($key, ['GroupID', 'count'])){
-                            switch(gettype($param)){
-                                case 'string':
-                                case 'float':
-                                    $param = (int) $param;
-                                    break;
-                            }
-                        }elseif(in_array($key, ['BarCode2'])){
-                            switch(gettype($param)){
-                                case 'float':
-                                    $param = preg_replace('/\.0^/', '', $param);
-                                    break;
+                        
+                        if(!is_int($key)){
+                            if(in_array($key, ['GroupID', 'count'])){
+                                switch(gettype($param)){
+                                    case 'string':
+                                    case 'float':
+                                        $param = (int) $param;
+                                        break;
+                                }
+                            }elseif(in_array($key, ['BarCode2'])){
+                                switch(gettype($param)){
+                                    case 'float':
+                                        $param = preg_replace('/\.0^/', '', $param);
+                                        break;
+                                }
                             }
                         }
 
