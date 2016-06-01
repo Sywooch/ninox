@@ -22,6 +22,7 @@ use common\models\GoodUk;
 use common\models\PriceListImport;
 use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
+use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
@@ -218,14 +219,40 @@ class DefaultController extends Controller
 
                 //Обновление уже существующих товаров
                 if(!empty($query->where)){
+                    $goods = $query->all();
+
+                    $i = 0;
+
+                    while(count($goods) != $i){
+                        for($record = 0; $record < 20; $record++){
+                            foreach($header as $param){
+                                try{
+                                    if(isset($record->$param)){
+                                        $goods[$i]->$param = $record->$param;
+                                    }
+                                }catch (ErrorException $e){
+
+                                }
+                            }
+
+                            if(array_key_exists($i, $goods)) {
+                                $goods[$i]->save(false);
+
+                                unset($goods[$i]);
+                                ksort($goods);
+                            }
+
+                            $i++;
+
+                            if(count($goods) == $i){
+                                break 2;
+                            }
+                        }
+                    }
+
+
+
                     foreach($query->all() as $good){
-
-
-
-
-                        var_dump($keys);
-                        die();
-                        foreach($attributes as $key)
 
                         $good->save(false);
                     }
