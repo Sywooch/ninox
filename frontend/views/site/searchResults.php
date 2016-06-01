@@ -33,7 +33,7 @@ echo Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs
             ]);
         },
         'layout' => '{summary}'.
-            Html::tag('div', '{items}', ['class' => 'items-grid clear-fix']).
+            Html::tag('div', '{items}', ['class' => 'items-grid clear-fix cols-4']).
             Html::tag('div', '{pager}', ['class' => 'pagination-wrapper']),
         'itemOptions'   =>  [
             'class'     =>  'hovered'

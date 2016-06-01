@@ -848,7 +848,9 @@ class SiteController extends Controller
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
-                return $this->goHome();
+                return $this->render('passwordSuccessfullySend', [
+                    'model' => $model,
+                ]);
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
             }
@@ -925,7 +927,7 @@ class SiteController extends Controller
             return $model->getErrors();
         }
 
-        return true;
+        return  $this->render('_callback_success');
     }
 
     public function saveUsersInterestsForm(){
