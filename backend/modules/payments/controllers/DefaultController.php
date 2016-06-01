@@ -135,7 +135,7 @@ class DefaultController extends Controller
 
             $query = History::find()->with('moneyCollector');
 
-            switch(\Yii::$app->request->get("type")){
+            switch(\Yii::$app->request->get('type')){
                 case 'shop':
                     $query->andWhere("FROM_UNIXTIME(`added`, '%Y-%m-%d') = '{$param}'")
                         ->andWhere(['orderSource'   =>  \Yii::$app->params['configuration']->id])

@@ -80,10 +80,16 @@ $js = <<<JS
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.item-wish', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-wish:not(.green)', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		addToWishlist($(e.currentTarget));
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.user-data-content .item-wish.green', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		removeFromWishList($(e.currentTarget));
 	});
 
 	$('body').on(hasTouch ? 'touchend' : 'click', '.rating .icon-star', function(e){
@@ -362,7 +368,8 @@ $this->beginPage();
 							['class' => 'personal-account']);
 					}else{
 						echo Html::tag('div',
-							Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to(['/account', 'language' => \Yii::$app->language]), ['class' => 'account']).
+							Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to
+							(['/account/orders', 'language' => \Yii::$app->language]), ['class' => 'account']).
 							Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout', 'language' => \Yii::$app->language]),
 								[
 									'data-method'   =>  'post',

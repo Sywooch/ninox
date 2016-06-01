@@ -202,7 +202,7 @@ $this->registerJs($js);
 			<div class="style">
 				<?=$this->render('subscribeForm')?>
 			</div>
-			<div class="style banner-img"></div>
+			<a href="https://krasota-style.com.ua/bizhuteriya/braslety/pandora/braslety-pandora"><div class="style banner-img"></div></a>
 		</div>
 		<div class="right-block style">
 			<?=$this->render('reviewForm', ['model' => $this])?>

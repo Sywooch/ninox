@@ -587,6 +587,24 @@ class SiteController extends Controller
         }
     }
 
+    public function actionRemovefromwishlist(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        if($itemID && !\Yii::$app->user->isGuest){
+            $wish = CustomerWishlist::findOne([
+                'itemID'        =>  $itemID,
+                'customerID'    =>  \Yii::$app->user->id
+            ]);
+            if($wish){
+                $wish->delete();
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
     public function actionSuccess($order = []){
         if(!empty($order)){
             return $this->render('order_success', [
