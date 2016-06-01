@@ -1,8 +1,15 @@
 <?php
 
 use kartik\grid\GridView;
+use yii\bootstrap\Html;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
+
+/**
+ * @var int $unconfirmed
+ * @var \yii\data\ActiveDataProvider $dataProvider
+ * @var string $param
+ */
 
 $js = <<<'JS'
 $("body").on('click', ".confirmPayment", function(){
@@ -32,7 +39,32 @@ $("body").on('click', ".confirmPayment", function(){
             }
         });
     });
-    console.log($(this));
+}).on('click', '.completeAll', function(){
+    var button = $(this); 
+    
+    swal({
+        title: "Подтвердить все оплаты?",
+        text: "Вы уверены, что хотите подтвердить все оплаты?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Подтвердить!",
+        cancelButtonText: "Отмена",
+        closeOnConfirm: false
+    },
+    function(){    
+        $.ajax({
+            type: 'POST',
+            url: '/payments/confirm-all',
+            data: {
+                date: location.href.replace(/(htt(.*)\/\D+)|\?(.*)/gm, '')
+            },
+            success: function(){
+                $.pjax.reload({container: '#dailyReportGrid-pjax'});
+                swal("Подтверждено!", "Оплаты успешно подтверждены!", "success");
+            }
+        });
+    });
 });
 JS;
 
@@ -54,8 +86,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $pageHeader = $this->title.'&nbsp;';
 
-if(\Yii::$app->request->get("type")){
-    switch(\Yii::$app->request->get("type")){
+if(\Yii::$app->request->get('type')){
+    switch(\Yii::$app->request->get('type')){
         case 'shop':
             $pageHeader .= \yii\bootstrap\Html::tag('small', 'из магазина');
             break;
@@ -66,7 +98,6 @@ if(\Yii::$app->request->get("type")){
 }
 
 echo \yii\helpers\Html::tag('h1', $pageHeader);
-
 echo GridView::widget([
     'dataProvider'  =>  $dataProvider,
     'summary'       =>  false,
@@ -75,9 +106,10 @@ echo GridView::widget([
     'export'        =>  false,
     'rowOptions'    =>  function($model){
         return [
-            'class' =>  ($model->moneyConfirmed == 1 ? 'success' : 'danger')
+            'class' => $model->moneyConfirmed == 1 ? 'success' : 'danger'
         ];
     },
+    'beforeHeader'  =>  (\Yii::$app->request->get('type') == 'shop' && $unconfirmed != 0) ? Html::tag('div', Html::button('Подтвердить все', ['class' => 'btn btn-default completeAll pull-right', 'style' => 'margin-bottom: 10px;']), ['class' => 'col-xs-12']) : '',
     'columns'       =>  [
         [
             'hAlign'    =>  GridView::ALIGN_CENTER,

@@ -476,15 +476,14 @@ class History extends \common\models\History
             case self::STATUS_DELIVERED:
             case self::STATUS_DONE:
                 $messageID = Sms::MESSAGE_ORDER_DELIVERED;
+                $this->nakladnaSendDate = date('Y-m-d H:i');
                 break;
         }
 
         if($messageID){
             $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
-            //TODO: SmS state and date;
             if($result == 200){
-                $this->smsSendDate = date('Y-m-d H:i');
-                $this->save(true);
+                $this->save(false);
             }
         }
 
@@ -504,6 +503,7 @@ class History extends \common\models\History
                     return false;
                 }
                 $messageID = Sms::MESSAGE_ORDER_DONE_ID;
+                $this->smsSendDate = date('Y-m-d H:i');
                 break;
             case self::STATUS_WAIT_DELIVERY:
                 $messageID = Sms::MESSAGE_PAYMENT_CONFIRMED_ID;
@@ -514,10 +514,8 @@ class History extends \common\models\History
 
         if($messageID){
             $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
-            //TODO: SmS state and date;
             if($result == 200){
-                $this->smsSendDate = date('Y-m-d H:i');
-                $this->save(true);
+                $this->save(false);
             }
         }
         

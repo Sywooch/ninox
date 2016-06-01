@@ -5,6 +5,7 @@ namespace backend\modules\payments\controllers;
 use backend\models\History;
 use backend\models\SendedPayment;
 use common\models\MoneyExchange;
+use yii\base\InvalidParamException;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -123,6 +124,32 @@ class DefaultController extends Controller
         return $order->save(false);
     }
 
+    public function actionConfirmAll(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException('Этот метод доступен только через ajax!');
+        }
+
+        $date = \Yii::$app->request->post('date');
+
+        if(empty($date)){
+            throw new InvalidParamException('Дата кривовата');
+        }
+
+        $orders = History::find()
+            ->andWhere("FROM_UNIXTIME(`added`, '%Y-%m-%d') = '{$date}'")
+            ->andWhere(['orderSource'   =>  \Yii::$app->params['configuration']->id])
+            ->andWhere(['sourceType' => History::SOURCETYPE_SHOP]);
+
+        $return = false;
+
+        foreach($orders->each() as $order){
+            $order->moneyConfirmed = 1;
+            $return = $order->save(false);
+        }
+
+        return $return;
+    }
+
     /**
      * @param mixed $param
      * @return string
@@ -150,17 +177,26 @@ class DefaultController extends Controller
                     break;
             }
 
+            $dataProvider = new ActiveDataProvider([
+                'query' =>  $query,
+                'sort'  =>  [
+                    'defaultOrder'  =>  [
+                        'number'    =>  SORT_DESC
+                    ]
+                ]
+            ]);
+
+            $unconfirmed = 0;
+
+            foreach($dataProvider->getModels() as $model){
+                $model->moneyConfirmed != 1 ? $unconfirmed++ : null;
+            }
+
             return $this->render('viewDay',
                 [
-                    'param' =>  $param,
-                    'dataProvider'  =>  new ActiveDataProvider([
-                        'query' =>  $query,
-                        'sort'  =>  [
-                            'defaultOrder'  =>  [
-                                'number'    =>  SORT_DESC
-                            ]
-                        ]
-                    ])
+                    'param'         =>  $param,
+                    'unconfirmed'   =>  $unconfirmed,
+                    'dataProvider'  =>  $dataProvider
                 ]);
         }
 
