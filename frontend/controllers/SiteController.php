@@ -429,7 +429,7 @@ class SiteController extends Controller
             $customerPhone = \Yii::$app->user->identity->phone;
         }
 
-        if(empty($customerPhone)){
+        if(strlen($customerPhone) < 9){
             return \Yii::$app->response->redirect('/#modalCart');
         }
 
