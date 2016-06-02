@@ -289,6 +289,15 @@ span.twitter-typeahead div.tt-menu{
 
 }
 
+/*.tt-menu .typeahead-list-item:last-child .media-left{
+	display: none;
+}
+
+.tt-menu .typeahead-list-item:last-child .media-heading{
+	margin-bottom: 15px;
+	margin-left: 30px;
+} как ни странно работает только в site.css*/
+
 .tt-menu .media-left{
     width: 60px !important;
     height: 40px !important;

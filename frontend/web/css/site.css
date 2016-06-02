@@ -6440,3 +6440,12 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	text-shadow: none;
 	border: none;
 }
+
+.tt-menu .typeahead-list-item:last-child .media-left{
+	display: none;
+}
+
+.tt-menu .typeahead-list-item:last-child .media-heading{
+	margin-bottom: 15px;
+	margin-left: 30px;
+}
