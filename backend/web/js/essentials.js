@@ -9,49 +9,47 @@ $.urlParam = function(name){
 };
 
 (function($){
-    $.fn.orderPreviewListeners = function() {
+    $.fn.orderPreviewListeners = function(id) {
         var selector = this.selector + ".kv-expand-detail-row";
 
-        kvInitPlugin(selector + ' #orderpreviewform-deliveryparam', function(){
-            if (jQuery(selector + ' #orderpreviewform-deliveryparam').data('depdrop')) {
-                jQuery(selector + ' #orderpreviewform-deliveryparam').depdrop('destroy');
+        kvInitPlugin(selector + ' select[name="OrderPreviewForm[deliveryParam]"]', function(){
+            if (jQuery(selector + ' select[name="OrderPreviewForm[deliveryParam]"]').data('depdrop')) {
+                jQuery(selector + ' select[name="OrderPreviewForm[deliveryParam]"]').depdrop('destroy');
             }
 
-            jQuery(selector + ' #orderpreviewform-deliveryparam').depdrop({
+            jQuery(selector + ' select[name="OrderPreviewForm[deliveryParam]"]').depdrop({
                 "depends":[
-                    "deliveryTypeInput"
+                    "deliveryTypeInput-" + id
                 ],
                 "initialize": true,
                 "params": [
-                    "deliveryTypeInput",
-                    "deliveryParamInput"
+                    "deliveryParamInput-" + id
                 ],
                 "emptyMsg": "варианты отсутствуют",
                 "initDepends":[
-                    "deliveryTypeInput"
+                    "deliveryTypeInput-" + id
                 ],
                 "url":'/orders/get-deliveries'
             });
         });
 
 
-        kvInitPlugin(selector + ' #orderpreviewform-paymentparam', function(){
-            if (jQuery(selector + ' #orderpreviewform-paymentparam').data('depdrop')) {
-                jQuery(selector + ' #orderpreviewform-paymentparam').depdrop('destroy');
+        kvInitPlugin(selector + ' select[name="OrderPreviewForm[paymentParam]"]', function(){
+            if (jQuery(selector + ' select[name="OrderPreviewForm[paymentParam]"]').data('depdrop')) {
+                jQuery(selector + ' select[name="OrderPreviewForm[paymentParam]"]').depdrop('destroy');
             }
 
-            jQuery(selector + ' #orderpreviewform-paymentparam').depdrop({
+            jQuery(selector + ' select[name="OrderPreviewForm[paymentParam]"]').depdrop({
                 "depends":[
-                    "paymentTypeInput"
+                    "paymentTypeInput-" + id
                 ],
                 "initialize": true,
                 "params":[
-                    "paymentTypeInput",
-                    "paymentParamInput"
+                    "paymentParamInput-" + id
                 ],
                 "emptyMsg":"варианты отсутствуют",
                 "initDepends":[
-                    "paymentTypeInput"
+                    "paymentTypeInput-" + id
                 ],
                 "url":'/orders/get-payments'
             });

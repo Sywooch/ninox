@@ -27,14 +27,14 @@ $form = ActiveForm::begin([
                         Способ доставки:
                     </td>
                     <td style="width: 30%;">
-                        <?=Html::hiddenInput('deliveryParamInput', $model->deliveryParam, ['id' => 'deliveryParamInput']).
+                        <?=Html::hiddenInput('deliveryParamInput', $model->deliveryParam, ['id' => 'deliveryParamInput-'.$model->id]).
                             Html::tag('div',
                             $form->field($model, 'deliveryType', [
                                 'options'   =>  [
                                     'class' =>  'col-xs-4'
                                 ],
                                 'inputOptions'  =>  [
-                                    'id'    =>  'deliveryTypeInput'
+                                    'id'    =>  'deliveryTypeInput-'.$model->id
                                 ]
                             ])
                                 ->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-deliveries', ['type' => 'deliveryType']), 'id', 'name')).
@@ -44,19 +44,7 @@ $form = ActiveForm::begin([
                                         'class' =>  'col-xs-8'
                                     ]
                                 ])
-                                ->widget(\kartik\depdrop\DepDrop::className(), [
-                                    'pluginOptions' =>  [
-                                        'depends'   =>  ['deliveryTypeInput'],
-                                        'initialize'=>  true,
-                                        'params'    =>  [
-                                            'deliveryTypeInput',
-                                            'deliveryParamInput'
-                                        ],
-                                        'emptyMsg'  =>  'варианты отсутствуют',
-                                        'initDepends'=>  ['deliveryTypeInput'],
-                                        'url'       =>  Url::to('/orders/get-deliveries')
-                                    ]
-                                ]).
+                                ->dropDownList([]).
                             $form->field($model, 'deliveryInfo',
                                 [
                                     'options'   =>  [
@@ -84,14 +72,14 @@ $form = ActiveForm::begin([
                         Способ оплаты:
                     </td>
                     <td>
-                        <?=Html::hiddenInput('paymentParamInput', $model->paymentParam, ['id' => 'paymentParamInput']).
+                        <?=Html::hiddenInput('paymentParamInput', $model->paymentParam, ['id' => 'paymentParamInput-'.$model->id]).
                         Html::tag('div',
                             $form->field($model, 'paymentType', [
                                 'options'   =>  [
                                     'class' =>  'col-xs-6'
                                 ],
                                 'inputOptions'  =>  [
-                                    'id'    =>  'paymentTypeInput'
+                                    'id'    =>  'paymentTypeInput-'.$model->id
                                 ]
                             ])->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-payments', ['type' => 'paymentType']), 'id', 'name')).
                             $form->field($model, 'paymentParam',
@@ -100,20 +88,7 @@ $form = ActiveForm::begin([
                                         'class' =>  'col-xs-6'
                                     ]
                                 ])
-                                ->widget(\kartik\depdrop\DepDrop::className(), [
-                                    //'type'      =>  \kartik\depdrop\DepDrop::TYPE_SELECT2,
-                                    'pluginOptions' =>  [
-                                        'depends'   =>  ['paymentTypeInput'],
-                                        'initialize'=>  true,
-                                        'params'    =>  [
-                                            'paymentTypeInput',
-                                            'paymentParamInput'
-                                        ],
-                                        'emptyMsg'  =>  'варианты отсутствуют',
-                                        'initDepends'=>  ['paymentTypeInput'],
-                                        'url'       =>  Url::to('/orders/get-payments')
-                                    ]
-                                ]),
+                                ->dropDownList([]),
                             [
                                 'class' =>  'row'
                             ])?>
