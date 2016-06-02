@@ -143,7 +143,7 @@ echo Html::tag('h1', $this->title, ['class' => 'page-title', 'data-attribute-ord
         'rowOptions'    =>  function($model){
             return [
                 'data-key'  =>  $model->itemID,
-                'class'     =>  $model->controlled ? 'success' : ($model->leftControl != $model->originalCount ? 'warning' : '')
+                'class'     =>  $model->controlled ? 'success' : ($model->leftControl != $model->count ? 'warning' : '')
             ];
         },
         'columns'       =>  [
@@ -174,12 +174,12 @@ echo Html::tag('h1', $this->title, ['class' => 'page-title', 'data-attribute-ord
                 }
             ],
             [
-                'attribute' =>  'originalCount',
+                'attribute' =>  'count',
                 'width'     =>  '280px',
                 'hAlign'    =>  GridView::ALIGN_CENTER,
                 'vAlign'    =>  GridView::ALIGN_MIDDLE,
                 'value'     =>  function($model){
-                    return $model->originalCount.' шт.';
+                    return $model->count.' шт.';
                 }
             ],
             [
@@ -196,7 +196,7 @@ echo Html::tag('h1', $this->title, ['class' => 'page-title', 'data-attribute-ord
                         return 'Товар не проконтролирован';
                     }
 
-                    return 'Осталось проконтролировать: '.($model->originalCount - $model->realyCount).' шт.';
+                    return 'Осталось проконтролировать: '.($model->count - $model->realyCount).' шт.';
                 }
             ]
         ],
