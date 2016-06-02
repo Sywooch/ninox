@@ -217,6 +217,25 @@ function addToWishlist(item){
 	});
 }
 
+function removeFromWishList(item) {
+	if(item.hasClass('is-guest')){
+		document.location = document.location.href.replace(/#.*/, '') + '#loginModal';
+		return false;
+	}
+	$.ajax({
+		type: 'POST',
+		url: '/removefromwishlist',
+		data: {
+			'itemID': item.data('itemid')
+		},
+		success: function(data){
+			if(data == true){
+				item.removeClass('green');
+			}
+		}
+	});
+}
+
 function getFilterParams(){
 	var prmstr = decodeURIComponent(window.location.search.substr(1));
 	return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};

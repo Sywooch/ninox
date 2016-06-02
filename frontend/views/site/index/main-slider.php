@@ -27,7 +27,7 @@ if(!empty($items)){
             'slidesToShow'   => 1,
             'slidesToScroll' => 1,
             'asNavFor'       => '#sliderNav',
-            'infinite'       => 'true',
+            'infinite'       => true,
         ]
     ]);
 }

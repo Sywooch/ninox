@@ -48,7 +48,7 @@ $callbackSuccessModal = new \bobroid\remodal\Remodal([
     'content'			=>	$this->render('_callback_success'),
     'id'				=>	'callbackSuccessModal',
     'options'			=>  [
-        'class'			=>  'callback-success--modal'
+        'class'			=>  'callback-success-modal'
     ]
 ]);
 
@@ -80,10 +80,16 @@ $js = <<<JS
 		});
 	}
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.item-wish', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.item-wish:not(.green)', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		addToWishlist($(e.currentTarget));
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.user-data-content .item-wish.green', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		removeFromWishList($(e.currentTarget));
 	});
 
 	$('body').on(hasTouch ? 'touchend' : 'click', '.rating .icon-star', function(e){
@@ -186,6 +192,25 @@ $js = <<<JS
 	$(window).scroll(function(){
   $('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
 });
+
+
+$('#callback-form').on('submit', function(e){
+	e.preventDefault();
+
+	var form = $(this);
+
+    if(form.find("#callbackform-phone").val().length != 0){
+		$.ajax({
+			type: 'POST',
+			url: '#callbackSuccessModal',
+			data: form.serialize(),
+			success: function(){
+				 location.href = '#callbackSuccessModal';
+			}
+		});
+    }
+});
+
 
 JS;
 
@@ -362,7 +387,8 @@ $this->beginPage();
 							['class' => 'personal-account']);
 					}else{
 						echo Html::tag('div',
-							Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to(['/account', 'language' => \Yii::$app->language]), ['class' => 'account']).
+							Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to
+							(['/account/orders', 'language' => \Yii::$app->language]), ['class' => 'account']).
 							Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout', 'language' => \Yii::$app->language]),
 								[
 									'data-method'   =>  'post',
@@ -528,11 +554,11 @@ $this->beginPage();
 					[
 						'class'	=>	'hours'
 					]),
-  /*                  Pjax::begin(['id' => 'callback']),*/
 				Remodal::widget([
 					'cancelButton'		=>	false,
 					'confirmButton'		=>	false,
 					'addRandomToID'		=>	false,
+					'closeButton'		=>  false,
 					'id'           		=>  'callbackModal',
 					'buttonOptions' =>  [
 						'label' =>  'Заказать обратный звонок',
@@ -544,7 +570,6 @@ $this->beginPage();
 					]
 
 				]);
-               /*  Pjax::end()*/
                 ?>
 			</div>
 		</div>

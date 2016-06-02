@@ -16,7 +16,7 @@ return [
         '<module(autopricelist)>/<id>'   =>  '<module>/default/index',
         '<action:(search)>/<string:(.*)>/page-<page:(\d+)>' => 'site/<action>',
         '<action:(search)>/<string:(.*)>' => 'site/<action>',
-        '<action:((modify|get)cart|order|setitemrate|addtowishlist)>' => 'site/<action>',
+        '<action:((modify|get)cart|order|setitemrate|addtowishlist|removefromwishlist)>' => 'site/<action>',
         '<action:(log(in|out)|register|subscribe|request-password-reset|captcha(.*))>'   =>  'site/<action>',
         '<action:(reset-password)>/<token>'      =>   'site/<action>',
         '<module(account|blog)>'          =>  '<module>/default/index',
