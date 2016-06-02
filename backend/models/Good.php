@@ -203,6 +203,10 @@ class Good extends \common\models\Good{
             $this->otgruzka_time = '0000-00-00 00:00:00';
         }
 
+        if(empty($this->tovupdate)){
+            $this->tovupdate = date('Y-m-d H:i:s');
+        }
+
         if((empty($this->count) && $this->count != 0) || $this->count == null){
             $this->count = 0;
         }
