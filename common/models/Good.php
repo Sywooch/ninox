@@ -353,6 +353,10 @@ class Good extends ActiveRecord
             if(empty($this->BarCode1)){
                 $this->BarCode1 = $this->getBarcode();
             }
+
+            if(empty($this->tovdate)){
+                $this->tovdate = date('Y-m-d H:i:s');
+            }
         }
 
         if(empty($this->photos) && $this->enabled != 0){
@@ -395,6 +399,7 @@ class Good extends ActiveRecord
             [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'discountSize', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
             [['link'], 'string'],
             [['count'], 'default', 0],
+            [['tovupdate'], 'default', '0000-00-00 00:00:00'],
             [['dimensions'], 'default', 'value' => ''],
             [['Code', 'BarCode1', 'BarCode2', 'BarCode3', 'Catalog1', 'Catalog2', 'Catalog3', 'Name', 'Name2', 'dimensions', 'measure', 'Measure2', 'anotherCurrencyTag', 'video'], 'string', 'max' => 255],
             [['width', 'height', 'length', 'diameter'], 'string', 'max' => 20],

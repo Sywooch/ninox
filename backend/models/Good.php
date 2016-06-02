@@ -191,10 +191,6 @@ class Good extends \common\models\Good{
             $this->vkl_time = '0000-00-00 00:00:00';
         }
 
-        if(empty($this->tovdate)){
-            $this->tovdate = '0000-00-00 00:00:00';
-        }
-
         if(empty($this->photodate)){
             $this->photodate = '0000-00-00 00:00:00';
         }
