@@ -306,7 +306,10 @@ echo \yii\grid\GridView::widget([
         ],
         [
             'header'    =>  'Кол.',
-            'attribute' =>  'count'
+            'attribute' =>  'count',
+            'value'     =>  function($model){
+                return  $model->nalichie ? $model->count : 'нет в наличии';
+            }
         ],
         [
             'header'    =>  'Цена (грн.)',
@@ -319,14 +322,14 @@ echo \yii\grid\GridView::widget([
         [
             'header'    =>  'Сумма',
             'value'     =>  function($model){
-                return $model->count * $model->price;
+                return ($model->nalichie ? $model->count : 0) * $model->price;
             }
         ],
         [
             'header'    =>  'Скидка',
             'attribute' =>  'discountSize',
             'value'     =>  function($model){
-                return $model->discountType != 0 ? $model->discountType == 2 ? $model->discountSize.'%' : ($model->discountSize * $model->count).' грн.' : '';
+                return $model->discountType != 0 ? $model->discountType == 2 ? $model->discountSize.'%' : ($model->discountSize * ($model->nalichie ? $model->count : 0)).' грн.' : '';
             }
         ]
     ]

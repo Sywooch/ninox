@@ -43,7 +43,7 @@ class DefaultController extends Controller
         }
 
         $sborkaItems = new ActiveDataProvider([
-            'query'         =>  SborkaItem::find()->where(['orderID' => $order->id]),
+            'query'         =>  SborkaItem::find()->where(['AND', ['orderID' => $order->id, 'nezakaz' => 0]]),
             'pagination'    =>  [
                 'pageSize'  =>  0
             ]
