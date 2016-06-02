@@ -3,13 +3,13 @@
 $withoutDiscountSum = $orderSum = $discountSum = $customerDiscount = 0;
 
 foreach($items as $item){
-    $orderSum += ($item->price * $item->count);
+    $orderSum += ($item->price * ($item->nalichie ? $item->count : 0));
 
     if(!empty($customer->cardNumber) && $item->discountSize == 2 && $item->discountType == 2 && $item->priceRuleID == 0){
-        $customerDiscount += (($item->originalPrice - $item->price) * $item->count);
+        $customerDiscount += (($item->originalPrice - $item->price) * ($item->nalichie ? $item->count : 0));
     }
 
-    $withoutDiscountSum += ($item->originalPrice * $item->count);
+    $withoutDiscountSum += ($item->originalPrice * ($item->nalichie ? $item->count : 0));
 }
 
 $discountSum = $withoutDiscountSum - $orderSum - $customerDiscount;

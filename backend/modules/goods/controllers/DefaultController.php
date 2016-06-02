@@ -18,9 +18,7 @@ use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;
 use common\models\GoodTranslation;
-use common\models\GoodUk;
 use common\models\PriceListImport;
-use common\models\UploadPhoto;
 use sammaye\audittrail\AuditTrail;
 use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
@@ -167,6 +165,23 @@ class DefaultController extends Controller
 
                     if(array_key_exists($key, $header)){
                         $param = $header[$key];
+                        
+                        if(!is_int($key)){
+                            if(in_array($key, ['GroupID', 'count'])){
+                                switch(gettype($param)){
+                                    case 'string':
+                                    case 'float':
+                                        $param = (int) $param;
+                                        break;
+                                }
+                            }elseif(in_array($key, ['BarCode2'])){
+                                switch(gettype($param)){
+                                    case 'float':
+                                        $param = preg_replace('/\.0^/', '', $param);
+                                        break;
+                                }
+                            }
+                        }
 
                         if(!empty($param)){
                             $createdModel->$param = $value;
@@ -199,9 +214,7 @@ class DefaultController extends Controller
                 $query = Good::find();
 
                 foreach($keys as $keyKey => $keyAttribute){
-                    $keysValues = [];
-
-                    $keysModels = [];
+                    $keysValues = $keysModels = [];
 
                     foreach($dataProvider->getModels() as $model){
                         $param = $header[$keyKey];
@@ -217,127 +230,51 @@ class DefaultController extends Controller
                     }
                 }
 
+                $query->with('translations')->with('photos');
+
+                $updated = $added = 0;
+
                 //Обновление уже существующих товаров
                 if(!empty($query->where)){
-                    $goods = $query->all();
+                    foreach($query->each() as $good){
+                        foreach($keys as $key){
+                            if(
+                                array_key_exists($key, $keysModels) &&
+                                array_key_exists($good->$key, $keysModels[$key]) &&
+                                !empty($keysModels[$key][$good->$key])
+                            ){
+                                $goodRow = $keysModels[$key][$good->$key];
 
-                    $i = 0;
+                                foreach($header as $param){
+                                    try{
+                                        if(isset($goodRow->$param)){
+                                            $good->$param = $goodRow->$param;
+                                        }
+                                    }catch (ErrorException $e){
 
-                    while(count($goods) != $i){
-                        for($record = 0; $record < 20; $record++){
-                            foreach($header as $param){
-                                try{
-                                    if(isset($record->$param)){
-                                        $goods[$i]->$param = $record->$param;
                                     }
-                                }catch (ErrorException $e){
-
                                 }
                             }
-
-                            if(array_key_exists($i, $goods)) {
-                                $goods[$i]->save(false);
-
-                                unset($goods[$i]);
-                                ksort($goods);
-                            }
-
-                            $i++;
-
-                            if(count($goods) == $i){
-                                break 2;
-                            }
                         }
-                    }
-
-
-
-                    foreach($query->all() as $good){
 
                         $good->save(false);
                     }
+
+                    $updated++;
                 }
 
-
-            }
-
-            /*if(\Yii::$app->request->post('PriceListImportTable')){
-                $keys = $attributes = [];
-                $replaceExisting = false;
-                $keysCount = $added = $updated = 0;
-
-                $columns = \Yii::$app->request->post('PriceListImportTable')['columns'];
-
-                foreach($columns as $key => $subarray){
-                    if(!empty($subarray['key'])){
-                        $keys[$key] = $subarray['attribute'];
-                    }
-
-                    if(!empty($subarray['attribute'])){
-                        $attributes[$key] = $subarray['attribute'];
-                    }
-                }
-
-                if(!empty($keys)){
-                    $keysCount = sizeof($keys);
-                    $replaceExisting = true;
-                }
-
-                foreach($dataProvider->getModels() as $model){
-                    $good = $badParams = false;
-
-                    if($replaceExisting){
-                        $good = Good::find();
-
-                        $conditions = [];
-
-                        foreach($keys as $key => $attribute){
-                            $conditions[$attribute] = $model[$key];
-                        }
-
-                        if(!empty($conditions) && $keysCount == sizeof($conditions)){
-                            $good->andWhere($conditions);
-                        }else{
-                            $badParams = true;
-                        }
-
-                        if(!$badParams){
-                            $good = $good->one();
-                        }
-                    }
-
-                    if(!$good){
-                        $good = new Good();
-                    }
-
-                    if(!$badParams){
-                        foreach($model as $key => $field){
-                            if(!empty($attributes[$key])){
-                                $changedAttribute = $attributes[$key];
-                                $good->$changedAttribute = $field;
-                            }
-                        }
-
-                        $thisAdded = $good->isNewRecord ? 1 : 0;
-
-                        if($good->save(false)){
-                            $added += $thisAdded;
-                            $updated++;
-                        }
-                    }
-                }
 
                 $importInfo = [
-                    'updated'   =>  $updated - $added,
+                    'updated'   =>  $updated,
                     'added'     =>  $added,
-                    'totalCount'=>  sizeof($models)
+                    'totalCount'=>  $updated + $added
                 ];
 
                 $priceList->imported = 1;
                 $priceList->importedDate = date('Y-m-d H:i:s');
 
                 $priceList->save(false);
-            }*/
+            }
 
             return $this->render('import_table', [
                 'data'          =>  $data,

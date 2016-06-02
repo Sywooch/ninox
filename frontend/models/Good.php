@@ -98,6 +98,17 @@ class Good extends \common\models\Good{
     }
 
 	public function getCanBuy(){
+/*		if($this->category->enabled){
+			$parents = $this->category->parents;
+			foreach($parents as $category){
+				if(!$category->enabled){
+					return false;
+				}
+			}
+		}else{
+			return false;
+		}TODO: Большая нагрузка при хоть каком-то количестве товара в корзине*/
+
 		return $this->enabled && ($this->count > 0 || $this->isUnlimited) && $this->PriceOut1 > 0 && $this->PriceOut2 > 0;
 	}
 

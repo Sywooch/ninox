@@ -578,7 +578,7 @@ class DefaultController extends Controller
                 return false;
         }
 
-        $item->save();
+        $item->save(false);
 
         return $return;
     }

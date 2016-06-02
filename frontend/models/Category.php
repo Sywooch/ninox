@@ -127,7 +127,7 @@ class Category extends \common\models\Category{
 					}
 				}
 			}
-			$this->_groupIDs = array_values($this->_groupIDs);
+			$this->_groupIDs = is_array($this->_groupIDs) ? array_values($this->_groupIDs) : 0;
 		}
 
 		return $this->_groupIDs;
