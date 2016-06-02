@@ -587,6 +587,24 @@ class SiteController extends Controller
         }
     }
 
+    public function actionRemovefromwishlist(){
+        \Yii::$app->response->format = 'json';
+        $itemID = \Yii::$app->request->post("itemID");
+        if($itemID && !\Yii::$app->user->isGuest){
+            $wish = CustomerWishlist::findOne([
+                'itemID'        =>  $itemID,
+                'customerID'    =>  \Yii::$app->user->id
+            ]);
+            if($wish){
+                $wish->delete();
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
     public function actionSuccess($order = []){
         if(!empty($order)){
             return $this->render('order_success', [
@@ -830,7 +848,9 @@ class SiteController extends Controller
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
-                return $this->goHome();
+                return $this->render('passwordSuccessfullySend', [
+                    'model' => $model,
+                ]);
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
             }
@@ -907,7 +927,7 @@ class SiteController extends Controller
             return $model->getErrors();
         }
 
-        return true;
+        return  $this->render('_callback_success');
     }
 
     public function saveUsersInterestsForm(){
