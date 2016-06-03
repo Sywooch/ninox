@@ -269,6 +269,15 @@ $typeaheadStyles = <<<'CSS'
     overflow: hidden;
 }
 
+.tt-menu .typeahead-list-item:last-child .media-left{
+	display: none;
+}
+
+.tt-menu .typeahead-list-item:last-child .media-heading{
+	margin-bottom: 15px;
+	margin-left: 30px;
+}
+
 .tt-menu .media-left img{
 /*    max-width: 80px;
     max-height: 80px;
@@ -595,10 +604,6 @@ $this->beginPage();
 					'class'	=>	'goods-item'
 				]).
 			Html::tag('div',
-				Html::tag('span', \Yii::t('shop', 'Новости и акции'), [
-					'class'		=>	'link-hide',
-					'data-href'	=>	'/akcii'
-				]).
 				Html::tag('span', \Yii::t('shop', 'Оплата и доставка'), [
 					'class'		=>	'link-hide',
 					'data-href'	=>	'/o-nas#about-delivery-payment-header',

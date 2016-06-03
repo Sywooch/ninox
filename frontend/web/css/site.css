@@ -2663,10 +2663,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 #modal-cart .phone-number-block label:after{
 	position: absolute;
 	left: 192px;
-	color: rgb(218, 218, 218);
-	content: '';
+	color: #c2c2c2;
+	content: '+38';
 	font-size: 22px;
-	margin-top: 6px;
+	margin-top: -10px;
 }
 
 #modal-cart .phone-number-text{
@@ -2684,7 +2684,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2) inset;
 	font-size: 22px;
 	vertical-align: middle;
-	padding-left: 10px;
+	padding-left: 57px;
+	color: #3a3a3a;
 }
 
 #modal-cart .cart-buttons{
@@ -6441,6 +6442,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	border: none;
 }
 
+/*
 .tt-menu .typeahead-list-item:last-child .media-left{
 	display: none;
 }
@@ -6448,4 +6450,4 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .tt-menu .typeahead-list-item:last-child .media-heading{
 	margin-bottom: 15px;
 	margin-left: 30px;
-}
+}*/

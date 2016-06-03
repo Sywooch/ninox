@@ -94,6 +94,7 @@ echo Html::tag('div',
 				\Yii::t('shop', 'Ваш телефон:'), [
 					'class' =>  'phone-number-text'
 				]).
+/*			input  options[data-mask  => phone]*/
 			\frontend\widgets\MaskedInput::widget([
 				'name'			=>	'phone',
 				'options'		=>	[
@@ -103,7 +104,9 @@ echo Html::tag('div',
 					'clearIncomplete'   =>  true,
 					'alias'             =>  'phone',
 					'url'               =>  Url::to('/js/phone-codes.json'),
-					'countrycode'       =>  '',
+					'countrycode'       =>  '+38',
+					'mask' => '999-999-99-99',
+
 					/*						'onBeforePaste'           =>  new \yii\web\JsExpression('
                                                 function(){
                                                     return true;
