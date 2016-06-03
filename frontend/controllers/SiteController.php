@@ -398,8 +398,7 @@ class SiteController extends Controller
                     if($isWildcard || is_int($code)){
                         $code = substr($language, 0, 2);
                     }
-
-                    $temp[$code] = '/'.\Yii::$app->request->url;
+                    $temp[$code] = '/'.\Yii::$app->request->pathInfo;
                 }
                 break;
             default:
