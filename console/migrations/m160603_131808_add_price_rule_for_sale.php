@@ -12,7 +12,7 @@ class m160603_131808_add_price_rule_for_sale extends Migration
                 ->limit(1)->scalar() + 1;
         $priceRule = new \common\models\Pricerule([
             'Name'      =>   'Распродажа Солоха 20%',
-            'Formula'   =>   'IF ((GoodGroup >= AABAAH) OR (GoodGroup >= AABABC) OR (GoodGroup >= AABABD)) AND (GoodGroup != AABABDAAF) AND (DocumentSum >= 2000) AND (Date >= 03.06.2016) AND (Date <= 08.06.2016) THEN Discount = 20',
+            'Formula'   =>   'IF ((GoodGroup >= AABAAH) OR (GoodGroup >= AABABC) OR (GoodGroup >= AABABD)) AND (GoodGroup != AABABDAAF) AND (DocumentSum >= 2000) AND (Date >= 04.06.2016) AND (Date <= 08.06.2016) THEN Discount = 20',
             'Enabled'   =>   1,
             'Priority'  =>   $priority,
         ]);
