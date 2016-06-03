@@ -11,6 +11,7 @@ namespace common\helpers;
 use common\models\Pricerule;
 use DateTime;
 use yii\base\Component;
+use yii\helpers\Json;
 
 class PriceRuleHelper extends Component{
 
@@ -52,7 +53,6 @@ class PriceRuleHelper extends Component{
 	protected function recalcItem(&$model, $rule, $category){
 		$termsCount = 0;
 		$discount = 0;
-
 		foreach($rule->terms as $keyTerm => $terms){
 			if($discount == $termsCount){
 				switch($keyTerm){
@@ -60,7 +60,10 @@ class PriceRuleHelper extends Component{
 						$this->checkCategory($terms, $model->categoryCode, $termsCount, $discount);
 						break;
 					case 'Date':
-						$this->checkDate($terms, $termsCount, $discount);
+						if($this->checkDate($terms, $termsCount, $discount) == 'disable'){
+							$rule->Enabled = 0;
+							$rule->save();
+						}
 						break;
 					case 'WithoutBlyamba':
 						if($category && !empty($terms[0][0]['term'])){
@@ -203,16 +206,18 @@ class PriceRuleHelper extends Component{
 	}
 
 	protected function checkDate($terms, &$termsCount, &$discount){
+		//\Yii::$app->setTimeZone('Europe/Kiev'); TODO: надо только, если будут использоваться другие часовые пояса
+		$now = new DateTime(date('Y-m-d'));
 		foreach($terms as $term){
 			if($termsCount == $discount){
 				$termsCount++;
-				//\Yii::$app->setTimeZone('Europe/Kiev'); TODO: надо только, если будут использоваться другие часовые пояса
-				$now = new DateTime(date('Y-m-d'));
 				foreach($term as $date){
 					$dt = new DateTime($date['term']);
 					if(($date['type'] == '=' && $now->diff($dt)->days == 0) || ($date['type'] == '>=' && $dt->diff($now)->days >= 0 && $dt->diff($now)->invert == 0) || ($date['type'] == '<=' && $now->diff($dt)->days >= 0 && $now->diff($dt)->invert == 0)){
 						$discount++;
 						break;
+					}elseif($date['type'] == '<=' && $now->diff($dt)->days >= 0 && $now->diff($dt)->invert == 1){
+						return 'disable';
 					}
 				}
 			}

@@ -17,7 +17,7 @@ $this->registerJs($js);
 
 ?>
 <div class="product-characteristics">
-    <span class="tabTitle semi-bold">
+    <span class="tabTitle">
         <?=\Yii::t('shop', 'Характеристики товара')?>
     </span>
     <div class="details">

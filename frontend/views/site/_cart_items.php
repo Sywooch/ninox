@@ -15,7 +15,14 @@ echo \kartik\grid\GridView::widget([
 		'models'     =>  \Yii::$app->cart->itemsCount ? \Yii::$app->cart->goods : []
 	]),
 	'id'            =>  'cart-gridview',
-	'emptyText'     =>  '',
+	'emptyText'     =>	Html::tag('div', \Yii::t('shop', 'Ваша корзинка пуста :(')).
+						Html::button(\Yii::t('shop', 'За покупками!'), [
+							'type'	    =>	'submit',
+							'name'	    =>	'orderType',
+							'value'	    =>	'1',
+							'class'	    =>	'button yellow-button-modal',
+							'data-remodal-action'   =>  'close'
+						]),
 	'showHeader'    =>  false,
 	'summary'       =>  false,
 	'pjax'          =>  true,
@@ -41,7 +48,8 @@ echo \kartik\grid\GridView::widget([
 					'src'       =>  \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->photo,
 					'alt'       =>  $model->Name.' '.\Yii::t('shop', 'от интернет магазина Krasota-Style.ua'),
 					'width'     =>  '100px',
-					'height'    =>  '75px'
+					'height'    =>  '75px',
+					'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
 				]);
 			}
 		],

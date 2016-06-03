@@ -74,6 +74,8 @@ $js = <<<JS
 	    $("[data-toggle='popover']").popover();
 	});
 
+	$('input[data-mask="phone"]').mask("+38(999)999-99-99");
+
 JS;
 
 \frontend\assets\PerfectScrollbarAsset::register($this);
@@ -86,11 +88,7 @@ $cartModal = new \bobroid\remodal\Remodal([
     'cancelButton'		=>	false,
     'confirmButton'		=>	false,
     'closeButton'		=>	false,
-    'content'			=>	$this->render('../site/cart', [
-        'dataProvider'	=>	new \yii\data\ActiveDataProvider([
-		        'query' =>  \Yii::$app->cart->goodsQuery()
-	        ])
-    ]),
+    'content'			=>	$this->render('../site/cart', ['order' => true]),
     'options'           =>  [
         'id'            =>  'modal-cart',
         'class'         =>  \Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'wholesale' : 'retail') : 'empty'

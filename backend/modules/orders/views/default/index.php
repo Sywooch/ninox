@@ -197,7 +197,7 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
 });
 
 $(document).on('kvexprow.loaded', 'div[data-attribute-type=ordersGrid]', function(vind, key, extradata){
-    $(this).find("tr[data-key=" + extradata + "]").orderPreviewListeners();
+    $(this).find("tr[data-key=" + extradata + "]").orderPreviewListeners(extradata);
 });
 
 var sendSms = function(order, type, button){
@@ -508,6 +508,7 @@ $css = <<<'CSS'
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
+\kartik\depdrop\DepDropAsset::register($this);
 
 $this->registerJs($js);
 $this->registerCss($css);

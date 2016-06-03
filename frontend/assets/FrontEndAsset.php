@@ -24,6 +24,7 @@ class FrontEndAsset extends AssetBundle
 	public $js = [
 		'js/main.js',
 		'js/jquery.sticky.js',
+		'js/jquery.maskedinput.js',
 	];
 	public $depends = [
 		'yii\web\YiiAsset',

@@ -330,7 +330,7 @@ class History extends \common\models\History
         $count = 0;
 
         foreach($this->notControlledGoods as $item){
-            $count += ($item->originalCount - $item->realyCount);
+            $count += ($item->count - $item->realyCount);
         }
 
         return $count;

@@ -190,9 +190,15 @@ $form = \yii\bootstrap\ActiveForm::begin([
                         <div class="ordering-body-items">
                         <div class="ordering-body-items-discount">
                             <div class="all-price">
-                                <?=\Yii::t('shop', '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}} на сумму', ['n' => \Yii::$app->cart->itemsCount]), '#modalCart'?>
+                                <?=Html::tag('span',
+                                    \Yii::t('shop',
+                                        '{n, number} {n, plural, one{товар} few{товара} many{товаров} other{товар}}',
+                                        ['n' => \Yii::$app->cart->itemsCount]),
+                                [
+                                    'class' => 'items-count-ext'
+                                ]).' '.\Yii::t('shop', 'на сумму')?>
                                 <div class="bold">
-                                    <span class="amount"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount)?></span>
+                                    <span class="amount-cart"><?=Formatter::getFormattedPrice(\Yii::$app->cart->cartSumWithoutDiscount)?></span>
                                 </div>
                             </div>
                             <div class="price action-discount">

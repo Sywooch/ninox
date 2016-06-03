@@ -102,6 +102,7 @@ class DefaultController extends Controller
     }
 
     public function actionGetDeliveries($type = ''){
+        $incomingArray = [];
         if(empty($type)){
             if(!\Yii::$app->request->isAjax ){
                 throw new BadRequestHttpException("Данный запрос возможен только через ajax!");
@@ -111,8 +112,13 @@ class DefaultController extends Controller
 
             $type = \Yii::$app->request->post("type");
 
-            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params")['deliveryTypeInput'])){
-                $type = 'deliveryParam';
+            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params"))){
+                foreach(\Yii::$app->request->post("depdrop_all_params") as $k => $v){
+                    $incomingArray[preg_replace('/(-.\d+)/', '', $k)] = $v;
+                }
+                if(!empty($incomingArray['deliveryTypeInput'])){
+                    $type = 'deliveryParam';
+                }
             }
         }
 
@@ -133,7 +139,7 @@ class DefaultController extends Controller
                 return $results;
                 break;
             case 'deliveryParam':
-                $deliveryType = empty(\Yii::$app->request->post("depdrop_all_params")['deliveryTypeInput']) ? \Yii::$app->request->post('deliveryType') : \Yii::$app->request->post("depdrop_all_params")['deliveryTypeInput'];
+                $deliveryType = $incomingArray['deliveryTypeInput'];
 
                 $deliveryType = DeliveryType::find()->where(['id' => $deliveryType])->one();
 
@@ -153,12 +159,13 @@ class DefaultController extends Controller
                     $result[] = ['id' => $param->id, 'name' => $param->description];
                 }
 
-                return ['output' => $result, 'selected' => empty(\Yii::$app->request->post("depdrop_all_params")['deliveryParamInput']) ? 0 : \Yii::$app->request->post("depdrop_all_params")['deliveryParamInput']];
+                return ['output' => $result, 'selected' => empty($incomingArray['deliveryParamInput']) ? 0 : $incomingArray['deliveryParamInput']];
                 break;
         }
     }
 
     public function actionGetPayments($type = ''){
+        $incomingArray = [];
         if(empty($type)){
             if(!\Yii::$app->request->isAjax ){
                 throw new BadRequestHttpException("Данный запрос возможен только через ajax!");
@@ -168,8 +175,13 @@ class DefaultController extends Controller
 
             $type = \Yii::$app->request->post("type");
 
-            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params")['paymentTypeInput'])){
-                $type = 'paymentParam';
+            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params"))){
+                foreach(\Yii::$app->request->post("depdrop_all_params") as $k => $v){
+                    $incomingArray[preg_replace('/(-.\d+)/', '', $k)] = $v;
+                }
+                if(!empty($incomingArray['paymentTypeInput'])){
+                    $type = 'paymentParam';
+                }
             }
         }
 
@@ -190,7 +202,7 @@ class DefaultController extends Controller
                 return $results;
                 break;
             case 'paymentParam':
-                $paymentType = empty(\Yii::$app->request->post("depdrop_all_params")['paymentTypeInput']) ? \Yii::$app->request->post('paymentType') : \Yii::$app->request->post("depdrop_all_params")['paymentTypeInput'];
+                $paymentType = $incomingArray['paymentTypeInput'];
 
                 $paymentType = PaymentType::find()->where(['id' => $paymentType])->one();
 
@@ -213,7 +225,7 @@ class DefaultController extends Controller
                 }
 
 
-                return ['output' => $result, 'selected' => empty(\Yii::$app->request->post("depdrop_all_params")['paymentParamInput']) ? 0 : \Yii::$app->request->post("depdrop_all_params")['paymentParamInput']];
+                return ['output' => $result, 'selected' => empty($incomingArray['paymentParamInput']) ? 0 : $incomingArray['paymentParamInput']];
                 break;
         }
     }

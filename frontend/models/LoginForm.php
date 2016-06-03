@@ -81,7 +81,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByPhone($this->phone);
+            $this->_user = User::findByPhone(preg_replace('/\D+/', '', $this->phone));
         }
 
         return $this->_user;
