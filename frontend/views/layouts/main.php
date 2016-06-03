@@ -189,7 +189,7 @@ $js = <<<JS
 	    }
 	});
 /*горизонтальная прокрутка менюшки он*/
-	$(window).scroll(function(){
+$(window).scroll(function(){
   $('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
 });
 

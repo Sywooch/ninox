@@ -70,45 +70,47 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 			'class' =>  'cart-footer-top'
 		]).
 	Html::beginTag('div', ['class' => 'cart-footer-bottom']);
-$form = \yii\widgets\ActiveForm::begin([
-	'action'	=>	Url::to(['/order', 'language' => \Yii::$app->language])
-]);
-echo Html::tag('div',
-		Html::tag('div',
+
+if(!(isset($order) && $order == true)){
+	$form = \yii\widgets\ActiveForm::begin([
+		'action' => Url::to(['/order', 'language' => \Yii::$app->language])
+	]);
+	echo Html::tag('div',
 			Html::tag('div',
-				\Yii::t('shop', 'Ваш телефон:'), [
-					'class' =>  'phone-number-text'
-				]
-			).
-			Html::input('text', 'phone', !\Yii::$app->user->isGuest ?
-				\Yii::$app->user->identity->phone :
-				(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
-					\Yii::$app->request->cookies->getValue("customerPhone") : ''),
-				[
-					'class' => 'phone-number-input-modal',
-					'data-mask' => 'phone'
-				]
-			).
-/*			\frontend\widgets\MaskedInput::widget([
-				'name'			=>	'phone',
-				'options'		=>	[
-					'class'			=>	'phone-number-input-modal',
-				],
-				'clientOptions' =>  [
-					'clearIncomplete'   =>  true,
-					'alias'             =>  'phone',
-					'url'               =>  Url::to('/js/phone-codes.json'),
-					'countrycode'       =>  '',
-					/*						'onBeforePaste'           =>  new \yii\web\JsExpression('
-                                                function(){
-                                                    return true;
-                                                }
-                                            ')*/
-					/*						'oncomplete'           =>  new \yii\web\JsExpression('
-                                                function(){
-                                                    }
-                                                }
-                                            ') TODO: сделать вывод флага после того, как плагин будет пофикшен*/
+				Html::tag('div',
+					\Yii::t('shop', 'Ваш телефон:'), [
+						'class' => 'phone-number-text'
+					]
+				).
+				Html::input('text', 'phone', !\Yii::$app->user->isGuest ?
+					\Yii::$app->user->identity->phone :
+					(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
+						\Yii::$app->request->cookies->getValue("customerPhone") : ''),
+					[
+						'class' => 'phone-number-input-modal',
+						'data-mask' => 'phone'
+					]
+				).
+				/*			\frontend\widgets\MaskedInput::widget([
+								'name'			=>	'phone',
+								'options'		=>	[
+									'class'			=>	'phone-number-input-modal',
+								],
+								'clientOptions' =>  [
+									'clearIncomplete'   =>  true,
+									'alias'             =>  'phone',
+									'url'               =>  Url::to('/js/phone-codes.json'),
+									'countrycode'       =>  '',
+									/*						'onBeforePaste'           =>  new \yii\web\JsExpression('
+																function(){
+																	return true;
+																}
+															')*/
+				/*						'oncomplete'           =>  new \yii\web\JsExpression('
+											function(){
+												}
+											}
+										') TODO: сделать вывод флага после того, как плагин будет пофикшен*/
 
 				/*],
 				'value'         =>  !\Yii::$app->user->isGuest ?
@@ -116,34 +118,35 @@ echo Html::tag('div',
 					(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
 						\Yii::$app->request->cookies->getValue("customerPhone") : '')
 			]).*/
-			Html::tag('label', '', [
-				'class' =>  '',
-				'for'		=>  'w4'
-			]), [
-				'class' =>  'phone-number-block'
-			]), [
-			'class' =>  'left'
-		]).
-	Html::tag('div',
-		Html::tag('div',
-			Html::button(\Yii::t('shop', 'Заказать в 1 клик'), [
-				'type'	    =>	'submit',
-				'name'	    =>	'orderType',
-				'value'	    =>	'1',
-				'class'	    =>	'button yellow-button-modal cart-button one-click-order',
-				'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+				Html::tag('label', '', [
+					'class' => '',
+					'for' => 'w4'
+				]), [
+					'class' => 'phone-number-block'
+				]), [
+				'class' => 'left'
 			]).
-			Html::button(\Yii::t('shop', 'Оформить заказ'), [
-				'type'	    =>	'submit',
-				'name'	    =>	'orderType',
-				'value'	    =>	'0',
-				'class'	    =>	'button yellow-button-modal cart-button form-order',
-				'disabled'  =>  \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
-			]), [
-				'class' =>  'cart-buttons'
-			]), [
-			'class' =>  'right'
-		]);
-$form->end();
+		Html::tag('div',
+			Html::tag('div',
+				Html::button(\Yii::t('shop', 'Заказать в 1 клик'), [
+					'type' => 'submit',
+					'name' => 'orderType',
+					'value' => '1',
+					'class' => 'button yellow-button-modal cart-button one-click-order',
+					'disabled' => \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+				]).
+				Html::button(\Yii::t('shop', 'Оформить заказ'), [
+					'type' => 'submit',
+					'name' => 'orderType',
+					'value' => '0',
+					'class' => 'button yellow-button-modal cart-button form-order',
+					'disabled' => \Yii::$app->cart->cartRealSumm < \Yii::$app->params['domainInfo']['minimalOrderSum'] || \Yii::$app->cart->itemsCount < 1
+				]), [
+					'class' => 'cart-buttons'
+				]), [
+				'class' => 'right'
+			]);
+	$form->end();
+}
 echo Html::endTag('div').
 	Html::endTag('div');

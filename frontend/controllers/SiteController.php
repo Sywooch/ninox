@@ -488,7 +488,9 @@ class SiteController extends Controller
         $itemID = \Yii::$app->request->post("itemID");
         $count = \Yii::$app->request->post("count");
         $wholesaleBefore = \Yii::$app->cart->wholesale;
-        $item = $count == 0 ? \Yii::$app->cart->remove($itemID) : \Yii::$app->cart->put($itemID, $count);
+        if(!empty($itemID)){
+            $count == 0 ? \Yii::$app->cart->remove($itemID) : \Yii::$app->cart->put($itemID, $count);
+        }
         $items = [];
         foreach(\Yii::$app->cart->goods as $good){
             if($good->priceModified || $good->ID == $itemID || $wholesaleBefore != \Yii::$app->cart->wholesale){

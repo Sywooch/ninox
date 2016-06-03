@@ -143,6 +143,13 @@ function openCart(){
 
 function getCart(){
 	$.pjax.reload({container: '#cart-gridview-pjax', url: '/getcart', push: false, replace: false});
+	$.ajax({
+		type: 'POST',
+		url: '/modifycart',
+		success: function(data){
+			updateCart(data);
+		}
+	});
 }
 
 function cartScroll(){
@@ -160,7 +167,7 @@ function updateCart(data){
 					return data[i] ? '' : 'wholesale retail';
 				});
 			case 'count-ext':
-				$('.desire-basket .items-' + i).text(data[i]);
+				$('.items-' + i).text(data[i]);
 				break;
 			case 'items':
 				for(var j in data[i]){

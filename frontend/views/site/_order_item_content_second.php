@@ -39,7 +39,7 @@ var deliveryType = function(element){
 	}
 }, paymentParam = function(element){
 	element.checked = true;
-	var amount = parseFloat($('.amount').text().replace(/[^\d\.,]+/g, ''));
+	var amount = parseFloat($('.amount-cart').text().replace(/[^\d\.,]+/g, ''));
 	var actionDiscount = parseFloat($('.action-discount-amount').text().replace(/[^\d\.,]+/g, ''));
 	var cardDiscount = parseFloat($('.card-discount-amount').text().replace(/[^\d\.,]+/g, ''));
 	var stc = parseFloat($(element).data('commission-static'));
@@ -50,6 +50,10 @@ var deliveryType = function(element){
 	$('.commission-amount').text('+' + commission.toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
 	$('.total-amount').text((amount - actionDiscount - cardDiscount + commission).toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
 };
+
+function orderRecalc(){
+
+}
 
 $('input:radio[name="OrderForm[deliveryType]"]').on('click', function(e){
 	deliveryType(e.currentTarget);
