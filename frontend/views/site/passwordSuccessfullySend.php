@@ -8,15 +8,18 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-?>
-
-<div class="content" xmlns="http://www.w3.org/1999/html">
-    <div class="">
-        Письмо отправлено Вам на <? echo Html::a(\Yii::t('shop', 'почту')/*, Url::to([
-            ('http://'.substr($model->email, strrpos($model->email, '@')+1))
-        ])*/)
-        ?>
-    </div>
-</div>
-<!--'onclick' => "window.open ('http://'+document.getElementById
-('passwordresetrequestform-email'.substr($model->email, strrpos($model->email, '@')+1)).value)"-->
+echo Html::tag('div',
+    \Yii::t('shop', 'Письмо отправлено Вам на {email}',
+        [
+            'email' => Html::a(\Yii::t('shop', 'почту'), Url::to(
+                'http://'.substr($model->email, strrpos($model->email, '@')+1)),
+                [
+                    'target' => '_blank'
+                ]
+            )
+        ]
+    ),
+    [
+        'class' => 'content password-recovery-success'
+    ]
+);
