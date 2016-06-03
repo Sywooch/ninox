@@ -2,7 +2,7 @@
 use yii\bootstrap\Html;
 ?>
 <div class="product-characteristics">
-    <span class="tabTitle semi-bold">
+    <span class="tabTitle">
         <?=\Yii::t('shop', 'Характеристики товара')?>
     </span>
     <div class="details">
@@ -15,7 +15,7 @@ use yii\bootstrap\Html;
     <!--<div class="properties" itemprop="description"><?/*php$good->Description*/?></div>-->
 </div>
 <div class="item-detail">
-    <span class="tabTitle semi-bold"><?=\Yii::t('shop', 'Описание товара')?></span>
+    <span class="tabTitle"><?=\Yii::t('shop', 'Описание товара')?></span>
     <div class="details">
         <?=!empty($good->description) ? $good->description : \Yii::t('shop', 'Нет описания')?>
     </div>

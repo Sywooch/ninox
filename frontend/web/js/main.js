@@ -117,7 +117,12 @@ function changeItemCount(item){
 					'count': count
 				},
 				success: function(data){
-					updateCart(data);
+					if(data.count == 0){
+						updateCart(data);
+						getCart();
+					}else{
+						updateCart(data);
+					}
 				}
 			});
 		}else{

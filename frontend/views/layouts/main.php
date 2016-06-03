@@ -211,6 +211,7 @@ $('#callback-form').on('submit', function(e){
     }
 });
 
+$('input[data-mask="phone"]').mask("+38(999)999-99-99");
 
 JS;
 

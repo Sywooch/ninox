@@ -326,7 +326,7 @@ class SiteController extends Controller
         $this->getView()->params['breadcrumbs'] = array_merge($this->getView()->params['breadcrumbs'], $temp);
     }
 
-    public function getCategoryPhoneNumber($object = null){
+    public static function getCategoryPhoneNumber($object = null){
         $class = get_parent_class($object);
         switch($class){
             case 'common\models\Category':

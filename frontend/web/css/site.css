@@ -2350,17 +2350,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	line-height: 21px;
 }
 
-#modal-cart .empty{
-	padding-bottom: 43px;
-	padding-top: 25px;
-	display: none;
-}
-
-#modal-cart .empty .cart-message{
-	float: none;
-	margin-bottom: 20px;
-}
-
 #modal-cart .cart-message{
 	float: left;
 	color: #e0e0e0;
@@ -2379,8 +2368,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 #modal-cart.retail .cart-message-retail,
-#modal-cart.wholesale .cart-message-wholesale,
-#modal-cart.empty .cart-message-empty{
+#modal-cart.wholesale .cart-message-wholesale{
 	display: block;
 }
 
@@ -2591,8 +2579,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: none;
 }
 
-#modal-cart.empty  .empty{
-	display: block;
+#modal-cart .empty{
+	text-align: center;
+}
+
+#modal-cart .empty div{
+	color: #e0e0e0;
+	margin-bottom: 15px;
 }
 
 #modal-cart .cart-footer-top{
@@ -2707,10 +2700,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2);
 	color: #949494;
 
-}
-
-#modal-cart.empty #cart-gridview-pjax{
-	display: none;
 }
 
 #modal-cart .cart-buttons .form-order{

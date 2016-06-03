@@ -7,9 +7,6 @@ echo Html::tag('div',
 		Html::tag('span', 'Корзина №', [
 			'class'	=>  'number-of-order'
 		]).
-		/*Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
-            'class' =>  'cart-message cart-message-empty semi-bold'
-        ]).*/
 		Html::tag('div',
 			\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} до опта', [
 				'wholesaleRemind'   =>  Html::tag('span',
@@ -32,19 +29,7 @@ echo Html::tag('div',
 			'class' =>  'cart-caption'
 		]).
 	$this->render('_cart_items');
-echo Html::tag('div',
-		Html::tag('div', \Yii::t('shop', 'Ваша корзинка пуста :('), [
-			'class' =>  'cart-message cart-message-empty semi-bold'
-		]). Html::button(\Yii::t('shop', 'За покупками!'), [
-			'type'	    =>	'submit',
-			'name'	    =>	'orderType',
-			'value'	    =>	'1',
-			'class'	    =>	'button yellow-button-modal',
-			'data-remodal-action'   =>  'close'
-		]), [
-			'class' =>  'empty'
-		]).
-	Html::beginTag('div', ['class' => 'cart-footer']).
+echo Html::beginTag('div', ['class' => 'cart-footer']).
 	Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
@@ -93,8 +78,18 @@ echo Html::tag('div',
 			Html::tag('div',
 				\Yii::t('shop', 'Ваш телефон:'), [
 					'class' =>  'phone-number-text'
-				]).
-			\frontend\widgets\MaskedInput::widget([
+				]
+			).
+			Html::input('text', 'phone', !\Yii::$app->user->isGuest ?
+				\Yii::$app->user->identity->phone :
+				(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
+					\Yii::$app->request->cookies->getValue("customerPhone") : ''),
+				[
+					'class' => 'phone-number-input-modal',
+					'data-mask' => 'phone'
+				]
+			).
+/*			\frontend\widgets\MaskedInput::widget([
 				'name'			=>	'phone',
 				'options'		=>	[
 					'class'			=>	'phone-number-input-modal',
@@ -115,12 +110,13 @@ echo Html::tag('div',
                                                 }
                                             ') TODO: сделать вывод флага после того, как плагин будет пофикшен*/
 
-				],
+				/*],
 				'value'         =>  !\Yii::$app->user->isGuest ?
 					\Yii::$app->user->identity->phone :
 					(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
 						\Yii::$app->request->cookies->getValue("customerPhone") : '')
-			]).Html::tag('label', '', [
+			]).*/
+			Html::tag('label', '', [
 				'class' =>  '',
 				'for'		=>  'w4'
 			]), [

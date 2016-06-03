@@ -16,7 +16,7 @@ echo
         Html::a(\Yii::t('shop', ' зарегистрируйтесь'), '#registrationModal'), [
         'class'		=>	'login-modal-title',
     ]).
-    $form->field($model, 'phone'),
+    $form->field($model, 'phone')->input('text', ['data-mask' => 'phone']),
     $form->field($model, 'password')->passwordInput(),
     Html::tag('div',
         Html::button(\Yii::t('shop', 'Войти'), [

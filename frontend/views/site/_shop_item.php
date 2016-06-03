@@ -67,7 +67,8 @@ echo Html::tag('div',
 		Html::a(Html::tag('div', Html::img($photo,[
 				'alt' => $model->Name,
 				'height' => 180,
-				'width' => 230
+				'width' => 230,
+				'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
 			]), [
 				'class' => 'item-img',
 			]).

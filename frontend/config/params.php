@@ -13,5 +13,6 @@ return [
 	],
 	'img-path'				=>	'/img/catalog/',
 	'small-img-path'		=>  '/img/catalog/sm/',
+	'noimage'               =>  '/img/site/noimage.png',
 	'categoryPhoneNumber'	=>	'(044) 578 20 16'
 ];
