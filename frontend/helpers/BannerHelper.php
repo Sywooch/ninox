@@ -16,6 +16,7 @@ use frontend\widgets\ItemBuyButtonWidget;
 use yii\base\Component;
 use yii\bootstrap\Html;
 use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 class BannerHelper extends Component
@@ -151,9 +152,8 @@ class BannerHelper extends Component
     public static function renderHTMLBanner($banner){
         $content = $banner->banner->value;
 
-        if(!empty($banner->banner->link)){
-            $content = Html::a($content, $banner->banner->link);
-        }
+        $content = !empty($banner->banner->link) ? Html::a($content, Url::to([$banner->banner->link,
+            'language' => \Yii::$app->language])) : $content;
 
         return Html::tag('div', $content, [
             'class'	=>	'goods-item goods-item-style'
@@ -168,7 +168,8 @@ class BannerHelper extends Component
     public static function renderImageBanner($banner, $withBlock){
         $content = Html::img(preg_match('/http/', $banner->banner->value) ? $banner->banner->value : \Yii::$app->params['frontend'].$banner->banner->value);
         
-        $content = !empty($banner->banner->link) ? Html::a($content, $banner->banner->link) : $content;
+        $content = !empty($banner->banner->link) ? Html::a($content, Url::to([$banner->banner->link,
+            'language' => \Yii::$app->language])) : $content;
 
         if($withBlock){
             return $content;
