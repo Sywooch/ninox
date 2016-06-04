@@ -7,8 +7,15 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
+$js = <<<JS
+function myFunction() {
+    window.open("http://www.w3schools.com");
+}
+JS;
+
 $this->title = \Yii::t('shop', 'Востановление пароля');
 $this->params['breadcrumbs'][] = $this->title;
+
 
 $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
 ?>
@@ -20,7 +27,9 @@ $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'ro
                 <?php $form = ActiveForm::begin(['id' => 'request-password-reset-form']); ?>
                     <?= $form->field($model, 'email') ?>
                     <div class="form-group">
-                        <?= Html::submitButton(\Yii::t('shop', 'Отправить'), ['class' => 'btn btn-primary']) ?>
+                        <?= Html::submitButton(\Yii::t('shop', 'Отправить'), [
+                            'class'   => 'btn btn-primary',
+                        ]) ?>
                     </div>
                 <?php ActiveForm::end(); ?>
             </div>

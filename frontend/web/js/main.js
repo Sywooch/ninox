@@ -243,6 +243,7 @@ function removeFromWishList(item) {
 		success: function(data){
 			if(data == true){
 				item.removeClass('green');
+				item.parents('.hovered').remove();
 			}
 		}
 	});

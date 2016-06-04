@@ -90,7 +90,7 @@ if(!(isset($order) && $order == true)){
 						'class' => 'phone-number-input-modal',
 						'data-mask' => 'phone'
 					]
-				).
+				)
 				/*			\frontend\widgets\MaskedInput::widget([
 								'name'			=>	'phone',
 								'options'		=>	[
@@ -117,11 +117,7 @@ if(!(isset($order) && $order == true)){
 					\Yii::$app->user->identity->phone :
 					(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
 						\Yii::$app->request->cookies->getValue("customerPhone") : '')
-			]).*/
-				Html::tag('label', '', [
-					'class' => '',
-					'for' => 'w4'
-				]), [
+			])*/, [
 					'class' => 'phone-number-block'
 				]), [
 				'class' => 'left'

@@ -9,12 +9,12 @@ echo Html::beginTag('div', ['class' => 'content']),
         \frontend\widgets\ListGroupMenu::widget([
             'items'    => [
                 [
-                    'label' =>  \Yii::t('shop', 'Личные данные'),
-                    'href'  =>  '/account'
-                ],
-                [
                     'label' =>  \Yii::t('shop', 'Мои заказы'),
                     'href'  =>  '/account/orders'
+                ],
+                [
+                    'label' =>  \Yii::t('shop', 'Личные данные'),
+                    'href'  =>  '/account'
                 ],
                 [
                     'label' =>  \Yii::t('shop', 'Моя скидка'),
