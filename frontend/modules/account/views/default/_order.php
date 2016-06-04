@@ -64,14 +64,14 @@ if($model->deleted){
                     'itemView'  =>  '_items'
                 ])?>
             </div>
-            <div class="delivery">
+            <!--<div class="delivery">
                 <div class="delivery-type">
-<!--                    Доставка (Курьер по вашему адресу)-->
+                    Доставка (Курьер по вашему адресу)
                 </div>
                 <div class="delivery-coast">
                     50 грн
                 </div>
-            </div>
+            </div>-->
             <div class="total-price">
                 <div class="title">
                     Итого к оплате:
