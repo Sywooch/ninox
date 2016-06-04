@@ -27,7 +27,7 @@ class CustomerForm extends Model{
     public function rules(){
         return [
             [['name', 'surname', 'city', 'region'], 'string'],
-            [['phone', 'cardNumber', 'cardNumber'], 'integer'],
+            [['phone', 'cardNumber'], 'integer'],
             [['name', 'surname'], 'required'],
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => '\backend\models\Customer', 'message' => 'Пользователь с таким аддресом электронной почты уже существует!'],
