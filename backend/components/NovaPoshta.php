@@ -86,8 +86,6 @@ class NovaPoshta extends Component{
             ->setOption(CURLOPT_POSTFIELDS, $request)
             ->post($this->getUrl($method, $addons));
 
-        \Yii::trace($result);
-
         return $result;
     }
 

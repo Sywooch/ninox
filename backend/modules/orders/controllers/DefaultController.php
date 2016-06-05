@@ -2,30 +2,27 @@
 
 namespace backend\modules\orders\controllers;
 
+use backend\controllers\SiteController as Controller;
 use backend\models\HistorySearch;
 use backend\models\OrderCommentForm;
 use backend\models\OrdersStats;
+use backend\models\Customer;
+use backend\models\Good;
+use backend\models\History;
+use backend\models\NovaPoshtaOrder;
+use backend\models\SborkaItem;
 use backend\modules\orders\models\CustomerCommentForm;
 use backend\modules\orders\models\OrderCustomerForm;
 use backend\modules\orders\models\OrderDeliveryForm;
 use backend\modules\orders\models\OrderPreviewForm;
 use common\helpers\PriceRuleHelper;
-use backend\models\Customer;
-use backend\models\CustomerAddresses;
-use backend\models\CustomerContacts;
-use backend\models\Good;
-use backend\models\History;
-use backend\models\NovaPoshtaOrder;
-use common\models\DeliveryParam;
 use common\models\DeliveryType;
 use common\models\PaymentType;
 use common\models\Pricerule;
-use backend\models\SborkaItem;
 use common\models\Siteuser;
 use sammaye\audittrail\AuditTrail;
 use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
-use backend\controllers\SiteController as Controller;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
@@ -39,11 +36,11 @@ class DefaultController extends Controller
     public function actionIndex(){
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
-        $showDates = \Yii::$app->request->get("showDates");
+        $showDates = \Yii::$app->request->get('showDates');
 
         $timeFrom = $timeTo = null;
 
-        if(empty(\Yii::$app->request->get("ordersStatus"))){
+        if(empty(\Yii::$app->request->get('ordersStatus'))){
             $showDates = 'alltime';
         }
 
