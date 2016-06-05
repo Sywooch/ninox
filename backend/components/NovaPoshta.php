@@ -15,7 +15,7 @@ use yii\helpers\Json;
 
 class NovaPoshta extends Component{
 
-    private $url = 'http://testapi.novaposhta.ua/v2.0/';
+    private $url = 'https://api.novaposhta.ua/v2.0/';
     private $format = 'json';
     private $apiKey = '5fdddf77cb55decfcbe289063799c67e';
     private $cities;
@@ -25,7 +25,7 @@ class NovaPoshta extends Component{
 
     /**
      * @param string|array $method - метод
-     * @param array $addons - добавочные куски
+     * @param string|array $addons - добавочные куски
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class NovaPoshta extends Component{
             $addons = implode('/', $addons).'/';
         }
 
-        return $this->url.$method.'/'.$this->format.'/'.$addons;
+        return $this->url.$this->format.'/'.$method.'/'.$addons;
     }
 
     public function paymentMethods(){
@@ -76,7 +76,7 @@ class NovaPoshta extends Component{
         return $types;
     }
 
-    private function sendRequest($request, $method, $addons = []){
+    private function sendRequest($request, $method, array $addons = []){
         $request['apiKey'] = $this->apiKey;
         $request = Json::encode($request);
 
@@ -85,6 +85,8 @@ class NovaPoshta extends Component{
             ->setOption(CURLINFO_CONTENT_TYPE, 'application/json')
             ->setOption(CURLOPT_POSTFIELDS, $request)
             ->post($this->getUrl($method, $addons));
+
+        \Yii::trace($result);
 
         return $result;
     }
@@ -105,17 +107,6 @@ class NovaPoshta extends Component{
         }
 
         return $response['0']['Ref'];
-
-        if(sizeof($response) >= 1 && $area != null){
-            foreach($response as $city){
-                if($city['Area'] == $area){
-                    \Yii::trace($city, __METHOD__);
-                    return $city;
-                }
-            }
-        }
-
-        return $response['0'];
     }
 
     public function departments($city){
@@ -156,8 +147,6 @@ class NovaPoshta extends Component{
             'calledMethod'      =>  'save',
             'methodProperties'  =>  $order
         ], 'en/save');
-
-        \Yii::trace($order);
 
         $response = Json::decode($request->response);
 

@@ -39,6 +39,13 @@ class NovaPoshtaSeat extends Model
      */
     public $weight;
 
+    public function rules(){
+        return [
+            [['volumetricVolume', 'volumetricWidth', 'volumetricLength', 'volumetricHeight', 'weight'], 'required'],
+            [['volumetricVolume', 'volumetricWidth', 'volumetricLength', 'volumetricHeight', 'weight'], 'number']
+        ];
+    }
+
     public function attributeLabels()
     {
         return [

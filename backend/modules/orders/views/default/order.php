@@ -10,6 +10,8 @@ use yii\helpers\Url;
 use yii\jui\Accordion;
 use yii\web\JsExpression;
 
+/** @var \yii\web\View $this */
+
 $this->title = 'Заказ #'.$order->number;
 $deliveryType = DeliveryType::find()->select('description')->where(['id' => $order->deliveryType])->scalar();
 $deliveryParam = \common\models\DeliveryParam::find()->select('description')->where(['id' => $order->deliveryParam])->scalar();
@@ -339,17 +341,6 @@ $js = <<<'JS'
                 $.pjax.reload({container: '#orderItems-pjax'});
             }
         });
-    }, runCreateInvoice = function(e, order){
-        e.currentTarget.innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
-
-        $.ajax({
-            type: 'POST',
-            url: '/orders/createinvoice/' + order,
-            success: function(data){
-                e.currentTarget.innerHTML = data;
-                $("#novaPoshtaModal #seats").addInputArea();
-            }
-        });
     }, getSelectedGoods = function(){
         var items = [];
 
@@ -416,22 +407,6 @@ $js = <<<'JS'
         deleteItemInOrder($(this));
     }).on('click', ".itemToOrder", function(e){
         addItemToOrder($("#orderInfo")[0].getAttribute('data-attribute-orderID'), e.currentTarget.getAttribute("data-attribute-itemID"));
-    }).on('submit', '#invoiceForm', function(e){
-        var container = $(this)[0].parentNode;
-
-        container.innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
-
-        $.ajax({
-            type: 'POST',
-            url: '/orders/createinvoice/' + $("#orderID")[0].getAttribute('data-orderID'),
-            data: $(this).serialize(),
-            success: function(data){
-                container.innerHTML = data;
-                $("#novaPoshtaModal #seats").addInputArea();
-            }
-        });
-
-        e.preventDefault();
     }).on('click', 'tr.oneOrderItem button.editGood', function(){
         var modal = $('[data-remodal-id=goodEditModal]');
 
@@ -566,13 +541,10 @@ if($order->deliveryType == 2){
         'cancelButton'		=>	false,
         'confirmButton'		=>	false,
         'addRandomToID'		=>	false,
-        'content'			=>	\rmrevin\yii\fontawesome\FA::i('refresh')->addCssClass('fa-spin'),
+        'content'			=>	$this->context->runAction('createinvoice', ['param' => $order->id]),
         'id'				=>	'novaPoshtaModal',
         'options'           =>  [
             'id'                =>  'novaPoshtaModal'
-        ],
-        'events'			=>	[
-            'opened'	        =>	new \yii\web\JsExpression("runCreateInvoice(e, ".$order->id.")")
         ],
     ]);
 

@@ -249,7 +249,7 @@ class NovaPoshtaOrder extends NovaPoshtaModels
 
         $department = \Yii::$app->NovaPoshta->department($order->deliveryInfo, $order->customer->recipient->cityID);
 
-        if(!($department)){
+        if(!$department){
             $this->addError('RecipientAddress', 'Не удалось распознать отделение получателя!');
         }else{
             $order->customer->recipient->recipientAddress = $department['Ref'];

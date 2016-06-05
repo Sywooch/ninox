@@ -666,18 +666,19 @@ class DefaultController extends Controller
             'orderData'         =>  $order,
         ]);
 
-        if(!empty(\Yii::$app->request->post("NovaPoshtaOrder")) && $invoice->load(\Yii::$app->request->post())){
+        if(!empty(\Yii::$app->request->post('NovaPoshtaOrder')) && $invoice->load(\Yii::$app->request->post())){
             $invoice->save();
         }
 
         if(!empty($invoice->deliveryReference)){
-            return $this->renderAjax('print/novaPoshta_invoice', [
+            return $this->renderPartial('print/novaPoshta_invoice', [
                 'invoice'   =>  $invoice
             ]);
         }
 
-        return $this->renderAjax('invoice', [
-            'invoice'   =>  $invoice
+        return $this->renderPartial('invoice', [
+            'invoice'   =>  $invoice,
+            'orderID'   =>  !empty($order) ? $order->ID : $param
         ]);
     }
 
