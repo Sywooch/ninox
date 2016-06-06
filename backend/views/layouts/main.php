@@ -645,6 +645,10 @@ $this->beginPage() ?>
                             [
                                 'label' =>  'Клиентские корзины',
                                 'url'   =>  '/carts'
+                            ],
+                            [
+                                'label' =>  'Статистика заказов',
+                                'url'   =>  '/customers/orders-stats'
                             ]
                         ]
                     ],
