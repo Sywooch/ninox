@@ -8,6 +8,8 @@ $css = <<<'STYLE'
 STYLE;
 
 $this->registerCss($css);
+
+/** @var \backend\models\Customer $customer */
 ?>
 <div class="col-xs-4">
     <div class="row" style="margin-left: 0; margin-bottom: 20px; margin-top: 10px;">
@@ -56,15 +58,15 @@ $this->registerCss($css);
         </tr>
         <tr>
             <td>Номер телефона:</td>
-            <td><?=$customer->Phone?></td>
+            <td><?=$customer->phone?></td>
         </tr>
         <tr>
             <td>email:</td>
-            <td><?=$customer->eMail?></td>
+            <td><?=$customer->email?></td>
         </tr>
         <tr>
             <td>Номер карты:</td>
-            <td><?=$customer->CardNumber?></td>
+            <td><?=$customer->cardNumber?></td>
         </tr>
         <tr>
             <td>Скидка:</td>
@@ -72,7 +74,7 @@ $this->registerCss($css);
         </tr>
         </tbody>
     </table>
-    <?php if(!empty($lastOrder)){ ?>
+    <?php if(!$customer->lastOrder->isNewRecord){ ?>
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h1 class="panel-title">Последний заказ</h1>
@@ -82,15 +84,15 @@ $this->registerCss($css);
                     <tbody>
                     <tr>
                         <td style="width: 40%;">Номер заказа</td>
-                        <td><a href="/orders/showorder/<?=$lastOrder->id?>"><?=$lastOrder->id?></a></td>
+                        <td><a href="/orders/showorder/<?=$customer->lastOrder->id?>"><?=$customer->lastOrder->id?></a></td>
                     </tr>
                     <tr>
                         <td>Фактическая сумма заказа</td>
-                        <td><?=$lastOrder->fakt_summ?> грн.</td>
+                        <td><?=$customer->lastOrder->actualAmount?> грн.</td>
                     </tr>
                     <tr>
                         <td>Дата заказа</td>
-                        <td><?=date("d.m.Y H:i", $lastOrder->displayorder)?></td>
+                        <td><?=\Yii::$app->formatter->asDate($customer->lastOrder->added)?></td>
                     </tr>
 
                     </tbody>
@@ -122,7 +124,7 @@ $this->registerCss($css);
     <div class="panel panel-default" style="margin-top: 10px;">
         <?=\kartik\grid\GridView::widget([
             'dataProvider'  =>  $orders,
-            'summary'       =>  'Заказы клиента: {begin} - {end}, всего {totalCount} заказов',
+            'summary'       =>  false,
             'tableOptions'       =>  [
                 'class'     =>  'col-xs-12 customer-data-orders',
                 'style'     =>  'text-align: center'
@@ -146,28 +148,28 @@ $this->registerCss($css);
                     'class'     =>  '\kartik\grid\ActionColumn'
                 ],
                 [
-                    'attribute' =>  'id',
+                    'attribute' =>  'number',
                     'format'    =>  'html',
                     'value'     =>  function($model){
-                        return '<a href="/orders/showorder/'.$model->id.'">'.$model->id.'</a>';
+                        return '<a href="/orders/showorder/'.$model->id.'">'.$model->number.'</a>';
                     }
                 ],
                 [
                     'attribute' =>  'Name',
                     'label'     =>  'Имя',
                     'value'     =>  function($model){
-                        return $model->name.' '.$model->surname;
+                        return $model->customerName.' '.$model->customerSurname;
                     }
                 ],
                 [
-                    'attribute' =>  'phone',
+                    'attribute' =>  'customerPhone',
                     'label'     =>  'Телефон'
                 ],
                 [
-                    'attribute' =>  'displayorder',
+                    'attribute' =>  'added',
                     'label'     =>  'Дата заказа',
                     'value'     =>  function($model){
-                        return date('d.m.Y', $model->displayorder);
+                        return date('d.m.Y', $model->added);
                     }
                 ],
                 [
@@ -176,7 +178,7 @@ $this->registerCss($css);
                     'header'    =>  'Заказ оплачен',
                     'checkboxOptions'   =>  function($model){
                         return [
-                            'checked'   =>  $model->confirm_money == 1,
+                            'checked'   =>  $model->moneyConfirmed == 1,
                             'disabled'  =>  true
                         ];
                     }
@@ -187,16 +189,16 @@ $this->registerCss($css);
                     'header'    =>  'Удалён',
                     'checkboxOptions'   =>  function($model){
                         return [
-                            'checked'   =>  $model->trash == 1,
+                            'checked'   =>  $model->deleted == 1,
                             'disabled'  =>  true
                         ];
                     }
                 ],
                 [
-                    'attribute' =>  'fakt_summ',
+                    'attribute' =>  'actualAmount',
                     'label'     =>  'К оплате',
                     'value'     =>  function($model){
-                        return $model->fakt_summ.' грн.';
+                        return $model->actualAmount.' грн.';
                     }
                 ]
             ],
