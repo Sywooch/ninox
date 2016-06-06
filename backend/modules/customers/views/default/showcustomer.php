@@ -58,7 +58,7 @@ $this->registerCss($css);
         </tr>
         <tr>
             <td>Номер телефона:</td>
-            <td><?=$customer->phone?></td>
+            <td><?=\Yii::$app->formatter->asPhone($customer->phone)?></td>
         </tr>
         <tr>
             <td>email:</td>
@@ -84,7 +84,7 @@ $this->registerCss($css);
                     <tbody>
                     <tr>
                         <td style="width: 40%;">Номер заказа</td>
-                        <td><a href="/orders/showorder/<?=$customer->lastOrder->id?>"><?=$customer->lastOrder->id?></a></td>
+                        <td><a href="/orders/showorder/<?=$customer->lastOrder->id?>"><?=$customer->lastOrder->number?></a></td>
                     </tr>
                     <tr>
                         <td>Фактическая сумма заказа</td>
@@ -134,7 +134,7 @@ $this->registerCss($css);
 
                 if($model->done == 1){
                     $class = 'success';
-                }else if($model->trash == 1){
+                }else if($model->deleted == 1){
                     $class = 'danger';
                 }
 

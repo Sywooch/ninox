@@ -17,7 +17,7 @@ class CustomersOrdersSearch extends Customer
 
     public function search($params){
 
-        $query = Customer::find()->with('orders')->leftJoin('history', '`history`.`customerID` = `partners`.`ID`')->andWhere(['`partners`.`Deleted`' => 0]);
+        $query = Customer::find()->with('orders')->leftJoin('history', '`history`.`customerID` = `partners`.`ID`')->andWhere(['`partners`.`Deleted`' => 0, '`history`.`deleted`' => 0]);
 
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,

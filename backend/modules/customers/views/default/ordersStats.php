@@ -74,15 +74,21 @@ echo Html::tag('h1', $this->title, ['class' => 'page-heading']),
                         $sumArray = [];
 
                         if(!empty($customer->lastOrder->actualAmount)){
-                            $sumArray[] = Html::tag('div', "{$customer->lastOrder->actualAmount} грн.", ['title' => 'Сумма последнего чека']);
+                            $money = number_format($customer->lastOrder->actualAmount, 2, '.', ' ');
+
+                            $sumArray[] = Html::tag('div', "{$money} грн.", ['title' => 'Сумма последнего чека']);
                         }
 
                         if($customer->middleOrder != 0){
-                            $sumArray[] = Html::tag('div', "{$customer->middleOrder} грн.", ['title' => 'Средний чек']);
+                            $money = number_format($customer->middleOrder, 2, '.', ' ');
+
+                            $sumArray[] = Html::tag('div', "{$money} грн.", ['title' => 'Средний чек']);
                         }
 
                         if($customer->spentMoney != 0){
-                            $sumArray[] = Html::tag('div', "{$customer->spentMoney} грн.", ['title' => 'Потрачено всего']);
+                            $money = number_format($customer->spentMoney, 2, '.', ' ');
+
+                            $sumArray[] = Html::tag('div', "{$money} грн.", ['title' => 'Потрачено всего']);
                         }
 
                         return implode('', $sumArray);
