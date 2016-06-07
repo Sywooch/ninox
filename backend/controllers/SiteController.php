@@ -229,7 +229,11 @@ class SiteController extends Controller
     public function actionLogin(){
         $this->layout = 'login';
 
-        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
+        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post('LoginForm'))){
+            foreach(\Yii::$app->log->targets as $target){
+                $target->enabled = false;
+            }
+
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 

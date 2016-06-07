@@ -799,12 +799,14 @@ class DefaultController extends Controller
 
     public function actionGetlastid(){
         if(!\Yii::$app->request->isAjax){
-            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+            throw new UnsupportedMediaTypeHttpException('Этот запрос возможен только через ajax!');
         }
 
-        //\Yii::$app->response->format = 'json';
+        foreach(\Yii::$app->log->targets as $target){
+            $target->enabled = false;
+        }
 
-        return History::find()->select("id")->orderBy("id desc")->limit(1)->scalar();
+        return History::find()->max('id');
     }
 
     public function actionUsepricerule(){
