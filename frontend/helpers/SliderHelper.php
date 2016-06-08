@@ -28,7 +28,6 @@ class SliderHelper extends BannerHelper
      * @return string
      */
     public static function renderImageBanner($banner, $withBlock = false){
-        die();
         return Html::img('//'.\Yii::$app->params['frontend'].'/'.$banner->banner_ru);
     }
 
