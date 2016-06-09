@@ -3,10 +3,12 @@
 namespace backend\modules\charts\controllers;
 
 use backend\controllers\SiteController as Controller;
+use backend\models\Good;
 use backend\models\History;
 use backend\models\Shop;
 use backend\modules\charts\models\HistorySearch;
 use backend\modules\charts\models\MonthReport;
+use yii\data\ActiveDataProvider;
 
 class DefaultController extends Controller
 {
@@ -76,8 +78,25 @@ class DefaultController extends Controller
         $mod = \Yii::$app->request->get("mod");
         $mod = empty($mod) ? '' : $mod;
 
-        return $this->render('goods', [
+        $lang = \Yii::$app->language;
 
+        return $this->render('goods', [
+            'goodsDataProvider' =>  new ActiveDataProvider([
+                'query' =>  Good::find()
+                    ->joinWith('translations')
+                    ->andWhere("`item_translations`.`enabled` = '0'")
+                    ->andWhere("`item_translations`.`language` = '{$lang}'")
+                    ->andWhere(['deleted' => '0', 'disableConfirmed' => '0']),
+                'sort' =>  [
+                    'defaultOrder'   =>  [
+                        'otkl_time' =>  SORT_DESC
+                    ]
+                ],
+                'pagination'    =>  [
+                    'pageSize'  =>  25
+                ]
+
+            ])
         ]);
     }
 }

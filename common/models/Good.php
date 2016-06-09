@@ -359,12 +359,10 @@ class Good extends ActiveRecord
             }
         }
 
-        if(empty($this->photos) && $this->enabled != 0){
+        if((empty($this->photos) && $this->enabled != 0) || $this->count >= 0){
             GoodTranslation::updateAll(['enabled' => 0], ['ID' => $this->ID]);
+            $this->otkl_time = date('Y-m-d H:i:s');
         }
-
-        \Yii::trace($this->oldAttributes);
-        \Yii::trace($this->attributes);
 
         return parent::beforeSave($insert);
     }
@@ -398,7 +396,7 @@ class Good extends ActiveRecord
             [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2'], 'safe'],
             [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'discountSize', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
             [['link'], 'string'],
-            [['count'], 'default', 0],
+            [['count'], 'default', 'value' => 0],
             [['dimensions'], 'default', 'value' => ''],
             [['Code', 'BarCode1', 'BarCode2', 'BarCode3', 'Catalog1', 'Catalog2', 'Catalog3', 'Name', 'Name2', 'dimensions', 'measure', 'Measure2', 'anotherCurrencyTag', 'video'], 'string', 'max' => 255],
             [['width', 'height', 'length', 'diameter'], 'string', 'max' => 20],
