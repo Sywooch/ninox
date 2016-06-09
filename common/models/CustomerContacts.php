@@ -11,6 +11,7 @@ use Yii;
  * @property integer $partnerID
  * @property integer $type
  * @property string $value
+ * @property integer $primary
  */
 class CustomerContacts extends \yii\db\ActiveRecord
 {
