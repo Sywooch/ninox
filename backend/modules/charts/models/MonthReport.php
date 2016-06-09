@@ -105,7 +105,7 @@ class MonthReport extends Model
         $orders = [];
 
         foreach($this->orders as $order){
-            if($order->added >= date('Y-m-d')){
+            if($order->added >= strtotime(date('Y-m-d'))){
                 $orders[] = $order;
             }
         }
