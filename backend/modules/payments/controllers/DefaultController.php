@@ -55,9 +55,10 @@ class DefaultController extends Controller
                     break;
                 case 'confirm':
                     if(!empty($model->order)){
-                        $model->order->moneyConfirmed = 1;
+                        $order = $model->order;
+                        $order->moneyConfirmed = 1;
 
-                        if($model->order->save(false)){
+                        if($order->save(false)){
                             $model->read_confirm = 1;
                             $model->save(false);
 

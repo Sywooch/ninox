@@ -29,11 +29,15 @@ class DefaultController extends Controller
     public function actionIndex(){
         $breadcrumbs = $goodsCount = [];
 
-        $category = Category::findOne(['Code' => \Yii::$app->request->get("category")]);
+        $categoryCode = \Yii::$app->request->get('category');
 
-        if(empty($category)){
+        if(!empty($categoryCode)){
+            $category = Category::findOne(['Code' => $categoryCode]);
+        }else{
             $category = new Category();
-        }elseif(empty($category->childs)){
+        }
+
+        if(!$category->isNewRecord && empty($category->childs)){
             $this->redirect(['/goods', 'category' => $category->Code]);
         }
 

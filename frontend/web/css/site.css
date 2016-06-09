@@ -1247,29 +1247,36 @@ h2{
 	content: '%';
 }
 
-.item .discount{
-	width: 76px;
-	height: 76px;
+.item .discount-block{
+	width: 70px;
+	height: 70px;
 	position: absolute;
-	border-radius: 38px;
-	background: #81bb72;
-	top: 20px;
-	right: -10px;
+	border-radius: 5px;
+	background: #ff5a00;
+	top: 22px;
+	right: -7px;
 	overflow: hidden;
 	text-align: center;
 	display: block;
 	font-family: OpenSans-Bold;
 	text-transform: uppercase;
 	color: #fff;
-	padding-top: 10px;
+	padding: 5px;
 }
 
-.item .discount .top, .item .discount .bottom{
-	font-size: 11px;
+.item .discount-block .discount, .item .discount-block .block-label{
+	font-size: 10px;
+	line-height: 12px;
 }
 
-.item .discount .middle{
+.item .discount-block .price{
 	font-size: 18px;
+	color: #fffc00;
+	line-height: 22px;
+}
+
+.item .discount-block .currency{
+	font-size: 11px;
 }
 
 /*============* AND ITEM STYLE *==============*/

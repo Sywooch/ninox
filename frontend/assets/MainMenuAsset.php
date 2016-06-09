@@ -17,7 +17,4 @@ class MainMenuAsset extends AssetBundle
 	public $js = [
 		'js/mainMenu.js'
 	];
-	public $css = [
-		'css/menu.css'
-	];
 }

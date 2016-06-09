@@ -1,6 +1,7 @@
 <?php
 use kartik\editable\Editable;
 use kartik\form\ActiveForm;
+use speixoto\amcharts\Widget as AmChart;
 
 $this->title = 'Отключеные товары';
 
@@ -205,19 +206,19 @@ $form = ActiveForm::begin([
     <div class="col-xs-6">
         <div class="thumbnail">
             <center class="lead">Количество заказов</center>
-            <?=yii\amcharts\Widget::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['ordersCount'])])?>
+            <?=AmChart::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['ordersCount'])])?>
         </div>
     </div>
     <div class="col-xs-6">
         <div class="thumbnail">
             <center class="lead">Типы оплаты</center>
-            <?=yii\amcharts\Widget::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['paymentType'])])?>
+            <?=AmChart::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['paymentType'])])?>
         </div>
     </div>
     <div class="col-xs-12">
         <div class="thumbnail">
             <center class="lead">Продажи по категориям</center>
-            <?=yii\amcharts\Widget::widget(['width' =>  '100%', 'chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['byCategories'])])?>
+            <?=AmChart::widget(['width' =>  '100%', 'chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['byCategories'])])?>
         </div>
     </div>
 

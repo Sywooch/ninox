@@ -414,7 +414,7 @@ $this->beginPage();
 		<div class="sticky-on-scroll">
 			<div class="under-menu">
 				<div class="under-menu-content">
-					<a href="/"><div class="logo"></div></a>
+					<?=Html::a(Html::tag('div', '', ['class' => 'logo']), Url::to(['/', 'language' => \Yii::$app->language]))?>
 					<div class="input-style-main">
 						<?php
 						$form = new \kartik\form\ActiveForm([

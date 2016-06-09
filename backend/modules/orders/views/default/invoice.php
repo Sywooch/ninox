@@ -4,8 +4,12 @@
  * User: bobroid
  * Date: 23.10.15
  * Time: 13:58
+ *
+ * @var \backend\models\NovaPoshtaOrder $invoice
+ * @var integer $orderID
  */
 
+use kartik\form\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
@@ -16,11 +20,19 @@ echo Html::button('', [
 
 $seat = new \backend\models\NovaPoshtaSeat();
 
-$form = new \yii\widgets\ActiveForm([
-    'id'    =>  'invoiceForm'
+\yii\widgets\Pjax::begin([
+    'ID'                    =>  'x1',
+    'enablePushState'    =>  false
 ]);
-$form->begin();
-
+$form = ActiveForm::begin([
+    'id'        =>  'invoiceForm',
+    'action'    =>  '/orders/createinvoice/'.$orderID,
+    'enableAjaxValidation' => false,
+    'options'   =>[
+        'data-pjax'=>'#x1'
+    ],
+    'enableClientValidation' => true
+]);
 echo Html::tag('div',
         Html::tag('div',
             $form->field($invoice, 'ServiceType')->dropDownList(\Yii::$app->NovaPoshta->serviceTypes()).
@@ -86,4 +98,5 @@ echo Html::tag('div',
     ]),
     Html::button('Создать накладную', ['id' => 'createInvoice', 'type' => 'submit', 'class' => 'btn btn-default btn-success']);
 
-$form->end();
+$form::end();
+\yii\widgets\Pjax::end();

@@ -47,6 +47,8 @@ use Yii;
  * @property string $paymentInfo
  * @property CustomerAddresses $recipient
  * @property History[] $orders
+ * @property CustomerContacts[] phones
+ * @property string primaryPhone
  */
 class Customer extends \yii\db\ActiveRecord
 {

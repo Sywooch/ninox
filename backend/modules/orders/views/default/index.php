@@ -243,13 +243,14 @@ $css = <<<'CSS'
     background: #66cc00 !important;
 }
 
+.orderRow.danger td{
+    background: #ff0000 !important;
+}
+
 .orderRow.new td{
     background: #ff9966 !important;
 }
 
-.orderRow.danger td{
-    background: #ff0000 !important;
-}
 
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;

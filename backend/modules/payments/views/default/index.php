@@ -135,6 +135,16 @@ echo \kartik\grid\GridView::widget([
             }
         ],
         [
+            'label'     =>  'Менеджер',
+            'value'     =>  function($model){
+                if(empty($model->order) || empty($model->order->responsibleUser)){
+                    return '';
+                }
+
+                return $model->order->responsibleUser->name;
+            }
+        ],
+        [
             'label'     =>  'Телефон',
             'value'     =>  function($model){
                 if(empty($model->order)){
