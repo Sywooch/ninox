@@ -44,6 +44,9 @@ class History extends \common\models\History
     public $status_10    =   'Ожидает отправки';
 
 
+    /**
+     * @return yii\db\ActiveQuery the newly created [[ActiveQuery]] instance.
+     */
     public static function find()
     {
         return parent::find()->with('items')->with('customer');

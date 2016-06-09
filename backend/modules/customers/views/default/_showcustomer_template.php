@@ -4,10 +4,6 @@ use yii\bootstrap\Modal;
 use yii\data\ActiveDataProvider;
 
 $this->title = "Клиент ".$customer->Company;
-$this->params['breadcrumbs'][] = [
-    'label' =>  'Клиенты',
-    'url'   =>  '/customers'
-];
 $this->params['breadcrumbs'][] = $customer->Company;
 
 $css = <<<'STYLE'
