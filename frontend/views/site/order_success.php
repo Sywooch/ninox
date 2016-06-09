@@ -46,10 +46,10 @@ switch($order->paymentType){
 		$payment = 'Наложеный платёж';
 		break;
 	case 2:
-		$payment = 'Оценочная стоимость';
+		$payment = 'На банковскую карту ПриватБанка';
 		break;
 	case 3:
-		$payment = 'стоимость';
+		$payment = 'Наличные';
 		break;
 }
 
@@ -116,9 +116,8 @@ if(/*\Yii::$app->user->isGuest*/\Yii::$app->request->post("orderType") == 1){
 		 		Html::tag('span',
 					Html::tag('span', '№ заказа:', ['class' => 'number-of-order']).
 					Html::tag('b',  $order->number)).
-		 		Html::tag('span',
-		 			$order->customerName . ' ' . $order->customerSurname).
-		 		Html::tag('span', \Yii::$app->formatter->asPhone(\Yii::$app->user->identity->phone)).
+		 		Html::tag('span', $order->customerName . ' ' . $order->customerSurname).
+		 		Html::tag('span', \Yii::$app->request->cookies->getValue("customerPhone", false)).
 		 		Html::tag('span', $delivery).
 		 		Html::tag('span', $payment).
 		 		Html::tag('div', '', ['class' => 'blue-line']).
