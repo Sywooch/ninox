@@ -166,7 +166,7 @@ $columns = $showFourth ? 3 : 4;
                         <td><?=count($report->todayShopOrders)?>\<?=count($report->todayDoneShopOrders)?> (<?=$report->todayShopOrdersSum?> грн.)</td>
                     </tr>
                     <tr>
-                        <td>План на сегодня&nbsp;&nbsp;&nbsp;</td>
+                        <td>План на сегодня&nbsp;</td>
                         <td><?=$report->shop->daySalesPlan?> грн.</td>
                     </tr>
                 </table>
