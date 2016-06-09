@@ -17,41 +17,38 @@ class Pricerule extends \yii\db\ActiveRecord
 {
 
     public $customerRule = 0;
-	public $_terms = [];
-	public $_actions = [];
+	private $_asArray = [];
 	protected $termTypes = ['=', '>=', '<=', '!='];
 
-	public function __get($name){
-		switch($name){
-			case 'terms':
-				if(!empty($this->_terms)){
-					return $this->_terms;
-				}
-
-				$this->asArray();
-
-				return $this->_terms;
-				break;
-			case 'actions':
-				if(!empty($this->_actions)){
-					return $this->_actions;
-				}
-
-				$this->asArray();
-
-				return $this->_actions;
-				break;
+	public function getAsArray(){
+		if(!empty($this->_asArray)){
+			return $this->_asArray;
 		}
 
-		return parent::__get($name);
+		return $this->_asArray = $this->asArray();
+	}
+
+	public function getTerms(){
+		return $this->asArray['terms'];
+	}
+
+	public function getActions(){
+		return $this->asArray['actions'];
+	}
+
+	public function setTerms($value){
+		$this->_asArray['terms'] = $value;
 	}
 
 	public function asArray(){
 		$termPattern = '/'.implode('|', $this->termTypes).'/';
 		$parts = explode('THEN', preg_replace('/\s/', '', $this->Formula));
-		$terms = $parts[0];
-		$actions = $parts[1];
-		$terms = preg_replace('/IF/', '', $terms);
+		$result['terms'] = [];
+		$result['actions'] = [];
+		if(empty($parts[0]) || empty($parts[1])){
+			return $result;
+		}
+		$terms = preg_replace('/IF/', '', $parts[0]);
 		$terms = explode('AND', $terms);
 
 		foreach($terms as $termt){
@@ -70,34 +67,17 @@ class Pricerule extends \yii\db\ActiveRecord
 				}
 			}
 			if(!empty($key) && !empty($tempArray)){
-				$this->_terms[$key][] = $tempArray;
+				$result['terms'][$key][] = $tempArray;
 			}
 		}
 
-		$actions = explode('AND', $actions);
+		$actions = explode('AND', $parts[1]);
 		foreach($actions as $action){
 			$action = explode('=', $action);
-			$this->_actions[$action[0]] = $action[1];
+			$result['actions'][$action[0]] = $action[1];
 		}
-	}
 
-	public function getPossibleTerms(){
-		return [
-			'GoodGroup', 'Date', 'WithoutBlyamba', 'DocumentSum'
-		];
-	}
-
-	public function getTermsPossibleValues(){
-		return [
-			'GoodGroup'	=>	[],
-			'Date'	=>	[],
-			'WithoutBlyamba'	=>	[],
-			'DocumentSum'	=>	[],
-		];
-	}
-
-	public function getTermPossibleValue(){
-
+		return $result;
 	}
 
     /**

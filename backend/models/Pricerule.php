@@ -20,12 +20,39 @@ class Pricerule extends \common\models\Pricerule{
 
     }
 
+	/**
+     * @return PriceRuleTerm[] array
+     */
     public static function terms(){
         return [
-            ['Сумма заказа' => 'DocumentSum', 'number', ['>=', '<=', '=']],
-            ['Категория товара' => 'GoodGroup', 'string', ['>=', '<=', '=', '!=']],
-            ['Без пометки "распродажа"' => 'WithoutBlyamba', ['Да' => 'true'], ['=']],
-            ['Дата' => 'Date', 'date', ['>=', '<=', '=']],
+            new PriceRuleTerm([
+                'attribute'         =>  'DocumentSum',
+                'label'             =>  'Сумма заказа',
+                'possibleOperands'  =>  ['>=', '<=', '=']
+            ]),
+            new PriceRuleTerm([
+                'attribute'         =>  'GoodGroup',
+                'label'             =>  'Категория товара',
+                'possibleOperands'  =>  ['>=', '<=', '=', '!=']
+            ]),
+            new PriceRuleTerm([
+                'attribute'         =>  'WithoutBlyamba',
+                'label'             =>  'Без пометки "Акция"',
+                'default'           =>  ['Да' => 'true'],
+                'possibleOperands'  =>  ['=']
+            ]),
+            new PriceRuleTerm([
+                'attribute'         =>  'Date',
+                'label'             =>  'Дата',
+                'possibleOperands'  =>  ['>=', '<=', '=']
+            ]),
+        ];
+    }
+
+    public static function actions(){
+        return [
+            ['Discount' => 'Скидка', 'float', ['=']],
+            ['Type' => 'Тип', 'integer', ['=']],
         ];
     }
 

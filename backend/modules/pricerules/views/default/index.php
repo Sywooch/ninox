@@ -6,7 +6,115 @@ use yii\bootstrap\Html;
 $this->title = 'Ценовые правила';
 $this->params['breadcrumbs'][] = $this->title;
 
-$js = <<<'SCRIPT'
+\kartik\select2\Select2Asset::register($this);
+\kartik\depdrop\DepDropAsset::register($this);
+\kartik\date\DatePickerAsset::register($this);
+
+$js = <<<'JS'
+
+function loadList(list, data){
+    var terms = data.rule.terms;
+    list.children().remove();
+
+    currentId = 1;
+    categoriesDropdown = data.categoriesDropdown;
+
+    for(var key in terms){
+        if(terms.hasOwnProperty(key)){
+            var term = terms[key];
+            for(var keyId in term){
+                if(term.hasOwnProperty(keyId)){
+                    var subTerm = term[keyId];
+                    for(var subKeyId in subTerm){
+                        if(subTerm.hasOwnProperty(subKeyId)){
+                            var li = document.createElement('li'),
+                            selectTerm = document.createElement('select'),
+                            selectOperand = document.createElement('select');
+                            selectTerm.setAttribute('name', 'term[' + key + '][' + keyId + '][' + subKeyId + ']');
+                            selectOperand.setAttribute('name', 'operand[' + key + '][' + keyId + '][' + subKeyId + ']');
+                            selectTerm.setAttribute('id', 'term_' + currentId);
+                            selectOperand.setAttribute('id', 'operand_' + currentId);
+                            for(var operand in data.typesDropdown[key]){
+                                var option = document.createElement('option');
+                                option.setAttribute('value', operand);
+                                operand == subTerm[subKeyId]['type'] ? option.setAttribute('selected', 'selected') : '';
+                                option.textContent = operand;
+                                selectOperand.appendChild(option);
+                            }
+                            li.appendChild(selectTerm);
+                            li.appendChild(selectOperand);
+                            list.append(li);
+                            inputValueCreate($(li), key, keyId, subKeyId, subTerm[subKeyId]['term']);
+                            $(selectTerm).select2({
+                                "data": data.termsDropdown,
+                            }).on("select2:selecting", function(e){
+                                inputValueCreate($(e.currentTarget).parent('li'), e.params.args.data.id, false);
+                            }).val(key).trigger('change');
+                            $(selectOperand).depdrop({
+                                "depends":[
+                                    'term_' + currentId,
+                                ],
+                                "url":'/pricerules/getoperands'
+                            });
+                            currentId++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function inputValueCreate(li, key, keyId, subKeyId, value){
+    var input = li.find('.term-value');
+    if(typeof input == "object"){
+        if($(input).data('select2')){
+            input.select2('destroy');
+        }
+        input.remove();
+        input = '';
+    }
+    switch(key){
+        case 'DocumentSum':
+            input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.setAttribute('id', 'value_' + currentId);
+            input.setAttribute('class', 'term-value');
+            input.setAttribute('name', 'value[' + key + '][' + keyId + '][' + subKeyId + ']');
+            input.value = value;
+            li.append(input);
+            //input.setAttribute('type', 'text');
+            //input.setAttribute('type', 'text');
+            break;
+        case 'GoodGroup':
+            input = document.createElement('select');
+            input.setAttribute('id', 'value_' + currentId);
+            input.setAttribute('class', 'term-value');
+            input.setAttribute('name', 'value[' + key + '][' + keyId + '][' + subKeyId + ']');
+            li.append(input);
+            $(input).select2({
+                data: categoriesDropdown,
+                width: "200px"
+            }).val(value).trigger('change');
+            break;
+        case 'WithoutBlyamba':
+            break;
+        case 'Date':
+            input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.setAttribute('id', 'value_' + currentId);
+            input.setAttribute('class', 'term-value');
+            input.setAttribute('name', 'value[' + key + '][' + keyId + '][' + subKeyId + ']');
+            input.value = value;
+            li.append(input);
+            $(input).kvDatepicker({
+                format: 'dd.mm.yyyy',
+                autoclose: true,
+            });
+            break;
+    }
+}
+
 var changeState = function(e){
     var button = e.currentTarget,
         id = button.getAttribute('data-attribute-ruleID');
@@ -37,7 +145,8 @@ var changeState = function(e){
 		    'id': e.currentTarget.getAttribute('data-attribute-ruleid')
 		},
 		success: function(data){
-			document.querySelector("div[data-remodal-id='updateRule']").innerHTML = data;
+		    var list = $('.ruleEditForm #ruleTermsList');
+			loadList(list, data);
 		}
 	});
 }, updSort = function(){
@@ -59,15 +168,18 @@ var changeState = function(e){
 		}
 	});
 }
-    buttons1 = document.querySelectorAll(".priceRuleState");
-    buttons2 = document.querySelectorAll(".priceRuleEdit");
 
-for(var i = 0; i < buttons1.length; i++){
-    buttons1[i].addEventListener('click', changeState, false);
-    buttons2[i].addEventListener('click', updateRuleModal, false);
-}
+$('body').on('click', '.priceRuleState', changeState);
+$('body').on('click', '.priceRuleEdit', updateRuleModal);
 
-SCRIPT;
+$(document).on('confirmation', '.remodal[data-remodal-id="updateRule"]', function(e){
+    var form = $(e.currentTarget).find('form');
+    if(form){
+        form.submit();
+    }
+});
+
+JS;
 
 $this->registerJs($js);
 
@@ -80,26 +192,17 @@ $ruleModal = new Remodal([
     'confirmButtonOptions'  =>  [
         'label' =>  'Сохранить'
     ],
+    'content'   =>  $this->render('_rule_edit', [
+        'rule'  =>  new \backend\models\Pricerule()
+    ])
 ]);
 
 ?>
 <h1><?=$this->title?></h1>
 <br>
-<?=Remodal::widget([
-    'id'            =>  'newPriceRule',
-    'buttonOptions' =>  [
-        'label' =>  FA::icon('plus').' Добавить',
-        'class' =>  'btn btn-default'
-    ],
-    'cancelButtonOptions'  =>  [
-        'label' =>  'Отменить'
-    ],
-    'confirmButtonOptions'  =>  [
-        'label' =>  'Сохранить'
-    ],
-    'content'   =>  $this->render('_rule_edit', [
-        'rule'  =>  new \backend\models\Pricerule()
-    ])
+<?=Html::a(FA::icon('plus').' Добавить', '#updateRule', [
+    'class' =>  'priceRuleEdit btn btn-default',
+    'data-attribute-ruleID' =>  0,
 ])?>
 <br>
 <br>
@@ -123,6 +226,7 @@ foreach($rules as $rule){
         'id'  =>  'pricerules'
     ],
     'pluginEvents' => [
-        'sortupdate' => 'function() { updSort(); }',
+        'sortupdate' => 'function(){updSort();}',
     ]
-])?>
+]).
+$ruleModal->renderModal()?>

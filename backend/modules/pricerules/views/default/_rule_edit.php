@@ -1,18 +1,26 @@
 <?php
-$form = new \yii\bootstrap\ActiveForm();
 
-$terms = \backend\models\Pricerule::terms();
+use yii\helpers\Html;
 
-$termsDropdown = [];
+$css = <<<'CSS'
+    .select2-container--open, .datepicker{
+        z-index: 10000 !important;
+    }
+CSS;
 
-foreach($terms as $term){
-    $termsDropdown[] = $term['0'];
-}
+$this->registerCss($css);
 
-echo '<pre>';
+$form = new \kartik\form\ActiveForm([
+    'options'   =>  [
+        'class' =>  'ruleEditForm'
+    ]
+]);
+$form->begin();
 
-if(!empty($rule->Formula)){
-    //print_r($rule->asArray());
-}
-echo 'В разработке...';
-echo '</pre>';
+echo Html::hiddenInput('ruleID', 0).
+Html::tag('ol', '', ['id' => 'ruleTermsList']);/*,
+Html::button(FA::icon('plus').' Добавить', [
+    'class' => 'ruleTermsList_add btn btn-success btn-sm',
+    'style' =>  'margin: 0px auto; display: block;'
+]);*/
+$form->end();
