@@ -60,8 +60,6 @@ class DefaultController extends Controller
     public function actionShop(){
         $shop = \Yii::$app->params['configuration'];
 
-        $shop->month = 5;
-
         $report = new MonthReport();
 
         $report->shop = $shop;
