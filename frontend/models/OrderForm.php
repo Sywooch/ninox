@@ -173,8 +173,8 @@ class OrderForm extends Model{
             'customerPhone'     =>  $customer->phone,
             'customerEmail'     =>  $customer->email,
             'deliveryCity'      =>  $customer->city,
-            'paymentType'       =>  $customer->paymentType,
-            'paymentParam'      =>  $customer->paymentParam,
+            'paymentType'       =>  empty($customer->paymentType) ? $this->paymentType : $customer->paymentType,
+            'paymentParam'      =>  empty($customer->paymentParam) ? $this->paymentParam : $customer->paymentParam,
             'paymentInfo'       =>  $customer->paymentInfo
         ]);
 

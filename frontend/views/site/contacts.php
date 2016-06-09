@@ -8,6 +8,8 @@
 use yii\bootstrap\Html;
 use yii\jui\Accordion;
 
+$this->title = 'Контакты';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="content">
     <div class="left-side contact">

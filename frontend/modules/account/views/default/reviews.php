@@ -2,6 +2,9 @@
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
 
+$this->title = 'Мои отзывы';
+$this->params['breadcrumbs'][] = $this->title;
+
 echo Html::tag('div',
     Html::tag('div',
         \frontend\widgets\ListGroupMenu::widget([

@@ -13,6 +13,9 @@ use yii\jui\Accordion;
 
 $model = new \frontend\models\UsersInterestsForm();
 
+
+$this->title = 'О компании';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="left-side left-menu-links">

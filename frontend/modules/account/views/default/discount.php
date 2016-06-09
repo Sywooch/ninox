@@ -1,6 +1,9 @@
 <?php
 use yii\bootstrap\Html;
 
+$this->title = 'Моя скидка';
+$this->params['breadcrumbs'][] = $this->title;
+
 echo Html::tag('div',
     Html::tag('div',
         \frontend\widgets\ListGroupMenu::widget([

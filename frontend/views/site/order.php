@@ -8,6 +8,9 @@
 
 $form = new \yii\bootstrap\ActiveForm();
 
+$this->title = 'Оформление заказа';
+$this->params['breadcrumbs'][] = $this->title;
+
 if(!empty($model->getErrors())){
     echo '<pre>';
     print_r($model->getErrors());

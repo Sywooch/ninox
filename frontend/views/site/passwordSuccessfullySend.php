@@ -8,6 +8,9 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$this->title = \Yii::t('shop', 'Востановление пароля');
+$this->params['breadcrumbs'][] = $this->title;
+
 echo Html::tag('div',
     \Yii::t('shop', 'Письмо отправлено Вам на {email}',
         [

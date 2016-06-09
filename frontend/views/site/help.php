@@ -6,6 +6,9 @@
  * Time: 16:45
  */
 use yii\bootstrap\Html;
+
+$this->title = 'Помощь';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="content help-page">
     <div class="left-side">
