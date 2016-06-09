@@ -90,7 +90,7 @@ echo \kartik\grid\GridView::widget([
             'attribute' =>  'creator',
             'format'    =>  'raw',
             'value'     =>  function($model){
-                $user = \common\models\Siteuser::getUser($model->creator);
+                $user = \backend\models\Siteuser::getUser($model->creator);
 
                 if($user){
                     return Html::tag('span', $user->name, [

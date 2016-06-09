@@ -5,7 +5,7 @@ use common\models\Chat;
 use common\models\ChatMessage;
 use common\models\ControllerAction;
 use common\models\Service;
-use common\models\Siteuser;
+use backend\models\Siteuser;
 use common\models\SubDomain;
 use frontend\models\Customer;
 use frontend\models\Good;

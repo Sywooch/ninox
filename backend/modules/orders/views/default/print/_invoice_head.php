@@ -115,7 +115,7 @@ use yii\helpers\Html;
                     $i = 0;
                     ?>
                     <tr>
-                        <td class="telefon">Заказ №<?=$order->id?></td><td class="telefon">Менеджер: <?=\common\models\Siteuser::getUser($order->responsibleUser)?></td>
+                        <td class="telefon">Заказ №<?=$order->id?></td><td class="telefon">Менеджер: <?=\backend\models\Siteuser::getUser($order->responsibleUser)?></td>
                     </tr>
                     </table>
                 <?php
