@@ -16,9 +16,22 @@ namespace backend\models;
  * @property History firstOrder
  * @property History lastOrder
  * @property float spentMoney
+ * @property History[] $actualOrders
  */
 
 class Customer extends \common\models\Customer{
+
+    public function getActualOrders(){
+        $actualOrders = [];
+
+        foreach($this->orders as $order){
+            if($order->deleted == 0){
+                $actualOrders[] = $order;
+            }
+        }
+
+        return $actualOrders;
+    }
 
     public function init(){
         $this->discount = !empty($this->discount) ? $this->discount : 0;
@@ -48,13 +61,17 @@ class Customer extends \common\models\Customer{
     }
 
     public function getMiddleOrder(){
-        return round($this->spentMoney / count($this->orders), 2);
+        if(count($this->actualOrders) == 0){
+            return 0;
+        }
+
+        return round($this->spentMoney / count($this->actualOrders), 2);
     }
 
     public function getSpentMoney(){
         $ordersSum = 0;
 
-        foreach($this->orders as $order){
+        foreach($this->actualOrders as $order){
             $ordersSum += $order->actualAmount;
         }
 
@@ -64,7 +81,7 @@ class Customer extends \common\models\Customer{
     public function getFirstOrder(){
         $firstOrder = new History;
 
-        foreach($this->orders as $order){
+        foreach($this->actualOrders as $order){
             if($firstOrder->isNewRecord || $firstOrder->added > $order->added){
                 $firstOrder = $order;
             }
@@ -76,7 +93,7 @@ class Customer extends \common\models\Customer{
     public function getLastOrder(){
         $lastOrder = new History;
 
-        foreach($this->orders as $order){
+        foreach($this->actualOrders as $order){
             if($lastOrder->isNewRecord || $lastOrder->added < $order->added){
                 $lastOrder = $order;
             }

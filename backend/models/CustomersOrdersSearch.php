@@ -15,9 +15,21 @@ use yii\db\ActiveRecord;
 class CustomersOrdersSearch extends Customer
 {
 
+    public $ordersSum;
+
+    public $ordersCount;
+
+    public $dateFrom;
+
+    public $dateTo;
+
     public function search($params){
 
-        $query = Customer::find()->with('orders')->leftJoin('history', '`history`.`customerID` = `partners`.`ID`')->andWhere(['`partners`.`Deleted`' => 0, '`history`.`deleted`' => 0]);
+        $query = self::find()
+            ->with('orders')
+            ->select(['`partners`.*', 'SUM(`history`.`actualAmount`) AS `ordersSum`', 'COUNT(`history`.`ID`) AS `ordersCount`'])
+            ->leftJoin('history', '`history`.`customerID` = `partners`.`ID`')
+            ->andWhere(['`partners`.`Deleted`' => 0, '`history`.`deleted`' => 0, '`history`.`moneyConfirmed`' => 1]);
 
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
@@ -25,6 +37,20 @@ class CustomersOrdersSearch extends Customer
                 'pageSize'  =>  array_key_exists('pageSize', $params) ? $params['pageSize'] : 50
             ]
         ]);
+
+        if(array_key_exists('dateFrom', $params)){
+            $dateFrom = strtotime($params['dateFrom']);
+            $query->andWhere("`history`.`added` > '{$dateFrom}'");
+        }
+
+        if(array_key_exists('dateTo', $params)){
+            $dateTo = strtotime($params['dateTo']);
+            $query->andWhere("`history`.`added` < '{$dateTo}'");
+        }
+
+        if(array_key_exists('didOrder', $params) && $params['didOrder'] == 'false'){
+            $query->andWhere("COUNT(`history`.`ID`) < '1'");
+        }
 
         /*$dataProvider->setSort([
             'defaultOrder' => [
@@ -38,9 +64,9 @@ class CustomersOrdersSearch extends Customer
             ]
         ]);*/
 
-        $query->andWhere(['`history`.`moneyConfirmed`' => 1]);
-
-        $query->groupBy('`history`.`customerID`')->orderBy('SUM(`history`.`actualAmount`) DESC');
+        $query
+            ->groupBy('`history`.`customerID`')
+            ->orderBy('ordersSum DESC');
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
@@ -66,6 +92,11 @@ class CustomersOrdersSearch extends Customer
         }
 
         return $dataProvider;
+    }
+
+    public function getMiddleOrder()
+    {
+        return $this->ordersSum / $this->ordersCount;
     }
 
     public function rules()
