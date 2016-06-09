@@ -13,7 +13,7 @@ class SendedPayment extends \common\models\SendedPayment
 {
 
     public function getOrder(){
-        return History::findOne(['number' => filter_var($this->nomer_id, FILTER_SANITIZE_NUMBER_INT)]);
+        return History::find()->where(['number' => filter_var($this->nomer_id, FILTER_SANITIZE_NUMBER_INT)])->with('items')->one();
     }
 
 }
