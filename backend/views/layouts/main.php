@@ -739,12 +739,17 @@ $this->beginPage() ?>
                     'class' =>  'inline-search-container'
                 ]
             ],
-            [
+            /*[
                 'label'     =>  'Сообщения',
                 'options'   =>  [
                     'class'   =>  'showChat'
                 ],
                 'counter'   =>  '6'
+            ],*/
+            [
+                'label'     =>  'Оплаты',
+                'url'       =>  '/payments/index',
+                'counter'   =>  \backend\models\SendedPayment::find()->where(['read_confirm' => 0])->count()
             ],
             /*[
                 'label'     =>  'Задания',
