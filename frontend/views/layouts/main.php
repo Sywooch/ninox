@@ -531,34 +531,14 @@ $this->beginPage();
 											'class' => 'amount-cart'
 										])
 								).
-								Html::tag('span', \Yii::t('shop', /*Html::tag('div',
-										\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} до опта',
-											[
-											'wholesaleRemind'   =>  Html::tag('span',
-												Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
-												[
-													'class' =>  'amount-remind'
-												])
-										]),
-										[
-											'class' =>  'basket'
-										]).
-									Html::tag('div', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), [
-										'class' =>  'basket-'
-									]).
-									Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
-										'class' =>  'basket-empty'
-									]).*//*'Вы покупаете по оптовым ценам '*/ ''),
-									[
-									'class' => 'price-info'
-								]).
+								Html::tag('span', \Yii::t('shop', /*'Вы покупаете по оптовым ценам '*/ ''), ['class' =>
+									'price-info']).
 								Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
 									'class' =>  'button yellow-button middle-button'
 								]).
 								Html::button(\Yii::t('shop', 'Продолжить покупки'), ['id' => 'continueShopping']),
 								[
-									'class'	=>	\Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'in-basket popover-arrow bottom wholesale' :
-											'in-basket popover-arrow bottom retail') : 'in-basket popover-arrow bottom empty',
+									'class'	=>	'in-basket popover-arrow bottom',
 									'id'	=>	'basketPopover'
 								]),
 							[
