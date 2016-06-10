@@ -49,7 +49,7 @@ class History extends \common\models\History
      */
     public static function find()
     {
-        return parent::find()->with('items')->with('customer');
+        return parent::find()->with('customer')->with('responsibleUser')->with('items');
     }
 
     /**
@@ -60,59 +60,6 @@ class History extends \common\models\History
      */
     public function getItems($returnAll = true){
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
-    }
-
-    /**
-     * Пользователь, забравший деньги
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getMoneyCollector(){
-        return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
-    }
-
-    /**
-     * Клиент, оформивший заказ
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getCustomer(){
-        return $this->hasOne(Customer::className(), ['ID' => 'customerID']);
-    }
-
-    /**
-     * Комментарии к заказу
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getComments(){
-        $className = self::className();
-
-        if(count(explode('\\', $className)) > 1){
-            $t = explode('\\', $className);
-            $t = array_reverse($t);
-            $className = $t[0];
-        }
-
-        return $this->hasMany(Comment::className(), ['modelID' => 'ID'])->with('commenter')->andWhere(['model' => $className]);
-    }
-
-    /**
-     * Менеджер заказа
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getResponsibleUser(){
-        return $this->hasOne(Siteuser::className(), ['ID' => 'responsibleUserID']);
-    }
-    
-    /**
-     * Параметр оплаты
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getPaymentParamInfo(){
-        return $this->hasOne(PaymentParam::className(), ['id' => 'paymentParam']);
     }
 
     /**
@@ -523,6 +470,10 @@ class History extends \common\models\History
         }
         
         return $result;
+    }
+
+    public function getPaymentRespond(){
+
     }
 
     public function beforeSave($insert){

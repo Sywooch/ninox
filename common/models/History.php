@@ -103,6 +103,60 @@ class History extends ActiveRecord
     public function getItems(){
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
+    
+
+    /**
+     * Пользователь, забравший деньги
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getMoneyCollector(){
+        return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
+    }
+
+    /**
+     * Клиент, оформивший заказ
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getCustomer(){
+        return $this->hasOne(Customer::className(), ['ID' => 'customerID'])->with('recipients')->with('contacts')->with('orders');
+    }
+
+    /**
+     * Комментарии к заказу
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getComments(){
+        $className = self::className();
+
+        if(count(explode('\\', $className)) > 1){
+            $t = explode('\\', $className);
+            $t = array_reverse($t);
+            $className = $t[0];
+        }
+
+        return $this->hasMany(Comment::className(), ['modelID' => 'ID'])->with('commenter')->andWhere(['model' => $className]);
+    }
+
+    /**
+     * Менеджер заказа
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getResponsibleUser(){
+        return $this->hasOne(Siteuser::className(), ['id' => 'responsibleUserID']);
+    }
+
+    /**
+     * Параметр оплаты
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public function getPaymentParamInfo(){
+        return $this->hasOne(PaymentParam::className(), ['id' => 'paymentParam']);
+    }
 
     public function beforeSave($insert){
         if($this->isNewRecord){

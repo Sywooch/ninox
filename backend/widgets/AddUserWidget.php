@@ -8,7 +8,7 @@
 
 namespace backend\widgets;
 
-use common\models\Siteuser;
+use backend\models\Siteuser;
 use kartik\form\ActiveForm;
 use yii\base\Widget;
 use yii\bootstrap\Modal;

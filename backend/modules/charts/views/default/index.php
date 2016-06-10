@@ -30,10 +30,10 @@ use speixoto\amcharts\Widget as AmChart;
             'dataProvider'  => [
                 [
                     'category'  =>  'Из магазина',
-                    'column-1'  =>  $orders['fromShop']['all']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'С сайта',
-                    'column-1'  =>  $orders['fromSite']['all']
+                    'column-1'  =>  0
                 ]
             ]
         ],
@@ -42,16 +42,16 @@ use speixoto\amcharts\Widget as AmChart;
             'dataProvider'  => [
                 [
                     'category'  =>  'На карту',
-                    'column-1'  =>  $orders['payments']['card']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'Наложеным платежом',
-                    'column-1'  =>  $orders['payments']['COD']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'Покупка в магазине',
-                    'column-1'  =>  $orders['payments']['shop']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'Самовывоз',
-                    'column-1'  =>  $orders['payments']['pickup']
+                    'column-1'  =>  0
                 ]
             ]
         ],
@@ -71,7 +71,7 @@ use speixoto\amcharts\Widget as AmChart;
             'mouseWheelScrollEnabled'    =>  'true',
             'startDuration'    =>  "1",
             'valueField'    =>  'count',
-            'dataProvider'  => $orders['byCategories'],
+            'dataProvider'  => 0,
         ],
     ];
 

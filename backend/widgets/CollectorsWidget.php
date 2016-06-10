@@ -10,6 +10,7 @@ namespace backend\widgets;
 
 use yii\base\Widget;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 class CollectorsWidget extends Widget{
 
@@ -17,8 +18,13 @@ class CollectorsWidget extends Widget{
 
     public $showUnfinished = true;
 
-    public function init(){
+    public $dateFrom;
 
+    public $dateTo;
+
+    public function init(){
+        $this->dateFrom = strtotime(date('Y-m-d'));
+        $this->dateTo = strtotime(date('Y-m-d')) + 86400;
     }
 
     public function run(){
@@ -110,31 +116,23 @@ CSS;
         $items = [];
 
         foreach($this->items as $item){
-            if(!isset($item['userID']) || (!isset($item['completedOrders']) || $item['completedOrders'] == 0)){
-                $link = '#';
-            }else{
-                if(!empty(\Yii::$app->request->get()) && !preg_match('/(|\?|&)responsibleUser/', \Yii::$app->request->url)){
-                    $link = \Yii::$app->request->url.'&responsibleUser='.$item['userID'];
-                }else{
-                    $link = \Yii::$app->request->url;
-                    if(preg_match('/(|\?|&)responsibleUser/', $link)){
-                        $link = preg_replace('/(|\?|&)responsibleUser=\d+/', '', $link);
-                    }
-                    $link = $link.'?responsibleUser='.$item['userID'];
-                }
-            }
-
-
-            $items[] = Html::tag('li', Html::tag('span', $item['name'].':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', isset($item['completedOrders']) ? $item['completedOrders'] : 0, [
-                    'href'  =>  $link
-                ]) : '').' '.Html::tag('span', isset($item['totalOrders']) ? $item['totalOrders'] : 0, ['class' => 'totalOrders']), [
-                'class' =>  (!isset($item['completedOrders']) || $item['completedOrders'] == 0 ? 'bad' : '')
-            ]);
+            $items[] = $this->renderItem($item);
         }
 
         return Html::tag('ul', implode('', $items), [
             'class' =>  'collectors'
         ]).Html::tag('div', '', ['class' => 'clearfix']);
+    }
+
+    public function renderItem($item){
+        $link = Url::to(array_merge(['/', 'responsibleUser' =>  $item->id], \Yii::$app->request->get()));
+
+        return Html::tag('li',
+            Html::tag('span', $item->name.':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo), [
+                'href'  =>  $link
+            ]) : '').' '.Html::tag('span', $item->ordersCount, ['class' => 'totalOrders']), [
+            'class' =>  $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo) == 0 ? 'bad' : ''
+        ]);
     }
 
 }

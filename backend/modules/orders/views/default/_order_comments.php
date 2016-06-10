@@ -47,7 +47,7 @@ $this->registerJs($js);
                 $commenter = $comment->commenter;
 
                 if(empty($commenter)){
-                    $commenter = new \common\models\Siteuser([
+                    $commenter = new \backend\models\Siteuser([
                         'name'  =>  'Система'
                     ]);
                 }
