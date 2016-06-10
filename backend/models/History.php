@@ -62,6 +62,10 @@ class History extends \common\models\History
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 
+    public function getCustomer(){
+        return $this->hasOne(Customer::className(), ['ID' => 'customerID']);
+    }
+
     /**
      * Возвращает ID заказа
      *
