@@ -25,7 +25,7 @@ class Siteuser extends \common\models\Siteuser
 
     public function getOrders()
     {
-        return $this->hasMany(HistoryWithoutRelations::className(), ['responsibleUserID' => 'id']);
+        return $this->hasMany(HistoryWithoutRelations::className(), ['responsibleUserID' => 'id'])->andWhere(['deleted' => 0]);
     }
 
     public function getDoneOrders()
