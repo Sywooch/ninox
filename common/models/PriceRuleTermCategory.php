@@ -6,12 +6,12 @@
  * Time: 13:14
  */
 
-namespace backend\models;
+namespace common\models;
 
 
 use yii\base\Model;
 
-class PriceRuleTerm extends Model{
+class PriceRuleTermCategory extends Model{
 	public $attribute = '';
 	public $label = '';
 	public $possibleOperands = [];

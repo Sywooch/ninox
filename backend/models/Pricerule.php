@@ -9,44 +9,17 @@
 namespace backend\models;
 
 
+use common\models\PriceRuleTerm;
+
 class Pricerule extends \common\models\Pricerule{
-
-    /**
-     * Создает (восстанавливает) ценовое правило из массива
-     *
-     * @param $array
-     */
-    public function fromArray($array){
-
-    }
 
 	/**
      * @return PriceRuleTerm[] array
      */
     public static function terms(){
-        return [
-            new PriceRuleTerm([
-                'attribute'         =>  'DocumentSum',
-                'label'             =>  'Сумма заказа',
-                'possibleOperands'  =>  ['>=', '<=', '=']
-            ]),
-            new PriceRuleTerm([
-                'attribute'         =>  'GoodGroup',
-                'label'             =>  'Категория товара',
-                'possibleOperands'  =>  ['>=', '<=', '=', '!=']
-            ]),
-            new PriceRuleTerm([
-                'attribute'         =>  'WithoutBlyamba',
-                'label'             =>  'Без пометки "Акция"',
-                'default'           =>  ['Да' => 'true'],
-                'possibleOperands'  =>  ['=']
-            ]),
-            new PriceRuleTerm([
-                'attribute'         =>  'Date',
-                'label'             =>  'Дата',
-                'possibleOperands'  =>  ['>=', '<=', '=']
-            ]),
-        ];
+        $term = new PriceRuleTerm();
+
+        return $term->getTermCategories();
     }
 
     public static function actions(){

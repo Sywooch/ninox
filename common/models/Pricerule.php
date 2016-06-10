@@ -44,6 +44,14 @@ class Pricerule extends \yii\db\ActiveRecord
 	public function getActions(){
 		return $this->asArray['actions'];
 	}
+	
+	public function getTermsAsEntity(){
+		return $this->asEntity['terms'];
+	}
+
+	public function getActionsAsEntity(){
+		return $this->asEntity['actions'];
+	}
 
 	/**
 	 * Парсер ценового правила для последующего применения на фронтенде к товарам
@@ -115,7 +123,7 @@ class Pricerule extends \yii\db\ActiveRecord
 				if(!empty($matches)){
 					$tTerm = explode($matches[0], $term);
 					if(!empty($tTerm[1]) && !empty($tTerm[0])){
-						$result['terms'][] = array('term' => $tTerm[0], 'value' => $tTerm[1], 'type' => $matches[0]);
+						$result['terms'][] = new PriceRuleTerm(['term' => $tTerm[0], 'value' => $tTerm[1], 'type' => $matches[0]]);
 					}
 				}
 			}
@@ -145,31 +153,39 @@ class Pricerule extends \yii\db\ActiveRecord
 		$actions = '';
 
 		foreach($array['priceRuleTerms'] as $term){
-			if(empty($term['term']) || empty($term['type']) || empty($term['value'])){
-				return false;
-			}else{
-				if($term['type'] == '=' || $term['type'] == '>='){
-					$parts[$term['term']]['OR'][] = $term;
+			$ruleTerm = new PriceRuleTerm();
+			$ruleTerm->setAttributes($term, false);
+
+
+			if($ruleTerm->validate()){
+				if($ruleTerm->type == '=' || $ruleTerm->type == '>='){
+					$parts[$ruleTerm->term]['OR'][] = $ruleTerm;
 				}else{
-					$parts[$term['term']]['AND'][] = $term;
+					$parts[$ruleTerm->term]['AND'][] = $ruleTerm;
 				}
 			}
 		}
 
 		foreach($parts as $part){
-			$subRuleFormula = '';
-			if(!empty($part['OR']) && sizeof($part['OR']) > 1){
+			if(!empty($part['OR'])){
+				$items = [];
+
 				foreach($part['OR'] as $item){
-					$subRuleFormula .= (empty($subRuleFormula) ? '' : ' OR ').'('.$item['term'].' '.$item['type'].' '.$item['value'].')';
+					$items[] = $item->asString;
 				}
-				$formula .= (empty($formula) ? '' : 'AND ').'('.$subRuleFormula.') ';
-			}elseif(!empty($part['OR'])){
-				$formula .= (empty($formula) ? '' : 'AND ').'('.$part['OR'][0]['term'].' '.$part['OR'][0]['type'].' '.$part['OR'][0]['value'].') ';
+
+				$itemsString = implode(' OR ', $items);
+
+				if(count($items) > 1){
+					$itemsString = "({$itemsString})";
+				}
+
+				$formula .= (empty($formula) ? '' : ' AND ').$itemsString.' ';
 			}
 
 			if(!empty($part['AND'])){
 				foreach($part['AND'] as $item){
-					$formula .= (empty($formula) ? '' : 'AND ').'('.$item['term'].' '.$item['type'].' '.$item['value'].') ';
+					$formula .= (empty($formula) ? '' : ' AND ').$item->asString;
 				}
 			}
 		}
@@ -187,7 +203,40 @@ class Pricerule extends \yii\db\ActiveRecord
 	}
 
 	public function getHumanFriendly(){
+		$categoryCanBuy = $categoryCantBuy = [];
 
+		foreach($this->termsAsEntity as $term){
+			if($term->term == 'GoodGroup'){
+				if(in_array($term->type, ['=', '>='])){
+					$categoryCanBuy[] = $term->category->name;
+				}else{
+					$categoryCantBuy[] = $term->category->name;
+				}
+			}
+		}
+		/*echo "<pre>";
+		var_dump($categoryCanBuy);
+		var_dump($categoryCantBuy);
+		die();*/
+	}
+
+	public function getTermsByType($type){
+		$terms = [];
+
+		foreach($this->termsAsEntity as $term){
+			if($term->term == $type){
+				$terms[] = $term;
+			}
+		}
+
+		return $terms;
+	}
+
+	/**
+	 *
+	 */
+	public function getCategoryTerms(){
+		return $this->getTermsByType('GoodGroup');
 	}
 
     /**
