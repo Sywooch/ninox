@@ -85,18 +85,18 @@ echo Html::tag('div',
         Html::tag('div', !($category->Code == 'AABAAD') ? '' :
             Html::tag('div', Html::tag('div', '%',
                     [
-                        'class'     =>      'percent'
+                        'class'     =>      'banner-percent'
                     ]).
                 Html::tag('span', 'Акция! Скидка -20% на весь раздел Детская бижутерия при покупке товара на сумму от 1500 грн.',
                     [
-                        'class'     =>      'discount-property'
+                        'class'     =>      'banner-discount-property'
                     ]).
                 Html::tag('span', 'Только 4 дня (до 12.06). Дешевле уже не будет!',
                     [
-                        'class'     =>      'discount-time'
+                        'class'     =>      'banner-discount-time'
                     ]),
                 [
-                    'class'     =>      'discount'
+                    'class'     =>      'banner-discount'
                 ])
             ).
                Html::ul($category->subCategories, [
