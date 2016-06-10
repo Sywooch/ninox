@@ -16,56 +16,82 @@ function loadList(list, data){
     var terms = data.rule.terms;
     list.children().remove();
 
-    currentId = 1;
     categoriesDropdown = data.categoriesDropdown;
 
     for(var key in terms){
         if(terms.hasOwnProperty(key)){
-            var term = terms[key];
-            for(var keyId in term){
-                if(term.hasOwnProperty(keyId)){
-                    var subTerm = term[keyId];
-                    for(var subKeyId in subTerm){
-                        if(subTerm.hasOwnProperty(subKeyId)){
-                            var li = document.createElement('li'),
-                            selectTerm = document.createElement('select'),
-                            selectOperand = document.createElement('select');
-                            selectTerm.setAttribute('name', 'term[' + key + '][' + keyId + '][' + subKeyId + ']');
-                            selectOperand.setAttribute('name', 'operand[' + key + '][' + keyId + '][' + subKeyId + ']');
-                            selectTerm.setAttribute('id', 'term_' + currentId);
-                            selectOperand.setAttribute('id', 'operand_' + currentId);
-                            for(var operand in data.typesDropdown[key]){
-                                var option = document.createElement('option');
-                                option.setAttribute('value', operand);
-                                operand == subTerm[subKeyId]['type'] ? option.setAttribute('selected', 'selected') : '';
-                                option.textContent = operand;
-                                selectOperand.appendChild(option);
-                            }
-                            li.appendChild(selectTerm);
-                            li.appendChild(selectOperand);
-                            list.append(li);
-                            inputValueCreate($(li), key, keyId, subKeyId, subTerm[subKeyId]['term']);
-                            $(selectTerm).select2({
-                                "data": data.termsDropdown,
-                            }).on("select2:selecting", function(e){
-                                inputValueCreate($(e.currentTarget).parent('li'), e.params.args.data.id, false);
-                            }).val(key).trigger('change');
-                            $(selectOperand).depdrop({
-                                "depends":[
-                                    'term_' + currentId,
-                                ],
-                                "url":'/pricerules/getoperands'
-                            });
-                            currentId++;
-                        }
-                    }
-                }
+            var object = terms[key];
+            var li = document.createElement('li'),
+            selectTerm = document.createElement('select'),
+            selectOperand = document.createElement('select'),
+            buttonRemove = document.createElement('button'),
+            iRemove = document.createElement('i');
+            selectTerm.setAttribute('name', 'priceRuleTerms[' + key + '][term]');
+            selectTerm.setAttribute('name_format', 'priceRuleTerms[%d][term]');
+            selectTerm.setAttribute('class', 'ruleTerm');
+            selectOperand.setAttribute('name', 'priceRuleTerms[' + key + '][type]');
+            selectOperand.setAttribute('name_format', 'priceRuleTerms[%d][type]');
+            selectOperand.setAttribute('class', 'ruleOperand');
+            selectTerm.setAttribute('id', 'ruleTerm_' + key);
+            selectOperand.setAttribute('id', 'ruleOperand_' + key);
+            buttonRemove.setAttribute('class', 'btn btn-default btn-danger ruleTermsList_del');
+            buttonRemove.setAttribute('type', 'button');
+            iRemove.setAttribute('class', 'fa fa-remove');
+            buttonRemove.appendChild(iRemove);
+            for(var term in data.termsDropdown){
+                var option = document.createElement('option');
+                option.value = data.termsDropdown[term].id;
+                data.termsDropdown[term].id == object.term ? option.setAttribute('selected', 'selected') : '';
+                option.textContent = data.termsDropdown[term].text;
+                selectTerm.appendChild(option);
             }
+            for(var operand in data.typesDropdown[object.term]){
+                var option = document.createElement('option');
+                option.value = operand;
+                operand == object.type ? option.setAttribute('selected', 'selected') : '';
+                option.textContent = operand;
+                selectOperand.appendChild(option);
+            }
+            li.setAttribute('class', 'ruleTermsList_var');
+            li.appendChild(selectTerm);
+            li.appendChild(selectOperand);
+            li.appendChild(buttonRemove);
+            list.append(li);
+            inputValueCreate($(li), object.term, object.value, key, false);
+
         }
     }
+
+    $('input[name="ruleName"]').val(data.name);
+    $('input[name="priceRuleActions[Discount]"]').val(data.rule.actions.Discount);
+    $('select[name="priceRuleActions[Type]"]').val(data.rule.actions.Type);
+
+    if(!$('#ruleTermsList').data('add-input-area')){
+        $('#ruleTermsList').addInputArea({});
+        $('#ruleTermsList').data('add-input-area', true);
+    }
+
+
+    $('select.ruleTerm').select2();
+    $('select.ruleOperand').each(function(index){
+        var id = $(this).attr('id').replace(/\D+/, '');
+        $(this).depdrop({
+            "depends":[
+                'ruleTerm_' + id,
+            ],
+            "url":'/pricerules/getoperands'
+        });
+    });
+    $('input.term-value-date').kvDatepicker({
+        format: 'dd.mm.yyyy',
+        autoclose: true,
+    });
+    $('select.term-value-goodgroup').select2({
+        width: "200px"
+    });
 }
 
-function inputValueCreate(li, key, keyId, subKeyId, value){
+function inputValueCreate(li, term, value, id, init){
     var input = li.find('.term-value');
     if(typeof input == "object"){
         if($(input).data('select2')){
@@ -74,43 +100,75 @@ function inputValueCreate(li, key, keyId, subKeyId, value){
         input.remove();
         input = '';
     }
-    switch(key){
+    switch(term){
         case 'DocumentSum':
             input = document.createElement('input');
             input.setAttribute('type', 'text');
-            input.setAttribute('id', 'value_' + currentId);
+            input.setAttribute('id', 'ruleValue_' + id);
             input.setAttribute('class', 'term-value');
-            input.setAttribute('name', 'value[' + key + '][' + keyId + '][' + subKeyId + ']');
+            input.setAttribute('name', 'priceRuleTerms[' + id + '][value]');
+            input.setAttribute('name_format', 'priceRuleTerms[%d][value]');
             input.value = value;
-            li.append(input);
-            //input.setAttribute('type', 'text');
-            //input.setAttribute('type', 'text');
+            $(input).insertBefore(li.find('.ruleTermsList_del'));
             break;
         case 'GoodGroup':
             input = document.createElement('select');
-            input.setAttribute('id', 'value_' + currentId);
-            input.setAttribute('class', 'term-value');
-            input.setAttribute('name', 'value[' + key + '][' + keyId + '][' + subKeyId + ']');
-            li.append(input);
-            $(input).select2({
-                data: categoriesDropdown,
-                width: "200px"
-            }).val(value).trigger('change');
+            input.setAttribute('id', 'ruleValue_' + id);
+            input.setAttribute('class', 'term-value term-value-goodgroup');
+            input.setAttribute('name', 'priceRuleTerms[' + id + '][value]');
+            input.setAttribute('name_format', 'priceRuleTerms[%d][value]');
+            for(var key in categoriesDropdown){
+                var option = document.createElement('option');
+                option.value = categoriesDropdown[key].id;
+                option.textContent = categoriesDropdown[key].text;
+                categoriesDropdown[key].id == value ? option.setAttribute('selected', 'selected') : '';
+                input.appendChild(option);
+            }
+            $(input).insertBefore(li.find('.ruleTermsList_del'));
+            if(init){
+                $(input).select2({
+                    width: "200px"
+                });
+            }
             break;
         case 'WithoutBlyamba':
+            input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.setAttribute('id', 'ruleValue_' + id);
+            input.setAttribute('class', 'term-value term-value-date');
+            input.setAttribute('name', 'priceRuleTerms[' + id + '][value]');
+            input.setAttribute('name_format', 'priceRuleTerms[%d][value]');
+            input.setAttribute('disabled', 'disabled');
+            input.value = true;
+            $(input).insertBefore(li.find('.ruleTermsList_del'));
             break;
         case 'Date':
             input = document.createElement('input');
             input.setAttribute('type', 'text');
-            input.setAttribute('id', 'value_' + currentId);
-            input.setAttribute('class', 'term-value');
-            input.setAttribute('name', 'value[' + key + '][' + keyId + '][' + subKeyId + ']');
-            input.value = value;
-            li.append(input);
-            $(input).kvDatepicker({
-                format: 'dd.mm.yyyy',
-                autoclose: true,
-            });
+            input.setAttribute('id', 'ruleValue_' + id);
+            input.setAttribute('class', 'term-value term-value-date');
+            input.setAttribute('name', 'priceRuleTerms[' + id + '][value]');
+            input.setAttribute('name_format', 'priceRuleTerms[%d][value]');
+            if(value){
+                input.value = value;
+            }else{
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1;
+                var yyyy = today.getFullYear();
+
+                dd = dd < 10 ? '0' + dd : dd;
+                mm = mm < 10 ? '0' + mm : mm;
+
+                input.value = dd + '.' + mm + '.' + yyyy;
+            }
+            $(input).insertBefore(li.find('.ruleTermsList_del'));
+            if(init){
+                $(input).kvDatepicker({
+                    format: 'dd.mm.yyyy',
+                    autoclose: true,
+                });
+            }
             break;
     }
 }
@@ -138,14 +196,16 @@ var changeState = function(e){
 		}
 	});
 }, updateRuleModal = function(e){
+    var id = e.currentTarget.getAttribute('data-attribute-ruleid');
     $.ajax({
 	    type: 'POST',
 		url: '/pricerules/edit',
 		data: {
-		    'id': e.currentTarget.getAttribute('data-attribute-ruleid')
+		    'id': id
 		},
 		success: function(data){
 		    var list = $('.ruleEditForm #ruleTermsList');
+		    $('input[name="ruleID"]').val(id);
 			loadList(list, data);
 		}
 	});
@@ -167,10 +227,31 @@ var changeState = function(e){
 		    'data': b
 		}
 	});
+}, addEvents = function(element){
+    var counter = ($(element[0].parentNode).find(" > *").length - 1);
+    $('#ruleTerm_' + counter).select2().val($('#ruleTerm_' + counter + ' option[selected]').val()).trigger('change');
+    $('#ruleOperand_' + counter).depdrop({
+        "depends":[
+            'ruleTerm_' + counter,
+        ],
+        "url":'/pricerules/getoperands'
+    }).val($('#ruleOperand_' + counter + ' option[selected]').val()).trigger('change');
+    $('#ruleValue_' + counter + '.term-value-goodgroup').select2({width: "200px"});
+    $('#ruleValue_' + counter + '.term-value-date').kvDatepicker({
+        format: 'dd.mm.yyyy',
+        autoclose: true,
+    });
 }
 
 $('body').on('click', '.priceRuleState', changeState);
 $('body').on('click', '.priceRuleEdit', updateRuleModal);
+$('body').on("select2:selecting", 'select.ruleTerm', function(e){
+    inputValueCreate($(e.currentTarget).parent('li'), e.params.args.data.id, 0, $(e.currentTarget).attr('id').replace(/\D+/, ''), true);
+});
+
+$("#ruleTermsList").on('inputArea.added', function(event, element){
+    addEvents(element);
+});
 
 $(document).on('confirmation', '.remodal[data-remodal-id="updateRule"]', function(e){
     var form = $(e.currentTarget).find('form');

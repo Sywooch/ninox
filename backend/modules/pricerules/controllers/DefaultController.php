@@ -5,7 +5,6 @@ namespace backend\modules\pricerules\controllers;
 use backend\controllers\SiteController as Controller;
 use common\models\Category;
 use common\models\Pricerule;
-use yii\data\ActiveDataProvider;
 
 class DefaultController extends Controller
 {
@@ -13,15 +12,27 @@ class DefaultController extends Controller
     {
         if(\Yii::$app->request->post()){
             $id = \Yii::$app->request->post("ruleID");
+            $name = \Yii::$app->request->post("ruleName");
             $rule = Pricerule::findOne(['ID' => $id]);
+            $rule = empty($rule) ? new Pricerule() : $rule;
 
-            if(!$rule){
-                $rule = new Pricerule();
+            if(empty($name) || !$rule->loadEntities(\Yii::$app->request->post())){
+                return $this->run('site/error');
             }
 
-            //$rule->attributes = $data;
+            if(!$id){
+                $rule->setAttributes([
+                    'Name'      =>  $name,
+                    'Enabled'   =>  0,
+                    'Priority'  =>  Pricerule::find()->select('Priority')->max('Priority') + 1
+                ]);
+            }else{
+                $rule->setAttributes([
+                    'Name'      =>  $name,
+                ]);
+            }
 
-            //$rule->save();
+            $rule->save();
         }
 
         return $this->render('index', [
@@ -78,9 +89,10 @@ class DefaultController extends Controller
 
         if(!$rule){
             return [
+                'name'      =>  '',
                 'rule'  =>  [
-                    'terms'     =>  ['DocumentSum' => [0 => [0 => ['term' => 0, 'type' => '>=']]]],
-                    'actions'   =>  []
+                    'terms'     =>  [0 => ['term' => 'DocumentSum', 'value' => 0, 'type' => '>=']],
+                    'actions'   =>  ['Discount' => 0, 'Type' => 2]
                 ],
                 'termsDropdown' =>  $termsDropdown,
                 'typesDropdown' =>  $typesDropdown,
@@ -89,7 +101,8 @@ class DefaultController extends Controller
         }
 
         return [
-            'rule'          =>  $rule->asArray,
+            'name'          =>  $rule->Name,
+            'rule'          =>  $rule->asEntity,
             'termsDropdown' =>  $termsDropdown,
             'typesDropdown' =>  $typesDropdown,
             'categoriesDropdown' =>  $categoriesDropdown,
