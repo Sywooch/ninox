@@ -343,7 +343,7 @@ class DefaultController extends Controller
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionShoworder($param = ''){
-        $order = History::findOne($param);
+        $order = History::findWith()->where(['id' => $param])->one();
 
         if(!$order){
             throw new NotFoundHttpException("Такого заказа не существует!");
@@ -727,7 +727,7 @@ class DefaultController extends Controller
             return $this->render('control_index');
         }
 
-        $order = History::find()->where(['or', ['number' => $param], ['ID' => $param]])->one();
+        $order = History::findWith()->where(['or', ['number' => $param], ['ID' => $param]])->one();
 
         if(!$order){
             throw new NotFoundHttpException("Такого заказа не существует!");

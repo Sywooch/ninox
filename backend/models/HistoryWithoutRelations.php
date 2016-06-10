@@ -9,11 +9,11 @@
 namespace backend\models;
 
 
-use common\models\History;
-
 class HistoryWithoutRelations extends History
 {
 
-
+    public function getID(){
+        return $this->id;
+    }
 
 }

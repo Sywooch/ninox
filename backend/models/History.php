@@ -43,13 +43,19 @@ class History extends \common\models\History
     public $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
     public $status_10    =   'Ожидает отправки';
 
-
     /**
+     * @param array $usedRelations
      * @return yii\db\ActiveQuery the newly created [[ActiveQuery]] instance.
      */
-    public static function find()
+    public static function findWith(array $usedRelations = ['customer', 'responsibleUser', 'items'])
     {
-        return parent::find()->with('customer')->with('responsibleUser')->with('items');
+        $query = self::find();
+
+        foreach($usedRelations as $relation){
+            $query->with($relation);
+        }
+
+        return $query;
     }
 
     /**

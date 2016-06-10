@@ -124,10 +124,10 @@ CSS;
         $link = Url::to(array_merge(['/'], \Yii::$app->request->get(), ['responsibleUser' =>  $item->id]));
 
         return Html::tag('li',
-            Html::tag('span', $item->name.':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo), [
+            Html::tag('span', $item->name.':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', count($item->unfinishedOrders).(!empty($item->unfinishedItemsCount) ? '&nbsp;'.Html::tag('small', "({$item->unfinishedItemsCount})") : ''), [
                 'href'  =>  $link
-            ]) : '').' '.Html::tag('span', $item->ordersCount, ['class' => 'totalOrders']), [
-            'class' =>  $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo) == 0 ? 'bad' : ''
+            ]) : '').' '.Html::tag('span', count($item->yesterdayDoneOrders), ['class' => 'totalOrders']), [
+            'class' =>  count($item->unfinishedOrders) == 0 ? 'bad' : ''
         ]);
     }
 

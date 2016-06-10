@@ -57,12 +57,12 @@ class DefaultController extends Controller
             'editMode'      =>  $edit,
             'ordersStats'   =>  $customer->getOrdersStats(),
             'orders'        =>  new ActiveDataProvider([
-                'query' =>  History::find()->where(['customerID' => $customer->ID]),
+                'query' =>  $customer->getOrders(),
                 'pagination' => [
                     'pageSize' => 10,
                 ],
             ]),
-            'lastOrder'     =>  History::find()->where(['customerID' => $customer->ID, 'confirmed' => 1])->orderby('ID desc')->one()
+            'lastOrder'     =>  $customer->lastOrder
         ]);
     }
 

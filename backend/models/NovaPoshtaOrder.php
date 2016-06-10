@@ -307,7 +307,7 @@ class NovaPoshtaOrder extends NovaPoshtaModels
 
     public function getOrder(){
         if(empty($this->_order) && !empty($this->orderID)){
-            $this->_order = History::findOne($this->orderID);
+            $this->_order = History::findWith()->where(['id' => $this->orderID])->one();
         }
 
         return $this->_order;
