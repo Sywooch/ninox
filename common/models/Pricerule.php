@@ -2,7 +2,10 @@
 
 namespace common\models;
 
+use common\helpers\Formatter;
 use Yii;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "pricerules".
@@ -180,7 +183,7 @@ class Pricerule extends \yii\db\ActiveRecord
 					$itemsString = "({$itemsString})";
 				}
 
-				$formula .= (empty($formula) ? '' : ' AND ').$itemsString.' ';
+				$formula .= (empty($formula) ? '' : ' AND ').$itemsString;
 			}
 
 			if(!empty($part['AND'])){
@@ -197,27 +200,71 @@ class Pricerule extends \yii\db\ActiveRecord
 		if(empty($formula) || empty($actions)){
 			return false;
 		}else{
-			$this->Formula = 'IF '.$formula.'THEN '.$actions;
+			$this->Formula = 'IF '.$formula.' THEN '.$actions;
 			return true;
 		}
 	}
 
 	public function getHumanFriendly(){
-		$categoryCanBuy = $categoryCantBuy = [];
+		$categoryCanBuy = $categoryCantBuy = $canLinks = [];
+		$dateStart = $dateEnd = $dateOnly = $summ = $discount = 0;
 
 		foreach($this->termsAsEntity as $term){
 			if($term->term == 'GoodGroup'){
 				if(in_array($term->type, ['=', '>='])){
-					$categoryCanBuy[] = $term->category->name;
+					$categoryCanBuy[] = Html::a($term->category->name, Url::to(['/'.$term->category->link, 'language' => \Yii::$app->language]));
 				}else{
-					$categoryCantBuy[] = $term->category->name;
+					$categoryCantBuy[] = Html::a($term->category->name, Url::to(['/'.$term->category->link, 'language' => \Yii::$app->language]));
 				}
 			}
+			if($term->term == 'Date'){
+				switch($term->type){
+					case '>=':
+						$dateStart= $term->value;
+						break;
+					case '<=':
+						$dateEnd = $term->value;
+						break;
+					case '=':
+						$dateOnly = $term->value;
+						break;
+				}
+			}
+			if($term->term == 'DocumentSum'){
+				$summ = $term->value;
+			}
 		}
-		/*echo "<pre>";
-		var_dump($categoryCanBuy);
-		var_dump($categoryCantBuy);
-		die();*/
+
+		switch($this->actionsAsEntity['Type']){
+			case 1:
+				$discount = Formatter::getFormattedPrice(-$this->actionsAsEntity['Discount'], true);
+				break;
+			case 2:
+				$discount = '-'.$this->actionsAsEntity['Discount'].'%';
+				break;
+			case 3:
+				break;
+		}
+
+/*		$period = \Yii::t('shop', 'Действует {dateOnly, plural,
+		=0{} other{только {dateOnly}}}',
+			[
+				'dateOnly' =>  strlen($dateOnly),
+				'dates' =>  strlen($dateStart) + strlen($dateEnd),
+				'dateStart' =>  $dateStart,
+				'dateEnd' =>  $dateEnd,
+			]);*/
+
+		return \Yii::t('shop', '{discount} на товары из {categoryCanBuy, plural, =0{всех категорий} =1{категории {canLinks}}
+		other{категорий {canLinks}}}{categoryCantBuy, plural, =0{ } =1{, кроме категории {cantLinks}}
+		other{, кроме категорий {cantLinks}}}.',
+			[
+				'discount'  =>  $discount,
+				'categoryCanBuy'    =>  count($categoryCanBuy),
+				'categoryCantBuy'    =>  count($categoryCantBuy),
+				'canLinks'  =>  implode(', ', $categoryCanBuy),
+				'cantLinks'  =>  implode(', ', $categoryCantBuy),
+			]);
 	}
 
 	public function getTermsByType($type){

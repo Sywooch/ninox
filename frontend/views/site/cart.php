@@ -1,6 +1,5 @@
 <?php
 use common\helpers\Formatter;
-use yii\base\DynamicModel;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -11,10 +10,10 @@ $personalDiscount = '';
 if(!empty(\Yii::$app->cart->personalDiscount)){
 	switch(\Yii::$app->cart->personalDiscount['Type']){
 		case 1:
-			$personalDiscount = ' грн';
+			$personalDiscount = Formatter::getFormattedPrice(\Yii::$app->cart->personalDiscount['Discount'], true);
 			break;
 		case 2:
-			$personalDiscount = '%';
+			$personalDiscount = '-'.\Yii::$app->cart->personalDiscount['Discount'].'%';
 			break;
 		case 3:
 			break;
@@ -23,7 +22,7 @@ if(!empty(\Yii::$app->cart->personalDiscount)){
 	$personalDiscount = Html::tag('div',
 		Html::a(\Yii::t('shop', 'Ваша персональная скидка {personalDiscount}',
 			[
-				'personalDiscount' =>  '-'.\Yii::$app->cart->personalDiscount['Discount'].$personalDiscount
+				'personalDiscount' =>  $personalDiscount
 			]
 		),
 			Url::to(['/account/discount', 'language' => \Yii::$app->language])

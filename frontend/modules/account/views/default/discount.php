@@ -7,7 +7,7 @@ $helper = new PriceRuleHelper();
 $rules = '';
 
 foreach($helper->pricerules as $rule){
-    if($rule->customerRule == 1 || true){
+    if($rule->customerRule == 1){
         $rules .= Html::tag('div', $rule->humanFriendly, ['class' => 'one-rule']);
     }
 }
