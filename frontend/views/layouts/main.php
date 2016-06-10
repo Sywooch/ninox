@@ -531,7 +531,8 @@ $this->beginPage();
 											'class' => 'amount-cart'
 										])
 								).
-								Html::tag('span', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), ['class' => 'price-info']).
+								Html::tag('span', \Yii::t('shop', /*'Вы покупаете по оптовым ценам '*/ ''), ['class' =>
+									'price-info']).
 								Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
 									'class' =>  'button yellow-button middle-button'
 								]).
@@ -636,14 +637,16 @@ $this->beginPage();
 					[
 						'class'	=>	'card'
 					]).
-				Html::tag('div',
+				Html::tag('div', Html::tag('span', 'Мы в соцсетях:',[]).
 					SocialButtonWidget::widget([
 						'items' => [
 							['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
 							['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
-							['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
-							['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
 							['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
+							['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
+							['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
+							['linkTag' => 'a', 'link' => '', 'type' => 'youtube'],
+							['linkTag' => 'a', 'link' => '', 'type' => 'instagram'],
 						]
 					]),
 					[

@@ -24,6 +24,8 @@ class SocialButtonWidget extends Widget{
 		'vkontakte'         =>  'shop-vkontakte',
 		'googleplus'        =>  'shop-googleplus',
 		'odnoklassniki'     =>  'shop-odnoklassniki-rect',
+		'youtube'           =>  'shop-youtube',
+		'instagram'         =>  'shop-instagram',
 		'twitter'           =>  'shop-twitter-squared'
 	];
 

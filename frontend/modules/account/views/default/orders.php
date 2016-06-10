@@ -8,6 +8,9 @@
 use yii\bootstrap\Html;
 use yii\widgets\ListView;
 
+$this->title = 'Мои заказы';
+$this->params['breadcrumbs'][] = $this->title;
+
 $js = <<<'JS'
 $("body").on('click', ".spoiler-title", function(){
     $(this).parent().toggleClass("showw").children(".spoiler-body").slideToggle("medium");

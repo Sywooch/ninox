@@ -4,6 +4,9 @@ use common\helpers\Formatter;
 use yii\jui\Accordion;
 use yii\bootstrap\Html;
 
+$this->title = \Yii::t('shop', ' Оформление заказа');
+$this->params['breadcrumbs'][] = $this->title;
+
 $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
 
 $js = <<<JS

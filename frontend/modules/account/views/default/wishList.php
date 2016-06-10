@@ -5,6 +5,9 @@ use yii\bootstrap\Html;
 use yii\web\JsExpression;
 use yii\widgets\ListView;
 
+$this->title = 'Список желаний';
+$this->params['breadcrumbs'][] = $this->title;
+
 $helper = new PriceRuleHelper();
 
 echo Html::tag('div',

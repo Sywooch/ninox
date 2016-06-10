@@ -82,7 +82,24 @@ echo Html::tag('div',
                 ['class' => 'category-items-count']),
             ['class' => 'category-label']
         ).
-       Html::ul($category->subCategories, [
+        Html::tag('div', !($category->Code == 'AABAAD') ? '' :
+            Html::tag('div', Html::tag('div', '%',
+                    [
+                        'class'     =>      'banner-percent'
+                    ]).
+                Html::tag('span', 'Акция! Скидка -20% на весь раздел Детская бижутерия при покупке товара на сумму от 1500 грн.',
+                    [
+                        'class'     =>      'banner-discount-property'
+                    ]).
+                Html::tag('span', 'Только 4 дня (до 12.06). Дешевле уже не будет!',
+                    [
+                        'class'     =>      'banner-discount-time'
+                    ]),
+                [
+                    'class'     =>      'banner-discount'
+                ])
+            ).
+               Html::ul($category->subCategories, [
             'item'      =>  function($item){
                 return Html::tag('li', Html::a($item->name, Url::to(['/'.$item->link,
                     'language' => \Yii::$app->language])));

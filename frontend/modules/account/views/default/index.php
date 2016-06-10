@@ -4,6 +4,9 @@ use bobroid\remodal\Remodal;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
+$this->title = 'Личные данные';
+$this->params['breadcrumbs'][] = $this->title;
+
 echo Html::beginTag('div', ['class' => 'content']),
     Html::tag('div',
         \frontend\widgets\ListGroupMenu::widget([
