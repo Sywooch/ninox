@@ -42,9 +42,10 @@ class DefaultController extends Controller
 
         if(empty(\Yii::$app->request->get('ordersStatus'))){
             $showDates = 'alltime';
-            $collectorsTimeTo = strtotime(date('Y-m-d')) + 86400;
-            $collectorsTimeFrom = strtotime(date('Y-m-d'));
         }
+
+        $collectorsTimeTo = strtotime(date('Y-m-d')) + 86400;
+        $collectorsTimeFrom = strtotime(date('Y-m-d'));
 
         switch($showDates){
             case 'yesterday':
