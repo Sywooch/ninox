@@ -1,5 +1,16 @@
 <?php
+use frontend\helpers\PriceRuleHelper;
 use yii\bootstrap\Html;
+
+$helper = new PriceRuleHelper();
+
+$rules = '';
+
+foreach($helper->pricerules as $rule){
+    if($rule->customerRule == 1){
+        $rules .= Html::tag('div', $rule->actions['Discount'], ['class' => 'one-rule']);
+    }
+}
 
 echo Html::tag('div',
     Html::tag('div',
@@ -37,7 +48,13 @@ echo Html::tag('div',
         ]),
         [
             'class' =>  'menu'
-        ]),
+        ]).
+    Html::tag('div', $rules,
+        [
+            'class' =>  'user-data-content discount'
+        ]
+    ),
     [
         'class' =>  'content'
-    ]);
+    ]
+);

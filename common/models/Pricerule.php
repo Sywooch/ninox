@@ -137,11 +137,11 @@ class Pricerule extends \yii\db\ActiveRecord
 	/**
 	 * Загрузка сущностей из формы
 	 * @param $array
+	 * @return bool
 	 */
 	public function loadEntities($array){
 		$parts = [];
 		$formula = '';
-		$subRuleFormula = '';
 		$actions = '';
 
 		foreach($array['priceRuleTerms'] as $term){
@@ -157,11 +157,14 @@ class Pricerule extends \yii\db\ActiveRecord
 		}
 
 		foreach($parts as $part){
-			if(!empty($part['OR'])){
+			$subRuleFormula = '';
+			if(!empty($part['OR']) && sizeof($part['OR']) > 1){
 				foreach($part['OR'] as $item){
 					$subRuleFormula .= (empty($subRuleFormula) ? '' : ' OR ').'('.$item['term'].' '.$item['type'].' '.$item['value'].')';
 				}
 				$formula .= (empty($formula) ? '' : 'AND ').'('.$subRuleFormula.') ';
+			}elseif(!empty($part['OR'])){
+				$formula .= (empty($formula) ? '' : 'AND ').'('.$part['OR'][0]['term'].' '.$part['OR'][0]['type'].' '.$part['OR'][0]['value'].') ';
 			}
 
 			if(!empty($part['AND'])){
@@ -174,14 +177,17 @@ class Pricerule extends \yii\db\ActiveRecord
 		foreach($array['priceRuleActions'] as $key => $value){
 			$actions .= (empty($actions) ? '' : ' AND ').$key.' = '.$value;
 		}
-		\Yii::trace($formula);
-		\Yii::trace($actions);
+
 		if(empty($formula) || empty($actions)){
 			return false;
 		}else{
 			$this->Formula = 'IF '.$formula.'THEN '.$actions;
 			return true;
 		}
+	}
+
+	public function getHumanFriendly(){
+
 	}
 
     /**

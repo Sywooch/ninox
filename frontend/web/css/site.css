@@ -2359,13 +2359,24 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 #modal-cart .number-of-order{
 	float: left;
 	font-size: 22px;
-	font-weight: 600;
-	font-family: 'Open Sans';
+	font-family: 'OpenSans-Semibold';
 }
 
 #modal-cart.retail .cart-message-retail,
 #modal-cart.wholesale .cart-message-wholesale{
 	display: block;
+}
+
+#modal-cart .cart-message-personal-discount{
+	display: block;
+	float: right;
+	font-size: 22px;
+	font-family: 'OpenSans-Semibold';
+	text-decoration: none;
+}
+
+#modal-cart .cart-message-personal-discount a{
+	color: #000;
 }
 
 
@@ -2643,6 +2654,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: inline-block;
 	font-size: 18px;
 	vertical-align: sub;
+	font-weight: normal;
 }
 
 #modal-cart .phone-number-input-modal{
