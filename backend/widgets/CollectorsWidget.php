@@ -124,7 +124,7 @@ CSS;
         $link = Url::to(array_merge(['/'], \Yii::$app->request->get(), ['responsibleUser' =>  $item->id]));
 
         return Html::tag('li',
-            Html::tag('span', $item->name.':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo).(!empty([1]) ? '&nbsp;'.Html::tag('small', '(1)') : ''), [
+            Html::tag('span', $item->name.':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo), [
                 'href'  =>  $link
             ]) : '').' '.Html::tag('span', $item->ordersCount, ['class' => 'totalOrders']), [
             'class' =>  $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo) == 0 ? 'bad' : ''
