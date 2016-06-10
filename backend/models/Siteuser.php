@@ -15,6 +15,7 @@ class Siteuser extends \common\models\Siteuser
         return Siteuser::find()
             ->joinWith('accessDomains')
             ->andWhere(['`siteusers`.`active`' => '1', '`subDomainsAccess`.`subDomainId`' => \Yii::$app->params['configuration']->id])
+            ->andWhere(['showInStat' => 1])
             ->all();
     }
 
@@ -43,5 +44,7 @@ class Siteuser extends \common\models\Siteuser
 
         return $query->count();
     }
+
+    //public function get
 
 }
