@@ -257,6 +257,10 @@ class DefaultController extends Controller
                             }
                         }
 
+                        if($good->count > 0){
+                            $good->enabled = 1;
+                        }
+
                         $good->save(false);
                     }
 

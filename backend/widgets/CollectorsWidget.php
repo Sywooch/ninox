@@ -105,10 +105,6 @@ class CollectorsWidget extends Widget{
     .collectors li.bad a{
         background: #ff6f6c;
     }
-
-    .collectors li.bad a:hover{
-        cursor: not-allowed;
-    }
 CSS;
 
     $this->getView()->registerCss($css);
@@ -125,7 +121,7 @@ CSS;
     }
 
     public function renderItem($item){
-        $link = Url::to(array_merge(['/', 'responsibleUser' =>  $item->id], \Yii::$app->request->get()));
+        $link = Url::to(array_merge(['/'], \Yii::$app->request->get(), ['responsibleUser' =>  $item->id]));
 
         return Html::tag('li',
             Html::tag('span', $item->name.':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', $item->getCompletedOrdersCount($this->dateFrom, $this->dateTo), [
