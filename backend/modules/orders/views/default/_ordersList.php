@@ -144,7 +144,7 @@ echo \kartik\grid\GridView::widget([
             'attribute' =>  'status',
             'value'     =>  function($model){
 
-                if($model->status == $model::STATUS_DONE || $model->status == $model::STATUS_NOT_PAYED || $model->status == $model::STATUS_WAIT_DELIVERY && $model->paymentType == 1){
+                if($model->status == $model::STATUS_DONE || $model->status == $model::STATUS_NOT_PAYED || ($model->status == $model::STATUS_WAIT_DELIVERY && $model->paymentType == 1)){
                     $status2 = 'Выполнено '.\Yii::$app->formatter->asDate($model->doneDate);
                 }elseif($model->status == $model::STATUS_WAIT_DELIVERY && $model->paymentType == 2){
                     $status2 = 'Оплачено '.\Yii::$app->formatter->asDate($model->moneyConfirmedDate);
@@ -193,7 +193,15 @@ echo \kartik\grid\GridView::widget([
                     default:
                         break;
                 }
+
+                $priceDiff = 0;
+
+                if($model->actualAmount != 0){
+                    $priceDiff = round($model->actualAmount - $model->originalSum, 2);
+                }
+
                 return Html::tag('div', $model->originalSum.' грн.').
+                ($priceDiff > 1 || $priceDiff < -1 ? Html::tag('div', Html::tag('small', "$priceDiff грн.", ['class' => 'text-'.($priceDiff > 0 ? 'success' : 'danger')])) : '').
                     Html::tag('span', $value, ['class' => 'payment-type'.$class]);
             }
         ],

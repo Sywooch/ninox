@@ -43,10 +43,19 @@ class History extends \common\models\History
     public $status_9     =   '<small><b>Отправлен - оплаты нет</b></small>';
     public $status_10    =   'Ожидает отправки';
 
-
-    public static function find()
+    /**
+     * @param array $usedRelations
+     * @return yii\db\ActiveQuery the newly created [[ActiveQuery]] instance.
+     */
+    public static function findWith(array $usedRelations = ['customer', 'responsibleUser', 'items'])
     {
-        return parent::find()->with('items')->with('customer');
+        $query = self::find();
+
+        foreach($usedRelations as $relation){
+            $query->with($relation);
+        }
+
+        return $query;
     }
 
     /**
@@ -59,57 +68,8 @@ class History extends \common\models\History
         return $this->hasMany(SborkaItem::className(), ['orderID' => 'ID']);
     }
 
-    /**
-     * Пользователь, забравший деньги
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getMoneyCollector(){
-        return $this->hasOne(Siteuser::className(), ['id' => 'moneyCollectorUserId']);
-    }
-
-    /**
-     * Клиент, оформивший заказ
-     *
-     * @return yii\db\ActiveQuery
-     */
     public function getCustomer(){
         return $this->hasOne(Customer::className(), ['ID' => 'customerID']);
-    }
-
-    /**
-     * Комментарии к заказу
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getComments(){
-        $className = self::className();
-
-        if(count(explode('\\', $className)) > 1){
-            $t = explode('\\', $className);
-            $t = array_reverse($t);
-            $className = $t[0];
-        }
-
-        return $this->hasMany(Comment::className(), ['modelID' => 'ID'])->with('commenter')->andWhere(['model' => $className]);
-    }
-
-    /**
-     * Менеджер заказа
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getResponsibleUser(){
-        return $this->hasOne(Siteuser::className(), ['ID' => 'responsibleUserID']);
-    }
-    
-    /**
-     * Параметр оплаты
-     *
-     * @return yii\db\ActiveQuery
-     */
-    public function getPaymentParamInfo(){
-        return $this->hasOne(PaymentParam::className(), ['id' => 'paymentParam']);
     }
 
     /**
@@ -520,6 +480,10 @@ class History extends \common\models\History
         }
         
         return $result;
+    }
+
+    public function getPaymentRespond(){
+
     }
 
     public function beforeSave($insert){

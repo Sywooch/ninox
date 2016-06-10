@@ -27,7 +27,7 @@ class DefaultController extends Controller
     }
 
     public function actionExcel($param){
-        $order = History::findOne($param);
+        $order = History::findWith()->where(['id' => $param])->one();
         $row = $i = $sum = $stockDiscount = $bankPercent = $discountPercent = $sumWithoutDiscount = $customerDiscountSum = $saleDiscount = 0;
         $fileName = "nakladna{$order->number}.xls";
         $filePath = \Yii::getAlias('@export')."/{$fileName}";

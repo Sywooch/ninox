@@ -566,17 +566,17 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Отчёты',
-                                'url'   =>  '#',
+                                'url'   =>  '##',
                                 'items' =>  [
                                     [
-                                        'label' =>  'Статистика (графики)',
-                                        'url'   =>  Url::toRoute('/charts/index')
+                                        'label' =>  'Статистика магазина',
+                                        'url'   =>  Url::toRoute('/charts/shop')
                                     ],
                                     [
                                         'label' =>  'Отключеные товары',
                                         'url'   =>  Url::toRoute('/charts/goods?mod=disabled')
                                     ],
-                                    [
+                                    /*[
                                         'label' =>  'Включеные товары',
                                         'url'   =>  Url::toRoute('/charts/goods?mod=enabled')
                                     ],
@@ -595,7 +595,7 @@ $this->beginPage() ?>
                                     [
                                         'label' =>  'Продажи из магазина и самовывоз',
                                         'url'   =>  Url::toRoute('/charts/shopsales')
-                                    ],
+                                    ],*/
                                 ]
                             ],
                             [
@@ -645,6 +645,10 @@ $this->beginPage() ?>
                             [
                                 'label' =>  'Клиентские корзины',
                                 'url'   =>  '/carts'
+                            ],
+                            [
+                                'label' =>  'Статистика заказов',
+                                'url'   =>  '/customers/orders-stats'
                             ]
                         ]
                     ],
@@ -735,12 +739,17 @@ $this->beginPage() ?>
                     'class' =>  'inline-search-container'
                 ]
             ],
-            [
+            /*[
                 'label'     =>  'Сообщения',
                 'options'   =>  [
                     'class'   =>  'showChat'
                 ],
                 'counter'   =>  '6'
+            ],*/
+            [
+                'label'     =>  'Оплаты',
+                'url'       =>  '/payments/index',
+                'counter'   =>  \backend\models\SendedPayment::find()->where(['read_confirm' => 0])->count()
             ],
             /*[
                 'label'     =>  'Задания',

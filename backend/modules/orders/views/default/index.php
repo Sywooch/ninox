@@ -243,13 +243,14 @@ $css = <<<'CSS'
     background: #66cc00 !important;
 }
 
+.orderRow.danger td{
+    background: #ff0000 !important;
+}
+
 .orderRow.new td{
     background: #ff9966 !important;
 }
 
-.orderRow.danger td{
-    background: #ff0000 !important;
-}
 
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
@@ -565,11 +566,7 @@ $this->title = 'Заказы';
 
 /*echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
     'model' =>  $ordersStatsModel
-]),
-\backend\widgets\CollectorsWidget::widget([
-    'showUnfinished'    =>  $showUnfinished,
-    'items'             =>  $collectors
-]);*/
+]),*/
 
 echo Html::tag('div', OrdersSearchWidget::widget([
     'searchModel'   =>  $searchModel,
@@ -612,7 +609,13 @@ Accordion::widget([
     ],
     'clientOptions' => ['collapsible' => true, 'active' => true, 'heightStyle' => 'content'],
 ]),
-    Html::tag('br'),
+\backend\widgets\CollectorsWidget::widget([
+    'showUnfinished'    =>  $showUnfinished,
+    'dateFrom'          =>  $collectorsData['dateFrom'],
+    'dateTo'          =>  $collectorsData['dateTo'],
+    'items'             =>  $collectors
+]),
+Html::tag('br'),
 \kartik\tabs\TabsX::widget([
     'id'            =>  'ordersSourcesTabs',
     'encodeLabels'  =>  false,

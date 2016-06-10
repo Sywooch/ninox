@@ -1,6 +1,7 @@
 <?php
 use kartik\editable\Editable;
 use kartik\form\ActiveForm;
+use speixoto\amcharts\Widget as AmChart;
 
     $this->title = 'Статистика';
 
@@ -29,10 +30,10 @@ use kartik\form\ActiveForm;
             'dataProvider'  => [
                 [
                     'category'  =>  'Из магазина',
-                    'column-1'  =>  $orders['fromShop']['all']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'С сайта',
-                    'column-1'  =>  $orders['fromSite']['all']
+                    'column-1'  =>  0
                 ]
             ]
         ],
@@ -41,16 +42,16 @@ use kartik\form\ActiveForm;
             'dataProvider'  => [
                 [
                     'category'  =>  'На карту',
-                    'column-1'  =>  $orders['payments']['card']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'Наложеным платежом',
-                    'column-1'  =>  $orders['payments']['COD']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'Покупка в магазине',
-                    'column-1'  =>  $orders['payments']['shop']
+                    'column-1'  =>  0
                 ],[
                     'category'  =>  'Самовывоз',
-                    'column-1'  =>  $orders['payments']['pickup']
+                    'column-1'  =>  0
                 ]
             ]
         ],
@@ -70,7 +71,7 @@ use kartik\form\ActiveForm;
             'mouseWheelScrollEnabled'    =>  'true',
             'startDuration'    =>  "1",
             'valueField'    =>  'count',
-            'dataProvider'  => $orders['byCategories'],
+            'dataProvider'  => 0,
         ],
     ];
 
@@ -205,19 +206,19 @@ $form = ActiveForm::begin([
     <div class="col-xs-6">
         <div class="thumbnail">
             <center class="lead">Количество заказов</center>
-            <?=yii\amcharts\Widget::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['ordersCount'])])?>
+            <?=AmChart::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['ordersCount'])])?>
         </div>
     </div>
     <div class="col-xs-6">
         <div class="thumbnail">
             <center class="lead">Типы оплаты</center>
-            <?=yii\amcharts\Widget::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['paymentType'])])?>
+            <?=AmChart::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['paymentType'])])?>
         </div>
     </div>
     <div class="col-xs-12">
         <div class="thumbnail">
             <center class="lead">Продажи по категориям</center>
-            <?=yii\amcharts\Widget::widget(['width' =>  '100%', 'chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['byCategories'])])?>
+            <?=AmChart::widget(['width' =>  '100%', 'chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['byCategories'])])?>
         </div>
     </div>
 

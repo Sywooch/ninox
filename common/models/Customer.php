@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use backend\models\CustomerAddresses;
+use backend\models\CustomerContacts;
 use frontend\models\CustomerReceiver;
 use Yii;
 
@@ -47,19 +49,14 @@ use Yii;
  * @property string $paymentInfo
  * @property CustomerAddresses $recipient
  * @property History[] $orders
+ * @property CustomerContacts[] phones
+ * @property string primaryPhone
+ * @property CustomerContacts[] contacts
+ * @property CustomerAddresses[] recipients
+ * @property CustomerAddresses defaultRecipient
  */
 class Customer extends \yii\db\ActiveRecord
 {
-    /**
-     * @type CustomerContacts[]
-     */
-    private $_phones = [];
-
-    /**
-     * @type CustomerContacts[]
-     */
-    private $_emails = [];
-
     /**
      * @type CustomerAddresses
      */
@@ -106,7 +103,7 @@ class Customer extends \yii\db\ActiveRecord
     public function getRegion(){
         $array = explode(', ', $this->City);
 
-        return isset($array[1]) ? $array[1] : '';
+        return array_key_exists(1, $array) ? $array['1'] : '';
     }
 
     /**
@@ -155,15 +152,38 @@ class Customer extends \yii\db\ActiveRecord
         $this->City = implode(', ', $array);
     }
 
+    public function getContacts(){
+        return $this->hasMany(CustomerContacts::className(), ['partnerID' => 'ID']);
+    }
+
     /**
      * @return \common\models\CustomerContacts[]
      */
     public function getPhones(){
-        if(empty($this->_phones)){
-            $this->_phones = CustomerContacts::findAll(['partnerID' => $this->ID, 'type' => CustomerContacts::TYPE_PHONE]);
+        $phones = [];
+
+        foreach($this->contacts as $contact){
+            if($contact->type == CustomerContacts::TYPE_PHONE){
+                $phones[] = $contact;
+            }
         }
 
-        return $this->_phones;
+        return $phones;
+    }
+
+    /**
+     * @return \common\models\CustomerContacts[]
+     */
+    public function getEmails(){
+        $emails = [];
+
+        foreach($this->contacts as $contact){
+            if($contact->type == CustomerContacts::TYPE_EMAIL){
+                $emails[] = $contact;
+            }
+        }
+
+        return $emails;
     }
 
     /**
@@ -184,17 +204,6 @@ class Customer extends \yii\db\ActiveRecord
      */
     public function getPhone(){
         return $this->primaryPhone ? $this->primaryPhone->value : '';
-    }
-
-    /**
-     * @return \common\models\CustomerContacts[]
-     */
-    public function getEmails(){
-        if(empty($this->_emails)){
-            $this->_emails = CustomerContacts::findAll(['partnerID' => $this->ID, 'type' => CustomerContacts::TYPE_EMAIL]);
-        }
-
-        return $this->_emails;
     }
 
     /**
@@ -223,6 +232,36 @@ class Customer extends \yii\db\ActiveRecord
      */
     public function getOrders(){
         return $this->hasMany(History::className(), ['customerID' => 'ID'])->orderBy('added DESC');
+    }
+
+    public function getRecipients(){
+        return $this->hasMany(CustomerAddresses::className(), ['partnerID' => 'ID']);
+    }
+
+    public function getDefaultRecipient(){
+        foreach($this->recipients as $recipient){
+            if($recipient->default == 1){
+                return $recipient;
+            }
+        }
+
+        return new CustomerAddresses();
+    }
+
+    public function getRecipient($recipientID = null){
+        if(!empty($recipientID)){
+            foreach($this->recipients as $recipient){
+                if($recipient->ID == $recipientID){
+                    return $recipient;
+                }
+            }
+        }
+
+        return $this->defaultRecipient;
+    }
+
+    public function setRecipient($customerRecipient){
+        $this->_recipient = $customerRecipient;
     }
 
     /**
@@ -268,24 +307,6 @@ class Customer extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getRecipient($recipientID = null){
-        $query = CustomerAddresses::find()->where(['partnerID' => $this->ID]);
-
-        if($recipientID != null){
-            return $query->andWhere(['ID' => $recipientID])->one();
-        }
-
-        if(!empty($this->_recipient)){
-            return $this->_recipient;
-        }
-
-        return $this->_recipient = $query->andWhere(['default' => 1])->one();
-    }
-
-    public function setRecipient($customerRecipient){
-        $this->_recipient = $customerRecipient;
-    }
-
     public function beforeSave($insert){
         if($this->isNewRecord){
             $this->ID = hexdec(uniqid());
@@ -302,8 +323,8 @@ class Customer extends \yii\db\ActiveRecord
     }
 
     public function afterFind(){
-        if(empty($this->recipient)){
-            $this->recipient = new CustomerAddresses([
+        if($this->recipient->isNewRecord){
+            $this->recipient->setAttributes([
                 'partnerID'     =>  $this->ID,
                 'region'        =>  $this->region,
                 'city'          =>  $this->city,

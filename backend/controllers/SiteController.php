@@ -5,13 +5,13 @@ use common\models\Chat;
 use common\models\ChatMessage;
 use common\models\ControllerAction;
 use common\models\Service;
-use common\models\Shop;
-use common\models\Siteuser;
+use backend\models\Siteuser;
 use common\models\SubDomain;
 use frontend\models\Customer;
 use frontend\models\Good;
+use backend\models\Shop;
 use sammaye\audittrail\AuditTrail;
-use Yii;
+use yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -229,7 +229,11 @@ class SiteController extends Controller
     public function actionLogin(){
         $this->layout = 'login';
 
-        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
+        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post('LoginForm'))){
+            foreach(\Yii::$app->log->targets as $target){
+                $target->enabled = false;
+            }
+
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 

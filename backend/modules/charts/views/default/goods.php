@@ -1,6 +1,8 @@
 <?php
 use kartik\editable\Editable;
 use kartik\form\ActiveForm;
+use speixoto\amcharts\Widget as AmChart;
+use yii\bootstrap\Html;
 
 $this->title = 'Отключеные товары';
 
@@ -111,14 +113,48 @@ if($minPeriod || $maxPeriod){
 }
 
 
-$js = <<<'SCRIPT'
+$js = <<<'JS'
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-SCRIPT;
+
+$("body").on('click', '.btn-viewed', function(){
+    var target = $(this);
+    
+    target.html('<span class="fa fa-spin fa-spinner"></span>').attr('disabled', true);
+    
+    $.ajax({
+        type: 'POST',
+        url: '/goods/toggle',
+        data: {
+            'goodID': target.attr("data-itemID"),
+            'attribute': 'disableConfirmed'
+        },
+        success: function(){
+            $.pjax.reload({container: '#goodsGrid-pjax'});
+        }
+    });
+}).on('click', '.btn-decline', function(){
+    var target = $(this);
+    
+    target.html('<span class="fa fa-spin fa-spinner"></span>').attr('disabled', true);
+
+    $.ajax({
+        type: 'POST',
+        url: '/goods/toggle',
+        data: {
+            'goodID': target.attr("data-itemID"),
+            'attribute': 'enabled'
+        },
+        success: function(){
+            $.pjax.reload({container: '#goodsGrid-pjax'});
+        }
+    });
+});
+JS;
 
 $this->registerJs($js);
 
@@ -134,7 +170,7 @@ $form = ActiveForm::begin([
 ]);
 ?>
 <h1><?=$this->title?> <?=$s?></h1>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" style="display: none;">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
@@ -181,7 +217,7 @@ $form = ActiveForm::begin([
 
                                     params += 'maxPeriod=' + form;
 
-                                    location.href = '/charts?' + params;
+                                    location.href = '/charts/goods?' + params;
                                 }"
                             ],
                             'options'   =>  [
@@ -195,30 +231,57 @@ $form = ActiveForm::begin([
                             'size'  =>  'md',
                             'value' =>  !empty($maxPeriod) && $maxPeriod != date('d.m.Y') ? $maxPeriod : '',
                             'inputType' => Editable::INPUT_DATE,
-                        ])?></a></li>
+                        ])?>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
-<h2>По заказам</h2>
-<div class="row">
-    <div class="col-xs-6">
-        <div class="thumbnail">
-            <center class="lead">Количество заказов</center>
-            <?=yii\amcharts\Widget::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['ordersCount'])])?>
-        </div>
-    </div>
-    <div class="col-xs-6">
-        <div class="thumbnail">
-            <center class="lead">Типы оплаты</center>
-            <?=yii\amcharts\Widget::widget(['chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['paymentType'])])?>
-        </div>
-    </div>
-    <div class="col-xs-12">
-        <div class="thumbnail">
-            <center class="lead">Продажи по категориям</center>
-            <?=yii\amcharts\Widget::widget(['width' =>  '100%', 'chartConfiguration' => array_merge($chartBasicConf, $chartsConfigurations['byCategories'])])?>
-        </div>
-    </div>
+<div class="well">
+    <?=\kartik\grid\GridView::widget([
+        'dataProvider'  =>  $goodsDataProvider,
+        'summary'       =>  false,
+        'pjax'          =>  true,
+        'id'            =>  'goodsGrid',
+        'columns'       =>  [
+            [
+                'class' =>  \kartik\grid\SerialColumn::className()
+            ],
+            [
+                'format'    =>  'html',
+                'width'     =>  '200px',
+                'value'     =>  function($model){
+                    if(empty($model->photo)){
+                        return;
+                    }
 
+                    return Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$model->photo);
+                }
+            ],
+            [
+                'attribute' =>  'name',
+                'format'    =>  'html',
+                'value'     =>  function($model){
+                    return Html::tag('div', $model->name).
+                    Html::tag('div', 'Дата отключения: '.\Yii::$app->formatter->asDatetime($model->otkl_time)).
+                    Html::tag('div', 'Колличество на сайте: '.$model->count.' шт.').
+                    Html::tag('div', 'Код товара: '.Html::a($model->Code, '/goods/view/'.$model->ID));
+                }
+            ],
+            [
+                'class'     =>  \kartik\grid\ActionColumn::className(),
+                'buttons'   =>  [
+                    'accept'    =>  function($one, $model, $three){
+                        return Html::button(\rmrevin\yii\fontawesome\FA::i('eye').' просмотрено', ['class' => 'btn btn-success btn-viewed', 'data-itemID' => $model->ID]);
+                    },
+                    'decline'    =>  function($one, $model, $three){
+                        return Html::button('вернуть', ['class' => 'btn btn-danger btn-lg btn-decline', 'data-itemID' => $model->ID]);
+
+                    },
+                ],
+                'template'  =>  '{decline}<br><br>{accept}'
+            ],
+        ]
+    ])?>
 </div>

@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $name
+ * @property integer daySalesPlan
  */
 class Shop extends \yii\db\ActiveRecord
 {
@@ -31,9 +32,21 @@ class Shop extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['id', 'type'], 'integer'],
+            [['id', 'type', 'daySalesPlan'], 'integer'],
             [['name'], 'string', 'max' => 255],
         ];
+    }
+
+    public function getMonthPlan($month = null, $year = null){
+        if(empty($year)){
+            $year = date('Y');
+        }
+
+        if(empty($month)){
+            $month = date('m');
+        }
+
+        return $this->daySalesPlan * cal_days_in_month(CAL_GREGORIAN, $month, $year);
     }
 
     /**

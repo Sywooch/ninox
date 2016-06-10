@@ -33,7 +33,7 @@ class HistorySearch extends History{
     }
 
     public function search($params, $onlyQuery = false, array $ignoreFilters = []){
-        $query = History::find();
+        $query = self::findWith();
 
         if(!empty(\Yii::$app->request->get('HistorySearch'))){
             $params = array_merge(\Yii::$app->request->get('HistorySearch'), $params);

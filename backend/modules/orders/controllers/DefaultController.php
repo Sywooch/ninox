@@ -19,7 +19,7 @@ use common\helpers\PriceRuleHelper;
 use common\models\DeliveryType;
 use common\models\PaymentType;
 use common\models\Pricerule;
-use common\models\Siteuser;
+use backend\models\Siteuser;
 use sammaye\audittrail\AuditTrail;
 use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
@@ -38,10 +38,12 @@ class DefaultController extends Controller
 
         $showDates = \Yii::$app->request->get('showDates');
 
-        $timeFrom = $timeTo = null;
+        $timeFrom = $timeTo = $date;
 
         if(empty(\Yii::$app->request->get('ordersStatus'))){
             $showDates = 'alltime';
+            $collectorsTimeTo = strtotime(date('Y-m-d')) + 86400;
+            $collectorsTimeFrom = strtotime(date('Y-m-d'));
         }
 
         switch($showDates){
@@ -57,6 +59,11 @@ class DefaultController extends Controller
                 break;
             case 'alltime':
                 break;
+        }
+
+        if($showDates != 'alltime'){
+            $timeTo = strtotime(date('Y-m-d')) + 86400;
+            $timeFrom = strtotime(date('Y-m-d'));
         }
 
         $this->getView()->params['showDateButtons'] = true;
@@ -84,7 +91,8 @@ class DefaultController extends Controller
         }*/
 
         return $this->render('index', [
-            'collectors'        =>  Siteuser::getCollectorsWithData($timeTo, $timeFrom),
+            'collectors'        =>  Siteuser::getActive(),
+            'collectorsData'    =>  ['dateFrom' => $collectorsTimeFrom, 'dateTo' => $collectorsTimeTo],
             'showUnfinished'    =>  !\Yii::$app->request->get("showDates") || \Yii::$app->request->get("showDates") == 'today',
             'ordersStats'       =>  $ordersStats,
             'ordersStatsModel'  =>  $stats,
@@ -335,7 +343,7 @@ class DefaultController extends Controller
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionShoworder($param = ''){
-        $order = History::findOne($param);
+        $order = History::findWith()->where(['id' => $param])->one();
 
         if(!$order){
             throw new NotFoundHttpException("Такого заказа не существует!");
@@ -719,7 +727,7 @@ class DefaultController extends Controller
             return $this->render('control_index');
         }
 
-        $order = History::find()->where(['or', ['number' => $param], ['ID' => $param]])->one();
+        $order = History::findWith()->where(['or', ['number' => $param], ['ID' => $param]])->one();
 
         if(!$order){
             throw new NotFoundHttpException("Такого заказа не существует!");
@@ -799,12 +807,14 @@ class DefaultController extends Controller
 
     public function actionGetlastid(){
         if(!\Yii::$app->request->isAjax){
-            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+            throw new UnsupportedMediaTypeHttpException('Этот запрос возможен только через ajax!');
         }
 
-        //\Yii::$app->response->format = 'json';
+        foreach(\Yii::$app->log->targets as $target){
+            $target->enabled = false;
+        }
 
-        return History::find()->select("id")->orderBy("id desc")->limit(1)->scalar();
+        return History::find()->max('id');
     }
 
     public function actionUsepricerule(){

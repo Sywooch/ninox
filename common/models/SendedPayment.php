@@ -32,8 +32,10 @@ class SendedPayment extends \yii\db\ActiveRecord
     {
         return [
             [['nomer_id', 'summ', 'data_oplaty', 'kvitanciya', 'sposoboplaty'], 'required'],
-            [['read_confirm'], 'integer'],
-            [['nomer_id', 'summ', 'data_oplaty'], 'string', 'max' => 10],
+            [['nomer_id'], 'integer'],
+            [['nomer_id'], 'filter', 'filter' => 'intval'],
+            [['read_confirm'], 'bool'],
+            [['summ', 'data_oplaty'], 'string', 'max' => 10],
             [['kvitanciya'], 'string', 'max' => 255],
             [['sposoboplaty'], 'string', 'max' => 100],
         ];
@@ -54,4 +56,5 @@ class SendedPayment extends \yii\db\ActiveRecord
             'read_confirm' => 'Read Confirm',
         ];
     }
+
 }

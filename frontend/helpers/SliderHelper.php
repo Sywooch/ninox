@@ -28,7 +28,7 @@ class SliderHelper extends BannerHelper
      * @return string
      */
     public static function renderImageBanner($banner, $withBlock = false){
-        return Html::img('http://krasota-style.com.ua/'.$banner->banner_ru);
+        return Html::img('//'.\Yii::$app->params['frontend'].'/'.$banner->banner_ru);
     }
 
 }

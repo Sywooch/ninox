@@ -8,7 +8,6 @@
 
 namespace backend\models;
 
-
 class CustomerContacts extends \common\models\CustomerContacts{
 
 }

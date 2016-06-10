@@ -31,7 +31,7 @@
         "kartik-v/yii2-grid": "*",
         "kartik-v/yii2-mpdf": "dev-master",
         "kartik-v/yii2-widget-rangeinput": "*",
-        "asofter/yii2-amcharts": "dev-master",
+        "speixoto/yii2-amcharts": "*",
         "kartik-v/yii2-widget-datetimepicker": "*",
         "kartik-v/yii2-widget-datepicker": "*",
         "kartik-v/yii2-widget-switchinput": "*",
@@ -50,6 +50,7 @@
         "bobroid/yii2-remodal": "dev-master",
         "bobroid/yii2-imperavi-redactor": "dev-master",
         "bobroid/yii2-messenger": "*",
+        "bobroid/yii2-ammap": "*",
         "liqpay/liqpay": "dev-master",
         "phpoffice/phpexcel": "*",
         "morozovsk/yii2-websocket": "dev-master",
@@ -63,7 +64,10 @@
         "yii2mod/yii2-ion-slider": "*",
         "codemix/yii2-localeurls": "@dev",
         "himiklab/yii2-recaptcha-widget": "*",
-        "frostealth/yii2-aws-s3": "~1.0@stable"
+        "frostealth/yii2-aws-s3": "~1.0@stable",
+        "juniq/yii2-helper-time": "*",
+        "kartik-v/yii2-krajee-base": "dev-master",
+        "kartik-v/yii2-helpers": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",
@@ -111,6 +115,10 @@
         {
             "type": "git",
             "url":  "https://github.com/panchenkodv/yii2-localeurls"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/BoBRoID/yii2-ammap"
         }
     ],
     "extra": {

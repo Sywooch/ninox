@@ -40,6 +40,13 @@ class Siteuser extends \yii\db\ActiveRecord
         '4' =>  'В отпуску',
     ];
 
+    public function getAccessDomains(){
+        return $this->hasMany(SubDomainAccess::className(), ['userId' => 'id']);
+    }
+
+    public function getOrders(){
+        return $this->hasMany(History::className(), ['responsibleUserID' => 'id']);
+    }
 
     public static function getUser($id){
         if(!empty(self::$siteusers)){
@@ -68,7 +75,14 @@ class Siteuser extends \yii\db\ActiveRecord
         return $users;
     }
 
+    /**
+     * @param null $timeFrom
+     * @param null $timeTo
+     * @return array
+     * @deprecated Я надеюсь, то единственное место, где она использовалась, было последним, и мы это скоро удалим
+     */
     public static function getCollectorsWithData($timeFrom = null, $timeTo = null){
+
         $timeFrom = $timeFrom == null ? (time() - (date('H') * 3600 + date('i') * 60 + date('s'))) : $timeFrom;
 
         $collectors = $collectorsIDs = [];
