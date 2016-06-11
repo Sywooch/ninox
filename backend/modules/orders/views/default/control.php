@@ -57,13 +57,16 @@ var setCount = function(data){
                     swal({
                         title: 'Ошибка!',
                         type: 'error',
-                        text: "Товар с идентификатором " + itemInput.val() + " не найден в заказе!"
+                        html: true,
+                        text: "Товар с идентификатором " + itemInput.val() + " не найден в заказе!<audio autoplay=\"true\" src=\"/audio/error.wav\"></audio>"
                     });
                     break;
                 case 'Conflict':
-                    Messenger().post("Этот товар уже весь подтверждён!");
+                    Messenger().post("Этот товар уже весь подтверждён!<audio autoplay=\"true\" src=\"/audio/warning.wav\"></audio>");
                     break;
             }
+            
+            itemInput.val("");
         }
     });
 };
