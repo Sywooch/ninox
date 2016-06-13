@@ -62,6 +62,9 @@ class DefaultController extends Controller
     public function actionShop(){
         $shop = \Yii::$app->params['configuration'];
 
+        $shop->month = empty(\Yii::$app->request->get('month')) ? date('m') : \Yii::$app->request->get('month');
+        $shop->year = empty(\Yii::$app->request->get('year')) ? date('Y') : \Yii::$app->request->get('year');
+
         $report = new MonthReport();
 
         $report->shop = $shop;

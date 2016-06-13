@@ -71,6 +71,10 @@ $css = <<<'CSS'
     height: 150px;
     position: relative;
 }
+
+.amcharts-main-div a{
+opacity: 0 !important;
+}
 CSS;
 
 $this->registerCss($css);
@@ -174,6 +178,54 @@ $columns = $showFourth ? 3 : 4;
         </div>
     </div>
     <?php } ?>
+    <div class="col-xs-12">
+        <h3 class="text-center">График продаж</h3>
+        <?=\speixoto\amcharts\Widget::widget([
+            'width'             =>  'auto',
+            'chartConfiguration'   =>  [
+                'type'          =>  'serial',
+                'categoryField' =>  'date',
+                'startDuration' =>  1,
+                'categoryAxis'  =>  [
+                    'gridPosition'  =>  'start'
+                ],
+                'valueAxis'  =>  [
+                    'id'    =>  'moneyForDay',
+                    'title' =>  'Сумма'
+                ],
+                'chartScrollbar'    =>  [
+                      'enabled' =>  true
+                ],
+                'graphs'    =>  [
+                    [
+                        'balloonText'   =>  '[[title]] [[category]]: [[value]]',
+                        'bullet'        =>  'round',
+                        'id'            =>  'graph1',
+                        'title'         =>  'Получено',
+                        'valueField'    =>  'earned'
+
+                    ],
+                    [
+                        'balloonText'   =>  '[[title]] [[category]]: [[value]]',
+                        'bullet'        =>  'round',
+                        'id'            =>  'graph2',
+                        'title'         =>  'Подтверждено',
+                        'valueField'    =>  'confirmed'
+
+                    ],
+                    [
+                        'balloonText'   =>  '[[title]] [[category]]: [[value]]',
+                        'bullet'        =>  'round',
+                        'id'            =>  'graph3',
+                        'title'         =>  'Выполнено',
+                        'valueField'    =>  'done'
+
+                    ],
+                ],
+                'dataProvider'  =>  $report->salesStats
+            ]
+        ])?>
+    </div>
 </div>
 <?php
     echo Html::endTag('div');

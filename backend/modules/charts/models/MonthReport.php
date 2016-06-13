@@ -11,6 +11,8 @@ namespace backend\modules\charts\models;
 
 use backend\models\History;
 use backend\models\Shop;
+use libphonenumber\ValidationResult;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\widgets\Pjax;
 
@@ -200,6 +202,84 @@ class MonthReport extends Model
         }
 
         return $progress;
+    }
+
+    public function getOrdersByDay($day, array $attributes = ['added']){
+        if(!filter_var($day, FILTER_VALIDATE_INT)){
+            $day = date('d', strtotime($day));
+        }
+
+        if(!is_array($attributes)){
+            $attributes = [$attributes];
+        }
+
+        $dayStart = strtotime($this->year.'-'.$this->month.'-'.$day);
+        $dayEnd = strtotime($this->year.'-'.$this->month.'-'.($day + 1));
+
+        $orders = [];
+
+        foreach($this->orders as $order){
+            foreach ($attributes as $attribute){
+                if(!$order->hasAttribute($attribute)){
+                    throw new InvalidConfigException("Аттрибут {$attribute} в заказе не найден!");
+                }
+
+                if($attribute != 'added'){
+                    $order->$attribute = strtotime($order->$attribute);
+                }
+
+                if($order->$attribute >= $dayStart && $order->$attribute < $dayEnd){
+                    $orders[] = $order;
+                }
+            }
+        }
+        return $orders;
+    }
+
+    public function getSalesStatsByDay($day){
+        if($day > date('d') && $this->year == date('Y') && $this->month == date('m')){
+            return [];
+        }
+
+        $earned = $confirmed = $done = 0;
+
+        $dayTime = strtotime($this->year.'-'.$this->month.'-'.$day);
+
+        foreach($this->getOrdersByDay($day) as $order){
+            if($order->added >= $dayTime && $order->added < ($dayTime + 86400)){
+                $earned++;
+            }
+        }
+
+        if(count($this->getOrdersByDay($day, ['moneyConfirmedDate'])) >= 1){
+            var_dump($this->getOrdersByDay($day, ['moneyConfirmedDate']));
+            die();
+        }
+
+        foreach($this->getOrdersByDay($day, ['moneyConfirmedDate']) as $order){
+            if($order->moneyConfirmed == 1 && date('Y-m-d', strtotime($order->moneyConfirmedDate)) ==  date('Y-m-d', $dayTime)){
+                $confirmed++;
+            }else if($order->moneyConfirmed == 1){
+                \Yii::trace(date('Y-m-d', strtotime($order->moneyConfirmedDate)));
+                \Yii::trace("$order->moneyConfirmedDate = ".strtotime($order->moneyConfirmedDate)." = ".date('Y-m-d', strtotime($order->moneyConfirmedDate)).". Needle ".date('Y-m-d', $dayTime));
+            }
+        }
+
+        return ['earned' => $earned, 'confirmed' =>  $confirmed, 'done'  =>  $done];
+    }
+
+    public function getSalesStats(){
+        $dayFormatted = $this->year.'-'.$this->month.'-01';
+
+        $stats = [];
+
+        $lastDay = date('t', strtotime($dayFormatted));
+
+        for($day = 1; $day <= $lastDay; $day++){
+            $stats[] = array_merge(['date' => $day], $this->getSalesStatsByDay($day));
+        }
+
+        return $stats;
     }
 
 }
