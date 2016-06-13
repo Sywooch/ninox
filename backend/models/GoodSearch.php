@@ -14,7 +14,7 @@ use yii\data\ActiveDataProvider;
 class GoodSearch extends \common\models\GoodSearch
 {
     
-    public function search($params){
+    public function search($params, $onlyQuery = false){
 
         $query = Good::find();
 
@@ -44,7 +44,7 @@ class GoodSearch extends \common\models\GoodSearch
             }
         }
 
-        return $dataProvider;
+        return $onlyQuery ? $query : $dataProvider;
     }
 
     public function rules()
