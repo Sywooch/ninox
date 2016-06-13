@@ -5,6 +5,7 @@ namespace backend\models;
 use backend\components\Sms;
 use common\models\Comment;
 use common\models\PaymentParam;
+use common\models\SendedPayment;
 use common\models\Siteuser;
 use yii;
 use yii\data\ActiveDataProvider;
@@ -483,7 +484,7 @@ class History extends \common\models\History
     }
 
     public function getPaymentRespond(){
-
+        return $this->hasOne(SendedPayment::className(), ['nomer_id' => 'number'])->andWhere(['read_confirm' => 0]);
     }
 
     public function beforeSave($insert){
@@ -507,9 +508,18 @@ class History extends \common\models\History
             $this->moneyCollectorUserId = \Yii::$app->user->identity->id;
             $this->moneyConfirmedDate = date('Y-m-d H:i:s');
 
-            if($this->sourceType != self::SOURCETYPE_SHOP && $this->deliveryType != 3 && $this->paymentType == 2){
-                \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
+            if($this->sourceType != self::SOURCETYPE_SHOP){
+                if(!empty($this->paymentRespond)){
+                    $this->paymentRespond->read_confirm = 1;
+                    $this->paymentRespond->save(false);
+                }
+
+                if($this->deliveryType != 3 && $this->paymentType == 2){
+                    \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
+                }
             }
+
+
         }
 
         if($this->status != $this->getCurrentStatus()) {
