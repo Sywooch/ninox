@@ -163,11 +163,11 @@ $columns = $showFourth ? 3 : 4;
                     </tr>
                     <tr>
                         <td>Интернет</td>
-                        <td><?=count($report->todayInternetOrders)?>\<?=count($report->todayDoneInternetOrders)?> (<?=$report->todayInternetOrdersSum?> грн.)</td>
+                        <td><?=count($report->todayInternetOrders)?>\<?=count($report->todayDoneInternetOrders)?> (<?=$report->todayInternetEarnedSum?>/<?=$report->todayInternetOrdersSum?> грн.)</td>
                     </tr>
                     <tr>
                         <td>Магазин</td>
-                        <td><?=count($report->todayShopOrders)?>\<?=count($report->todayDoneShopOrders)?> (<?=$report->todayShopOrdersSum?> грн.)</td>
+                        <td><?=count($report->todayShopOrders)?>\<?=count($report->todayDoneShopOrders)?> (<?=$report->todayShopEarnedSum?>/<?=$report->todayShopOrdersSum?> грн.)</td>
                     </tr>
                     <tr>
                         <td>План на сегодня&nbsp;</td>

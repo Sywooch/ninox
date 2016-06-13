@@ -174,6 +174,26 @@ class MonthReport extends Model
         return $sum;
     }
 
+    public function getTodayInternetEarnedSum(){
+        $sum = 0;
+
+        foreach ($this->todayDoneInternetOrders as $order){
+            $sum += $order->originalSum;
+        }
+
+        return $sum;
+    }
+
+    public function getTodayShopEarnedSum(){
+        $sum = 0;
+
+        foreach ($this->todayDoneShopOrders as $order){
+            $sum += $order->originalSum;
+        }
+
+        return $sum;
+    }
+
     public function getTodayShopOrdersSum(){
         $sum = 0;
 
