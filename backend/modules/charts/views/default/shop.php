@@ -198,26 +198,26 @@ $columns = $showFourth ? 3 : 4;
                 ],
                 'graphs'    =>  [
                     [
-                        'balloonText'   =>  '[[title]] [[category]]: [[value]]',
+                        'balloonText'   =>  '[[category]]: [[title]] [[value]]',
                         'bullet'        =>  'round',
                         'id'            =>  'graph1',
-                        'title'         =>  'Получено',
+                        'title'         =>  'Заказов на',
                         'valueField'    =>  'earned'
 
                     ],
                     [
-                        'balloonText'   =>  '[[title]] [[category]]: [[value]]',
+                        'balloonText'   =>  '[[category]]: [[title]] [[value]]',
                         'bullet'        =>  'round',
                         'id'            =>  'graph2',
-                        'title'         =>  'Подтверждено',
+                        'title'         =>  'Подтверждено на',
                         'valueField'    =>  'confirmed'
 
                     ],
                     [
-                        'balloonText'   =>  '[[title]] [[category]]: [[value]]',
+                        'balloonText'   =>  '[[category]]: [[title]] [[value]]',
                         'bullet'        =>  'round',
                         'id'            =>  'graph3',
-                        'title'         =>  'Выполнено',
+                        'title'         =>  'Выполнено на',
                         'valueField'    =>  'done'
 
                     ],

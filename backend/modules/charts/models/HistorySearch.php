@@ -25,10 +25,18 @@ class HistorySearch extends HistoryWithoutRelations
         }
 
         if(!empty($this->dateFrom)){
-            $query->andWhere("`added` > '{$this->dateFrom}'");
+            if(!filter_var($this->dateFrom, FILTER_VALIDATE_INT)){
+                $this->dateFrom = strtotime($this->dateFrom);
+            }
+
+            $query->andWhere("`added` >= '{$this->dateFrom}'");
         }
 
         if(!empty($this->dateTo)){
+            if(!filter_var($this->dateTo, FILTER_VALIDATE_INT)){
+                $this->dateTo = strtotime($this->dateTo);
+            }
+
             $query->andWhere("`added` < '{$this->dateTo}'");
         }
 

@@ -214,7 +214,6 @@ class MonthReport extends Model
         }
 
         $dayStart = strtotime($this->year.'-'.$this->month.'-'.$day);
-        $dayEnd = strtotime($this->year.'-'.$this->month.'-'.($day + 1));
 
         $orders = [];
 
@@ -224,11 +223,15 @@ class MonthReport extends Model
                     throw new InvalidConfigException("Аттрибут {$attribute} в заказе не найден!");
                 }
 
-                if($attribute != 'added'){
-                    $order->$attribute = strtotime($order->$attribute);
+                if($attribute != 'added' && !empty($order->$attribute)){
+                    $time = \DateTime::createFromFormat('Y-m-d H:i:s', $order->$attribute);
+
+                    if($time != false){
+                        $order->$attribute = $time->getTimestamp();
+                    }
                 }
 
-                if($order->$attribute >= $dayStart && $order->$attribute < $dayEnd){
+                if($order->$attribute >= $dayStart && $order->$attribute < ($dayStart + 86400)){
                     $orders[] = $order;
                 }
             }
@@ -243,8 +246,6 @@ class MonthReport extends Model
         }
 
         $earned = $confirmed = $done = 0;
-
-        $dayTime = strtotime($this->year.'-'.$this->month.'-'.$day);
 
         foreach($this->getOrdersByDay($day, ['added']) as $order){
             $earned += $order->originalSum;
