@@ -11,7 +11,7 @@ namespace frontend\models;
 
 use yii\web\IdentityInterface;
 
-class User extends Customer implements IdentityInterface {
+class User extends Customer implements IdentityInterface{
 
 	private $_pricerules = [];
 	private $_wishlist = [];
@@ -84,6 +84,21 @@ class User extends Customer implements IdentityInterface {
             $this->_wishlist = array_column(CustomerWishlist::find()->where(['customerID' => $this->ID])->asArray()->all(), 'itemID');
         }
         return in_array($id, $this->_wishlist);
+    }
+
+    /**
+     * Метод считает и возвращает сумму оплаченных заказов в этом месяце
+     * @return int
+     */
+    public function getMonthOrdersSum(){
+        $sum = 0;
+        foreach($this->orders as $order){
+            if($order->added > date('Y-m-1') && $order->moneyConfirmed){
+                $sum += $order->actualAmount;
+            }
+        }
+
+        return $sum;
     }
 
 }

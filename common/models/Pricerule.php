@@ -205,9 +205,27 @@ class Pricerule extends \yii\db\ActiveRecord
 		}
 	}
 
+	/**
+	 * Возвращает персональное правило в человеко-понятной форме
+	 * @return string
+	 */
 	public function getHumanFriendly(){
+		return \Yii::t('shop', '{discount} на товары из {categoryCanBuy, plural, =0{всех категорий} =1{категории {canLinks}}
+		other{категорий {canLinks}}}{categoryCantBuy, plural, =0{} =1{, кроме категории {cantLinks}}
+		other{, кроме категорий {cantLinks}}}. Действует {dateOnly, select, 0{{datesFlag, select, 0{ на постоянной основе}
+		other{{dateStart, select, 0{} other{c {dateStart}}} {dateEnd,select,0{} other{по {dateEnd}}}}}}
+		other{только {dateOnly}}}{sum, select, 0{.} other{, при сумме заказа от {sum}}}',
+			$this->ruleData);
+	}
+
+	/**
+	 * Возвращает подготовленные данные ценового правила для последующей обработки
+	 * и представления их на сайте в человеко-понятной форме
+	 * @return array
+	 */
+	public function getRuleData(){
 		$categoryCanBuy = $categoryCantBuy = $canLinks = [];
-		$dateStart = $dateEnd = $dateOnly = $summ = $discount = 0;
+		$dateStart = $dateEnd = $dateOnly = $sum = $discount = 0;
 
 		foreach($this->termsAsEntity as $term){
 			if($term->term == 'GoodGroup'){
@@ -231,7 +249,7 @@ class Pricerule extends \yii\db\ActiveRecord
 				}
 			}
 			if($term->term == 'DocumentSum'){
-				$summ = $term->value;
+				$sum = $term->value;
 			}
 		}
 
@@ -246,25 +264,18 @@ class Pricerule extends \yii\db\ActiveRecord
 				break;
 		}
 
-/*		$period = \Yii::t('shop', 'Действует {dateOnly, plural,
-		=0{} other{только {dateOnly}}}',
-			[
-				'dateOnly' =>  strlen($dateOnly),
-				'dates' =>  strlen($dateStart) + strlen($dateEnd),
-				'dateStart' =>  $dateStart,
-				'dateEnd' =>  $dateEnd,
-			]);*/
-
-		return \Yii::t('shop', '{discount} на товары из {categoryCanBuy, plural, =0{всех категорий} =1{категории {canLinks}}
-		other{категорий {canLinks}}}{categoryCantBuy, plural, =0{ } =1{, кроме категории {cantLinks}}
-		other{, кроме категорий {cantLinks}}}.',
-			[
-				'discount'  =>  $discount,
-				'categoryCanBuy'    =>  count($categoryCanBuy),
-				'categoryCantBuy'    =>  count($categoryCantBuy),
-				'canLinks'  =>  implode(', ', $categoryCanBuy),
-				'cantLinks'  =>  implode(', ', $categoryCantBuy),
-			]);
+		return [
+			'discount'  =>  $discount,
+			'categoryCanBuy'    =>  count($categoryCanBuy),
+			'categoryCantBuy'    =>  count($categoryCantBuy),
+			'canLinks'  =>  implode(', ', $categoryCanBuy),
+			'cantLinks'  =>  implode(', ', $categoryCantBuy),
+			'dateOnly' =>  $dateOnly,
+			'datesFlag' =>  $dateStart + $dateEnd,
+			'dateStart' =>  $dateStart,
+			'dateEnd' =>  $dateEnd,
+			'sum'   =>  $sum > 0 ? Formatter::getFormattedPrice($sum) : $sum,
+		];
 	}
 
 	public function getTermsByType($type){
