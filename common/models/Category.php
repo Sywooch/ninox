@@ -63,6 +63,10 @@ class Category extends \yii\db\ActiveRecord
         return $this->hasMany(CategoryPhoto::className(), ['categoryID' => 'ID'])->orderBy('order');
     }
 
+    /*public function getChilds(){
+        $this->hasMany(self::className(), ['true' => 'true'])->andWhere(['like', 'Code', $this->Code.'%', false])->andWhere("`Code` != '{$this->Code}");
+    }*/
+
     public function getParents(){
         if(!empty($this->parents)){
             return $this->parents;
