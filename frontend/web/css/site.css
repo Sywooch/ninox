@@ -2701,6 +2701,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-left: 10px;
 }
 
+#modal-cart .has-error .phone-number-input-modal{
+	border: 1px solid #a94442;
+}
+
 #modal-cart .one-click-order {
 	float: left;
 	background: #e7e7e7;
