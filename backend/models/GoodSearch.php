@@ -29,17 +29,18 @@ class GoodSearch extends \common\models\GoodSearch
         $dataProvider = new ActiveDataProvider([
             'query' =>  $query,
             'pagination'    =>  [
-                'pageSize'  =>  isset($params['per-page']) ? $params['per-page'] : (isset($params['view']) && $params['view'] == 'list' ? 100 : 20)
+                'pageSize'  =>  array_key_exists('per-page', $params) ? $params['per-page'] : (array_key_exists('view', $params) && $params['view'] == 'list' ? 100 : 20)
             ]
         ]);
 
-        if(\Yii::$app->request->get("smartfilter") != ''){
-            switch(\Yii::$app->request->get("smartfilter")){
+        if($params['smartFilter'] != ''){
+            $query->joinWith('translations');
+            switch($params['smartFilter']){
                 case 'disabled':
-                    $query->andWhere(['enabled' => 0]);
+                    $query->andWhere(['enabled' => 0, 'language' => \Yii::$app->language]);
                     break;
                 case 'enabled':
-                    $query->andWhere(['enabled' => 1]);
+                    $query->andWhere(['enabled' => 1, 'language' => \Yii::$app->language]);
                     break;
             }
         }

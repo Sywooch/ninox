@@ -86,8 +86,8 @@ class DefaultController extends Controller
         return $this->render('goods', [
             'goods'         => $goodsSearch->search($searchParams),
             'goodsCount'    => [
-                'enabled'   =>  $goodsSearch->search($searchParams, true)->joinWith('translations')->andWhere('`item_translations`.`enabled` = \'1\'')->andWhere(['language' => \Yii::$app->language])->count(),
-                'disabled'  =>  $goodsSearch->search($searchParams, true)->joinWith('translations')->andWhere('`item_translations`.`enabled` = \'0\'')->andWhere(['language' => \Yii::$app->language])->count()
+                'enabled'   =>  $goodsSearch->search(array_merge($searchParams, ['smartFilter' => 'enabled']), true)->count(),
+                'disabled'  =>  $goodsSearch->search(array_merge($searchParams, ['smartFilter' => 'disabled']), true)->count()
             ],
             'nowCategory'   => $currentCategory,
         ]);
