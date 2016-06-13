@@ -233,6 +233,7 @@ class MonthReport extends Model
                 }
             }
         }
+
         return $orders;
     }
 
@@ -245,24 +246,16 @@ class MonthReport extends Model
 
         $dayTime = strtotime($this->year.'-'.$this->month.'-'.$day);
 
-        foreach($this->getOrdersByDay($day) as $order){
-            if($order->added >= $dayTime && $order->added < ($dayTime + 86400)){
-                $earned++;
-            }
-        }
-
-        if(count($this->getOrdersByDay($day, ['moneyConfirmedDate'])) >= 1){
-            var_dump($this->getOrdersByDay($day, ['moneyConfirmedDate']));
-            die();
+        foreach($this->getOrdersByDay($day, ['added']) as $order){
+            $earned += $order->originalSum;
         }
 
         foreach($this->getOrdersByDay($day, ['moneyConfirmedDate']) as $order){
-            if($order->moneyConfirmed == 1 && date('Y-m-d', strtotime($order->moneyConfirmedDate)) ==  date('Y-m-d', $dayTime)){
-                $confirmed++;
-            }else if($order->moneyConfirmed == 1){
-                \Yii::trace(date('Y-m-d', strtotime($order->moneyConfirmedDate)));
-                \Yii::trace("$order->moneyConfirmedDate = ".strtotime($order->moneyConfirmedDate)." = ".date('Y-m-d', strtotime($order->moneyConfirmedDate)).". Needle ".date('Y-m-d', $dayTime));
-            }
+            $confirmed += $order->actualAmount;
+        }
+
+        foreach($this->getOrdersByDay($day, ['doneDate']) as $order){
+            $done += !empty($order->actualAmount) ? $order->actualAmount : $order->originalSum;
         }
 
         return ['earned' => $earned, 'confirmed' =>  $confirmed, 'done'  =>  $done];
