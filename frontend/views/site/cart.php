@@ -3,31 +3,77 @@ use common\helpers\Formatter;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$model = new \frontend\models\CartForm();
+
+$personalDiscount = '';
+
+if(!empty(\Yii::$app->cart->personalDiscount)){
+	switch(\Yii::$app->cart->personalDiscount['Type']){
+		case 1:
+			$personalDiscount = Formatter::getFormattedPrice(\Yii::$app->cart->personalDiscount['Discount'], true);
+			break;
+		case 2:
+			$personalDiscount = '-'.\Yii::$app->cart->personalDiscount['Discount'].'%';
+			break;
+		case 3:
+			break;
+	}
+
+	$personalDiscount = Html::tag('div',
+		Html::a(\Yii::t('shop', 'Ваша персональная скидка {personalDiscount}',
+			[
+				'personalDiscount' =>  $personalDiscount
+			]
+		),
+			Url::to(['/account/discount', 'language' => \Yii::$app->language])
+		),
+		[
+			'class' =>  'cart-message cart-message-personal-discount'
+		]
+	);
+}
+
 echo Html::tag('div',
-		Html::tag('span', 'Корзина №', [
-			'class'	=>  'number-of-order'
-		]).
+		Html::tag('span', 'Корзина №',
+			[
+				'class'	=>  'number-of-order'
+			]
+		).
 		Html::tag('div',
-			\Yii::t('shop', 'Вы покупаете по розничным ценам - {wholesaleRemind} до опта', [
-				'wholesaleRemind'   =>  Html::tag('span',
-					Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm), [
-						'class' =>  'amount-remind'
-					])
-			]), [
-				'class' =>  'cart-message cart-message-retail semi-bold'
-			]).
-		Html::tag('div', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), [
-			'class' =>  'cart-message cart-message-wholesale semi-bold'
-		]).
-		Html::tag('div', \Yii::t('shop', '').
-			Html::tag('div', '', [
-				'class'   =>  'cross'
-			]), [
-			'class'                 =>  'cart-close',
-			'data-remodal-action'   =>  'close'
-		]), [
+			\Yii::t('shop', 'До оптовых цен осталось {wholesaleRemind}',
+				[
+					'wholesaleRemind'   =>  Html::tag('span',
+						Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['wholesaleThreshold'] - \Yii::$app->cart->cartWholesaleRealSumm),
+						[
+							'class' =>  'amount-remind'
+						]
+					)
+				]
+			),
+			[
+				'class' =>  'cart-message cart-message-retail'
+			]
+		).
+		Html::tag('div', \Yii::t('shop', 'Вы покупаете по оптовым ценам'),
+			[
+				'class' =>  'cart-message cart-message-wholesale'
+			]
+		).
+		Html::tag('div',
+			Html::tag('div', '',
+				[
+					'class'   =>  'cross'
+				]
+			),
+			[
+				'class'                 =>  'cart-close',
+				'data-remodal-action'   =>  'close'
+			]
+		).$personalDiscount,
+		[
 			'class' =>  'cart-caption'
-		]).
+		]
+	).
 	$this->render('_cart_items');
 echo Html::beginTag('div', ['class' => 'cart-footer']).
 	Html::tag('div',
@@ -73,24 +119,23 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 
 if(!(isset($order) && $order == true)){
 	$form = \yii\widgets\ActiveForm::begin([
-		'action' => Url::to(['/order', 'language' => \Yii::$app->language])
+		'action' => Url::to(['/order', 'language' => \Yii::$app->language]),
+		'validateOnSubmit' => true,
 	]);
 	echo Html::tag('div',
 			Html::tag('div',
-				Html::tag('div',
-					\Yii::t('shop', 'Ваш телефон:'), [
-						'class' => 'phone-number-text'
-					]
-				).
-				Html::input('text', 'phone', !\Yii::$app->user->isGuest ?
-					\Yii::$app->user->identity->phone :
-					(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
-						\Yii::$app->request->cookies->getValue("customerPhone") : ''),
-					[
-						'class' => 'phone-number-input-modal',
-						'data-mask' => 'phone'
-					]
-				)
+				$form->field($model, 'phone', ['labelOptions' => ['class' => 'control-label phone-number-text']])
+					->input('text',
+						[
+							'name'  =>  'phone',
+							'value' =>  !\Yii::$app->user->isGuest ?
+								\Yii::$app->user->identity->phone :
+								(\Yii::$app->request->cookies->getValue("customerPhone", false) ?
+									\Yii::$app->request->cookies->getValue("customerPhone") : ''),
+							'class' =>  'phone-number-input-modal',
+							'data-mask' =>  'phone',
+						]
+					)
 				/*			\frontend\widgets\MaskedInput::widget([
 								'name'			=>	'phone',
 								'options'		=>	[

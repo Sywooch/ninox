@@ -188,58 +188,7 @@ echo Html::beginTag('div', ['class' => 'content']),
                 ]),
             [
                 'class' => 'user-account-data'
-            ]).
-        Html::beginTag('div', ['class' =>   'user-money-discount']);
-
-        if(!empty(\Yii::$app->user->identity->money)){
-            echo Html::tag('div',
-                Html::tag('div',
-                    Html::tag('div',
-                        Html::tag('i', '', ['class' => 'icon icon-money-pig']).\Yii::t('shop', 'Личный счёт')
-                    ),
-                    [
-                        'class' =>  'myriad'
-                    ]).
-                Html::tag('div',
-                    Html::tag('div',
-                        Html::tag('div', \Yii::t('shop', 'На вашем счету:'), ['class' => 'address']).
-                        Html::tag('div', \Yii::$app->user->identity->money, ['class' => 'account-money']),
-                        [
-                            'class' =>  'address-data'
-                        ]),
-                    [
-                        'class' =>  'semi-font'
-                    ]),
-                [
-                    'class' =>  'user-account personal-discount'
-                ]);
-        }
-
-        if(!empty(\Yii::$app->user->identity->cardNumber) || !empty(\Yii::$app->user->identity->personalRules)){
-            echo Html::tag('div',
-                Html::tag('div',
-                    Html::tag('div',
-                        Html::tag('i', '', ['class' => 'icon icon-your-discont']).\Yii::t('shop', 'Ваша скидка')
-                    ),
-                    [
-                        'class' =>  'myriad'
-                    ]).
-                Html::tag('div',
-                    Html::tag('div',
-                        (!empty(\Yii::$app->user->identity->cardNumber) ? Html::tag('div', \Yii::t('shop', 'Дисконтная карта - 2% на все товары на сайте'), ['class' => 'address']) : '').
-                        (!empty(\Yii::$app->user->identity->personalRules) ? Html::tag('div', \Yii::t('shop', 'Персональная скидка - 15% на <a>избранные</a> категории'), ['class' => 'address']) : ''),
-                        [
-                            'class' =>  'address-data'
-                        ]),
-                    [
-                        'class' =>  'semi-font'
-                    ]),
-                [
-                    'class' =>  'user-account personal-discount'
-                ]);
-        }
-
-        echo Html::endTag('div');
+            ]);
      if(!empty($lastOrderProvider->getModels()) && (time() - strtotime(\Yii::$app->user->identity->giveFeedbackClosed)) > 3600){
             $js = <<<'JS'
                 $("#reviews .icon.icon-exit").on('click', function(e){

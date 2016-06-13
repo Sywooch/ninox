@@ -104,7 +104,7 @@ $model = new \frontend\models\PaymentConfirmForm();
             'type' => DatePicker::TYPE_INPUT,
             'pluginOptions' => [
                 'autoclose'=>true,
-                'format' => 'mm-dd-yyyy'
+                'format' => 'dd-mm-yyyy'
             ]
         ]);
         ?>
