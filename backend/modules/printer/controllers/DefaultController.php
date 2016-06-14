@@ -6,6 +6,7 @@ use backend\controllers\SiteController as Controller;
 use backend\models\Customer;
 use backend\models\Good;
 use backend\models\History;
+use backend\models\HistorySearch;
 use backend\models\SborkaItem;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -71,6 +72,14 @@ class DefaultController extends Controller
             'orderItems'    =>  $sborkaItems,
             'customer'      =>  $order->customer,
             'act'           =>  'printOrder'
+        ]);
+    }
+
+    public function actionDeliveryList(){
+        $orders = (new HistorySearch())->search(\Yii::$app->request->get());
+
+        return $this->render('deliveryList', [
+           'orders'         =>  $orders
         ]);
     }
 

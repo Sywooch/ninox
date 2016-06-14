@@ -568,6 +568,8 @@ $this->title = 'Заказы';
     'model' =>  $ordersStatsModel
 ]),*/
 
+
+
 echo Html::tag('div', OrdersSearchWidget::widget([
     'searchModel'   =>  $searchModel,
     'items'         =>  [
@@ -614,8 +616,14 @@ Accordion::widget([
     'dateFrom'          =>  $collectorsData['dateFrom'],
     'dateTo'          =>  $collectorsData['dateTo'],
     'items'             =>  $collectors
-]),
-Html::tag('br'),
+]);
+
+if(\Yii::$app->request->get('ordersStatus') == 'delivery'){
+    echo Html::tag('div', Html::a(FA::i('print').' Печать', Url::to(array_merge(['/printer/delivery-list'], \Yii::$app->request->get())), ['class' => 'btn btn-default', 'target' => '_blank']), ['class' => 'col-xs-12']),
+        Html::tag('br');
+}
+
+echo Html::tag('br'),
 \kartik\tabs\TabsX::widget([
     'id'            =>  'ordersSourcesTabs',
     'encodeLabels'  =>  false,
