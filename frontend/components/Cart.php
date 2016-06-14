@@ -139,7 +139,11 @@ class Cart extends Component{
      * @return int
      */
     public function has($itemID){
-        return isset($this->items[$itemID]) ? $this->items[$itemID]->count : 0;
+        return isset($this->items[$itemID]) && isset($this->goods[$itemID]) ?
+	        ($this->goods[$itemID]->count >= $this->items[$itemID]->count ?
+		        $this->items[$itemID]->count :
+		        ($this->goods[$itemID]->count > 0 ? $this->goods[$itemID]->count : 0)
+	        ) : 0;
     }
 
     /**
@@ -235,18 +239,18 @@ class Cart extends Component{
 				}
 			}
 			foreach($this->goods as $good){
-				$helper->cartSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesalePrice : $good->realWholesalePrice) * $this->items[$good->ID]->count;
+				$helper->cartSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesalePrice : $good->realWholesalePrice) * $this->has($good->ID);
 			}
 			foreach($this->goods as $good){
 				$helper->recalc($good);
-				$this->cartWholesaleSumm += $good->wholesalePrice * $this->items[$good->ID]->count;
-				$this->cartWholesaleRealSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesalePrice : $good->realWholesalePrice) * $this->items[$good->ID]->count;
-				$this->cartWholesaSumNotDiscounted += $good->discountType == 0 ? $good->realWholesalePrice * $this->items[$good->ID]->count : 0;
-				$this->cartWholesaSumWithoutDiscount += $good->realWholesalePrice * $this->items[$good->ID]->count;
-				$this->cartRetailSumm += $good->retailPrice * $this->items[$good->ID]->count;
-				$this->cartRetailRealSumm += $good->realRetailPrice * $this->items[$good->ID]->count;
-				$this->cartRetailSumNotDiscounted += $good->discountType == 0 ? $good->realRetailPrice * $this->items[$good->ID]->count : 0;
-				$this->cartRetailSumWithoutDiscount += $good->realRetailPrice * $this->items[$good->ID]->count;
+				$this->cartWholesaleSumm += $good->wholesalePrice * $this->has($good->ID);
+				$this->cartWholesaleRealSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesalePrice : $good->realWholesalePrice) * $this->has($good->ID);
+				$this->cartWholesaSumNotDiscounted += $good->discountType == 0 ? $good->realWholesalePrice * $this->has($good->ID) : 0;
+				$this->cartWholesaSumWithoutDiscount += $good->realWholesalePrice * $this->has($good->ID);
+				$this->cartRetailSumm += $good->retailPrice * $this->has($good->ID);
+				$this->cartRetailRealSumm += $good->realRetailPrice * $this->has($good->ID);
+				$this->cartRetailSumNotDiscounted += $good->discountType == 0 ? $good->realRetailPrice * $this->has($good->ID) : 0;
+				$this->cartRetailSumWithoutDiscount += $good->realRetailPrice * $this->has($good->ID);
 			}
 		}
 

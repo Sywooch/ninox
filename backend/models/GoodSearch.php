@@ -33,7 +33,7 @@ class GoodSearch extends \common\models\GoodSearch
             ]
         ]);
 
-        if($params['smartFilter'] != ''){
+        if(!empty($params['smartFilter'])){
             $query->joinWith('translations');
             switch($params['smartFilter']){
                 case 'disabled':
