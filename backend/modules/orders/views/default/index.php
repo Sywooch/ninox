@@ -554,6 +554,7 @@ $accordionJs = <<<'JS'
                 $("#searchResults").css('display', 'block');
                 url = '/orders/showlist?ordersSource=search&context=true&' + e.currentTarget.name + '=' + e.currentTarget.value;
                 $.pjax({url: url, container: '#ordersGridView_search-pjax', push: false, replace: false, timeout: 10000,scrollTo: true});
+                
 
             }
         });
