@@ -658,8 +658,8 @@ $this->beginPage();
 							['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
 							['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
 							['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
-							['linkTag' => 'a', 'link' => '', 'type' => 'youtube'],
-							['linkTag' => 'a', 'link' => '', 'type' => 'instagram'],
+							['linkTag' => 'a', 'link' => 'https://www.youtube.com/channel/UCuWGRaxroJabTiecC9jAqow/featured', 'type' => 'youtube'],
+							['linkTag' => 'a', 'link' => 'https://www.instagram.com/krasota_style.ua/', 'type' => 'instagram'],
 						]
 					]),
 					[

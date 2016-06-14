@@ -3535,9 +3535,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .about-as-order-infogramma{
 	margin: auto auto 40px;
 	overflow: auto;
-	display: block;
+	display: table;
 	text-align: center;
-	width: -moz-fit-content;
 }
 
 .about-as-order-infogramma-item{
