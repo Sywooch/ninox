@@ -39,7 +39,7 @@ class Category extends \common\models\Category{
 	    $return = Good::find()
 		    ->where(['in', '`goods`.`GroupID`', $this->groupIDs])
 		    ->with('reviews')
-	        ->joinWith(['translations', 'photos']);
+	        ->joinWith(['translations']);
 
 	    if(!empty($values) && !empty($names)){
 		    $return
@@ -59,7 +59,6 @@ class Category extends \common\models\Category{
 	    }
 
 	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` > 0 AND `goods`.`PriceOut2` > 0)')
-	        ->andWhere(['>', '`dopfoto`.`itemid`', 0])
 	        ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
 	        ->andWhere(['`item_translations`.`enabled`' => 1])
 		    ->orderBy("IF ((`goods`.`count` <= '0' AND `goods`.`isUnlimited` = '0') OR `item_translations`.`enabled` = '0', 'FIELD(`goods`.`count` DESC)', 'FIELD()')");
