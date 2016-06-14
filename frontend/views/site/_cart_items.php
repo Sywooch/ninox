@@ -10,6 +10,13 @@ use frontend\widgets\ItemCounterWidget;
 use common\helpers\Formatter;
 use yii\helpers\Html;
 
+$css = "#modal-cart .grid-view tr.out-of-stock td:first-child:before{
+	content: '".\Yii::t('shop', 'Нет в наличии!!!')."';
+}";
+
+$this->registerCss($css);
+
+
 echo \kartik\grid\GridView::widget([
 	'dataProvider'  =>  new \yii\data\ArrayDataProvider([
 		'models'     =>  \Yii::$app->cart->itemsCount ? \Yii::$app->cart->goods : []
@@ -35,6 +42,9 @@ echo \kartik\grid\GridView::widget([
 	'bordered'      =>  false,
 	'striped'       =>  false,
 	'export'		=>	false,
+	'rowOptions' => function($model){
+		return $model->inCart > 0 ? [] : ['class' => 'out-of-stock'];
+	},
 	'columns'       =>  [
 		[
 			'format'        =>  'raw',
