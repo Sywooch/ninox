@@ -251,7 +251,9 @@ $css = <<<'CSS'
     background: #ff9966 !important;
 }
 
-
+.orderRow.notCalled td{
+    background: rgba(255, 253, 88, 0.62) !important;
+}
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
     border: 3px solid #000;
@@ -506,6 +508,8 @@ $css = <<<'CSS'
     .payment-type.cash{
         background: #385698;
     }
+    
+   
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
