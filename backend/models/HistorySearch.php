@@ -157,7 +157,7 @@ class HistorySearch extends History{
             }
         }
 
-        if(!array_key_exists('ordersStatus', $ignoreFilters) && $params['ordersSource'] != 'search'){
+        if(!array_key_exists('ordersStatus', $ignoreFilters) && !array_key_exists('responsibleUser', $params) && $params['ordersSource'] != 'search'){
             $params['ordersStatus'] = !empty($params['ordersStatus']) ? $params['ordersStatus'] : 'new';
 
             switch($params['ordersStatus']){
