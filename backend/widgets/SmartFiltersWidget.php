@@ -68,10 +68,6 @@ class SmartFiltersWidget extends Widget
             $routeOptions[$this->filterKey] = $item['filter'];
         }
 
-        if(!empty(\Yii::$app->request->get('category'))){
-            $routeOptions['category'] = \Yii::$app->request->get('category');
-        }
-
         $linkOptions = [];
 
         if(!empty($item['items'])){
@@ -81,7 +77,11 @@ class SmartFiltersWidget extends Widget
             $linkOptions['data-toggle'] = 'dropdown';
         }
 
-        $url = Url::toRoute($routeOptions);
+        if(!empty($this->getView()->context->module)){
+            $url = '/'.$this->getView()->context->module->id;
+        }
+
+        $url = Url::to(array_merge([$url], \Yii::$app->request->get(), [$this->filterKey => $item['filter']]));
 
         $content = Html::a($item['label'], $url, $linkOptions);
 

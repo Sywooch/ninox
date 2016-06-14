@@ -150,11 +150,46 @@ $enabled = isset($goodsCount[$nowCategory->Code]['enabled']) ? $goodsCount[$nowC
 $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$nowCategory->Code]['disabled'] : 0;
 ?>
 <?=Html::tag('h1', $this->title.(!empty($nowCategory) ? '&nbsp;'.Html::tag('small', $nowCategory->Name) : ''))?>
-<ul class="nav nav-pills" style="margin-left: -15px;">
-    <li role="presentation"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>">Всего товаров: <span class="label label-info"><?=($enabled + $disabled)?></span></a></li>
-    <li role="presentation" class="<?=$sf == 'enabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=enabled">включено: <span class="label label-success"><?=$enabled?></span></a></li>
-    <li role="presentation" class="<?=$sf == 'disabled' ? 'active' : ''?>"><a href="/goods?category=<?=\Yii::$app->request->get("category")?>&smartfilter=disabled">выключено: <span class="label label-danger"><?=$disabled?></span></a></li>
-</ul>
+<?=\backend\widgets\SmartFiltersWidget::widget([
+    'items' =>  [
+        [
+            'label'         =>  'Всего товаров: ',
+            'counterValue'  =>  $goodsCount['enabled'] + $goodsCount['disabled'],
+            'labelClass'    =>  'label-info',
+            'filter'        =>  ''
+        ],
+        [
+            'label'         =>  'Отключеных: ',
+            'counterValue'  =>  $goodsCount['disabled'],
+            'labelClass'    =>  'label-danger',
+            'filter'        =>  'disabled'
+        ],
+        [
+            'label'         =>  'Включеных: ',
+            'counterValue'  =>  $goodsCount['enabled'],
+            'labelClass'    =>  'label-success',
+            'filter'        =>  'enabled'
+        ],
+        [
+            'label'         =>  'Другие',
+            'labelClass'    =>  'label-success',
+            'items'         =>  [
+                [
+                    'label'         =>  'Без фотографий',
+                    'filter'        =>  'withoutPhoto'
+                ],
+                [
+                    'label'         =>  'Без аттрибутов',
+                    'filter'        =>  'withoutAttributes'
+                ],
+                [
+                    'label'         =>  'На распродаже',
+                    'filter'        =>  'onSale'
+                ],
+            ]
+        ],
+    ]
+])?>
 <div class="clearfix"></div>
 <br style="margin-bottom: 0;">
 <div class="dropdown">

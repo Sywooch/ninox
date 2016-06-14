@@ -126,7 +126,7 @@ CSS;
         return Html::tag('li',
             Html::tag('span', $item->name.':', ['class' => 'name']).' '.($this->showUnfinished ? Html::tag('a', count($item->unfinishedOrders).(!empty($item->unfinishedItemsCount) ? '&nbsp;'.Html::tag('small', "({$item->unfinishedItemsCount})") : ''), [
                 'href'  =>  $link
-            ]) : '').' '.Html::tag('span', count($item->yesterdayDoneOrders), ['class' => 'totalOrders']), [
+            ]) : '').' '.Html::tag('span', (count($item->todayDoneOrders) > 0 ? count($item->todayDoneOrders).'&nbsp;'.Html::tag('small', "({$item->todayDoneOrdersItemsCount})") : 0), ['class' => 'totalOrders']), [
             'class' =>  count($item->unfinishedOrders) == 0 ? 'bad' : ''
         ]);
     }

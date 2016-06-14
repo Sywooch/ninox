@@ -193,12 +193,11 @@ foreach($options as $key => $option){
         ]);
 }
 
-$form = new \kartik\form\ActiveForm([
+$form = \kartik\form\ActiveForm::begin([
     'options'   =>  [
         'class' =>  'goodEditForm'
     ]
 ]);
-$form->begin();
 
 echo Html::tag('ol', implode('', $goodOptions), ['id' => 'goodAttributesList']),
 Html::button(FA::icon('plus').' Добавить', [

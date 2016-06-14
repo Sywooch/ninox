@@ -66,7 +66,7 @@ class PriceRuleHelper extends Component{
 						}
 						break;
 					case 'WithoutBlyamba':
-						if($category && !empty($terms[0][0]['term'])){
+						if($category && !empty($terms[0][0]['value'])){
 							$termsCount++;
 						}
 						break;
@@ -155,7 +155,7 @@ class PriceRuleHelper extends Component{
 		if($discount == $termsCount && $termsCount != 0){
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;
-			$model->discountType = empty($rule->actions['Type']) ? 2 : $rule->actions['Type'];
+			$model->discountType = $rule->actions['Type'];
 			$model->discountSize = $rule->actions['Discount'];
 			$model->customerRule = $rule->customerRule;
 			return true;
@@ -169,30 +169,30 @@ class PriceRuleHelper extends Component{
 				foreach($term as $gg){
 					switch($gg['type']){
 						case '=':
-							if($cat == $gg['term']){
+							if($cat == $gg['value']){
 								$discount++;
 								break 2;
 							}
 							break;
 						case '>=':
-							if(strlen($cat) != strlen($gg['term'])){
-								$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+							if(strlen($cat) != strlen($gg['value'])){
+								$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['value'])));
 							}else{
 								$cat0 = $cat;
 							}
-							if($cat0 == $gg['term']){
+							if($cat0 == $gg['value']){
 								$discount++;
 								break 2;
 							}
 							break;
 						case '<=':
 						case '!=':
-							if(strlen($cat) != strlen($gg['term'])){
-								$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['term'])));
+							if(strlen($cat) != strlen($gg['value'])){
+								$cat0 = substr($cat, 0, -(strlen($cat) - strlen($gg['value'])));
 							}else{
 								$cat0 = $cat;
 							}
-							if($cat0 != $gg['term']){
+							if($cat0 != $gg['value']){
 								$discount++;
 								break 2;
 							}
@@ -212,7 +212,7 @@ class PriceRuleHelper extends Component{
 			if($termsCount == $discount){
 				$termsCount++;
 				foreach($term as $date){
-					$dt = new DateTime($date['term']);
+					$dt = new DateTime($date['value']);
 					if(($date['type'] == '=' && $now->diff($dt)->days == 0) || ($date['type'] == '>=' && $dt->diff($now)->days >= 0 && $dt->diff($now)->invert == 0) || ($date['type'] == '<=' && $now->diff($dt)->days >= 0 && $now->diff($dt)->invert == 0)){
 						$discount++;
 						break;
@@ -229,7 +229,7 @@ class PriceRuleHelper extends Component{
 			if($termsCount == $discount){
 				$termsCount++;
 				foreach($term as $ds){
-					if(($this->cartSumm == $ds['term'] && $ds['type'] == '=') || ($this->cartSumm >= $ds['term'] && $ds['type'] == '>=') || ($this->cartSumm <= $ds['term'] && $ds['type'] == '<=')){
+					if(($this->cartSumm == $ds['value'] && $ds['type'] == '=') || ($this->cartSumm >= $ds['value'] && $ds['type'] == '>=') || ($this->cartSumm <= $ds['value'] && $ds['type'] == '<=')){
 						$discount += 1;
 						break;
 					}

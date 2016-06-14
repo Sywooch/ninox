@@ -34,6 +34,7 @@ class Cart extends Component{
 	public $cartSumWithoutDiscount = 0;
 	public $cartSumNotDiscounted = 0;
     public $wholesale = false;
+	public $personalDiscount = [];
 
     public function init(){
         $cache = \Yii::$app->cache;
@@ -227,6 +228,12 @@ class Cart extends Component{
 		if(!empty($this->goods)){
 			$helper = new PriceRuleHelper();
 			$helper->cartSumm = 0;
+			foreach($helper->pricerules as $rule){
+				if($rule->customerRule == 1){
+					$this->personalDiscount = $rule->actions;
+					break;
+				}
+			}
 			foreach($this->goods as $good){
 				$helper->cartSumm += ($good->discountType > 0 && $good->priceRuleID == 0 ? $good->wholesalePrice : $good->realWholesalePrice) * $this->items[$good->ID]->count;
 			}

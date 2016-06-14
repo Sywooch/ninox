@@ -59,6 +59,16 @@ class Siteuser extends \common\models\Siteuser
         return $this->getOrders()->andWhere("`added` > '{$today}'");
     }
 
+    public function getTodayDoneOrdersItemsCount(){
+        $itemsCount = 0;
+
+        foreach($this->todayDoneOrders as $order){
+            $itemsCount += count($order->items);
+        }
+
+        return $itemsCount;
+    }
+
     public function getUnfinishedOrders(){
         return $this->getOrders()->andWhere("`done` != '1'");
     }

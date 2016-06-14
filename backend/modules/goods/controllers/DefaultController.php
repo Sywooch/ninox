@@ -59,7 +59,7 @@ class DefaultController extends Controller
         if(!empty($currentCategory)){
             $searchID = $currentCategory->ID;
 
-            if(\Yii::$app->request->get("withSubcategories")){
+            if(\Yii::$app->request->get('withSubcategories')){
                 $subCategoriesIDs = [];
 
                 $subCategories = Category::find()
@@ -85,7 +85,10 @@ class DefaultController extends Controller
 
         return $this->render('goods', [
             'goods'         => $goodsSearch->search($searchParams),
-            'goodsCount'    => 0,
+            'goodsCount'    => [
+                'enabled'   =>  $goodsSearch->search(array_merge($searchParams, ['smartFilter' => 'enabled']), true)->count(),
+                'disabled'  =>  $goodsSearch->search(array_merge($searchParams, ['smartFilter' => 'disabled']), true)->count()
+            ],
             'nowCategory'   => $currentCategory,
         ]);
     }

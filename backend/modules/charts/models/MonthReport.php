@@ -11,6 +11,8 @@ namespace backend\modules\charts\models;
 
 use backend\models\History;
 use backend\models\Shop;
+use libphonenumber\ValidationResult;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\widgets\Pjax;
 
@@ -172,6 +174,26 @@ class MonthReport extends Model
         return $sum;
     }
 
+    public function getTodayInternetEarnedSum(){
+        $sum = 0;
+
+        foreach ($this->todayDoneInternetOrders as $order){
+            $sum += $order->originalSum;
+        }
+
+        return $sum;
+    }
+
+    public function getTodayShopEarnedSum(){
+        $sum = 0;
+
+        foreach ($this->todayDoneShopOrders as $order){
+            $sum += $order->originalSum;
+        }
+
+        return $sum;
+    }
+
     public function getTodayShopOrdersSum(){
         $sum = 0;
 
@@ -200,6 +222,78 @@ class MonthReport extends Model
         }
 
         return $progress;
+    }
+
+    public function getOrdersByDay($day, array $attributes = ['added']){
+        if(!filter_var($day, FILTER_VALIDATE_INT)){
+            $day = date('d', strtotime($day));
+        }
+
+        if(!is_array($attributes)){
+            $attributes = [$attributes];
+        }
+
+        $dayStart = strtotime($this->year.'-'.$this->month.'-'.$day);
+
+        $orders = [];
+
+        foreach($this->orders as $order){
+            foreach ($attributes as $attribute){
+                if(!$order->hasAttribute($attribute)){
+                    throw new InvalidConfigException("Аттрибут {$attribute} в заказе не найден!");
+                }
+
+                if($attribute != 'added' && !empty($order->$attribute)){
+                    $time = \DateTime::createFromFormat('Y-m-d H:i:s', $order->$attribute);
+
+                    if($time != false){
+                        $order->$attribute = $time->getTimestamp();
+                    }
+                }
+
+                if($order->$attribute >= $dayStart && $order->$attribute < ($dayStart + 86400)){
+                    $orders[] = $order;
+                }
+            }
+        }
+
+        return $orders;
+    }
+
+    public function getSalesStatsByDay($day){
+        if($day > date('d') && $this->year == date('Y') && $this->month == date('m')){
+            return [];
+        }
+
+        $earned = $confirmed = $done = 0;
+
+        foreach($this->getOrdersByDay($day, ['added']) as $order){
+            $earned += $order->originalSum;
+        }
+
+        foreach($this->getOrdersByDay($day, ['moneyConfirmedDate']) as $order){
+            $confirmed += $order->actualAmount;
+        }
+
+        foreach($this->getOrdersByDay($day, ['doneDate']) as $order){
+            $done += !empty($order->actualAmount) ? $order->actualAmount : $order->originalSum;
+        }
+
+        return ['earned' => $earned, 'confirmed' =>  $confirmed, 'done'  =>  $done];
+    }
+
+    public function getSalesStats(){
+        $dayFormatted = $this->year.'-'.$this->month.'-01';
+
+        $stats = [];
+
+        $lastDay = date('t', strtotime($dayFormatted));
+
+        for($day = 1; $day <= $lastDay; $day++){
+            $stats[] = array_merge(['date' => $day], $this->getSalesStatsByDay($day));
+        }
+
+        return $stats;
     }
 
 }

@@ -2392,13 +2392,24 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 #modal-cart .number-of-order{
 	float: left;
 	font-size: 22px;
-	font-weight: 600;
-	font-family: 'Open Sans';
+	font-family: 'OpenSans-Semibold';
 }
 
 #modal-cart.retail .cart-message-retail,
 #modal-cart.wholesale .cart-message-wholesale{
 	display: block;
+}
+
+#modal-cart .cart-message-personal-discount{
+	display: block;
+	float: right;
+	font-size: 22px;
+	font-family: 'OpenSans-Semibold';
+	text-decoration: none;
+}
+
+#modal-cart .cart-message-personal-discount a{
+	color: #000;
 }
 
 
@@ -2676,6 +2687,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	display: inline-block;
 	font-size: 18px;
 	vertical-align: sub;
+	font-weight: normal;
 }
 
 #modal-cart .phone-number-input-modal{
@@ -2687,6 +2699,10 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-size: 22px;
 	vertical-align: middle;
 	padding-left: 10px;
+}
+
+#modal-cart .has-error .phone-number-input-modal{
+	border: 1px solid #a94442;
 }
 
 #modal-cart .one-click-order {
@@ -2714,37 +2730,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 
 /*========* ACCOUNT *=========*/
-
-.icon
-{
-    font-family: "shop";
-    font-style: normal;
-    font-weight: normal;
-    speak: none;
-    display: inline-block;
-    text-decoration: inherit;
-    width: 1em;
-    margin-right: .2em;
-    text-align: center;
-    /* opacity: .8; */
-    font-size: 32px;
-    /* For safety - reset parent styles, that can break glyph codes*/
-    font-variant: normal;
-    text-transform: none;
-    vertical-align: bottom;
-    /* fix buttons height, for twitter bootstrap */
-    line-height: 1em;
-    /* Animation center compensation - margins should be symmetric */
-    /* remove if not needed */
-    margin-left: .2em;
-    /* You can be more comfortable with increased icons size */
-    /*font-size: 250%;*/
-    /* Font smoothing. That was taken from TWBS */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    /* Uncomment for 3D effect */
-    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
-}
 
 .content{
     /*
@@ -2898,12 +2883,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     color: #1998db;
 }
 
-.icon-money-pig{
-    padding-left: 3px;
-    width: 37px;
-    vertical-align: inherit;
-}
-
 .icon-your-discont{
     vertical-align: inherit;
 }
@@ -2994,6 +2973,83 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 
 .user-data-content .reviews .text{
 	padding: 35px;
+}
+
+.user-data-content.discount{
+	color: #282828;
+	font-size: 16px;
+}
+
+.user-data-content.discount .discount-info{
+	width: 480px;
+	float: left;
+}
+
+.user-data-content.discount .money-info{
+	width: 320px;
+	background: #f1f1f1;
+	border-radius: 10px;
+	padding: 20px 40px;
+	float: right;
+}
+
+.user-data-content.discount .icon{
+	font-size: 22px;
+	padding-bottom: 15px;
+	font-family: OpenSans-Semibold;
+}
+
+.user-data-content.discount .icon:before{
+	font-size: 28px;
+	padding-right: 10px;
+}
+
+.user-data-content.discount .money-info .money-amount{
+	font-size: 24px;
+	padding-top: 10px;
+}
+
+.user-data-content.discount .user-card-discount{
+	padding-bottom: 20px;
+}
+
+.user-data-content.discount .personal-rule .discount{
+	font-family: OpenSans-Semibold;
+	font-size: 45px;
+}
+
+.user-data-content.discount .personal-rule .sum{
+	font-family: OpenSans-Semibold;
+	font-size: 22px;
+	padding-bottom: 10px;
+}
+
+.user-data-content.discount .personal-rule .not-categories{
+	font-size: 12px;
+}
+
+.user-data-content.discount .personal-rule .not-categories:before{
+	content: '*';
+}
+
+.user-data-content.discount .month-orders-sum{
+	font-size: 22px;
+	font-family: OpenSans-Semibold;
+}
+
+.user-data-content.discount .month-orders-sum:before{
+	content: '';
+	display: block;
+	width: 60px;
+	height: 4px;
+	background: #1998db;
+	margin: 25px 0;
+}
+
+.user-data-content.discount .temp-info-block{
+	background: #fffbd0;
+	padding: 25px 40px;
+	margin-top: 45px;
 }
 
 .order{
