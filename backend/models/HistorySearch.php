@@ -174,10 +174,10 @@ class HistorySearch extends History{
                     break;
                 case 'done':
                 case self::STATUS_DONE:
-                    $query->andWhere(['or', ['status' => self::STATUS_DONE], ['status' => self::STATUS_DELIVERED]]);
+                    $query->andWhere(['done' => 1]);
                     break;
                 case 'new':
-                    $query->andWhere(['or', ['status' => self::STATUS_NOT_CALLED], ['status' => self::STATUS_PROCESS], ['status' => self::STATUS_NOT_PAYED], ['status' => self::STATUS_WAIT_DELIVERY]]);
+                    $query->andWhere(['done' => 0]);
                     break;
                 case 'all':
                 default:
