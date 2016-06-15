@@ -125,7 +125,7 @@ var lastOrder = 0,
                             close: {
                                 label: 'Обновить страницу',
                                 action: function(){
-                                    location.reload();
+                                    $.pjax({container: $(".tab-pane.active div[data-pjax-container='']"), push: false, replace: false, timeout: 10000,scrollTo: true});
                                 }
                             }
                         }

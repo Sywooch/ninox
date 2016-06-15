@@ -113,7 +113,9 @@ class SborkaItem extends ActiveRecord
                 $this->added = time();
             }
 
-            $this->originalCount = $this->count;
+            if(empty($this->originalCount)){
+                $this->originalCount = $this->count;
+            }
         }
 
         if(!empty($this->good) && $this->isAttributeChanged('count')){

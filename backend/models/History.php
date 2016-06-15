@@ -5,6 +5,7 @@ namespace backend\models;
 use backend\components\Sms;
 use common\models\Comment;
 use common\models\PaymentParam;
+use common\models\PaymentType;
 use common\models\SendedPayment;
 use common\models\Siteuser;
 use yii;
@@ -111,6 +112,10 @@ class History extends \common\models\History
                 return false;
                 break;
         }
+    }
+
+    public function getPaymentTypeModel(){
+        return $this->hasOne(PaymentType::className(), ['id' => 'paymentType']);
     }
 
     /**

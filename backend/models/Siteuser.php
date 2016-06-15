@@ -25,7 +25,7 @@ class Siteuser extends \common\models\Siteuser
 
     public function getOrders()
     {
-        return $this->hasMany(HistoryWithoutRelations::className(), ['responsibleUserID' => 'id'])->andWhere(['deleted' => 0]);
+        return $this->hasMany(HistoryWithoutRelations::className(), ['responsibleUserID' => 'id'])->andWhere(['deleted' => 0, 'sourceType' => History::SOURCETYPE_INTERNET]);
     }
 
     public function getDoneOrders()
@@ -70,7 +70,7 @@ class Siteuser extends \common\models\Siteuser
     }
 
     public function getUnfinishedOrders(){
-        return $this->getOrders()->andWhere("`done` != '1'");
+        return $this->getOrders()->andWhere(['done' => 0]);
     }
 
     public function getUnfinishedItemsCount(){

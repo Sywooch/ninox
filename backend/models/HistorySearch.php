@@ -174,10 +174,10 @@ class HistorySearch extends History{
                     break;
                 case 'done':
                 case self::STATUS_DONE:
-                    $query->andWhere(['or', ['status' => self::STATUS_DONE], ['status' => self::STATUS_DELIVERED]]);
+                    $query->andWhere(['done' => 1]);
                     break;
                 case 'new':
-                    $query->andWhere(['or', ['status' => self::STATUS_NOT_CALLED], ['status' => self::STATUS_PROCESS], ['status' => self::STATUS_NOT_PAYED], ['status' => self::STATUS_WAIT_DELIVERY]]);
+                    $query->andWhere('`done` != \'1\'');
                     break;
                 case 'all':
                 default:
@@ -185,7 +185,7 @@ class HistorySearch extends History{
             }
         }
 
-        if((array_key_exists('showDeleted', $params) && $params['showDeleted'] == 0) || ((!array_key_exists('showDeleted', $ignoreFilters) && empty($params['showDeleted'])) && $params['ordersSource'] != 'search')){
+        if((array_key_exists('showDeleted', $params) && $params['showDeleted'] == 0) || (!array_key_exists('showDeleted', $ignoreFilters) && empty($params['showDeleted']))){
             $query->andWhere('deleted = 0');
         }elseif((array_key_exists('showDeleted', $params) && $params['showDeleted'] == 1) || (!empty($params['ordersSource']) && $params['ordersSource'] == 'deleted')){
             $query->andWhere('deleted = 1');

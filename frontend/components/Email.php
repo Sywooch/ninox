@@ -39,15 +39,17 @@ class Email extends \common\components\Email{
         $emailOrder->phone = $order->customerPhone;
 
         foreach($order->items as $item){
-            $emailOrder->items[] = [
-                'name'              =>  $item->name,
-                'cost'              =>  $item->price,
-                'category'          =>  $item->category->name,
-                'quantity'          =>  $item->count,
-                'externalItemId'    =>  $item->good->Code,
-                'url'               =>  'https://krasota-style.com.ua/tovar/-g'.$item->itemID,
-                'imageUrl'          =>  'https:'.\Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$item->photo,
-            ];
+            if($item->nalichie == 1 && $item->nezakaz == 0){
+                $emailOrder->items[] = [
+                    'name'              =>  $item->name,
+                    'cost'              =>  $item->price,
+                    'category'          =>  $item->category->name,
+                    'quantity'          =>  $item->count,
+                    'externalItemId'    =>  $item->good->Code,
+                    'url'               =>  'https://krasota-style.com.ua/tovar/-g'.$item->itemID,
+                    'imageUrl'          =>  'https:'.\Yii::$app->params['cdn-link'].'/img/catalog/sm/'.$item->photo,
+                ];
+            }
         }
 
         $orders = new \stdClass();

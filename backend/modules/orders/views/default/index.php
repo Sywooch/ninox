@@ -64,7 +64,13 @@ var ordersChanges = function(e){
     });
 }, doneOrder = function(obj){
     var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode),
+        actualAmount = parseFloat(orderNode.find('.actualAmount').text().replace(/\s.*/, '')),
         button = $(obj);
+
+    if(actualAmount <= 0){
+        swal("Ошибка!", "Введите сумму к оплате!", "error");
+        return false;
+    }
 
     $.ajax({
         type: 'POST',
@@ -149,49 +155,49 @@ var ordersChanges = function(e){
 
 $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
     event.preventDefault();
-    
+
     var form = $(this);
-   
-   if(form.find('.has-error').length) {
-      return false;
-   }
-   
-   $.ajax({
-       type: "POST",
-       url: '/orders/order-preview',
-       data: $.extend({action: 'save'}, form.serializeJSON()),
-       success: function(response){
-           if(response.length == 0 || response == false){
-               return false;
-           }
-  
-   
-   
-           /*var tr = ,
+
+    if(form.find('.has-error').length) {
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: '/orders/order-preview',
+        data: $.extend({action: 'save'}, form.serializeJSON()),
+        success: function(response){
+            if(response.length == 0 || response == false){
+                return false;
+            }
+
+            console.log(response);
+
+            /*var tr = ,
                responsibleUser = tr.find('small.responsibleUser'),
                actualAmount = tr.find('span.actualAmount');
-   
-           if(responsibleUser != null){
+
+            if(responsibleUser != null){
                if(response.responsibleUserID != 0){
                    responsibleUser.html(response.responsibleUserID);
                }else{
                    responsibleUser.remove();
                }
-           }else if(response.responsibleUserID != 0){
+            }else if(response.responsibleUserID != 0){
                var node = document.createElement('small');
                node.innerHTML = response.responsibleUserID;
                node.setAttribute('class', 'responsibleUser');
                tr.find('td[data-col-seq="7"]')[0].appendChild(node);
-           }
-   
-           actualAmount.innerHTML = response.actualAmount + ' грн.';
-           
-           console.log(tr);
-           console.log(tr.find(".kv-expand-row"));*/
-           
-           $('div[data-attribute-type="ordersGrid"] tr[data-key="' + form.parent().parent().parent().attr('data-key') + '"]').find(".kv-expand-row").trigger('click');
-       }
-   });
+            }
+
+            actualAmount.innerHTML = response.actualAmount + ' грн.';
+
+            console.log(tr);
+            console.log(tr.find(".kv-expand-row"));*/
+
+            $('div[data-attribute-type="ordersGrid"] tr[data-key="' + form.parent().parent().parent().attr('data-key') + '"]').find(".kv-expand-row").trigger('click');
+        }
+    });
 
     return false;
 });
@@ -236,7 +242,7 @@ $("body").on('click', "button.sms-order", function(){
 JS;
 $css = <<<'CSS'
 .orderRow.warning td{
-    background: #ff9966 !important;
+    background: rgba(255, 253, 88, 0.62) !important;
 }
 
 .orderRow.success td{
@@ -251,7 +257,9 @@ $css = <<<'CSS'
     background: #ff9966 !important;
 }
 
-
+.orderRow.notCalled td{
+    background: #ff9966 !important;
+}
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
     border: 3px solid #000;
@@ -506,6 +514,8 @@ $css = <<<'CSS'
     .payment-type.cash{
         background: #385698;
     }
+    
+   
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
@@ -550,6 +560,7 @@ $accordionJs = <<<'JS'
                 $("#searchResults").css('display', 'block');
                 url = '/orders/showlist?ordersSource=search&context=true&' + e.currentTarget.name + '=' + e.currentTarget.value;
                 $.pjax({url: url, container: '#ordersGridView_search-pjax', push: false, replace: false, timeout: 10000,scrollTo: true});
+                
 
             }
         });
@@ -567,6 +578,8 @@ $this->title = 'Заказы';
 /*echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
     'model' =>  $ordersStatsModel
 ]),*/
+
+
 
 echo Html::tag('div', OrdersSearchWidget::widget([
     'searchModel'   =>  $searchModel,
@@ -614,8 +627,14 @@ Accordion::widget([
     'dateFrom'          =>  $collectorsData['dateFrom'],
     'dateTo'          =>  $collectorsData['dateTo'],
     'items'             =>  $collectors
-]),
-Html::tag('br'),
+]);
+
+if(\Yii::$app->request->get('ordersStatus') == 'delivery'){
+    echo Html::tag('div', Html::a(FA::i('print').' Печать', Url::to(array_merge(['/printer/delivery-list'], \Yii::$app->request->get())), ['class' => 'btn btn-default', 'target' => '_blank']), ['class' => 'col-xs-12']),
+        Html::tag('br');
+}
+
+echo Html::tag('br'),
 \kartik\tabs\TabsX::widget([
     'id'            =>  'ordersSourcesTabs',
     'encodeLabels'  =>  false,

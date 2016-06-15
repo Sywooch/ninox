@@ -87,6 +87,8 @@ use yii\db\ActiveRecord;
  * @property GoodTranslation $realTranslation
  * @property GoodTranslation[] $translations
  * @property GoodTranslation $translation
+ * @property int enabled
+ * @property int disableConfirmed
  */
 class Good extends ActiveRecord
 {
@@ -359,8 +361,12 @@ class Good extends ActiveRecord
             }
         }
 
-        if((empty($this->photos) && $this->enabled != 0) || $this->count <= 0){
+        if((empty($this->photos) && $this->enabled != 0) || ($this->count <= 0 && $this->isUnlimited == 0)){
             GoodTranslation::updateAll(['enabled' => 0], ['ID' => $this->ID]);
+        }
+
+        if($this->enabled == 0 && $this->realTranslation->getOldAttribute('enabled') != 0){
+            $this->disableConfirmed = 0;
             $this->otkl_time = date('Y-m-d H:i:s');
         }
 
@@ -392,7 +398,7 @@ class Good extends ActiveRecord
     {
         return [
             [['dimensions', 'width', 'height', 'length', 'diameter', 'listorder', 'otkl_time', 'vkl_time', 'tovdate', 'tovupdate', 'photodate', 'otgruzka', 'otgruzka_time', 'p_photo', 'link', 'rate', 'originalGood', 'video'], 'required'],
-            [['listorder', 'otgruzka', 'otgruzka2', 'discountType', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited'], 'integer'],
+            [['listorder', 'otgruzka', 'otgruzka2', 'discountType', 'Type', 'IsRecipe', 'TaxGroup', 'IsVeryUsed', 'GroupID', 'old_id', 'Deleted', 'anotherCurrencyPeg', 'supplierId', 'garantyShow', 'yandexExport', 'originalGood', 'count', 'isUnlimited', 'disableConfirmed'], 'integer'],
             [['otkl_time', 'vkl_time', 'tovdate', 'orderDate', 'tovupdate', 'photodate', 'otgruzka_time', 'otgruzka_time2'], 'safe'],
             [['Ratio', 'PriceIn', 'PriceOut1', 'PriceOut2', 'PriceOut3', 'PriceOut4', 'PriceOut5', 'PriceOut6', 'PriceOut7', 'PriceOut8', 'PriceOut9', 'PriceOut10', 'discountSize', 'MinQtty', 'NormalQtty', 'rate', 'anotherCurrencyValue'], 'number'],
             [['link'], 'string'],

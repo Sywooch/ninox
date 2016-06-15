@@ -92,8 +92,10 @@ class User extends Customer implements IdentityInterface{
      */
     public function getMonthOrdersSum(){
         $sum = 0;
+        date_default_timezone_set('UTC');
+        $date = strtotime(date('Y-m-1'));
         foreach($this->orders as $order){
-            if($order->added > date('Y-m-1') && $order->moneyConfirmed){
+            if($order->added >= $date && $order->moneyConfirmed){
                 $sum += $order->actualAmount;
             }
         }
