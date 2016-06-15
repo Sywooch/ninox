@@ -170,6 +170,32 @@ class DefaultController extends Controller
         }
     }
 
+    public function actionRestore(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException('Данный метод доступен только через ajax!');
+        }
+
+        $orderID = \Yii::$app->request->post('orderID');
+        $order = History::find()->where(['id' => $orderID])->with('items')->one();
+
+        if(!$order){
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
+        }
+
+        if(!empty($order->items)){
+            foreach($order->items as $item){
+                $item->good->count -= $item->count;
+                $item->good->save(false);
+            }
+        }
+
+        $order->deleted = 0;
+
+        $order->save(false);
+
+        return true;
+    }
+
     public function actionGetPayments($type = ''){
         $incomingArray = [];
         if(empty($type)){

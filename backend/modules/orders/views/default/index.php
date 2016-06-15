@@ -33,8 +33,34 @@ var ordersChanges = function(e){
         }
     });
 }, restoreOrder = function(item){
-    console.log(item);
-    alert('end me plz! file: index.php');
+    var container   = $(item).parent().parent().parent(),
+        orderID     = $(container).attr('data-key');
+
+    swal({
+        title:  'Подождите, пожалуйста...',
+        text:   'Возвращаем товары со склада...',
+        type: 'info',
+        showConfirmButton: false,
+        closeOnConfirm: false
+    });
+
+    $.ajax({
+        type: 'POST',
+        url: '/orders/restore',
+        data: {
+            'orderID': orderID
+        },
+        success: function(data){
+            swal("Восстановлен!", "Заказ успешно восстановлен!", "success");
+            container.remove();
+            
+            var a = document.querySelector('.kv-expand-detail-row[data-key="' + orderID + '"]');
+            
+            if(a !== undefined && a != null){
+                a.remove();
+            }
+        }
+    });
 }, deleteOrder = function(item){
     var container   = item.parentNode.parentNode.parentNode,
         orderID     = container.getAttribute('data-key');
