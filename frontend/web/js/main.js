@@ -63,6 +63,7 @@ function addToCart(item){
 					.toggleClass('yellow-button green-button buy open-cart');
 				$('.count[data-itemId='+ itemId +']').data('incart', count);
 				updateCart(data);
+				updateBasketPopover(data);
 			}
 		});
 	}
@@ -148,6 +149,7 @@ function getCart(){
 		url: '/modifycart',
 		success: function(data){
 			updateCart(data);
+			updateBasketPopover(data);
 		}
 	});
 }
@@ -190,6 +192,20 @@ function updateCart(data){
 			default:
 				$('.amount-' + i).text(data[i]);
 				break;
+		}
+	}
+}
+
+function updateBasketPopover(data){
+	for(var i in data){
+		switch(i){
+			case 'wholesale':
+				$('#basketPopover').toggleClass('wholesale', data[i]).toggleClass('retail', !data[i]);
+				break;
+			case 'count':
+				$('#basketPopover').toggleClass('empty', !data[i]).removeClass(function(){
+					return data[i] ? '' : 'wholesale retail';
+				});
 		}
 	}
 }

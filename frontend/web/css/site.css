@@ -2878,10 +2878,12 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
     width: 100%;
     padding-bottom: 20px;
 }
+
 .personal-data{
     padding-bottom: 20px;
 }
-.personal-discount{
+
+.user-data-content .personal-discount{
     float: left;
     padding-bottom: 20px;
     width:50%;
@@ -3603,9 +3605,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .about-as-order-infogramma{
 	margin: auto auto 40px;
 	overflow: auto;
-	display: block;
+	display: table;
 	text-align: center;
-	width: -moz-fit-content;
 }
 
 .about-as-order-infogramma-item{
@@ -4617,6 +4618,23 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin-bottom: 10px;
 	margin-top: 5px;
 }
+
+.in-basket.retail .price-info .basket-retail{
+	display: block;
+}
+
+.in-basket.wholesale .price-info .basket-wholesale{
+	display: block;
+}
+
+.in-basket.empty .price-info .basket-empty{
+	display: block;
+}
+
+.in-basket .price-info .hidden-text{
+	display: none;
+}
+
 
 .in-basket a{
 	color: #4f4f4f;
