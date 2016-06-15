@@ -361,7 +361,7 @@ class Good extends ActiveRecord
             }
         }
 
-        if((empty($this->photos) && $this->enabled != 0) || $this->count <= 0){
+        if((empty($this->photos) && $this->enabled != 0) || ($this->count <= 0 && $this->isUnlimited == 0)){
             GoodTranslation::updateAll(['enabled' => 0], ['ID' => $this->ID]);
         }
 

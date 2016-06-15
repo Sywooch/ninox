@@ -140,7 +140,7 @@ class Cart extends Component{
      */
     public function has($itemID){
         return isset($this->items[$itemID]) && isset($this->goods[$itemID]) && $this->goods[$itemID]->enabled ?
-	        ($this->goods[$itemID]->count >= $this->items[$itemID]->count ?
+	        ($this->goods[$itemID]->count >= $this->items[$itemID]->count || $this->goods[$itemID]->isUnlimited ?
 		        $this->items[$itemID]->count :
 		        ($this->goods[$itemID]->count > 0 ? $this->goods[$itemID]->count : 0)
 	        ) : 0;

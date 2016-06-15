@@ -64,7 +64,13 @@ var ordersChanges = function(e){
     });
 }, doneOrder = function(obj){
     var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode),
+        actualAmount = parseFloat(orderNode.find('.actualAmount').text().replace(/\s.*/, '')),
         button = $(obj);
+
+    if(actualAmount <= 0){
+        swal("Ошибка!", "Введите сумму к оплате!", "error");
+        return false;
+    }
 
     $.ajax({
         type: 'POST',
@@ -149,49 +155,49 @@ var ordersChanges = function(e){
 
 $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
     event.preventDefault();
-    
+
     var form = $(this);
-   
-   if(form.find('.has-error').length) {
-      return false;
-   }
-   
-   $.ajax({
-       type: "POST",
-       url: '/orders/order-preview',
-       data: $.extend({action: 'save'}, form.serializeJSON()),
-       success: function(response){
-           if(response.length == 0 || response == false){
-               return false;
-           }
-  
-   
-   
-           /*var tr = ,
+
+    if(form.find('.has-error').length) {
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: '/orders/order-preview',
+        data: $.extend({action: 'save'}, form.serializeJSON()),
+        success: function(response){
+            if(response.length == 0 || response == false){
+                return false;
+            }
+
+            console.log(response);
+
+            /*var tr = ,
                responsibleUser = tr.find('small.responsibleUser'),
                actualAmount = tr.find('span.actualAmount');
-   
-           if(responsibleUser != null){
+
+            if(responsibleUser != null){
                if(response.responsibleUserID != 0){
                    responsibleUser.html(response.responsibleUserID);
                }else{
                    responsibleUser.remove();
                }
-           }else if(response.responsibleUserID != 0){
+            }else if(response.responsibleUserID != 0){
                var node = document.createElement('small');
                node.innerHTML = response.responsibleUserID;
                node.setAttribute('class', 'responsibleUser');
                tr.find('td[data-col-seq="7"]')[0].appendChild(node);
-           }
-   
-           actualAmount.innerHTML = response.actualAmount + ' грн.';
-           
-           console.log(tr);
-           console.log(tr.find(".kv-expand-row"));*/
-           
-           $('div[data-attribute-type="ordersGrid"] tr[data-key="' + form.parent().parent().parent().attr('data-key') + '"]').find(".kv-expand-row").trigger('click');
-       }
-   });
+            }
+
+            actualAmount.innerHTML = response.actualAmount + ' грн.';
+
+            console.log(tr);
+            console.log(tr.find(".kv-expand-row"));*/
+
+            $('div[data-attribute-type="ordersGrid"] tr[data-key="' + form.parent().parent().parent().attr('data-key') + '"]').find(".kv-expand-row").trigger('click');
+        }
+    });
 
     return false;
 });
