@@ -12,7 +12,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="content help-page">
     <div class="left-side">
-        <?=Html::tag('div',
+        <div class="left-side-menu">
+       <?=Html::tag('div',
             \frontend\widgets\ListGroupMenu::widget([
                 'items'    => [
                     [
@@ -38,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]),
         $this->render('_left_menu')
         ?>
+       </div>
     </div>
     <div class="help">
         <h1>Вопросы и ответы</h1>

@@ -1340,6 +1340,7 @@ h2{
 	padding: 20px;
 	background: #fff7c0;
 	margin-bottom: 25px;
+	display: none;
 }
 
 .category .banner-percent{
@@ -3402,18 +3403,21 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .left-side{
 /*	float: left;
 	width: 285px;
-	margin-left: 35px;*/ /*было и стало*/
+	margin-left: 35px;
 	float: left;
 	width: 245px;
-/*	position: fixed;*/
-    /*
-	left: auto !important;
-    */
+	position: fixed;
+	left: auto !important;*/
+	position: relative;
+	top: 0;
 }
 
 .left-side-menu{
 	border-radius: 3px;
 	border-top: 1px solid #ebebeb;
+	float: left;
+	width: 245px;
+	position: absolute;
     /*
 	border-bottom: 1px solid #ebebeb;
     */

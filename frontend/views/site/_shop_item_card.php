@@ -123,7 +123,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                     'fade'           => true,
                     'slidesToShow'   => 1,
                     'slidesToScroll' => 1,
-                    'asNavFor'       => '#sliderNav',
+                    'asNavFor'       => '#modalSliderFor',
                 ]
             ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
                 [
@@ -136,7 +136,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                 ])), (!empty($itemsModal) ? '#imgModal' : '')).
             (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
-                    'id'    => 'sliderNav',
+                    'id'    => '',
                     'class' => 'second'
                 ],
                 'items' =>  $itemsNav,
