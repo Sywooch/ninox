@@ -42,6 +42,8 @@ echo \kartik\grid\GridView::widget([
                 $class = 'success';
                 break;
             case $model::STATUS_NOT_CALLED:
+                $class = 'notCalled';
+                break;
             default:
                 $class = 'new';
                 break;

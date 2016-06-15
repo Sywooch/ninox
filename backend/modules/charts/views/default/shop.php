@@ -68,7 +68,7 @@ $css = <<<'CSS'
 }
 
 .panels .panel{
-    height: 150px;
+    min-height: 150px;
     position: relative;
 }
 
@@ -163,11 +163,11 @@ $columns = $showFourth ? 3 : 4;
                     </tr>
                     <tr>
                         <td>Интернет</td>
-                        <td><?=count($report->todayInternetOrders)?>\<?=count($report->todayDoneInternetOrders)?> (<?=$report->todayInternetEarnedSum?>/<?=$report->todayInternetOrdersSum?> грн.)</td>
+                        <td><?=count($report->todayInternetOrders)?>/<?=count($report->todayDoneInternetOrders)?> (<?=$report->todayInternetEarnedSum?>/<?=$report->todayInternetOrdersSum?> грн.)</td>
                     </tr>
                     <tr>
                         <td>Магазин</td>
-                        <td><?=count($report->todayShopOrders)?>\<?=count($report->todayDoneShopOrders)?> (<?=$report->todayShopEarnedSum?>/<?=$report->todayShopOrdersSum?> грн.)</td>
+                        <td><?=count($report->todayShopOrders)?>/<?=count($report->todayDoneShopOrders)?> (<?=$report->todayShopEarnedSum?>/<?=$report->todayShopOrdersSum?> грн.)</td>
                     </tr>
                     <tr>
                         <td>План на сегодня&nbsp;</td>
@@ -178,53 +178,72 @@ $columns = $showFourth ? 3 : 4;
         </div>
     </div>
     <?php } ?>
+    <div class="col-xs-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Подробная статистика
+            </div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4">
+
+    </div>
     <div class="col-xs-12">
-        <h3 class="text-center">График продаж</h3>
-        <?=\speixoto\amcharts\Widget::widget([
-            'width'             =>  'auto',
-            'chartConfiguration'   =>  [
-                'type'          =>  'serial',
-                'categoryField' =>  'date',
-                'startDuration' =>  1,
-                'categoryAxis'  =>  [
-                    'gridPosition'  =>  'start'
-                ],
-                'valueAxis'  =>  [
-                    'id'    =>  'moneyForDay',
-                    'title' =>  'Сумма'
-                ],
-                'chartScrollbar'    =>  [
-                      'enabled' =>  true
-                ],
-                'graphs'    =>  [
-                    [
-                        'balloonText'   =>  '[[category]]: [[title]] [[value]]',
-                        'bullet'        =>  'round',
-                        'id'            =>  'graph1',
-                        'title'         =>  'Заказов на',
-                        'valueField'    =>  'earned'
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                График продаж за месяц
+            </div>
+            <div class="panel-body">
+                <?=\speixoto\amcharts\Widget::widget([
+                    'width'             =>  'auto',
+                    'chartConfiguration'   =>  [
+                        'type'          =>  'serial',
+                        'categoryField' =>  'date',
+                        'startDuration' =>  1,
+                        'categoryAxis'  =>  [
+                            'gridPosition'  =>  'start'
+                        ],
+                        'valueAxis'  =>  [
+                            'id'    =>  'moneyForDay',
+                            'title' =>  'Сумма'
+                        ],
+                        'chartScrollbar'    =>  [
+                            'enabled' =>  true
+                        ],
+                        'graphs'    =>  [
+                            [
+                                'balloonText'   =>  '[[category]]: [[title]] [[value]]₴',
+                                'bullet'        =>  'round',
+                                'id'            =>  'graph1',
+                                'title'         =>  'Заказов на',
+                                'valueField'    =>  'earned'
 
-                    ],
-                    [
-                        'balloonText'   =>  '[[category]]: [[title]] [[value]]',
-                        'bullet'        =>  'round',
-                        'id'            =>  'graph2',
-                        'title'         =>  'Подтверждено на',
-                        'valueField'    =>  'confirmed'
+                            ],
+                            [
+                                'balloonText'   =>  '[[category]]: [[title]] [[value]]₴',
+                                'bullet'        =>  'round',
+                                'id'            =>  'graph2',
+                                'title'         =>  'Подтверждено на',
+                                'valueField'    =>  'confirmed'
 
-                    ],
-                    [
-                        'balloonText'   =>  '[[category]]: [[title]] [[value]]',
-                        'bullet'        =>  'round',
-                        'id'            =>  'graph3',
-                        'title'         =>  'Выполнено на',
-                        'valueField'    =>  'done'
+                            ],
+                            [
+                                'balloonText'   =>  '[[category]]: [[title]] [[value]]₴',
+                                'bullet'        =>  'round',
+                                'id'            =>  'graph3',
+                                'title'         =>  'Выполнено на',
+                                'valueField'    =>  'done'
 
-                    ],
-                ],
-                'dataProvider'  =>  $report->salesStats
-            ]
-        ])?>
+                            ],
+                        ],
+                        'dataProvider'  =>  $report->salesStats
+                    ]
+                ])?>
+            </div>
+        </div>
     </div>
 </div>
 <?php

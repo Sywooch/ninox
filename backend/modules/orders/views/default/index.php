@@ -251,7 +251,9 @@ $css = <<<'CSS'
     background: #ff9966 !important;
 }
 
-
+.orderRow.notCalled td{
+    background: rgba(255, 253, 88, 0.62) !important;
+}
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
     border: 3px solid #000;
@@ -506,6 +508,8 @@ $css = <<<'CSS'
     .payment-type.cash{
         background: #385698;
     }
+    
+   
 CSS;
 
 \bobroid\sweetalert\SweetalertAsset::register($this);
@@ -550,6 +554,7 @@ $accordionJs = <<<'JS'
                 $("#searchResults").css('display', 'block');
                 url = '/orders/showlist?ordersSource=search&context=true&' + e.currentTarget.name + '=' + e.currentTarget.value;
                 $.pjax({url: url, container: '#ordersGridView_search-pjax', push: false, replace: false, timeout: 10000,scrollTo: true});
+                
 
             }
         });
@@ -567,6 +572,8 @@ $this->title = 'Заказы';
 /*echo backend\modules\orders\widgets\OrdersStatsWidget::widget([
     'model' =>  $ordersStatsModel
 ]),*/
+
+
 
 echo Html::tag('div', OrdersSearchWidget::widget([
     'searchModel'   =>  $searchModel,
@@ -614,8 +621,14 @@ Accordion::widget([
     'dateFrom'          =>  $collectorsData['dateFrom'],
     'dateTo'          =>  $collectorsData['dateTo'],
     'items'             =>  $collectors
-]),
-Html::tag('br'),
+]);
+
+if(\Yii::$app->request->get('ordersStatus') == 'delivery'){
+    echo Html::tag('div', Html::a(FA::i('print').' Печать', Url::to(array_merge(['/printer/delivery-list'], \Yii::$app->request->get())), ['class' => 'btn btn-default', 'target' => '_blank']), ['class' => 'col-xs-12']),
+        Html::tag('br');
+}
+
+echo Html::tag('br'),
 \kartik\tabs\TabsX::widget([
     'id'            =>  'ordersSourcesTabs',
     'encodeLabels'  =>  false,

@@ -815,7 +815,7 @@ class DefaultController extends Controller
             $target->enabled = false;
         }
 
-        return History::find()->max('id');
+        return History::find()->max('number');
     }
 
     public function actionUsepricerule(){
