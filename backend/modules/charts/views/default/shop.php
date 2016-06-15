@@ -201,6 +201,7 @@ $columns = $showFourth ? 3 : 4;
                     'width'             =>  'auto',
                     'chartConfiguration'   =>  [
                         'type'          =>  'serial',
+                        'language'      =>  'ru',
                         'categoryField' =>  'date',
                         'startDuration' =>  1,
                         'categoryAxis'  =>  [
