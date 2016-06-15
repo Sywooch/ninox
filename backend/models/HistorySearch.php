@@ -185,7 +185,7 @@ class HistorySearch extends History{
             }
         }
 
-        if((array_key_exists('showDeleted', $params) && $params['showDeleted'] == 0) || ((!array_key_exists('showDeleted', $ignoreFilters) && empty($params['showDeleted'])) && $params['ordersSource'] != 'search')){
+        if((array_key_exists('showDeleted', $params) && $params['showDeleted'] == 0) || (!array_key_exists('showDeleted', $ignoreFilters) && empty($params['showDeleted']))){
             $query->andWhere('deleted = 0');
         }elseif((array_key_exists('showDeleted', $params) && $params['showDeleted'] == 1) || (!empty($params['ordersSource']) && $params['ordersSource'] == 'deleted')){
             $query->andWhere('deleted = 1');
