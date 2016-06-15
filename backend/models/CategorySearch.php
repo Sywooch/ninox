@@ -39,24 +39,32 @@ class CategorySearch extends Category
                 ->andWhere("LENGTH(`goodsgroups`.`Code`) > '{$tLen}'");
         }
 
-        if(\Yii::$app->request->get("smartFilter") == 'enabled' || \Yii::$app->request->get("smartFilter") == 'disabled'){
-            $query->leftJoin(GoodTranslation::tableName(), [GoodTranslation::tableName().'.ID' => 'goods.ID']);
-        }
+        if(array_key_exists('smartFilter', $params)){
+            if(in_array($params['smartFilter'], ['enabled', 'disabled'])){
+                $query->leftJoin(GoodTranslation::tableName(), '`item_translations`.`ID` = `goods`.`ID`')->andWhere(['`item_translations`.`language`' => \Yii::$app->language]);
+            }
 
-        switch(\Yii::$app->request->get("smartFilter")){
-            case 'enabled':
-                $query->andWhere([GoodTranslation::tableName().'.`enabled`' => 1]);
-                break;
-            case 'disabled':
-                $query->andWhere([GoodTranslation::tableName().'.`enabled`' => 0]);
-                break;
-            case 'onSale':
-                $query->andWhere("`goods`.`discountType` != '0'");
-                break;
-            case 'withoutPhoto':
-                $query->leftJoin('dopfoto', '`dopfoto`.`itemid` = `goods`.`ID`')
-                    ->having("COUNT(`dopfoto`.`itemid`) < 1");
-                break;
+            switch($params['smartFilter']){
+                case 'enabled':
+                    $query->andWhere(['`item_translations`.`enabled`' => 1]);
+                    break;
+                case 'disabled':
+                    $query->andWhere(['`item_translations`.`enabled`' => 0]);
+                    break;
+                case 'onSale':
+                    $query->andWhere("`goods`.`discountType` != '0'");
+                    break;
+                case 'withoutPhoto':
+                    $query->leftJoin('dopfoto', '`dopfoto`.`itemid` = `goods`.`ID`')
+                        ->having('COUNT(`dopfoto`.`itemid`) < 1');
+                    break;
+                case 'withoutPrices':
+                    $query->andWhere("`goods`.`PriceOut1` <= '0' OR `goods`.`PriceOut2` <= '0'");
+                    break;
+                case 'withoutAttributes':
+                    //$query->andWhere("`goods`.`PriceOut1` <= '0' OR `goods`.`PriceOut2` <= '0'");
+                    break;
+            }
         }
 
         $query->groupBy('codeAlias')

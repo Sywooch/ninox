@@ -137,6 +137,10 @@ echo Html::tag('h1', 'Категории '.(!$nowCategory->isNewRecord ? Html::t
                     'label'         =>  'На распродаже',
                     'filter'        =>  'onSale'
                 ],
+                [
+                    'label'         =>  'Без цен',
+                    'filter'        =>  'withoutPrices'
+                ],
             ]
         ],
     ]

@@ -93,15 +93,15 @@ class DefaultController extends Controller
      */
     public function actionUpdateorder(){
         if(!\Yii::$app->request->isAjax){
-            throw new BadRequestHttpException("Данный метод возможен только через ajax!");
+            throw new BadRequestHttpException('Данный метод возможен только через ajax!');
         }
 
         $response = [];
 
-        \Yii::$app->response->format = "json";
+        \Yii::$app->response->format = 'json';
 
-        $data = \Yii::$app->request->post("data");
-        $category = \Yii::$app->request->post("category");
+        $data = \Yii::$app->request->post('data');
+        $category = \Yii::$app->request->post('category');
         $length = (strlen($category) + 3);
 
         $data = array_flip($data);
@@ -327,6 +327,7 @@ class DefaultController extends Controller
      * @param Category $category
      *
      * @return array
+     * @throws \yii\base\InvalidParamException
      */
     public function createBreadcrumbs($category = null, $last = true){
         $breadcrumbs = [];
@@ -336,7 +337,7 @@ class DefaultController extends Controller
         ];
 
         if(\Yii::$app->request->url != '/categories'){
-            $moduleBreadcrumb['url'] = Url::toRoute(['/categories', 'smartFilter' => \Yii::$app->request->get("smartFilter")]);
+            $moduleBreadcrumb['url'] = Url::toRoute(array_merge(['/categories'], \Yii::$app->request->get()));
         }
 
         $breadcrumbs[] = $moduleBreadcrumb;
@@ -347,12 +348,12 @@ class DefaultController extends Controller
 
         $parentCategories = $category->parents;
 
-        if(sizeof($parentCategories) >= 1) {
+        if(count($parentCategories) >= 1) {
             foreach ($parentCategories as $parentCategory) {
                 if ($parentCategory != '') {
                     $breadcrumbs[] = [
                         'label' => $parentCategory->Name,
-                        'url'   =>  Url::toRoute(['/categories', 'category' => $parentCategory->Code, 'smartFilter' => \Yii::$app->request->get("smartFilter")])
+                        'url'   =>  Url::toRoute(array_merge(['/categories'], \Yii::$app->request->get(), ['category' => $parentCategory->Code]))
                     ];
                 }
             }
@@ -361,7 +362,7 @@ class DefaultController extends Controller
         $lastBreadcrumb = ['label' => $category->Name];
 
         if(!$last){
-            $lastBreadcrumb['url'] = Url::toRoute(['/categories', 'category' => $category->Code, 'smartFilter' => \Yii::$app->request->get("smartFilter")]);
+            $lastBreadcrumb['url'] = Url::toRoute(array_merge(['/categories'], \Yii::$app->request->get(), ['category' => $category->Code]));
         }
 
         $breadcrumbs[] = $lastBreadcrumb;

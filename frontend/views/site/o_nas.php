@@ -19,7 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="content" xmlns="http://www.w3.org/1999/html">
     <div class="left-side left-menu-links">
+        <div class="left-side-menu">
         <?=$this->render('_left_menu')?>
+        </div>
     </div>
     <div class="about">
         <div class="about-as padding-bottom">

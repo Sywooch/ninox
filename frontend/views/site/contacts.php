@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="content">
     <div class="left-side contact">
+        <div class="left-side-menu">
         <?=Html::tag('div',
             \frontend\widgets\ListGroupMenu::widget([
                 'items'    => [
@@ -39,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]),
         $this->render('_left_menu')
         ?>
+        </div>
     </div>
 <div class="about-contacts padding-bottom">
             <span class="about-header semi-bold">
