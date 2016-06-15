@@ -236,7 +236,7 @@ $("body").on('click', "button.sms-order", function(){
 JS;
 $css = <<<'CSS'
 .orderRow.warning td{
-    background: #ff9966 !important;
+    background: rgba(255, 253, 88, 0.62) !important;
 }
 
 .orderRow.success td{
@@ -252,7 +252,7 @@ $css = <<<'CSS'
 }
 
 .orderRow.notCalled td{
-    background: rgba(255, 253, 88, 0.62) !important;
+    background: #ff9966 !important;
 }
 .kv-expand-detail-row, .kv-expand-detail-row:hover{
     background: #fff !important;
