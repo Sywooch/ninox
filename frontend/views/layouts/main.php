@@ -41,15 +41,15 @@ $cartModal = new \bobroid\remodal\Remodal([
 ]);
 
 $callbackSuccessModal = new \bobroid\remodal\Remodal([
-    'cancelButton'		=>	false,
-    'confirmButton'		=>	false,
-    'closeButton'		=>	false,
-    'addRandomToID'		=>	false,
-    'content'			=>	$this->render('_callback_success'),
-    'id'				=>	'callbackSuccessModal',
-    'options'			=>  [
-        'class'			=>  'callback-success-modal'
-    ]
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'closeButton'		=>	false,
+	'addRandomToID'		=>	false,
+	'content'			=>	$this->render('_callback_success'),
+	'id'				=>	'callbackSuccessModal',
+	'options'			=>  [
+		'class'			=>  'callback-success-modal'
+	]
 ]);
 
 $loginModal = new \bobroid\remodal\Remodal([
@@ -531,14 +531,27 @@ $this->beginPage();
 											'class' => 'amount-cart'
 										])
 								).
-								Html::tag('span', \Yii::t('shop', /*'Вы покупаете по оптовым ценам '*/ ''), ['class' =>
-									'price-info']).
+								Html::tag('span', \Yii::t('shop', Html::tag('div',
+										\Yii::t('shop', 'Вы покупаете по розничным ценам'),
+										[
+											'class' =>  'basket-retail hidden-text'
+										]).
+									Html::tag('div', \Yii::t('shop', 'Вы покупаете по оптовым ценам'), [
+										'class' =>  'basket-wholesale hidden-text'
+									]).
+									Html::tag('div', \Yii::t('shop', 'Ваша корзина пуста'), [
+										'class' =>  'basket-empty hidden-text'
+									])./*'Вы покупаете по оптовым ценам '*/ ''),
+									[
+										'class' => 'price-info'
+									]).
 								Html::a(\Yii::t('shop', 'Оформить заказ'), '#modalCart', [
 									'class' =>  'button yellow-button middle-button'
 								]).
 								Html::button(\Yii::t('shop', 'Продолжить покупки'), ['id' => 'continueShopping']),
 								[
-									'class'	=>	'in-basket popover-arrow bottom',
+									'class'	=>	\Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'in-basket popover-arrow bottom wholesale' :
+										'in-basket popover-arrow bottom retail') : 'in-basket popover-arrow bottom empty',
 									'id'	=>	'basketPopover'
 								]),
 							[
@@ -581,7 +594,7 @@ $this->beginPage();
 					]
 
 				]);
-                ?>
+				?>
 			</div>
 		</div>
 		<?=Html::tag('div',
@@ -645,8 +658,8 @@ $this->beginPage();
 							['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
 							['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
 							['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
-							['linkTag' => 'a', 'link' => '', 'type' => 'youtube'],
-							['linkTag' => 'a', 'link' => '', 'type' => 'instagram'],
+							['linkTag' => 'a', 'link' => 'https://www.youtube.com/channel/UCuWGRaxroJabTiecC9jAqow/featured', 'type' => 'youtube'],
+							['linkTag' => 'a', 'link' => 'https://www.instagram.com/krasota_style.ua/', 'type' => 'instagram'],
 						]
 					]),
 					[
@@ -678,8 +691,8 @@ $this->beginPage();
 		)?>
 	</div>
 	<?=$cartModal->renderModal(),
-    $callbackSuccessModal->renderModal(),
-    $loginModal->renderModal(),
+	$callbackSuccessModal->renderModal(),
+	$loginModal->renderModal(),
 	$registrationModal->renderModal();
 
 	RuLangAsset::register($this);
