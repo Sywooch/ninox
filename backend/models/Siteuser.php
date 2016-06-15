@@ -70,7 +70,7 @@ class Siteuser extends \common\models\Siteuser
     }
 
     public function getUnfinishedOrders(){
-        return $this->getOrders()->andWhere("`done` != '1'");
+        return $this->getOrders()->andWhere(['done' => 0]);
     }
 
     public function getUnfinishedItemsCount(){
