@@ -201,16 +201,21 @@ $columns = $showFourth ? 3 : 4;
                     'width'             =>  'auto',
                     'chartConfiguration'   =>  [
                         'type'          =>  'serial',
+                        'language'      =>  'ru',
                         'categoryField' =>  'date',
                         'startDuration' =>  1,
                         'categoryAxis'  =>  [
-                            'gridPosition'  =>  'start'
+                            'gridPosition'  =>  'start',
+                            'parseDates'    =>  'true'
                         ],
                         'valueAxis'  =>  [
                             'id'    =>  'moneyForDay',
                             'title' =>  'Сумма'
                         ],
                         'chartScrollbar'    =>  [
+                            'enabled' =>  true
+                        ],
+                        'chartCursor'    =>  [
                             'enabled' =>  true
                         ],
                         'graphs'    =>  [
