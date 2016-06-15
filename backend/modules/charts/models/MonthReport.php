@@ -290,7 +290,7 @@ class MonthReport extends Model
         $lastDay = date('t', strtotime($dayFormatted));
 
         for($day = 1; $day <= $lastDay; $day++){
-            $stats[] = array_merge(['date' => $this->year.'-'.$this->month.'-'.($day < 10 ? "0{$day}" : $day)], $this->getSalesStatsByDay($day));
+            $stats[] = array_merge(['date' => $this->year.'-'.(strlen($this->month) < 2 ? "0{$this->month}" : $this->month).'-'.($day < 10 ? "0{$day}" : $day)], $this->getSalesStatsByDay($day));
         }
 
         return $stats;
