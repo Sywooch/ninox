@@ -113,7 +113,7 @@ class OrderForm extends Model{
                     return in_array($this->deliveryType, [2]);
                 },
                 'whenClient' => "function(attribute, value){
-                    $(attribute.input).val($(attribute.input).val().replace(/\D+/, ''));
+                    $(attribute.input).val($(attribute.input).val().replace(/\D+/g, ''));
                     return $(attribute.input).val() == '';
                 }"
             ],
