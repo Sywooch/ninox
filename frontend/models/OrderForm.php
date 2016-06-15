@@ -108,6 +108,15 @@ class OrderForm extends Model{
                     return $(attribute.input).parents('.tab-pane.active').length > 1;
                 }"
             ],
+            ['deliveryInfo', 'integer',
+                'when' => function(){
+                    return in_array($this->deliveryType, [2]);
+                },
+                'whenClient' => "function(attribute, value){
+                    $(attribute.input).val($(attribute.input).val().replace(/\D+/, ''));
+                    return $(attribute.input).val() == '';
+                }"
+            ],
             [['anotherReceiverName', 'anotherReceiverSurname', 'anotherReceiverPhone'], 'required',
                 'when' => function(){
                     return $this->anotherReceiver != 0;
