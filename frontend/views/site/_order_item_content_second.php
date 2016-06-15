@@ -51,7 +51,7 @@ var deliveryType = function(element){
 	$('.total-amount').text((amount - actionDiscount - cardDiscount + commission).toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
 };
 
-$('input[name^="OrderForm[deliveryInfo][2]"]').keydown(function (e) {
+$('input[name^="OrderForm[deliveryInfo][2]"]').keydown(function(e){
 	// Allow: backspace, delete, tab, escape, enter
 	if($.inArray(e.keyCode, [46, 8, 9, 27, 13]) !== -1 ||
 		// Allow: Ctrl+A
@@ -69,6 +69,10 @@ $('input[name^="OrderForm[deliveryInfo][2]"]').keydown(function (e) {
 	if((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)){
 		e.preventDefault();
 	}
+});
+
+$('input[name^="OrderForm[deliveryInfo][2]"]').change(function(e){
+	$(this).val($(this).val().replace(/\D+/, ''));
 });
 
 $('input:radio[name="OrderForm[deliveryType]"]').on('click', function(e){
