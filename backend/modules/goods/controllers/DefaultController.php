@@ -806,6 +806,7 @@ class DefaultController extends Controller
      * @param Good|static $good Модель товара
      *
      * @return array Хлебные крошки
+     * @throws \yii\base\InvalidParamException
      */
     public function buildBreadcrumbs($category, $good = null){
         $breadcrumbs = [];
@@ -816,14 +817,14 @@ class DefaultController extends Controller
         ];
 
         if(is_object($category) && !$category->isNewRecord){
-            if (sizeof($category->parents) >= 1) {
-                $parents = array_reverse($category->parents);
+            if (count($category->parents) >= 1) {
+                $parents = $category->parents;
 
                 foreach($parents as $parentCategory) {
                     if(!empty($parentCategory)){
                         $breadcrumbs[] = [
                             'label' => $parentCategory->Name,
-                            'url'   => Url::toRoute(['/categories', 'category' => $parentCategory->Code])
+                            'url'   => Url::toRoute(array_merge(['/categories'], \Yii::$app->request->get(), ['category' => $parentCategory->Code]))
                         ];
                     }
                 }
@@ -831,7 +832,7 @@ class DefaultController extends Controller
 
             $breadcrumbs[] = [
                 'label' =>  $category->Name,
-                'url'   => Url::toRoute(['/categories', 'category' => $category->Code])
+                'url'   => Url::toRoute(array_merge(['/categories'], \Yii::$app->request->get(), ['category' => $category->Code]))
             ];
         }
 

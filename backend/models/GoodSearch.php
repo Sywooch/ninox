@@ -42,6 +42,9 @@ class GoodSearch extends \common\models\GoodSearch
                 case 'enabled':
                     $query->andWhere(['enabled' => 1, 'language' => \Yii::$app->language]);
                     break;
+                case 'withoutPrices':
+                    $query->andWhere("`goods`.`PriceOut1` <= '0' OR `goods`.`PriceOut2` <= '0'");
+                    break;
             }
         }
 
