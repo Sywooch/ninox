@@ -33,9 +33,10 @@ menuItems.click(function(e){
 
 $(document).ready(function(){
     $(window).scroll(function() {
-        var top = $(document).scrollTop();
-        if (top < 100) $(".left-side").css({top: '0', position: 'relative'});
-        else $(".left-side").css({top: '130px', position: 'fixed'});
+        var menu = $('.left-side-menu');
+        $(window).on('scroll', function(e) {
+          menu.css('top', $(this).scrollTop());
+        });
     // Get container scroll position
    var fromTop = $(this).scrollTop()+topMenuHeight;
 
@@ -57,6 +58,7 @@ $(document).ready(function(){
    }
     });
 });
+
 /*
 function scrollToAnchor(aid){
     $('html,body').animate({scrollTop: ($("a[name='"+ aid +"']").offset().top - 120)},2000);
@@ -83,9 +85,8 @@ $(document).ready(function(){
 
 JS;
 $this->registerJs($js);
-?>
-<div class="left-side-menu">
-    <?=Html::tag('div',
+
+echo Html::tag('div',
         \frontend\widgets\ListGroupMenu::widget([
             'items'    => [
                 [
@@ -124,5 +125,5 @@ $this->registerJs($js);
         ]),
         [
             'class' =>  'menu'
-        ])?>
-</div>
+        ]);
+

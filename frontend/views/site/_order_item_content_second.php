@@ -51,10 +51,6 @@ var deliveryType = function(element){
 	$('.total-amount').text((amount - actionDiscount - cardDiscount + commission).toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
 };
 
-function orderRecalc(){
-
-}
-
 $('input:radio[name="OrderForm[deliveryType]"]').on('click', function(e){
 	deliveryType(e.currentTarget);
 });
