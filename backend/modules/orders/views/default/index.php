@@ -89,9 +89,9 @@ var ordersChanges = function(e){
         }
     });
 }, doneOrder = function(obj){
-    var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode),
-        actualAmount = parseFloat(orderNode.find('.actualAmount').text().replace(/\s.*/, '')),
-        button = $(obj);
+    var button = $(obj),
+        orderNode = button.closest('tr'),
+        actualAmount = parseFloat(orderNode.find('.actualAmount').text().replace(/\s.*/, ''));
 
     if(actualAmount <= 0){
         swal("Ошибка!", "Введите сумму к оплате!", "error");
@@ -110,28 +110,28 @@ var ordersChanges = function(e){
         }
     });
 }, changeStatus = function(row, status){
-    row.attr('class', '');
+    row.removeClass('warning success danger notCalled');
 
     switch(status.id){
         case 1:
         case 3:
-            row.toggleClass('warning');
+            row.addClass('warning');
             break;
         case 2:
         case 4:
         case 5:
-            row.toggleClass('success');
+            row.addClass('success');
             break;
         default:
         case 0:
-            row.toggleClass('danger');
+            row.addClass('danger');
             break;
     }
 
     row.find(".mainStatus").html(status.description);
 }, confirmCall = function(obj){
-    var orderNode = $(obj.parentNode.parentNode.parentNode.parentNode.parentNode),
-        button = $(obj);
+    var button = $(obj),
+        orderNode = button.closest('tr');
 
     swal({
         title: "Вы дозвонились?",
@@ -193,12 +193,16 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
         url: '/orders/order-preview',
         data: $.extend({action: 'save'}, form.serializeJSON()),
         success: function(response){
+                    console.log(response);
             if(response.length == 0 || response == false){
                 return false;
             }
 
-            console.log(response);
-
+            var orderNode = form.closest('table').find('.orderRow[data-key="' + form.closest('tr').data('key') + '"]'),
+            actualAmount = orderNode.find('.actualAmount');
+console.log(form);
+console.log(orderNode);
+            actualAmount.text((response.actualAmount == '' ? 0 : response.actualAmount) + ' грн.');
             /*var tr = ,
                responsibleUser = tr.find('small.responsibleUser'),
                actualAmount = tr.find('span.actualAmount');
