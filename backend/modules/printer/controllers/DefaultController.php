@@ -76,10 +76,12 @@ class DefaultController extends Controller
     }
 
     public function actionDeliveryList(){
-        $orders = (new HistorySearch())->search(\Yii::$app->request->get());
+        $orders = (new HistorySearch())->search(\Yii::$app->request->get(), true);
 
         return $this->render('deliveryList', [
-           'orders'         =>  $orders
+           'orders'         =>  new ActiveDataProvider([
+               'query'  =>  $orders->andWhere("`responsibleUserID` != '59'")    //Убрал "Женю"
+           ])
         ]);
     }
 
