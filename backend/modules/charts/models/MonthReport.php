@@ -131,7 +131,7 @@ class MonthReport extends Model
         $orders = [];
 
         foreach($this->todayShopOrders as $order){
-            if($order->done == 1){
+            if($order->moneyConfirmed == 1){
                 $orders[] = $order;
             }
         }
