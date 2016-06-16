@@ -19,7 +19,7 @@ if(!empty(\Yii::$app->user->identity->cardNumber || !empty(\Yii::$app->user->ide
         $discount .= Html::tag('div',
             Html::tag('div', $data['discount'], ['class' => 'discount blue']).
             Html::tag('div', \Yii::t('shop', 'при покупке от {sum}', ['sum' => $data['sum']]), ['class' => 'sum blue']).
-            Html::tag('div', \Yii::t('shop', 'Персональная скидка действует на {categoryCanBuy, plural, =0{все категории} =1{категорию {canLinks}}
+            Html::tag('div', \Yii::t('shop', 'Действует на {categoryCanBuy, plural, =0{все категории} =1{категорию {canLinks}}
                 other{категории {canLinks}}}.',
                 $data),
                 ['class' => 'categories']
@@ -31,13 +31,17 @@ if(!empty(\Yii::$app->user->identity->cardNumber || !empty(\Yii::$app->user->ide
             ) : ''),
             ['class' => 'personal-rule']
         );
-        break;
     }
 }else{
-    $discount = \Yii::t('shop', 'Покупатель, который сделает единоразовую покупку на сумму свыше 5 000 грн.,
-    становится владельцем персональной дисконтной карточки, и имеет возможность делать последующие
-    покупки со скидкой 2% от их стоимости. За более подробной информацией о правилах и условиях получения
-    персональной скидки обращайтесь к нашим менеджерам.');
+    $discount = Html::tag('div',
+        \Yii::t('shop', 'Покупатель, который сделает единоразовую покупку на сумму свыше 5 000 грн.,
+        становится владельцем персональной дисконтной карточки, и имеет возможность делать последующие
+        покупки со скидкой 2% от их стоимости. За более подробной информацией о правилах и условиях получения
+        персональной скидки обращайтесь к нашим менеджерам.'),
+        [
+            'class' => 'no-discount'
+        ]
+    );
 }
 
 echo Html::tag('div',

@@ -193,38 +193,13 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
         url: '/orders/order-preview',
         data: $.extend({action: 'save'}, form.serializeJSON()),
         success: function(response){
-                    console.log(response);
             if(response.length == 0 || response == false){
                 return false;
             }
 
             var orderNode = form.closest('table').find('.orderRow[data-key="' + form.closest('tr').data('key') + '"]'),
             actualAmount = orderNode.find('.actualAmount');
-console.log(form);
-console.log(orderNode);
             actualAmount.text((response.actualAmount == '' ? 0 : response.actualAmount) + ' грн.');
-            /*var tr = ,
-               responsibleUser = tr.find('small.responsibleUser'),
-               actualAmount = tr.find('span.actualAmount');
-
-            if(responsibleUser != null){
-               if(response.responsibleUserID != 0){
-                   responsibleUser.html(response.responsibleUserID);
-               }else{
-                   responsibleUser.remove();
-               }
-            }else if(response.responsibleUserID != 0){
-               var node = document.createElement('small');
-               node.innerHTML = response.responsibleUserID;
-               node.setAttribute('class', 'responsibleUser');
-               tr.find('td[data-col-seq="7"]')[0].appendChild(node);
-            }
-
-            actualAmount.innerHTML = response.actualAmount + ' грн.';
-
-            console.log(tr);
-            console.log(tr.find(".kv-expand-row"));*/
-
             $('div[data-attribute-type="ordersGrid"] tr[data-key="' + form.parent().parent().parent().attr('data-key') + '"]').find(".kv-expand-row").trigger('click');
         }
     });

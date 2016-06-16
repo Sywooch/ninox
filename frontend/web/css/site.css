@@ -3024,13 +3024,13 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	padding-top: 10px;
 }
 
-.user-data-content.discount .user-card-discount{
-	padding-bottom: 20px;
-}
-
 .user-data-content.discount .personal-rule .discount{
 	font-family: OpenSans-Semibold;
 	font-size: 45px;
+}
+
+.user-data-content.discount .personal-rule .categories{
+	font-size: 20px;
 }
 
 .user-data-content.discount .personal-rule .sum{
@@ -3052,7 +3052,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	font-family: OpenSans-Semibold;
 }
 
-.user-data-content.discount .month-orders-sum:before{
+.user-data-content.discount .user-card-discount:after,
+.user-data-content.discount .personal-rule:after,
+.user-data-content.discount .no-discount:after{
 	content: '';
 	display: block;
 	width: 60px;
