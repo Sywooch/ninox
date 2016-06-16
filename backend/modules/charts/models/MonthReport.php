@@ -177,7 +177,7 @@ class MonthReport extends Model
     public function getTodayInternetEarnedSum(){
         $sum = 0;
 
-        foreach ($this->todayDoneInternetOrders as $order){
+        foreach ($this->todayInternetOrders as $order){
             $sum += $order->originalSum;
         }
 
@@ -187,7 +187,7 @@ class MonthReport extends Model
     public function getTodayShopEarnedSum(){
         $sum = 0;
 
-        foreach ($this->todayDoneShopOrders as $order){
+        foreach ($this->todayShopOrders as $order){
             $sum += $order->originalSum;
         }
 
