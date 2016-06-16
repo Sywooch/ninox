@@ -80,7 +80,7 @@ echo Html::tag('div',
 			$this->render('_shop_item/_shop_item_discount', ['model' => $model]).
 			$this->render('_shop_item/_shop_item_labels', ['model' => $model]).
 			Html::tag('div', $model->Name, [
-				'class' =>  'item-title '.($model->count > 0 || $model->isUnlimited ? 'blue' : 'gray'),
+				'class' =>  'item-title '.($model->enabled && ($model->count > 0 || $model->isUnlimited) ? 'blue' : 'gray'),
 			]),
 			$link,
 			['title' => $model->Name.' - '.\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')]
