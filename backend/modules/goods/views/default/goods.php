@@ -174,7 +174,7 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
             'label'         =>  'Другие',
             'labelClass'    =>  'label-success',
             'items'         =>  [
-                /*[
+                [
                     'label'         =>  'Без фотографий',
                     'filter'        =>  'withoutPhoto'
                 ],
@@ -185,7 +185,7 @@ $disabled = isset($goodsCount[$nowCategory->Code]['disabled']) ? $goodsCount[$no
                 [
                     'label'         =>  'На распродаже',
                     'filter'        =>  'onSale'
-                ],*/
+                ],
                 [
                     'label'         =>  'Без цен',
                     'filter'        =>  'withoutPrices'
