@@ -57,6 +57,7 @@ class CategorySearch extends Category
                 case 'withoutPhoto':
                     $query->leftJoin('dopfoto', '`dopfoto`.`itemid` = `goods`.`ID`')
                         ->having('COUNT(`dopfoto`.`itemid`) < 1');
+                    $query->addGroupBy('`dopfoto`.`itemid`');
                     break;
                 case 'withoutPrices':
                     $query->andWhere("`goods`.`PriceOut1` <= '0' OR `goods`.`PriceOut2` <= '0'");
@@ -67,7 +68,7 @@ class CategorySearch extends Category
             }
         }
 
-        $query->groupBy('codeAlias')
+        $query->addGroupBy('codeAlias')
             ->orderBy('`category_translations`.`sequence`')
             ->addOrderBy('`goodsgroups`.`ID`');
 
