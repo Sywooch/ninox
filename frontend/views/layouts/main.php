@@ -360,6 +360,8 @@ $this->registerCss($typeaheadStyles);
 
 \frontend\assets\PerfectScrollbarAsset::register($this);
 
+$logo = Html::tag('div', '', ['class' => 'logo']);
+
 $this->beginPage();
 ?>
 	<!DOCTYPE html>
@@ -414,7 +416,8 @@ $this->beginPage();
 		<div class="sticky-on-scroll">
 			<div class="under-menu">
 				<div class="under-menu-content">
-					<?=Html::a(Html::tag('div', '', ['class' => 'logo']), Url::to(['/', 'language' => \Yii::$app->language]))?>
+					<?=Url::home() != Url::current() ?
+						Html::a($logo, Url::to(['/', 'language' => \Yii::$app->language])) : $logo?>
 					<div class="input-style-main">
 						<?php
 						$form = new \kartik\form\ActiveForm([
