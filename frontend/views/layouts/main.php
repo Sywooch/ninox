@@ -416,8 +416,8 @@ $this->beginPage();
 		<div class="sticky-on-scroll">
 			<div class="under-menu">
 				<div class="under-menu-content">
-					<?=Url::home() != Url::current() ?
-						Html::a($logo, Url::to(['/', 'language' => \Yii::$app->language])) : $logo?>
+					<?=Url::to([Url::home(), 'language' => \Yii::$app->language]) != Url::current() ?
+						Html::a($logo, Url::to([Url::home(), 'language' => \Yii::$app->language])) : $logo?>
 					<div class="input-style-main">
 						<?php
 						$form = new \kartik\form\ActiveForm([
