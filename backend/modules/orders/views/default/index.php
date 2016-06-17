@@ -107,6 +107,13 @@ var ordersChanges = function(e){
         success: function(data){
             button.toggleClass('btn-success');
             changeStatus(orderNode, data.status);
+            if(data.done && data.sms.result > 0){
+                swal({
+                    title: data.sms.result == 200 ? "Успех!" : "Ошибка!",
+                    text: "SMS " + data.sms.message + (data.sms.result == 200 ? "" : " не") + " было отправлено!",
+                    type: data.sms.result == 200 ? "success" : "error",
+                });
+            }
         }
     });
 }, changeStatus = function(row, status){

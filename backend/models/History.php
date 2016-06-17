@@ -422,6 +422,9 @@ class History extends \common\models\History
             case 'sms':
                 return $this->sendSms();
                 break;
+            case 'done':
+                return $this->sendSmsDone();
+                break;
         }
 
         return false;
@@ -437,12 +440,12 @@ class History extends \common\models\History
             case self::STATUS_NOT_PAYED:
                 break;
             case self::STATUS_WAIT_DELIVERY:
-                $messageID = Sms::MESSAGE_ORDER_WAIT_DELIVERY_ID;
+                $messageID = Sms::MESSAGE_ORDER_DONE_COD_ID;
                 break;
             case self::STATUS_DELIVERED:
             case self::STATUS_DONE:
-                $messageID = Sms::MESSAGE_ORDER_DELIVERED;
-                $this->nakladnaSendDate = date('Y-m-d H:i');
+                $messageID = Sms::MESSAGE_ORDER_DELIVERED_ID;
+                $this->nakladnaSendDate = date('Y-m-d H:i:s');
                 break;
         }
 
@@ -468,11 +471,10 @@ class History extends \common\models\History
                 if(empty($this->paymentParamInfo)){
                     return false;
                 }
-                $messageID = Sms::MESSAGE_ORDER_DONE_ID;
-                $this->smsSendDate = date('Y-m-d H:i');
+                $messageID = Sms::MESSAGE_ORDER_DONE_CARD_ID;
+                $this->smsSendDate = date('Y-m-d H:i:s');
                 break;
             case self::STATUS_WAIT_DELIVERY:
-                $messageID = Sms::MESSAGE_PAYMENT_CONFIRMED_ID;
                 break;
             case self::STATUS_DELIVERED:
                 break;
@@ -486,6 +488,45 @@ class History extends \common\models\History
         }
         
         return $result;
+    }
+
+    public function sendSmsDone(){
+        $messageID = 0;
+        $result = 0;
+        switch($this->status){
+            case self::STATUS_NOT_CALLED:
+                break;
+            case self::STATUS_PROCESS:
+                break;
+            case self::STATUS_NOT_PAYED:
+                switch($this->paymentType){
+                    case 2:
+                        if(empty($this->paymentParamInfo)){
+                            return false;
+                        }
+                        $messageID = Sms::MESSAGE_ORDER_DONE_CARD_ID;
+                        break;
+                    case 3:
+                        $messageID = Sms::MESSAGE_ORDER_DONE_PICKUP_ID;
+                        break;
+                }
+                break;
+            case self::STATUS_WAIT_DELIVERY:
+                $messageID = Sms::MESSAGE_ORDER_DONE_COD_ID;
+                break;
+            case self::STATUS_DELIVERED:
+                break;
+        }
+
+        if($messageID && (empty($this->smsSendDate) || $this->smsSendDate == '0000-00-00 00:00:00')){
+            $result = \Yii::$app->sms->sendPreparedMessage($this, $messageID);
+            if($result == 200){
+                $this->smsSendDate = date('Y-m-d H:i:s');
+                $this->save(false);
+            }
+        }
+
+        return ['result' => $result, 'message' => \Yii::$app->sms->getMessageDescription($messageID)];
     }
 
     public function getPaymentRespond(){
@@ -517,10 +558,6 @@ class History extends \common\models\History
                 if(!empty($this->paymentRespond)){
                     $this->paymentRespond->read_confirm = 1;
                     $this->paymentRespond->save(false);
-                }
-
-                if($this->deliveryType != 3 && $this->paymentType == 2){
-                    \Yii::$app->sms->sendPreparedMessage($this, Sms::MESSAGE_PAYMENT_CONFIRMED_ID);
                 }
             }
 

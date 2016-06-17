@@ -13,11 +13,11 @@ use backend\models\History;
 
 class Sms extends \common\components\Sms{
 
-    const MESSAGE_PAYMENT_CONFIRMED_ID = 420750;        // Заказ оплачен
     const MESSAGE_CANT_CALL_ID = 420753;                // Не смогли дозвониться
-    const MESSAGE_ORDER_DONE_ID = 420754;               // Заказ готов (оплата на карту)
-    const MESSAGE_ORDER_WAIT_DELIVERY_ID = 420755;      // Заказ собран
-    const MESSAGE_ORDER_DELIVERED = 442219;             // Заказ отправлен (ТТН)
+    const MESSAGE_ORDER_DONE_CARD_ID = 420754;          // Заказ собран (оплата на карту)
+    const MESSAGE_ORDER_DONE_COD_ID = 420755;           // Заказ собран (наложка)
+    const MESSAGE_ORDER_DONE_PICKUP_ID = 442349;        // Заказ собран (самовывоз)
+    const MESSAGE_ORDER_DELIVERED_ID = 442219;          // Заказ отправлен (ТТН)
 
     /**
      * @param $order History
@@ -48,6 +48,24 @@ class Sms extends \common\components\Sms{
             'action'    =>  'message',
             'data'      =>  $message
         ], $messageID.'/send');
+    }
+
+    public function getMessageDescription($id){
+        if(!array_key_exists($id, $this->descriptions)){
+            return '';
+        }
+
+        return $this->descriptions[$id];
+    }
+
+    public function getDescriptions(){
+        return[
+            self::MESSAGE_CANT_CALL_ID          =>  'о недозвоне',
+            self::MESSAGE_ORDER_DONE_CARD_ID    =>  'с номером карты',
+            self::MESSAGE_ORDER_DONE_COD_ID     =>  'о готовности заказа',
+            self::MESSAGE_ORDER_DONE_PICKUP_ID  =>  'о самовывозе',
+            self::MESSAGE_ORDER_DELIVERED_ID    =>  'с номером ТТН',
+        ];
     }
 
 }

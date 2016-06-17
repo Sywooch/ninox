@@ -349,7 +349,7 @@ class DefaultController extends Controller
             throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
         }
 
-        $order->done = $order->done == 1 ? 0 : 1;
+        $order->done = !$order->done;
 
         $order->save(false);
 
@@ -360,7 +360,8 @@ class DefaultController extends Controller
             'status'    =>  [
                 'id'            =>  $order->status,
                 'description'   =>  $order->statusDescription
-            ]
+            ],
+            'sms'       =>  $order->sendMessage('done')
         ];
     }
 
