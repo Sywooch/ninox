@@ -111,10 +111,13 @@ echo Html::tag('div',
                     return Html::tag('li',
                         Html::a($item->name.
                             ($item->discountType > 0 && $item->discountSize > 0 ?
-                                Html::tag('div', $item->discountSize.'%', ['class' => 'category-action-label'])
+                                Html::tag('div', '-'.$item->discountSize.'%', ['class' => 'category-action-label'])
                                 : ''
                             ),
                             Url::to(['/'.$item->link, 'language' => \Yii::$app->language])
+                        ),
+                        ($item->discountType > 0 && $item->discountSize > 0 ?
+                            ['class' => 'category-action'] : []
                         )
                     );
                 },

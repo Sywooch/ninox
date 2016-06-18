@@ -1305,13 +1305,20 @@ h2{
 
 .category .sub-categories li{
 	display: inline-block;
-	border: 1px solid #ffc600;
 	border-radius: 3px;
 	padding: 0 10px;
 	line-height: 25px;
 	font-family: OpenSans-Semibold;
 	margin: 0 10px 10px 0;
 	position: relative;
+}
+
+.category .sub-categories li:not(.category-action){
+	border: 1px solid #ffc600;
+}
+
+.category .sub-categories li.category-action{
+	border: 1px solid #ff6c00;
 }
 
 .category .sub-categories .category-action-label{
@@ -1327,9 +1334,14 @@ h2{
 	color: #fff;
 }
 
-.category .sub-categories li:hover{
+.category .sub-categories li:not(.category-action):hover{
 	background: #ffc600;
 }
+
+.category .sub-categories li.category-action:hover{
+	background: #ff6c00;
+}
+
 
 .category .sub-categories li:hover a{
 	color: #fff;
