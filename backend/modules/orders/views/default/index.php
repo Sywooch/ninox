@@ -207,7 +207,7 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
             var orderNode = form.closest('table').find('.orderRow[data-key="' + form.closest('tr').data('key') + '"]'),
             actualAmount = orderNode.find('.actualAmount');
             actualAmount.text((response.actualAmount == '' ? 0 : response.actualAmount) + ' грн.');
-            $('div[data-attribute-type="ordersGrid"] tr[data-key="' + form.parent().parent().parent().attr('data-key') + '"]').find(".kv-expand-row").trigger('click');
+            orderNode.find(".kv-expand-row").trigger('click');
         }
     });
 
@@ -227,7 +227,7 @@ var sendSms = function(order, type, button){
             type: type
         },
         success: function(response){
-            button.removeClass('btn-danger').removeClass('btn-default').removeClass('btn-success').prop('disabled', false);
+            button.removeClass('btn-danger btn-default btn-success').prop('disabled', false);
 
             if(response == 200){
                 button.toggleClass('btn-success').html('<i class="fa fa-check"></i>');
