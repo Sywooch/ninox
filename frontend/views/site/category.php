@@ -83,29 +83,44 @@ echo Html::tag('div',
             ['class' => 'category-label']
         ).
         Html::tag('div', !($category->Code == 'AABAAD') ? '' :
-            Html::tag('div', Html::tag('div', '%',
+            Html::tag('div',
+                Html::tag('div', '%',
                     [
                         'class'     =>      'banner-percent'
-                    ]).
+                    ]
+                ).
                 Html::tag('span', 'Акция! Скидка -20% на весь раздел Детская бижутерия при покупке товара на сумму от 1500 грн.',
                     [
                         'class'     =>      'banner-discount-property'
-                    ]).
+                    ]
+                ).
                 Html::tag('span', 'Только 4 дня (до 12.06). Дешевле уже не будет!',
                     [
                         'class'     =>      'banner-discount-time'
-                    ]),
+                    ]
+                ),
                 [
                     'class'     =>      'banner-discount'
-                ])
-            ).
-               Html::ul($category->subCategories, [
-            'item'      =>  function($item){
-                return Html::tag('li', Html::a($item->name, Url::to(['/'.$item->link,
-                    'language' => \Yii::$app->language])));
-            },
-            'class'     =>  'sub-categories'
-        ]).
+                ]
+            )
+        ).
+        Html::ul($category->subCategories,
+            [
+                'item'      =>  function($item) use (&$helper){
+                    $helper->recalc($item, true);
+                    return Html::tag('li',
+                        Html::a($item->name.
+                            ($item->discountType > 0 && $item->discountSize > 0 ?
+                                Html::tag('div', $item->discountSize.'%', ['class' => 'category-action-label'])
+                                : ''
+                            ),
+                            Url::to(['/'.$item->link, 'language' => \Yii::$app->language])
+                        )
+                    );
+                },
+                'class'     =>  'sub-categories'
+            ]
+        ).
         \kartik\select2\Select2::widget([
             'data'          => [
                 'date'      =>  \Yii::t('shop', 'По рейтингу'),

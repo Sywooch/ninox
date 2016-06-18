@@ -22,6 +22,12 @@ class Category extends \common\models\Category{
 	private $_maxPrice;
 	private $_groupIDs;
 
+	public $discountType = 0;
+	public $discountSize = 0;
+	public $priceRuleID = 0;
+	public $priceModified = false;
+	public $customerRule = 0;
+
 	public static function find(){
 		return parent::find()->with('translations');
 	}
@@ -349,6 +355,14 @@ class Category extends \common\models\Category{
 		}else{
 			return strip_tags(htmlspecialchars_decode($this->translation->metaKeywords));
 		}
+	}
+
+	/**
+	 * Функция, возвращающая код категории для PriceRuleHelper'a
+	 * @return string
+	 */
+	public function getCategoryCode(){
+		return $this->Code;
 	}
 
 }

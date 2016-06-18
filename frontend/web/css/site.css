@@ -1311,6 +1311,20 @@ h2{
 	line-height: 25px;
 	font-family: OpenSans-Semibold;
 	margin: 0 10px 10px 0;
+	position: relative;
+}
+
+.category .sub-categories .category-action-label{
+	position: absolute;
+	width: 33px;
+	height: 33px;
+	background: url('/img/site/categoryActionLabel.png') no-repeat;
+	right: -10px;
+	top: -20px;
+	text-align: center;
+	line-height: 33px;
+	font-size: 10px;
+	color: #fff;
 }
 
 .category .sub-categories li:hover{
