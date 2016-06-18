@@ -526,7 +526,10 @@ $css = <<<'CSS'
     .payment-type.cash{
         background: #385698;
     }
-    
+
+    button.success{
+        background: #56b356;
+    }
    
 CSS;
 

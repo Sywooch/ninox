@@ -234,14 +234,14 @@ echo \kartik\grid\GridView::widget([
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'buttons'   =>  [
                 'sms'   =>  function($url, $model, $key){
-                    return Html::button(FA::i('envelope-o'), ['class' => 'btn btn-sm btn-default sms-order']);
+                    return Html::button(FA::i('envelope-o'), ['class' => 'btn btn-sm btn-default sms-order'.((empty($model->nakladnaSendDate) || $model->nakladnaSendDate == '0000-00-00 00:00:00') ? '' : ' success')]);
                 },
                 'card' =>  function($url, $model, $key){
                     if(!$model->payOnCard){
                         return '';
                     }
 
-                    return Html::button(FA::i('credit-card'), ['class' => 'btn btn-default sms-card']);
+                    return Html::button(FA::i('credit-card'), ['class' => 'btn btn-default sms-card'.((empty($model->smsSendDate) || $model->smsSendDate == '0000-00-00 00:00:00') ? '' : ' success')]);
                 },
             ],
             'template'  =>  Html::tag('div', '{sms}{card}', ['class' => 'btn-group btn-group-sm sms-buttons'])
