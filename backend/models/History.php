@@ -256,6 +256,8 @@ class History extends \common\models\History
             foreach($this->availableItems as $item){
                 $this->real_summ += ($item->price * $item->count);
             }
+
+            $this->real_summ -= empty($this->amountDeductedOrder) ? 0 : $this->amountDeductedOrder;
         }
 
         return $this->real_summ;
