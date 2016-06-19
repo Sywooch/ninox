@@ -82,6 +82,5 @@ class Category extends \common\models\Category
         
         return substr(0, (strlen($this->Code) - 3), $this->Code);
     }
-    }
 
 }
