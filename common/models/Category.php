@@ -490,7 +490,7 @@ class Category extends \yii\db\ActiveRecord
 
     public function beforeSave($insert){
         if($this->isNewRecord){
-            $this->setAttribute('Code', Category::createCategoryCode($this->parentCategory));
+            $this->setAttribute('Code', Category::createCategoryCode($this->parentCategoryCode));
         }
 
         if(is_array($this->viewOptions)){
