@@ -399,7 +399,7 @@ class Category extends \yii\db\ActiveRecord
             ->all();
     }
 
-    public static function getParentCategory($identifier = null){
+    public static function getParentCategory($identifier){
         if(filter_var($identifier, FILTER_VALIDATE_INT)){
             $c = Category::findOne(['ID' => $identifier]);
             $identifier = $c->Code;
