@@ -75,7 +75,7 @@ class Category extends \common\models\Category
         return true;
     }
 
-    public function getParentCategory($param = null){
+    public function getParentCategoryCode($param = null){
         if(strlen($this->Code) == 3){
             return;
         }
