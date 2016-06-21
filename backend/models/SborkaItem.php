@@ -42,11 +42,15 @@ class SborkaItem extends \common\models\SborkaItem{
     }
 
     public function getControlled(){
-        return $this->realyCount == $this->originalCount;
+        if($this->realyCount >= $this->count){
+            $this->realyCount = $this->count;
+        }
+
+        return $this->realyCount == $this->count;
     }
 
     public function getLeftControl(){
-        return $this->originalCount - $this->realyCount;
+        return $this->count - $this->realyCount;
     }
 
     public function getInOrder(){
