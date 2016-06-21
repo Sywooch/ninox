@@ -91,12 +91,15 @@ var ordersChanges = function(e){
 }, doneOrder = function(obj){
     var button = $(obj),
         orderNode = button.closest('tr'),
-        actualAmount = parseFloat(orderNode.find('.actualAmount').text().replace(/\s.*/, ''));
+        actualAmount = parseFloat(orderNode.find('.actualAmount').text().replace(/\s.*/, '')),
+        cardSms = orderNode.find('.sms-card');
 
     if(actualAmount <= 0){
         swal("Ошибка!", "Введите сумму к оплате!", "error");
         return false;
     }
+
+    cardSms.prop('disabled', 'disabled');
 
     $.ajax({
         type: 'POST',
@@ -113,6 +116,8 @@ var ordersChanges = function(e){
                     text: "SMS " + data.sms.message + (data.sms.result == 200 ? "" : " не") + " было отправлено!",
                     type: data.sms.result == 200 ? "success" : "error",
                 });
+                cardSms.toggleClass('success', data.sms.result == 200);
+                cardSms.prop('disabled', false);
             }
         }
     });
