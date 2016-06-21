@@ -155,7 +155,6 @@ class DefaultController extends Controller
                 $header = $attributes;
             }
 
-
             $i = 0;
 
             while(count($tableRows) != $i){
@@ -168,19 +167,21 @@ class DefaultController extends Controller
 
                     if(array_key_exists($key, $header)){
                         $param = $header[$key];
-                        
-                        if(!is_int($key)){
-                            if(in_array($key, ['GroupID', 'count'])){
-                                switch(gettype($param)){
+
+                        if(!is_int($param)){
+                            if(in_array($param, ['GroupID', 'count'])){
+                                switch(gettype($value)){
                                     case 'string':
+                                    case 'double':
                                     case 'float':
-                                        $param = (int) $param;
+                                        $value = (int) filter_var($value, FILTER_SANITIZE_NUMBER_INT);
                                         break;
                                 }
-                            }elseif(in_array($key, ['BarCode2'])){
-                                switch(gettype($param)){
+                            }elseif(in_array($param, ['BarCode2'])){
+                                switch(gettype($value)){
+                                    case 'double':
                                     case 'float':
-                                        $param = preg_replace('/\.0^/', '', $param);
+                                        $value = (string) preg_replace('/\.0^/', '', filter_var($value, FILTER_SANITIZE_NUMBER_INT));
                                         break;
                                 }
                             }
@@ -205,23 +206,13 @@ class DefaultController extends Controller
             $dataProvider->setModels($generatedModels);
 
             if(\Yii::$app->request->post('PriceListImportTable')){
-                $keysValues = [];
-                $replaceExisting = false;
-                $keysCount = $added = $updated = 0;
-
-                if(!empty($keys)){
-                    $keysCount = count($keys);
-                    $replaceExisting = true;
-                }
-
                 $query = Good::find();
 
                 foreach($keys as $keyKey => $keyAttribute){
                     $keysValues = $keysModels = [];
+                    $param = $header[$keyKey];
 
                     foreach($dataProvider->getModels() as $model){
-                        $param = $header[$keyKey];
-
                         if(isset($model->$param)){
                             $keysModels[$keyAttribute][$model->$param] = $model;
                             $keysValues[] = $model->$param;
@@ -235,7 +226,9 @@ class DefaultController extends Controller
 
                 $query->with('translations')->with('photos');
 
-                $updated = $added = 0;
+                $updated = $notUpdated = $added = 0;
+
+                $notUpdatedGoods = $dataProvider->getModels();
 
                 //Обновление уже существующих товаров
                 if(!empty($query->where)){
@@ -257,6 +250,12 @@ class DefaultController extends Controller
 
                                     }
                                 }
+
+                                foreach($notUpdatedGoods as $row => $notUpdatedGood){
+                                    if(isset($notUpdatedGood->$key) && $notUpdatedGood->$key == $good->$key){
+                                        unset($notUpdatedGoods[$row]);
+                                    }
+                                }
                             }
                         }
 
@@ -264,17 +263,33 @@ class DefaultController extends Controller
                             $good->enabled = 1;
                         }
 
-                        $good->save(false);
+                        if($good->save(false)){
+                            $updated++;
+                        }else{
+                            $notUpdated++;
+                        }
                     }
-
-                    $updated++;
                 }
 
+                foreach($notUpdatedGoods as $notUpdatedGood){
+                    $good = new Good();
+
+                    foreach($header as $param){
+                        try{
+                            $good->$param = $notUpdatedGood->$param;
+                        }catch (ErrorException $e){
+
+                        }
+                    }
+
+                    $good->save(false);
+                }
 
                 $importInfo = [
                     'updated'   =>  $updated,
-                    'added'     =>  $added,
-                    'totalCount'=>  $updated + $added
+                    'notUpdated'=>  $notUpdated,
+                    'added'     =>  count($notUpdatedGoods),
+                    'totalCount'=>  $i
                 ];
 
                 $priceList->imported = 1;
