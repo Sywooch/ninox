@@ -204,7 +204,7 @@ class History extends \common\models\History
         $availableItems = [];
 
         foreach($this->items as $item){
-            if($item->nalichie == 1){
+            if($item->nalichie == 1 && $item->nezakaz == 0){
                 $availableItems[] = $item;
             }
         }
