@@ -63,7 +63,7 @@ class CategoryTranslation extends ActiveRecord
             $this->language = \Yii::$app->language;
         }
 
-        if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name || empty($this->link) || $this->link != ($this->categoryLink.'/'.TranslitHelper::to($this->Name))){
+        if($this->isNewRecord || $this->oldAttributes['Name'] != $this->Name || empty($this->link) || (!empty($this->categoryLink) && $this->link != ($this->categoryLink.'/'.TranslitHelper::to($this->Name)))){
             $this->link = $this->categoryLink.'/'.TranslitHelper::to($this->Name);
         }
 
@@ -77,7 +77,7 @@ class CategoryTranslation extends ActiveRecord
     public function afterSave($insert, $changedAttributes){
         if(!empty(array_intersect(['Name', 'link'], array_keys($changedAttributes)))){
             $c = Category::findOne(['ID' => $this->ID]);
-            foreach($c->subCategories as $cc){
+            foreach($c->childs as $cc){
                 $cc->translation->save(false);
             }
         }

@@ -23,15 +23,6 @@ class Category extends \common\models\Category
         return $this->hasMany(Good::className(), ['GroupID' => 'ID']);
     }
 
-    public function getChilds(){
-        $len = strlen($this->Code) + 3;
-
-        return self::find()
-            ->where(['like', 'Code', $this->Code.'%', false])
-            ->andWhere("LENGTH(`Code`) = '{$len}'")
-            ->all();
-    }
-
     /**
      * @param float $size       - размер скидки
      * @param string $priceType - тип цены
@@ -74,13 +65,4 @@ class Category extends \common\models\Category
 
         return true;
     }
-
-    public function getParentCategoryCode($param = null){
-        if(strlen($this->Code) == 3){
-            return;
-        }
-        
-        return substr(0, (strlen($this->Code) - 3), $this->Code);
-    }
-
 }

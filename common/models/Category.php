@@ -63,9 +63,14 @@ class Category extends \yii\db\ActiveRecord
         return $this->hasMany(CategoryPhoto::className(), ['categoryID' => 'ID'])->orderBy('order');
     }
 
-    /*public function getChilds(){
-        $this->hasMany(self::className(), ['true' => 'true'])->andWhere(['like', 'Code', $this->Code.'%', false])->andWhere("`Code` != '{$this->Code}");
-    }*/
+    public function getChilds(){
+        $len = strlen($this->Code) + 3;
+
+        return self::find()
+            ->where(['like', 'Code', $this->Code.'%', false])
+            ->andWhere("LENGTH(`Code`) = '{$len}'")
+            ->all();
+    }
 
     public function getParents(){
         if(!empty($this->parents)){
@@ -336,10 +341,6 @@ class Category extends \yii\db\ActiveRecord
 
 
     public static function createCategoryCode($parentCategory){
-        if($parentCategory == ''){
-            return false;
-        }
-
         if(filter_var($parentCategory, FILTER_VALIDATE_INT)){
             $c = Category::findOne(['ID' => $parentCategory]);
             $parentCategory = $c->Code;
@@ -386,17 +387,6 @@ class Category extends \yii\db\ActiveRecord
 
     public static function changeOneprice($id){
         return Category::change($id, 'onePrice');
-    }
-
-    public function getSubCategories(){
-        $s = strlen($this->Code) + 3;
-        return $this::find()
-            ->joinWith(['translations'])
-            ->where(['`category_translations`.`language`' => \Yii::$app->language])
-            ->andWhere(['`category_translations`.`enabled`' => 1])
-            ->andWhere(['like', 'Code', $this->Code.'%', false])
-            ->andWhere(['LENGTH(`Code`)' => $s])
-            ->all();
     }
 
     public static function getParentCategory($identifier){
@@ -489,10 +479,6 @@ class Category extends \yii\db\ActiveRecord
     }
 
     public function beforeSave($insert){
-        if($this->isNewRecord){
-            $this->setAttribute('Code', Category::createCategoryCode($this->parentCategoryCode));
-        }
-
         if(is_array($this->viewOptions)){
             $this->viewOptions = Json::encode($this->viewOptions);
         }

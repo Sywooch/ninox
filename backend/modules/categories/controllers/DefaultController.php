@@ -183,7 +183,7 @@ class DefaultController extends Controller
         return $this->render(\Yii::$app->request->get('act') == 'edit' ? 'edit' : 'view', [
             'category'      =>  $category,
             'categoryForm'  =>  $categoryForm,
-            'subCats'       =>  $category->subCategories,
+            'subCats'       =>  $category->childs,
             'parentCategory'=>  Category::getParentCategory($category->Code),
             'categoryUk'    =>  CategoryUk::findOne(['ID' => $category->ID])
         ]);
@@ -230,7 +230,7 @@ class DefaultController extends Controller
             }
         }
 
-        if(\Yii::$app->request->post() && \Yii::$app->request->post("parent_category") != ''){
+        if(\Yii::$app->request->post() && \Yii::$app->request->post("parentСategory") != ''){
             $m = new Category();
             $mUk = new CategoryUk();
 
@@ -242,7 +242,7 @@ class DefaultController extends Controller
                 $m->$y = $yy;
             }
 
-            $m->Code = Category::createCategoryCode(\Yii::$app->request->post("parent_category"));
+            $m->Code = Category::createCategoryCode(\Yii::$app->request->post("parentСategory"));
 
             foreach(\Yii::$app->request->post("CategoryUk") as $y=>$yy){
                 if($y == 'keywords'){

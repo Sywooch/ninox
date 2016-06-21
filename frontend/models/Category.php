@@ -365,4 +365,19 @@ class Category extends \common\models\Category{
 		return $this->Code;
 	}
 
+	/**
+	 * Функция, возвращающая включенные подкатегории
+	 * @return array|\yii\db\ActiveRecord[]
+	 */
+	public function getSubCategories(){
+		$s = strlen($this->Code) + 3;
+		return $this::find()
+			->joinWith(['translations'])
+			->where(['`category_translations`.`language`' => \Yii::$app->language])
+			->andWhere(['`category_translations`.`enabled`' => 1])
+			->andWhere(['like', 'Code', $this->Code.'%', false])
+			->andWhere(['LENGTH(`Code`)' => $s])
+			->all();
+	}
+
 }

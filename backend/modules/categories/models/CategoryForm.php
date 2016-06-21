@@ -104,6 +104,7 @@ class CategoryForm extends Model
 
         if(empty($this->category)){
             $this->category = new Category();
+            $this->category->Code = Category::createCategoryCode($this->parentCategory);
         }
 
         $this->category->setAttributes([
