@@ -869,7 +869,7 @@ class DefaultController extends Controller
         $items = SborkaItem::findAll(['orderID' => $order->id]);
 
         $priceRuleHelper = new PriceRuleHelper();
-        $priceRuleHelper->cartSumm = $order->orderSum;
+        $priceRuleHelper->cartSumm = $order->sumWithoutDiscount;
 
         foreach($items as $item){
             $priceRuleHelper->recalcSborkaItem($item, $priceRule);
@@ -877,8 +877,6 @@ class DefaultController extends Controller
                 throw new ErrorException("Не удалось сохранить итем при пересчёте. ID: ".$item->id);
             }
         }
-
-        //тут должна быть функция пересчёта
 
         return true;
     }
