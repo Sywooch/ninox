@@ -54,8 +54,9 @@ class HistorySearch extends HistoryWithoutRelations
                 case 'childsGoods':
                     $query->andWhere(['sourceType' => self::SOURCETYPE_INTERNET, 'responsibleUserID' => '59']);
                     break;
+                case 'all':
                 default:
-                    $query->andWhere("`sourceType` != '0' AND `orderSource` != '0'");
+                    $query->andWhere("`orderSource` != '0'");
                     break;
             }
         }

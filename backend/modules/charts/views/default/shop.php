@@ -191,7 +191,7 @@ $columns = $showFourth ? 3 : 4;
             ?>
             <div class="panel-body">
                 <div class="row col-xs-12">
-                    <?=Html::a('Все', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => '']), ['class' => 'btn btn-default'])?>
+                    <?=Html::a('Все', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'all']), ['class' => 'btn btn-default'])?>
                     <?=Html::a('Интернет', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'internet']), ['class' => 'btn btn-default'])?>
                     <?=Html::a('Магазин', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'shop']), ['class' => 'btn btn-default'])?>
                     <?=Html::a('Хмельницкий', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'hmelnytsky']), ['class' => 'btn btn-default'])?>
