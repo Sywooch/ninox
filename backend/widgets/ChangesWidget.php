@@ -9,6 +9,7 @@
 namespace backend\widgets;
 
 use backend\models\User;
+use common\models\Siteuser;
 use kartik\grid\ActionColumn;
 use sammaye\audittrail\AuditTrail;
 use yii\base\Widget;
@@ -39,7 +40,10 @@ class ChangesWidget extends Widget{
     }
 
     private function getUser($id){
-        return isset($this->siteusers[$id]) ? $this->siteusers[$id] : $this->siteusers['-1'];
+        return isset($this->siteusers[$id]) ? $this->siteusers[$id] : new Siteuser([
+            'name'      =>  'system',
+            'username'  =>  'system'
+        ]);
     }
 
     public function run(){
