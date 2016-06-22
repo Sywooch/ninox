@@ -56,7 +56,6 @@ class HistorySearch extends HistoryWithoutRelations
                     break;
                 case 'all':
                 default:
-                    $query->andWhere("`orderSource` != '0'");
                     break;
             }
         }
