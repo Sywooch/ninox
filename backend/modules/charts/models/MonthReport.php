@@ -75,7 +75,7 @@ class MonthReport extends Model
 
             $search = $search->search(\Yii::$app->request->get());
 
-            if(\Yii::$app->request->get("smartFilter") != 'hmelnytsky'){
+            if(\Yii::$app->request->get('smartFilter') != 'hmelnytsky' && (\Yii::$app->request->get('smartFilter') != 'all' || \Yii::$app->request->get('smartFilter') != '')){
                 $search = $search->andWhere(['orderSource' => $this->shop->id]);
             }
 
