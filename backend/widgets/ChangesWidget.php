@@ -40,7 +40,7 @@ class ChangesWidget extends Widget{
     }
 
     private function getUser($id){
-        return isset($this->siteusers[$id]) ? $this->siteusers[$id] : new Siteuser([
+        return array_key_exists($id, $this->siteusers) ? $this->siteusers[$id] : new Siteuser([
             'name'      =>  'system',
             'username'  =>  'system'
         ]);
