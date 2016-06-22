@@ -73,7 +73,13 @@ class MonthReport extends Model
                 'dateTo'    =>  strtotime($this->year.'-'.$this->month.'-'.date('t', $dateFrom))
             ]);
 
-            $this->_orders = $search->search(\Yii::$app->request->get())->andWhere(['orderSource' => $this->shop->id])->all();
+            $search = $search->search(\Yii::$app->request->get());
+
+            if(\Yii::$app->request->get("smartFilter") != 'hmelnytsky'){
+                $search = $search->andWhere(['orderSource' => $this->shop->id]);
+            }
+
+            $this->_orders = $search->all();
         }
 
         return $this->_orders;
