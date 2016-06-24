@@ -173,7 +173,7 @@ class BannerHelper extends Component
 
 
         if(!empty($banner->banner->link)){
-            if(preg_match('/^http/', $banner->banner->link)){
+            if(preg_match('/http/', $banner->banner->link)){
                 $link = $banner->banner->link;
             }else{
                 $link = Url::toRoute([$banner->banner->link, 'language' => \Yii::$app->language]);
