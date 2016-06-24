@@ -172,7 +172,7 @@ class SiteController extends Controller
 
         $orderItems->setSort([
             'defaultOrder'  =>  [
-                'added' =>  SORT_DESC
+                'added' =>  SORT_ASC
             ]
         ]);
 

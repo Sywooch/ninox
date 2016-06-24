@@ -34,7 +34,10 @@ $js = <<<JS
                     removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
                 });
 
-                $("#itemInput")['0'].value = '';
+                $("#itemInput").val("");
+                
+                
+                $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             error: function (request, status, error) {
                 Messenger().post({
