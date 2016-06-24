@@ -168,7 +168,7 @@ class BannerHelper extends Component
     public static function renderImageBanner($banner, $withBlock){
         $content = Html::img(preg_match('/http/', $banner->banner->value) ? $banner->banner->value : \Yii::$app->params['frontend'].$banner->banner->value);
         
-        $content = !empty($banner->banner->link) ? Html::a($content, Url::to([$banner->banner->link,
+        $content = !empty($banner->banner->link) ? Html::a($content, Url::toRoute([$banner->banner->link,
             'language' => \Yii::$app->language])) : $content;
 
         if($withBlock){
