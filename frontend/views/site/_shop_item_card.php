@@ -62,11 +62,11 @@ $tabsItems = [
     ]
 ];
 
-if($good->video){
+if($good->videos){
     $tabsItems[] = [
         'label'     =>  \Yii::t('shop', 'Видео'),
         'content'   =>  $this->render('_shop_item/_item_tabs/_tabItem_video', [
-            'good'  =>  $good
+            'videos'  =>  $good->videos
         ])
     ];
 }
