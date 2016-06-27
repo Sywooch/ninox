@@ -391,7 +391,7 @@ class DefaultController extends Controller
                 'id'            =>  $order->status,
                 'description'   =>  $order->statusDescription
             ],
-            'sms'       =>  $order->sendMessage('done')
+            'sms'       =>  $order->responsibleUserID == 59 ? '' : $order->sendMessage('done')
         ];
     }
 

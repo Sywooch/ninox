@@ -1,8 +1,8 @@
-<?php use common\models\Siteuser;
+<?php
+
+use common\models\Siteuser;
 use kartik\form\ActiveForm;
-use kartik\switchinput\SwitchInput;
 use yii\bootstrap\Html;
-use yii\helpers\Url;
 
 $form = ActiveForm::begin([
     'id'            =>  'orderPreview-form-horizontal'.$model->id,
@@ -11,10 +11,9 @@ $form = ActiveForm::begin([
     ],
     'type'          =>  ActiveForm::TYPE_INLINE,
     'fieldConfig'   =>  [
-        'template'  =>  '{label}{input}',
+        'template'      =>  '{label}{input}',
         'showLabels'    =>  true,
     ],
-    //'action'                =>  '/orders/order-preview',
     'validationUrl'         =>  '/orders/order-preview',
     'enableAjaxValidation'  =>  true,
 ]);

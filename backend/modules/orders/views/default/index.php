@@ -118,8 +118,8 @@ var ordersChanges = function(e){
                     type: data.sms.result == 200 ? "success" : "error",
                 });
                 cardSms.toggleClass('success', data.sms.result == 200);
-                cardSms.prop('disabled', false);
             }
+            cardSms.prop('disabled', false);
         }
     });
 }, changeStatus = function(row, status){
