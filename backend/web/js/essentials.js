@@ -23,7 +23,7 @@ $.urlParam = function(name){
                 ],
                 "initialize": true,
                 "params": [
-                    "deliveryParamInput-" + id
+                    "orderID-" + id
                 ],
                 "emptyMsg": "варианты отсутствуют",
                 "initDepends":[
@@ -45,7 +45,7 @@ $.urlParam = function(name){
                 ],
                 "initialize": true,
                 "params":[
-                    "paymentParamInput-" + id
+                    "orderID-" + id
                 ],
                 "emptyMsg":"варианты отсутствуют",
                 "initDepends":[

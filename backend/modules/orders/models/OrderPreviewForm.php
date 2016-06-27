@@ -17,6 +17,8 @@ class OrderPreviewForm extends Model
 
     public $id;
 
+    public $number;
+
     public $deliveryType;
 
     public $deliveryParam;
@@ -31,7 +33,7 @@ class OrderPreviewForm extends Model
 
     public $paymentParam;
 
-    public $paymentConfirmed;
+    public $moneyConfirmed;
 
     public $globalMoneyPayment;
 
@@ -44,10 +46,10 @@ class OrderPreviewForm extends Model
 
     public function rules(){
         return [
-            [['deliveryType', 'deliveryParam', 'responsibleUser', 'paymentType', 'paymentParam', 'id'], 'integer'],
+            [['deliveryType', 'deliveryParam', 'responsibleUser', 'paymentType', 'paymentParam', 'id', 'number'], 'integer'],
             [['deliveryInfo', 'nakladna'], 'string'],
             [['actualAmount'], 'number'],
-            [['paymentConfirmed', 'globalMoneyPayment'], 'boolean']
+            [['moneyConfirmed', 'globalMoneyPayment'], 'boolean']
         ];
     }
 
@@ -57,6 +59,7 @@ class OrderPreviewForm extends Model
     public function loadOrder($order){
         $this->setAttributes([
             'id'                =>  $order->id,
+            'number'            =>  $order->number,
             'deliveryType'      =>  $order->deliveryType,
             'deliveryParam'     =>  $order->deliveryParam,
             'deliveryInfo'      =>  $order->deliveryInfo,
@@ -64,7 +67,7 @@ class OrderPreviewForm extends Model
             'nakladna'          =>  $order->nakladna,
             'paymentType'       =>  $order->paymentType,
             'paymentParam'      =>  $order->paymentParam,
-            'paymentConfirmed'  =>  $order->moneyConfirmed != 0,
+            'moneyConfirmed'  =>  $order->moneyConfirmed,
             'actualAmount'      =>  $order->actualAmount,
             'globalMoneyPayment'=>  $order->globalmoney == 1
         ]);
@@ -81,7 +84,7 @@ class OrderPreviewForm extends Model
             'nakladna'          =>  $this->nakladna,
             'paymentType'       =>  $this->paymentType,
             'paymentParam'      =>  $this->paymentParam,
-            'moneyConfirmed'    =>  $this->paymentConfirmed,
+            'moneyConfirmed'    =>  $this->moneyConfirmed,
             'actualAmount'      =>  $this->actualAmount,
             'globalmoney'       =>  $this->globalMoneyPayment,
         ]);
@@ -92,15 +95,16 @@ class OrderPreviewForm extends Model
     public function attributeLabels()
     {
         return [
-            'deliveryType'      =>  '',
+            'deliveryType'      =>  'Способ доставки:',
+            'deliveryParam'     =>  '',
             'deliveryInfo'      =>  '',
-            'responsibleUser'   =>  '',
-            'nakladna'          =>  '',
-            'paymentType'       =>  '',
+            'responsibleUser'   =>  'Менеджер:',
+            'nakladna'          =>  'ТТН:',
+            'paymentType'       =>  'Способ оплаты:',
             'paymentParam'      =>  '',
-            'paymentConfirmed'  =>  '',
+            'moneyConfirmed'    =>  'Оплата:',
             'globalMoneyPayment'=>  '',
-            'actualAmount'      =>  ''
+            'actualAmount'      =>  'Сумма к оплате:'
         ];
     }
 

@@ -1,5 +1,6 @@
 <?php
 use backend\modules\orders\widgets\OrdersSearchWidget;
+use bobroid\remodal\Remodal;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -191,12 +192,12 @@ var ordersChanges = function(e){
     });
 };
 
-$(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
+$(document).on("beforeSubmit", ".orderPreviewAJAXForm", function(event){
     event.preventDefault();
 
     var form = $(this);
 
-    if(form.find('.has-error').length) {
+    if(form.find('.has-error').length){
         return false;
     }
 
@@ -209,10 +210,31 @@ $(document).on("beforeSubmit", ".orderPreviewAJAXForm", function (event) {
                 return false;
             }
 
-            var orderNode = form.closest('table').find('.orderRow[data-key="' + form.closest('tr').data('key') + '"]'),
+            var orderNode = form.closest('table.kv-grid-table').find('.orderRow[data-key="' + form.closest('tr.kv-expand-detail-row').data('key') + '"]'),
             actualAmount = orderNode.find('.actualAmount');
             actualAmount.text((response.actualAmount == '' ? 0 : response.actualAmount) + ' грн.');
             orderNode.find(".kv-expand-row").trigger('click');
+        }
+    });
+
+    return false;
+});
+
+$(document).on("beforeSubmit", "#payment-confirm-form", function(event){
+    event.preventDefault();
+
+    var form = $(this);
+
+    if(form.find('.has-error').length){
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: '/orders/payment-confirm-form',
+        data: $.extend({action: 'save'}, form.serializeJSON()),
+        success: function(response){
+            form.closest('.remodal').remodal().close();
         }
     });
 
@@ -247,8 +269,12 @@ $("body").on('click', "button.sms-order", function(){
     sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'sms', $(this));
 }).on('click', "button.sms-card", function(){
     sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card', $(this));
-}).on('click', 'button.informPayment', function(){
-    
+}).on('click', 'button.btn-inform-payment', function(){
+    $('#payment-confirm-form').find('#paymentconfirmform-ordernumber').val($(this).data('number'));
+}).on('click', 'input.btn-cancel', function(){
+    var obj = $(this),
+    orderNode = obj.closest('table.kv-grid-table').find('.orderRow[data-key="' + obj.closest('tr.kv-expand-detail-row').data('key') + '"]');
+    orderNode.find(".kv-expand-row").trigger('click');
 }).on('submit', '#extendedSearch', function(e){
     e.preventDefault();
     $("#searchResults").tab('show');
@@ -284,9 +310,79 @@ $css = <<<'CSS'
     border-collapse: collapse;
 }
 
+.kv-expand-detail-row td{
+    padding: 0 !important;
+}
+
+.kv-expand-detail-row table{
+    table-layout: fixed;
+}
+
 .kv-expand-detail-row table td{
     vertical-align: middle !important;
-    line-height: 100% !important;
+}
+
+.kv-expand-detail-row table td:first-child{
+    width: 515px;
+}
+
+.kv-expand-detail-row table td:last-child{
+    width: 180px;
+}
+
+.kv-expand-detail-row .btn{
+    border: 2px solid;
+}
+
+.kv-expand-detail-row #orderpreviewform-actualamount{
+    width: 110px;
+}
+
+.kv-expand-detail-row .btn-save, .kv-expand-detail-row .btn-cancel{
+    margin: 0 25px 10px 0;
+    width: 120px;
+}
+
+.kv-expand-detail-row .btn-save, .kv-expand-detail-row .btn-inform-payment{
+    border-color: #5cb85c;
+    color: #5cb85c;
+}
+
+.kv-expand-detail-row .btn-cancel{
+    border-color: #ff6c00;
+    color: #ff6c00;
+}
+
+.kv-expand-detail-row .form-group{
+    padding: 0 3px;
+    line-height: 70px;
+}
+
+.kv-expand-detail-row .form-group > *{
+    vertical-align: middle;
+}
+
+.kv-expand-detail-row table td + td{
+    border-left: 65px solid transparent;
+}
+
+.kv-expand-detail-row table td label{
+    font-weight: normal;
+    font-size: 12px;
+    padding-right: 15px;
+}
+
+.kv-expand-detail-row table td:first-child label{
+    width: 155px;
+    padding-left: 35px;
+}
+
+.kv-expand-detail-row table td:first-child .form-group:first-child select{
+    width: 180px;
+}
+
+.kv-expand-detail-row table td:first-child .form-group:nth-child(2) select{
+    width: 130px;
 }
 
 .orders-statistics{
@@ -793,15 +889,20 @@ echo Html::tag('br'),
 
 echo Html::tag('script', 'window.onload = function(){ setTimeout(100, $("#ordersSourcesTabs li.active a").click()); }'); //TODO: микрокостыль :D
 
-$modal = new \bobroid\remodal\Remodal([
+$modal = new Remodal([
     'id'            =>  'orderChanges',
     'cancelButton'  =>  false,
     'confirmButton' =>  false,
     'addRandomToID' =>  false,
-    'events'    =>  [
-        'opening'  =>   new \yii\web\JsExpression("
-            console.log(e);
-        ")
-    ]
 ]);
-echo $modal->renderModal();
+
+$paymentMessage = new Remodal([
+    'cancelButton'	=>	false,
+    'confirmButton'	=>	false,
+    'addRandomToID'	=>	false,
+    'id'            =>  'payment-confirm-form',
+    'content'       =>  $this->render('_payment_confirm'),
+]);
+
+echo $modal->renderModal().
+    $paymentMessage->renderModal();

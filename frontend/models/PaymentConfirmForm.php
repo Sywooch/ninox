@@ -8,8 +8,6 @@
 
 namespace frontend\models;
 
-
-use common\models\CustomerOrderPayment;
 use yii\base\Model;
 
 class PaymentConfirmForm extends Model
@@ -33,7 +31,7 @@ class PaymentConfirmForm extends Model
     }
 
     public function save(){
-        $customerOrderPayment = new CustomerOrderPayment();
+        $customerOrderPayment = new \common\models\CustomerOrderPayment();
 
         $customerOrderPayment->setAttributes([
             'nomer_id'      =>  $this->orderNumber,
@@ -42,7 +40,7 @@ class PaymentConfirmForm extends Model
             'sposoboplaty'  =>  $this->paymentType
         ], false);
 
-        $customerOrderPayment->save(false);
+        return $customerOrderPayment->save(false);
     }
 
     public function rules()

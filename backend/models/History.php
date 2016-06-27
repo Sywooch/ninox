@@ -6,7 +6,6 @@ use backend\components\Sms;
 use common\models\Comment;
 use common\models\PaymentParam;
 use common\models\PaymentType;
-use common\models\SendedPayment;
 use common\models\Siteuser;
 use yii;
 use yii\data\ActiveDataProvider;

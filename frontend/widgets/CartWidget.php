@@ -20,11 +20,6 @@ use yii\helpers\Html;
 
 class CartWidget extends Widget{
 
-    /**
-     * @type \bobroid\remodal\Remodal
-     */
-    public $remodalInstance;
-
     public function init(){
 
     }

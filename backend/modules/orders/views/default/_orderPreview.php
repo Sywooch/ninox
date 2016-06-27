@@ -11,140 +11,55 @@ $form = ActiveForm::begin([
     ],
     'type'          =>  ActiveForm::TYPE_INLINE,
     'fieldConfig'   =>  [
-        'template'  =>  '{input}'
+        'template'  =>  '{label}{input}',
+        'showLabels'    =>  true,
     ],
     //'action'                =>  '/orders/order-preview',
     'validationUrl'         =>  '/orders/order-preview',
     'enableAjaxValidation'  =>  true,
 ]);
 ?>
-<div class="row">
-    <div class="col-xs-10">
-        <table style="width: 100%; margin-bottom: 0; vertical-align: middle; line-height: 100%;" class="table table-condensed good-preview-table">
-            <tbody>
-                <tr>
-                    <td style="width: 20%;">
-                        Способ доставки:
-                    </td>
-                    <td style="width: 30%;">
-                        <?=Html::hiddenInput('deliveryParamInput', $model->deliveryParam, ['id' => 'deliveryParamInput-'.$model->id]).
-                            Html::tag('div',
-                            $form->field($model, 'deliveryType', [
-                                'options'   =>  [
-                                    'class' =>  'col-xs-4'
-                                ],
-                                'inputOptions'  =>  [
-                                    'id'    =>  'deliveryTypeInput-'.$model->id
-                                ]
-                            ])
-                                ->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-deliveries', ['type' => 'deliveryType']), 'id', 'name')).
-                            $form->field($model, 'deliveryParam',
-                                [
-                                    'options'   =>  [
-                                        'class' =>  'col-xs-8'
-                                    ]
-                                ])
-                                ->dropDownList([]).
-                            $form->field($model, 'deliveryInfo',
-                                [
-                                    'options'   =>  [
-                                        'class' =>  'col-xs-4'
-                                    ]
-                                ])
-                                ->label('Склад #')
-                            )?>
-                    </td>
-                    <td style="width: 20%;">
-                        Менеджер:
-                    </td>
-                    <td style="width: 30%;">
-                        <?=$form->field($model, 'responsibleUser')->dropDownList(Siteuser::getActiveUsers())->label(false)?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        ТТН:
-                    </td>
-                    <td>
-                        <?=$form->field($model, 'nakladna')->label(false)?>
-                    </td>
-                    <td>
-                        Способ оплаты:
-                    </td>
-                    <td>
-                        <?=Html::hiddenInput('paymentParamInput', $model->paymentParam, ['id' => 'paymentParamInput-'.$model->id]).
-                        Html::tag('div',
-                            $form->field($model, 'paymentType', [
-                                'options'   =>  [
-                                    'class' =>  'col-xs-6'
-                                ],
-                                'inputOptions'  =>  [
-                                    'id'    =>  'paymentTypeInput-'.$model->id
-                                ]
-                            ])->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-payments', ['type' => 'paymentType']), 'id', 'name')).
-                            $form->field($model, 'paymentParam',
-                                [
-                                    'options'   =>  [
-                                        'class' =>  'col-xs-6'
-                                    ]
-                                ])
-                                ->dropDownList([]),
-                            [
-                                'class' =>  'row'
-                            ])?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Статус ТТН:
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-                        Сума к оплате:
-                    </td>
-                    <td>
-                        <?=$form->field($model, 'actualAmount')->label(false)?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Статус СМС:
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-                        Оплата:
-                    </td>
-                    <td>
-                        <?=$form->field($model, 'paymentConfirmed')->checkbox()?>
-                        <?=''//Html::button('Сообщить об оплате', ['class' => 'btn btn-default pull-right informPayment'])?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Статус посылки:
-                    </td>
-                    <td>
-
-                    </td>
-                    <td>
-                        Платёж Global Money:
-                    </td>
-                    <td>
-                        <?=$form->field($model, 'globalMoneyPayment')->checkbox();?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-xs-1">
-        <?=$form->field($model, 'id')->hiddenInput(['display' => 'none'])?>
-        <button class="btn btn-default btn-lg">Сохранить</button>
-    </div>
-</div>
+<table class="table table-condensed good-preview-table">
+    <tbody>
+        <tr>
+            <td><?=$form->field($model, 'paymentType', [
+                    'inputOptions'  =>  [
+                        'id'    =>  'paymentTypeInput-'.$model->id
+                    ]
+                ])->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-payments', ['type' => 'paymentType']), 'id', 'name')).
+                $form->field($model, 'paymentParam')->dropDownList([])->label(false)?>
+            </td>
+            <td><?=$form->field($model, 'responsibleUser')->dropDownList(Siteuser::getActiveUsers()).
+                $form->field($model, 'actualAmount', ['options' => ['class' => 'form-group pull-right']])?>
+            </td>
+            <td rowspan="3"><?=$form->field($model, 'id')->hiddenInput(['id' => 'orderID-'.$model->id])->label(false)?>
+                <input type="submit" class="btn btn-default btn-lg btn-save" value="Сохранить">
+                <input type="button" class="btn btn-default btn-lg btn-cancel" value="Отмена">
+            </td>
+        </tr>
+        <tr>
+            <td><?=$form->field($model, 'deliveryType', [
+                    'inputOptions'  =>  [
+                        'id'    =>  'deliveryTypeInput-'.$model->id
+                    ]
+                ])->dropDownList(\yii\helpers\ArrayHelper::map(\Yii::$app->runAction('orders/default/get-deliveries', ['type' => 'deliveryType']), 'id', 'name')).
+                $form->field($model, 'deliveryParam')->dropDownList([])->label(false)?>
+            </td>
+            <td><?=$form->field($model, 'nakladna')?></td>
+        </tr>
+        <tr>
+            <td><?=$form->field($model, 'moneyConfirmed')->dropDownList(['0' => 'Не оплачено', '1' => 'Оплачено'])?></td>
+            <td><?=Html::button('Сообщить об оплате',
+                    [
+                        'class'                 =>  'btn btn-default btn-lg btn-inform-payment',
+                        'data-remodal-target'   =>  'payment-confirm-form',
+                        'data-number'           =>  $model->number
+                    ]
+                )?>
+            </td>
+        </tr>
+    </tbody>
+</table>
 <?php
 ActiveForm::end();
 ?>

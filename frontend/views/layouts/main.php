@@ -510,7 +510,7 @@ $this->beginPage();
 									'class'	=>	'desire',
 									'href'	=>	Url::to(['/account/wish-list', 'language' => \Yii::$app->language])
 								]).
-							CartWidget::widget(['remodalInstance' => $cartModal]).
+							CartWidget::widget().
 							Html::tag('div',
 								Html::tag('div', '', ['class' => 'arrow']).
 								Html::tag('span',

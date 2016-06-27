@@ -102,13 +102,23 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * Хз че делает, скорее всего она депрекейтед
+     * @deprecated
+     */
     public function actionUpdate(){
         $order = \Yii::$app->request->post("orderID");
 
     }
 
+    /**
+     * Возвращает типы и параметры доставки для превью блока заказа
+     * @param string $type
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionGetDeliveries($type = ''){
-        $incomingArray = [];
         if(empty($type)){
             if(!\Yii::$app->request->isAjax ){
                 throw new BadRequestHttpException("Данный запрос возможен только через ajax!");
@@ -118,13 +128,9 @@ class DefaultController extends Controller
 
             $type = \Yii::$app->request->post("type");
 
-            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params"))){
-                foreach(\Yii::$app->request->post("depdrop_all_params") as $k => $v){
-                    $incomingArray[preg_replace('/(-.\d+)/', '', $k)] = $v;
-                }
-                if(!empty($incomingArray['deliveryTypeInput'])){
-                    $type = 'deliveryParam';
-                }
+            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_params"))){
+                $order = History::findOne(['ID' => \Yii::$app->request->post("depdrop_params")]);
+                $type = 'deliveryParam';
             }
         }
 
@@ -145,9 +151,9 @@ class DefaultController extends Controller
                 return $results;
                 break;
             case 'deliveryParam':
-                $deliveryType = $incomingArray['deliveryTypeInput'];
+                $deliveryTypeID = \Yii::$app->request->post("depdrop_parents");
 
-                $deliveryType = DeliveryType::find()->where(['id' => $deliveryType])->one();
+                $deliveryType = DeliveryType::findOne(['id' => $deliveryTypeID]);
 
                 if(!$deliveryType){
                     throw new NotFoundHttpException("Не найден переданый тип доставки!");
@@ -165,11 +171,18 @@ class DefaultController extends Controller
                     $result[] = ['id' => $param->id, 'name' => $param->description];
                 }
 
-                return ['output' => $result, 'selected' => empty($incomingArray['deliveryParamInput']) ? 0 : $incomingArray['deliveryParamInput']];
+                return ['output' => $result, 'selected' =>
+                    $order->deliveryType != $deliveryTypeID || empty($order->deliveryParam) ?(string)$params[0]['id'] : (string)$order->deliveryParam];
                 break;
         }
     }
 
+    /**
+     * Восстанавливает заказ
+     * @return bool
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionRestore(){
         if(!\Yii::$app->request->isAjax){
             throw new BadRequestHttpException('Данный метод доступен только через ajax!');
@@ -196,8 +209,14 @@ class DefaultController extends Controller
         return true;
     }
 
+    /**
+     * Возвращает типы и параметры оплат для превью блока заказа
+     * @param string $type
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionGetPayments($type = ''){
-        $incomingArray = [];
         if(empty($type)){
             if(!\Yii::$app->request->isAjax ){
                 throw new BadRequestHttpException("Данный запрос возможен только через ajax!");
@@ -207,13 +226,9 @@ class DefaultController extends Controller
 
             $type = \Yii::$app->request->post("type");
 
-            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_all_params"))){
-                foreach(\Yii::$app->request->post("depdrop_all_params") as $k => $v){
-                    $incomingArray[preg_replace('/(-.\d+)/', '', $k)] = $v;
-                }
-                if(!empty($incomingArray['paymentTypeInput'])){
-                    $type = 'paymentParam';
-                }
+            if(empty($type) && !empty(\Yii::$app->request->post("depdrop_params"))){
+                $order = History::findOne(['ID' => \Yii::$app->request->post("depdrop_params")]);
+                $type = 'paymentParam';
             }
         }
 
@@ -234,9 +249,9 @@ class DefaultController extends Controller
                 return $results;
                 break;
             case 'paymentParam':
-                $paymentType = $incomingArray['paymentTypeInput'];
+                $paymentTypeID = \Yii::$app->request->post("depdrop_parents");
 
-                $paymentType = PaymentType::find()->where(['id' => $paymentType])->one();
+                $paymentType = PaymentType::findOne(['id' => $paymentTypeID]);
 
                 if(!$paymentType){
                     throw new NotFoundHttpException("Не найден переданый тип оплаты!");
@@ -257,7 +272,9 @@ class DefaultController extends Controller
                 }
 
 
-                return ['output' => $result, 'selected' => empty($incomingArray['paymentParamInput']) ? 0 : $incomingArray['paymentParamInput']];
+                return ['output' => $result, 'selected' =>
+                    $order->paymentType != $paymentTypeID || empty($order->paymentParam) ?
+                        (string)$params[0]['id'] : (string)$order->paymentParam];
                 break;
         }
     }
@@ -307,6 +324,12 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * Подтверждает или снимает статус дозвона до клиента
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws UnsupportedMediaTypeHttpException
+     */
     public function actionConfirmordercall(){
         if(!\Yii::$app->request->isAjax){
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
@@ -336,6 +359,13 @@ class DefaultController extends Controller
         ];
     }
 
+    /**
+     * Ставит или снимает пометку о сборке заказа + отсылает смс получателю об этом
+     * с условием, что это не заказы с детскими товарами
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws UnsupportedMediaTypeHttpException
+     */
     public function actionDoneorder(){
         if(!\Yii::$app->request->isAjax){
             throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
@@ -368,7 +398,6 @@ class DefaultController extends Controller
     /**
      * Страница просмотра и редактирования заказа
      * @param string $param ID заказа
-     *
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
@@ -951,6 +980,19 @@ class DefaultController extends Controller
         }
 
         return $order->sendMessage(\Yii::$app->request->post("type"));
+    }
+
+
+    public function actionPaymentConfirmForm(){
+        $model = new \frontend\models\PaymentConfirmForm();
+
+        $model->load(\Yii::$app->request->post());
+
+        if(!$model->save()){
+            return false;
+        }
+
+        return true;
     }
 
 }
