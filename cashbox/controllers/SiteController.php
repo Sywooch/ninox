@@ -135,7 +135,7 @@ class SiteController extends Controller
 
         $customer = $this->cashbox->customer;
 
-        if(\Yii::$app->request->post("CustomerForm")){
+        if(\Yii::$app->request->post('CustomerForm')){
             $customerForm = new CustomerForm();
             $customerForm->load(\Yii::$app->request->post());
 
@@ -559,6 +559,10 @@ class SiteController extends Controller
         $this->layout = 'login';
 
         if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
+            foreach(\Yii::$app->log->targets as $target){
+                $target->enabled = false;
+            }
+
             return \Yii::$app->user->isGuest ? '1' : '0';
         }
 
