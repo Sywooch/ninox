@@ -69,10 +69,14 @@ class DefaultController extends Controller
 
         $report->shop = $shop;
 
+        $orders = new HistorySearch();
+
         return $this->render('shop',
             [
-                'shop'      =>  $shop,
-                'report'    =>  $report
+                'shop'          =>  $shop,
+                'report'        =>  $report,
+                'orders'        =>  $orders->search(\Yii::$app->request->get()),
+                'historySearch' =>  $orders
             ]
         );
     }

@@ -18,7 +18,7 @@ class S3Uploader extends Component
         $options = array_merge(['name' => '', 'directory' => 'img/catalog/', 'fullReturn' => false], $options);
 
         if(empty($options['name'])){
-            $options['name'] = $this->setName(\Yii::$app->security->generateRandomString(32)."-".\Yii::$app->security->generateRandomString(8), $file);
+            $options['name'] = $this->setName(\Yii::$app->security->generateRandomString(32).'-'.\Yii::$app->security->generateRandomString(8), $file);
         }
 
         $s3 = \Yii::$app->get('s3');

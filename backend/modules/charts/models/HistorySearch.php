@@ -40,6 +40,26 @@ class HistorySearch extends HistoryWithoutRelations
             $query->andWhere("`added` < '{$this->dateTo}'");
         }
 
+        if(array_key_exists('smartFilter', $params)){
+            switch($params['smartFilter']){
+                case 'shop':
+                    $query->andWhere(['sourceType' => self::SOURCETYPE_SHOP]);
+                    break;
+                case 'hmelnytsky':
+                    $query->andWhere(['sourceType' => self::SOURCETYPE_SHOP, 'orderSource' => 2]);
+                    break;
+                case 'internet':
+                    $query->andWhere(['sourceType' => self::SOURCETYPE_INTERNET])->andWhere("`responsibleUserID` != '59'");
+                    break;
+                case 'childsGoods':
+                    $query->andWhere(['sourceType' => self::SOURCETYPE_INTERNET, 'responsibleUserID' => '59']);
+                    break;
+                case 'all':
+                default:
+                    break;
+            }
+        }
+
         return $query;
     }
     

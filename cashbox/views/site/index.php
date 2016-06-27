@@ -30,11 +30,9 @@ $js = <<<JS
 
                 summary.update(data);
 
-                $(".removeGood > *").on('click', function(e){
-                    removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
-                });
-
-                $("#itemInput")['0'].value = '';
+                $("#itemInput").val("");                
+                
+                $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             error: function (request, status, error) {
                 Messenger().post({
@@ -60,10 +58,6 @@ $js = <<<JS
                 /*if(data.wholesaleSum < 500 && data.priceType == 1){
                     changeCashboxType();
                 }*/
-
-                $(".removeGood > *").on('click', function(e){
-                    removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
-                });
             },
             error: function (request, status, error) {
                 Messenger().post({
@@ -74,7 +68,35 @@ $js = <<<JS
                 });
             }
         });
-    }, changeItemCount = function(e){
+    }, 
+    newChangeItemCount = function(input){
+        $.ajax({
+            type: 'POST',
+            url: '/changeitemcount',
+            data: {
+                'itemID': input.attr('data-key'),
+                'count': input.val()
+            },
+            success: function(data){
+                $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+                /*if((data.wholesaleSum >= 500 && data.priceType != 1) || (data.wholesaleSum < 500 && data.priceType == 1)){
+                    changeCashboxType();
+                }*/
+
+                summary.update(data);
+            },
+            error: function (request, status, error) {
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
+            }
+        });
+    },
+    changeItemCount = function(e){
         $.ajax({
             type: 'POST',
             url: '/changeitemcount',
@@ -101,7 +123,7 @@ $js = <<<JS
             }
         });
     }, completeSell = function(){
-        var paymentSum = $(".toPay")[0].innerHTML;
+        var paymentSum = $(".toPay").html();
 
         var s = swal({
             title: "Введите сумму к оплате",
@@ -188,23 +210,23 @@ $js = <<<JS
         buttonSelector: '#changeCashboxType',
         update: function(data){
             if(data.sum !== undefined){
-                $(this.selector).find(".summ")[0].innerHTML = data.sum;
+                $(this.selector).find(".summ").html(data.sum);
             }
 
             if(data.sumToPay !== undefined){
-                $(this.selector).find(".toPay")[0].innerHTML = data.sumToPay;
+                $(this.selector).find(".toPay").html(data.sumToPay);
             }
 
             if(data.sumToPay !== undefined){
-                $(this.selector).find(".wholesale-sum")[0].innerHTML = data.wholesaleSum;
+                $(this.selector).find(".wholesale-sum").html(data.wholesaleSum);
             }
 
             if(data.sumToPay !== undefined){
-                $(this.selector).find(".discount")[0].innerHTML = data.discountSum;
+                $(this.selector).find(".discount").html(data.discountSum);
             }
 
             if(data.sumToPay !== undefined){
-                $(this.selector).find(".itemsCount")[0].innerHTML = data.itemsCount;
+                $(this.selector).find(".itemsCount").html(data.itemsCount);
             }
         },
         clear: function(){
@@ -216,77 +238,30 @@ $js = <<<JS
                 'wholesaleSum': 0
             });
 
-            this.setRetail();
+            this.setWholesale();
         },
         setWholesale: function(){
-            $(this.selector).toggleClass('bg-' + this.retailClass);
-            $(this.buttonSelector).toggleClass('btn-' + this.retailClass);
-
-            $(this.selector).addClass('bg-' + this.wholesaleClass);
-            $(this.buttonSelector).addClass('btn-' + this.wholesaleClass);
-            $(this.buttonSelector)[0].innerHTML = 'Опт';
+            $(this.selector)
+                .removeClass('bg-' + this.retailClass)
+                .addClass('bg-' + this.wholesaleClass);
+                
+            $(this.buttonSelector)
+                .removeClass('btn-' + this.retailClass)
+                .addClass('btn-' + this.wholesaleClass)
+                .html('Опт');
         },
         setRetail: function(){
-            $(this.selector).toggleClass('bg-' + this.wholesaleClass);
-            $(this.buttonSelector).toggleClass('btn-' + this.wholesaleClass)
-
-            $(this.selector).addClass('bg-' + this.retailClass)
-            $(this.buttonSelector).addClass('btn-' + this.retailClass);
-            $(this.buttonSelector)[0].innerHTML = 'Розница';
+            $(this.selector)
+                .removeClass('bg-' + this.wholesaleClass)
+                .addClass('bg-' + this.retailClass);
+            
+            $(this.buttonSelector)
+                .removeClass('btn-' + this.wholesaleClass)
+                .addClass('btn-' + this.retailClass)
+                .html('Розница');
         }
     },
-    changeManager = function(e){
-        $.ajax({
-            type: 'POST',
-            url: '/changemanager',
-            data: {
-                'action': 'showList'
-            },
-            success: function(data){
-                swal({
-                    title:  "Сменить продавца?",
-                    text:   data,
-                    html:   true,
-                    showConfirmButton: false,
-                    showCancelButton: true,
-                    cancelButtonText: 'Отмена'
-                });
-
-                $(".managersButtons > *").on('click', function(e){
-                    $.ajax({
-                        type: 'POST',
-                        url: '/changemanager',
-                        data: {
-                            'action': 'change',
-                            'manager': e.currentTarget.getAttribute('manager-key')
-                        },
-                        success: function(){
-                            $("#changeManager")[0].innerHTML = e.currentTarget.innerHTML;
-
-                            Messenger().post({
-                                message: 'Менеджер изменён на <b>' + e.currentTarget.innerHTML + '</b>',
-                                type: 'info',
-                                showCloseButton: true,
-                                hideAfter: 5
-                            });
-                        },
-                        error: function (request, status, error) {
-                            console.log(request.responseText);
-                        }
-                    });
-                });
-            },
-            error: function (request, status, error) {
-                swal.close();
-                Messenger().post({
-                    message: request.responseText.replace(/(.*)\):\s/, ''),
-                    type: 'error',
-                    showCloseButton: true,
-                    hideAfter: 5
-                });
-            }
-        });
-    }, postponeCheck = function(){
+    postponeCheck = function(){
         $.ajax({
             type: 'POST',
             url: '/postponecheck',
@@ -338,91 +313,102 @@ $js = <<<JS
         });
     };
 
-    $("#itemInput").on('keypress', function(e){
-        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
-
-        if((e.keyCode == 13) && e.currentTarget.value != ''){
-            addItem(e.currentTarget.value);
-        }
-    });
-
-    $("#itemInput").on('keyup', function(e){
-        e.currentTarget.value = e.currentTarget.value.replace(/\D+/, '');
-    });
-
-    $(".removeGood > *").on('click', function(e){
-        removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
-    });
-
-    $(".changeItemCount").on('change', function(e){
-        changeItemCount(e);
-    });
-
-    $("#changeManager").on('click', function(e){
-        changeManager(e);
-    });
-
-    $("#postponeCheck").on('click', function(e){
+    $('body').on('click', ".removeGood > *", function(e){
+        removeItem($(this).parent().parent().attr('data-attribute-key'));
+    }).on('change', ".changeItemCount", function(e){
+        newChangeItemCount($(this));
+    }).on('click', "#postponeCheck", function(e){
         postponeCheck();
-    });
-
-
-    $("#sellButton").on('click', function(e){
+    }).on('click', "#sellButton", function(e){
         completeSell();
-    });
-
-
-    $("#clearOrder").on('click', function(e){
+    }).on('click', "#clearOrder", function(e){
         clearOrder();
-    });
-
-    $("#returnOrder").on('click', function(e){
+    }).on('click', "#returnOrder", function(e){
         returnOrder();
-    });
+    }).on('keypress keyup', "#itemInput", function(e){
+        $(this).val($(this).val().replace(/\D+/, ''));
 
-    $("#itemInput").focus();
+        if((e.keyCode == 13) && $(this).val() != ''){
+            addItem($(this).val());
+        }
+    }).on('click', "#changeManager", function(){
+        $.ajax({
+            type: 'POST',
+            url: '/changemanager',
+            data: {
+                'action': 'showList'
+            },
+            success: function(data){
+                swal({
+                    title:  "Сменить продавца?",
+                    text:   data,
+                    html:   true,
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    cancelButtonText: 'Отмена'
+                });
+            },
+            error: function (request, status, error) {
+                swal.close();
+                Messenger().post({
+                    message: request.responseText.replace(/(.*)\):\s/, ''),
+                    type: 'error',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
+            }
+        });
+    }).on('click', ".managersButtons > *", function(e){
+        var button = $(this);
+        
+        $.ajax({
+            type: 'POST',
+            url: '/changemanager',
+            data: {
+                'action': 'change',
+                'manager': button.attr('manager-key')
+            },
+            success: function(){
+                $("#changeManager").html(button.html());
+
+                Messenger().post({
+                    message: 'Менеджер изменён на <b>' + button.html() + '</b>',
+                    type: 'info',
+                    showCloseButton: true,
+                    hideAfter: 5
+                });
+            },
+            error: function (request, status, error) {
+                console.log(request.responseText);
+            }
+        });
+    });
 
     $(document).on('pjax:complete', function() {
-        $(".removeGood > *").on('click', function(e){
-            removeItem(e.currentTarget.parentNode.parentNode.getAttribute('data-attribute-key'));
-        });
-
-        $(".changeItemCount").on('change', function(e){
-            changeItemCount(e);
-        });
-
         $("#itemInput").focus();
-    });
-
-    $(document).on('keypress', function(e){
+    }).on('keypress', function(e){
         if(e.keyCode == 120){
             completeSell();
         }
-    });
-
-    $(document).on('click', '*', function(){
+    }).on('click', '*', function(){
         if($('input:focus').length <= 0){
             $("#itemInput").focus();
         }
-    });
-
-    $(document).on('opened', '.remodal', function(){
+    }).on('opened', '.remodal', function(){
         $(document).off('click', '*');
-    });
-
-    $(document).on('closed', '.remodal', function(){
+    }).on('closed', '.remodal', function(){
         $(document).on('click', '*', function(){
             if($('input:focus').length <= 0){
                 $("#itemInput").focus();
             }
         });
-    });
-
-    $(document).on('click', '*', function(){
+    }).on('click', '*', function(){
         if($('input:focus').length <= 0){
             $("#itemInput").focus();
         }
     });
+    
+    $("#itemInput").focus();
 JS;
 
 $this->registerJs($js);

@@ -73,7 +73,13 @@ class MonthReport extends Model
                 'dateTo'    =>  strtotime($this->year.'-'.$this->month.'-'.date('t', $dateFrom))
             ]);
 
-            $this->_orders = $search->search(\Yii::$app->request->get())->andWhere(['orderSource' => $this->shop->id])->all();
+            $search = $search->search(\Yii::$app->request->get());
+
+            if(\Yii::$app->request->get('smartFilter') != 'hmelnytsky' && \Yii::$app->request->get('smartFilter') != 'all'){
+                $search = $search->andWhere(['orderSource' => $this->shop->id]);
+            }
+
+            $this->_orders = $search->all();
         }
 
         return $this->_orders;
@@ -265,21 +271,31 @@ class MonthReport extends Model
             return [];
         }
 
-        $earned = $confirmed = $done = 0;
+        $earned = $confirmed = $done = $earnedOrders = $confirmedOrders = $doneOrders = 0;
 
         foreach($this->getOrdersByDay($day, ['added']) as $order){
             $earned += $order->originalSum;
+            $earnedOrders++;
 
             if($order->done == 1){
+                $doneOrders++;
                 $done += $order->actualAmount;
             }
 
             if($order->moneyConfirmed == 1){
+                $confirmedOrders++;
                 $confirmed += $order->actualAmount;
             }
         }
 
-        return ['earned' => $earned, 'confirmed' =>  $confirmed, 'done'  =>  $done];
+        return [
+            'earned'        =>  $earned,
+            'confirmed'     =>  $confirmed,
+            'done'          =>  $done,
+            'earnedOrders'  =>  $earnedOrders,
+            'confirmedOrders'=> $confirmedOrders,
+            'doneOrders'    =>  $doneOrders
+        ];
     }
 
     public function getSalesStats(){
@@ -290,7 +306,10 @@ class MonthReport extends Model
         $lastDay = date('t', strtotime($dayFormatted));
 
         for($day = 1; $day <= $lastDay; $day++){
-            $stats[] = array_merge(['date' => $this->year.'-'.(strlen($this->month) < 2 ? "0{$this->month}" : $this->month).'-'.($day < 10 ? "0{$day}" : $day)], $this->getSalesStatsByDay($day));
+            $stats[] = array_merge([
+                'date' => $this->year.'-'.(strlen($this->month) < 2 ? "0{$this->month}" : $this->month).'-'.($day < 10 ? "0{$day}" : $day)],
+                $this->getSalesStatsByDay($day)
+            );
         }
 
         return $stats;

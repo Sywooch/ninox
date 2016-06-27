@@ -164,12 +164,23 @@ class BannerHelper extends Component
      * @param Banner $banner
      *
      * @return string
+     * @throws \yii\base\InvalidParamException
      */
     public static function renderImageBanner($banner, $withBlock){
         $content = Html::img(preg_match('/http/', $banner->banner->value) ? $banner->banner->value : \Yii::$app->params['frontend'].$banner->banner->value);
-        
-        $content = !empty($banner->banner->link) ? Html::a($content, Url::to([$banner->banner->link,
-            'language' => \Yii::$app->language])) : $content;
+
+        $link = '';
+
+
+        if(!empty($banner->banner->link)){
+            if(preg_match('/http/', $banner->banner->link)){
+                $link = $banner->banner->link;
+            }else{
+                $link = Url::toRoute([$banner->banner->link, 'language' => \Yii::$app->language]);
+            }
+        }
+
+        $content = !empty($link) ? Html::a($content, $link) : $content;
 
         if($withBlock){
             return $content;

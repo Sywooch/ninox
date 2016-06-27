@@ -185,7 +185,7 @@ class DefaultController extends Controller
             'categoryForm'  =>  $categoryForm,
             'subCats'       =>  $category->childs,
             'parentCategory'=>  Category::getParentCategory($category->Code),
-            'categoryUk'    =>  CategoryUk::findOne(['ID' => $category->ID])
+            'categoryUk'    =>  new CategoryUk
         ]);
     }
 

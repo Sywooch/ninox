@@ -74,6 +74,7 @@ $css = <<<'CSS'
 
 .amcharts-main-div a{
 opacity: 0 !important;
+display: none !important;
 }
 CSS;
 
@@ -84,6 +85,8 @@ $showFourth = ($report->month == date('m') && $report->year == date('Y'));
 $columns = $showFourth ? 3 : 4;
 
 ?>
+    <button class="btn btn-default"><?=$report->year?> год</button>&nbsp;&nbsp;<button class="btn btn-default"><?=\Yii::$app->formatter->asDate($report->year.'-'.$report->month.'-01', 'LLLL')?></button>
+<br><br>
 <div class="row panels">
     <div class="col-xs-<?=$columns?>">
         <div class="panel panel-<?=$report->planProgressInPercents > 99 ? 'success' : 'default'?>">
@@ -178,18 +181,67 @@ $columns = $showFourth ? 3 : 4;
         </div>
     </div>
     <?php } ?>
-    <div class="col-xs-8">
+    <div class="col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 Подробная статистика
             </div>
+            <?php
+            \yii\widgets\Pjax::begin();
+            ?>
             <div class="panel-body">
+                <div class="row col-xs-12">
+                    <?=Html::a('Все', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'all']), ['class' => 'btn btn-default'])?>
+                    <?=Html::a('Интернет', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'internet']), ['class' => 'btn btn-default'])?>
+                    <?=Html::a('Магазин', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'shop']), ['class' => 'btn btn-default'])?>
+                    <?=Html::a('Хмельницкий', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'hmelnytsky']), ['class' => 'btn btn-default'])?>
+                    <?=Html::a('Детские товары', array_merge(['/charts/shop'], \Yii::$app->request->get(), ['smartFilter' => 'childsGoods']), ['class' => 'btn btn-default'])?>
+                </div>
+                <!--<div class="row col-xs-12" style="margin-bottom: 10px">
+                    <span class="heading">Источник заказа</span>
+                    <a href="<?=\yii\helpers\Url::to(array_merge(['/charts/shop'], \Yii::$app->request->get(), ['ordersSource' => 'all']))?>" class="btn btn-default">Все</a>&nbsp;&nbsp;
+                    <a class="btn btn-default">Интернет</a>&nbsp;&nbsp;
+                    <a class="btn btn-default">Магазин (троещина)</a>&nbsp;&nbsp;
+                    <a class="btn btn-default">Хмельницкий</a>&nbsp;&nbsp;
+                </div>
+                <div class="row col-xs-12">
+                    <span class="heading">Категории</span>
+                    <button class="btn btn-default">button</button>&nbsp;&nbsp;
+                    <button class="btn btn-default">button</button>&nbsp;&nbsp;
+                    <button class="btn btn-default">button</button>&nbsp;&nbsp;
+                    <button class="btn btn-default">button</button>&nbsp;&nbsp;
+                </div>-->
+                <?=\kartik\grid\GridView::widget([
+                    'summary'       =>  '<br><br>',
+                    'dataProvider'  =>  new \yii\data\ArrayDataProvider([
+                        'models'    =>  $report->salesStats
+                    ]),
+                    'bordered'      =>  false,
+                    'columns'       =>  [
+                        [
+                            'label'     =>  'Дата',
+                            'attribute' =>  'date',
+                        ],
+                        [
+                            'label'     =>  'Заказов',
+                            'attribute' =>  'earnedOrders',
+                        ],
+                        [
+                            'label'     =>  'На сумму',
+                            'attribute' =>  'earned',
+                        ],
+                        [
+                            'label'     =>  'Получено оплат',
+                            'attribute' =>  'confirmed',
+                        ],
 
+                    ]
+                ])?>
             </div>
+            <?php
+            \yii\widgets\Pjax::end();
+            ?>
         </div>
-    </div>
-    <div class="col-xs-4">
-
     </div>
     <div class="col-xs-12">
         <div class="panel panel-default">
