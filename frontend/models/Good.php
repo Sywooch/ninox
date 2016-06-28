@@ -142,19 +142,9 @@ class Good extends \common\models\Good{
         return $options;
     }
 
-    public function __get($name){
-	    switch($name){
-		    case 'inCart':
-			    return \Yii::$app->cart->has($this->ID);
-			    break;
-            case 'video':
-                return true; //TODO: return video from dopVideo table
-                break;
-		    default:
-			    return parent::__get($name);
-			    break;
-	    }
-    }
+	public function getInCart(){
+		return \Yii::$app->cart->has($this->ID);
+	}
 
     public function __set($name, $value){
 	    parent::__set($name, $value);

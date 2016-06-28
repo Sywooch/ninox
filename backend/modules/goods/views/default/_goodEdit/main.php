@@ -83,7 +83,6 @@ $form = ActiveForm::begin([
         'class' =>  'goodEditForm',
     ],
     'type' => ActiveForm::TYPE_HORIZONTAL,
-    'validateOnType'    =>  true,
     'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL]
 ]);
 

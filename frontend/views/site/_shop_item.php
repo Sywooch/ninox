@@ -48,7 +48,7 @@ $onePriceBlock = function($model){
 
 $itemDopInfoBlock = function($model) use ($link){
 	return Html::tag('div',
-		(!empty($model->video) ?
+		(!empty($model->videos) ?
 			Html::tag('span', '', [
 				'class'     =>  'icon-youtube link-hide',
 				'data-href' =>  $link.'#tab-video'

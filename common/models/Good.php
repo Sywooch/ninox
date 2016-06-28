@@ -71,7 +71,7 @@ use yii\db\ActiveRecord;
  * @property integer $garantyShow
  * @property integer $yandexExport
  * @property integer $originalGood
- * @property string $video
+ * @property GoodsVideo $videos
  * @property integer $count
  * @property integer $isUnlimited
  * @property Category $category
@@ -225,6 +225,10 @@ class Good extends ActiveRecord
      */
     public function getPhotos(){
         return $this->hasMany(GoodsPhoto::className(), ['itemid' => 'ID'])->orderBy('order');
+    }
+
+    public function getVideos(){
+        return $this->hasMany(GoodsVideo::className(), ['goodID' => 'ID']);
     }
 
     /**
