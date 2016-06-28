@@ -151,7 +151,7 @@ class DefaultController extends Controller
                 return $results;
                 break;
             case 'deliveryParam':
-                $deliveryTypeID = \Yii::$app->request->post("depdrop_parents");
+                $deliveryTypeID = \Yii::$app->request->post("depdrop_parents")[0];
 
                 $deliveryType = DeliveryType::findOne(['id' => $deliveryTypeID]);
 
@@ -270,6 +270,7 @@ class DefaultController extends Controller
                         $result[] = ['id' => $param->id, 'name' => $param->description];
                     }
                 }
+
                 return ['output' => $result, 'selected' =>
                     $order->paymentType != $paymentTypeID || empty($order->paymentParam) ?
                         (string)$params[0]['id'] : (string)$order->paymentParam];
