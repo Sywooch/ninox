@@ -1,7 +1,5 @@
 <?php
-$form = new \kartik\form\ActiveForm();
-
-$form->begin();
+$form = \kartik\form\ActiveForm::begin();
 
 echo $form->field($model, 'sum'),
     $form->field($model, 'type')->dropDownList(\yii\helpers\ArrayHelper::map(\common\models\CostsType::find()->asArray()->all(), 'id', 'type')),

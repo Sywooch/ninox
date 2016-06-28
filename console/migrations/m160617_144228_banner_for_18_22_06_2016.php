@@ -18,7 +18,7 @@ class m160617_144228_banner_for_18_22_06_2016 extends Migration
         foreach($images as $image){
             $banner = new Banner([
                 'category'  =>  29,
-                'ID'        =>  (Banner::find()->select("MAX(ID)")->scalar() + 1),
+                'ID'        =>  Banner::find()->max('id') + 1,
                 'type'      =>  Banner::TYPE_IMAGE,
                 'dateFrom'  =>  '2016-06-18 00:00:00',
                 'dateTo'    =>  '2016-06-21 23:59:59',

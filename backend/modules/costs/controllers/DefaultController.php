@@ -15,6 +15,7 @@ class DefaultController extends Controller
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\base\InvalidParamException
      */
     public function actionIndex()
     {
@@ -39,7 +40,7 @@ class DefaultController extends Controller
         }
 
         return $this->render('index', [
-            'types'     =>  CostsType::find()->all(),
+            'types'     =>  CostsType::find()->where("`type` != 'cashboxExpenses'")->all(),
             'costFilter'=>  $costFilter,
             'costForm'  =>  $costForm
         ]);

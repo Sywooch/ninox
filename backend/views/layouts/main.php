@@ -548,6 +548,10 @@ $this->beginPage() ?>
                                         'label' =>  'Отключеные товары',
                                         'url'   =>  Url::toRoute('/charts/goods?mod=disabled')
                                     ],
+                                    [
+                                        'label' =>  'Статистика кассы',
+                                        'url'   =>  Url::toRoute('/charts/cashbox')
+                                    ],
                                     /*[
                                         'label' =>  'Включеные товары',
                                         'url'   =>  Url::toRoute('/charts/goods?mod=enabled')

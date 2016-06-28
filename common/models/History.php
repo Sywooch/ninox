@@ -76,6 +76,7 @@ use yii\db\ActiveRecord;
  * @property SborkaItem[] $items
  * @property integer $orderProvider
  * @property integer $status
+ * @property float payedAmount
  *
  */
 class History extends ActiveRecord
@@ -121,6 +122,10 @@ class History extends ActiveRecord
      */
     public function getCustomer(){
         return $this->hasOne(Customer::className(), ['ID' => 'customerID'])->with('recipients')->with('contacts')->with('orders');
+    }
+
+    public function getPayedAmount(){
+        return $this->moneyConfirmed ? $this->actualAmount : 0;
     }
 
     /**
