@@ -736,7 +736,7 @@ class Cashbox extends Component{
                 'promoCode' =>  $this->promoCode
             ]);
         }
-
+\Yii::trace('Count = '.$count);
         if($this->cashboxOrder->isNewRecord){
             $this->cashboxOrder->createdTime = date('Y-m-d H:i:s');
             $this->cashboxOrder->priceType = $this->priceType;
@@ -776,7 +776,7 @@ class Cashbox extends Component{
 
             $this->cashboxOrder->_items[$itemID] = $this->items[$itemID]; //???
         }
-
+\Yii::trace('Count 2 = '.$this->items[$itemID]->count);
         $this->items[$itemID]->count += $count;
 
         if($this->items[$itemID]->save(false)){

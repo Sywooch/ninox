@@ -325,7 +325,7 @@ $js = <<<JS
         clearOrder();
     }).on('click', "#returnOrder", function(e){
         returnOrder();
-    }).on('keypress keyup', "#itemInput", function(e){
+    }).on('keypress', "#itemInput", function(e){
         $(this).val($(this).val().replace(/\D+/, ''));
 
         if((e.keyCode == 13) && $(this).val() != ''){
