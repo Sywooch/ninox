@@ -433,79 +433,59 @@ $this->beginPage() ?>
                 'items' =>  [
                     [
                         'label' =>  'Магазин',
+                        'url'   =>  '##',
                         'items' =>  [
                             [
                                 'label' =>  'Товары',
+                                'url'   =>  '##',
                                 'items' =>  [
                                     [
                                         'label' =>  'Все товары',
-                                        'url'   =>  Url::toRoute('/goods/index')
+                                        'url'   =>  Url::to(['/categories/index'])
                                     ],
                                     [
-                                        'label' =>  'Отключеные товары',
-                                        'url'   =>  Url::toRoute([
-                                            '/goods/index',
-                                            'smartfilter'   =>  'disabled'
-                                        ])
+                                        'label' =>  'Отключеные',
+                                        'url'   =>  Url::to(['/categories/index', 'smartFilter' => 'disabled'])
                                     ],
                                     [
-                                        'label' =>  'Товары без цены',
-                                        'url'   =>  Url::toRoute([
-                                            '/goods/index',
-                                            'smartfilter'   =>  'withoutprice'
-                                        ])
+                                        'label' =>  'Без цены',
+                                        'url'   =>  Url::to(['/categories/index', 'smartFilter' => 'withoutPrices'])
                                     ],
                                     [
-                                        'label' =>  'Товары без дополнительных фотографий',
-                                        'url'   =>  Url::toRoute([
-                                            '/goods/index',
-                                            'smartfilter'   =>  'withoutalternatephotos'
-                                        ])
+                                        'label' =>  'Без дополнительных фотографий',
+                                        'url'   =>  Url::to(['/categories/index', 'smartFilter' => 'withoutPhoto'])
                                     ],
                                     [
-                                        'label' =>  'Дублирующиеся товары',
-                                        'url'   =>  Url::toRoute([
-                                            '/goods/index',
-                                            'smartfilter'   =>  'duplicated'
-                                        ])
+                                        'label' =>  'Недавно отключеные',
+                                        'url'   =>  Url::to(['/charts/goods', 'mod' => 'disabled'])
                                     ],
                                     [
-                                        'label' =>  'Рейтинг товаров',
-                                        'url'   =>  Url::toRoute([
-                                            '/goods/rating'
-                                        ])
+                                        'label' =>  'Дублирующиеся',
+                                        'url'   =>  '#'
                                     ],
                                     [
-                                        'label' =>  'Лог изменений товаров',
-                                        'url'   =>  Url::toRoute(['/goods/log', 'act' => 'goodschanges'])
+                                        'label' =>  'Рейтинг',
+                                        'url'   =>  '#'
+                                    ],
+                                    [
+                                        'label' =>  'Лог изменений',
+                                        'url'   =>  '#'
                                     ],
                                     [
                                         'label' =>  'Лог загрузок фото',
-                                        'url'   =>  Url::toRoute(['/goods/log', 'act' => 'photosupload'])
+                                        'url'   =>  '#'
                                     ],
                                     [
-                                        'label' =>  'Приёмка товаров',
-                                        'url'   =>  Url::toRoute('/goods/take')
+                                        'label' =>  'Приёмка',
+                                        'url'   =>  '#'
                                     ],
                                     [
-                                        'label' =>  'Опции товаров',
-                                        'url'   =>  Url::toRoute('/goods/options')
+                                        'label' =>  'Опции',
+                                        'url'   =>  '#'
                                     ],
                                     [
-                                        'label' =>  'Отзывы на товары',
-                                        'url'   =>  Url::toRoute('/goods/reviews')
-                                    ],
-                                    [
-                                        'label' =>  'Запросы на отключение товаров',
-                                        'items' =>  [
-                                            [
-                                                'label' =>  'В заказе',
-                                                'url'   =>  Url::toRoute(['/goods/requests', 'act' => 'order'])
-                                            ],[
-                                                'label' =>  'На сайте',
-                                                'url'   =>  Url::toRoute(['/goods/requests', 'act' => 'site'])
-                                            ],
-                                        ]
+                                        'label' =>  'Отзывы',
+                                        'url'   =>  '#'
                                     ],
                                 ],
                             ],
@@ -516,18 +496,6 @@ $this->beginPage() ?>
                             [
                                 'label' =>  'Прайсы',
                                 'url'   =>  Url::to('/pricelists')
-                            ],
-                            [
-                                'label' =>  'Руколдельницы',
-                                'items' =>  [
-                                    [
-                                        'label' =>  'Рукодельницы',
-                                        'url'   =>  '#'
-                                    ],[
-                                        'label' =>  'Типы аккаунтов',
-                                        'url'   =>  '#'
-                                    ],
-                                ]
                             ],
                             [
                                 'label' =>  'Баннеры',
@@ -552,7 +520,7 @@ $this->beginPage() ?>
                             ],
                             [
                                 'label' =>  'Оплаты',
-                                'url'   =>  '#',
+                                'url'   =>  '##',
                                 'items' =>  [
                                     [
                                         'label' =>  'Подтверждение оплаты',
@@ -563,6 +531,10 @@ $this->beginPage() ?>
                                         'url'   =>  Url::to('/payments/control')
                                     ],
                                 ]
+                            ],
+                            [
+                                'label' =>  'Расходы',
+                                'url'   =>  '/costs'
                             ],
                             [
                                 'label' =>  'Отчёты',
@@ -603,9 +575,17 @@ $this->beginPage() ?>
                                 'url'   =>  '#'
                             ],
                             [
-                                'label' =>  'Расходы',
-                                'url'   =>  '/costs'
-                            ]
+                                'label' =>  'Руколдельницы',
+                                'items' =>  [
+                                    [
+                                        'label' =>  'Рукодельницы',
+                                        'url'   =>  '#'
+                                    ],[
+                                        'label' =>  'Типы аккаунтов',
+                                        'url'   =>  '#'
+                                    ],
+                                ]
+                            ],
                         ]
                     ],
                     [
@@ -613,8 +593,12 @@ $this->beginPage() ?>
                         'url'   =>  Url::toRoute('/customers/index'),
                         'items' =>  [
                             [
+                                'label' =>  'Список клиентов',
+                                'url'   =>  Url::toRoute(['/customers/index'])
+                            ],
+                            [
                                 'label' =>  'Обратная связь',
-                                'url'   =>  '#',
+                                'url'   =>  '##',
                                 'items' =>  [
                                     [
                                         'label' =>  'Отзывы',
@@ -639,31 +623,23 @@ $this->beginPage() ?>
                                 ]
                             ],
                             [
-                                'label' =>  'Рассылка',
-                                'url'   =>  '#'
-                            ],
-                            [
                                 'label' =>  'Клиентские корзины',
                                 'url'   =>  '/carts'
                             ],
                             [
                                 'label' =>  'Статистика заказов',
                                 'url'   =>  '/customers/orders-stats'
-                            ]
+                            ],
+                            [
+                                'label' =>  'Рассылка',
+                                'url'   =>  '#'
+                            ],
                         ]
                     ],
                     [
                         'label' =>  'Админчасть',
-                        'url'   =>  '#',
+                        'url'   =>  '##',
                         'items' =>  [
-                            [
-                                'label' =>  'График дежурств',
-                                'url'   =>  '#'
-                            ],
-                            [
-                                'label' =>  'Виртуальные категории',
-                                'url'   =>  '#'
-                            ],
                             [
                                 'label' =>  'Импорт прайслистов',
                                 'url'   =>  Url::toRoute('/goods/import')
@@ -671,6 +647,14 @@ $this->beginPage() ?>
                             [
                                 'label' =>  'Пользователи',
                                 'url'   =>  Url::toRoute('/users/index')
+                            ],
+                            [
+                                'label' =>  'График дежурств',
+                                'url'   =>  '#'
+                            ],
+                            [
+                                'label' =>  'Виртуальные категории',
+                                'url'   =>  '#'
                             ],
                             [
                                 'label' =>  'Способы оплаты',
@@ -695,16 +679,16 @@ $this->beginPage() ?>
                         'url'   =>  '#',
                         'items' =>  [
                             [
+                                'label' =>  'Статьи',
+                                'url'   =>  '#'//Url::toRoute('/blog/index')
+                            ],
+                            [
                                 'label' =>  'Тэги',
                                 'url'   =>  '#'
                             ],
                             [
                                 'label' =>  'Категории',
                                 'url'   =>  '#'
-                            ],
-                            [
-                                'label' =>  'Статьи',
-                                'url'   =>  Url::toRoute('/blog/index')
                             ],
                         ]
                     ],

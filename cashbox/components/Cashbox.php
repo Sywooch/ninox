@@ -727,6 +727,7 @@ class Cashbox extends Component{
      * @param int $count
      *
      * @return \cashbox\models\CashboxItem
+     * @throws \yii\base\InvalidCallException
      */
     public function put($itemID, $count = 1){
         if(!$this->cashboxOrder && !empty($this->orderID)){
