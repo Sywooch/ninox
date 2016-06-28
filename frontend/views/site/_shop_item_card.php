@@ -67,7 +67,10 @@ if($good->videos){
         'label'     =>  \Yii::t('shop', 'Видео'),
         'content'   =>  $this->render('_shop_item/_item_tabs/_tabItem_video', [
             'videos'  =>  $good->videos
-        ])
+        ]),
+        'options'   =>  [
+            'id'   =>  'tab-video',
+        ]
     ];
 }
 
@@ -305,7 +308,8 @@ $imgModal = new \bobroid\remodal\Remodal([
     </div>
     <div class="about-item">
         <?=TabsX::widget([
-            'items' =>  $tabsItems
+            'enableStickyTabs'  =>  true,
+            'items'             =>  $tabsItems
         ])?>
     </div>
 

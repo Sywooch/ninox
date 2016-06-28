@@ -1,6 +1,13 @@
 <?php
+use yii\helpers\Html;
+
 foreach($videos as $video){
-?>
-<iframe class="item-video" width="560" height="315" src="//www.youtube.com/embed/<?=$video->video?>" frameborder="0"
-         allowfullscreen></iframe>
-<?php }?>
+	echo Html::tag('iframe', '', [
+		'class'             =>  'item-video',
+		'width'             =>  '560',
+		'height'            =>  '315',
+		'src'               =>  '//www.youtube.com/embed/'.$video->video,
+		'frameborder'       =>  '0',
+		'allowfullscreen'   =>  true,
+	]);
+}
