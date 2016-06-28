@@ -34,7 +34,7 @@ class PaymentType extends \yii\db\ActiveRecord
     }
 
     public function getParams(){
-        return PaymentParam::find()->where(['in', 'id', DomainDeliveryPayment::find()->select('paymentParam')->where(['paymentType' => $this->id])]);
+        return PaymentParam::find()->where(['in', 'id', DomainDeliveryPayment::find()->select('paymentParam')->where(['paymentType' => $this->id])])->all();
     }
 
     /**

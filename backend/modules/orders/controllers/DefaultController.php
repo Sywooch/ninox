@@ -249,7 +249,7 @@ class DefaultController extends Controller
                 return $results;
                 break;
             case 'paymentParam':
-                $paymentTypeID = \Yii::$app->request->post("depdrop_parents");
+                $paymentTypeID = \Yii::$app->request->post("depdrop_parents")[0];
 
                 $paymentType = PaymentType::findOne(['id' => $paymentTypeID]);
 
@@ -270,8 +270,6 @@ class DefaultController extends Controller
                         $result[] = ['id' => $param->id, 'name' => $param->description];
                     }
                 }
-
-
                 return ['output' => $result, 'selected' =>
                     $order->paymentType != $paymentTypeID || empty($order->paymentParam) ?
                         (string)$params[0]['id'] : (string)$order->paymentParam];

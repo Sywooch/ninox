@@ -217,7 +217,7 @@ $form = \yii\bootstrap\ActiveForm::begin([
 		                        </div>
 	                        </div>
                             <div class="price commission">
-                                <?=\Yii::t('shop', 'Коммиссия')?> (<span class="commission-percent"></span><span class="commission-static"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>)
+                                <?=\Yii::t('shop', 'Комиссия')?> (<span class="commission-percent"></span><span class="commission-static"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>)
                                 <div class="bold">
 	                                <span class="commission-amount"></span><span class="currency"> <?=\Yii::$app->params['domainInfo']['currencyShortName']?></span>
                                 </div>
