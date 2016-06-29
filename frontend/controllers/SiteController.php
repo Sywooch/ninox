@@ -55,6 +55,7 @@ class SiteController extends Controller
      * Displays homepage.
      *
      * @return mixed
+     * @throws \yii\base\InvalidParamException
      */
     public function actionIndex()
     {
@@ -74,11 +75,11 @@ class SiteController extends Controller
                 ->andWhere('`'.GoodTranslation::tableName().'`.`enabled` = \'1\'')
                 ->andWhere('`'.GoodTranslation::tableName().'`.`language` = \''.\Yii::$app->language.'\''),
             'pagination'    =>  [
-                'pageSize'  =>  (!empty(\Yii::$app->request->get("page")) && \Yii::$app->request->get("page") != 1) ? 5 : 4
+                'pageSize'  =>  (!empty(\Yii::$app->request->get('page')) && \Yii::$app->request->get('page') != 1) ? 5 : 4
             ],
             'sort'  =>  [
                 'defaultOrder'   =>  [
-                    'vkl_time'  =>  SORT_DESC
+                    'tovupdate'  =>  SORT_DESC
                 ]
             ]
         ]);
@@ -117,11 +118,11 @@ class SiteController extends Controller
                 }
                 break;
             case 'sale':
-                $query->andWhere('`goods`.`discountType` != \'0\'');
+                $query->andWhere("`goods`.`discountType` != '0'");
                 break;
             case 'new':
                 //default:
-                $query->orderBy('`goods`.`vkl_time` DESC');
+                $query->orderBy('`goods`.`tovupdate` DESC');
                 break;
         }
 
