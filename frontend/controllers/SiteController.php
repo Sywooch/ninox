@@ -79,7 +79,7 @@ class SiteController extends Controller
             ],
             'sort'  =>  [
                 'defaultOrder'   =>  [
-                    'vkl_time'  =>  SORT_DESC
+                    'tovupdate'  =>  SORT_DESC
                 ]
             ]
         ]);
