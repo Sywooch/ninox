@@ -31,6 +31,10 @@ class CostsType extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getCosts(){
+        return $this->hasMany(Cost::className(), ['costId' => 'id']);
+    }
+
     /**
      * @inheritdoc
      */
