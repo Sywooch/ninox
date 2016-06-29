@@ -55,6 +55,7 @@ class SiteController extends Controller
      * Displays homepage.
      *
      * @return mixed
+     * @throws \yii\base\InvalidParamException
      */
     public function actionIndex()
     {
@@ -117,11 +118,11 @@ class SiteController extends Controller
                 }
                 break;
             case 'sale':
-                $query->andWhere('`goods`.`discountType` != \'0\'');
+                $query->andWhere("`goods`.`discountType` != '0'");
                 break;
             case 'new':
                 //default:
-                $query->orderBy('`goods`.`vkl_time` DESC');
+                $query->orderBy('`goods`.`tovupdate` DESC');
                 break;
         }
 
