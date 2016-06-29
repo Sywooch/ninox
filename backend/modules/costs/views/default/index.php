@@ -21,14 +21,34 @@ $remodal->buttonOptions = [
 echo $remodal->renderButton();
 
 foreach($types as $type){
-    echo Html::tag('h3', $type['type']),
+    echo Html::tag('h3', $type->type),
     \kartik\grid\GridView::widget([
         'summary'       =>  false,
-        'id'            =>  'costs_'.$type['type'],
-        'dataProvider'  =>  $costFilter->search(['costId' => $type['id']]),
+        'id'            =>  'costs_'.$type->type,
+        'dataProvider'  =>  new \yii\data\ActiveDataProvider([
+            'query' =>  $type->getCosts(),
+            'sort'  =>  [
+                'defaultOrder'   =>  [
+                    'date'  =>  SORT_DESC
+                ]
+            ]
+        ]),
+        'pjax'  =>  true,
         'columns'       =>  [
-            'date',
-            'costSumm',
+            [
+                'attribute' =>  'date',
+                'width'     =>  '130px',
+                'value'     =>  function($model){
+                    return \Yii::$app->formatter->asDate($model->date);
+                }
+            ],
+            [
+                'attribute' =>  'costSumm',
+                'width'     =>  '130px',
+                'value'     =>  function($model){
+                    return "{$model->costSumm} грн.";
+                }
+            ],
             'costComment'
         ]
     ]);
