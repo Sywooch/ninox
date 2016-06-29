@@ -35,9 +35,13 @@ class OrderPreviewForm extends Model
 
     public $moneyConfirmed;
 
-    public $globalMoneyPayment;
-
     public $actualAmount;
+
+    public $nakladnaSendDate;
+
+    public $moneyConfirmedDate;
+
+    public $moneyCollector;
 
     /**
      * @var History
@@ -46,10 +50,10 @@ class OrderPreviewForm extends Model
 
     public function rules(){
         return [
-            [['deliveryType', 'deliveryParam', 'responsibleUser', 'paymentType', 'paymentParam', 'id', 'number'], 'integer'],
+            [['deliveryType', 'deliveryParam', 'responsibleUser', 'paymentType', 'paymentParam', 'id', 'number', 'moneyConfirmed'], 'integer'],
             [['deliveryInfo', 'nakladna'], 'string'],
             [['actualAmount'], 'number'],
-            [['moneyConfirmed', 'globalMoneyPayment'], 'boolean']
+            [['nakladnaSendDate', 'moneyConfirmedDate', 'moneyCollector'], 'safe'],
         ];
     }
 
@@ -58,18 +62,20 @@ class OrderPreviewForm extends Model
      */
     public function loadOrder($order){
         $this->setAttributes([
-            'id'                =>  $order->id,
-            'number'            =>  $order->number,
-            'deliveryType'      =>  $order->deliveryType,
-            'deliveryParam'     =>  $order->deliveryParam,
-            'deliveryInfo'      =>  $order->deliveryInfo,
-            'responsibleUser'   =>  $order->responsibleUserID,
-            'nakladna'          =>  $order->nakladna,
-            'paymentType'       =>  $order->paymentType,
-            'paymentParam'      =>  $order->paymentParam,
-            'moneyConfirmed'  =>  $order->moneyConfirmed,
-            'actualAmount'      =>  $order->actualAmount,
-            'globalMoneyPayment'=>  $order->globalmoney == 1
+            'id'                    =>  $order->id,
+            'number'                =>  $order->number,
+            'deliveryType'          =>  $order->deliveryType,
+            'deliveryParam'         =>  $order->deliveryParam,
+            'deliveryInfo'          =>  $order->deliveryInfo,
+            'responsibleUser'       =>  $order->responsibleUserID,
+            'nakladna'              =>  $order->nakladna,
+            'paymentType'           =>  $order->paymentType,
+            'paymentParam'          =>  $order->paymentParam,
+            'moneyConfirmed'        =>  $order->moneyConfirmed,
+            'actualAmount'          =>  $order->actualAmount,
+            'nakladnaSendDate'      =>  $order->nakladnaSendDate,
+            'moneyConfirmedDate'    =>  $order->moneyConfirmedDate,
+            'moneyCollector'        =>  $order->moneyCollector,
         ]);
 
         $this->order = $order;
@@ -86,7 +92,6 @@ class OrderPreviewForm extends Model
             'paymentParam'      =>  $this->paymentParam,
             'moneyConfirmed'    =>  $this->moneyConfirmed,
             'actualAmount'      =>  $this->actualAmount,
-            'globalmoney'       =>  $this->globalMoneyPayment,
         ]);
 
         $this->order->save(false);
@@ -103,7 +108,6 @@ class OrderPreviewForm extends Model
             'paymentType'       =>  'Способ оплаты:',
             'paymentParam'      =>  '',
             'moneyConfirmed'    =>  'Оплата:',
-            'globalMoneyPayment'=>  '',
             'actualAmount'      =>  'Сумма к оплате:'
         ];
     }

@@ -266,9 +266,9 @@ var sendSms = function(order, type, button){
 }
 
 $("body").on('click', "button.sms-order", function(){
-    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'sms', $(this));
+    sendSms($(this).closest('tr[data-key]').data('key'), 'sms', $(this));
 }).on('click', "button.sms-card", function(){
-    sendSms($(this)[0].parentNode.parentNode.parentNode.getAttribute("data-key"), 'card', $(this));
+    sendSms($(this).closest('tr').data('key'), 'card', $(this));
 }).on('click', 'button.btn-inform-payment', function(){
     $('#payment-confirm-form').find('#paymentconfirmform-ordernumber').val($(this).data('number'));
 }).on('click', 'input.btn-cancel', function(){
@@ -330,7 +330,7 @@ $css = <<<'CSS'
     width: 180px;
 }
 
-.kv-expand-detail-row .btn{
+.kv-expand-detail-row .btn.btn-lg{
     border: 2px solid;
 }
 
@@ -353,13 +353,43 @@ $css = <<<'CSS'
     color: #ff6c00;
 }
 
-.kv-expand-detail-row .form-group{
-    padding: 0 3px;
-    line-height: 70px;
+.kv-expand-detail-row .sms-order{
+    margin-left: 10px;
 }
 
-.kv-expand-detail-row .form-group > *{
+.kv-expand-detail-row .form-group{
+    padding: 0 3px;
     vertical-align: middle;
+}
+
+.kv-expand-detail-row .form-group.money-collector,
+.kv-expand-detail-row .form-group.ttn-send-date{
+    font-size: 12px;
+}
+
+.kv-expand-detail-row .form-group.money-collector > div,
+.kv-expand-detail-row .form-group.ttn-send-date > div{
+    display: inline-block;
+}
+
+.kv-expand-detail-row .form-group.money-collector:before,
+.kv-expand-detail-row .form-group.ttn-send-date:before{
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #5cb85c;
+    margin: 0 10px;
+    display: inline-block;
+    vertical-align: 50%;
+}
+
+.kv-expand-detail-row .form-control{
+    vertical-align: middle;
+}
+
+.kv-expand-detail-row table tr{
+    height: 70px;
 }
 
 .kv-expand-detail-row table td + td{

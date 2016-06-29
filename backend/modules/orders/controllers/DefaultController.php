@@ -258,6 +258,7 @@ class DefaultController extends Controller
                 }
 
                 $result = [];
+                $selected = '';
 
                 $params = $paymentType->params;
 
@@ -269,11 +270,12 @@ class DefaultController extends Controller
                     foreach($params as $param){
                         $result[] = ['id' => $param->id, 'name' => $param->description];
                     }
+
+                    $selected = $order->paymentType != $paymentTypeID || empty($order->paymentParam) ?
+                        (string)$params[0]['id'] : (string)$order->paymentParam;
                 }
 
-                return ['output' => $result, 'selected' =>
-                    $order->paymentType != $paymentTypeID || empty($order->paymentParam) ?
-                        (string)$params[0]['id'] : (string)$order->paymentParam];
+                return ['output' => $result, 'selected' => $selected];
                 break;
         }
     }
