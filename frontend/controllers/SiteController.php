@@ -75,7 +75,7 @@ class SiteController extends Controller
                 ->andWhere('`'.GoodTranslation::tableName().'`.`enabled` = \'1\'')
                 ->andWhere('`'.GoodTranslation::tableName().'`.`language` = \''.\Yii::$app->language.'\''),
             'pagination'    =>  [
-                'pageSize'  =>  (!empty(\Yii::$app->request->get("page")) && \Yii::$app->request->get("page") != 1) ? 5 : 4
+                'pageSize'  =>  (!empty(\Yii::$app->request->get('page')) && \Yii::$app->request->get('page') != 1) ? 5 : 4
             ],
             'sort'  =>  [
                 'defaultOrder'   =>  [
