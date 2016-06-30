@@ -11,6 +11,7 @@ use backend\modules\charts\models\HistorySearch;
 use backend\modules\charts\models\MonthReport;
 use common\models\CashboxMoney;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 
 class DefaultController extends Controller
 {
@@ -28,6 +29,8 @@ class DefaultController extends Controller
     }
 
     public function actionCashbox(){
+        $report = new CashboxMonthReport();
+
         if(\Yii::$app->request->isAjax){
             switch(\Yii::$app->request->post('action')){
                 case 'addMoney':
@@ -48,12 +51,28 @@ class DefaultController extends Controller
 
                     $operation->save(false);
                     break;
+                case 'getDetailed':
+                    $day = \Yii::$app->request->post('value');
+
+                    return $this->renderAjax('cashbox/detailView', [
+                        'dataProvider'  =>  new ArrayDataProvider([
+                            'models'    =>  $report->getStatByDay($day)->operations,
+                            'sort'      =>  [
+                                'attributes' =>  ['date', 'responsibleUser'],
+                                'defaultOrder'  =>  [
+                                    'date'  =>  SORT_ASC
+                                ]
+                            ]
+                        ]),
+                        'day'           =>  $day
+                    ]);
+                    break;
             }
 
         }
 
         return $this->render('cashbox', [
-            'report'    =>  new CashboxMonthReport()
+            'report'    =>  $report
         ]);
     }
 

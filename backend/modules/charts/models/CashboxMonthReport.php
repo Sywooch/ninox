@@ -64,4 +64,18 @@ class CashboxMonthReport extends Model
         return $stats;
     }
 
+    /**
+     * @param string $date
+     * @return CashboxDayReport|bool
+     */
+    public function getStatByDay($date){
+        foreach($this->stats as $stat){
+            if($stat->date == $date){
+                return $stat;
+            }
+        }
+
+        return [];
+    }
+
 }
