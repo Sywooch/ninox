@@ -28,6 +28,29 @@ class DefaultController extends Controller
     }
 
     public function actionCashbox(){
+        if(\Yii::$app->request->isAjax){
+            switch(\Yii::$app->request->post('action')){
+                case 'addMoney':
+                    $operation = new CashboxMoney([
+                        'cashbox'   =>  1,
+                        'operation' =>   CashboxMoney::OPERATION_PUT,
+                        'amount'    =>  \Yii::$app->request->post('value')
+                    ]);
+
+                    $operation->save(false);
+                    break;
+                case 'tookMoney':
+                    $operation = new CashboxMoney([
+                        'cashbox'   =>  1,
+                        'operation' =>   CashboxMoney::OPERATION_TAKE,
+                        'amount'    =>  \Yii::$app->request->post('value')
+                    ]);
+
+                    $operation->save(false);
+                    break;
+            }
+
+        }
 
         return $this->render('cashbox', [
             'report'    =>  new CashboxMonthReport()

@@ -28,9 +28,13 @@ class CashboxDayReport  extends Model
         $dayStart = strtotime($this->date);
         $dayEnd = strtotime($this->date) + 86400;
 
+        $shopType = History::SOURCETYPE_SHOP;
+        $internetType = History::SOURCETYPE_INTERNET;
+
         return History::find()
-            ->where(['or', ['sourceType' => History::SOURCETYPE_SHOP], ['sourceType' => History::SOURCETYPE_INTERNET, 'paymentType' => 3]])
-            ->andWhere("`added` > '{$dayStart}' AND `added` < '{$dayEnd}'")
+            ->where(['or', "`sourceType` = '{$shopType}' AND `added` > '{$dayStart}' AND `added` < '{$dayEnd}'", "`sourceType` = '{$internetType}' AND `paymentType` = '3' AND `moneyConfirmedDate` LIKE '{$this->date}'"])
+
+            //->andWhere("`added` > '{$dayStart}' AND `added` < '{$dayEnd}'")
             //->andWhere(['or', "`added` > '{$dayStart}' AND `added` < '{$dayEnd}'", "`moneyConfirmedDate` LIKE '{$this->date}'"])
             ->all();
     }
@@ -63,8 +67,8 @@ class CashboxDayReport  extends Model
         $tooked = 0;
 
         foreach($this->cashboxMoney as $money){
-            if($money->operation == $money::OPERATION_REFUND){
-                $tooked = $money->amount;
+            if($money->operation == $money::OPERATION_TAKE){
+                $tooked += $money->amount;
             }
         }
 
@@ -75,8 +79,8 @@ class CashboxDayReport  extends Model
         $added = 0;
 
         foreach($this->cashboxMoney as $money){
-            if($money->operation == $money::OPERATION_SELL){
-                $added = $money->amount;
+            if($money->operation == $money::OPERATION_PUT){
+                $added += $money->amount;
             }
         }
 

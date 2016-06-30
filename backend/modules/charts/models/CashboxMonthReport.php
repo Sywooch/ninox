@@ -11,6 +11,9 @@ namespace backend\modules\charts\models;
 
 use yii\base\Model;
 
+/**
+ * @property CashboxDayReport[] stats
+ */
 class CashboxMonthReport extends Model
 {
 
