@@ -89,8 +89,9 @@ class ReturnForm extends Model
     public function save(){
         $return = new OrderReturn();
 
+        $return->orderNumber = $this->orderNumber;
+
         $return->setAttributes([
-            'orderNumber'   =>  $this->orderNumber,
             'data_otpravki' =>  $this->sendDate,
             'ttn'           =>  $this->nakladna,
             'telefon'       =>  $this->customerPhone,
