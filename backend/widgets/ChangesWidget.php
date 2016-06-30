@@ -11,6 +11,7 @@ namespace backend\widgets;
 use backend\models\User;
 use common\models\Siteuser;
 use kartik\grid\ActionColumn;
+use kartik\grid\GridView;
 use sammaye\audittrail\AuditTrail;
 use yii\base\Widget;
 use yii\bootstrap\Modal;
@@ -85,8 +86,8 @@ SCRIPT;
             ],
             'size'  =>  Modal::SIZE_LARGE,
         ]);
-        Pjax::begin();
-        echo \kartik\grid\GridView::widget([
+        echo GridView::widget([
+            'pjax'          =>  true,
             'dataProvider'  =>  new ActiveDataProvider([
                 'query' =>  $this->dataProvider,
                 'pagination'    =>  [
@@ -174,7 +175,7 @@ SCRIPT;
                 [
                     'attribute' =>  'user_id',
                     'value'     =>  function($model){
-                        return $this->getUser($model->user_id);
+                        return $this->getUser($model->user_id)->name;
                     }
                 ],
                 [
@@ -185,7 +186,6 @@ SCRIPT;
                 ],
             ]
         ]);
-        Pjax::end();
         Modal::end();
     }
 }
