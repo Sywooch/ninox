@@ -11,7 +11,7 @@ use evgeniyrru\yii2slick\Slick;
 
     <?=Slick::widget([
         'containerOptions' => [
-            'id'    => 'modalSliderFor',
+            'id'    => 'sliderForModal',
             'class' => 'first'
         ],
         'items' =>  $itemsModal,
@@ -20,10 +20,10 @@ use evgeniyrru\yii2slick\Slick;
             'fade'           => false,
             'slidesToShow'   => 1,
             'slidesToScroll' => 1,
-            'asNavFor'       => '#modalSliderNav',
+            'asNavFor'       => '#sliderFor',
         ]
     ]).
-    (sizeof($itemsNav) > 1 ? Slick::widget([
+    Slick::widget([
         'containerOptions' => [
             'id'    => 'modalSliderNav',
             'class' => 'second'
@@ -35,9 +35,9 @@ use evgeniyrru\yii2slick\Slick;
             'infinite'       => true,
             'slidesToShow'   => 8,
             'slidesToScroll' => 1,
-            'asNavFor'       => '#modalSliderFor',
+            'asNavFor'       => '#sliderForModal',
             'cssEase'        => 'linear',
         ]
-    ]) : '')
+    ])
 ?>
 

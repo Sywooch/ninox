@@ -649,6 +649,15 @@ $this->beginPage();
 					[
 						'class'	=>	'card'
 					]).
+				Html::tag('div',
+					Html::tag('span', 'Наши партнёры: ').
+					Html::tag('a', 'kolbaska.com.ua',
+						[
+							'href'	=>	'http://kolbaska.com.ua'
+						]),
+					[
+						'class'	=>	'our-partners'
+					]).
 				Html::tag('div', Html::tag('span', 'Мы в соцсетях:',[]).
 					SocialButtonWidget::widget([
 						'items' => [

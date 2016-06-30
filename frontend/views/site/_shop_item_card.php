@@ -86,7 +86,8 @@ foreach($good->photos as $photo){
 
     $itemsModal[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, [
         'width' =>  'auto',
-        'height'=>  'auto',
+        'height'=>  '100%',
+        'style' =>  'margin: auto;',
         'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
     ]);
 
@@ -102,8 +103,9 @@ $imgModal = new \bobroid\remodal\Remodal([
     'confirmButton'		=>	false,
     'closeButton'		=>	true,
     'addRandomToID'		=>	false,
-    'content'			=>	$this->render('_img_modal', ['good' => $good, 'itemsModal' => (!empty($itemsModal) ?
-        $itemsModal : ['На данный момент изображение товара отсутствует, приносим свои извинения']), 'itemsNav' => $itemsNav]),
+    'content'			=>	$this->render('_img_modal', ['good' => $good, /*'itemsModal' => (!empty($itemsModal) ?
+        $itemsModal : ['На данный момент изображение товара отсутствует, приносим свои извинения']),*/
+        'itemsModal' => $itemsModal, 'itemsNav' => $itemsNav]),
     'id'				=>	'imgModal',
     'options'			=>  [
         'class'			=>  'img-modal'
@@ -126,7 +128,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                     'fade'           => true,
                     'slidesToShow'   => 1,
                     'slidesToScroll' => 1,
-                    'asNavFor'       => '#modalSliderFor',
+                    'asNavFor'       => '',
                 ]
             ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
                 [
@@ -139,7 +141,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                 ])), (!empty($itemsModal) ? '#imgModal' : '')).
             (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
-                    'id'    => '',
+                    'id'    => 'sliderNav',
                     'class' => 'second'
                 ],
                 'items' =>  $itemsNav,
