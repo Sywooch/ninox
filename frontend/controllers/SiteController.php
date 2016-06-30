@@ -79,7 +79,7 @@ class SiteController extends Controller
             ],
             'sort'  =>  [
                 'defaultOrder'   =>  [
-                    'tovupdate'  =>  SORT_DESC
+                    'photodate'  =>  SORT_DESC
                 ]
             ]
         ]);
@@ -122,7 +122,7 @@ class SiteController extends Controller
                 break;
             case 'new':
                 //default:
-                $query->orderBy('`goods`.`tovupdate` DESC');
+                $query->orderBy('`goods`.`photodate` DESC');
                 break;
         }
 
