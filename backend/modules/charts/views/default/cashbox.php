@@ -91,10 +91,40 @@ $js = <<<'JS'
     
             $.pjax.reload({container: '#cashboxStatsGrid-pjax'});
         });
-    })
+    }).on('click', 'button.showExtended', function(){
+        $('[data-remodal-id=daySummaryModal]').remodal().open();
+        
+        var btn = $(this);
+        
+        $.ajax({
+            type: 'POST',
+            url: '/charts/cashbox',
+            data: {
+                action: 'getDetailed',
+                value: btn.attr('data-date')
+            },
+            success: function(data){
+                $("[data-remodal-id=daySummaryModal]").html(data);
+            }
+        });
+        
+        //$("[data-remodal-id=daySummaryModal]").html($(this).attr('data-date'));
+    }).on('opening', '.remodal', function () {
+      $(this).html('<span class="fa fa-spin fa-spinner"></span>')
+    });
 JS;
 
 $this->registerJs($js);
+
+$modal = new \bobroid\remodal\Remodal([
+    'cancelButton'  =>  false,
+    'confirmButton' =>  false,
+    'addRandomToID' =>  false,
+    'options'       =>  [
+        'hashTracking'  =>  false
+    ],
+    'id'            =>  'daySummaryModal'
+]);
 
 echo Html::tag('h1', $this->title, ['class' => 'page-header col-xs-12', 'style' => 'margin-top: 0']),
 Html::button("{$report->year} год", [
@@ -124,9 +154,10 @@ GridView::widget([
         [
             'label'         =>  'Дата',
             'attribute'     =>  'date',
+            'format'        =>  'raw',
             'width'         =>  '100px',
             'value'         =>  function($model){
-                return \Yii::$app->formatter->asDate($model->date, 'dd MMMM');
+                return Html::button(\Yii::$app->formatter->asDate($model->date, 'dd MMMM'), ['class' => 'btn btn-link showExtended', 'data-date' => $model->date, 'style' => 'padding: 0']);
             }
         ],
         [
@@ -163,3 +194,5 @@ GridView::widget([
         ],
     ]
 ]);
+
+echo $modal->renderModal();

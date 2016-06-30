@@ -18,6 +18,8 @@ use yii\base\Model;
 /**
  * @property History[] orders
  * @property CashboxMoney[] cashboxMoney
+ * @property CashboxDayOperation[] operations
+ * @property Cost[] cashboxExpenses
  */
 class CashboxDayReport  extends Model
 {
@@ -53,10 +55,14 @@ class CashboxDayReport  extends Model
         return $sum;
     }
 
+    public function getCashboxExpenses(){
+        return Cost::find()->where(['date' => $this->date, 'costId' => CostsType::find()->select('ID')->where(['type' => 'cashboxExpenses'])->scalar()])->all();
+    }
+
     public function getExpenses(){
         $expenses = 0;
 
-        foreach(Cost::find()->where(['date' => $this->date, 'costId' => CostsType::find()->select('ID')->where(['type' => 'cashboxExpenses'])->scalar()])->each() as $cost){
+        foreach($this->cashboxExpenses as $cost){
             $expenses += $cost->costSumm;
         }
 
@@ -86,9 +92,53 @@ class CashboxDayReport  extends Model
 
         return $added;
     }
-
+    
     public function getOperations(){
+        $operations = [];
 
+        foreach($this->orders as $order){
+            $operations[] = new CashboxDayOperation([
+                'date'              =>  \Yii::$app->formatter->asDatetime($order->added, 'php:Y-m-d H:i:s'),
+                'type'              =>  $order->sourceType == $order::SOURCETYPE_SHOP ? CashboxDayOperation::TYPE_SHOP_BUY : CashboxDayOperation::TYPE_SELF_DELIVERY,
+                'orderID'           =>  $order->id,
+                'sum'               =>  $order->actualAmount,
+                'responsibleUser'   =>  $order->responsibleUserID
+            ]);
+        }
+
+        foreach($this->cashboxMoney as $operation){
+            $type = null;
+
+            switch($operation->operation){
+                case $operation::OPERATION_TAKE:
+                    $type = CashboxDayOperation::TYPE_CASHBOX_GET;
+                    break;
+                case $operation::OPERATION_PUT:
+                    $type = CashboxDayOperation::TYPE_CASHBOX_PUT;
+                    break;
+            }
+
+            if(!empty($type)){
+                $operations[] = new CashboxDayOperation([
+                    'date'              =>  $operation->date,
+                    'type'              =>  $type,
+                    'orderID'           =>  $operation->order,
+                    'sum'               =>  $operation->amount,
+                    'responsibleUser'   =>  $operation->responsibleUser
+                ]);
+            }
+        }
+
+        foreach($this->cashboxExpenses as $expense){
+            $operations[] = new CashboxDayOperation([
+                'date'              =>  $expense->date,
+                'type'              =>  CashboxDayOperation::TYPE_CASHBOX_SPEND,
+                'sum'               =>  $expense->costSumm,
+                'responsibleUser'   =>  $expense->creator
+            ]);
+        }
+
+        return $operations;
     }
 
 }
