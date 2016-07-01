@@ -1,5 +1,6 @@
 <?php
 
+use common\models\Banner;
 use yii\db\Migration;
 
 class m160701_122144_big_tatoo_banner extends Migration
