@@ -4,7 +4,6 @@ $form = \kartik\form\ActiveForm::begin();
 echo $form->field($model, 'sum'),
     $form->field($model, 'type')->dropDownList(\yii\helpers\ArrayHelper::map(\common\models\CostsType::find()->asArray()->all(), 'id', 'type')),
     $form->field($model, 'date')->widget(\kartik\date\DatePicker::className(), [
-        //'convertFormat' =>  'Y-m-d',
         'pluginOptions' =>  [
             'format'    =>  'yyyy-mm-dd'
         ]
