@@ -801,20 +801,28 @@ class DefaultController extends Controller
                 case 'add':
                     $requestedItemID = \Yii::$app->request->post("itemID");
 
-                    $good = Good::find()
+                    $goods = Good::find()
                         ->where(['or',
                             ['BarCode2' => $requestedItemID],
                             ['ID' => $requestedItemID],
                             ['Code' => $requestedItemID],
                             ['BarCode1' => $requestedItemID]])
                         ->orderBy(['BarCode2' => SORT_DESC])
-                        ->one();
+                        ->all();
 
-                    if(empty($good)){
+                    if(empty($goods)){
                         throw new NotFoundHttpException("Товар с идентификатором {$requestedItemID} не найден!");
                     }
 
-                    $order->controlItem($good->ID);
+                    foreach($goods as $good){
+                        try{
+                            $order->controlItem($good->ID);
+                            break;
+                        }catch(NotFoundHttpException $e){
+
+                        }
+                    }
+
                     break;
 
             }
