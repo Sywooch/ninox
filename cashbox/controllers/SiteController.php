@@ -265,7 +265,7 @@ class SiteController extends Controller
 
         $this->cashbox->changeCustomer(\Yii::$app->request->post("customerID"));
 
-        return true;
+        return $this->cashbox->getSummary();
     }
 
     public function actionFindcustomer(){

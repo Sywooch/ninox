@@ -13,20 +13,22 @@ var typeaheadSelectFunc = function(suggestion){
         data: {
           customerID: suggestion.ID
         },
-        success: function(){
-            data = suggestion.Company;
+        success: function(data){
+            var customerData = suggestion.Company;
 
             if(suggestion.phone.length > 0){
-                data += '<br><small>';
-                data += suggestion.phone;
-                data += '</small>';
+                customerData += '<br><small>';
+                customerData += suggestion.phone;
+                customerData += '</small>';
             }
 
-            $('#changeCustomer')[0].innerHTML = data;
+            $('#changeCustomer')[0].innerHTML = customerData;
 
             $("[data-remodal-id=customerModal]").remodal().close();
 
             $.pjax.reload({container: '#cashboxGrid-pjax'});
+console.log(data);
+            summary.update(data);
 
             Messenger().post({
                 message: 'Текущий клиент: ' + suggestion.Company,
