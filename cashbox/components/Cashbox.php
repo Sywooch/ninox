@@ -890,6 +890,8 @@ class Cashbox extends Component{
             'value' =>  $this->customer
         ]));
 
+        $this->updateItems();
+
         $this->save();
     }
 

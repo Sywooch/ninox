@@ -14,24 +14,26 @@ var typeaheadSelectFunc = function(suggestion){
           customerID: suggestion.ID
         },
         success: function(){
-          data = suggestion.Company;
+            data = suggestion.Company;
 
-          if(suggestion.phone.length > 0){
-              data += '<br><small>';
-              data += suggestion.phone;
-              data += '</small>';
-          }
+            if(suggestion.phone.length > 0){
+                data += '<br><small>';
+                data += suggestion.phone;
+                data += '</small>';
+            }
 
-          $('#changeCustomer')[0].innerHTML = data;
+            $('#changeCustomer')[0].innerHTML = data;
 
-          $("[data-remodal-id=customerModal]").remodal().close();
+            $("[data-remodal-id=customerModal]").remodal().close();
 
-          Messenger().post({
-              message: 'Текущий клиент: ' + suggestion.Company,
-              type: 'info',
-              showCloseButton: true,
-              hideAfter: 5
-          });
+            $.pjax.reload({container: '#cashboxGrid-pjax'});
+
+            Messenger().post({
+                message: 'Текущий клиент: ' + suggestion.Company,
+                type: 'info',
+                showCloseButton: true,
+                hideAfter: 5
+            });
         }
     });
 };
