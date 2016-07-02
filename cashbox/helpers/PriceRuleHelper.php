@@ -17,10 +17,10 @@ class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
     {
         parent::init();
         if(\Yii::$app->request->cookies->getValue('cashboxCurrentCustomer', false) ||
-            \Yii::$app->response->cookies->getValue('cashboxCurrentCustomer', false)){
-            $req = \Yii::$app->request->cookies->getValue('cashboxCurrentCustomer', false);
-            $res = \Yii::$app->response->cookies->getValue('cashboxCurrentCustomer', false);
-            $customerID = !empty($res) && $res != $req ? $res : $req;
+            \Yii::$app->request->post("customerID")){
+            $cookie = \Yii::$app->request->cookies->getValue('cashboxCurrentCustomer', false);
+            $request = \Yii::$app->request->post("customerID");
+            $customerID = !empty($request) && $request != $cookie ? $request : $cookie;
             $this->pricerules = array_merge(CustomerPricerule::find()
                 ->where(['customerID' => $customerID, 'Enabled' => 1])
                 ->orderBy(['Priority' => SORT_DESC])

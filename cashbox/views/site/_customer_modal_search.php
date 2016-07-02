@@ -27,7 +27,7 @@ var typeaheadSelectFunc = function(suggestion){
             $("[data-remodal-id=customerModal]").remodal().close();
 
             $.pjax.reload({container: '#cashboxGrid-pjax'});
-            
+
             summary.update(data);
 
             Messenger().post({
