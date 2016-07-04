@@ -237,7 +237,7 @@ class History extends \common\models\History
         $missingItemsSum = 0;
 
         foreach($this->missingItems as $item){
-            $missingItemsSum += $item->price * $item->count;
+            $missingItemsSum += $item->originalPrice * $item->count;
         }
 
         return $missingItemsSum;
