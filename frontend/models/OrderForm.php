@@ -343,9 +343,10 @@ class OrderForm extends Model{
                 'deliveryParam' =>  $this->deliveryParam,
                 'paymentType'   =>  $this->paymentType,
                 'paymentParam'  =>  $this->paymentParam,
-                'paymentInfo'   =>  $this->paymentInfo,
-                'money'         =>  $orderSuperRealPrice >= $customer->money ? 0 : ($customer->money - $orderSuperRealPrice),
+                'paymentInfo'   =>  $this->paymentInfo
             ]);
+
+            $customer->money -= $order->amountDeductedOrder;
 
             $customer->save(false);
 

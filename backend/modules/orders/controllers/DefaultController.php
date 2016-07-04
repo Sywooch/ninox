@@ -202,9 +202,14 @@ class DefaultController extends Controller
             }
         }
 
+        $order->amountDeductedOrder = $order->realSum >= $order->customer->money ? $order->customer->money : $order->realSum;
+        $order->customer->money -= $order->amountDeductedOrder;
+
         $order->deleted = 0;
 
-        $order->save(false);
+        if($order->customer->save(false)){
+            $order->save(false);
+        }
 
         return true;
     }
@@ -675,8 +680,13 @@ class DefaultController extends Controller
                 $item->returnToStore($order->orderSource);
             }
 
+            $order->customer->money += $order->amountDeductedOrder;
+            $order->amountDeductedOrder = 0;
+
             $order->deleted = 1;
-            $order->save(false);
+            if($order->customer->save(false)){
+                $order->save(false);
+            }
         }
     }
 
