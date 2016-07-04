@@ -370,7 +370,7 @@ $this->registerJs($js);
                         return Html::button(\rmrevin\yii\fontawesome\FA::i('file-text'), [
                             'class' =>  'btn btn-default btn-default-sm view-invoice-btn',
                             'title' =>  'Открыть накладную',
-                            'data-attribute-id' =>  $model->createdOrder
+                            'data-attribute-id' =>  $model->createdOrderID
                         ]);
                     },
                     'update'   =>  function($widget, $model){

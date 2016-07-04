@@ -2,8 +2,11 @@
 
 namespace cashbox\models;
 
+use backend\models\Customer;
 use common\models\CashboxMoney;
-use Yii;
+use backend\models\History;
+use common\models\Siteuser;
+use yii;
 
 /**
  * This is the model class for table "cashboxOrders".
@@ -22,6 +25,10 @@ use Yii;
  * @property integer $postpone
  * @property string $promoCode
  * @property int $source
+ * @property int $createdOrderID
+ * @property int $itemsCount
+ * @property History $createdOrder
+ * @property int|mixed customer
  */
 class CashboxOrder extends \yii\db\ActiveRecord
 {
@@ -44,9 +51,6 @@ class CashboxOrder extends \yii\db\ActiveRecord
 
     public function __get($name){
         switch($name){
-            case 'items':
-                return $this->getItems();
-                break;
             case 'createdItems':
                 return $this->getCreatedOrderItems();
                 break;
@@ -55,12 +59,6 @@ class CashboxOrder extends \yii\db\ActiveRecord
                 break;
             case 'createdOrderItemsCount':
                 return $this->calcCreatedOrderItems();
-                break;
-            case 'itemsCount':
-                return $this->itemsCount = count($this->getItems());
-                break;
-            case 'sum':
-                return $this->sum = $this->calcSum();
                 break;
             case 'toPay':
                 return $this->toPay = $this->calcToPay();
@@ -71,21 +69,57 @@ class CashboxOrder extends \yii\db\ActiveRecord
     }
 
     public function getItems(){
-        $items = [];
+        return $this->hasMany(CashboxItem::className(), ['orderID' => 'id']);
+    }
 
-        foreach(CashboxItem::find()->where(['orderID' =>  $this->id])->each() as $item){
-            $items[$item->itemID] = $item;
+    public function getCreatedOrder(){
+        return $this->hasOne(History::className(), ['id' => 'createdOrderID']);
+    }
+
+    public function getCustomer(){
+        return $this->hasOne(Customer::className(), ['id' => 'customerID']);
+    }
+
+    public function getManager(){
+        return $this->hasOne(Siteuser::className(), ['id' => 'responsibleUser']);
+    }
+
+    public function getItemsCount(){
+        return count($this->items);
+    }
+
+    public function getSum(){
+        return $this->calcSum();
+    }
+
+    public function getToPay(){
+        return $this->calcToPay();
+    }
+
+    public function getCreatedOrderItemsCount(){
+        return $this->calcCreatedOrderItems();
+    }
+
+    /**
+     * @param $itemID
+     * @return CashboxItem|bool
+     */
+    public function getItem($itemID){
+        foreach($this->items as $item){
+            if($item->itemID == $itemID){
+                return $item;
+            }
         }
 
-        return $items;
+        return false;
     }
 
     public function getCreatedOrderItems(){
-        if(empty($this->createdOrder)){
+        if(empty($this->createdOrderID)){
             return [];
         }
 
-        return AssemblyItem::findAll(['orderID' => $this->createdOrder]);
+        return AssemblyItem::findAll(['orderID' => $this->createdOrderID]);
     }
 
     public function calcCreatedOrderSum(){
@@ -132,11 +166,10 @@ class CashboxOrder extends \yii\db\ActiveRecord
         }
 
         if($this->isNewRecord){
-            \Yii::trace('new record!');
             $this->id = hexdec(uniqid());
 
             if(empty($this->responsibleUser)){
-                $this->responsibleUser = \Yii::$app->request->cookies->getValue("cashboxManager", 0);
+                $this->responsibleUser = \Yii::$app->request->cookies->getValue('cashboxManager', 0);
             }
         }elseif($this->isAttributeChanged('priceType')){
             $this->changePriceType($this->priceType);

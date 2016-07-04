@@ -15,6 +15,7 @@ use common\models\SubDomain;
 use common\models\SubDomainAccess;
 use ErrorException;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -32,7 +33,7 @@ use yii\web\NotFoundHttpException;
 class SiteController extends Controller
 {
     /**
-     * @type \cashbox\components\Cashbox
+     * @type \cashbox\components\CashboxNoCache
      */
     protected $cashbox;
 
@@ -119,7 +120,7 @@ class SiteController extends Controller
             }
 
             \Yii::$app->user->identity->lastActivity = date('Y-m-d H:i:s');
-            \Yii::$app->user->identity->save();
+            \Yii::$app->user->identity->save(false);
             //echo \Yii::$app->user->identity->can('1') ? 'true' : 'false'; //если false - значит чувака нельзя пускать
         }
 
@@ -127,98 +128,81 @@ class SiteController extends Controller
     }
 
     public function actionIndex(){
-        if(!empty($this->cashbox->cashboxOrder)){
-            $order = $this->cashbox->cashboxOrder;
-        }else{
-            $order = new CashboxOrder();
-        }
-
-        $customer = $this->cashbox->customer;
+        $order = $this->cashbox->order;
 
         if(\Yii::$app->request->post('CustomerForm')){
             $customerForm = new CustomerForm();
             $customerForm->load(\Yii::$app->request->post());
 
             if($customerForm->save()){
-                if(!$order->isNewRecord){
-                    $order->customerID = $customerForm->id;
-
-                    $order->save(false);
-                }
-
                 \Yii::$app->response->cookies->add(new Cookie([
                     'name'  =>  'cashboxCurrentCustomer',
                     'value' =>  $customerForm->id
                 ]));
 
-                $customer = $customerForm->id;
+                if($order){
+                    $order->customerID = $customerForm->id;
+                    $order->save(false);
+                }
             }
-        }
-
-        if(!empty($order->customerID)){
-            $customer = $order->customerID;
-        }
-
-        if($customer){
-            $customer = Customer::findOne($customer);
         }
 
         $orderItems = new ActiveDataProvider([
             'query'     =>  $this->cashbox->cashboxItemsQuery(),
             'pagination'    =>  [
                 'pageSize'  =>  0
+            ],
+            'sort'      =>  [
+                'defaultOrder'  =>  [
+                    'added'         =>  SORT_ASC
+                ]
             ]
         ]);
-
-        $orderItems->setSort([
-            'defaultOrder'  =>  [
-                'added' =>  SORT_ASC
-            ]
-        ]);
-
-        $orderToPay = $orderDiscountSize = $orderDiscountPercent = $orderSum = 0;
-
-        $orderItemsIDs = [];
-
-        foreach($orderItems->getModels() as $item){
-            $orderItemsIDs[] = $item->itemID;
-            $orderToPay += $item->price;
-        }
-
-        $goodsModels = [];
-
-        foreach(Good::find()->where(['in', 'ID', $orderItemsIDs])->each() as $item){
-            $goodsModels[$item->ID] = $item;
-        }
 
         return $this->render('index', [
-            'goodsModels'       =>  $goodsModels,
             'orderItems'        =>  $orderItems,
             'order'             =>  $order,
-            'customer'          =>  $customer,
-            'manager'           =>  Siteuser::getActiveUsers()[$this->cashbox->responsibleUser]
+            'customer'          =>  $order->customer,
+            'sum'               =>  $this->cashbox->sum,
+            'discountSize'      =>  $this->cashbox->discountSize,
+            'itemsCount'        =>  $this->cashbox->itemsCount,
+            'wholesaleSum'      =>  $this->cashbox->wholesaleSum,
+            'retailSum'         =>  $this->cashbox->retailSum,
+            'toPay'             =>  $this->cashbox->toPay,
+            'priceType'         =>  $this->cashbox->priceType,
+            'manager'           =>  $order->manager
         ]);
     }
 
     public function actionCompletesell(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод доступен только через ajax!");
+            throw new MethodNotAllowedHttpException('Этот метод доступен только через ajax!');
         }
 
-        return $this->cashbox->sell(\Yii::$app->request->post("actualAmount"));
+        $amount = \Yii::$app->request->post('actualAmount');
+
+        if(empty($amount)){
+            throw new InvalidParamException("Сумма сделки равна {$amount}. По-моему, это не похоже на число");
+        }
+
+        return $this->cashbox->sell($amount);
+    }
+
+    public function actionClearOrder(){
+        return $this->cashbox->clear();
     }
 
     public function actionChangecashboxtype(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Этот метод доступен только через ajax!");
+            throw new MethodNotAllowedHttpException('Этот метод доступен только через ajax!');
         }
 
         \Yii::$app->response->format = 'json';
 
         $this->cashbox->changePriceType();
 
-        if(!empty($this->cashbox->cashboxOrder)){
-            $this->cashbox->recalculate();
+        if(!empty($this->cashbox->order)){
+           // $this->cashbox->recalculate();
 
             return $this->cashbox->getSummary();
         }
@@ -228,16 +212,24 @@ class SiteController extends Controller
 
     public function actionChangemanager(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
-        if(\Yii::$app->request->post("action") == 'showList'){
+        if(\Yii::$app->request->post('action') == 'showList'){
             return $this->renderAjax('_changeManager', [
                 'managers'  =>  Siteuser::getActiveUsers()
             ]);
         }
 
-        $this->cashbox->changeManager(\Yii::$app->request->post("manager"));
+        $managerID = \Yii::$app->request->post('manager');
+
+        $siteuser = Siteuser::findOne($managerID);
+
+        if(!$siteuser && $managerID != 0){
+            throw new NotFoundHttpException("Менеджер с идентификатором {$managerID} не найден!");
+        }
+
+        $this->cashbox->setManager($managerID);
 
         return $this->cashbox->responsibleUser;
     }
@@ -258,29 +250,36 @@ class SiteController extends Controller
 
     public function actionChangecustomer(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
         \Yii::$app->response->format = 'json';
 
-        $this->cashbox->changeCustomer(\Yii::$app->request->post("customerID"));
+        $customerID = \Yii::$app->request->post('customerID');
+
+        $customer = Customer::findOne($customerID);
+
+        if(!$customer){
+            throw new NotFoundHttpException("Клиент с идентификатором {$customerID} не найден!");
+        }
+
+        $this->cashbox->setCustomer($customerID);
 
         return true;
     }
 
     public function actionFindcustomer(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
         \Yii::$app->response->format = 'json';
 
-        $attribute  = \Yii::$app->request->get("attribute");
-        $query      = \Yii::$app->request->get("query");
-
-        $customer   = Customer::find()->select(['ID', 'Company', 'phone', 'cardNumber'])->where(['like', $attribute, $query])->limit(10);
-
-        return $customer->all();
+        return Customer::find()
+            ->select(['ID', 'Company', 'phone', 'cardNumber'])
+            ->where(['like', \Yii::$app->request->get('attribute'), \Yii::$app->request->get('query')])
+            ->limit(10)
+            ->all();
     }
 
     public function actionChecks(){
@@ -354,7 +353,7 @@ class SiteController extends Controller
 
         return $this->renderAjax('_orderPreview', [
             'goods' =>  new ActiveDataProvider([
-                'query' =>  SborkaItem::find()->where(['orderID'   =>  $cashboxOrder->createdOrder]),
+                'query' =>  SborkaItem::find()->where(['orderID'   =>  $cashboxOrder->createdOrderID]),
             ])
         ]);
     }
@@ -374,8 +373,8 @@ class SiteController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if(!empty($order->createdOrder)){
-            foreach(SborkaItem::find()->where(['orderID' => $order->createdOrder])->each() as $assemblyItem){
+        if(!empty($order->createdOrderID)){
+            foreach(SborkaItem::find()->where(['orderID' => $order->createdOrderID])->each() as $assemblyItem){
                 $cashboxItem = CashboxItem::findOne(['itemID' => $assemblyItem->itemID, 'orderID' => $order->id]);
 
                 if(!$cashboxItem){
@@ -494,16 +493,16 @@ class SiteController extends Controller
 
     public function actionAdditem(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
-        $itemID = \Yii::$app->request->post("itemID");
+        $itemID = \Yii::$app->request->post('itemID');
 
         $promoCode = Promocode::findOne(['code' => $itemID]);
 
-        if($promoCode && $this->cashbox->cashboxOrder){
-            $this->cashbox->promoCode = $this->cashbox->cashboxOrder->promoCode = $promoCode->code;
-            $this->cashbox->cashboxOrder->save(false);
+        if($promoCode && $this->cashbox->order){
+            $this->cashbox->promoCode = $this->cashbox->order->promoCode = $promoCode->code;
+            $this->cashbox->order->save(false);
 
             $this->cashbox->addDiscount(Pricerule::findOne($promoCode->rule));
 
@@ -518,7 +517,7 @@ class SiteController extends Controller
             ->one();
 
         if(!$good){
-            throw new NotFoundHttpException("Товар с идентификатором `".$itemID."` не найден!");
+            throw new NotFoundHttpException("Товар с идентификатором '{$itemID}' не найден!");
         }
 
         \Yii::$app->response->format = 'json';
@@ -531,22 +530,30 @@ class SiteController extends Controller
     public function actionRemoveitem()
     {
         if (!\Yii::$app->request->isAjax) {
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
         \Yii::$app->response->format = 'json';
 
-        $itemID = \Yii::$app->request->post("itemID");
+        $itemID = \Yii::$app->request->post('itemID');
 
-        if ($itemID != 'all' && !isset($this->cashbox->items[$itemID])) {
-            throw new NotFoundHttpException("Такой товар не найден!");
+        if($itemID != 'all'){
+            $good = Good::findOne($itemID);
+
+            if(!$good ){
+                throw new NotFoundHttpException("Товар с идентификатором {$itemID} не найден в магазине!");
+            }else if(empty($this->cashbox->getItem($itemID))) {
+                throw new NotFoundHttpException("Товар с идентификатором {$itemID} не найден в заказе с идентификатором {$this->cashbox->order->id}!");
+            }
         }
 
         if ($this->cashbox->itemsCount > 0) {
-            if ($itemID == 'all') {
-                $this->cashbox->clear();
+            if ($itemID == 'all' && !empty($this->cashbox->order)) {
+                foreach($this->cashbox->order->items as $item){
+                    $item->delete();
+                }
             } else {
-                $this->cashbox->remove($itemID);
+                $this->cashbox->getItem($itemID)->delete();
 
                 return $this->cashbox->getSummary();
             }

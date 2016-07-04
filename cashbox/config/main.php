@@ -14,7 +14,7 @@ return [
     'modules' => require(__DIR__.'/modules.php'),
     'components' => [
         'cashbox'   =>  [
-            'class' =>  'cashbox\components\Cashbox'
+            'class' =>  'cashbox\components\CashboxNoCache'
         ],
         'i18n' => [
             'translations' => [

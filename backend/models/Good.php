@@ -9,6 +9,7 @@
 namespace backend\models;
 
 use backend\components\S3Uploader;
+use common\helpers\PriceHelper;
 use common\models\GoodOptions;
 use common\models\GoodOptionsValue;
 use common\models\GoodOptionsVariant;

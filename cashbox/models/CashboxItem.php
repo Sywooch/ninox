@@ -2,6 +2,8 @@
 
 namespace cashbox\models;
 
+use common\helpers\PriceHelper;
+use common\models\Good;
 use common\models\SborkaItem;
 use Yii;
 use yii\web\BadRequestHttpException;
@@ -21,11 +23,14 @@ use yii\web\BadRequestHttpException;
  * @property integer $customerRule
  * @property integer $deleted
  * @property integer $added
+ * @property Good good
+ * @property float salePrice
  */
 class CashboxItem extends \yii\db\ActiveRecord
 {
 
-    public $price = 0;
+    use PriceHelper;
+
     public $changedValue = 0;
     public $return = false;
     public $priceModified = false;
@@ -38,22 +43,6 @@ class CashboxItem extends \yii\db\ActiveRecord
         return 'cashboxItems';
     }
 
-    public function afterFind(){
-        switch($this->discountType){
-            case '1':
-                $this->price = $this->originalPrice - $this->discountSize;
-                break;
-            case '2':
-                $this->price = round($this->originalPrice - ($this->originalPrice / 100 * $this->discountSize), 2);
-                break;
-            default:
-                $this->price = $this->originalPrice;
-                break;
-        }
-
-        return parent::afterFind();
-    }
-
     public function __set($name, $value){
         switch($name){
             case 'count':
@@ -62,6 +51,24 @@ class CashboxItem extends \yii\db\ActiveRecord
         }
 
         return parent::__set($name, $value);
+    }
+
+    public function getSalePrice(){
+        if(empty($this->good)){
+            return 0;
+        }
+
+        return \Yii::$app->cashbox->priceType == 1 ? $this->good->wholesalePrice : $this->good->retailPrice;
+    }
+
+    public function getPriceForPiece(){
+        $pieces = filter_var($this->good->num_opt, FILTER_SANITIZE_NUMBER_INT);
+
+        if(empty($pieces)){
+            return false;
+        }
+
+        return round(($this->salePrice/$pieces), 2);
     }
 
     public function loadAssemblyItem($assemblyItem, $orderID){
@@ -90,6 +97,34 @@ class CashboxItem extends \yii\db\ActiveRecord
         }
 
         $this->orderID = $orderID;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSum(){
+        return $this->price * $this->count;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscountValue(){
+        return ($this->originalPrice - $this->price) * $this->count;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGood(){
+        return $this->hasOne(\backend\models\Good::className(), ['ID' => 'itemID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder(){
+        return $this->hasOne(Order::className(), ['id' => 'orderID']);
     }
 
     /**
@@ -141,16 +176,25 @@ class CashboxItem extends \yii\db\ActiveRecord
     }
 
     public function beforeSave($insert){
-        if($this->isNewRecord && empty($this->orderID)){
+        if($this->isNewRecord){
+            $this->setAttributes([
+                'name'          =>  empty($this->name) && !empty($this->good) ? $this->good->name : $this->name,
+                'originalPrice' =>  $this->price,
+                'categoryCode'  =>  $this->good->categoryCode,
+                'deleted'       =>  0,
+                'added'         =>  date('Y-m-d H:i:s')
+            ]);
+        }
+
+        /*if(empty($this->orderID)){
             $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
         }
 
         if($this->isNewRecord || $this->isAttributeChanged('count')){
             $this->added = date('Y-m-d H:i:s');
-            \Yii::trace($this->added);
         }
 
-        $this->price = $this->originalPrice;
+        $this->price = $this->originalPrice;*/
 
         return parent::beforeSave($insert);
     }

@@ -177,10 +177,7 @@ $js = <<<JS
     }, clearOrder = function(){
         $.ajax({
             type: 'POST',
-            url: '/removeitem',
-            data: {
-                'itemID': 'all'
-            },
+            url: '/clear-order',
             success: function(data){
                 $.pjax.reload({container: '#cashboxGrid-pjax'});
 
@@ -444,20 +441,20 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                         </div>
                         <div class="buttonsRow row" style="margin-left: 0; padding: 0">
                             <a class="btn btn-default col-xs-4" href="#defectModal" disabled="disabled">Брак <?=FA::icon('lock')?></a>
-                            <button class="btn btn-default col-xs-4" id="changeManager"><?=$manager?></button>
+                            <button class="btn btn-default col-xs-4" id="changeManager"><?=!empty($manager) ? $manager->name : 'Не выбрано'?></button>
                         </div>
                     </div>
                     <div class="col-xs-3 col-xs-offset-1">
                         <button class="btn btn-default btn-sm" id="postponeCheck" style="margin-bottom: 5px;">Отложить чек</button>
-                        <a id="changeCustomer" class="btn btn-default btn-sm" href="#customerModal"><?=$customer ? $customer->Company : '+ клиент'?><?=!empty($customer->phone) ? Html::tag('br').Html::tag('small', $customer->phone) : ''?></a>
+                        <?=Html::a((!empty($customer) ? $customer->Company.Html::tag('br').Html::tag('small', $customer->phone) : '+ клиент'), '#customerModal', ['id' => 'changeCustomer', 'class' => 'btn btn-default btn-sm'])?>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-4 summary <?=\Yii::$app->request->cookies->getValue('cashboxPriceType', \Yii::$app->cashbox->priceType) == 0 ? 'bg-danger' : 'bg-success'?>">
-                <p style="font-size: 14px;">Сумма: <?=Html::tag('span', \Yii::$app->cashbox->sum, ['class' => 'summ'])?> грн. Скидка: <span class="discount"><?=\Yii::$app->cashbox->discountSize?></span> грн.</p>
-                <h2 style="font-size: 24px;">К оплате: <span class="toPay"><?=\Yii::$app->cashbox->toPay?></span> грн.</h2>
-                <p class="wholesale-block">Сумма по опту: <span class="wholesale-sum" style="display: inline"><?=\Yii::$app->cashbox->wholesaleSum?></span></p>
-                <p>Количество товаров: <span class="itemsCount"><?=\Yii::$app->cashbox->itemsCount?></span></p>
+            <div class="col-xs-4 summary <?=$priceType == 0 ? 'bg-danger' : 'bg-success'?>">
+                <p style="font-size: 14px;">Сумма: <?=Html::tag('span', $sum, ['class' => 'summ'])?> грн. Скидка: <?=Html::tag('span', $discountSize, ['class' => 'discount'])?> грн.</p>
+                <h2 style="font-size: 24px;">К оплате: <?=Html::tag('span', $toPay, ['class' => 'toPay'])?> грн.</h2>
+                <p class="wholesale-block">Сумма по опту: <?=Html::tag('span', $wholesaleSum, ['class' => 'wholesale-sum', 'style' => 'display: inline'])?></p>
+                <p>Количество товаров: <?=Html::tag('span', $itemsCount, ['class' => 'itemsCount'])?></p>
             </div>
         </div>
     </div>
@@ -467,9 +464,9 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
             'responsive'    =>  false,
             'resizableColumns'=>  false,
             'dataProvider'  =>  $orderItems,
-            'rowOptions'    =>  function($model) use(&$goodsModels){
+            'rowOptions'    =>  function($model){
                 $return = [
-                    'data-attribute-key'    =>  $goodsModels[$model->itemID]->ID,
+                    'data-attribute-key'    =>  $model->itemID,
                 ];
 
                 if($model->price <= 0){
@@ -487,7 +484,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                         'class' =>  'removeGood'
                     ],
                     'format'    =>  'html',
-                    'value'     =>  function($model){
+                    'value'     =>  function(){
                         return FA::icon('times')->size(FA::SIZE_LARGE);
                     },
                     'width' =>  '40px;'
@@ -501,8 +498,8 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 ],
                 [
                     'header'    =>  'Код товара',
-                    'value' =>  function($model) use(&$goodsModels){
-                        return $goodsModels[$model->itemID]->Code;
+                    'value' =>  function($model){
+                        return $model->good->Code;
                     },
                     'width' =>  '120px'
                 ],
@@ -526,14 +523,12 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'header'    =>  'Цена',
                     'width'     =>  '130px',
                     'format'    =>  'raw',
-                    'value'     =>  function($model) use(&$goodsModels){
-                        $return = $model->price.' грн.';
+                    'value'     =>  function($model){
+                        $return = "$model->salePrice грн.";
 
-                        if(!empty($goodsModels[$model->itemID]->num_opt)
-                            && filter_var($goodsModels[$model->itemID]->num_opt, FILTER_VALIDATE_INT)
-                            && $goodsModels[$model->itemID]->num_opt != 1){
+                        if($model->good->priceForPiece){
                             $return .= Html::tag('small',
-                                '('.\Yii::$app->formatter->asPrice($model->price / $goodsModels[$model->itemID]->num_opt).' грн. за шт.)',
+                                '('.\Yii::$app->formatter->asPrice($model->priceForPiece).' грн. за шт.)',
                                 ['style' => 'display: block;']
                             );
                         }
@@ -545,14 +540,14 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     'header'    =>  'Сумма',
                     'width'     =>  '130px',
                     'value'     =>  function($model){
-                        return ($model->price * $model->count).' грн.';
+                        return "$model->sum грн.";
                     }
                 ],
                 [
                     'header'    =>  'Дисконт',
                     'width'     =>  '100px',
                     'value'     =>  function($model){
-                        return '-'.(($model->originalPrice - $model->price) * $model->count).' грн.';
+                        return "$model->discountValue грн.";
                     }
                 ]
             ],
@@ -575,8 +570,8 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 <a class="btn btn-default btn-lg" href="/returns">Возвраты</a>
             </div>
             <div class="right">
-                <?=Html::button((\Yii::$app->request->cookies->getValue("cashboxPriceType", \Yii::$app->cashbox->priceType) == 1 ? 'Опт' : 'Розница'), [
-                    'class' =>  'btn btn-lg btn-'.(\Yii::$app->request->cookies->getValue("cashboxPriceType", \Yii::$app->cashbox->priceType) == 0 ? 'danger' : 'success'),
+                <?=Html::button(($priceType == 1 ? 'Опт' : 'Розница'), [
+                    'class' =>  'btn btn-lg btn-'.($priceType == 1 ? 'success' : 'danger'),
                     'id'    =>  'changeCashboxType',
                 ])?>
             </div>

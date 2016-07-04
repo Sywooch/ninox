@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\PriceHelper;
 use yii;
 use yii\db\ActiveRecord;
 
@@ -138,6 +139,17 @@ class Good extends ActiveRecord
             'language'  =>  'ru-RU'
         ]);
     }
+
+    public function getPriceForPiece($priceType = 1){
+        $pieces = filter_var($this->num_opt, FILTER_SANITIZE_NUMBER_INT);
+
+        if(empty($pieces)){
+            return false;
+        }
+
+        return ($priceType == 1 ? $this->wholesalePrice : $this->retailPrice) / $pieces;
+    }
+
 
     /**
      * @param $key string
