@@ -28,7 +28,7 @@ echo \kartik\grid\GridView::widget([
         [
             'attribute' =>  'paymentType',
             'value'     =>  function($model){
-                return $model->paymentTypeModel->description;
+                return $model->paymentTypeModel->description; //TODO: Сделать это через relation, чтоб оно не тащилось для каждого заказа отдельно
             }
         ],
         'actualAmount'

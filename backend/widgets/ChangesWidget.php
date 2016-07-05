@@ -34,9 +34,9 @@ class ChangesWidget extends Widget{
             $this->dataProvider = AuditTrail::find()->where(['model' => $this->model->className(), 'model_id' => $this->model->ID])->orderBy('ID DESC');
         }
 
-        $siteusers = User::find()->select(['name', 'id'])->all();
+        $siteusers = User::find()->select(['id', 'name', 'username'])->all();
         foreach($siteusers as $user){
-            $this->siteusers[$user->id] = $user->name;
+            $this->siteusers[$user->id] = ['name' => $user->name, 'username' => $user->username];
         }
     }
 

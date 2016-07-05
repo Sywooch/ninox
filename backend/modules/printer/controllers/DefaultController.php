@@ -9,6 +9,7 @@ use backend\models\History;
 use backend\models\HistorySearch;
 use backend\models\SborkaItem;
 use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -76,11 +77,13 @@ class DefaultController extends Controller
     }
 
     public function actionDeliveryList(){
-        $orders = (new HistorySearch())->search(\Yii::$app->request->get(), true);
+        $orders = (new HistorySearch())->search(\Yii::$app->request->get(), true)
+            ->andWhere("`responsibleUserID` != '59'");    //Убрал "Женю"
 
         return $this->render('deliveryList', [
            'orders'         =>  new ActiveDataProvider([
-               'query'  =>  $orders->andWhere("`responsibleUserID` != '59'")    //Убрал "Женю"
+               'query'      =>  $orders,
+               'pagination' =>  new Pagination(['pageSize' => $orders->count()]),
            ])
         ]);
     }

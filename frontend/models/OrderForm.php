@@ -58,7 +58,6 @@ class OrderForm extends Model{
     public $promoCode;
     public $canChangeItems = 0;
     public $anotherReceiver = 0;
-    public $payment = 0;
 
     /**
      * @type integer - ID заказа после оформления
@@ -176,15 +175,15 @@ class OrderForm extends Model{
         }
 
         $this->setAttributes([
-            'customerID'        =>  $customer->ID,
-            'customerName'      =>  $customer->name,
-            'customerSurname'   =>  $customer->surname,
-            'customerPhone'     =>  $customer->phone,
-            'customerEmail'     =>  $customer->email,
-            'deliveryCity'      =>  $customer->city,
-            'paymentType'       =>  empty($customer->paymentType) ? $this->paymentType : $customer->paymentType,
-            'paymentParam'      =>  empty($customer->paymentParam) ? $this->paymentParam : $customer->paymentParam,
-            'paymentInfo'       =>  $customer->paymentInfo
+            'customerID'            =>  $customer->ID,
+            'customerName'          =>  $customer->name,
+            'customerSurname'       =>  $customer->surname,
+            'customerPhone'         =>  $customer->phone,
+            'customerEmail'         =>  $customer->email,
+            'deliveryCity'          =>  $customer->city,
+            'paymentType'           =>  empty($customer->paymentType) ? $this->paymentType : $customer->paymentType,
+            'paymentParam'          =>  empty($customer->paymentParam) ? $this->paymentParam : $customer->paymentParam,
+            'paymentInfo'           =>  $customer->paymentInfo,
         ]);
 
         if(isset($this->getRegions()[$customer->region])){
@@ -327,6 +326,7 @@ class OrderForm extends Model{
             }
 
             /* TODO: чистой воды костыль */
+            $order->amountDeductedOrder = $orderSuperRealPrice >= $customer->money ? $customer->money : $orderSuperRealPrice;
             $order->originalSum = $orderSuperRealPrice;
             $order->save(false);
 
@@ -343,8 +343,10 @@ class OrderForm extends Model{
                 'deliveryParam' =>  $this->deliveryParam,
                 'paymentType'   =>  $this->paymentType,
                 'paymentParam'  =>  $this->paymentParam,
-                'paymentInfo'   =>  $this->paymentInfo,
+                'paymentInfo'   =>  $this->paymentInfo
             ]);
+
+            $customer->money -= $order->amountDeductedOrder;
 
             $customer->save(false);
 

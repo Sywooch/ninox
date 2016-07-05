@@ -8,7 +8,7 @@
 
 namespace cashbox\helpers;
 
-use common\models\Pricerule;
+use cashbox\models\CustomerPricerule;
 
 class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
 
@@ -16,6 +16,16 @@ class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
     public function init()
     {
         parent::init();
+        if(\Yii::$app->request->cookies->getValue('cashboxCurrentCustomer', false) ||
+            \Yii::$app->request->post("customerID")){
+            $cookie = \Yii::$app->request->cookies->getValue('cashboxCurrentCustomer', false);
+            $request = \Yii::$app->request->post("customerID");
+            $customerID = !empty($request) && $request != $cookie ? $request : $cookie;
+            $this->pricerules = array_merge(CustomerPricerule::find()
+                ->where(['customerID' => $customerID, 'Enabled' => 1])
+                ->orderBy(['Priority' => SORT_DESC])
+                ->all(), $this->pricerules);
+        }
         $this->cartSumm = isset($this->cartSumm) ?
             $this->cartSumm : (isset(\Yii::$app->cashbox) ? \Yii::$app->cashbox->sum : 0);
     }

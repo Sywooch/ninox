@@ -300,7 +300,7 @@ class SiteController extends Controller
 
         $this->cashbox->setCustomer($customerID);
 
-        return true;
+        return $this->cashbox->getSummary();
     }
 
     public function actionFindcustomer(){

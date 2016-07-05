@@ -202,9 +202,14 @@ class DefaultController extends Controller
             }
         }
 
+        $order->amountDeductedOrder = $order->realSum >= $order->customer->money ? $order->customer->money : $order->realSum;
+        $order->customer->money -= $order->amountDeductedOrder;
+
         $order->deleted = 0;
 
-        $order->save(false);
+        if($order->customer->save(false)){
+            $order->save(false);
+        }
 
         return true;
     }
@@ -675,8 +680,13 @@ class DefaultController extends Controller
                 $item->returnToStore($order->orderSource);
             }
 
+            $order->customer->money += $order->amountDeductedOrder;
+            $order->amountDeductedOrder = 0;
+
             $order->deleted = 1;
-            $order->save(false);
+            if($order->customer->save(false)){
+                $order->save(false);
+            }
         }
     }
 
@@ -801,13 +811,28 @@ class DefaultController extends Controller
                 case 'add':
                     $requestedItemID = \Yii::$app->request->post("itemID");
 
-                    $good = Good::find()->where(['or', ['BarCode2' => $requestedItemID], ['ID' => $requestedItemID], ['Code' => $requestedItemID], ['BarCode1' => $requestedItemID]])->one();
+                    $goods = Good::find()
+                        ->where(['or',
+                            ['BarCode2' => $requestedItemID],
+                            ['ID' => $requestedItemID],
+                            ['Code' => $requestedItemID],
+                            ['BarCode1' => $requestedItemID]])
+                        ->orderBy(['BarCode2' => SORT_DESC])
+                        ->all();
 
-                    if(empty($good)){
+                    if(empty($goods)){
                         throw new NotFoundHttpException("Товар с идентификатором {$requestedItemID} не найден!");
                     }
 
-                    $order->controlItem($good->ID);
+                    foreach($goods as $good){
+                        try{
+                            $order->controlItem($good->ID);
+                            break;
+                        }catch(NotFoundHttpException $e){
+
+                        }
+                    }
+
                     break;
 
             }

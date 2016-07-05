@@ -1,6 +1,15 @@
 <?php
 use yii\bootstrap\Html;
 
+$css = <<< 'CSS'
+.datepicker{
+    z-index: 10000 !important;
+}
+CSS;
+
+$this->registerCss($css);
+
+
 $this->title = 'Расходы';
 $this->params['breadcrumbs'][] = $this->title;
 
