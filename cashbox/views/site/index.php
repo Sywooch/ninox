@@ -441,7 +441,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                         </div>
                         <div class="buttonsRow row" style="margin-left: 0; padding: 0">
                             <a class="btn btn-default col-xs-4" href="#defectModal" disabled="disabled">Брак <?=FA::icon('lock')?></a>
-                            <button class="btn btn-default col-xs-4" id="changeManager"><?=!empty($manager) ? $manager->name : 'Не выбрано'?></button>
+                            <button class="btn btn-default col-xs-4" id="changeManager"><?=!empty($manager) && !$manager->isNewRecord ? $manager->name : 'Не выбрано'?></button>
                         </div>
                     </div>
                     <div class="col-xs-3 col-xs-offset-1">
