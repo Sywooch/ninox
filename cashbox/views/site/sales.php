@@ -267,10 +267,10 @@ $this->registerJs($js);
         'dataProvider'  =>  $salesProvider,
         'id'            =>  'salesTable',
         'summary'       =>  false,
-        //'perfectScrollbar'  =>  true,
         'hover'         =>  true,
         'striped'       =>  false,
         'pjax'          =>  true,
+        'bordered'      =>  false,
         'pjaxSettings'  =>  [
             'options'   =>  [
                 'enablePushState'       =>  false,
@@ -292,10 +292,12 @@ $this->registerJs($js);
                 'hAlign'    =>  'center',
                 'vAlign'    =>  'middle',
                 'attribute' =>  'customerID',
-                'value'     =>  function($model) use(&$customers){
-                    if($model->customerID != 0){
-                        return $customers[$model->customerID]->Company;
+                'value'     =>  function($model){
+                    if(!empty($model->customer)){
+                        return $model->customer->Company;
                     }
+
+                    return;
                 }
             ],
             [
@@ -304,8 +306,8 @@ $this->registerJs($js);
                 'width'     =>  '140px',
                 'attribute' =>  'responsibleUser',
                 'value'     =>  function($model){
-                    if($model->responsibleUser != 0){
-                        return \common\models\Siteuser::getUser($model->responsibleUser)->name;
+                    if(!empty($model->manager)){
+                        return $model->manager->name;
                     }
 
                     return ;

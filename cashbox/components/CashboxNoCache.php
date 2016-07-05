@@ -9,14 +9,13 @@
 namespace cashbox\components;
 
 
-use backend\models\Siteuser;
 use cashbox\helpers\PriceRuleHelper;
 use cashbox\models\AssemblyItem;
 use cashbox\models\CashboxItem;
 use cashbox\models\CashboxOrder;
 use cashbox\models\Order;
+use cashbox\models\Siteuser;
 use common\models\CashboxMoney;
-use common\models\Customer;
 use common\models\Pricerule;
 use common\models\Promocode;
 use yii\base\Component;
@@ -54,6 +53,12 @@ class CashboxNoCache extends Component
     public $promoCode;
 
     public function init(){
+        if(empty($this->responsibleUser)){
+            $this->responsibleUser = \Yii::$app->request->cookies->getValue('cashboxManager', 0);
+        }
+
+        $this->priceType = \Yii::$app->request->cookies->getValue('cashboxPriceType', $this->priceType);
+
         if(!empty(\Yii::$app->request->cookies->getValue('cashboxOrderID', 0))){
             $order = CashboxOrder::findOne(\Yii::$app->request->cookies->getValue('cashboxOrderID', 0));
 
@@ -62,14 +67,12 @@ class CashboxNoCache extends Component
             }
         }
 
-        if(empty($this->responsibleUser)){
-            $this->responsibleUser = \Yii::$app->request->cookies->getValue('cashboxManager', \Yii::$app->user->identity->id);
-        }
-
-        $this->priceType = $this->responsibleUser = \Yii::$app->request->cookies->getValue('cashboxPriceType', $this->priceType);
-
         if(empty($this->order)){
-            $this->order = new CashboxOrder();
+            $this->order = new CashboxOrder([
+                'responsibleUser'   =>  $this->responsibleUser,
+                'customerID'        =>  $this->customer,
+                'priceType'         =>  $this->priceType,
+            ]);
 
             if(!empty($this->customer)){
                 $this->order->customerID = $this->customer;
@@ -81,6 +84,48 @@ class CashboxNoCache extends Component
         }
 
         $this->recalculate();
+    }
+
+    /**
+     * Делает возврат заказа
+     * @throws \Exception
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\web\NotFoundHttpException
+     * @throws \yii\base\InvalidCallException
+     */
+    public function refund(){
+        $refundSum = $this->sum;
+
+        $order = $this->order;
+
+        foreach($order->items as $item) {
+            if ($this->remove($item->itemID)) {
+                $item->good->count += $item->count;
+
+                $item->good->save(false);
+            }
+        }
+
+        $order->doneTime = date('Y-m-d H:i:s');
+        $order->return = 1;
+
+        if($order->save(false)) {
+            $refund = new CashboxMoney([
+                'cashbox'           => \Yii::$app->params['configuration']->ID,
+                'amount'            => $refundSum,
+                'operation'         => CashboxMoney::OPERATION_REFUND,
+                'order'             => $this->order->createdOrderID,
+                'date'              => date('Y-m-d H:i:s'),
+                'customer'          => $this->customer,
+                'responsibleUser'   => $this->responsibleUser
+            ]);
+
+            $refund->save(false);
+        }
+
+        $this->clearContext();
+
+        return $order;
     }
 
     /**
@@ -147,9 +192,9 @@ class CashboxNoCache extends Component
         if(!empty($this->order)){
             if(!$drop){
                 $this->postpone();
+            }else{
+                $this->clear();
             }
-
-            $this->clear();
         }
 
         if(filter_var($order, FILTER_VALIDATE_INT)){
@@ -171,6 +216,13 @@ class CashboxNoCache extends Component
 
         $this->priceType = $order->priceType;
         $this->promoCode = $order->promoCode;
+
+
+
+        \Yii::$app->response->cookies->add(new Cookie([
+            'name'      =>  'cashboxOrderID',
+            'value'     =>  $this->order->id
+        ]));
     }
     
     /**
@@ -220,7 +272,7 @@ class CashboxNoCache extends Component
         $item = $this->order->getItem($itemID);
 
         if($item){
-            $item->delete();
+            return $item->delete();
         }
 
         return false;
@@ -294,6 +346,14 @@ class CashboxNoCache extends Component
         ]));
 
         return $this->responsibleUser = $id;
+    }
+
+    public function getManager(){
+        if(empty($this->responsibleUser)){
+            return new Siteuser();
+        }
+
+        return Siteuser::findOne($this->responsibleUser);
     }
 
     /**
@@ -380,12 +440,14 @@ class CashboxNoCache extends Component
             throw new NotFoundHttpException('Невозможно оформить несуществующий заказ!');
         }
 
-        $order = new Order();
+        $isNewOrder = empty($this->order->createdOrder);
+
+        $order = $isNewOrder ? new Order() : $this->order->createdOrder;
 
         $order->setAttributes([
-            'responsibleUserID'     => $this->order->responsibleUser,
-            'customerID'            => $this->order->customerID,
-            'originalSum'           => $this->order->toPay,
+            'responsibleUserID'     => $this->responsibleUser,
+            'customerID'            => empty($this->customer) ? 0 : $this->customer,
+            'originalSum'           => $this->toPay,
             'actualAmount'          => $amount,
             'coupon'                => $this->promoCode,
             'sourceType'            => Order::SOURCETYPE_SHOP,
@@ -397,13 +459,54 @@ class CashboxNoCache extends Component
             return false;
         }
 
-        foreach($this->order->items as $item){
-            $assemblyItem = new AssemblyItem();
-            $assemblyItem->loadCashboxItem($item, $order->id);
+        if($isNewOrder){
+            foreach($this->order->items as $item){
+                $assemblyItem = new AssemblyItem();
+                $assemblyItem->loadCashboxItem($item, $order->id);
 
-            if ($assemblyItem->save(false)) {
-                $item->changedValue = 0;
-                $item->delete();
+                if ($assemblyItem->save(false)) {
+                    $item->changedValue = 0;
+                    $item->delete();
+                }
+            }
+        }else{
+            $oldItems = $newItems = [];
+
+            foreach($this->order->items as $item){
+                $newItems[] = $item->itemID;
+            }
+
+            foreach($this->order->createdOrder->items as $item){
+                $oldItems[] = $item->itemID;
+            }
+
+            /*
+             * Удаление товаров из заказа
+             */
+            foreach(array_diff($oldItems, $newItems) as $deleteItem){
+                $this->order->createdOrder->getItem($deleteItem)->delete();
+            }
+
+            /*
+             * Добавление товаров в заказ
+             */
+            foreach(array_diff($newItems, $oldItems) as $createItem){
+                $item = $this->order->getItem($createItem);
+
+                $assemblyItem = new AssemblyItem();
+                $assemblyItem->loadCashboxItem($item, $order->id);
+
+                if ($assemblyItem->save(false)) {
+                    $item->changedValue = 0;
+                    $item->delete();
+                }
+            }
+            
+            foreach(array_intersect($newItems, $oldItems) as $updatedItem){
+                $item = $this->order->createdOrder->getItem($updatedItem);
+
+                $item->loadCashboxItem($this->order->getItem($updatedItem), $order->id);
+                $item->save(false);
             }
         }
 
@@ -412,23 +515,34 @@ class CashboxNoCache extends Component
             'doneTime'          =>  date('Y-m-d H:i:s')
         ]);
 
+        $createdOrder = $this->order->createdOrderID = $order->id;
+
         $this->order->save(false);
 
-        $payment = new CashboxMoney([
-            'cashbox'           => \Yii::$app->params['configuration']->ID,
+        $payment = false;
+
+        if(!$isNewOrder){
+            $payment = CashboxMoney::findOne(['order' => $this->order->id]);
+        }
+
+        if(!$payment){
+            $payment = new CashboxMoney([
+                'cashbox'           => \Yii::$app->params['configuration']->ID,
+                'operation'         => CashboxMoney::OPERATION_SELL,
+                'order'             => $this->order->id,
+            ]);
+        }
+
+        $payment->setAttributes([
             'amount'            => $amount,
-            'operation'         => CashboxMoney::OPERATION_SELL,
-            'order'             => $this->order->id,
             'date'              => date('Y-m-d H:i:s'),
-            'customer'          => $this->customer,
+            'customer'          => empty($this->customer) ? 0 : $this->customer,
             'responsibleUser'   => $this->responsibleUser
         ]);
 
         $payment->save(false);
 
-        $createdOrder = $this->order->id;
-
-        $this->clear();
+        $this->clearContext();
 
         return $createdOrder;
     }
@@ -444,19 +558,25 @@ class CashboxNoCache extends Component
      *
      */
     public function postpone(){
-        if(!$this->order){
-            throw new NotFoundHttpException('Нечего откладывать');
-        }
-
         $this->order->postpone = 1;
 
         if($this->order->save(false)){
-            $this->clear();
+            $this->clearContext();
 
             return true;
         }
 
         return false;
+    }
+
+    public function clearContext(){
+        $cookies = \Yii::$app->response->cookies;
+
+        $this->promoCode = false;
+        $this->order = $this->orderID = $this->customer = null;
+
+        $cookies->remove('cashboxOrderID');
+        $cookies->remove('cashboxCurrentCustomer');
     }
 
     /**
@@ -466,21 +586,17 @@ class CashboxNoCache extends Component
      * @throws \yii\db\StaleObjectException
      */
     public function clear(){
-        $cookies = \Yii::$app->response->cookies;
-
         $this->priceType = 1;
 
-        foreach ($this->order->items as $item) {
-            $item->delete();
+        if(!empty($this->order)){
+            foreach ($this->order->items as $item) {
+                $item->delete();
+            }
+
+            $this->order->delete();
         }
 
-        $this->order->delete();
-        $this->promoCode = false;
-        $this->order = $this->orderID = $this->customer = null;
-
-        $cookies->remove('cashboxOrderID');
-        $cookies->remove('cashboxResponsibleUser');
-        $cookies->remove('cashboxCurrentCustomer');
+        $this->clearContext();
     }
 
     /**
@@ -522,11 +638,6 @@ class CashboxNoCache extends Component
      */
     public function getToPay(){
         return $this->order->toPay;
-    }
-
-    
-    public function goodsQuery(){
-        
     }
     
 }

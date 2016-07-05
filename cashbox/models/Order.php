@@ -18,8 +18,27 @@ class Order extends \common\models\History{
         $this->setAttributes([
             'actualAmount'      =>  $amount,
             'responsibleUserID' =>  \Yii::$app->cashbox->responsibleUser,
-            'originalSum'       =>  \Yii::$app->cashbox->order->sum
+            'originalSum'       =>  \Yii::$app->cashbox->sum
         ], false);
+    }
+
+    public function getItems()
+    {
+        return $this->hasMany(AssemblyItem::className(), ['orderID' => 'id']);
+    }
+
+    /**
+     * @param $itemID
+     * @return bool|\common\models\SborkaItem
+     */
+    public function getItem($itemID){
+        foreach($this->items as $item){
+            if($item->itemID == $itemID){
+                return $item;
+            }
+        }
+
+        return false;
     }
 
 }

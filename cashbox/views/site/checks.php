@@ -1,5 +1,6 @@
 <?php
 
+use kartik\grid\GridView;
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
 $this->title = 'Отложенные чеки';
@@ -52,7 +53,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
     </div>
 </div>
 <div class="content main-small">
-    <?=\kartik\grid\GridView::widget([
+    <?=GridView::widget([
         'dataProvider'  =>  $checksItems,
         'id'            =>  'cashboxGrid',
         'summary'       =>  false,
@@ -78,21 +79,31 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                 ],
             ],
             [
-                'attribute' =>  'customerID',
-                'value'     =>  function($model) use(&$customers){
-                    if($model->customerID != 0){
-                        return $customers[$model->customerID]->Company;
-                    }
+                'attribute' =>  'createdTime',
+                'width'     =>  '130px',
+                'format'    =>  'raw',
+                'hAlign'    =>  GridView::ALIGN_CENTER,
+                'vAlign'    =>  GridView::ALIGN_MIDDLE,
+                'value'     =>  function($model){
+                    return  Html::tag('div', \Yii::$app->formatter->asDatetime($model->createdTime, 'dd MMMM YYYY').' г.').
+                    Html::tag('div', \Yii::$app->formatter->asDatetime($model->createdTime, 'HH:mm'));
                 }
             ],
             [
-                'attribute' =>  'createdTime'
+                'attribute' =>  'customerID',
+                'value'     =>  function($model){
+                    if(!empty($model->customer)){
+                        return $model->customer->Company;
+                    }
+
+                    return;
+                }
             ],
             [
                 'attribute' =>  'responsibleUser',
                 'value'     =>  function($model){
-                    if($model->responsibleUser != 0){
-                        return \common\models\Siteuser::getUser($model->responsibleUser)->name;
+                    if(!empty($model->manager)){
+                        return $model->manager->name;
                     }
 
                     return ;

@@ -29,6 +29,7 @@ use yii;
  * @property int $itemsCount
  * @property History $createdOrder
  * @property int|mixed customer
+ * @property int return
  */
 class CashboxOrder extends \yii\db\ActiveRecord
 {
@@ -49,23 +50,8 @@ class CashboxOrder extends \yii\db\ActiveRecord
         return 'cashboxOrders';
     }
 
-    public function __get($name){
-        switch($name){
-            case 'createdItems':
-                return $this->getCreatedOrderItems();
-                break;
-            case 'createdOrderSum':
-                return $this->calcCreatedOrderSum();
-                break;
-            case 'createdOrderItemsCount':
-                return $this->calcCreatedOrderItems();
-                break;
-            case 'toPay':
-                return $this->toPay = $this->calcToPay();
-                break;
-        }
-
-        return parent::__get($name);
+    public function getCreatedItems(){
+        return $this->getCreatedOrderItems();
     }
 
     public function getItems(){
@@ -73,11 +59,19 @@ class CashboxOrder extends \yii\db\ActiveRecord
     }
 
     public function getCreatedOrder(){
-        return $this->hasOne(History::className(), ['id' => 'createdOrderID']);
+        return $this->hasOne(Order::className(), ['id' => 'createdOrderID']);
+    }
+
+    public function getCreatedOrderSum(){
+        if(empty($this->createdOrder)){
+            return 0;
+        }
+
+        return $this->createdOrder->actualAmount;
     }
 
     public function getCustomer(){
-        return $this->hasOne(Customer::className(), ['id' => 'customerID']);
+        return $this->hasOne(Customer::className(), ['ID' => 'customerID']);
     }
 
     public function getManager(){
@@ -166,8 +160,10 @@ class CashboxOrder extends \yii\db\ActiveRecord
         }
 
         if($this->isNewRecord){
-            $this->id = hexdec(uniqid());
-
+            $this->setAttributes([
+                'id'            =>  hexdec(uniqid()),
+                'createdTime'   =>  date('Y-m-d H:i:s')
+            ]);
             if(empty($this->responsibleUser)){
                 $this->responsibleUser = \Yii::$app->request->cookies->getValue('cashboxManager', 0);
             }
@@ -227,7 +223,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'customerID', 'responsibleUser', 'priceType', 'deleted', 'postpone'], 'integer'],
+            [['id', 'customerID', 'responsibleUser', 'priceType', 'deleted', 'postpone', 'createdOrderID'], 'integer'],
             [['actualAmount'], 'double'],
             [['createdTime', 'doneTime'], 'safe'],
         ];
@@ -239,14 +235,14 @@ class CashboxOrder extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('common', 'ID'),
-            'actualAmount' => Yii::t('common', 'actualAmount'),
-            'customerID' => Yii::t('common', 'Customer ID'),
-            'responsibleUser' => Yii::t('common', 'Responsible User'),
-            'createdTime' => Yii::t('common', 'Created Time'),
-            'doneTime' => Yii::t('common', 'Done Time'),
-            'priceType' => Yii::t('common', 'Price Type'),
-            'deleted' => Yii::t('common', 'Deleted'),
+            'id'                => Yii::t('common', 'ID'),
+            'actualAmount'      => Yii::t('common', 'Сумма'),
+            'customerID'        => Yii::t('common', 'Клиент'),
+            'responsibleUser'   => Yii::t('common', 'Менеджер'),
+            'createdTime'       => Yii::t('common', 'Дата создания'),
+            'doneTime'          => Yii::t('common', 'Дата завершения'),
+            'priceType'         => Yii::t('common', 'Тип цены'),
+            'deleted'           => Yii::t('common', 'Удалён'),
         ];
     }
 }

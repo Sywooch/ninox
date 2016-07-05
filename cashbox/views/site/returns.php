@@ -1,5 +1,6 @@
 <?php
 
+use kartik\grid\GridView;
 use yii\bootstrap\Html;
 $this->title = 'Возвраты';
 
@@ -37,22 +38,48 @@ $this->registerJs($js);
     </div>
     <br>
     <br>
-    <?=\kartik\grid\GridView::widget([
+    <?=GridView::widget([
         'dataProvider'  =>  $returns,
         'id'            =>  'returnsTable',
         'summary'       =>  false,
         'pjax'          =>  true,
-        /*'columns'       =>  [
+        'bordered'      =>  false,
+        'columns'       =>  [
             [
-                'attribute' =>  'customerID'
+                'class'     =>  \kartik\grid\SerialColumn::className()
             ],[
-                'attribute' =>  'responsibleUser'
-            ],[
-                'attribute' =>  'doneTime'
-            ],[
+                'attribute' =>  'customerID',
+                'hAlign'    =>  GridView::ALIGN_CENTER,
+                'vAlign'    =>  GridView::ALIGN_MIDDLE,
+                'value'     =>  function($model){
+                    if(!empty($model->customer)){
+                        return $model->customer->Company;
+                    }
 
+                    return;
+                }
+            ],[
+                'attribute' =>  'responsibleUser',
+                'hAlign'    =>  GridView::ALIGN_CENTER,
+                'vAlign'    =>  GridView::ALIGN_MIDDLE,
+                'value'     =>  function($model){
+                    if(!empty($model->manager)){
+                        return $model->manager->name;
+                    }
+
+                    return;
+                }
+            ],[
+                'attribute' =>  'doneTime',
+                'format'    =>  'html',
+                'hAlign'    =>  GridView::ALIGN_CENTER,
+                'vAlign'    =>  GridView::ALIGN_MIDDLE,
+                'value'     =>  function($model){
+                    return  Html::tag('div', \Yii::$app->formatter->asDatetime($model->createdTime, 'dd MMMM YYYY').' г.').
+                    Html::tag('div', \Yii::$app->formatter->asDatetime($model->createdTime, 'HH:mm'));
+                }
             ]
-        ]*/
+        ]
     ])?>
 </div>
 <div class="footer">

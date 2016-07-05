@@ -127,6 +127,11 @@ class SiteController extends Controller
         return parent::beforeAction($action);
     }
 
+    /**
+     * @return string
+     * @throws \yii\base\InvalidParamException
+     * @throws \yii\base\InvalidCallException
+     */
     public function actionIndex(){
         $order = $this->cashbox->order;
 
@@ -165,15 +170,25 @@ class SiteController extends Controller
             'customer'          =>  $order->customer,
             'sum'               =>  $this->cashbox->sum,
             'discountSize'      =>  $this->cashbox->discountSize,
-            'itemsCount'        =>  $this->cashbox->itemsCount,
+            'itemsCount'        =>  $order->itemsCount,
             'wholesaleSum'      =>  $this->cashbox->wholesaleSum,
             'retailSum'         =>  $this->cashbox->retailSum,
             'toPay'             =>  $this->cashbox->toPay,
             'priceType'         =>  $this->cashbox->priceType,
-            'manager'           =>  $order->manager
+            'manager'           =>  $this->cashbox->getManager()
         ]);
     }
 
+    /**
+     * @return bool|string
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\base\InvalidCallException
+     * @throws \yii\base\InvalidParamException
+     * @throws \Exception
+     * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionCompletesell(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException('Этот метод доступен только через ajax!');
@@ -188,10 +203,19 @@ class SiteController extends Controller
         return $this->cashbox->sell($amount);
     }
 
+    /**
+     *
+     * @throws \Exception
+     */
     public function actionClearOrder(){
         return $this->cashbox->clear();
     }
 
+    /**
+     * @return array
+     * @throws \yii\base\InvalidCallException
+     * @throws MethodNotAllowedHttpException
+     */
     public function actionChangecashboxtype(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException('Этот метод доступен только через ajax!');
@@ -201,15 +225,16 @@ class SiteController extends Controller
 
         $this->cashbox->changePriceType();
 
-        if(!empty($this->cashbox->order)){
-           // $this->cashbox->recalculate();
-
-            return $this->cashbox->getSummary();
-        }
 
         return $this->cashbox->getSummary();
     }
 
+    /**
+     * @return int|string
+     * @throws \yii\base\InvalidCallException
+     * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionChangemanager(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
@@ -217,7 +242,8 @@ class SiteController extends Controller
 
         if(\Yii::$app->request->post('action') == 'showList'){
             return $this->renderAjax('_changeManager', [
-                'managers'  =>  Siteuser::getActiveUsers()
+                'managers'  =>  Siteuser::getActiveUsers(),
+                'cashbox'   =>  \Yii::$app->cashbox
             ]);
         }
 
@@ -234,20 +260,29 @@ class SiteController extends Controller
         return $this->cashbox->responsibleUser;
     }
 
+    /**
+     * @return array|bool
+     * @throws MethodNotAllowedHttpException
+     */
     public function actionChangeitemcount(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
         \Yii::$app->response->format = 'json';
 
-        if($this->cashbox->changeCount(\Yii::$app->request->post("itemID"), \Yii::$app->request->post("count"))){
+        if($this->cashbox->changeCount(\Yii::$app->request->post('itemID'), \Yii::$app->request->post('count'))){
             return $this->cashbox->getSummary();
         }
 
         return false;
     }
 
+    /**
+     * @return bool
+     * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionChangecustomer(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
@@ -283,32 +318,26 @@ class SiteController extends Controller
     }
 
     public function actionChecks(){
-        $dataProvider = new ActiveDataProvider([
-            'query'     =>  CashboxOrder::find()->where(['postpone' => 1])->andWhere(['source' => \Yii::$app->params['configuration']->ID]),
-            'sort'      =>  [
-                'defaultOrder'  =>  ['createdTime' =>  SORT_DESC]
-            ]
-        ]);
-
-        $customersIDs = [];
-        $customers = [];
-
-        foreach($dataProvider->getModels() as $sell){
-            $customersIDs[] = $sell->customerID;
-        }
-
-        foreach(Customer::find()->where(['in', 'id', $customersIDs])->each() as $customer){
-            $customers[$customer->ID] = $customer;
-        }
-
         return $this->render('checks', [
-            'checksItems'   =>  $dataProvider,
-            'customers'     =>  $customers
+            'checksItems'   =>  new ActiveDataProvider([
+                'query'     =>  CashboxOrder::find()
+                    ->andWhere(['postpone' => 1, 'source' => \Yii::$app->params['configuration']->ID])
+                    ->with('customer')
+                    ->with('manager'),
+                'sort'      =>  [
+                    'defaultOrder'  =>  [
+                        'createdTime' =>  SORT_DESC]
+                    
+                ]
+            ])
         ]);
     }
 
     public function actionReturns(){
-        $orders = CashboxOrder::find()->where(['return' => 1])->andWhere(['source' => \Yii::$app->params['configuration']->ID]);
+        $orders = CashboxOrder::find()
+            ->andWhere(['return' => 1, 'source' => \Yii::$app->params['configuration']->ID])
+            ->with('customer')
+            ->with('manager');
 
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
@@ -358,23 +387,30 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return bool
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\base\InvalidCallException
+     * @throws \Exception
+     * @throws BadRequestHttpException
+     * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionLoadorder(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
-        if(empty(\Yii::$app->request->post("orderID"))){
-            throw new BadRequestHttpException("");
-        }
+        $orderID = \Yii::$app->request->post('orderID');
 
-        $order = CashboxOrder::findOne(\Yii::$app->request->post("orderID"));
+        $order = CashboxOrder::findOne($orderID);
 
         if(!$order){
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException("Заказ с идентификатором {$orderID} не найден!");
         }
 
-        if(!empty($order->createdOrderID)){
-            foreach(SborkaItem::find()->where(['orderID' => $order->createdOrderID])->each() as $assemblyItem){
+        if(!empty($order->createdOrder)){
+            foreach($order->createdOrder->items as $assemblyItem){
                 $cashboxItem = CashboxItem::findOne(['itemID' => $assemblyItem->itemID, 'orderID' => $order->id]);
 
                 if(!$cashboxItem){
@@ -387,13 +423,13 @@ class SiteController extends Controller
             }
         }
 
-        $this->cashbox->loadOrder(\Yii::$app->request->post("orderID"), \Yii::$app->request->post("dropOrder", false));
+        $this->cashbox->loadOrder($order, \Yii::$app->request->post('dropOrder', false));
 
         return true;
     }
 
     public function actionSales(){
-        $orders = CashboxOrder::find();
+        $orders = CashboxOrder::find()->with('manager')->with('customer')->with('createdOrder');
 
         $date = time() - (date('H') * 3600 + date('i') * 60 + date('s'));
 
@@ -409,8 +445,8 @@ class SiteController extends Controller
                 $orders->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime(($date - (date("j") - 1) * 86400), 'php:Y-m-d H:i:s')."'");
                 break;
             case 'range':
-                $dateFrom = \Yii::$app->request->get("dateFrom");
-                $dateTo = \Yii::$app->request->get("dateTo");
+                $dateFrom = \Yii::$app->request->get('dateFrom');
+                $dateTo = \Yii::$app->request->get('dateTo');
                 $orders
                     ->andWhere('doneTime <= \''.\Yii::$app->formatter->asDatetime($dateTo, 'php:Y-m-d H:i:s').'\'')
                     ->andWhere('doneTime >= \''.\Yii::$app->formatter->asDatetime($dateFrom, 'php:Y-m-d H:i:s').'\'');
@@ -421,76 +457,97 @@ class SiteController extends Controller
                 break;
         }
 
-        $dataProvider = new ActiveDataProvider([
-            'query'     =>  $orders->andWhere(['return' => 0])->andWhere(['source' => \Yii::$app->params['configuration']->ID]),
-            'sort'      =>  [
-                'defaultOrder'  =>  ['doneTime' =>  SORT_DESC]
-            ]
-        ]);
-
-        $customersIDs = [];
-        $customers = [];
-
-        foreach($dataProvider->getModels() as $sell){
-            $customersIDs[] = $sell->customerID;
-        }
-
-        foreach(Customer::find()->where(['in', 'id', $customersIDs])->each() as $customer){
-            $customers[$customer->ID] = $customer;
-        }
 
         return $this->render('sales', [
-            'customers'     =>  $customers,
-            'salesProvider' =>  $dataProvider
+            'salesProvider' =>  new ActiveDataProvider([
+                'query'     =>  $orders->andWhere(['return' => 0])->andWhere(['source' => \Yii::$app->params['configuration']->ID]),
+                'sort'      =>  [
+                    'defaultOrder'  =>  [
+                        'doneTime' =>  SORT_DESC
+                    ]
+                ]
+            ])
         ]);
     }
 
+    /**
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\base\InvalidCallException
+     * @throws \Exception
+     * @throws MethodNotAllowedHttpException
+     */
     public function actionReturnorder(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
-        $oldOrder = $this->cashbox->cashboxOrder->id;
-
-        if(\Yii::$app->request->post("orderID")){
-            $this->cashbox->loadOrder(\Yii::$app->request->post("orderID"));
+        if(!empty(\Yii::$app->request->post('orderID'))){
+            \Yii::$app->cashbox->loadOrder(\Yii::$app->request->post('orderID'));
         }
 
-        $orderID = $this->cashbox->refund()->id;
-
-        if(!empty($oldOrder) && $orderID != $oldOrder){
-            $this->cashbox->loadOrder($oldOrder);
-
-            $orderID = $this->cashbox->cashboxOrder->id;
+        if(empty($this->cashbox->order->items)){
+           throw new MethodNotAllowedHttpException('Нельзя оформить возврат, когда товаров нет!');
         }
 
-        return $orderID;
+        \Yii::$app->response->format = 'json';
+
+        return $this->cashbox->refund()->id;
     }
 
+    /**
+     * @return mixed
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\base\InvalidCallException
+     * @throws \Exception
+     * @throws \yii\web\NotFoundHttpException
+     * @throws ErrorException
+     * @throws MethodNotAllowedHttpException
+     */
     public function actionPostponecheck(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
-        $order = $this->cashbox->cashboxOrder;
+        $order = $this->cashbox->order;
+
+        if(!$order){
+            throw new NotFoundHttpException('Нечего откладывать');
+        }
 
         if(!$this->cashbox->postpone()){
-            throw new ErrorException("Произошла ошибка при выполнении метода actionPostponeCheck");
+            throw new ErrorException('Произошла ошибка при выполнении метода actionPostponeCheck');
         }
 
         return $order->id;
     }
 
+    /**
+     * @return bool
+     * @throws \yii\web\NotFoundHttpException
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\base\InvalidCallException
+     * @throws \Exception
+     * @throws MethodNotAllowedHttpException
+     */
     public function actionLoadpostpone(){
         if(!\Yii::$app->request->isAjax){
-            throw new MethodNotAllowedHttpException("Данный метод возможен только через ajax!");
+            throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
         }
 
-        $this->cashbox->loadPostpone(\Yii::$app->request->post("postponeOrderID"));
+        $this->cashbox->loadPostpone(\Yii::$app->request->post('postponeOrderID'));
 
         return true;
     }
 
+    /**
+     * @return array
+     * @throws \yii\base\InvalidCallException
+     * @throws ErrorException
+     * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionAdditem(){
         if(!\Yii::$app->request->isAjax){
             throw new MethodNotAllowedHttpException('Данный метод возможен только через ajax!');
@@ -527,6 +584,13 @@ class SiteController extends Controller
         return $this->cashbox->getSummary();
     }
 
+    /**
+     * @return array|bool
+     * @throws \yii\db\StaleObjectException
+     * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     */
     public function actionRemoveitem()
     {
         if (!\Yii::$app->request->isAjax) {
@@ -547,7 +611,7 @@ class SiteController extends Controller
             }
         }
 
-        if ($this->cashbox->itemsCount > 0) {
+        if ($this->cashbox->order->itemsCount > 0) {
             if ($itemID == 'all' && !empty($this->cashbox->order)) {
                 foreach($this->cashbox->order->items as $item){
                     $item->delete();
@@ -562,10 +626,14 @@ class SiteController extends Controller
         return true;
     }
 
+    /**
+     * @return string|\yii\web\Response
+     * @throws \yii\base\InvalidParamException
+     */
     public function actionLogin(){
         $this->layout = 'login';
 
-        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post("LoginForm"))){
+        if(\Yii::$app->request->isAjax && empty(\Yii::$app->request->post('LoginForm'))){
             foreach(\Yii::$app->log->targets as $target){
                 $target->enabled = false;
             }
@@ -584,11 +652,11 @@ class SiteController extends Controller
         if(!empty(\Yii::$app->params['autologin'])){
             $model->autoLoginUsers = \Yii::$app->params['autologin'];
 
-            if(isset(\Yii::$app->request->post("LoginForm")['userID']) && in_array(\Yii::$app->request->post("LoginForm")['userID'], $model->autoLoginUsers)){
-                $model->autoLoginUsers = [\Yii::$app->request->post("LoginForm")['userID']];
+            if(array_key_exists('userID', \Yii::$app->request->post('LoginForm')) && in_array(\Yii::$app->request->post('LoginForm')['userID'], $model->autoLoginUsers)){
+                $model->autoLoginUsers = [\Yii::$app->request->post('LoginForm')['userID']];
             }
 
-            if(sizeof($model->autoLoginUsers) == 1){
+            if(count($model->autoLoginUsers) == 1){
                 $user = Siteuser::findOne($model->autoLoginUsers['0']);
 
                 if($user){
@@ -626,6 +694,9 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * @return \yii\web\Response
+     */
     public function actionLogout()
     {
         Url::remember(\Yii::$app->request->referrer, 'previous');
