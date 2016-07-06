@@ -101,7 +101,10 @@ class ReturnForm extends Model
             'vozvrat_deneg' =>  $this->refundMethod,
             'comment'       =>  $this->comment,
             'bank_cart'     =>  $this->cardNumber,
-            'bank_pib'      =>  $this->cardHolder
+            'bank_pib'      =>  $this->cardHolder,
+            'prichina_vozvrata' =>  '',
+            'suma_vozvrata' =>  0,
+            'status' =>  0,
         ], false);
 
         $return->save(false);
