@@ -36,7 +36,7 @@ class ChangesWidget extends Widget{
 
         $siteusers = User::find()->select(['id', 'name', 'username'])->all();
         foreach($siteusers as $user){
-            $this->siteusers[$user->id] = ['name' => $user->name, 'username' => $user->username];
+            $this->siteusers[$user->id] = $user;
         }
     }
 
