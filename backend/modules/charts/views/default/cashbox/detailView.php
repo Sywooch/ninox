@@ -84,6 +84,9 @@ GridView::widget([
             }
         ],
         [
+            'label'     =>  'Остаток',
+        ],
+        [
             'attribute' =>  'responsibleUser',
             'label'     =>  'Пользователь',
             'hAlign'    =>  GridView::ALIGN_CENTER,

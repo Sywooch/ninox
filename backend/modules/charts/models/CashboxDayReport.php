@@ -69,6 +69,29 @@ class CashboxDayReport  extends Model
         return $expenses;
     }
 
+    public function getShopOrders(){
+        $orders = [];
+
+        foreach($this->orders as $order){
+            if($order->sourceType == $order::SOURCETYPE_SHOP){
+                $orders[] = $order;
+            }
+        }
+
+        return $orders;
+    }
+
+    public function getSelfDeliveredOrders(){
+        $orders = [];
+
+        foreach($this->orders as $order){
+            if($order->sourceType == $order::SOURCETYPE_INTERNET){
+                $orders[] = $order;
+            }
+        }
+
+        return $orders;
+    }
     public function getTook(){
         $tooked = 0;
 
