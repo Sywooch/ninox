@@ -49,7 +49,7 @@ class CashboxDayReport  extends Model
         $sum = 0;
 
         foreach($this->orders as $order){
-            $sum += $order->payedAmount;
+            $sum += $order->actualAmount;
         }
 
         return $sum;
