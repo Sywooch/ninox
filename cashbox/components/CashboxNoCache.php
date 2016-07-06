@@ -136,6 +136,7 @@ class CashboxNoCache extends Component
     public function calcDiscount(){
         $helper = new PriceRuleHelper();
         $helper->cartSumm = $this->sum;
+        $helper->customer = $this->customer;
 
         foreach ($this->order->items as $item) {
             if($helper->recalc($item)){
@@ -151,6 +152,7 @@ class CashboxNoCache extends Component
      */
     public function recalculate()
     {
+        $this->calcDiscount();
         $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = 0;
 
         foreach ($this->order->getItems()->with('good')->each() as $item) {
@@ -608,6 +610,9 @@ class CashboxNoCache extends Component
     public function recalculateItem($itemID)
     {
         $priceRuleHelper = new PriceRuleHelper();
+
+        $priceRuleHelper->cartSumm = $this->sum;
+        $priceRuleHelper->customer = $this->customer;
 
         $priceRule = Pricerule::findOne(Promocode::find()->select('rule')->where(['code' => $this->order->promoCode])->scalar());
 

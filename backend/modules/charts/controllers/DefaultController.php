@@ -60,7 +60,7 @@ class DefaultController extends Controller
                             'sort'      =>  [
                                 'attributes' =>  ['date', 'responsibleUser'],
                                 'defaultOrder'  =>  [
-                                    'date'  =>  SORT_ASC
+                                    'date'  =>  SORT_DESC
                                 ]
                             ]
                         ]),

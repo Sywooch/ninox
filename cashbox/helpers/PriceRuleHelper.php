@@ -12,17 +12,14 @@ use cashbox\models\CustomerPricerule;
 
 class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
 
+    public $customer = 0;
 
     public function init()
     {
         parent::init();
-        if(\Yii::$app->request->cookies->getValue('cashboxCurrentCustomer', false) ||
-            \Yii::$app->request->post("customerID")){
-            $cookie = \Yii::$app->request->cookies->getValue('cashboxCurrentCustomer', false);
-            $request = \Yii::$app->request->post("customerID");
-            $customerID = !empty($request) && $request != $cookie ? $request : $cookie;
+        if(!empty($this->customer)){
             $this->pricerules = array_merge(CustomerPricerule::find()
-                ->where(['customerID' => $customerID, 'Enabled' => 1])
+                ->where(['customerID' => $this->customer, 'Enabled' => 1])
                 ->orderBy(['Priority' => SORT_DESC])
                 ->all(), $this->pricerules);
         }

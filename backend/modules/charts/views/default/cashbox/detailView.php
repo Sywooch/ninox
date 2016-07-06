@@ -5,7 +5,7 @@ use kartik\grid\GridView;
 
 $day = \Yii::$app->formatter->asDate($day);
 
-echo \yii\helpers\Html::tag('h3', "Траты за {$day}"),
+echo \yii\helpers\Html::tag('h3', "Статистика кассы за {$day}"),
 GridView::widget([
     'pjax'          =>      true,
     'dataProvider'  =>  $dataProvider,
@@ -32,6 +32,7 @@ GridView::widget([
     'columns'       =>  [
         [
             'attribute' =>  'date',
+            'label'     =>  'Время',
             'width'     =>  '60px',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
@@ -41,6 +42,7 @@ GridView::widget([
         ],
         [
             'attribute' =>  'orderID',
+            'label'     =>  'Заказ',
             'format'    =>  'html',
             'width'     =>  '60px',
             'hAlign'    =>  GridView::ALIGN_CENTER,
@@ -55,6 +57,7 @@ GridView::widget([
         ],
         [
             'attribute' =>  'type',
+            'label'     =>  'Тип',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
@@ -67,6 +70,7 @@ GridView::widget([
         ],
         [
             'attribute' =>  'sum',
+            'label'     =>  'Сумма',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
@@ -81,10 +85,11 @@ GridView::widget([
         ],
         [
             'attribute' =>  'responsibleUser',
+            'label'     =>  'Пользователь',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
-                if(empty($model->responsibleUser)){
+                if(empty($model->responsibleUserModel)){
                     return 'Неизвестный пользователь';
                 }
 
