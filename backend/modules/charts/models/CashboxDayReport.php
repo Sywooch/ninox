@@ -35,7 +35,7 @@ class CashboxDayReport  extends Model
 
         return History::find()
             ->where(['or', "`sourceType` = '{$shopType}' AND `added` > '{$dayStart}' AND `added` < '{$dayEnd}'", "`sourceType` = '{$internetType}' AND `paymentType` = '3' AND `moneyConfirmedDate` LIKE '{$this->date}%'"])
-
+            ->andWhere(['orderSource' => \Yii::$app->params['configuration']->id])
             //->andWhere("`added` > '{$dayStart}' AND `added` < '{$dayEnd}'")
             //->andWhere(['or', "`added` > '{$dayStart}' AND `added` < '{$dayEnd}'", "`moneyConfirmedDate` LIKE '{$this->date}'"])
             ->all();
