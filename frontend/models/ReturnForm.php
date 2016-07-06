@@ -104,6 +104,7 @@ class ReturnForm extends Model
             'bank_pib'      =>  $this->cardHolder,
             'prichina_vozvrata' =>  '',
             'suma_vozvrata' =>  0,
+            'status' =>  0,
         ], false);
 
         $return->save(false);
