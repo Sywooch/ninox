@@ -649,7 +649,7 @@ class SiteController extends Controller
 
         $hasAutoLogin = !empty(\Yii::$app->params['autologin']);
 
-        if(!empty(\Yii::$app->params['autologin'])){
+        if(!empty(\Yii::$app->params['autologin']) && !empty(\Yii::$app->request->post('LoginForm'))){
             $model->autoLoginUsers = \Yii::$app->params['autologin'];
 
             if(array_key_exists('userID', \Yii::$app->request->post('LoginForm')) && in_array(\Yii::$app->request->post('LoginForm')['userID'], $model->autoLoginUsers)){
@@ -669,7 +669,7 @@ class SiteController extends Controller
             }
         }
 
-        if ($model->load(\Yii::$app->request->post()) && $model->login()) {
+        if($model->load(\Yii::$app->request->post()) && $model->login()){
             return $this->redirect(!empty(\Yii::$app->user->identity->default_route) ? \Yii::$app->user->identity->default_route : Url::home());
         }else{
             $users = [];

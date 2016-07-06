@@ -138,10 +138,6 @@ function changeItemCount(item){
 	}
 }
 
-function openCart(){
-	document.location = document.location.href.replace(/#.*/, '') + '#modalCart';
-}
-
 function getCart(){
 	$.pjax.reload({container: '#cart-gridview-pjax', url: '/getcart', push: false, replace: false});
 	$.ajax({
