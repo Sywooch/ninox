@@ -175,7 +175,7 @@ SCRIPT;
                 [
                     'attribute' =>  'user_id',
                     'value'     =>  function($model){
-                        return $this->getUser($model->user_id);
+                        return $this->getUser($model->user_id)->name;
                     }
                 ],
                 [
