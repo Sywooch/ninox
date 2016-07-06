@@ -165,6 +165,10 @@ GridView::widget([
             'attribute'     =>  'sum',
             'width'         =>  '214px',
             'value'         =>  function($model){
+                if(empty($model->sum)){
+                    return '-';
+                }
+
                 return "{$model->sum} грн.";
             }
         ],
@@ -173,6 +177,10 @@ GridView::widget([
             'attribute'     =>  'expenses',
             'width'         =>  '214px',
             'value'         =>  function($model){
+                if(empty($model->expenses)){
+                    return '-';
+                }
+
                 return "{$model->expenses} грн.";
             }
         ],
@@ -181,6 +189,10 @@ GridView::widget([
             'attribute'     =>  'took',
             'width'         =>  '214px',
             'value'         =>  function($model){
+                if(empty($model->took)){
+                    return '-';
+                }
+
                 return "{$model->took} грн.";
             }
         ],
@@ -189,6 +201,10 @@ GridView::widget([
             'attribute'     =>  'added',
             'width'         =>  '214px',
             'value'         =>  function($model){
+                if(empty($model->added)){
+                    return '-';
+                }
+
                 return "{$model->added} грн.";
             }
         ],

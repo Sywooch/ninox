@@ -34,7 +34,7 @@ class CashboxDayReport  extends Model
         $internetType = History::SOURCETYPE_INTERNET;
 
         return History::find()
-            ->where(['or', "`sourceType` = '{$shopType}' AND `added` > '{$dayStart}' AND `added` < '{$dayEnd}'", "`sourceType` = '{$internetType}' AND `paymentType` = '3' AND `moneyConfirmedDate` LIKE '{$this->date}'"])
+            ->where(['or', "`sourceType` = '{$shopType}' AND `added` > '{$dayStart}' AND `added` < '{$dayEnd}'", "`sourceType` = '{$internetType}' AND `paymentType` = '3' AND `moneyConfirmedDate` LIKE '{$this->date}%'"])
 
             //->andWhere("`added` > '{$dayStart}' AND `added` < '{$dayEnd}'")
             //->andWhere(['or', "`added` > '{$dayStart}' AND `added` < '{$dayEnd}'", "`moneyConfirmedDate` LIKE '{$this->date}'"])
