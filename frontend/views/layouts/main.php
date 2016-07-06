@@ -30,13 +30,13 @@ $cartModal = new \bobroid\remodal\Remodal([
 	'closeButton'		=>	false,
 	'content'			=>	$this->render('../site/cart'),
 	'options'           =>  [
-		'id'            =>  'modal-cart',
-		'class'         =>  \Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'wholesale' : 'retail') : 'empty'
+		'id'    =>  'modal-cart',
+		'class' =>  \Yii::$app->cart->itemsCount ? (\Yii::$app->cart->wholesale ? 'wholesale' : 'retail') : 'empty',
 	],
 	'id'	            =>	'modalCart',
 	'addRandomToID'		=>	false,
 	'events'			=>	[
-		'opening'	    =>	new \yii\web\JsExpression("getCart()")
+		'opening'   =>	new \yii\web\JsExpression("getCart()")
 	]
 ]);
 
@@ -48,7 +48,7 @@ $callbackSuccessModal = new \bobroid\remodal\Remodal([
 	'content'			=>	$this->render('_callback_success'),
 	'id'				=>	'callbackSuccessModal',
 	'options'			=>  [
-		'class'			=>  'callback-success-modal'
+		'class' =>  'callback-success-modal'
 	]
 ]);
 
@@ -60,7 +60,7 @@ $loginModal = new \bobroid\remodal\Remodal([
 	'content'			=>	$this->render('parts/_login_modal'),
 	'id'				=>	'loginModal',
 	'options'			=>  [
-		'class'			=>  'login-modal'
+		'class' =>  'login-modal'
 	]
 ]);
 
@@ -145,7 +145,13 @@ $js = <<<JS
 	$('body').on(hasTouch ? 'touchend' : 'click', '.button.open-cart', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
-		openCart();
+		$('#modal-cart').remodal().open();
+	});
+
+	$('body').on(hasTouch ? 'touchend' : 'click', '.icon-quick-view', function(e){
+		if(hasTouch && isTouchMoved(e)){ return false; }
+		e.preventDefault();
+		$('#modal-quick-view').remodal().open();
 	});
 
 	$(document).on('pjax:complete', function(){
@@ -520,7 +526,7 @@ $this->beginPage();
 									]).Html::a(\Yii::t('shop', '{n, plural, =0{# товаров} =1{# товар} few{#
 									товара}	many{# товаров} other{# товар}}', [
 										'n'	=>	\Yii::$app->cart->itemsCount
-									]), '#modalCart', [
+									]), '#modal-сart', [
 										'class' =>  'items-count-ext'
 									])
 								).

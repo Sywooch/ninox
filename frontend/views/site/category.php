@@ -53,6 +53,20 @@ JS;
 
 $this->registerJS($js);
 
+$quickViewModal = new \bobroid\remodal\Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	true,
+    'addRandomToID'		=>	false,
+    'content'			=>	$this->render('_quick_view_modal'),
+    'id'				=>	'quickView',
+    'options'			=>  [
+        'id'    =>  'modal-quick-view',
+        'class' =>  'quick-view-modal',
+    ]
+
+]);
+
 \yii\widgets\Pjax::begin([
     'id'            =>  'pjax-category',
     'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a',
@@ -229,3 +243,5 @@ echo Html::tag('div',
 );
 
 \yii\widgets\Pjax::end();
+
+echo $quickViewModal->renderModal();

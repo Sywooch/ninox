@@ -430,7 +430,7 @@ class SiteController extends Controller
         }
 
         if(strlen($customerPhone) < 9){
-            return \Yii::$app->response->redirect('/#modalCart');
+            return \Yii::$app->response->redirect('/#modalСart');
         }
 
         if(\Yii::$app->cart->itemsCount < 1){
