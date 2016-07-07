@@ -134,9 +134,11 @@ class CashboxNoCache extends Component
      * @return bool
      */
     public function calcDiscount(){
-        $helper = new PriceRuleHelper();
-        $helper->cartSumm = $this->sum;
-        $helper->customer = $this->customer;
+        $helper = new PriceRuleHelper(['customer' => $this->customer]);
+
+        foreach ($this->order->items as $item) {
+            $helper->cartSumm += $item->originalPrice * $item->count;
+        }
 
         foreach ($this->order->items as $item) {
             if($helper->recalc($item)){
@@ -150,8 +152,7 @@ class CashboxNoCache extends Component
     /**
      * Считает сумму текущего заказа
      */
-    public function recalculate()
-    {
+    public function recalculate(){
         $this->calcDiscount();
         $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = 0;
 
@@ -599,29 +600,6 @@ class CashboxNoCache extends Component
         }
 
         $this->clearContext();
-    }
-
-    /**
-     * Пересчитывает товар
-     *
-     * @param $itemID
-     * @return bool
-     */
-    public function recalculateItem($itemID)
-    {
-        $priceRuleHelper = new PriceRuleHelper();
-
-        $priceRuleHelper->cartSumm = $this->sum;
-        $priceRuleHelper->customer = $this->customer;
-
-        $priceRule = Pricerule::findOne(Promocode::find()->select('rule')->where(['code' => $this->order->promoCode])->scalar());
-
-        if($priceRule){
-            $priceRuleHelper->recalcSborkaItem($this->getItem($itemID), $priceRule);
-            return $this->getItem($itemID)->save(false);
-        }
-
-        return false;
     }
 
     /**

@@ -159,6 +159,14 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
+        (new PriceRuleHelper())->recalc($good, true);
+
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('_quick_view_modal', [
+                'good'  =>  $good
+            ]);
+        }
+
         if($good->link.'-g'.$good->ID != $link){
             $this->redirect(Url::to(['/tovar/'.$good->link.'-g'.$good->ID, 'language' => \Yii::$app->language]), 301);
         }
@@ -170,7 +178,7 @@ class SiteController extends Controller
 
         self::getLanguagesLinks($good);
 
-        (new PriceRuleHelper())->recalc($good, true);
+
 
         return $this->render('_shop_item_card', [
             'good'  =>  $good

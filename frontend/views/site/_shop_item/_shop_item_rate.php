@@ -8,6 +8,8 @@
 
 use yii\helpers\Html;
 
+$link = '/tovar/'.$model->link.'-g'.$model->ID;
+
 $createStar = function($rate) use ($model){
 	$options = [
 		'class'         => 'icon-star'.($rate <= $model->rate && $model->rate < $rate + 1 ? ' current' : ''),
