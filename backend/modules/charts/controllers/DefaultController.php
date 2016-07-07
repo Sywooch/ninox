@@ -56,13 +56,16 @@ class DefaultController extends Controller
                     $day = \Yii::$app->request->post('value');
 
                     return $this->renderAjax('cashbox/detailView', [
-                        'dataProvider'  =>  new ArrayDataProvider([
-                            'models'    =>  $report->getStatByDay($day)->operations,
+                        'dataProvider'  =>  new ActiveDataProvider([
+                            'query' =>  CashboxMoney::find()->where(['like', 'date', $day.'%', false]),
                             'sort'      =>  [
                                 'attributes' =>  ['date', 'responsibleUser'],
                                 'defaultOrder'  =>  [
                                     'date'  =>  SORT_DESC
                                 ]
+                            ],
+                            'pagination'    =>  [
+                                'pageSize'  =>  0
                             ]
                         ]),
                         'day'           =>  $day

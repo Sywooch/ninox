@@ -43,7 +43,7 @@ class CashboxMoney extends \yii\db\ActiveRecord
     }
 
     public function getResponsibleUserModel(){
-        return Siteuser::findOne($this->responsibleUser);
+        return $this->hasOne(Siteuser::className(), ['id' => 'responsibleUser']);
     }
 
     /**
