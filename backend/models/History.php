@@ -569,6 +569,7 @@ class History extends \common\models\History
                         'responsibleUser'   =>  $this->responsibleUserID,
                         'customer'          =>  $this->customerID,
                         'order'             =>  $this->id,
+                        'cashbox'           =>  \Yii::$app->params['configuration']->defaultCashboxID
                     ]))->save(false);
                 }
             }

@@ -14,6 +14,7 @@ use common\models\Cost;
 use common\models\CostsType;
 use common\models\History;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * @property History[] orders
@@ -27,7 +28,7 @@ class CashboxDayReport  extends Model
     public $date;
 
     public function getCashboxMoney(){
-        return CashboxMoney::find()->where(['like', 'date', $this->date.'%', false])->all();
+        return CashboxMoney::find()->where(['like', 'date', $this->date.'%', false])->andWhere(['in', 'cashbox', ArrayHelper::getColumn(\Yii::$app->params['configuration']->possibleCashboxes, 'ID')])->all();
     }
 
     public function getSum(){
@@ -59,7 +60,7 @@ class CashboxDayReport  extends Model
 
         foreach($this->cashboxMoney as $money){
             if($money->operation == $money::OPERATION_SELL){
-                $orders[] = History::findOne($money->order);
+                $orders[] = $money->order;
             }
         }
 
@@ -71,7 +72,7 @@ class CashboxDayReport  extends Model
 
         foreach($this->cashboxMoney as $money){
             if($money->operation == $money::OPERATION_SELF_DELIVERY){
-                $orders[] = History::findOne($money->order);
+                $orders[] = $money->order;
             }
         }
 

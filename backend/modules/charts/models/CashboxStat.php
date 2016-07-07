@@ -11,6 +11,7 @@ namespace backend\modules\charts\models;
 
 use common\models\CashboxMoney;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * @property mixed operations
@@ -27,7 +28,7 @@ class CashboxStat extends Model
             return $this->_operations;
         }
 
-        return $this->_operations = CashboxMoney::find()->all();
+        return $this->_operations = CashboxMoney::find()->andWhere(['in', 'cashbox', ArrayHelper::getColumn(\Yii::$app->params['configuration']->possibleCashboxes, 'ID')])->all();
     }
 
     public function getActualOperations(){

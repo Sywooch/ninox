@@ -73,6 +73,7 @@ class Cost extends \yii\db\ActiveRecord
                 'amount'            =>  $this->costSumm,
                 'operation'         =>  CashboxMoney::OPERATION_SPEND,
                 'responsibleUser'   =>  $this->creator,
+                'cashbox'           =>  \Yii::$app->params['configuration']->defaultCashboxID
             ]))->save(false);
         }
 

@@ -10,9 +10,11 @@ use backend\modules\charts\models\CashboxMonthReport;
 use backend\modules\charts\models\CashboxStat;
 use backend\modules\charts\models\HistorySearch;
 use backend\modules\charts\models\MonthReport;
+use common\models\Cashbox;
 use common\models\CashboxMoney;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 
 class DefaultController extends Controller
 {
@@ -36,7 +38,7 @@ class DefaultController extends Controller
             switch(\Yii::$app->request->post('action')){
                 case 'addMoney':
                     $operation = new CashboxMoney([
-                        'cashbox'   =>  1,
+                        'cashbox'   =>  \Yii::$app->params['configuration']->defaultCashboxID,
                         'operation' =>   CashboxMoney::OPERATION_PUT,
                         'amount'    =>  \Yii::$app->request->post('value')
                     ]);
@@ -45,9 +47,9 @@ class DefaultController extends Controller
                     break;
                 case 'tookMoney':
                     $operation = new CashboxMoney([
-                        'cashbox'   =>  1,
+                        'cashbox'   =>  \Yii::$app->params['configuration']->defaultCashboxID,
                         'operation' =>   CashboxMoney::OPERATION_TAKE,
-                        'amount'    =>  \Yii::$app->request->post('value')
+                        'amount'    =>  \Yii::$app->request->post('value'),
                     ]);
 
                     $operation->save(false);
@@ -57,7 +59,7 @@ class DefaultController extends Controller
 
                     return $this->renderAjax('cashbox/detailView', [
                         'dataProvider'  =>  new ActiveDataProvider([
-                            'query' =>  CashboxMoney::find()->where(['like', 'date', $day.'%', false]),
+                            'query' =>  CashboxMoney::find()->where(['like', 'date', $day.'%', false])->andWhere(['in', 'cashbox', ArrayHelper::getColumn(\Yii::$app->params['configuration']->possibleCashboxes, 'ID')]),
                             'sort'      =>  [
                                 'attributes' =>  ['date', 'responsibleUser'],
                                 'defaultOrder'  =>  [
@@ -75,7 +77,7 @@ class DefaultController extends Controller
 
         }
 
-        $lastMoneyTake = CashboxMoney::find()->where(['operation' => CashboxMoney::OPERATION_TAKE])->orderBy('date DESC')->one();
+        $lastMoneyTake = CashboxMoney::find()->where(['operation' => CashboxMoney::OPERATION_TAKE])->andWhere(['in', 'cashbox', ArrayHelper::getColumn(\Yii::$app->params['configuration']->possibleCashboxes, 'ID')])->orderBy('date DESC')->one();
 
         if(empty($lastMoneyTake)){
             $lastMoneyTake = new CashboxMoney([
