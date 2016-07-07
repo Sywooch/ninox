@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use backend\components\Sms;
+use common\models\CashboxMoney;
 use common\models\Comment;
 use common\models\PaymentParam;
 use common\models\PaymentType;
@@ -559,6 +560,16 @@ class History extends \common\models\History
                 if(!empty($this->paymentRespond)){
                     $this->paymentRespond->read_confirm = 1;
                     $this->paymentRespond->save(false);
+                }
+                
+                if($this->paymentType == 3){
+                    (new CashboxMoney([
+                        'amount'            =>  $this->actualAmount,
+                        'operation'         =>  CashboxMoney::OPERATION_SELF_DELIVERY,
+                        'responsibleUser'   =>  $this->responsibleUserID,
+                        'customer'          =>  $this->customerID,
+                        'order'             =>  $this->id,
+                    ]))->save(false);
                 }
             }
 

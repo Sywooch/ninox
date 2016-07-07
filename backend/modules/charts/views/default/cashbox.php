@@ -241,7 +241,7 @@ echo $modal->renderModal();
 <div class="bigGrayFooter" style="position: fixed; left: 0; bottom: 0; height: 140px; width: 100%;">
     <div style="border-top: 1px solid #ddd; background: #fff; height: 40px; padding: 10px 0">
         <div class="container" style="height: 20px;">
-            За период с - по -
+            За период с <?=\Yii::$app->formatter->asDate($lastMoneyTake->date)?> по <?=\Yii::$app->formatter->asDate(date('Y-m-d H:i:s'))?>
         </div>
     </div>
     <div style="background: #ddd">
@@ -250,15 +250,15 @@ echo $modal->renderModal();
                 <div class="row col-xs-7">
                     <div class="col-xs-4">
                         <span>Сумма заказов</span>
-                        <h3>100 грн</h3>
+                        <h3><?=$stats->ordersSum?> грн</h3>
                     </div>
                     <div class="col-xs-4">
                         <span>Траты</span>
-                        <h3>100 грн</h3>
+                        <h3><?=$stats->spend?> грн</h3>
                     </div>
                     <div class="col-xs-4">
                         <span>Остаток в кассе</span>
-                        <h3>100 грн</h3>
+                        <h3><?=$stats->currentSum?> грн</h3>
                     </div>
                 </div>
                 <div class="col-xs-4 col-xs-offset-1 text-right" style="margin-top: 20px; position: relative">

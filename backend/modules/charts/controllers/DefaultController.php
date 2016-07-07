@@ -7,6 +7,7 @@ use backend\models\Good;
 use backend\models\History;
 use backend\models\Shop;
 use backend\modules\charts\models\CashboxMonthReport;
+use backend\modules\charts\models\CashboxStat;
 use backend\modules\charts\models\HistorySearch;
 use backend\modules\charts\models\MonthReport;
 use common\models\CashboxMoney;
@@ -71,8 +72,18 @@ class DefaultController extends Controller
 
         }
 
+        $lastMoneyTake = CashboxMoney::find()->where(['operation' => CashboxMoney::OPERATION_TAKE])->orderBy('date DESC')->one();
+
+        if(empty($lastMoneyTake)){
+            $lastMoneyTake = new CashboxMoney([
+                'operation' =>  CashboxMoney::OPERATION_TAKE
+            ]);
+        }
+
         return $this->render('cashbox', [
-            'report'    =>  $report
+            'report'        =>  $report,
+            'lastMoneyTake' =>  $lastMoneyTake,
+            'stats'         =>  new CashboxStat(['date' => $lastMoneyTake->date])
         ]);
     }
 
