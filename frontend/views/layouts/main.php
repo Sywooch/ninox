@@ -152,6 +152,13 @@ $js = <<<JS
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
 		$('#modal-quick-view').remodal().open();
+		$.ajax({
+			type: 'POST',
+			url: $(e.currentTarget).closest('a').attr('href'),
+			success: function(data){
+				$('#modal-quick-view').html(data);
+			}
+		});
 	});
 
 	$(document).on('pjax:complete', function(){

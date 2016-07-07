@@ -48,7 +48,6 @@ $js = <<<'JS'
     $('body').on('change', '.filter-rows input[type=checkbox]', function(){
         updateFilter(this);
     });
-
 JS;
 
 $this->registerJS($js);
@@ -58,13 +57,12 @@ $quickViewModal = new \bobroid\remodal\Remodal([
     'confirmButton'		=>	false,
     'closeButton'		=>	true,
     'addRandomToID'		=>	false,
-    'content'			=>	$this->render('_quick_view_modal'),
     'id'				=>	'quickView',
     'options'			=>  [
-        'id'    =>  'modal-quick-view',
-        'class' =>  'quick-view-modal',
-    ]
-
+        'id'        =>  'modal-quick-view',
+        'class'     =>  'quick-view-modal',
+        'hashTracking'  =>  false
+    ],
 ]);
 
 \yii\widgets\Pjax::begin([

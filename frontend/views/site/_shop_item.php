@@ -72,13 +72,13 @@ echo Html::tag('div',
 			]), [
 				'class' => 'item-img',
 			]).
+			$this->render('_shop_item/_shop_item_discount', ['model' => $model]).
+			$this->render('_shop_item/_shop_item_labels', ['model' => $model]).
 			Html::tag('div',
 				Html::tag('span', \Yii::t('shop', 'Быстрый просмотр')),
 				[
 					'class' => 'icon-quick-view'
 				]).
-			$this->render('_shop_item/_shop_item_discount', ['model' => $model]).
-			$this->render('_shop_item/_shop_item_labels', ['model' => $model]).
 			Html::tag('div', $model->Name, [
 				'class' =>  'item-title '.($model->enabled && ($model->count > 0 || $model->isUnlimited) ? 'blue' : 'gray'),
 			]),
@@ -94,7 +94,5 @@ echo Html::tag('div',
 		$itemDopInfoBlock($model),
 		['class' => 'inner-sub']) : ''
 	),
-	['class' => 'item '.($model->enabled && ($model->count > 0 || $model->isUnlimited) ?
-			($model->inCart ?
-				'in-cart' : 'available'
-			) : 'out-of-stock')]);
+	['class' => 'item']
+);
