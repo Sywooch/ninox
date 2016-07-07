@@ -95,7 +95,7 @@ class CashboxMoney extends \yii\db\ActiveRecord
         if(empty($this->responsibleUser)){
             $this->responsibleUser = \Yii::$app->user->id;
         }
-
+        
         if(empty($this->customer)){
             $this->customer = 0;
         }

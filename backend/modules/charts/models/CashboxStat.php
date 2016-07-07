@@ -9,7 +9,7 @@
 namespace backend\modules\charts\models;
 
 
-use common\models\CashboxMoney;
+use backend\models\CashboxMoney;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 

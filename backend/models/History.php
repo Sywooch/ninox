@@ -3,9 +3,6 @@
 namespace backend\models;
 
 use backend\components\Sms;
-use common\models\CashboxMoney;
-use common\models\Comment;
-use common\models\PaymentParam;
 use common\models\PaymentType;
 use common\models\Siteuser;
 use yii;

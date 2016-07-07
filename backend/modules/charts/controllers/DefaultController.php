@@ -4,16 +4,12 @@ namespace backend\modules\charts\controllers;
 
 use backend\controllers\SiteController as Controller;
 use backend\models\Good;
-use backend\models\History;
-use backend\models\Shop;
 use backend\modules\charts\models\CashboxMonthReport;
 use backend\modules\charts\models\CashboxStat;
 use backend\modules\charts\models\HistorySearch;
 use backend\modules\charts\models\MonthReport;
-use common\models\Cashbox;
-use common\models\CashboxMoney;
+use backend\models\CashboxMoney;
 use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 
 class DefaultController extends Controller

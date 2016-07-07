@@ -9,9 +9,8 @@
 namespace backend\modules\charts\models;
 
 
-use common\models\CashboxMoney;
+use backend\models\CashboxMoney;
 use common\models\Cost;
-use common\models\CostsType;
 use common\models\History;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
