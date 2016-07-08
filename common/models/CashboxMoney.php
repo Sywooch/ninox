@@ -2,7 +2,6 @@
 
 namespace common\models;
 
-use backend\models\Siteuser;
 use Yii;
 
 /**
@@ -43,7 +42,7 @@ class CashboxMoney extends \yii\db\ActiveRecord
     }
 
     public function getResponsibleUserModel(){
-        return $this->hasOne(Siteuser::className(), ['id' => 'responsibleUser']);
+        return $this->hasOne(\backend\models\Siteuser::className(), ['id' => 'responsibleUser']);
     }
 
     /**
