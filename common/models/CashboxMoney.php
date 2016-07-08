@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\models\Siteuser;
 use Yii;
 
 /**
@@ -22,6 +23,28 @@ class CashboxMoney extends \yii\db\ActiveRecord
     const OPERATION_REFUND = 1;
     const OPERATION_TAKE = 2;
     const OPERATION_PUT = 3;
+    const OPERATION_SELF_DELIVERY = 4;
+    const OPERATION_SPEND = 5;
+
+
+    public function getTypes(){
+        return [
+            self::OPERATION_SELL            =>  'Покупка',
+            self::OPERATION_TAKE            =>  'Забранно',
+            self::OPERATION_PUT             =>  'Добавлено',
+            self::OPERATION_SELF_DELIVERY   =>  'Самовывоз',
+            self::OPERATION_SPEND           =>  'Траты',
+            self::OPERATION_REFUND          =>  'Возврат',
+        ];
+    }
+
+    public function getOrderModel(){
+        return $this->hasOne(History::className(), ['id' => 'order']);
+    }
+
+    public function getResponsibleUserModel(){
+        return $this->hasOne(Siteuser::className(), ['id' => 'responsibleUser']);
+    }
 
     /**
      * @inheritdoc
@@ -65,11 +88,14 @@ class CashboxMoney extends \yii\db\ActiveRecord
     {
         if($this->isNewRecord){
             $this->setAttributes([
-                'responsibleUser'   =>  \Yii::$app->user->id,
                 'date'              =>  date('Y-m-d H:i:s')
             ]);
         }
 
+        if(empty($this->responsibleUser)){
+            $this->responsibleUser = \Yii::$app->user->id;
+        }
+        
         if(empty($this->customer)){
             $this->customer = 0;
         }

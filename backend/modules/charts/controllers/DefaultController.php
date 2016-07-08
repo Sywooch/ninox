@@ -4,14 +4,13 @@ namespace backend\modules\charts\controllers;
 
 use backend\controllers\SiteController as Controller;
 use backend\models\Good;
-use backend\models\History;
-use backend\models\Shop;
 use backend\modules\charts\models\CashboxMonthReport;
+use backend\modules\charts\models\CashboxStat;
 use backend\modules\charts\models\HistorySearch;
 use backend\modules\charts\models\MonthReport;
-use common\models\CashboxMoney;
+use backend\models\CashboxMoney;
 use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 
 class DefaultController extends Controller
 {
@@ -35,7 +34,7 @@ class DefaultController extends Controller
             switch(\Yii::$app->request->post('action')){
                 case 'addMoney':
                     $operation = new CashboxMoney([
-                        'cashbox'   =>  1,
+                        'cashbox'   =>  \Yii::$app->params['configuration']->defaultCashboxID,
                         'operation' =>   CashboxMoney::OPERATION_PUT,
                         'amount'    =>  \Yii::$app->request->post('value')
                     ]);
@@ -44,9 +43,9 @@ class DefaultController extends Controller
                     break;
                 case 'tookMoney':
                     $operation = new CashboxMoney([
-                        'cashbox'   =>  1,
+                        'cashbox'   =>  \Yii::$app->params['configuration']->defaultCashboxID,
                         'operation' =>   CashboxMoney::OPERATION_TAKE,
-                        'amount'    =>  \Yii::$app->request->post('value')
+                        'amount'    =>  \Yii::$app->request->post('value'),
                     ]);
 
                     $operation->save(false);
@@ -55,13 +54,16 @@ class DefaultController extends Controller
                     $day = \Yii::$app->request->post('value');
 
                     return $this->renderAjax('cashbox/detailView', [
-                        'dataProvider'  =>  new ArrayDataProvider([
-                            'models'    =>  $report->getStatByDay($day)->operations,
+                        'dataProvider'  =>  new ActiveDataProvider([
+                            'query' =>  CashboxMoney::find()->where(['like', 'date', $day.'%', false])->andWhere(['in', 'cashbox', ArrayHelper::getColumn(\Yii::$app->params['configuration']->possibleCashboxes, 'ID')]),
                             'sort'      =>  [
                                 'attributes' =>  ['date', 'responsibleUser'],
                                 'defaultOrder'  =>  [
                                     'date'  =>  SORT_DESC
                                 ]
+                            ],
+                            'pagination'    =>  [
+                                'pageSize'  =>  0
                             ]
                         ]),
                         'day'           =>  $day
@@ -71,8 +73,18 @@ class DefaultController extends Controller
 
         }
 
+        $lastMoneyTake = CashboxMoney::find()->where(['operation' => CashboxMoney::OPERATION_TAKE])->andWhere(['in', 'cashbox', ArrayHelper::getColumn(\Yii::$app->params['configuration']->possibleCashboxes, 'ID')])->orderBy('date DESC')->one();
+
+        if(empty($lastMoneyTake)){
+            $lastMoneyTake = new CashboxMoney([
+                'operation' =>  CashboxMoney::OPERATION_TAKE
+            ]);
+        }
+
         return $this->render('cashbox', [
-            'report'    =>  $report
+            'report'        =>  $report,
+            'lastMoneyTake' =>  $lastMoneyTake,
+            'stats'         =>  new CashboxStat(['date' => $lastMoneyTake->date])
         ]);
     }
 

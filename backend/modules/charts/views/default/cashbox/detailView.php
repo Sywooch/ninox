@@ -14,15 +14,16 @@ GridView::widget([
     'rowOptions'    =>  function($model){
         $class = '';
 
-        switch($model->type){
-            case $model::TYPE_SHOP_BUY:
-            case $model::TYPE_SELF_DELIVERY:
+        switch($model->operation){
+            case $model::OPERATION_SELL:
+            case $model::OPERATION_SELF_DELIVERY:
                 $class = 'success';
                 break;
-            case $model::TYPE_CASHBOX_SPEND:
+            case $model::OPERATION_SPEND:
+            case $model::OPERATION_TAKE:
                 $class = 'danger';
                 break;
-            case $model::TYPE_CASHBOX_GET:
+            case $model::OPERATION_PUT:
                 $class = 'info';
                 break;
         }
@@ -41,31 +42,31 @@ GridView::widget([
             }
         ],
         [
-            'attribute' =>  'orderID',
+            'attribute' =>  'order',
             'label'     =>  'Заказ',
             'format'    =>  'html',
             'width'     =>  '60px',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
-                if(empty($model->orderID) || empty($model->order)){
+                if(empty($model->order) || empty($model->orderModel)){
                     return '';
                 }
 
-                return \yii\helpers\Html::a($model->order->number, '/orders/showorder/'.$model->orderID);
+                return \yii\helpers\Html::a($model->orderModel->number, '/orders/showorder/'.$model->order);
             }
         ],
         [
-            'attribute' =>  'type',
+            'attribute' =>  'operation',
             'label'     =>  'Тип',
             'hAlign'    =>  GridView::ALIGN_CENTER,
             'vAlign'    =>  GridView::ALIGN_MIDDLE,
             'value'     =>  function($model){
-                if(!array_key_exists($model->type, $model->types)){
+                if(!array_key_exists($model->operation, $model->types)){
                     return 'Неизвестная операция';
                 }
 
-                return $model->types[$model->type];
+                return $model->types[$model->operation];
             }
         ],
         [
@@ -76,12 +77,15 @@ GridView::widget([
             'value'     =>  function($model){
                 $sign = '';
 
-                if($model->type == $model::TYPE_CASHBOX_GET || $model->type == $model::TYPE_CASHBOX_SPEND){
+                if($model->operation == $model::OPERATION_TAKE || $model->operation == $model::OPERATION_SPEND){
                     $sign = '-';
                 }
 
-                return "{$sign}{$model->sum} грн.";
+                return "{$sign}{$model->amount} грн.";
             }
+        ],
+        [
+            'label'     =>  'Остаток',
         ],
         [
             'attribute' =>  'responsibleUser',

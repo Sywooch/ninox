@@ -133,14 +133,6 @@ Html::button("{$report->year} год", [
 '&nbsp;&nbsp;',
 Html::button(\Yii::$app->formatter->asDate($report->year.'-'.$report->month.'-01', 'LLLL'), ['class' => 'btn btn-default']),
 '&nbsp;&nbsp;',
-Html::tag('div',
-    Html::tag('div', 'Операции с деньгами: ', ['class' => 'btn']).
-    Html::button('Забрать', ['class' => 'btn btn-default tookMoney']).
-    Html::button('Положить', ['class' => 'btn btn-default addMoney']),
-    [
-        'class' =>  'btn-group'
-    ]
-),
 Html::tag('br'),
 Html::tag('br'),
 GridView::widget([
@@ -161,6 +153,24 @@ GridView::widget([
             }
         ],
         [
+            'label'         =>  'Заказов',
+            //'attribute'     =>  'ordersCount',
+            'format'        =>  'raw',
+            'width'         =>  '40px',
+            'value'         =>  function($model){
+                return count($model->shopOrders);
+            }
+        ],
+        [
+            'label'         =>  'Самовывоз',
+            //'attribute'     =>  'ordersCount',
+            'format'        =>  'raw',
+            'width'         =>  '40px',
+            'value'         =>  function($model){
+                return count($model->selfDeliveredOrders);
+            }
+        ],
+        [
             'label'         =>  'Сумма',
             'attribute'     =>  'sum',
             'width'         =>  '214px',
@@ -176,6 +186,11 @@ GridView::widget([
             'label'         =>  'Траты',
             'attribute'     =>  'expenses',
             'width'         =>  '214px',
+            'contentOptions'   =>  function($model){
+                return [
+                    'class' =>  !empty($model->expenses) ? 'danger' : ''
+                ];
+            },
             'value'         =>  function($model){
                 if(empty($model->expenses)){
                     return '-';
@@ -188,6 +203,11 @@ GridView::widget([
             'label'         =>  'Забрано с кассы',
             'attribute'     =>  'took',
             'width'         =>  '214px',
+            'contentOptions'   =>  function($model){
+                return [
+                    'class' =>  !empty($model->took) ? 'success' : ''
+                ];
+            },
             'value'         =>  function($model){
                 if(empty($model->took)){
                     return '-';
@@ -200,6 +220,11 @@ GridView::widget([
             'label'         =>  'Добавлено',
             'attribute'     =>  'added',
             'width'         =>  '214px',
+            'contentOptions'   =>  function($model){
+                return [
+                    'class' =>  !empty($model->added) ? 'info' : ''
+                ];
+            },
             'value'         =>  function($model){
                 if(empty($model->added)){
                     return '-';
@@ -212,3 +237,36 @@ GridView::widget([
 ]);
 
 echo $modal->renderModal();
+?>
+<div class="bigGrayFooter" style="position: fixed; left: 0; bottom: 0; height: 140px; width: 100%;">
+    <div style="border-top: 1px solid #ddd; background: #fff; height: 40px; padding: 10px 0">
+        <div class="container" style="height: 20px;">
+            За период с <?=\Yii::$app->formatter->asDate($lastMoneyTake->date)?> по <?=\Yii::$app->formatter->asDate(date('Y-m-d H:i:s'))?>
+        </div>
+    </div>
+    <div style="background: #ddd">
+        <div class="container" style="height: 100px">
+            <div class="row" style="margin-top: 15px;">
+                <div class="row col-xs-7">
+                    <div class="col-xs-4">
+                        <span>Сумма заказов</span>
+                        <h3><?=$stats->ordersSum?> грн</h3>
+                    </div>
+                    <div class="col-xs-4">
+                        <span>Траты</span>
+                        <h3><?=$stats->spend?> грн</h3>
+                    </div>
+                    <div class="col-xs-4">
+                        <span>Остаток в кассе</span>
+                        <h3><?=$stats->currentSum?> грн</h3>
+                    </div>
+                </div>
+                <div class="col-xs-4 col-xs-offset-1 text-right" style="margin-top: 20px; position: relative">
+                    <button class="btn btn-default btn-success tookMoney">Забрать деньги</button>
+                    &nbsp;
+                    <button class="btn btn-default btn-info addMoney">Добавить денег</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
