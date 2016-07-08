@@ -49,6 +49,7 @@ function addToCart(item){
 	item = $(item);
 	var itemId = item.data('itemid');
 	var count = item.data('count');
+	var maxItemsCount;
 	if(itemId && count){
 		$.ajax({
 			type: 'POST',
@@ -61,9 +62,14 @@ function addToCart(item){
 				$('.buy[data-itemId='+ itemId +']')
 					.text(function(){return $(this).hasClass('mini-button') || $(this).hasClass('micro-button') ? '' : texts.itemText.inCart;})
 					.toggleClass('yellow-button green-button buy open-cart');
-				$('.count[data-itemId='+ itemId +']').data('incart', count);
+				$('.count[data-itemId='+ itemId +']')
+					.val(count)
+					.data('value', count)
+					.data('incart', count);
+				maxItemsCount = parseInt($('.count[data-itemId='+ itemId +']').data('store'));
+				$('.plus[data-itemId='+ itemId +']').toggleClass('inhibit', maxItemsCount == count);
+				$('.minus[data-itemId='+ itemId +']').toggleClass('inhibit', count == 1);
 				updateCart(data);
-				updateBasketPopover(data);
 			}
 		});
 	}
@@ -118,12 +124,7 @@ function changeItemCount(item){
 					'count': count
 				},
 				success: function(data){
-					if(data.count == 0){
-						updateCart(data);
-						getCart();
-					}else{
-						updateCart(data);
-					}
+					data.count == 0 ? getCart() : updateCart(data);
 				}
 			});
 		}else{
@@ -145,7 +146,6 @@ function getCart(){
 		url: '/modifycart',
 		success: function(data){
 			updateCart(data);
-			updateBasketPopover(data);
 		}
 	});
 }
@@ -159,9 +159,13 @@ function updateCart(data){
 		switch(i){
 			case 'wholesale':
 				$('#modal-cart').toggleClass('wholesale', data[i]).toggleClass('retail', !data[i]);
+				$('#basketPopover').toggleClass('wholesale', data[i]).toggleClass('retail', !data[i]);
 				break;
 			case 'count':
 				$('#modal-cart').toggleClass('empty', !data[i]).removeClass(function(){
+					return data[i] ? '' : 'wholesale retail';
+				});
+				$('#basketPopover').toggleClass('empty', !data[i]).removeClass(function(){
 					return data[i] ? '' : 'wholesale retail';
 				});
 			case 'count-ext':
@@ -188,20 +192,6 @@ function updateCart(data){
 			default:
 				$('.amount-' + i).text(data[i]);
 				break;
-		}
-	}
-}
-
-function updateBasketPopover(data){
-	for(var i in data){
-		switch(i){
-			case 'wholesale':
-				$('#basketPopover').toggleClass('wholesale', data[i]).toggleClass('retail', !data[i]);
-				break;
-			case 'count':
-				$('#basketPopover').toggleClass('empty', !data[i]).removeClass(function(){
-					return data[i] ? '' : 'wholesale retail';
-				});
 		}
 	}
 }
