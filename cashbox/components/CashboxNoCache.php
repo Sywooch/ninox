@@ -136,7 +136,9 @@ class CashboxNoCache extends Component
     public function calcDiscount(){
         $helper = new PriceRuleHelper(['customer' => $this->customer]);
 
-        foreach ($this->order->items as $item) {
+        $helper->cartSumm = 0;
+
+        foreach ($this->order->getItems()->each() as $item) {
             $helper->cartSumm += $item->originalPrice * $item->count;
         }
 
