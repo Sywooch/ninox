@@ -6896,6 +6896,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 
 #modal-quick-view .item{
 	height: 590px;
+	overflow: hidden;
 }
 
 #modal-quick-view .item.icon-loader{
