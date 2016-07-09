@@ -148,14 +148,24 @@ $js = <<<JS
 		$('#modal-cart').remodal().open();
 	});
 
-	$('body').on(hasTouch ? 'touchend' : 'click', '.icon-quick-view', function(e){
+	$('body').on(hasTouch ? 'touchend' : 'click', '.icon-quick-view, .item-navigation', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
+		var itemID = $(e.currentTarget).closest('.hovered').data('key') || $(e.currentTarget).data('key');
+		if(!itemID){
+			return false;
+		}
+		var item = $('.hovered[data-key="' + itemID + '"]');
+		if(!item){
+			return false;
+		}
+		$('#modal-quick-view .icon-circle-left').data('key', (item.prev().data('key') || $('.hovered').last().data('key')));
+		$('#modal-quick-view .icon-circle-right').data('key', (item.next().data('key') || $('.hovered').first().data('key')));
 		$('#modal-quick-view .item').empty().addClass('icon-loader');
-		$('#modal-quick-view').remodal().open();
+		$('#modal-quick-view.remodal-is-closed').length > 0 ? $('#modal-quick-view.remodal-is-closed').remodal().open() : '';
 		$.ajax({
 			type: 'POST',
-			url: $(e.currentTarget).closest('a').attr('href'),
+			url: item.find('a').attr('href'),
 			success: function(data){
 				$('#modal-quick-view .item').removeClass('icon-loader').html(data);
 			}

@@ -302,6 +302,8 @@ h2{
 .icon-quick-view:after{content: "\e905";}
 .icon-origin:before{content: "\e906";}
 .icon-home:before{content: "\e907";}
+.icon-circle-right:before{content: "\e90a";}
+.icon-circle-left:before{content: "\e90b";}
 .icon-arrow-right:before{content: "\e908" !important;}
 .buy.icon-cart:before{content: "\e909";}
 .open-cart.icon-cart:before{content: "\e910";}
@@ -6902,6 +6904,24 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 #modal-quick-view .item.icon-loader{
 	font-size: 150px;
 	line-height: 590px;
+}
+
+#modal-quick-view .item-navigation{
+	width: 35px;
+	height: 35px;
+	line-height: 30px;
+	position: absolute;
+	top: 50%;
+	font-size: 35px;
+	cursor: pointer;
+}
+
+#modal-quick-view .icon-circle-left{
+	left: 0;
+}
+
+#modal-quick-view .icon-circle-right{
+	right: 0;
 }
 
 #modal-quick-view .item-main-info{
