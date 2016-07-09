@@ -58,6 +58,7 @@ $quickViewModal = new \bobroid\remodal\Remodal([
     'closeButton'		=>	true,
     'addRandomToID'		=>	false,
     'id'				=>	'quickView',
+    'content'           =>  Html::tag('div', '', ['class' => 'item item-main clear-fix']),
     'options'			=>  [
         'id'        =>  'modal-quick-view',
         'class'     =>  'quick-view-modal',

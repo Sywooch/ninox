@@ -6898,6 +6898,11 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	height: 590px;
 }
 
+#modal-quick-view .item.icon-loader{
+	font-size: 150px;
+	line-height: 590px;
+}
+
 #modal-quick-view .item-main-info{
 	float: right;
 	height: 100%;

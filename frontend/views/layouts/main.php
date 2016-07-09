@@ -151,12 +151,13 @@ $js = <<<JS
 	$('body').on(hasTouch ? 'touchend' : 'click', '.icon-quick-view', function(e){
 		if(hasTouch && isTouchMoved(e)){ return false; }
 		e.preventDefault();
+		$('#modal-quick-view .item').empty().addClass('icon-loader');
 		$('#modal-quick-view').remodal().open();
 		$.ajax({
 			type: 'POST',
 			url: $(e.currentTarget).closest('a').attr('href'),
 			success: function(data){
-				$('#modal-quick-view').html(data);
+				$('#modal-quick-view .item').removeClass('icon-loader').html(data);
 			}
 		});
 	});
