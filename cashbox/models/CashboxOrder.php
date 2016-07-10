@@ -151,7 +151,7 @@ class CashboxOrder extends \yii\db\ActiveRecord
     }
 
     public function getAmount(){
-        return CashboxMoney::find()->select('amount')->where(['order' => $this->id])->scalar();
+        return CashboxMoney::find()->select('amount')->where(['order' => $this->createdOrderID])->scalar();
     }
 
     public function beforeSave($insert){

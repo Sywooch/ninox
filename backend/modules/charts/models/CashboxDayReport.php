@@ -34,7 +34,7 @@ class CashboxDayReport  extends Model
         $sum = 0;
 
         foreach($this->cashboxMoney as $money){
-            if($money->operation == $money::OPERATION_SELL){
+            if($money->operation == $money::OPERATION_SELL || $money->operation == $money::OPERATION_SELF_DELIVERY){
                 $sum += $money->amount;
             }
         }

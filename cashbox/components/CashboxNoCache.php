@@ -520,21 +520,19 @@ class CashboxNoCache extends Component
             'doneTime'          =>  date('Y-m-d H:i:s')
         ]);
 
-        $createdOrder = $this->order->createdOrderID = $order->id;
-
         $this->order->save(false);
 
         $payment = false;
 
         if(!$isNewOrder){
-            $payment = CashboxMoney::findOne(['order' => $this->order->id]);
+            $payment = CashboxMoney::findOne(['order' => $this->order->createdOrderID]);
         }
 
         if(!$payment){
             $payment = new CashboxMoney([
                 'cashbox'           => \Yii::$app->params['configuration']->ID,
                 'operation'         => CashboxMoney::OPERATION_SELL,
-                'order'             => $this->order->id,
+                'order'             => $this->order->createdOrderID,
             ]);
         }
 
@@ -549,7 +547,7 @@ class CashboxNoCache extends Component
 
         $this->clearContext();
 
-        return $createdOrder;
+        return $this->order->createdOrderID;
     }
 
     /**

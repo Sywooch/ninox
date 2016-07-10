@@ -142,6 +142,9 @@ GridView::widget([
     'summary'       =>  false,
     'pjax'          =>  true,
     'id'            =>  'cashboxStatsGrid',
+	'options'       =>  [
+		'style'     =>  'padding-bottom: 140px;'
+	],
     'columns'       =>  [
         [
             'label'         =>  'Дата',
