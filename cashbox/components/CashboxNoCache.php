@@ -39,6 +39,8 @@ class CashboxNoCache extends Component
 
     public $orderID;
 
+    public $itemsCount;
+
     /**
      * @var CashboxOrder
      */
@@ -138,11 +140,13 @@ class CashboxNoCache extends Component
 
         $helper->cartSumm = 0;
 
-        foreach ($this->order->getItems()->each() as $item) {
+        $items = $this->order->getItems()->all();
+
+        foreach($items as $item){
             $helper->cartSumm += $item->originalPrice * $item->count;
         }
 
-        foreach ($this->order->items as $item) {
+        foreach($items as $item){
             if($helper->recalc($item)){
                 $item->save(false);
             }
@@ -156,13 +160,14 @@ class CashboxNoCache extends Component
      */
     public function recalculate(){
         $this->calcDiscount();
-        $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = 0;
+        $this->retailSum = $this->wholesaleSum = $this->sum = $this->toPay = $this->itemsCount = 0;
 
         foreach ($this->order->getItems()->with('good')->each() as $item) {
             $this->retailSum += ($item->good->retailPrice * $item->count);
             $this->wholesaleSum += ($item->good->wholesalePrice * $item->count);
             $this->sum += ($item->originalPrice * $item->count);
             $this->toPay += ($item->price * $item->count);
+            $this->itemsCount++;
         }
 
         $this->discountSize = $this->sum - $this->toPay;
@@ -402,7 +407,7 @@ class CashboxNoCache extends Component
             'sumToPay'          =>  $this->toPay,
             'wholesaleSum'      =>  $this->wholesaleSum,
             'discountSum'       =>  $this->discountSize,
-            'itemsCount'        =>  $this->order->itemsCount,
+            'itemsCount'        =>  $this->itemsCount,
         ];
     }
 
