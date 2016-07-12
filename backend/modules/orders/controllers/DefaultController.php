@@ -680,13 +680,15 @@ class DefaultController extends Controller
                 $item->returnToStore($order->orderSource);
             }
 
-            $order->customer->money += $order->amountDeductedOrder;
+            if(!empty($order->customer)){
+                $order->customer->money += $order->amountDeductedOrder;
+                $order->customer->save(false);
+            }
+
             $order->amountDeductedOrder = 0;
 
             $order->deleted = 1;
-            if($order->customer->save(false)){
-                $order->save(false);
-            }
+            $order->save(false);
         }
     }
 
