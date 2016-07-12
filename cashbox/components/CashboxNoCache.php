@@ -547,7 +547,7 @@ class CashboxNoCache extends Component
 
         $this->clearContext();
 
-        return $this->order->createdOrderID;
+        return $order->id;
     }
 
     /**
