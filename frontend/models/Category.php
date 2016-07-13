@@ -64,8 +64,11 @@ class Category extends \common\models\Category{
 		    $return->andWhere(['<=', '`goods`.`PriceOut1`', $priceMax]);
 	    }
 
-	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` > 0 AND `goods`.`PriceOut2` > 0)')
-	        ->andWhere(['not', ['`dopfoto`.`ico`' => null]])
+	    $return->andWhere('`goods`.`deleted` = 0 AND (`goods`.`PriceOut1` > 0 AND `goods`.`PriceOut2` > 0)');
+		if($this->ID == 563){//TODO: Костылизация для группы распродажа
+			$return->andWhere('`goods`.`discountType` > 0 AND `goods`.`discountSize` > 0');
+		}
+		$return->andWhere(['not', ['`dopfoto`.`ico`' => null]])
 	        ->andWhere(['`item_translations`.`language`' => \Yii::$app->language])
 	        //->andWhere(['`item_translations`.`enabled`' => 1])
 		    ->groupBy(['`dopfoto`.`itemid`'])
@@ -120,17 +123,20 @@ class Category extends \common\models\Category{
 
 	public function getGroupIDs(){
 		if(empty($this->_groupIDs)){
-			foreach(self::find()
+			$query = self::find()
 				->joinWith(['translations'])
-				->where(['like', '`goodsgroups`.`Code`', $this->Code.'%', false])
-				->andWhere(['`category_translations`.`language`' => \Yii::$app->language])
-				->andWhere(['`category_translations`.`enabled`' => 1])
-				->orderBy('`goodsgroups`.`Code`')
-				->all() as $category){
+				->where(['`category_translations`.`language`' => \Yii::$app->language])
+				->andWhere(['`category_translations`.`enabled`' => 1]);
+			if($this->ID != 563){//TODO: Костылизация для группы распродажа
+				$query->andWhere(['like', '`goodsgroups`.`Code`', $this->Code.'%', false]);
+			}
+			$query->orderBy('`goodsgroups`.`Code`');
+
+			foreach($query->all() as $category){
 				if($category->enabled == 1){
 					if(empty($this->_groupIDs)){
 						$this->_groupIDs[$category->Code] = $category->ID;
-					}elseif(isset($this->_groupIDs[substr($category->Code, 0, -3)])){
+					}elseif(isset($this->_groupIDs[substr($category->Code, 0, -3)]) || strlen($category->Code) == 3){
 						$this->_groupIDs[$category->Code] = $category->ID;
 					}
 				}
@@ -154,7 +160,7 @@ class Category extends \common\models\Category{
 	}
 
 	public function getFilters(){
-		if(substr($this->Code, 0, 3) == 'AAB'){
+		if(substr($this->Code, 0, 3) == 'AAB' || $this->ID == 563){//TODO: Костылизация для группы распродажа
 			return [];
 		}
 
