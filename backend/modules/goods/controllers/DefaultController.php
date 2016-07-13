@@ -614,7 +614,18 @@ class DefaultController extends Controller
         $tmp = imagecreatetruecolor(250, 187);
         imagecopyresized($tmp, $src, 0, 0, 0, 0, 250, 187, $width, $height);
         imagejpeg($tmp, $file['tmp_name'][0].'-sm');
-        $uploader->upload(['tmp_name' => [$file['tmp_name'][0].'-sm']], ['name' => $uploader->setName($filename, $file), 'directory' => 'img/catalog/sm/', 'fullReturn' => true]);
+        $uploader->upload(
+            [
+                'name'      =>  [$file['name'][0]],
+                'type'      =>  [$file['type'][0]],
+                'tmp_name'  =>  [$file['tmp_name'][0].'-sm']
+            ],
+            [
+                'name' => $uploader->setName($filename, $file),
+                'directory' => 'img/catalog/sm/',
+                'fullReturn' => true
+            ]
+        );
 
         return $good->addPhoto($uploader->upload($file, [
             'name' => $uploader->setName($filename, $file)

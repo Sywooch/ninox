@@ -23,7 +23,7 @@ class S3Uploader extends Component
 
         $s3 = \Yii::$app->get('s3');
 
-        $result = $s3->upload($options['directory'].$options['name'], $file['tmp_name'][0]);
+        $result = $s3->put($options['directory'].$options['name'], file_get_contents($file['tmp_name'][0]), null, ['ContentType' => $file['type'][0]]); //TODO: Очень внимательно с типом контента!!!!
 
         return $options['fullReturn'] ? $result['ObjectURL'] : $options['name'];
     }

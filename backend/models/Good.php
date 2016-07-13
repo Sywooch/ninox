@@ -107,6 +107,7 @@ class Good extends \common\models\Good{
             $s3 = new S3Uploader();
 
             $s3->remove($photo->ico);
+            $s3->remove($photo->ico, ['directory' => 'img/catalog/sm/']);
 
             return true;
         }
