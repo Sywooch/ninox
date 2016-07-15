@@ -17,7 +17,7 @@ $form->field($model, 'surname'),
 $form->field($model, 'phone'),
 $form->field($model, 'email');
 echo Html::tag('hr'),
-Html::hiddenInput('paymentParamInput', $model->paymentParam, ['id' => 'paymentParamInput']),
+Html::hiddenInput('orderID', $model->order->ID, ['id' => 'orderID']),
 $form->field($model, 'coupon'),
 $form->field($model, 'paymentType',
     [
@@ -31,8 +31,7 @@ $form->field($model, 'paymentParam')
             'depends'   =>  ['paymentTypeInput'],
             'initialize'=>  true,
             'params'    =>  [
-                'paymentTypeInput',
-                'paymentParamInput'
+                'orderID'
             ],
             'emptyMsg'  =>  'варианты отсутствуют',
             'initDepends'=>  ['paymentTypeInput'],

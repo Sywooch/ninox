@@ -19,15 +19,14 @@ echo Html::tag('h4', 'Редактирование инфо о доставке 
             'id'    =>  'deliveryTypeInput'
         ]
     ])->dropDownList(\Yii::$app->runAction('orders/default/get-deliveries', ['type' => 'deliveryType'])),
-    Html::hiddenInput('deliveryParamInput', $model->deliveryParam, ['id' => 'deliveryParamInput']),
+    Html::hiddenInput('orderID', $model->order->ID, ['id' => 'orderID']),
     $form->field($model, 'deliveryParam')
         ->widget(\kartik\depdrop\DepDrop::className(), [
             'pluginOptions' =>  [
                 'depends'   =>  ['deliveryTypeInput'],
                 'initialize'=>  true,
                 'params'    =>  [
-                    'deliveryTypeInput',
-                    'deliveryParamInput'
+                    'orderID'
                 ],
                 'emptyMsg'  =>  'варианты отсутствуют',
                 'initDepends'=>  ['deliveryTypeInput'],

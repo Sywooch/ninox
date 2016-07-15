@@ -702,7 +702,7 @@ Html::a('История заказа', '#orderHistory', [
 
           <?=Html::tag('span', Html::tag('b', $deliveryType))?>
           <span><?=$order->deliveryCity?>, <?=$order->deliveryRegion?></span>
-          <span><?=$deliveryParam?>, <?=$order->deliveryInfo != '' ? ($order->deliveryType == 2 ? 'склад №' : '').$order->deliveryInfo : ''?></span>
+          <span><?=$order->deliveryType == 3 ? $deliveryType : $deliveryParam?>, <?=$order->deliveryType == 3 ? $deliveryParam : ($order->deliveryInfo != '' ? ($order->deliveryType == 2 ? 'склад №' : '').$order->deliveryInfo : '')?></span>
           <?=Remodal::widget([
               'cancelButton'		=>	false,
               'confirmButton'		=>	false,
