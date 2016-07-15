@@ -386,12 +386,13 @@ class DefaultController extends Controller
         $item = \Yii::$app->request->get("string");
 
         $goods = Good::find()
-            ->where(['like', GoodTranslation::tableName().'.name', $item])
             ->joinWith('translations')
-            ->andWhere([GoodTranslation::tableName().'.language' => \Yii::$app->language])
-            ->orWhere(['like', 'goods.Code', $item.'%', false])
-            ->orWhere(['like', 'goods.BarCode1', $item])
-            ->orWhere(['like', 'goods.BarCode2', $item])
+            ->with('photos')
+            ->where([GoodTranslation::tableName().'.language' => \Yii::$app->language])
+            ->andFilterWhere(['or', ['like', GoodTranslation::tableName().'.name', $item],
+            ['like', 'goods.Code', $item.'%', false],
+            ['like', 'goods.BarCode1', $item],
+            ['like', 'goods.BarCode2', $item]])
             ->limit(10);
 
         $return = [];

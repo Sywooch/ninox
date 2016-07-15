@@ -705,18 +705,18 @@ $this->beginPage() ?>
                     'options'       => ['placeholder' => 'Поиск'],
                     'scrollable'    => true,
                     'pluginOptions' => [
-                        'limit'         =>  '10',
                         'highlight'     =>  true
                     ],
                     'dataset' => [
                         [
-                            'remote' => [
-                                'url' => Url::to(['/goods/search']).'?string=%QUERY',
-                                'wildcard' => '%QUERY'
+                            'remote'            =>  [
+                                'url'       =>  Url::to(['/goods/search']).'?string=%QUERY',
+                                'wildcard'  =>  '%QUERY'
                             ],
-                            'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
-                            'display'   => 'value',
-                            'templates' => [
+                            'limit'             =>  '10',
+                            'datumTokenizer'    =>  "Bloodhound.tokenizers.obj.whitespace('value')",
+                            'display'           =>  'value',
+                            'templates'         =>  [
                                 'notFound'      => $this->render('search/notFound'),
                                 'suggestion'    => new JsExpression("Handlebars.compile('".$this->render('search/suggestion')."')")
                             ]
