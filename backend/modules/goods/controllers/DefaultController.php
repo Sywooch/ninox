@@ -389,10 +389,13 @@ class DefaultController extends Controller
             ->joinWith('translations')
             ->with('photos')
             ->where([GoodTranslation::tableName().'.language' => \Yii::$app->language])
-            ->andFilterWhere(['or', ['like', GoodTranslation::tableName().'.name', $item],
-            ['like', 'goods.Code', $item.'%', false],
-            ['like', 'goods.BarCode1', $item],
-            ['like', 'goods.BarCode2', $item]])
+            ->andFilterWhere(['or',
+                ['like', GoodTranslation::tableName().'.name', $item],
+                ['like', 'goods.Code', $item.'%', false],
+                ['like', 'goods.BarCode1', $item],
+                ['like', 'goods.BarCode2', $item]
+            ])
+            ->orderBy(['goods.BarCode2' => SORT_DESC])
             ->limit(10);
 
         $return = [];
