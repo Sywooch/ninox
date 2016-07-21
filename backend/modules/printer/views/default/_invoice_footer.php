@@ -47,12 +47,6 @@ $discountSum = $withoutDiscountSum - $orderSum - $customerDiscount;
         <?php
         }
         ?>
-
-        <!--<tr>
-            <td colspan="4"></td>
-            <td colspan="2">Услуги банка (+1%):</td>
-            <td border="1" style="border:1px #000 solid" align="right">5.48 грн.</td>
-        </tr>-->
         <tr>
             <td colspan="7">&nbsp;</td>
         </tr>

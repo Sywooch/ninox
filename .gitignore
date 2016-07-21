@@ -3,6 +3,7 @@ frontend/runtime/*
 frontend/web/assets/*
 backend/runtime/*
 backend/web/assets/*
+backend/web/export/*
 cashbox/runtime/*
 cashbox/web/assets/*
 vendor/*

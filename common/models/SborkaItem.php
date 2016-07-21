@@ -39,9 +39,10 @@ class SborkaItem extends ActiveRecord
     const DISCOUNT_TYPE_FIXED_SUM = 3;
 
     public static $DISCOUNT_TYPES = [
-        self::DISCOUNT_TYPE_UNDEFINED =>  'Не выбрано',
-        self::DISCOUNT_TYPE_SUM =>  'Отнять сумму',
-        self::DISCOUNT_TYPE_PERCENT =>  'Отнять процент',
+        self::DISCOUNT_TYPE_UNDEFINED   =>  'Не выбрано',
+        self::DISCOUNT_TYPE_SUM         =>  'Отнять сумму',
+        self::DISCOUNT_TYPE_PERCENT     =>  'Отнять процент',
+        self::DISCOUNT_TYPE_FIXED_SUM   =>  'Установить цену',
     ];
 
     public $addedCount = 0;

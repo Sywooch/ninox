@@ -28,7 +28,7 @@ class DefaultController extends Controller
 
     public function actionExcel($param){
         $order = History::findWith()->where(['id' => $param])->one();
-        $row = $i = $sum = $stockDiscount = $discountPercent = $sumWithoutDiscount = $customerDiscountSum = $saleDiscount = 0;
+        $row = $i = 0;
         $fileName = "nakladna{$order->number}.xls";
         $filePath = \Yii::getAlias('@export')."/{$fileName}";
 
@@ -165,13 +165,7 @@ class DefaultController extends Controller
 
             if(!empty($item->nalichie)){
                 $list->setCellValue("F{$row}", (!empty($item->discountType) ? $item->price.($item->priceRuleID == 0 ? '**' : '*') : $item->price));
-                $list->setCellValue("G{$row}", ($item->price * $item->count));
-
-                $sum += $item->sum;
-                $customerDiscountSum += $item->customerDiscountSum;
-                $sumWithoutDiscount += $item->originalSum;
-                $saleDiscount += ($item->priceRuleID == 0 && !empty($item->discountType)) ? $item->discountSum : 0;
-                $stockDiscount += $item->discountSum * $item->count;
+                $list->setCellValue("G{$row}", $item->sum);
             }else{
                 $list->mergeCells("F{$row}:G{$row}")
                     ->setCellValue("F{$row}", "Нет в наличии");
@@ -187,23 +181,23 @@ class DefaultController extends Controller
 
         $list->mergeCells("A{$row}:C{$row}")
             ->setCellValue("A{$row}", "Сумма (без скидки):")
-            ->setCellValue("G{$row}", $sumWithoutDiscount)
+            ->setCellValue("G{$row}", $order->sumWithoutDiscount)
             ->getStyle("G{$row}")
             ->applyFromArray($borderedStyle);
 
         //Пишем инфо о скидке на акционный товар
-        if($stockDiscount){
+        if($order->sumDiscount){
             $row += 2;
 
             $list->mergeCells("A{$row}:C{$row}")
                 ->setCellValue("A{$row}", "*Сумма скидки на акционный товар:")
-                ->setCellValue("G{$row}", (round($stockDiscount, 2)))
+                ->setCellValue("G{$row}", $order->sumDiscount)
                 ->getStyle("G{$row}")
                 ->applyFromArray($borderedStyle);
         }
 
         //Пишем инфо о скидке на распродажный товар
-        if($saleDiscount){
+/*        if($saleDiscount){
             $row += 2;
 
             $list->mergeCells("A{$row}:C{$row}")
@@ -211,21 +205,19 @@ class DefaultController extends Controller
                 ->setCellValue("G{$row}", (round($saleDiscount, 2)))
                 ->getStyle("G{$row}")
                 ->applyFromArray($borderedStyle);
-        }
+        }*/
 
-        if(!empty($order->customer->cardNumber) && !empty(\Yii::$app->request->get("withoutDiscount")) && $customerDiscountSum > 0){
+        if(!empty($order->customer->cardNumber) && $order->sumCustomerDiscount > 0){
             $row += 2;
-
-            $discountPercent = round((2 * $customerDiscountSum / 100), 2);
 
             $list->mergeCells("A{$row}:C{$row}")
                 ->setCellValue("A{$row}", "Дисконт 2%, грн.:")
-                ->setCellValue("G{$row}", round((2 * $customerDiscountSum / 100), 2))
+                ->setCellValue("G{$row}", $order->sumCustomerDiscount)
                 ->getStyle("G{$row}")
                 ->applyFromArray($borderedStyle);
         }
 
-        if ($order['amountDeductedOrder'] <> 0){
+        if ($order['amountDeductedOrder'] > 0){
             $row += 2;
 
             $list->mergeCells("A{$row}:C{$row}")
@@ -239,7 +231,7 @@ class DefaultController extends Controller
 
         $list->mergeCells("A{$row}:C{$row}")
             ->setCellValue("A{$row}", "Сумма к оплате, грн.:")
-            ->setCellValue("G{$row}", (round(($sum - $customerDiscountSum - $order->amountDeductedOrder), 2)))
+            ->setCellValue("G{$row}", $order->realSum)
             ->getStyle("G{$row}")
             ->applyFromArray($borderedStyle);
 
