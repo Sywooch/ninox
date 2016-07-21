@@ -1,6 +1,7 @@
 <?php
 
 use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 $content = Html::tag('div',
     Html::tag('div',
@@ -25,6 +26,6 @@ $content = Html::tag('div',
     ]
 );
 
-echo Html::a($content, '/tovar/{{link}}-g{{ID}}', [
+echo Html::a($content, Url::to(['/tovar/{{link}}-g{{ID}}', 'language' => \Yii::$app->language]), [
     'class' =>  'typeahead-list-item'
 ]);

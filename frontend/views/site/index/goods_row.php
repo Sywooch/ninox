@@ -1,5 +1,5 @@
 <?php
-use bobroid\y2sp\ScrollPager;
+use darkcs\infinitescroll\InfiniteScrollPager;
 use frontend\helpers\PriceRuleHelper;
 use yii\bootstrap\Html;
 
@@ -19,24 +19,38 @@ echo \yii\widgets\ListView::widget([
         ]);
     },
     'options'       =>  [
-        'class' =>  'list-view listView-selector-'.\Yii::$app->request->get("type")
+        'class' =>  'list-view listView-selector-'.
+            (empty(\Yii::$app->request->get('type')) ? 'new' : \Yii::$app->request->get('type'))
     ],
     'itemOptions'	=>	[
         'class'	=>	'hovered'
     ],
-    'layout'        =>  Html::tag('div', '{items}', ['class' => 'items-grid clear-fix']).'{pager}',
+    'layout'        =>  Html::tag('div', '{items}'.
+            Html::tag('div',
+                Html::tag('span', \Yii::t('shop', 'СМОТРЕТЬ ВСЕ ТОВАРЫ')),
+                [
+                    'class' => 'ias-trigger'
+                ]
+            ),
+            [
+                'class' => 'items-grid clear-fix'
+            ]
+        ).
+        '{pager}',
     'pager'         =>  [
-        'class'             =>  ScrollPager::className(),
-        'container'         =>  '.list-view .items-grid',
-        'item'              =>  '.hovered',
-        'enabledExtensions' =>  [
-            ScrollPager::EXTENSION_TRIGGER,
-            ScrollPager::EXTENSION_SPINNER,
-            ScrollPager::EXTENSION_PAGING,
+        'class'                 =>  InfiniteScrollPager::className(),
+        'options'           =>  [
+            'class' =>  'pagination hidden'
         ],
-        'triggerTemplate'   =>  Html::tag('div', Html::tag('span', \Yii::t('shop', 'СМОТРЕТЬ ВСЕ ТОВАРЫ')), ['class' => 'ias-trigger']),
-        'spinnerTemplate'   =>  Html::tag('div', Html::tag('span', \rmrevin\yii\fontawesome\FA::i('refresh')->addCssClass('fa-spin')), ['class' => 'goods-item-style', 'style' => 'height: 345px; width: 215px; float: left; margin-left: 10px; margin-bottom: 20px; margin-right: 10px;']),
-        'delay'             =>  0
+        'paginationSelector'    =>  '.pagination',
+        'itemSelector'          =>  '.hovered',
+        'autoStart'             =>  false,
+        'containerSelector'     =>  '.items-grid',
+        'nextSelector'          =>  '.pagination .next a:first',
+        'alwaysHidePagination'  =>  true,
+        'pluginOptions'         =>  [
+            'loadingText'   =>  '',
+        ],
     ],
     'summary'       =>  false
 ]);

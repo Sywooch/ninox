@@ -1,9 +1,9 @@
 <?php
 
-use bobroid\y2sp\ScrollPager;
+use darkcs\infinitescroll\InfiniteScrollPager;
 use frontend\helpers\PriceRuleHelper;
 use frontend\widgets\Breadcrumbs;
-use yii\bootstrap\Html;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ListView;
 
@@ -27,12 +27,12 @@ if($pageSize < 1){
     $pageCount = (int)(($totalCount + $pageSize - 1) / $pageSize);
 }
 
-if($page > 1){
+/*if($page > 1){
     $this->registerLinkTag(['rel' => 'prev', 'href' => urldecode($items->pagination->createUrl($page - 2, null, true))]);
 }
 if($page < $pageCount){
     $this->registerLinkTag(['rel' => 'next', 'href' => urldecode($items->pagination->createUrl($page, null, true))]);
-}
+}*/
 
 if(!$totalCount || in_array(\Yii::$app->request->get('order'), ['asc', 'desc', 'novivki'])){
     $this->registerMetaTag(['name' => 'robots', 'content' => 'noindex, follow'], 'robots');
@@ -48,6 +48,56 @@ $js = <<<'JS'
     $('body').on('change', '.filter-rows input[type=checkbox]', function(){
         updateFilter(this);
     });
+
+    $('body').on('#pjax-category pjax:complete', function(){
+        params = getFilterParams();
+    });
+
+    $('body').on(hasTouch ? 'touchend' : 'click', '.load-more', function(e){
+        if(hasTouch && isTouchMoved(e)){ return false; }
+        e.preventDefault();
+        $('.load-more').addClass('icon-loader').attr('disabled');
+        $('.grid-view').infinitescroll('start').scroll();
+    });
+
+    $('body').on('.items-grid infinitescroll:afterRetrieve', function(){
+        $('.grid-view').infinitescroll('stop');
+        if(params['offset']){
+            params['offset'][0]++;
+        }else{
+            params['offset'] = [];
+            params['offset'].push(2);
+        }
+        var offset = params['offset'][0];
+        var add = false;
+        $($('.list-view .pagination li:not(.next):not(.prev)').get().reverse()).each(
+            function(){
+                if(offset > 1 && add){
+                    $(this).addClass('active');
+                    offset--;
+                }else if($(this).hasClass('active')){
+                    add = true;
+                }
+            }
+        )
+        window.history.replaceState({}, document.title, buildLinkFromParams(false, false));
+    });
+
+    if(params['offset']){
+        var offset = params['offset'][0];
+        var add = false;
+        $($('.list-view .pagination li:not(.next):not(.prev)').get().reverse()).each(
+            function(){
+                if(offset > 1 && add){
+                    $(this).addClass('active');
+                    offset--;
+                }else if($(this).hasClass('active')){
+                    add = true;
+                }
+            }
+        )
+    }
+
 JS;
 
 $this->registerJS($js);
@@ -68,7 +118,7 @@ $quickViewModal = new \bobroid\remodal\Remodal([
     ],
 ]);
 
-\yii\widgets\Pjax::begin([
+$pjax = \yii\widgets\Pjax::begin([
     'id'            =>  'pjax-category',
     'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a',
     'timeout'       =>  '5000'
@@ -170,60 +220,33 @@ echo Html::tag('div',
                 ]);
             },
             'layout'        =>
-                Html::tag('div', '{items}', ['class' => 'items-grid clear-fix']).
-                Html::tag('div', '{pager}', ['class' => 'pagination-wrapper']),
+                Html::tag('div', '{items}', ['class' => 'items-grid clear-fix cols-'.(empty($category->filters) ? 4 : 3)]).
+                Html::tag('div', ($items->pagination->params['page'] < $pageCount ?
+                    Html::tag('div',
+                        Html::tag('span',
+                            \Yii::t('shop', 'Ещё {n} товаров', ['n' => empty($category->filters) ? 20 : 15])
+                        ),
+                        [
+                            'class' => 'load-more'
+                        ]
+                    ) : ''
+                ).'{pager}', ['class' => 'pagination-wrapper']),
             'itemOptions'   =>  [
                 'class'     =>  'hovered'
             ],
             'pager' =>  [
-                'class'             =>  ScrollPager::className(),
-                'triggerTemplate'   =>
-                    Html::tag('div',
-                        Html::tag('div', \Yii::t('shop', 'Ещё '.(empty($category->filters) ? 20 : 15).' товаров'),
-                            [
-                                'class' => 'load-more'
-                            ]
-                        ),
-                        [
-                            'class' =>  'ias-trigger'
-                        ]
-                    ),
-                'spinnerTemplate'   =>
-                    Html::tag('div',
-                        Html::tag('div', '',
-                            [
-                                'class' => 'load-more icon-loader'
-                            ]
-                        ),
-                        [
-                            'class' =>  'ias-loader'
-                        ]
-                    ),
-                'item'              =>  '.hovered',
-                'noneLeftText'      =>  '',
-                'paginationClass'   =>  'pagination',
-                'paginationSelector'=>  'pagi',
-                'triggerOffset'     =>  \Yii::$app->request->get('offset'),
-                'eventOnPageChange' =>  new \Yii\web\JsExpression('
-                    function(offset){
-                        if(params[\'offset\']){
-                            offset > params[\'offset\'][0] ? params[\'offset\'][0] = offset : \'\';
-                        }else{
-                            params[\'offset\'] = [];
-					        params[\'offset\'].push(offset);
-                        }
-                        $(\'.list-view .pagination .active ~ li:not(.next)\').each(
-                            function(){
-                                if(offset > 1){
-                                    $(this).addClass(\'active\');
-                                    offset--;
-                                }
-                            }
-                        )
-                        window.history.replaceState({}, document.title, buildLinkFromParams(false, false));
-                        return false;
-                    }
-                ')
+                'class' => InfiniteScrollPager::className(),
+                'paginationSelector'    =>  '.pagination-wrapper',
+                'itemSelector'          =>  '.hovered',
+                'pjaxContainer'         =>  $pjax->id,
+                'autoStart'             =>  false,
+                'containerSelector'     =>  '.items-grid',
+                'nextSelector'          =>  '.pagination .next a:first',
+                'alwaysHidePagination'  =>  false,
+                'pluginOptions'         =>  [
+                    'loadingText'   =>  '',
+                ],
+                'registerLinkTags'      =>  true,
             ]
         ]).
         Html::tag('div',
@@ -239,7 +262,7 @@ echo Html::tag('div',
                 ),
                 ['class' => 'seo-city']),
             ['class' => 'category-description']),
-        ['class' => 'content cols-'.(empty($category->filters) ? 4 : 3)]),
+        ['class' => 'content']),
     ['class' => 'category clear-fix']
 );
 

@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $content = Html::tag('div',
     Html::tag('div',
@@ -23,6 +24,6 @@ $content = Html::tag('div',
     ]
 );
 
-echo Html::a($content, '/search/{{query}}', [
+echo Html::a($content, Url::to(['/search/{{query}}', 'language' => \Yii::$app->language]), [
     'class' =>  'typeahead-list-item'
 ]);

@@ -5,6 +5,7 @@
 
 use bobroid\remodal\Remodal;
 use common\helpers\Formatter;
+use frontend\assets\PerfectScrollbarAsset;
 use frontend\models\Category;
 use frontend\assets\RuLangAsset;
 use common\components\SocialButtonWidget;
@@ -378,22 +379,24 @@ CSS;
 
 $this->registerCss($typeaheadStyles);
 
-\frontend\assets\PerfectScrollbarAsset::register($this);
+PerfectScrollbarAsset::register($this);
+RuLangAsset::register($this);
 
 $logo = Html::tag('div', '', ['class' => 'logo']);
 
-$this->beginPage();
-?>
+$this->beginPage()?>
 	<!DOCTYPE html>
 	<html lang="<?=Yii::$app->language?>">
 	<head>
+		<meta charset="UTF-8">
 		<?=Html::csrfMetaTags()?>
 		<title><?=Html::encode($this->title)?></title>
 		<?php $this->head() ?>
 	</head>
 	<body>
+	<?php $this->beginBody() ?>
 	<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MLV949" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-	<?php $this->beginBody();
+	<?php
 	if(\Yii::$app->request->get("serviceMenu") == 'true' && \Yii::$app->request->get("secretKey") == \Yii::$app->params['secretAdminPanelKey']){
 		echo $this->render('_admin_menu');
 	}
@@ -439,15 +442,7 @@ $this->beginPage();
 					<?=Url::to([Url::home(), 'language' => \Yii::$app->language]) != Url::current() ?
 						Html::a($logo, Url::to([Url::home(), 'language' => \Yii::$app->language])) : $logo?>
 					<div class="input-style-main">
-						<?php
-						$form = new \kartik\form\ActiveForm([
-							'action'	=>	Url::to(['/search']),
-							'method'	=>	'get'
-						]);
-
-						$form->begin();
-
-						echo \kartik\typeahead\Typeahead::widget([
+						<?=\kartik\typeahead\Typeahead::widget([
 							'name'          => 'string',
 
 							'options'       => ['placeholder' => \Yii::t('shop', 'Поиск...')],
@@ -459,7 +454,7 @@ $this->beginPage();
 							'dataset' => [
 								[
 									'remote' => [
-										'url' => Url::to(['/search']).'/%QUERY',
+										'url' => Url::to(['/search/%QUERY', 'language' => \Yii::$app->language]),
 										'wildcard' => '%QUERY'
 									],
 									'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
@@ -472,9 +467,7 @@ $this->beginPage();
 									]
 								]
 							]
-						]);
-						$form->end();
-						?>
+						]);?>
 					</div>
 					<?=Html::tag('div',
 						Html::tag('div',
@@ -725,11 +718,8 @@ $this->beginPage();
 	<?=$cartModal->renderModal(),
 	$callbackSuccessModal->renderModal(),
 	$loginModal->renderModal(),
-	$registrationModal->renderModal();
-
-	RuLangAsset::register($this);
-
-	$this->endBody() ?>
+	$registrationModal->renderModal();?>
+	<?php $this->endBody() ?>
 	</body>
 	</html>
-<?php $this->endPage() ?>
+<?=$this->endPage()?>

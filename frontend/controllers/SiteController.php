@@ -4,7 +4,7 @@ namespace frontend\controllers;
 use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
 use common\models\GoodTranslation;
-use common\models\UsersInterests;
+use common\data\LimitActiveDataProvider;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\CallbackForm;
@@ -21,7 +21,6 @@ use frontend\models\ReviewForm;
 use frontend\models\SborkaItem;
 use frontend\models\SubscribeForm;
 use frontend\models\UsersInterestsForm;
-use Prophecy\Exception\Doubler\ClassNotFoundException;
 use kartik\form\ActiveForm;
 use yii;
 use common\models\Domain;
@@ -38,7 +37,6 @@ use frontend\models\SignupForm;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
-use yii\data\Sort;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -266,18 +264,21 @@ class SiteController extends Controller
 
         $pageParams = \Yii::$app->request->get();
         unset($pageParams['_pjax']);
+        $offset = empty($pageParams['offset']) ? 1 : $pageParams['offset'];
         unset($pageParams['offset']);
+        empty($pageParams['page']) ? $pageParams['page'] = 1 : '';
+        $pageParams['page'] += $offset - 1;
 
         return $this->render($view, [
             'category'          =>  $category,
-            'showText'          =>  true,
-            'items'             =>  new ActiveDataProvider([
+            'items'             =>  new LimitActiveDataProvider([
                 'query'         =>  $category->getItems(),
+                'showPages'     =>  $offset,
                 'pagination'    =>  [
-                    'pageSize'          =>  empty($category->filters) ? '20' : '15',
+                    'pageSize'          =>  empty($category->filters) ? 20 : 15,
                     'forcePageParam'    =>  false,
                     'pageSizeParam'     =>  false,
-                    'params'            =>  $pageParams
+                    'params'            =>  $pageParams,
                 ]
             ])
         ]);
@@ -707,14 +708,14 @@ class SiteController extends Controller
         $return = $r1 = $r2 = '';
         $string = mb_strtolower($string, 'UTF-8');
         //$string = preg_replace('/\w/', '', $string); allow latin symbols
-        $string = preg_replace('/[\[{(.,;\'*")}\]]/', ' ', $string);
+        $string = preg_replace('/[\[{(,;\'*")}\]]/', ' ', $string);
         $words = explode(' ', $string);
         foreach($words as $word){
             $word = trim($word, ' ');
             if(mb_strlen($word, 'UTF-8') > 3 || (filter_var($word, FILTER_VALIDATE_INT) && mb_strlen($word, 'UTF-8') > 2)){
-                $r1 .= '+'.$word.' ';
+                $r1 .= '+"'.$word.'" ';
                 $word = preg_replace($pattern, '', $word);
-                $r2 .= '+'.$word.'* ';
+                $r2 .= '+"'.$word.'*" ';
             }
         }
         $return = (($r1 != '') ? '>('.$r1.')' : '').' '.(($r2 != '') ? '<('.$r2.')' : '');
@@ -773,13 +774,17 @@ class SiteController extends Controller
 
         $pageParams = \Yii::$app->request->get();
         unset($pageParams['_pjax']);
+        $offset = empty($pageParams['offset']) ? 1 : $pageParams['offset'];
         unset($pageParams['offset']);
+        empty($pageParams['page']) ? $pageParams['page'] = 1 : '';
+        $pageParams['page'] += $offset - 1;
 
         return $this->render('searchResults', [
-            'goods' =>  new ActiveDataProvider([
-                'query' =>  $goodsQuery,
+            'items' =>  new LimitActiveDataProvider([
+                'query'         =>  $goodsQuery,
+                'showPages'     =>  $offset,
                 'pagination'    =>  [
-                    'pageSize'          =>  '20',
+                    'pageSize'          =>  20,
                     'forcePageParam'    =>  false,
                     'pageSizeParam'     =>  false,
                     'params'            =>  $pageParams

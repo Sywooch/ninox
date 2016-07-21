@@ -15,7 +15,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": "2.0.7",
+        "yiisoft/yii2": "^2.0.7@stable",
         "yiisoft/yii2-bootstrap": "dev-master",
         "yiisoft/yii2-swiftmailer": "*",
         "kartik-v/yii2-nav-x": "*",
@@ -54,7 +54,6 @@
         "liqpay/liqpay": "dev-master",
         "phpoffice/phpexcel": "*",
         "morozovsk/yii2-websocket": "dev-master",
-        "bobroid/yii2-scroll-pager": "dev-master",
         "rmrevin/yii2-fontawesome": "*",
         "udokmeci/yii2-phone-validator": "^1.0@dev",
         "vilochane/yii2-barcode-generator": "dev-master",
@@ -67,7 +66,8 @@
         "frostealth/yii2-aws-s3": "~1.0@stable",
         "juniq/yii2-helper-time": "*",
         "kartik-v/yii2-krajee-base": "dev-master",
-        "kartik-v/yii2-helpers": "dev-master"
+        "kartik-v/yii2-helpers": "dev-master",
+        "darkcs/yii2-infinite-scroll": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0",
@@ -110,7 +110,7 @@
         },
         {
             "type": "git",
-            "url":  "https://github.com/BoBRoID/yii2-scroll-pager"
+            "url":  "https://github.com/stylekrasota/yii2-infinite-scroll"
         },
         {
             "type": "git",

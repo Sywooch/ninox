@@ -43,34 +43,45 @@ $reviewModal = new \bobroid\remodal\Remodal([
 ]);
 
 $js = <<<'JS'
-$(".arrow-bottom").on('click', function(){
-	$('html, body').animate({
-        scrollTop: $('.arrow-bottom').offset().top - 15
-    }, 1000);
-});
+	$(".arrow-bottom").on('click', function(){
+		$('html, body').animate({
+	        scrollTop: $('.arrow-bottom').offset().top - 15
+	    }, 1000);
+	});
 
-$(".goods-content-icons .main-icons").on('click', function(e){
-	var url = '/?act=goodsRow&type=' + this.getAttribute('data-attribute-tab');
+	$(".goods-content-icons .main-icons").on('click', function(e){
+		var url = '/?act=goodsRow&type=' + this.getAttribute('data-attribute-tab');
 
-	$.pjax({url: url, container: '#goods_tabs', push: false, replace: false, timeout: 10000,scrollTo: true});
-});
+		$.pjax({url: url, container: '#goods_tabs', push: false, replace: false, timeout: 10000,scrollTo: true});
+	});
 
-$('#subscribeForm').on('submit', function(e){
-	e.preventDefault();   
-	
-	var form = $(this);
-	
-    if(form.find("#subscribeform-email").val().length != 0){
-		$.ajax({
-			type: 'POST',
-			url: '/subscribe',
-			data: form.serialize(),
-			success: function(){
-				form.html("спасибо за подписку!");
-			}
-		});
-    }
-});
+	$('#subscribeForm').on('submit', function(e){
+		e.preventDefault();
+
+		var form = $(this);
+
+	    if(form.find("#subscribeform-email").val().length != 0){
+			$.ajax({
+				type: 'POST',
+				url: '/subscribe',
+				data: form.serialize(),
+				success: function(){
+					form.html("спасибо за подписку!");
+				}
+			});
+	    }
+	});
+
+    $('body').on(hasTouch ? 'touchend' : 'click', '.ias-trigger', function(e){
+        if(hasTouch && isTouchMoved(e)){ return false; }
+        e.preventDefault();
+        $('.grid-view').infinitescroll('start').scroll();
+    });
+
+    $('body').on('.items-grid infinitescroll:afterRetrieve', function(){
+        $('.grid-view').infinitescroll('stop');
+    });
+
 JS;
 
 $this->registerJs($js);
