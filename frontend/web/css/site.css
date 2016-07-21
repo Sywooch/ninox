@@ -856,11 +856,11 @@ h2{
 	display: block;
 }
 
-.items-grid.cols-3 .hovered:not(:nth-child(3n - 3)){
+.category.cols-3 .items-grid .hovered:not(:nth-child(3n - 3)){
 	margin-right: 30px;
 }
 
-.items-grid.cols-4 .hovered:not(:nth-child(4n - 4)){
+.category.cols-3 .items-grid .hovered:not(:nth-child(4n - 4)){
 	margin-right: 30px;
 }
 
