@@ -118,7 +118,7 @@ echo Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs
             ]);
         },
         'layout' => '{summary}'.
-            Html::tag('div', '{items}', ['class' => 'items-grid clear-fix cols-4']).
+            Html::tag('div', '{items}', ['class' => 'items-grid clear-fix']).
             Html::tag('div', ($items->pagination->params['page'] < $pageCount ?
                     Html::tag('div',
                         Html::tag('span',
@@ -144,5 +144,5 @@ echo Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs
                 'loadingText'   =>  '',
             ],
         ]
-]), ['class' => 'category clear-fix cols-'.(empty($category->filters) ? 4 : 3)]).
+]), ['class' => 'category clear-fix cols-4']).
     $quickViewModal->renderModal();

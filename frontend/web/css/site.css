@@ -860,7 +860,7 @@ h2{
 	margin-right: 30px;
 }
 
-.category.cols-3 .items-grid .hovered:not(:nth-child(4n - 4)){
+.category.cols-4 .items-grid .hovered:not(:nth-child(4n - 4)){
 	margin-right: 30px;
 }
 
