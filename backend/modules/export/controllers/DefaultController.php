@@ -153,7 +153,7 @@ class DefaultController extends Controller
             $list->getRowDimension($row)
                 ->setRowHeight(60);
 
-            $list->setCellValue("C".$row, $item->code);
+            $list->setCellValue("C".$row, $item->good->BarCode1);
 
             $list->setCellValue("D".$row, $item->name);
 
@@ -164,7 +164,7 @@ class DefaultController extends Controller
             $list->setCellValue("E".$row, $item->count);
 
             if(!empty($item->nalichie)){
-                $list->setCellValue("F{$row}", (!empty($item->discountType) ? $item->price.($item->priceRuleID == 0 ? '**' : '*') : $item->price));
+                $list->setCellValue("F{$row}", "=CONCATENATE(".$item->price.", ".(!empty($item->discountType) ? ($item->priceRuleID == 0 ? '"**"' : '"*"') : '""').")");
                 $list->setCellValue("G{$row}", $item->sum);
             }else{
                 $list->mergeCells("F{$row}:G{$row}")
