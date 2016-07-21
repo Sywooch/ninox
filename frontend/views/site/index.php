@@ -42,6 +42,22 @@ $reviewModal = new \bobroid\remodal\Remodal([
 
 ]);
 
+$quickViewModal = new \bobroid\remodal\Remodal([
+	'cancelButton'		=>	false,
+	'confirmButton'		=>	false,
+	'closeButton'		=>	true,
+	'addRandomToID'		=>	false,
+	'id'				=>	'quickView',
+	'content'           =>  Html::tag('div', '', ['class' => 'item-navigation icon-circle-left'])
+		.Html::tag('div', '', ['class' => 'item item-main clear-fix'])
+		.Html::tag('div', '', ['class' => 'item-navigation icon-circle-right']),
+	'options'			=>  [
+		'id'        =>  'modal-quick-view',
+		'class'     =>  'quick-view-modal',
+		'hashTracking'  =>  false
+	],
+]);
+
 $js = <<<'JS'
 	$(".arrow-bottom").on('click', function(){
 		$('html, body').animate({
@@ -238,5 +254,6 @@ $this->registerJs($js);
 <!--	<span class="about-main-content-open">Читать полностью</span>
 --></div>
 <?=
-$reviewModal->renderModal()
+$reviewModal->renderModal().
+$quickViewModal->renderModal();
 ?>

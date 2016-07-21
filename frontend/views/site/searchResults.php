@@ -27,6 +27,22 @@ if($pageSize < 1){
     $pageCount = (int)(($totalCount + $pageSize - 1) / $pageSize);
 }
 
+$quickViewModal = new \bobroid\remodal\Remodal([
+    'cancelButton'		=>	false,
+    'confirmButton'		=>	false,
+    'closeButton'		=>	true,
+    'addRandomToID'		=>	false,
+    'id'				=>	'quickView',
+    'content'           =>  Html::tag('div', '', ['class' => 'item-navigation icon-circle-left'])
+        .Html::tag('div', '', ['class' => 'item item-main clear-fix'])
+        .Html::tag('div', '', ['class' => 'item-navigation icon-circle-right']),
+    'options'			=>  [
+        'id'        =>  'modal-quick-view',
+        'class'     =>  'quick-view-modal',
+        'hashTracking'  =>  false
+    ],
+]);
+
 $helper = new PriceRuleHelper();
 
 $js = <<<'JS'
@@ -130,4 +146,5 @@ echo Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs
         ]
 ]), [
     'class' =>  'category search'
-]);
+]).
+    $quickViewModal->renderModal();
