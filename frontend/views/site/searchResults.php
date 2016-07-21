@@ -144,7 +144,5 @@ echo Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs
                 'loadingText'   =>  '',
             ],
         ]
-]), [
-    'class' =>  'category search'
-]).
+]), ['class' => 'category clear-fix cols-'.(empty($category->filters) ? 4 : 3)]).
     $quickViewModal->renderModal();

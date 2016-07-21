@@ -1238,11 +1238,11 @@ h2{
 	float: right;
 }
 
-.category .content.cols-3{
+.category.cols-3 .content{
 	width: 870px;
 }
 
-.category .content.cols-4{
+.category.cols-4 .content{
 	width: auto;
 }
 

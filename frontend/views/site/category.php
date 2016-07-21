@@ -147,7 +147,7 @@ echo Html::tag('div',
                 ['class' => 'category-items-count']),
             ['class' => 'category-label']
         ).
-        Html::tag('div', !($category->Code == 'AABAAD') ? '' :
+        ($category->Code == 'AABAAD' ?
             Html::tag('div',
                 Html::tag('div', '%',
                     [
@@ -167,7 +167,7 @@ echo Html::tag('div',
                 [
                     'class'     =>      'banner-discount'
                 ]
-            )
+            ) : ''
         ).
         Html::ul($category->subCategories,
             [
@@ -220,7 +220,7 @@ echo Html::tag('div',
                 ]);
             },
             'layout'        =>
-                Html::tag('div', '{items}', ['class' => 'items-grid clear-fix cols-'.(empty($category->filters) ? 4 : 3)]).
+                Html::tag('div', '{items}', ['class' => 'items-grid clear-fix']).
                 Html::tag('div', ($items->pagination->params['page'] < $pageCount ?
                     Html::tag('div',
                         Html::tag('span',
@@ -263,7 +263,7 @@ echo Html::tag('div',
                 ['class' => 'seo-city']),
             ['class' => 'category-description']),
         ['class' => 'content']),
-    ['class' => 'category clear-fix']
+    ['class' => 'category clear-fix cols-'.(empty($category->filters) ? 4 : 3)]
 );
 
 \yii\widgets\Pjax::end();

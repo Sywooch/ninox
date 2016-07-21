@@ -28,7 +28,7 @@ class DefaultController extends Controller
 
     public function actionExcel($param){
         $order = History::findWith()->where(['id' => $param])->one();
-        $row = $i = $sum = $stockDiscount = $bankPercent = $discountPercent = $sumWithoutDiscount = $customerDiscountSum = $saleDiscount = 0;
+        $row = $i = $sum = $stockDiscount = $discountPercent = $sumWithoutDiscount = $customerDiscountSum = $saleDiscount = 0;
         $fileName = "nakladna{$order->number}.xls";
         $filePath = \Yii::getAlias('@export')."/{$fileName}";
 
@@ -235,23 +235,11 @@ class DefaultController extends Controller
                 ->applyFromArray($borderedStyle);
         }
 
-        if($order->paymentType == '2'){
-            $row += 2;
-
-            $bankPercent = round((($sum - $discountPercent - $order->amountDeductedOrder) * 0.01) + 2, 2);
-
-            $list->mergeCells("A{$row}:C{$row}")
-                ->setCellValue("A{$row}", "Услуги банка (1%), грн.:")
-                ->setCellValue("G{$row}", $bankPercent)
-                ->getStyle("G{$row}")
-                ->applyFromArray($borderedStyle);
-        }
-
         $row += 2;
 
         $list->mergeCells("A{$row}:C{$row}")
             ->setCellValue("A{$row}", "Сумма к оплате, грн.:")
-            ->setCellValue("G{$row}", (round(($sum + $bankPercent - $customerDiscountSum - $order->amountDeductedOrder), 2)))
+            ->setCellValue("G{$row}", (round(($sum - $customerDiscountSum - $order->amountDeductedOrder), 2)))
             ->getStyle("G{$row}")
             ->applyFromArray($borderedStyle);
 
