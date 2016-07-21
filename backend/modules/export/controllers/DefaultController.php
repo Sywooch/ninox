@@ -153,7 +153,7 @@ class DefaultController extends Controller
             $list->getRowDimension($row)
                 ->setRowHeight(60);
 
-            $list->setCellValue("C".$row, $item->good->BarCode1);
+            $list->setCellValue("C".$row, $item->code);
 
             $list->setCellValue("D".$row, $item->name);
 
