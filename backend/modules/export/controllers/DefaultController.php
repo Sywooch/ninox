@@ -217,12 +217,12 @@ class DefaultController extends Controller
                 ->applyFromArray($borderedStyle);
         }
 
-        if ($order['amountDeductedOrder'] > 0){
+        if ($order->amountDeductedOrder > 0){
             $row += 2;
 
             $list->mergeCells("A{$row}:C{$row}")
                 ->setCellValue("A{$row}", "Списано со счета :")
-                ->setCellValue("G{$row}", $order['amountDeductedOrder'])
+                ->setCellValue("G{$row}", $order->amountDeductedOrder)
                 ->getStyle("G{$row}")
                 ->applyFromArray($borderedStyle);
         }

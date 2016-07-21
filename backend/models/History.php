@@ -152,7 +152,7 @@ class History extends \common\models\History
         $sumWithoutDiscount = 0;
 
         foreach($this->items as $item){
-            $sumWithoutDiscount += ($item->originalPrice * $item->count);
+            $sumWithoutDiscount += $item->nezakaz == 0 ? ($item->originalPrice * $item->count) : 0;
         }
 
         return $sumWithoutDiscount;
