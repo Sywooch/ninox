@@ -84,9 +84,6 @@ foreach($good->photos as $photo){
     ]);
 
     $itemsModal[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, [
-        'width' =>  'auto',
-        'height'=>  '100%',
-        'style' =>  'margin: auto;',
         'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
     ]);
 
@@ -102,9 +99,36 @@ $imgModal = new \bobroid\remodal\Remodal([
     'confirmButton'		=>	false,
     'closeButton'		=>	true,
     'addRandomToID'		=>	false,
-    'content'			=>	$this->render('_img_modal', ['good' => $good, /*'itemsModal' => (!empty($itemsModal) ?
-        $itemsModal : ['На данный момент изображение товара отсутствует, приносим свои извинения']),*/
-        'itemsModal' => $itemsModal, 'itemsNav' => $itemsNav]),
+    'content'			=>	Slick::widget([
+            'containerOptions' => [
+                'id'    => 'modalSliderFor',
+                'class' => 'first'
+            ],
+            'items' =>  $itemsModal,
+            'clientOptions' => [
+                'arrows'         => true,
+                'fade'           => false,
+                'slidesToShow'   => 1,
+                'slidesToScroll' => 1,
+                'asNavFor'       => '#sliderFor',
+            ]
+        ]).
+        Slick::widget([
+            'containerOptions' => [
+                'id'    => 'modalSliderNav',
+                'class' => 'second'
+            ],
+            'items' =>  $itemsNav,
+            'clientOptions' => [
+                'arrows'         => true,
+                'focusOnSelect'  => true,
+                'infinite'       => true,
+                'slidesToShow'   => 8,
+                'slidesToScroll' => 1,
+                'asNavFor'       => '#modalSliderFor',
+                'cssEase'        => 'linear',
+            ]
+        ]),
     'id'				=>	'imgModal',
     'options'			=>  [
         'class'			=>  'img-modal'

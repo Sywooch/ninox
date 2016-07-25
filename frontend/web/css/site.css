@@ -6313,24 +6313,24 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 
 .img-modal #modalSliderNav .slick-track{
-	margin: auto;
+	margin: 0 auto;
 }
 
 .img-modal #modalSliderNav .slick-slide img{
-	margin: auto;
+	margin: 0 auto;
 }
 
 .img-modal #modalSliderFor .slick-slide img{
-	margin: auto;
+	margin: 0 auto;
 	max-height: 710px;
 	max-width: 955px;
 	height: 100%;
 }
 
-.img-modal .slick-slide{
+.img-modal #modalSliderFor .slick-slide{
 	margin-bottom: 15px;
 	height: 710px;
-	width: 955px;
+	width: 955px !important;
 }
 
 .img-modal .slick-prev::before, .slick-next::before {
