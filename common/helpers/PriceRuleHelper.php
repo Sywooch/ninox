@@ -22,10 +22,10 @@ class PriceRuleHelper extends Component{
 		$this->pricerules = Pricerule::find()->where(['Enabled' => 1])->orderBy('`Priority` DESC')->all();
 	}
 
-	public function recalc(&$model, $category = false){
+	public function recalc(&$model, $checkOptions = ['only' => [], 'except' => ['WithoutBlyamba']]){
 		if($model->discountType == 0 || $model->priceRuleID != 0){
 			foreach($this->pricerules as $rule){
-				if(self::recalcItem($model, $rule, $category)){
+				if(self::recalcItem($model, $rule, $checkOptions)){
 					return;
 				}
 			}
@@ -47,37 +47,42 @@ class PriceRuleHelper extends Component{
 	 * @return bool
 	 */
 	public function recalcSborkaItem($model, $rule){
-		return $this->recalcItem($model, $rule, false);
+		return $this->recalcItem($model, $rule, ['only' => ['GoodGroup']]);
 	}
 
-	protected function recalcItem(&$model, $rule, $category){
+	protected function recalcItem(&$model, $rule, $checkOptions){
 		$termsCount = 0;
 		$discount = 0;
 		foreach($rule->terms as $keyTerm => $terms){
 			if($discount == $termsCount){
-				switch($keyTerm){
-					case 'GoodGroup':
-						$this->checkCategory($terms, $model->categoryCode, $termsCount, $discount);
-						break;
-					case 'Date':
-						if($this->checkDate($terms, $termsCount, $discount) == 'disable'){
-							$rule->Enabled = 0;
-							$rule->save();
-						}
-						break;
-					case 'WithoutBlyamba':
-						if($category && !empty($terms[0][0]['value'])){
+				if((empty($checkOptions['only']) && empty($checkOptions['except'])) ||
+				(!empty($checkOptions['only']) && in_array($keyTerm, $checkOptions['only'])) ||
+				(!empty($checkOptions['except']) && !in_array($keyTerm, $checkOptions['except']))){
+					switch($keyTerm){
+						case 'GoodGroup':
+							$this->checkCategory($terms, $model->categoryCode, $termsCount, $discount);
+							break;
+						case 'Date':
+							if($this->checkDate($terms, $termsCount, $discount) == 'disable'){
+								$rule->Enabled = 0;
+								$rule->save();
+							}
+							break;
+						case 'WithoutBlyamba':
 							$termsCount++;
-						}
-						break;
-					case 'DocumentSum':
-						if(!$category){
+							break;
+						case 'DocumentSum':
 							$this->checkDocumentSumm($terms, $termsCount, $discount);
-						}
-						break;
-					default:
-						break;
+							break;
+						default:
+							break;
+					}
 				}
+/*				echo '<pre>';
+				var_dump($keyTerm);
+				var_dump($termsCount);
+				var_dump($discount);
+				var_dump($terms);*/
 			}else{
 				break;
 			}
@@ -152,6 +157,10 @@ class PriceRuleHelper extends Component{
 			}
 			$cartInfo[$key]['flag'] = true;*/
 		}
+/*		echo '<pre>';
+		var_dump($termsCount);
+		var_dump($discount);
+		var_dump($discount == $termsCount && $termsCount != 0);*/
 		if($discount == $termsCount && $termsCount != 0){
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;

@@ -157,7 +157,7 @@ class SiteController extends Controller
             return \Yii::$app->runAction('site/error');
         }
 
-        (new PriceRuleHelper())->recalc($good, true);
+        (new PriceRuleHelper())->recalc($good, ['except' => ['DocumentSum']]);
 
         if(\Yii::$app->request->isAjax){
             return $this->renderAjax('_quick_view_modal', [

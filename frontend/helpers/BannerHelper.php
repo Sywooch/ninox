@@ -84,7 +84,7 @@ class BannerHelper extends Component
 
         $color = empty($color) ? '' : ' '.$color;//без цвета наверное будет
 
-        (new PriceRuleHelper())->recalc($good, true);
+        (new PriceRuleHelper())->recalc($good, ['except' => ['DocumentSum']]);
 
         return Html::tag('div', Html::tag('div',
                // Html::tag('span', '', ['class' => 'icons-fav-bask']).
@@ -121,7 +121,7 @@ class BannerHelper extends Component
 
         $color = empty($color) ? '' : ' '.$color;//без цвета наверное будет
 
-        (new PriceRuleHelper())->recalc($good, true);
+        (new PriceRuleHelper())->recalc($good, ['except' => ['DocumentSum']]);
 
         return
             Html::tag('div',

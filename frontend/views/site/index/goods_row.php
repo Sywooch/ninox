@@ -10,7 +10,7 @@ $helper = new PriceRuleHelper();
 echo \yii\widgets\ListView::widget([
     'dataProvider'	=>	$dataProvider,
     'itemView'	    =>	function($model) use (&$helper){
-        $helper->recalc($model, true);
+        $helper->recalc($model, ['except' => ['DocumentSum']]);
 
         return $this->render('../_shop_item', [
             'model'     =>  $model,

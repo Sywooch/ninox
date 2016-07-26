@@ -111,7 +111,7 @@ echo Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs
         'dataProvider'  =>  $items,
         'summary'       =>  Html::tag('div', \Yii::t('shop', 'Найдено {totalCount} товаров'), ['class' => 'summary']),
         'itemView'      =>  function($model) use (&$helper){
-            $helper->recalc($model, true);
+            $helper->recalc($model, ['except' => ['DocumentSum']]);
 
             return $this->render('_shop_item', [
                 'model' =>  $model

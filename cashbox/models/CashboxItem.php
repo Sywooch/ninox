@@ -179,22 +179,11 @@ class CashboxItem extends \yii\db\ActiveRecord
         if($this->isNewRecord){
             $this->setAttributes([
                 'name'          =>  empty($this->name) && !empty($this->good) ? $this->good->name : $this->name,
-                'originalPrice' =>  $this->price,
                 'categoryCode'  =>  $this->good->categoryCode,
                 'deleted'       =>  0,
                 'added'         =>  date('Y-m-d H:i:s')
             ]);
         }
-
-        /*if(empty($this->orderID)){
-            $this->orderID = \Yii::$app->request->cookies->getValue("cashboxOrderID");
-        }
-
-        if($this->isNewRecord || $this->isAttributeChanged('count')){
-            $this->added = date('Y-m-d H:i:s');
-        }
-
-        $this->price = $this->originalPrice;*/
 
         return parent::beforeSave($insert);
     }

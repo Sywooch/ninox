@@ -436,7 +436,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                     <div class="col-xs-8" style="margin-left: 0; padding: 0">
                         <div class="buttonsRow row" style="margin-left: 0; padding: 0">
                             <a class="btn btn-default col-xs-4" href="#writeOffModal" disabled="disabled">Списание <?=FA::icon('lock')?></a>
-                            <button class="btn btn-default col-xs-4" id="clearOrder">Очистить заказ</button>
+                            <?=empty($order->createdOrder) ? Html::button('Очистить заказ', ['id' => 'clearOrder', 'class' => 'btn btn-default col-xs-4']) : ''?>
                             <button class="btn btn-default col-xs-4" id="returnOrder">Возврат</button>
                         </div>
                         <div class="buttonsRow row" style="margin-left: 0; padding: 0">

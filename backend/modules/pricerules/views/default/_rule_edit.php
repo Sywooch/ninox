@@ -1,5 +1,6 @@
 <?php
 
+use kartik\form\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
@@ -13,12 +14,11 @@ $this->registerCss($css);
 
 \backend\assets\InputAreaAsset::register($this);
 
-$form = new \kartik\form\ActiveForm([
+$form = ActiveForm::begin([
     'options'   =>  [
         'class' =>  'ruleEditForm'
     ]
 ]);
-$form->begin();
 
 echo Html::hiddenInput('ruleID', 0).
     Html::input('text', 'ruleName').

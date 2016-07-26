@@ -172,7 +172,7 @@ echo Html::tag('div',
         Html::ul($category->subCategories,
             [
                 'item'      =>  function($item) use (&$helper){
-                    $helper->recalc($item, true);
+                    $helper->recalc($item, ['except' => ['DocumentSum']]);
                     return Html::tag('li',
                         Html::a($item->name.
                             ($item->discountType > 0 && $item->discountSize > 0 ?
@@ -213,7 +213,7 @@ echo Html::tag('div',
         ListView::widget([
             'dataProvider'  =>  $items,
             'itemView'      =>  function($model) use (&$helper){
-                $helper->recalc($model, true);
+                $helper->recalc($model, ['except' => ['DocumentSum']]);
 
                 return $this->render('_shop_item', [
                     'model' =>  $model

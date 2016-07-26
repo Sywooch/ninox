@@ -51,7 +51,7 @@ echo Html::tag('div',
         ListView::widget([
             'dataProvider'  =>  $items,
             'itemView'      =>  function($model) use (&$helper){
-                $helper->recalc($model, true);
+                $helper->recalc($model, ['except' => ['DocumentSum']]);
 
                 return $this->render('../../../../views/site/_shop_item', [
                     'model' =>  $model

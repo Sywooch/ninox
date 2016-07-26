@@ -455,15 +455,27 @@ class CashboxNoCache extends Component
         $order = $isNewOrder ? new Order() : $this->order->createdOrder;
 
         $order->setAttributes([
-            'responsibleUserID'     => $this->responsibleUser,
-            'customerID'            => empty($this->customer) ? 0 : $this->customer,
-            'originalSum'           => $this->toPay,
-            'actualAmount'          => $amount,
-            'coupon'                => $this->promoCode,
-            'sourceType'            => Order::SOURCETYPE_SHOP,
-            'orderSource'           => \Yii::$app->params['configuration']->store,
-            'sourceInfo'            => \Yii::$app->params['configuration']->ID,
+            'responsibleUserID'     =>  $this->responsibleUser,
+            'customerID'            =>  empty($this->customer) ? 0 : $this->customer,
+            'originalSum'           =>  $this->toPay,
+            'actualAmount'          =>  $amount,
+            'coupon'                =>  $this->promoCode,
+            'sourceType'            =>  Order::SOURCETYPE_SHOP,
+            'orderSource'           =>  \Yii::$app->params['configuration']->store,
+            'sourceInfo'            =>  \Yii::$app->params['configuration']->ID,
         ]);
+
+        if(!empty($this->order->customer)){
+            $customer = $this->order->customer;
+            $order->setAttributes([
+                'customerEmail'     =>  $customer->email,
+                'customerName'      =>  $customer->name,
+                'customerSurname'   =>  $customer->surname,
+                'customerPhone'     =>  $customer->phone,
+                'deliveryRegion'    =>  $customer->region,
+                'deliveryCity'      =>  $customer->city,
+            ]);
+        }
 
         if(!$order->save(false)){
             return false;
