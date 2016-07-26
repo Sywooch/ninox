@@ -78,11 +78,6 @@ class PriceRuleHelper extends Component{
 							break;
 					}
 				}
-/*				echo '<pre>';
-				var_dump($keyTerm);
-				var_dump($termsCount);
-				var_dump($discount);
-				var_dump($terms);*/
 			}else{
 				break;
 			}
@@ -157,10 +152,6 @@ class PriceRuleHelper extends Component{
 			}
 			$cartInfo[$key]['flag'] = true;*/
 		}
-/*		echo '<pre>';
-		var_dump($termsCount);
-		var_dump($discount);
-		var_dump($discount == $termsCount && $termsCount != 0);*/
 		if($discount == $termsCount && $termsCount != 0){
 			$model->priceModified = ($model->priceRuleID != $rule->ID);
 			$model->priceRuleID = $rule->ID;
