@@ -47,6 +47,9 @@ return [
         'urlManager' => require(__DIR__.'/urlManager.php'),
     ],
     'modules'   =>  [
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module'
+        ],
         'debug' => [
             'class' => 'yii\debug\Module',
             'allowedIPs' => ['80.78.45.114', '127.0.0.1', '::1'],
