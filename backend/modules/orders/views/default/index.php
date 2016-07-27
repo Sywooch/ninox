@@ -271,6 +271,9 @@ $("body").on('click', "button.sms-order", function(){
     sendSms($(this).closest('tr').data('key'), 'card', $(this));
 }).on('click', 'button.btn-inform-payment', function(){
     $('#payment-confirm-form').find('#paymentconfirmform-ordernumber').val($(this).data('number'));
+    $('#payment-confirm-form').find('#paymentconfirmform-sum').val('');
+    $('#payment-confirm-form').find('#paymentconfirmform-paymentdate').val('');
+    $('#payment-confirm-form').find('#paymentconfirmform-paymenttype').val('Приват24');
 }).on('click', 'input.btn-cancel', function(){
     var obj = $(this),
     orderNode = obj.closest('table.kv-grid-table').find('.orderRow[data-key="' + obj.closest('tr.kv-expand-detail-row').data('key') + '"]');
