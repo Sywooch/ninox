@@ -115,7 +115,7 @@ $this->registerJs($js);
 				'arrows'		=> true,
 				'slidesToScroll'=> 1,
 				'autoplay' 		=> true,
-				'autoplaySpeed'	=> 3000,
+				'autoplaySpeed'	=> 6000,
 			]
 	]) : '<div style="height: 370px;"></div>'
 	?>
