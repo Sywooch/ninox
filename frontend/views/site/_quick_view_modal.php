@@ -29,7 +29,16 @@ foreach($good->photos as $photo){
 echo Html::tag('div',
 	Html::tag('h1', $good->Name, ['class' => 'title']).
 	Html::tag('div', \Yii::t('shop', 'Код:').$good->Code, ['class' => 'code blue']).
-	(!empty($items) ? Slick::widget([
+	(empty($items) ? Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
+		[
+			'itemprop' => 'image',
+			'data-modal-index'  =>  0,
+			'width' =>  '475px',
+			'height'=>  '355px',
+			'alt'   =>  $good->Name,
+			'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
+		]) :
+		Slick::widget([
 		'containerOptions' => [
 			'id'    => 'sliderFor',
 			'class' => 'first'
@@ -42,15 +51,7 @@ echo Html::tag('div',
 			'slidesToScroll' => 1,
 			'asNavFor'       => '',
 		]
-	]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
-		[
-			'itemprop' => 'image',
-			'data-modal-index'  =>  0,
-			'width' =>  '475px',
-			'height'=>  '355px',
-			'alt'   =>  $good->Name,
-			'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
-		])
+	])
 	).
 	(sizeof($itemsNav) > 1 ? Slick::widget([
 		'containerOptions' => [

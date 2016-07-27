@@ -75,6 +75,7 @@ if($good->videos){
 
 $items = [];
 $itemsNav = [];
+$itemsModal = [];
 
 foreach($good->photos as $photo){
     $items[] = Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$photo->ico, [
@@ -99,21 +100,32 @@ $imgModal = new \bobroid\remodal\Remodal([
     'confirmButton'		=>	false,
     'closeButton'		=>	true,
     'addRandomToID'		=>	false,
-    'content'			=>	Slick::widget([
-            'containerOptions' => [
-                'id'    => 'modalSliderFor',
-                'class' => 'first'
-            ],
-            'items' =>  $itemsModal,
-            'clientOptions' => [
-                'arrows'         => true,
-                'fade'           => false,
-                'slidesToShow'   => 1,
-                'slidesToScroll' => 1,
-                'asNavFor'       => '#sliderFor',
-            ]
-        ]).
-        Slick::widget([
+    'content'			=>
+        (empty($items) ? Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
+            [
+                'itemprop' => 'image',
+                'data-modal-index'  =>  0,
+                'width' =>  '475px',
+                'height'=>  '355px',
+                'alt'   =>  $good->Name,
+                'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
+            ]) :
+            Slick::widget([
+                'containerOptions' => [
+                    'id'    => 'modalSliderFor',
+                    'class' => 'first'
+                ],
+                'items' =>  $itemsModal,
+                'clientOptions' => [
+                    'arrows'         => true,
+                    'fade'           => false,
+                    'slidesToShow'   => 1,
+                    'slidesToScroll' => 1,
+                    'asNavFor'       => '#sliderFor',
+                ]
+            ])
+        ).
+        (sizeof($itemsNav) > 1 ? Slick::widget([
             'containerOptions' => [
                 'id'    => 'modalSliderNav',
                 'class' => 'second'
@@ -128,7 +140,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                 'asNavFor'       => '#modalSliderFor',
                 'cssEase'        => 'linear',
             ]
-        ]),
+        ]) : ''),
     'id'				=>	'imgModal',
     'options'			=>  [
         'class'			=>  'img-modal'
@@ -140,20 +152,7 @@ $imgModal = new \bobroid\remodal\Remodal([
     <?=Breadcrumbs::widget(['links' => $this->params['breadcrumbs']])?>
     <div class="item-main">
         <div class="item-photos">
-            <?=Html::a((!empty($items) ? Slick::widget([
-                'containerOptions' => [
-                    'id'    => 'sliderFor',
-                    'class' => 'first'
-                ],
-                'items' =>  $items,
-                'clientOptions' => [
-                    'arrows'         => false,
-                    'fade'           => true,
-                    'slidesToShow'   => 1,
-                    'slidesToScroll' => 1,
-                    'asNavFor'       => '',
-                ]
-            ]) : Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
+            <?=(empty($items) ? Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
                 [
                     'itemprop' => 'image',
                     'data-modal-index'  =>  0,
@@ -161,7 +160,22 @@ $imgModal = new \bobroid\remodal\Remodal([
                     'height'=>  '355px',
                     'alt'   =>  $good->Name,
                     'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
-                ])), (!empty($itemsModal) ? '#imgModal' : '')).
+                ]) :
+                Html::a(Slick::widget([
+                    'containerOptions' => [
+                        'id'    => 'sliderFor',
+                        'class' => 'first'
+                    ],
+                    'items' =>  $items,
+                    'clientOptions' => [
+                        'arrows'         => false,
+                        'fade'           => true,
+                        'slidesToShow'   => 1,
+                        'slidesToScroll' => 1,
+                        'asNavFor'       => '',
+                    ]
+                ]), '#imgModal')
+            ).
             (sizeof($itemsNav) > 1 ? Slick::widget([
                 'containerOptions' => [
                     'id'    => 'sliderNav',
