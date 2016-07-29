@@ -24,6 +24,6 @@ $content = Html::tag('div',
     ]
 );
 
-echo Html::a($content, Url::to(['/search/{{query}}', 'language' => \Yii::$app->language]), [
+echo Html::a($content, Url::to(['/search/{{query}}']), [
     'class' =>  'typeahead-list-item'
 ]);

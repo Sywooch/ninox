@@ -179,7 +179,7 @@ echo Html::tag('div',
                                 Html::tag('div', '-'.$item->discountSize.'%', ['class' => 'category-action-label'])
                                 : ''
                             ),
-                            Url::to(['/'.$item->link, 'language' => \Yii::$app->language])
+                            Url::to(['/'.$item->link])
                         ),
                         ($item->discountType > 0 && $item->discountSize > 0 ?
                             ['class' => 'category-action'] : []

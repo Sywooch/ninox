@@ -4,7 +4,7 @@ use common\helpers\Formatter;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$link = Url::to(['/tovar/'.$model->link.'-g'.$model->ID, 'language' => \Yii::$app->language]);
+$link = Url::to(['/tovar/'.$model->link.'-g'.$model->ID]);
 $photo = \Yii::$app->params['cdn-link'].\Yii::$app->params['small-img-path'].$model->photo;
 $btnClass = isset($btnClass) ? $btnClass : 'small-button';
 $innerSub = isset($innerSub) ? $innerSub : true;

@@ -1,4 +1,5 @@
 <?php
+
 $params = array_merge(
     require(__DIR__ . '/../../common/config/params.php'),
     require(__DIR__ . '/../../common/config/params-local.php'),
@@ -89,23 +90,4 @@ return [
         ],
     ],
     'params' => $params,
-    'on beforeRequest' => function () {
-        $pathInfo = Yii::$app->request->pathInfo;
-        $query = Yii::$app->request->queryString;
-        if(!empty($pathInfo) && substr($pathInfo, -1) === '/'){
-            $url = '/' . substr($pathInfo, 0, -1);
-            if ($query) {
-                $url .= '?' . $query;
-            }
-            Yii::$app->response->redirect($url, 301);
-            Yii::$app->end();
-        }
-/*        if(!empty($pathInfo) && substr($pathInfo, 0, 2) === 'uk'){
-            Yii::$app->language = 'uk_UA';
-            Yii::$app->request->pathInfo = substr($pathInfo, 3);
-        }elseif(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'krasota-style.by'){
-            Yii::$app->language = 'be_BY';
-        }*/
-
-    },
 ];

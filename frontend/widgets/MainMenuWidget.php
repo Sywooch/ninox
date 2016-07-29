@@ -70,7 +70,7 @@ class MainMenuWidget extends Widget{
             $item['label'] = Html::tag('span', $item['label'], ['class' => 'item-label']);
         }
 
-        $menu .= Html::a($item['label'], Url::to(['/'.$item['url'], 'language' => \Yii::$app->language]));
+        $menu .= Html::a($item['label'], Url::to(['/'.$item['url']]));
 
         if(!empty($item['items'])){
             foreach($item['items'] as $sub){

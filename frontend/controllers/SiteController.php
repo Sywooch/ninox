@@ -5,6 +5,7 @@ use common\helpers\Formatter;
 use common\models\DomainDeliveryPayment;
 use common\models\GoodTranslation;
 use common\data\LimitActiveDataProvider;
+use common\models\Redirect;
 use frontend\helpers\PriceRuleHelper;
 use frontend\models\BannersCategory;
 use frontend\models\CallbackForm;
@@ -166,7 +167,7 @@ class SiteController extends Controller
         }
 
         if($good->link.'-g'.$good->ID != $link){
-            $this->redirect(Url::to(['/tovar/'.$good->link.'-g'.$good->ID, 'language' => \Yii::$app->language]), 301);
+            $this->redirect(Url::to(['/tovar/'.$good->link.'-g'.$good->ID]), 301);
         }
 
         $this->saveGoodInViewed($good);
@@ -311,7 +312,7 @@ class SiteController extends Controller
                 $category = Category::findOne($object->GroupID);
                 $temp = [
                     [
-                        'url'   =>  Url::to([$category->link, 'language' => \Yii::$app->language]),
+                        'url'   =>  Url::to([$category->link]),
                         'label' =>  $category->name
                     ],
                     [
@@ -327,7 +328,7 @@ class SiteController extends Controller
         if(strlen($category->Code) != 3){
             foreach($category->parents as $parent){
                 $this->getView()->params['breadcrumbs'][] = [
-                    'url'   =>  Url::to(['/'.$parent->link, 'language' => \Yii::$app->language]),
+                    'url'   =>  Url::to(['/'.$parent->link]),
                     'label' =>  $parent->name
                 ];
             }
@@ -970,6 +971,36 @@ class SiteController extends Controller
     }
 
     public function beforeAction($action){
+        $url = Yii::$app->request->getPathInfo();
+        if(!empty($url) && $url != rtrim($url, '/')){
+            $params =  Yii::$app->request->get();
+            unset($params['url']);
+            Yii::$app->response->redirect(Url::to(array_merge(['/'.rtrim($url, '/')], $params)), 301);
+            Yii::$app->end();
+        }
+
+        $arrayParams = Yii::$app->request->get();
+        if(!empty($arrayParams['url'])){
+            $redirect = Redirect::findOne(['language' => Yii::$app->language, 'source' => preg_replace('/.html|.php|\/page\/\d+/', '', $arrayParams['url'])]);
+            if(!empty($redirect)){
+                $controller = Yii::$app->controller;
+                $arrayParams['url'] = $redirect->target;
+                unset($arrayParams['page']);
+                $params = array_merge(["{$controller->id}/{$controller->action->id}"], $arrayParams);
+                $url = urldecode(Yii::$app->urlManager->createUrl($params));
+                Yii::$app->response->redirect($url, 301);
+                Yii::$app->end();
+            }elseif(preg_match('/.html|.php|\/page\/\d+/', $arrayParams['url'])){
+                $controller = Yii::$app->controller;
+                $arrayParams['url'] = preg_replace('/.html|.php|\/page\/\d+/', '', $arrayParams['url']);
+                unset($arrayParams['page']);
+                $params = array_merge(["{$controller->id}/{$controller->action->id}"], $arrayParams);
+                $url = urldecode(Yii::$app->urlManager->createUrl($params));
+                Yii::$app->response->redirect($url, 301);
+                Yii::$app->end();
+            }
+        }
+
         $domainName = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : \Yii::$app->request->getServerName();
         $domainInfo = Domain::findOne(['name' => $domainName]);
 

@@ -20,7 +20,7 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
 
 	public function init(){
 		parent::init();
-		$this->homeLink['url'] = Url::to(['/', 'language' => \Yii::$app->language]);
+		$this->homeLink['url'] = Url::to(['/']);
 		$this->homeLink['template'] = Html::tag('li', '{link}', [
 			'itemscope' =>  '',
 			'itemtype'  =>  'http://data-vocabulary.org/Breadcrumb'

@@ -1,8 +1,7 @@
 <?php
-use bobroid\y2sp\ScrollPager;
+use darkcs\infinitescroll\InfiniteScrollPager;
 use frontend\helpers\PriceRuleHelper;
 use yii\bootstrap\Html;
-use yii\web\JsExpression;
 use yii\widgets\ListView;
 
 $this->title = 'Список желаний';
@@ -10,43 +9,57 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $helper = new PriceRuleHelper();
 
+$js = <<<'JS'
+    $('body').on(hasTouch ? 'touchend' : 'click', '.load-more', function(e){
+        if(hasTouch && isTouchMoved(e)){ return false; }
+        e.preventDefault();
+        $('.load-more').addClass('icon-loader').attr('disabled');
+        $('.grid-view').infinitescroll('start').scroll();
+    });
+
+    $('body').on('.items-grid infinitescroll:afterRetrieve', function(){
+        $('.grid-view').infinitescroll('stop');
+        if(params['offset']){
+            params['offset'][0]++;
+        }else{
+            params['offset'] = [];
+            params['offset'].push(2);
+        }
+        var offset = params['offset'][0];
+        var add = false;
+        $($('.list-view .pagination li:not(.next):not(.prev)').get().reverse()).each(
+            function(){
+                if(offset > 1 && add){
+                    $(this).addClass('active');
+                    offset--;
+                }else if($(this).hasClass('active')){
+                    add = true;
+                }
+            }
+        )
+        window.history.replaceState({}, document.title, buildLinkFromParams(false, false));
+    });
+
+    if(params['offset']){
+        var offset = params['offset'][0];
+        var add = false;
+        $($('.list-view .pagination li:not(.next):not(.prev)').get().reverse()).each(
+            function(){
+                if(offset > 1 && add){
+                    $(this).addClass('active');
+                    offset--;
+                }else if($(this).hasClass('active')){
+                    add = true;
+                }
+            }
+        )
+    }
+JS;
+
+$this->registerJs($js);
+
 echo Html::tag('div',
-    Html::tag('div',
-        \frontend\widgets\ListGroupMenu::widget([
-            'items'    => [
-                [
-                    'label' =>  \Yii::t('shop', 'Мои заказы'),
-                    'href'  =>  '/account/orders'
-                ],
-                [
-                    'label' =>  \Yii::t('shop', 'Личные данные'),
-                    'href'  =>  '/account'
-                ],
-                [
-                    'label' =>  \Yii::t('shop', 'Моя скидка'),
-                    'href'  =>  '/account/discount'
-                ],
-                [
-                    'label' =>  \Yii::t('shop', 'Список желаний'),
-                    'href'  =>  '/account/wish-list'
-                ],
-                [
-                    'label' =>  \Yii::t('shop', 'Мои отзывы'),
-                    'href'  =>  '/account/reviews'
-                ],
-                /*[
-                    'label' =>  \Yii::t('shop', 'Возвраты'),
-                    'href'  =>  '/account/returns'
-                ],
-                [
-                    'label' =>  \Yii::t('shop', 'Ярмарка мастеров'),
-                    'href'  =>  '/account/yarmarka-masterov'
-                ],*/
-            ]
-        ]),
-        [
-            'class' =>  'menu'
-        ]).
+    $this->render('_account_menu').
     Html::tag('div',
         ListView::widget([
             'dataProvider'  =>  $items,
@@ -64,32 +77,16 @@ echo Html::tag('div',
                 'class'     =>  'hovered'
             ],
             'pager' =>  [
-                'class'             =>  ScrollPager::className(),
-                'item'              =>  '.hovered',
-                'noneLeftText'      =>  '',
-                'paginationClass'   =>  'pagination',
-                'paginationSelector'=>  'pagi',
-                'triggerOffset'     =>  \Yii::$app->request->get('offset'),
-                'eventOnPageChange' =>  new JsExpression('
-                    function(offset){
-                        if(params[\'offset\']){
-                            offset > params[\'offset\'][0] ? params[\'offset\'][0] = offset : \'\';
-                        }else{
-                            params[\'offset\'] = [];
-					        params[\'offset\'].push(offset);
-                        }
-                        $(\'.list-view .pagination .active ~ li:not(.next)\').each(
-                            function(){
-                                if(offset > 1){
-                                    $(this).addClass(\'active\');
-                                    offset--;
-                                }
-                            }
-                        )
-                        window.history.replaceState({}, document.title, buildLinkFromParams(false, false));
-                        return false;
-                    }
-                ')
+                'class' => InfiniteScrollPager::className(),
+                'paginationSelector'    =>  '.pagination-wrapper',
+                'itemSelector'          =>  '.hovered',
+                'autoStart'             =>  false,
+                'containerSelector'     =>  '.items-grid',
+                'nextSelector'          =>  '.pagination .next a:first',
+                'alwaysHidePagination'  =>  false,
+                'pluginOptions'         =>  [
+                    'loadingText'   =>  '',
+                ],
             ]
         ]),
         [

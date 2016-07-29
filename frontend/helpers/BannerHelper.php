@@ -152,8 +152,7 @@ class BannerHelper extends Component
     public static function renderHTMLBanner($banner){
         $content = $banner->banner->value;
 
-        $content = !empty($banner->banner->link) ? Html::a($content, Url::to([$banner->banner->link,
-            'language' => \Yii::$app->language])) : $content;
+        $content = !empty($banner->banner->link) ? Html::a($content, Url::to([$banner->banner->link])) : $content;
 
         return Html::tag('div', $content, [
             'class'	=>	'goods-item goods-item-style'
@@ -176,7 +175,7 @@ class BannerHelper extends Component
             if(preg_match('/http/', $banner->banner->link)){
                 $link = $banner->banner->link;
             }else{
-                $link = Url::toRoute([$banner->banner->link, 'language' => \Yii::$app->language]);
+                $link = Url::toRoute([$banner->banner->link]);
             }
         }
 

@@ -26,6 +26,6 @@ $content = Html::tag('div',
     ]
 );
 
-echo Html::a($content, Url::to(['/tovar/{{link}}-g{{ID}}', 'language' => \Yii::$app->language]), [
+echo Html::a($content, Url::to(['/tovar/{{link}}-g{{ID}}']), [
     'class' =>  'typeahead-list-item'
 ]);

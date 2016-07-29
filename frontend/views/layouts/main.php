@@ -404,9 +404,9 @@ $this->beginPage()?>
 	<div class="header">
 		<div class="top-menu">
 			<div class="top-menu-content">
-				<div class="items"><a href="/o-nas"><?=\Yii::t('shop', 'О компании')?></a></div>
-				<div class="items"><a href="/pomoshch"><?=\Yii::t('shop', 'Помощь')?></a></div>
-				<div class="items"><a href="/kontakty"><?=\Yii::t('shop', 'Контакты')?></a></div>
+				<div class="items"><?=Html::a(\Yii::t('shop', 'О компании'), Url::to(['/o-nas']))?></div>
+				<div class="items"><?=Html::a(\Yii::t('shop', 'Помощь'), Url::to(['/pomoshch']))?></div>
+				<div class="items"><?=Html::a(\Yii::t('shop', 'Контакты'), Url::to(['/kontakty']))?></div>
 				<!--<div class="blog items">Блог</div>
                 <div class="items currency-rate">1 USD - 24.2 UAH</div>-->
 				<!--					<div class="personal-account">
@@ -423,8 +423,8 @@ $this->beginPage()?>
 					}else{
 						echo Html::tag('div',
 							Html::a(\Yii::$app->user->identity->name.' '.\Yii::$app->user->identity->surname, Url::to
-							(['/account/orders', 'language' => \Yii::$app->language]), ['class' => 'account']).
-							Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout', 'language' => \Yii::$app->language]),
+							(['/account/orders']), ['class' => 'account']).
+							Html::a(\Yii::t('shop', 'Выйти'), Url::to(['/logout']),
 								[
 									'data-method'   =>  'post',
 									'class'         =>  'logout'
@@ -439,8 +439,8 @@ $this->beginPage()?>
 		<div class="sticky-on-scroll">
 			<div class="under-menu">
 				<div class="under-menu-content">
-					<?=Url::to([Url::home(), 'language' => \Yii::$app->language]) != Url::current() ?
-						Html::a($logo, Url::to([Url::home(), 'language' => \Yii::$app->language])) : $logo?>
+					<?=Url::to([Url::home()]) != Url::current() ?
+						Html::a($logo, Url::to([Url::home()])) : $logo?>
 					<div class="input-style-main">
 						<?=\kartik\typeahead\Typeahead::widget([
 							'name'          => 'string',
@@ -454,7 +454,7 @@ $this->beginPage()?>
 							'dataset' => [
 								[
 									'remote' => [
-										'url' => Url::to(['/search/%QUERY', 'language' => \Yii::$app->language]),
+										'url' => Url::to(['/search/%QUERY']),
 										'wildcard' => '%QUERY'
 									],
 									'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
@@ -525,7 +525,7 @@ $this->beginPage()?>
 								Html::tag('span', \Yii::t('shop', 'Желания')),
 								[
 									'class'	=>	'desire',
-									'href'	=>	Url::to(['/account/wish-list', 'language' => \Yii::$app->language])
+									'href'	=>	Url::to(['/account/wish-list'])
 								]).
 							CartWidget::widget().
 							Html::tag('div',

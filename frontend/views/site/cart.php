@@ -25,7 +25,7 @@ if(!empty(\Yii::$app->cart->personalDiscount)){
 				'personalDiscount' =>  $personalDiscount
 			]
 		),
-			Url::to(['/account/discount', 'language' => \Yii::$app->language])
+			Url::to(['/account/discount'])
 		),
 		[
 			'class' =>  'cart-message cart-message-personal-discount'
@@ -119,7 +119,7 @@ echo Html::beginTag('div', ['class' => 'cart-footer']).
 
 if(!(isset($order) && $order == true)){
 	$form = \yii\widgets\ActiveForm::begin([
-		'action' => Url::to(['/order', 'language' => \Yii::$app->language]),
+		'action' => Url::to(['/order']),
 		'validateOnSubmit' => true,
 	]);
 	echo Html::tag('div',
