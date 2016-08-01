@@ -112,6 +112,19 @@ class m160801_120240_add_chernivtsi_store_and_kassa extends Migration
         if($domain->save(false)){
             echo "Успех \r\n";
         }
+
+        /**
+         * Даем доступ пользователю root к кассе на Черновцах
+         */
+        echo '    > Даем доступ пользователю root к кассе на Черновцах... ';
+        $access = new \common\models\SubDomainAccess([
+            'userId'        =>  30,
+            'subDomainId'   =>  $domain->id
+        ]);
+
+        if($access->save(false)){
+            echo "Успех \r\n";
+        }
     }
 
     public function down()
