@@ -150,12 +150,18 @@ class SiteController extends Controller
             $model->save();
         }
 
-        $id = preg_replace('/\D+/', '', preg_replace('/[^g(.)]+\D+/', '', $link));
+        $id = [];
+        preg_match('/-g\d+/', $link, $id);
+        $id = preg_replace('/\D+/', '', $id[0]);
 
         $good = Good::find()->where(['`goods`.`ID`' => $id])->with('reviews')->one();
 
         if(!$good){
             return \Yii::$app->runAction('site/error');
+        }
+
+        if(!\Yii::$app->request->isAjax && $good->link.'-g'.$good->ID != $link){
+            $this->redirect(Url::to(['/tovar/'.$good->link.'-g'.$good->ID]), 301);
         }
 
         (new PriceRuleHelper())->recalc($good, ['except' => ['DocumentSum']]);
@@ -164,10 +170,6 @@ class SiteController extends Controller
             return $this->renderAjax('_quick_view_modal', [
                 'good'  =>  $good
             ]);
-        }
-
-        if($good->link.'-g'.$good->ID != $link){
-            $this->redirect(Url::to(['/tovar/'.$good->link.'-g'.$good->ID]), 301);
         }
 
         $this->saveGoodInViewed($good);

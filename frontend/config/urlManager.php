@@ -12,7 +12,7 @@ return [
     'showScriptName'    =>  false,
     'rules'             =>  [
         ''                  =>  'site/index',
-        'tovar/<link>'      =>  'site/showtovar',
+        'tovar/<link:(.*)>'      =>  'site/showtovar',
         '<module(autopricelist)>/<id>'   =>  '<module>/default/index',
         '<action:(search)>/<string:(.*)>/page-<page:(\d+)>' => 'site/<action>',
         '<action:(search)>/<string:(.*)>' => 'site/<action>',
