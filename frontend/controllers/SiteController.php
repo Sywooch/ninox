@@ -152,7 +152,11 @@ class SiteController extends Controller
 
         $id = [];
         preg_match('/-g\d+/', $link, $id);
-        $id = preg_replace('/\D+/', '', $id[0]);
+        $id = preg_replace('/\D+/', '', array_shift($id));
+
+        if(!$id){
+            return \Yii::$app->runAction('site/error');
+        }
 
         $good = Good::find()->where(['`goods`.`ID`' => $id])->with('reviews')->one();
 
