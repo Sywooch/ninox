@@ -417,6 +417,19 @@ class Customer extends \yii\db\ActiveRecord
     }
 
     public function getNotPayedOrders(){
-        return $this->hasMany(History::className(), ['customerID' => 'ID'])->andWhere(['moneyConfirmed' => 0, 'deleted' => 0]);
+        return $this
+            ->hasMany(History::className(), ['customerID' => 'ID'])
+            ->andWhere(['moneyConfirmed' => 0, 'deleted' => 0]);
+    }
+
+    /**
+     * Возвращает ценовіе правила пользователя
+     * @return array|mixed|\yii\db\ActiveRecord[]
+     */
+    public function getPriceRules(){
+        return $this
+            ->hasMany(CustomerPricerule::className(), ['customerID' => 'ID'])
+            ->andWhere(['Enabled' => 1])
+            ->orderBy(['Priority' => SORT_DESC]);
     }
 }

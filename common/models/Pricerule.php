@@ -230,9 +230,9 @@ class Pricerule extends \yii\db\ActiveRecord
 		foreach($this->termsAsEntity as $term){
 			if($term->term == 'GoodGroup'){
 				if(in_array($term->type, ['=', '>='])){
-					$categoryCanBuy[] = Html::a($term->category->name, Url::to(['/'.$term->category->link, 'language' => \Yii::$app->language]));
+					$categoryCanBuy[] = Html::a($term->category->name, Url::to(['/'.$term->category->link]));
 				}else{
-					$categoryCantBuy[] = Html::a($term->category->name, Url::to(['/'.$term->category->link, 'language' => \Yii::$app->language]));
+					$categoryCantBuy[] = Html::a($term->category->name, Url::to(['/'.$term->category->link]));
 				}
 			}
 			if($term->term == 'Date'){

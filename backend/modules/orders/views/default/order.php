@@ -4,7 +4,6 @@ use common\models\DeliveryType;
 use kartik\dropdown\DropdownX;
 use kartik\typeahead\Typeahead;
 use rmrevin\yii\fontawesome\FA;
-use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\jui\Accordion;
@@ -120,16 +119,16 @@ $css = <<<'CSS'
 
     }
     .block-span span{
-display: block;
-line-height: 32px;
-font-size: 16px;
+        display: block;
+        line-height: 32px;
+        font-size: 16px;
 
     }
     .blue-line{
-    width: 58px;
-    height: 4px;
-    background: #00bfe8;
-    margin-bottom: 10px;
+        width: 58px;
+        height: 4px;
+        background: #00bfe8;
+        margin-bottom: 10px;
     }
     .order-history ul li{
         font-size: 30px;
@@ -147,78 +146,82 @@ font-size: 16px;
     }
 
     .order-sum{
-    display: inline-block;
-    cursor: pointer;
+        display: inline-block;
+        cursor: pointer;
     }
 
     .order-sum:hover .order-sum-block{
-opacity: 1;
-visibility: visible;
+        opacity: 1;
+        visibility: visible;
     }
     .order-sum-block:hover{
-    opacity: 1;
-visibility: visible;
+        opacity: 1;
+        visibility: visible;
     }
     .order-sum-block{
-opacity: 0;
-visibility: hidden;
-transition: all .3s ease .15s;
-overflow: hidden;
-position: absolute;
-    width: 320px;
-    background: white;
-    position: absolute;
-    margin-top: -18px;
-    border-radius: 5px;
-    z-index: 1;
-    box-shadow: 0px 0px 10px black;
-    padding: 30px;
-padding-right: 53px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .3s ease .15s;
+        overflow: hidden;
+        position: absolute;
+        width: 320px;
+        background: white;
+        position: absolute;
+        margin-top: -18px;
+        border-radius: 5px;
+        z-index: 1;
+        box-shadow: 0px 0px 10px black;
+        padding: 30px;
+        padding-right: 53px;
     }
-    .order-sum-block span{ line-height: 28px;}
-    .order-sum-block:hover{
-    display: block;
+        .order-sum-block span{ line-height: 28px;}
+        .order-sum-block:hover{
+        display: block;
     }
-    .order-sum-block .blue-line{
-    width: 100%;
+        .order-sum-block .blue-line{
+        width: 100%;
     }
 
 
     .white{
-    background: white;
-    border-radius: 5px;
-    padding: 25px;
+        background: white;
+        border-radius: 5px;
+        padding: 25px;
     }
 
     .accordion{
-    padding: 0px;
+        padding: 0px;
     }
 
     .accordion .ui-accordion-header{
-    background: none;
-    border: none;
+        background: none;
+        border: none;
     }
     .accordion .ui-accordion-content{
-    background: none;
-    border: none;
+        background: none;
+        border: none;
     }
 
     .status-label{
-    margin-left: 20px;
+        margin-left: 20px;
     }
 
     .on-map{
-    display: inline-block !important;
-border-radius: 10px;
-height: 20px;
-line-height: normal !important;
-width: 87px;
-font-size: 14px !important;
-float: left;
+        display: inline-block !important;
+        border-radius: 10px;
+        height: 20px;
+        line-height: normal !important;
+        font-size: 14px !important;
     }
 
     .button-size{
-    width: 154px;
+        width: 154px;
+    }
+
+    .personal-rule{
+        color: red;
+        margin-top: 10px;
+        font-size: 16px;
     }
 
 CSS;
@@ -610,8 +613,7 @@ $paymentLabel = '';
 switch($order->paymentType){
     case 1:
         $paymentLabel = Html::tag('span', 'Наложеный платёж ', [
-            'class' =>  'label label-danger',
-            'style' =>  'display: inline-block; border-radius: 10px; float: left;'
+            'class' =>  'label label-danger on-map',
         ]);
         break;
     case 2:
@@ -622,11 +624,12 @@ switch($order->paymentType){
         break;
     case 3:
         $paymentLabel = Html::tag('span', 'Наличными', [
-            'class' =>  'label label-success',
-            'style' =>  'display: inline-block; border-radius: 10px; float: left;'
+            'class' =>  'label label-success on-map',
         ]);
         break;
 }
+
+$labels[] = $paymentLabel;
 
 if(!empty($order->sendDate)){
     $labels[] = Html::tag('span', Html::tag('b', 'Заказ отправлен').' '.\Yii::$app->formatter->asDate($order->sendDate, 'php:d.m.Y'), ['class' => 'status-label']);
@@ -640,15 +643,29 @@ if(!empty($order->responsibleUser)){
     $labels[] = Html::tag('span', Html::tag('b', 'Менеджер').' '.$order->responsibleUser->name, ['class' => 'status-label']);
 }
 
-$labels[] = $paymentLabel;
+$discount = '';
 
+foreach($order->customer->priceRules as $rule){
+    $data = $rule->ruleData;
+    $discount .= Html::tag('div', $data['discount'].
+        \Yii::t('shop', ' при покупке от {sum}', ['sum' => $data['sum']]).
+        \Yii::t('shop', ' Действует на {categoryCanBuy, plural, =0{все категории} =1{категорию {canLinks}}
+            other{категории {canLinks}}}.',
+            $data).
+        ($data['categoryCantBuy'] > 0 ? \Yii::t('shop', '{categoryCantBuy, plural, =0{} =1{ Кроме категории {cantLinks}}
+            other{ Кроме категорий {cantLinks}}}.',
+            $data) : ''),
+        ['class' => 'personal-rule']
+    );
+}
 ?>
 
 
 <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-8">
         <h1 style="margin-top: 0px;"><?=$order->number?></h1>
-        <?=Html::tag('div', implode('', $labels))?>
+        <?=Html::tag('div', implode('', $labels)).
+        (empty($discount) ? '' : $discount)?>
     </div>
 
 <div class="col-xs-6 col-md-4">
@@ -694,7 +711,7 @@ Html::a('История заказа', '#orderHistory', [
         'options'           =>   [
             'style' =>  'max-width: 500px;'
         ]
-    ]). $paymentLabel
+    ])
 ?>
       </div>
       <div class="col-md-4">

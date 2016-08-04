@@ -8,7 +8,7 @@
 
 namespace cashbox\helpers;
 
-use cashbox\models\CustomerPricerule;
+use common\models\CustomerPricerule;
 
 class PriceRuleHelper extends \common\helpers\PriceRuleHelper{
 

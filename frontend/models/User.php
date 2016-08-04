@@ -68,17 +68,6 @@ class User extends Customer implements IdentityInterface{
         return static::findOne(['phone' => $phone]);
     }
 
-	public function getPricerules(){
-		if(empty($this->_pricerules)){
-			$this->_pricerules = CustomerPricerule::find()
-                ->where(['customerID' => $this->ID, 'Enabled' => 1])
-                ->orderBy(['Priority' => SORT_DESC])
-                ->all();
-		}
-
-		return $this->_pricerules;
-	}
-
     public function hasInWishlist($id){
         if(empty($this->_wishlist)){
             $this->_wishlist = array_column(CustomerWishlist::find()->where(['customerID' => $this->ID])->asArray()->all(), 'itemID');

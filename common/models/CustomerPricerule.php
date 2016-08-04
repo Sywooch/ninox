@@ -15,6 +15,9 @@ use Yii;
  */
 class CustomerPricerule extends Pricerule
 {
+
+    public $customerRule = 1;
+
     /**
      * @inheritdoc
      */
