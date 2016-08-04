@@ -1,4 +1,5 @@
 <?php
+use yii\data\ArrayDataProvider;
 use yii\helpers\Html;
 use yii\widgets\ListView;
 
@@ -78,36 +79,55 @@ $this->title = 'Товар "'.$good->Name.'"';
             <div class="col-xs-4">
                 <img class="img-thumbnail" src="<?=\Yii::$app->params['cdn-link']?>/img/catalog/<?=$good->photo?>">
                 <br><br>
-                <?php if(!empty($good->video)){ ?>
+                <?php if(!empty($good->videos)){ ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Прикреплённое видео</h3>
                     </div>
                     <div class="panel-body">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/<?=$good->video?>" frameborder="0" allowfullscreen></iframe>
-                        </div>
+                        <?=ListView::widget([
+                            'dataProvider'  =>  new ArrayDataProvider([
+                                'models'    =>  $good->videos,
+                            ]),
+                            'itemOptions'   =>  [
+                                'class' =>  'embed-responsive embed-responsive-16by9',
+                                'style' =>  'margin-bottom: 15px',
+                            ],
+                            'summary'       =>  '',
+                            'itemView'      =>  function($model){
+                                return Html::tag('iframe', '', [
+                                    'class'             =>  'embed-responsive-item',
+                                    'src'               =>  'https://www.youtube.com/embed/'.$model->video,
+                                    'frameborder'       =>  0,
+                                    'allowfullscreen'   =>  true,
+                                ]);
+                            },
+                        ])?>
                     </div>
                 </div>
                 <?php }
-                if(!empty($additionalPhotos)){
+                if(!empty($good->photos)){
                 ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Дополнительные фото</h3>
                     </div>
                     <div class="panel-body" id="additionalPhotos">
-                    <?=ListView::widget([
-                        'dataProvider' => $additionalPhotos,
-                        'itemOptions' => ['class' => 'image-thumb-mask'],
-                        'summary'   =>  '',
-                        'itemView' => function ($model) {
-                            return Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$model->ico, [
-                                'class' =>  'img-thumbnail',
-                                'style' =>  'margin-bottom: 15px'
-                            ]);
-                        },
-                    ])?>
+                        <?=ListView::widget([
+                            'dataProvider'  =>  new ArrayDataProvider([
+                                'models'    =>  $good->photos
+                            ]),
+                            'itemOptions'   =>  [
+                                'class' => 'image-thumb-mask'
+                            ],
+                            'summary'       =>  '',
+                            'itemView'      =>  function($model){
+                                return Html::img(\Yii::$app->params['cdn-link'].'/img/catalog/'.$model->ico, [
+                                    'class' =>  'img-thumbnail',
+                                    'style' =>  'margin-bottom: 15px'
+                                ]);
+                            },
+                        ])?>
                     </div>
                 </div>
                 <?php

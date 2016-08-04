@@ -56,6 +56,11 @@ if(!$good->isNewRecord){
                         'good'  =>  $good
                     ])
                 ],[
+                    'label'     =>  'Видео',
+                    'content'   =>  $this->render('_goodEdit/videos', [
+                        'good'  =>  $good
+                    ])
+                ],[
                     'label'     =>  'Експорт',
                     'content'   =>  $this->render('_goodEdit/export', [
                         'model' =>  $goodExportForm

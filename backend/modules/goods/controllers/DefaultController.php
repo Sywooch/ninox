@@ -12,6 +12,7 @@ use backend\modules\goods\models\GoodAttributesForm;
 use backend\modules\goods\models\GoodExportForm;
 use backend\modules\goods\models\GoodMainForm;
 use backend\models\GoodSearch;
+use backend\modules\goods\models\GoodVideoForm;
 use common\helpers\TranslitHelper;
 use common\helpers\UploadHelper;
 use common\models\GoodOptions;
@@ -27,6 +28,8 @@ use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\UnsupportedMediaTypeHttpException;
+use yii\widgets\ActiveForm;
 
 class DefaultController extends Controller
 {
@@ -755,9 +758,6 @@ class DefaultController extends Controller
         return $this->render('view', [
             'good'              => $good,
             'nowCategory'       => $category,
-            'additionalPhotos'  =>  new ArrayDataProvider([
-                'models'            =>  $good->photos
-            ])
         ]);
     }
 
@@ -996,5 +996,39 @@ class DefaultController extends Controller
         $good->save(false);
 
         return $good->$attribute;
+    }
+
+    /**
+     * Валиация url прикрепляемого к товару видео
+     * @return array
+     * @throws UnsupportedMediaTypeHttpException
+     */
+    public function actionValidateVideoUrl(){
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+        }
+
+        $videoForm = new GoodVideoForm();
+
+        $videoForm->load(\Yii::$app->request->post());
+
+        if(!empty(\Yii::$app->request->post("ajax"))){
+            \Yii::$app->response->format = 'json';
+            return ActiveForm::validate($videoForm);
+        }
+    }
+
+    /**
+     * Добавление видео к товару
+     * @return bool
+     * @throws UnsupportedMediaTypeHttpException
+     */
+    public function actionAddVideo(){
+        if(!\Yii::$app->request->isAjax){
+            throw new UnsupportedMediaTypeHttpException("Этот запрос возможен только через ajax!");
+        }
+        $videoForm = new GoodVideoForm();
+        $videoForm->load(\Yii::$app->request->post());
+        return $videoForm->save();
     }
 }
