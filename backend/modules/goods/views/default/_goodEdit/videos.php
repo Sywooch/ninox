@@ -14,8 +14,7 @@ $this->registerCss($css);
 
 $model = new GoodVideoForm(['id' => $good->ID]);
 
-echo (!empty($good->videos) ?
-    ListView::widget([
+echo ListView::widget([
         'dataProvider'  =>  new ArrayDataProvider([
             'models'    =>  $good->videos,
         ]),
@@ -34,7 +33,7 @@ echo (!empty($good->videos) ?
                 'allowfullscreen'   =>  true,
             ]);
         },
-    ]) : '');
+    ]);
 $form = \yii\widgets\ActiveForm::begin([
     'id'                    =>  'add-video',
     'action'                =>  '/goods/add-video',
@@ -64,6 +63,7 @@ $js = <<<'JS'
                     iframe.setAttribute('class', 'embed-responsive-item')
                     iframe.setAttribute('frameborder', '0');
                     iframe.setAttribute('allowfullscreen', 'true');
+                    $('.video-list').find('.empty').remove();
                     $('.video-list').append(div);
                     $('#goodvideoform-url').val('');
                 }
