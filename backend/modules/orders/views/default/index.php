@@ -899,6 +899,14 @@ echo Html::tag('br'),
                     'content'   =>  '',
                     'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'sourceID' => '1', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
                 ],
+                [
+                    'label' =>  'Черновцы',
+                    'options'   =>  [
+                        'id'    =>  'source-local_store-cv'
+                    ],
+                    'content'   =>  '',
+                    'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'sourceID' => '3', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
+                ],
             ],
             //'linkOptions'   =>  ['data-url' =>  Url::to(['/orders/showlist', 'showDates' => \Yii::$app->request->get('showDates'), 'ordersSource' => 'market', 'responsibleUser' => \Yii::$app->request->get("responsibleUser"), 'ordersStatus' => \Yii::$app->request->get("ordersStatus")])]
         ],
