@@ -645,18 +645,20 @@ if(!empty($order->responsibleUser)){
 
 $discount = '';
 
-foreach($order->customer->priceRules as $rule){
-    $data = $rule->ruleData;
-    $discount .= Html::tag('div', $data['discount'].
-        \Yii::t('shop', ' при покупке от {sum}', ['sum' => $data['sum']]).
-        \Yii::t('shop', ' Действует на {categoryCanBuy, plural, =0{все категории} =1{категорию {canLinks}}
+if($order->customer){
+    foreach($order->customer->priceRules as $rule){
+        $data = $rule->ruleData;
+        $discount .= Html::tag('div', $data['discount'].
+            \Yii::t('shop', ' при покупке от {sum}', ['sum' => $data['sum']]).
+            \Yii::t('shop', ' Действует на {categoryCanBuy, plural, =0{все категории} =1{категорию {canLinks}}
             other{категории {canLinks}}}.',
-            $data).
-        ($data['categoryCantBuy'] > 0 ? \Yii::t('shop', '{categoryCantBuy, plural, =0{} =1{ Кроме категории {cantLinks}}
+                $data).
+            ($data['categoryCantBuy'] > 0 ? \Yii::t('shop', '{categoryCantBuy, plural, =0{} =1{ Кроме категории {cantLinks}}
             other{ Кроме категорий {cantLinks}}}.',
-            $data) : ''),
-        ['class' => 'personal-rule']
-    );
+                $data) : ''),
+            ['class' => 'personal-rule']
+        );
+    }
 }
 ?>
 
