@@ -113,39 +113,40 @@ $imgModal = new \bobroid\remodal\Remodal([
             Slick::widget([
                 'containerOptions' => [
                     'id'    => 'modalSliderFor',
-                    'class' => 'first'
+                    'class' => 'first-modal'
                 ],
                 'items' =>  $itemsModal,
-                'clientOptions' => [
-                    'arrows'         => true,
-                    'fade'           => false,
-                    'slidesToShow'   => 1,
-                    'slidesToScroll' => 1,
-                    'asNavFor'       => '#sliderFor',
-                ]
             ])
         ).
         (sizeof($itemsNav) > 1 ? Slick::widget([
             'containerOptions' => [
                 'id'    => 'modalSliderNav',
-                'class' => 'second'
+                'class' => 'second-modal'
             ],
             'items' =>  $itemsNav,
-            'clientOptions' => [
-                'arrows'         => true,
-                'focusOnSelect'  => true,
-                'infinite'       => true,
-                'slidesToShow'   => 8,
-                'slidesToScroll' => 1,
-                'asNavFor'       => '#modalSliderFor',
-                'cssEase'        => 'linear',
-            ]
         ]) : ''),
     'id'				=>	'imgModal',
     'options'			=>  [
         'class'			=>  'img-modal'
-    ]
-
+    ],
+    'events'			=>	[
+        'opening'   =>	new \yii\web\JsExpression("$('#modalSliderNav').slick('unslick').slick({
+            arrows: true,
+            focusOnSelect: true,
+            infinite: true,
+            slidesToShow: 8,
+            slidesToScroll: 1,
+            asNavFor: '#modalSliderFor',
+            cssEase: 'linear',
+        });
+        $('#modalSliderFor').slick('unslick').slick({
+            arrows: true,
+            fade: false,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            asNavFor: '#sliderFor',
+        });"),
+    ],
 ]);
 ?>
 <div class="item item-card" itemscope itemtype="http://schema.org/Product">
@@ -383,8 +384,6 @@ $imgModal = new \bobroid\remodal\Remodal([
     <!--<div class="SeoCity">
         <p><?=$good->Name.' '.\Yii::t('shop', 'на заказ по всей территории Украины: Киев, Харьков, Одесса, Львов, Днепропетровск, Донецк, Винница, Луганск, Луцк, Житомир, Запорожье, Ивано-Франковск, Николаев, Полтава, Ровно, Сумы, Тернополь, Ужгород, Херсон, Хмельницкий, Черкассы, Чернигов, Черновцы. Самовывоз товара со склада или доставка "Новой почтой".')?></p>
     </div>-->
-    <?=
-    $imgModal->renderModal()
-    ?>
+    <?=$imgModal->renderModal()?>
 </div>
 

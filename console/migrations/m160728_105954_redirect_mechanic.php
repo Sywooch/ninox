@@ -13,7 +13,7 @@ class m160728_105954_redirect_mechanic extends Migration
             'target'    =>  Schema::TYPE_CHAR."(255) NOT NULL DEFAULT ''",
         ]);
 
-        $this->addPrimaryKey('lang_surce', 'redirects', ['language', 'source']);
+        $this->addPrimaryKey('lang_source', 'redirects', ['language', 'source']);
 
         $this->batchInsert('redirects', ['source', 'target', 'language'], [
             ['10x15', 'rukodelie/shemy-dlya-vyshivki', 'ru-RU'],

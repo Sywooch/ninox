@@ -643,9 +643,6 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -661,6 +658,18 @@ class SiteController extends Controller
                 'transparent'   =>  true,
             ],
         ];
+    }
+
+    /**
+     * Обработчик ошибок
+     * @return string
+     */
+    public function actionError(){
+        $this->setViewPath(\Yii::$app->requestedAction->controller->viewPath);
+        $this->layout = '@'.\Yii::$app->name.'/'
+            .str_replace(\Yii::$app->getBasePath(), '', \Yii::$app->requestedAction->controller->module->layoutPath).'/'
+            .\Yii::$app->requestedAction->controller->module->layout;
+        return $this->render('error');
     }
 
     /**
@@ -730,7 +739,7 @@ class SiteController extends Controller
     }
 
     public function actionSearch(){
-        $suggestion = \Yii::$app->request->get('string');
+        $suggestion = trim(\Yii::$app->request->get('string'));
 
         $name = $this->getSearchStatement($suggestion);
 
