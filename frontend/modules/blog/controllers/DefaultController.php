@@ -110,7 +110,7 @@ class DefaultController extends Controller
         $arrayParams = Yii::$app->request->get();
 
         if(!empty($arrayParams['url'])){
-            $redirect = Redirect::findOne(['source' => preg_replace('/.html|.php|\d{4}\/\d{2}\/\d{2}\//', '', $arrayParams['url'])]);
+            $redirect = Redirect::findOne(['source' => urlencode(preg_replace('/.html|.php|\d{4}\/\d{2}\/\d{2}\//', '', $arrayParams['url']))]);
             if(!empty($redirect)){
                 $controller = Yii::$app->controller;
                 unset($arrayParams['page']);
