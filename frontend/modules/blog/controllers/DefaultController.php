@@ -111,6 +111,7 @@ class DefaultController extends Controller
         $arrayParams = Yii::$app->request->get();
 
         if(!empty($arrayParams['url'])){
+            $url = '';
             $redirect = Redirect::findOne(['source' => urlencode(preg_replace('/.html|.php|\d{4}\/\d{2}\/\d{2}\//', '', $arrayParams['url']))]);
             if(!empty($redirect)){
                 $controller = Yii::$app->controller;
@@ -120,15 +121,26 @@ class DefaultController extends Controller
                 $url = urldecode(Yii::$app->urlManager->createUrl($params));
                 Yii::$app->response->redirect($url, 301);
                 Yii::$app->end();
-            }elseif(preg_match('/.html|.php|\d{4}\/\d{2}\/\d{2}\//', $arrayParams['url'])){
+            }elseif(preg_match('/.html|.php|\d{4}\/\d{2}\/\d{2}\/|\/\d+$/', $arrayParams['url'])){
                 $controller = Yii::$app->controller;
-                $url = preg_replace('/.html|.php|\d{4}\/\d{2}\/\d{2}\//', '', $arrayParams['url']);
+                $url = preg_replace('/.html|.php|\d{4}\/\d{2}\/\d{2}\/|\/\d+$/', '', $arrayParams['url']);
                 unset($arrayParams['page']);
                 unset($arrayParams['url']);
                 $params = array_merge(["{$controller->module->id}/{$url}"], $arrayParams);
                 $url = urldecode(Yii::$app->urlManager->createUrl($params));
                 Yii::$app->response->redirect($url, 301);
                 Yii::$app->end();
+            }elseif(preg_match('/id-\d+/', $arrayParams['url'], $catID)){
+                $catID = preg_replace('/\D+/', '', $catID[0]);
+                $cat = \common\models\Category::findOne(['ID' => $catID]);
+                if(!empty($cat)){
+                    unset($arrayParams['page']);
+                    unset($arrayParams['url']);
+                    $params = array_merge(["{$cat->link}"], $arrayParams);
+                    $url = urldecode(Yii::$app->urlManager->createUrl($params));
+                    Yii::$app->response->redirect($url, 301);
+                    Yii::$app->end();
+                }
             }
         }
 
