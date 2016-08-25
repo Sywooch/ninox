@@ -50,7 +50,14 @@ class GoodSearch extends \common\models\GoodSearch
                 case 'withoutPrices':
                     $query->andWhere("`goods`.`PriceOut1` <= '0' OR `goods`.`PriceOut2` <= '0'");
                     break;
+                case 'withoutAttributes':
+                    $query
+                        ->leftJoin('goodsoptions_values', '`goodsoptions_values`.`good` = `goods`.`ID`')
+                        ->andWhere('`goodsoptions_values`.`good` IS NULL')
+                        ->addGroupBy('`goods`.`ID`');
+                    break;
             }
+            $query->andWhere(['goods.deleted' => 0]);
         }
 
         return $onlyQuery ? $query : $dataProvider;

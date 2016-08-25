@@ -63,7 +63,10 @@ class CategorySearch extends Category
                     $query->andWhere("`goods`.`PriceOut1` <= '0' OR `goods`.`PriceOut2` <= '0'");
                     break;
                 case 'withoutAttributes':
-                    //$query->andWhere("`goods`.`PriceOut1` <= '0' OR `goods`.`PriceOut2` <= '0'");
+                    $query
+                        ->leftJoin('goodsoptions_values', '`goodsoptions_values`.`good` = `goods`.`ID`')
+                        ->having('COUNT(`goodsoptions_values`.`good`) < 1')
+                        ->addGroupBy('`goodsoptions_values`.`good`');
                     break;
             }
         }
