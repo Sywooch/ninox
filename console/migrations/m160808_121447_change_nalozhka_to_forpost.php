@@ -8,12 +8,14 @@ class m160808_121447_change_nalozhka_to_forpost extends Migration
     {
         \common\models\DomainDeliveryPayment::updateAll(['enabled' => 1], ['paymentParam' => 6]);
         \common\models\DomainDeliveryPayment::updateAll(['enabled' => 0], ['paymentParam' => 5]);
+        \common\models\PaymentParam::updateAll(['enabled' => 1], ['id' => 6]);
     }
 
     public function down()
     {
         \common\models\DomainDeliveryPayment::updateAll(['enabled' => 0], ['paymentParam' => 6]);
         \common\models\DomainDeliveryPayment::updateAll(['enabled' => 1], ['paymentParam' => 5]);
+        \common\models\PaymentParam::updateAll(['enabled' => 0], ['id' => 6]);
         echo "m160808_121447_change_nalozhka_to_forpost was successfully reverted.\n";
 
         return true;
