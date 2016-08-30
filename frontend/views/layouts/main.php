@@ -212,25 +212,22 @@ $js = <<<JS
 
 	/*горизонтальная прокрутка менюшки он*/
 	$(window).scroll(function(){
-	  $('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
+		$('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());\
 	});
-
 
 	$('#callback-form').on('submit', function(e){
 		e.preventDefault();
-
 		var form = $(this);
-
-	    if(form.find("#callbackform-phone").val().length != 0){
+		if(form.find("#callbackform-phone").val().length != 0){
 			$.ajax({
 				type: 'POST',
 				url: '#callbackSuccessModal',
 				data: form.serialize(),
 				success: function(){
-					 location.href = '#callbackSuccessModal';
+					location.href = '#callbackSuccessModal';
 				}
 			});
-	    }
+		}
 	});
 
 	$('input[data-mask="phone"]').mask("+38(999)999-99-99");
@@ -245,7 +242,7 @@ $js = <<<JS
         $('.up').addClass('visible');
     })
     .on('sticky-end', function(){
-		$('.up').removeClass('visible');
+        $('.up').removeClass('visible');
 	});
 
 JS;
