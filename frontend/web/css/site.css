@@ -807,6 +807,58 @@ h2{
 	background: transparent linear-gradient(rgba(243, 243, 243, 0) 0%, #F3F3F3 90%) repeat scroll 0% 0%;
 }
 
+.up{
+	width: 60px;
+	height: 75px;
+	background: #f9b618;
+	border-radius: 5px;
+	position: fixed;
+	text-transform: uppercase;
+	z-index: 10;
+	right: 20px;
+	bottom: 20px;
+	visibility: hidden;
+	filter: alpha(opacity=0);
+	opacity: 0;
+	-webkit-transition: visibility 1s linear, opacity 0.5s ease-in-out;
+	-moz-transition: visibility 1s linear, opacity 0.5s ease-in-out;
+	-ms-transition: visibility 1s linear, opacity 0.5s ease-in-out;
+	-o-transition: visibility 1s linear, opacity 0.5s ease-in-out;
+	transition: visibility 1s linear, opacity 0.5s ease-in-out;
+	cursor: pointer;
+}
+
+.up.visible{
+	visibility: visible;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+
+.up.visible:hover{
+	filter: alpha(opacity=100);
+	opacity: 1;
+}
+
+.up:before{
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 15px;
+	margin-left: -15px;
+	border-width: 0 15px 15px;
+	border-style: solid;
+	border-color: transparent transparent #fff;
+}
+
+.up span{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	bottom: 15px;
+	color: #fff;
+	font-size: 12px;
+}
+
 /*==============* ITEM STYLE *================*/
 
 .hovered{

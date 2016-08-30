@@ -209,30 +209,44 @@ $js = <<<JS
 	        return false;
 	    }
 	});
-/*горизонтальная прокрутка менюшки он*/
-$(window).scroll(function(){
-  $('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
-});
+
+	/*горизонтальная прокрутка менюшки он*/
+	$(window).scroll(function(){
+	  $('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
+	});
 
 
-$('#callback-form').on('submit', function(e){
-	e.preventDefault();
+	$('#callback-form').on('submit', function(e){
+		e.preventDefault();
 
-	var form = $(this);
+		var form = $(this);
 
-    if(form.find("#callbackform-phone").val().length != 0){
-		$.ajax({
-			type: 'POST',
-			url: '#callbackSuccessModal',
-			data: form.serialize(),
-			success: function(){
-				 location.href = '#callbackSuccessModal';
-			}
-		});
-    }
-});
+	    if(form.find("#callbackform-phone").val().length != 0){
+			$.ajax({
+				type: 'POST',
+				url: '#callbackSuccessModal',
+				data: form.serialize(),
+				success: function(){
+					 location.href = '#callbackSuccessModal';
+				}
+			});
+	    }
+	});
 
-$('input[data-mask="phone"]').mask("+38(999)999-99-99");
+	$('input[data-mask="phone"]').mask("+38(999)999-99-99");
+
+    $('.up').click(function(){
+        $('body, html, document').animate({ scrollTop: 0 }, 1000); //for all browser include safari
+        return false;
+    });
+
+    $('.sticky-on-scroll')
+    .on('sticky-start', function(){
+        $('.up').addClass('visible');
+    })
+    .on('sticky-end', function(){
+		$('.up').removeClass('visible');
+	});
 
 JS;
 
@@ -583,7 +597,8 @@ $this->beginPage()?>
 			])?>
 		</div>
 	</div>
-	<?=Html::tag('div', $content, ['class' => 'main-content'])?>
+	<?=Html::tag('div', $content, ['class' => 'main-content']).
+	Html::tag('div', Html::tag('span', Yii::t('shop', 'Вверх')), ['class' => 'up'])?>
 	<div class="footer">
 		<div class="blue-line">
 			<div class="footer-content">
@@ -721,5 +736,5 @@ $this->beginPage()?>
 	$registrationModal->renderModal();?>
 	<?php $this->endBody() ?>
 	</body>
-	</html>
+</html>
 <?=$this->endPage()?>
