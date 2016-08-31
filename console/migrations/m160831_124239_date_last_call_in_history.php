@@ -7,7 +7,7 @@ class m160831_124239_date_last_call_in_history extends Migration
 {
     public function up()
     {
-        //$this->addColumn('history', 'callbackDate', Schema::TYPE_DATETIME." NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `callback`");
+        $this->addColumn('history', 'callbackDate', Schema::TYPE_DATETIME." NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `callback`");
         common\models\History::updateAll(['callbackDate' => new \yii\db\Expression('`confirmedDate`')], "`confirmedDate` IS NOT NULL AND `confirmedDate` != '0000-00-00 00:00:00'");
     }
 
