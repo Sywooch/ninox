@@ -283,24 +283,25 @@ echo \kartik\grid\GridView::widget([
                 'call'  =>  function($url, $model, $key){
                     switch($model->callback){
                         case '0':
-                            $subclass = 'btn-default';
+                            $subclass = 'btn-warning';
                             $title = 'Не звонили';
                             break;
                         case '1':
                             $subclass = 'btn-success';
-                            $title = 'Звонили';
+                            $title = 'Звонили'.($model->callbackDate != '0000-00-00 00:00:00' ? ' '.$model->callbackDate : '');
                             break;
                         default:
                             $subclass = 'btn-danger';
-                            $title = 'Клиент не отвечает';
-                    }
-
-                    if($model->callback == '0'){
-                        $subclass = 'btn-warning';
+                            $title = \Yii::t('backend', "Клиент не отвечает.\r\nЗвонили {n, plural, one{# раз} few{# раза} many{# раз} other{# раз}}.\r\nПоследний раз {date}.",
+                                [
+                                    'n' => $model->callback - 1,
+                                    'date'  =>  $model->callbackDate,
+                                ]
+                            );
                     }
 
                     return Html::button(FA::i('phone'), [
-                        'class' =>  'btn btn-default confirmCall '.$subclass,
+                        'class' =>  'btn confirmCall '.$subclass,
                         'title' =>  $title
                     ]);
                 },

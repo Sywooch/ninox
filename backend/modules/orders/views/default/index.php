@@ -152,7 +152,6 @@ var ordersChanges = function(e){
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#87D37C",
-
         confirmButtonText: "Дозвонились",
         cancelButtonText: "Не дозвонились",
         closeOnConfirm: false,

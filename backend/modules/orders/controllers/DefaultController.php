@@ -348,6 +348,7 @@ class DefaultController extends Controller
         }
 
         \Yii::$app->request->post("confirm") == "true" ? $order->callback = 1 : ($order->callback ? $order->callback++ : $order->callback = 2);
+        $order->callbackDate = date('Y-m-d H:i:s');
         $order->confirmed = $order->callback == 1 ? 1 : 0;
 
         $order->save(false);
