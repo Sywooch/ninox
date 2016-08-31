@@ -306,6 +306,7 @@ class OrderForm extends Model{
                     'itemID'        =>  $good->ID,
                     'name'          =>  $good->Name,
                     'count'         =>  \Yii::$app->cart->has($good->ID),
+                    'added'         =>  strtotime(\Yii::$app->cart->items[$good->ID]->date),
                     'originalCount' =>  \Yii::$app->cart->items[$good->ID]->count,
                     'nalichie'      =>  \Yii::$app->cart->has($good->ID) > 0 ? 1 : 0,
                     'nezakaz'       =>  \Yii::$app->cart->has($good->ID) <= 0 ? 1 : 0,
