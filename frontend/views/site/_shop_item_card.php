@@ -24,7 +24,7 @@ $reviewModal = new Remodal([
 
 
 
-$js = <<<'JS'
+/*$js = <<<'JS'
 (function(w,doc) {
     if (!w.__utlWdgt ) {
         w.__utlWdgt = true;
@@ -36,7 +36,7 @@ $js = <<<'JS'
     }})(window,document);
 JS;
 
-$this->registerJs($js);
+$this->registerJs($js);*/
 
 $this->registerCssFile('/css/img.css');
 
@@ -151,7 +151,7 @@ $imgModal = new \bobroid\remodal\Remodal([
 ?>
 <div class="item item-card" itemscope itemtype="http://schema.org/Product">
     <?=Breadcrumbs::widget(['links' => $this->params['breadcrumbs']])?>
-    <div class="item-main">
+    <div class="item-main clear-fix">
         <div class="item-photos">
             <?=(empty($items) ? Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,
                 [
@@ -234,10 +234,10 @@ $imgModal = new \bobroid\remodal\Remodal([
             </div>
         </div>
     </div>
-    <div class="soc-item-share">
-        <span class="share-to-friends"><?=\Yii::t('shop', 'Рассказать друзьям')?></span>
+<!--    <div class="soc-item-share">
+        <span class="share-to-friends"><?/*=\Yii::t('shop', 'Рассказать друзьям')*/?></span>
         <span data-background-alpha="0.0" data-buttons-color="#FFFFFF" data-counter-background-color="#ffffff" data-share-counter-size="12" data-top-button="false" data-share-counter-type="disable" data-share-style="1" data-mode="share" data-like-text-enable="false" data-mobile-view="true" data-icon-color="#ffffff" data-orientation="horizontal" data-text-color="#000000" data-share-shape="round-rectangle" data-sn-ids="fb.vk.tw.ok.gp.em." data-share-size="20" data-background-color="#ffffff" data-preview-mobile="false" data-mobile-sn-ids="fb.vk.tw.wh.ok.vb." data-pid="1479727" data-counter-background-alpha="1.0" data-following-enable="false" data-exclude-show-more="true" data-selection-enable="false" class="uptolike-buttons"></span>
-    </div>
+    </div>-->
     <div class="about-item">
         <?=TabsX::widget([
             'enableStickyTabs'  =>  true,
