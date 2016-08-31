@@ -34,13 +34,13 @@ class ServiceMenuWidget extends Widget{
                 'class' =>  'btn btn-default btn-sm',
             ]
         ],
-        [
+/*        [
             'label'     =>  'Неделя',
             'link'      =>  'thisweek',
             'options'   =>  [
                 'class' =>  'btn btn-default btn-sm',
             ]
-        ],
+        ],*/
         [
             'label'     =>  'Месяц',
             'link'      =>  'thismonth',
@@ -75,6 +75,13 @@ class ServiceMenuWidget extends Widget{
         [
             'label' =>  'Не оплаченые на карту',
             'link'  =>  'notPayedOnCard',
+            'options'   =>  [
+                'class' =>  'btn btn-default btn-sm',
+            ]
+        ],
+        [
+            'label' =>  'более 5 дней',
+            'link'  =>  'notPayedOnCardUnder5days',
             'options'   =>  [
                 'class' =>  'btn btn-default btn-sm',
             ]

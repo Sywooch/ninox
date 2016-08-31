@@ -181,8 +181,8 @@ i.large{
 
 .afterMenu > div{
     display: inline-block;
-    min-width: 31.8%;
-    max-width: 66%;
+/*    min-width: 31.8%;
+    max-width: 66%;*/
     line-height: 30px;
     color: #999;
 }

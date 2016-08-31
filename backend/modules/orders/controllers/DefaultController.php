@@ -71,8 +71,6 @@ class DefaultController extends Controller
 
         $historySearch = new HistorySearch();
 
-        $orders = $historySearch->search(\Yii::$app->request->get(), true);
-
         $stats = new OrdersStats();
 
         $ordersStats = [

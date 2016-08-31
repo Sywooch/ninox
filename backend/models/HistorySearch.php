@@ -168,6 +168,8 @@ class HistorySearch extends History{
                         ->andWhere(['in', 'deliveryType', [1, 2]])
                         ->andWhere(['deleted' => 0]);
                     break;
+                case 'notPayedOnCardUnder5days':
+	                $query->andWhere("doneDate <= '".date('Y-m-d H:i:s', time() - 5 * 86400)."'");
                 case 'notPayedOnCard':
                     $query->andWhere(['moneyConfirmed' => 0, 'paymentType' => 2])
                         ->andWhere('`actualAmount` != \'0\'');
@@ -211,10 +213,9 @@ class HistorySearch extends History{
             }
         }
 
-        if (!($this->load($params) && $this->validate())) {
+        if(!($this->load($params) && $this->validate())){
             return $onlyQuery ? $query : $dataProvider;
         }
-
 
         $this->addCondition($query, 'id');
         $this->addCondition($query, 'number');
@@ -253,7 +254,7 @@ class HistorySearch extends History{
         }
 
         if ($partialMatch) {
-            $query->andWhere(['like', $attribute, $value.'%', false]);
+            $query->andWhere(['like', $attribute, '%'.$value.'%', false]);
         }else{
             $query->andWhere([$attribute => $value]);
         }
