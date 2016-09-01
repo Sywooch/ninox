@@ -353,6 +353,16 @@ class DefaultController extends Controller
 
         $order->save(false);
 
+        $comment = trim(\Yii::$app->request->post("comment"));
+        if(!empty($comment)){
+            $commentModel = new OrderCommentForm([
+                'model'     =>  $order,
+                'comment'   =>  $comment,
+            ]);
+
+            $commentModel->save();
+        }
+
         \Yii::$app->response->format = 'json';
 
         return [

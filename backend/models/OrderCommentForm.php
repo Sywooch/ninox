@@ -40,7 +40,7 @@ class OrderCommentForm extends Model
         }
 
         $comment = new Comment([
-            'comment'   =>  $this->comment,
+            'comment'   =>  trim($this->comment),
             'model'     =>  $className,
             'modelID'   =>  $model->getPrimaryKey(),
             'userID'    =>  \Yii::$app->user->identity->id

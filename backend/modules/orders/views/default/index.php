@@ -147,47 +147,63 @@ var ordersChanges = function(e){
         orderNode = button.closest('tr');
 
     swal({
-        title: "Вы дозвонились?",
-        text: "Вы дозвонились этому клиенту?",
-        type: "warning",
+        title: "Детали звонка",
+        text: "Коментарий к звонку",
+        type: "input",
         showCancelButton: true,
         confirmButtonColor: "#87D37C",
-        confirmButtonText: "Дозвонились",
-        cancelButtonText: "Не дозвонились",
+        confirmButtonText: "Звонили",
+        cancelButtonText: "Отмена",
         closeOnConfirm: false,
-        closeOnCancel: false
     },
-    function(isConfirm){
-        $.ajax({
-            type: 'POST',
-            url: '/orders/confirmordercall',
-            data: {
-                'OrderID': orderNode.attr('data-key'),
-                'confirm': isConfirm
-            },
-            success: function(data){
-                button.attr('class', 'btn btn-default confirmCall').prop('disabled', false);
+    function(comment){
+        if(comment === false){
+            return false;
+        }
+        swal({
+            title: "Вы дозвонились?",
+            text: "Вы дозвонились этому клиенту?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#87D37C",
+            confirmButtonText: "Дозвонились",
+            cancelButtonText: "Не дозвонились",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            $.ajax({
+                type: 'POST',
+                url: '/orders/confirmordercall',
+                data: {
+                    'OrderID':  orderNode.attr('data-key'),
+                    'confirm':  isConfirm,
+                    'comment':  comment,
+                },
+                success: function(data){
+                    button.attr('class', 'btn btn-default confirmCall').prop('disabled', false);
 
-                switch(data.callback){
-                    case 0:
-                        orderNode.find("button.doneOrder").prop('disabled', true);
-                        break;
-                    case 1:
-                        button.toggleClass('btn-success');
-                        orderNode.find("button.doneOrder").prop('disabled', false);
-                        break;
-                    case 2:
-                    default:
-                        button.toggleClass('btn-danger');
-                        orderNode.find("button.doneOrder").prop('disabled', true);
-                        break;
+                    switch(data.callback){
+                        case 0:
+                            orderNode.find("button.doneOrder").prop('disabled', true);
+                            break;
+                        case 1:
+                            button.toggleClass('btn-success');
+                            orderNode.find("button.doneOrder").prop('disabled', false);
+                            break;
+                        case 2:
+                        default:
+                            button.toggleClass('btn-danger');
+                            orderNode.find("button.doneOrder").prop('disabled', true);
+                            break;
+                    }
+
+                    changeStatus(orderNode, data.status);
                 }
+            });
 
-                changeStatus(orderNode, data.status);
-            }
+            swal.close();
         });
-
-        swal.close();
     });
 };
 

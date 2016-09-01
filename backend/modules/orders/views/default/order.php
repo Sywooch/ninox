@@ -570,18 +570,6 @@ $goodEditModal = new Remodal([
     'id'				=>	'goodEditModal',
 ]);
 
-$orderCommentsModal = new Remodal([
-    'cancelButton'		=>	false,
-    'confirmButton'		=>	false,
-    'addRandomToID'		=>	false,
-    'options'           =>  [
-        //'hashTracking'  =>  'false',
-        'id'            =>  'orderCommentsModal'
-    ],
-    'id'				=>	'orderCommentsModal',
-]);
-
-
 $orderHistory = new \bobroid\remodal\Remodal([
     'cancelButton'		=>	false,
     'confirmButton'		=>	false,
@@ -594,9 +582,6 @@ $orderHistory = new \bobroid\remodal\Remodal([
     ]
 
 ]);
-
-
-echo $orderCommentsModal->renderModal($this->render('_order_comments', ['order' => $order]));
 
 echo $goodEditModal->renderModal();
 
@@ -757,18 +742,30 @@ Html::a('История заказа', '#orderHistory', [
       </div>
     </div>
 <hr>
-<div class="row accordion white">
-    <?=Accordion::widget([
-        'items' => [
-            [
-                'header' => Html::tag('span', 'Комментарий клиента', ['class' => 'title']),
-                'content' =>$this->render('_review_accordion', ['order' => $order, 'model' => $customerComment]),
+    <div class="row accordion white">
+        <?=Accordion::widget([
+            'items' => [
+                [
+                    'header' => Html::tag('span', 'Комментарий клиента', ['class' => 'title']),
+                    'content' =>$this->render('_review_accordion', ['order' => $order, 'model' => $customerComment]),
+                ],
             ],
-        ],
-        'clientOptions' => ['collapsible' => true, (!empty($order->customerComment) ? 'h' : '').'active' => true, 'heightStyle' => 'content'],
-    ]);?>
-</div>
-    <hr>
+            'clientOptions' => ['collapsible' => true, (!empty($order->customerComment) ? 'h' : '').'active' => true, 'heightStyle' => 'content'],
+        ]);?>
+    </div>
+<hr>
+    <div class="row accordion white">
+        <?=Accordion::widget([
+            'items' => [
+                [
+                    'header' => Html::tag('span', 'Комментарии менеджера', ['class' => 'title']),
+                    'content' =>$this->render('_order_comments', ['order' => $order]),
+                ],
+            ],
+            'clientOptions' => ['collapsible' => true, (!empty($order->comments) ? 'h' : '').'active' => true, 'heightStyle' => 'content'],
+        ]);?>
+    </div>
+<hr>
 <div class="row white">
     <div class="col-md-6">
     <div class="">
