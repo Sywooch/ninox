@@ -221,7 +221,7 @@ echo \kartik\grid\GridView::widget([
             'value'     =>  function($model){
                 return  Html::tag('span' , $model->actualAmount.' грн.', ['class' => 'actualAmount']).
                 Html::tag('br').
-                (\Yii::$app->user->identity->superAdmin ? Html::tag('small', 'Товаров '.count($model->items), ['style' => 'display: block']) : '').
+                Html::tag('small', 'Товаров '.count($model->items), ['style' => 'display: block']).
                 Html::tag('br').
                 (!empty($model->responsibleUser) ? Html::tag('small', $model->responsibleUser->name, ['class' => 'responsibleUser']) : '');
             }
