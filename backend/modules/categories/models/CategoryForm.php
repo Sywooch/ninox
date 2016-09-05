@@ -142,11 +142,6 @@ class CategoryForm extends Model
             }
         }
 
-/*        echo '<pre>';
-        var_dump($this->category->goodOptions);
-        var_dump($this->GoodOption);
-        die();*/
-
         foreach($this->GoodOption as $option){
             $tOption = GoodsoptionsCategoryoption::findOne(['category' => $this->category->ID, 'option' => $option]);
             if(!$tOption && $option != 0){
