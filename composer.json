@@ -47,7 +47,7 @@
         "bobroid/yamm": "*",
         "bobroid/yii2-audittrail": "*",
         "bobroid/yii2-sweetalert": "dev-master",
-        "bobroid/yii2-remodal": "dev-master",
+        "bobroid/yii2-remodal": "0.1",
         "bobroid/yii2-imperavi-redactor": "dev-master",
         "bobroid/yii2-messenger": "*",
         "bobroid/yii2-ammap": "*",
