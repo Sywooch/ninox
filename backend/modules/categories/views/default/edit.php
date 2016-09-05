@@ -6,6 +6,8 @@ use kartik\form\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
+\backend\assets\InputAreaAsset::register($this);
+
 $this->title = $category->isNewRecord == '' ? 'Новая категория' : "Категория {$category->Name}";
 
 $css = <<<'STYLE'
@@ -32,9 +34,31 @@ dl dt{
 .tab-content{
     padding: 0;
 }
+
+#goodAttributesList{
+    list-style: none;
+}
 STYLE;
 
 $js = <<<'JS'
+
+var addEvents = function(element){
+    selectOptions = {"allowClear":true,"options":{"name_format":"CategoryForm[GoodOption][%d]"},"theme":"krajee","width":"100%","escapeMarkup":function(markup){return markup;},"language":{"noResults": function(){ return 'Такого параметра нет. <span class="addOption newAttribute">Добавить?</span>'; }}},
+    counter = ($(element[0].parentNode).find(" > *").length - 1),
+    select2options2 = {"themeCss":".select2-container--krajee","sizeCss":"input-sm","doReset":true,"doToggle":false,"doOrder":false};
+
+    if ($('#good_attribute_' + counter).data('select2')) { $('#good_attribute_' + counter).select2('destroy'); }
+    $.when($('#good_attribute_' + counter).select2(selectOptions).val($('#good_attribute_' + counter + ' option[selected]').val()).trigger('change')).done(initS2Loading('good_attribute_' + counter,'select2options2'));
+
+    $(element[0].parentNode).find(".kv-plugin-loading").remove();
+}
+
+$('#goodAttributesList').addInputArea();
+
+$("#goodAttributesList").on('inputArea.added', function(event, element) {
+    addEvents(element);
+});
+
 $(".recalcCategoryPrices").on('click', function(){
     $.ajax({
         url: '/categories/recalc?act=retailPrice',
@@ -297,6 +321,65 @@ echo Html::tag('h1', (!$category->isNewRecord ? $category->name : 'Новая к
                     }
                 ]);
 
+                $goodOptions = $options = [];
+                $goodOptionsList = \common\models\GoodOptions::getList();
+
+                if(!empty($category->goodOptions)){
+                    $options = $category->goodOptions;
+                }else{
+                    $obj = new \stdClass();
+                    $obj->goodOptions = \common\models\GoodOptions::find()->one();
+                    $obj->option = 0;
+                    $options = [0 => $obj];
+                }
+
+                foreach($options as $key => $option){
+                    $variantsList = [];
+                    foreach($option->goodOptions->optionVariants as $variant){
+                        $variantsList[$variant->id] = $variant->value;
+                    }
+
+                    $goodOptions[] = Html::tag('li', Html::tag('div', Select2::widget([
+                            'name'      =>  'CategoryForm[GoodOption]['.$key.']',
+                            'id'        =>  'good_attribute_'.$key,
+                            'pluginOptions'     =>  [
+                                'allowClear'    =>  true,
+                                'language'              =>  [
+                                    'noResults' =>  new \yii\web\JsExpression("function(){ return 'Такого значения нет. <span class=\"addOption newAttribute\">Добавить?</span>'; }")
+                                ],
+                                'escapeMarkup'  =>  new \yii\web\JsExpression("function(markup){return markup;}"),
+                            ],
+                            'options'   =>  [
+                                'class' =>  'goodAttribute',
+                                'name_format'   =>  "CategoryForm[GoodOption][%d]",
+                                'nested'        =>  'good_attribute_option_',
+                            ],
+                            'size'      =>  'sm',
+                            'value'     =>  $option->option,
+                            'data'      =>  $goodOptionsList,
+                        ]), ['class'    => 'col-xs-5']).
+                        Html::tag('div', Html::button(FA::icon('times'), [
+                            'class' =>  'goodAttributesList_del btn btn-danger btn-sm',
+                        ]), [
+                            'class' => 'col-xs-2'
+                        ]),
+                        [
+                            'class' =>  'row goodAttributesList_var',
+                            'style' =>  'padding: 2px 0'
+                        ]);
+                }
+
+                echo Html::tag('div',
+                    Html::tag('div', 'Свойства товаров по умолчанию', ['style'  => 'padding-left: 40px; font-weight: bold;']).
+                    Html::tag('ol', implode('', $goodOptions), ['id' => 'goodAttributesList']).
+                    Html::button(FA::icon('plus').' Добавить', [
+                        'class' => 'goodAttributesList_add btn btn-success btn-sm',
+                        'style' =>  'margin: 0px auto 10px; display: block;'
+                    ]),
+                    [
+                        'style' =>  'margin: 10px; padding 10px; border: 1px solid;',
+                    ]);
+
                 echo
                     Html::tag('center',
                         Html::button('Сохранить', ['class' => 'btn btn-lg btn-success', 'style' => 'margin: 0 auto', 'type' => 'submit']).
@@ -308,3 +391,5 @@ echo Html::tag('h1', (!$category->isNewRecord ? $category->name : 'Новая к
                 ?>
             </div>
         </div>
+    </div>
+</div>

@@ -22,9 +22,13 @@ class GoodOptions extends \yii\db\ActiveRecord
         return 'goodsoptions';
     }
 
+    public function getOptionVariants(){
+        return $this->hasMany(GoodOptionsVariant::className(), ['option' => 'id']);
+    }
+
     public static function getList(){
         $list = [];
-
+        $list[0] = 'Выберите значение';
         foreach(self::find()->each() as $item){
             $list[$item['id']] = $item['name'];
         }

@@ -19,26 +19,9 @@ use yii\web\NotFoundHttpException;
 
 class Good extends \common\models\Good{
 
-    private $_options = [];
-
-    public function getOptions($updateCache = false){
-        if(!empty($this->_options) && !$updateCache){
-            return $this->_options;
-        }
-
-        $query = Query::create(new Query())
-            ->select([
-                'goodsoptions.name as option',
-                'goodsoptions.id as optionID',
-                'goodsoptions_variants.value as value',
-                'goodsoptions_variants.id as valueID'
-            ])
-            ->from(GoodOptionsValue::tableName().' goodsoptions_values')
-            ->leftJoin(GoodOptionsVariant::tableName().' goodsoptions_variants', 'goodsoptions_values.value = goodsoptions_variants.id')
-            ->leftJoin(GoodOptions::tableName().' goodsoptions', 'goodsoptions_values.option = goodsoptions.id')
-            ->where(['goodsoptions_values.good' => $this->ID]);
-
-        return $this->_options = $query->all();
+    public function getOptions(){
+        return $this->hasMany(GoodOptionsValue::className(), ['good' => 'ID'])
+            ->joinWith('goodOptions');
     }
 
     public function getCategory(){

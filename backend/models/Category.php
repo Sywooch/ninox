@@ -7,6 +7,7 @@
  */
 
 namespace backend\models;
+use common\models\GoodsoptionsCategoryoption;
 
 /**
  * Class Category
@@ -21,6 +22,10 @@ class Category extends \common\models\Category
 
     public function getGoods(){
         return $this->hasMany(Good::className(), ['GroupID' => 'ID']);
+    }
+
+    public function getGoodOptions(){
+        return $this->hasMany(GoodsoptionsCategoryoption::className(), ['category' => 'ID']);
     }
 
     /**

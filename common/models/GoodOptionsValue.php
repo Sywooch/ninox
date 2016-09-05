@@ -15,7 +15,7 @@ class GoodOptionsValue extends \yii\db\ActiveRecord
 {
 
     public function getGoodOptions(){
-        return $this->hasOne(GoodOptions::className(), ['id' => 'option']);
+        return $this->hasOne(GoodOptions::className(), ['id' => 'option'])->joinWith('optionVariants');
     }
 
     public function getGoodOptionsVariants(){

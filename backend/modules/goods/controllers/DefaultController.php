@@ -687,9 +687,6 @@ class DefaultController extends Controller
 
             if($request->post("GoodMainForm") && $goodMainForm->load($request->post())){
                 $goodMainForm->save();
-
-                $good = Good::findOne($param);
-
                 $goodMainForm->loadGood($good);
             }
 
@@ -708,8 +705,8 @@ class DefaultController extends Controller
                 }
 
                 foreach($good->options as $optionArray){
-                    if(!isset($options[$optionArray['optionID']])){
-                        $deleteOptions[] = $optionArray['optionID'];
+                    if(!isset($options[$optionArray['option']])){
+                        $deleteOptions[] = $optionArray['option'];
                     }
                 }
 
@@ -733,7 +730,7 @@ class DefaultController extends Controller
 
                 GoodOptionsValue::deleteAll(['and', ['in', 'option', $deleteOptions], ['good' => $good->ID]]);
 
-                $good->getOptions(true);
+                $good = Good::findOne($param);
             }
         }
 

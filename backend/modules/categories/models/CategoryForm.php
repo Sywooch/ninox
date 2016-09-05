@@ -10,6 +10,7 @@ namespace backend\modules\categories\models;
 
 
 use backend\models\Category;
+use common\models\GoodsoptionsCategoryoption;
 use yii\base\Model;
 
 class CategoryForm extends Model
@@ -51,6 +52,8 @@ class CategoryForm extends Model
 
     public $sellProducts = false;
 
+    public $GoodOption = [];
+
     private $category;
 
     public function rules(){
@@ -59,7 +62,8 @@ class CategoryForm extends Model
             [['name', 'title', 'titleAsc', 'titleDesc', 'titleNew', 'header', 'headerAsc', 'headerDesc', 'headerNew', 'keywords'], 'string', 'max' => 255],
             [['description', 'metaDescription'], 'string'],
             [['retailPercent', 'parentCategory'], 'number'],
-            [['enabled', 'onePrice', 'umlExport', 'sellProducts'], 'boolean']
+            [['enabled', 'onePrice', 'umlExport', 'sellProducts'], 'boolean'],
+            [['GoodOption'], 'safe'],
         ];
     }
 
@@ -83,7 +87,8 @@ class CategoryForm extends Model
             'onePrice'      =>  'Одна цена на сайте',
             'umlExport'     =>  'Экспортировать в xml',
             'sellProducts'  =>  'Продаются товары',
-            'parentCategory'=>  'Категория-родитель'
+            'parentCategory'=>  'Категория-родитель',
+            'GoodOption'    =>  'Опции категории по умолчанию',
         ];
     }
 
@@ -129,6 +134,32 @@ class CategoryForm extends Model
             'metaDescription'   =>  strip_tags($this->metaDescription),
         ], false);
 
+        $deleteOptions = $options = [];
+
+        foreach($this->category->goodOptions as $option){
+            if(!in_array($option->option, $this->GoodOption)){
+                $deleteOptions[] = $option->option;
+            }
+        }
+
+/*        echo '<pre>';
+        var_dump($this->category->goodOptions);
+        var_dump($this->GoodOption);
+        die();*/
+
+        foreach($this->GoodOption as $option){
+            $tOption = GoodsoptionsCategoryoption::findOne(['category' => $this->category->ID, 'option' => $option]);
+            if(!$tOption && $option != 0){
+                $tOption = new GoodsoptionsCategoryoption([
+                    'category'  =>  $this->category->ID,
+                    'option'    =>  $option,
+                ]);
+                $tOption->save(false);
+            }
+        }
+
+        GoodsoptionsCategoryoption::deleteAll(['and', ['in', 'option', $deleteOptions], ['category' => $this->category->ID]]);
+
         return $this->category->save(false);
     }
 
@@ -157,7 +188,8 @@ class CategoryForm extends Model
             'retailPercent' =>  $category->retailPercent,
             'onePrice'      =>  $category->onePrice,
             'umlExport'     =>  $category->ymlExport,
-            'sellProducts'  =>  $category->canBuy
+            'sellProducts'  =>  $category->canBuy,
+            'goodOptions'   =>  $category->goodOptions,
         ]);
 
         $parentCategory = Category::getParentCategory($category->Code);

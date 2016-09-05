@@ -1,5 +1,4 @@
 <?php
-use common\models\GoodOptionsVariant;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use rmrevin\yii\fontawesome\FA;
@@ -19,7 +18,7 @@ $js = <<<'JS'
         select2options2 = {"themeCss":".select2-container--krajee","sizeCss":"input-sm","doReset":true,"doToggle":false,"doOrder":false};
 
         if ($('#good_attribute_' + counter).data('select2')) { $('#good_attribute_' + counter).select2('destroy'); }
-        $.when($('#good_attribute_' + counter).select2(selectOptions)).done(initS2Loading('good_attribute_' + counter,'select2options2'));
+        $.when($('#good_attribute_' + counter).select2(selectOptions).val($('#good_attribute_' + counter + ' option[selected]').val()).trigger('change')).done(initS2Loading('good_attribute_' + counter,'select2options2'));
 
         if ($('#good_attribute_option_' + counter).data('depdrop')) { $('#good_attribute_option_' + counter).depdrop('destroy'); }
         $('#good_attribute_option_' + counter).depdrop(depDropOptions);
@@ -27,7 +26,6 @@ $js = <<<'JS'
         if ($('#good_attribute_option_' + counter).data('select2')) { $('#good_attribute_option_' + counter).select2('destroy'); }
         $.when($('#good_attribute_option_' + counter).select2(select2options)).done(function(){
             initS2Loading('good_attribute_option_' + counter,'select2options2');
-            $("#good_attribute_option_" + counter)[0].disabled = true;
         });
 
         $(element[0].parentNode).find(".kv-plugin-loading").remove();
@@ -124,13 +122,26 @@ $this->registerCss($css);
 
 $this->registerJs($js);
 
-$goodOptions = [];
+$goodOptions = $options = [];
+$goodOptionsList = \common\models\GoodOptions::getList();
 
-if(empty($options)){
-    $options = [0 => ['optionID' => 0, 'valueID' => 0]];
+if(empty($good->options) && !empty($defaults = \common\models\GoodsoptionsCategoryoption::find()->with('goodOptions')->where(['category' => $good->GroupID])->all())){
+    $options = $defaults;
+}elseif(empty($good->options)){
+    $obj = new \stdClass();
+    $obj->goodOptions = \common\models\GoodOptions::find()->one();
+    $obj->option = $obj->goodOptions->id;
+    $options = [0 => $obj];
+}else{
+    $options = $good->options;
 }
 
 foreach($options as $key => $option){
+    $variantsList = [];
+    foreach($option->goodOptions->optionVariants as $variant){
+        $variantsList[$variant->id] = $variant->value;
+    }
+
     $goodOptions[] = Html::tag('li', Html::tag('div', Select2::widget([
             'name'      =>  'GoodOption['.$key.'][option]',
             'id'        =>  'good_attribute_'.$key,
@@ -147,8 +158,8 @@ foreach($options as $key => $option){
                 'nested'        =>  'good_attribute_option_',
             ],
             'size'      =>  'sm',
-            'value'     =>  $option['optionID'],
-            'data'      =>  \common\models\GoodOptions::getList(),
+            'value'     =>  $option->option,
+            'data'      =>  $goodOptionsList,
         ]), ['class'    => 'col-xs-5']).
         Html::tag('div', DepDrop::widget([
             'type'      =>  DepDrop::TYPE_SELECT2,
@@ -158,10 +169,10 @@ foreach($options as $key => $option){
                 'placeholder'   =>  'Выбрать...',
                 'name_format'   =>  'GoodOption[%d][value]',
                 'class' =>  'goodOption',
-                'data-optionid' =>  $option['optionID']
+                'data-optionid' =>  $option->option
             ],
-            'value'     =>  $option['valueID'],
-            'data'      =>  GoodOptionsVariant::getList($option['optionID']),
+            'value'     =>  isset($option->value) ? $option->value : 0,
+            'data'      =>  $variantsList,
             'select2Options'    =>  [
                 'size'  =>  'sm',
                 'pluginOptions' =>  [
@@ -176,7 +187,7 @@ foreach($options as $key => $option){
                 'depends'       =>  [
                     'good_attribute_'.$key
                 ],
-                'url'           =>  Url::to(['/goods/filters', 'act' => 'getattributes', 'selected' => $option['valueID']]),
+                'url'           =>  Url::to(['/goods/filters', 'act' => 'getattributes', 'selected' => isset($option->value) ? $option->value : 0]),
                 'params'        =>  [
                     'good_attribute',
                 ]

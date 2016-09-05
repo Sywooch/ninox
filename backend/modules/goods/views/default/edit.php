@@ -48,7 +48,7 @@ if(!$good->isNewRecord){
                 ],[
                     'label'     =>  'Аттрибуты',
                     'content'   =>  $this->render('_goodEdit/params', [
-                        'options' =>  $good->options
+                        'good'  =>  $good
                     ])
                 ],[
                     'label'     =>  'Изображения',

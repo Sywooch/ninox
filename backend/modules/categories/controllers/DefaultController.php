@@ -147,15 +147,15 @@ class DefaultController extends Controller
                 $categoryForm->load($request->post());
 
                 if($categoryForm->save()){
-                    $category = $categoryForm->category;
+                    $category = Category::findOne(['ID' => $param]);
                 }
             }
         }
 
-        if($request->get('act') == 'edit'){
-            $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Редактирование');
+/*        if($request->get('act') == 'edit'){*/
+            $this->getView()->params['breadcrumbs'][] = $request->get('act') == 'edit' ? \Yii::t('backend', 'Редактирование') : \Yii::t('backend', 'Просмотр');
 
-            if($request->post('Category')){
+/*            if($request->post('Category')){ //TODO: Вроде как ненужный кусок кода. Закоменчен 2.09.2016. Если за год ничег оне случится -- удалить!
                 $category = Category::findOne(['ID' => $param]);
 
                 if(isset($r->post("Category")['keywords'])){
@@ -178,7 +178,7 @@ class DefaultController extends Controller
             }
         }else{
             $this->getView()->params['breadcrumbs'][] = \Yii::t('backend', 'Просмотр');
-        }
+        }*/
 
         return $this->render(\Yii::$app->request->get('act') == 'edit' ? 'edit' : 'view', [
             'category'      =>  $category,
