@@ -32,7 +32,7 @@ trait PriceHelper
         return $this->calcPrice($this->originalPrice);
     }
 
-    protected function calcPrice($price){
+    protected function calcPrice($price){//echo '<pre>';var_dump($this);die();
         switch($this->discountType){
             case $this->_discountTypePercent:
                 return round($price - ($price / 100 * $this->discountSize), 2);

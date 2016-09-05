@@ -314,6 +314,8 @@ class CashboxNoCache extends Component
             ]);
 
             $item->originalPrice = $this->priceType == 1 ? $item->good->wholesalePrice : $item->good->retailPrice;
+            $item->discountType = $item->good->discountType;
+            $item->discountSize = $item->good->discountSize;
         }
 
         $item->count += $count;
