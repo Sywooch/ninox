@@ -58,32 +58,39 @@ $itemDopInfoBlock = function($model) use ($link){
 		['class' => 'item-dop-info']);
 };
 
+$linkBlock = function($model) use ($link, $photo){
+	return Html::tag('div', Html::img($photo,[
+		'alt' => $model->Name,
+		'height' => 180,
+		'width' => 230,
+		'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
+	]), [
+		'class' => 'item-img',
+	]).
+	$this->render('_shop_item/_shop_item_discount', ['model' => $model]).
+	$this->render('_shop_item/_shop_item_labels', ['model' => $model]).
+	Html::tag('div',
+		Html::tag('span', \Yii::t('shop', 'Быстрый просмотр')),
+		[
+			'class' => 'icon-quick-view'
+		]).
+	Html::tag('div', $model->Name, [
+		'class' =>  'item-title blue',
+	]);
+};
+
 echo Html::tag('div',
 	Html::tag('div',
 		Html::tag('div',
 			$this->render('_shop_item/_shop_item_wish', ['model' => $model]).
 			Html::tag('span', $model->Code, ['class' => 'item-code']),
-			['class' => 'item-head clear-fix']).
-		Html::a(Html::tag('div', Html::img($photo,[
-				'alt' => $model->Name,
-				'height' => 180,
-				'width' => 230,
-				'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
-			]), [
-				'class' => 'item-img',
-			]).
-			$this->render('_shop_item/_shop_item_discount', ['model' => $model]).
-			$this->render('_shop_item/_shop_item_labels', ['model' => $model]).
-			Html::tag('div',
-				Html::tag('span', \Yii::t('shop', 'Быстрый просмотр')),
-				[
-					'class' => 'icon-quick-view'
-				]).
-			Html::tag('div', $model->Name, [
-				'class' =>  'item-title '.($model->enabled && ($model->count > 0 || $model->isUnlimited) ? 'blue' : 'gray'),
-			]),
-			$link,
-			['title' => $model->Name.' - '.\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')]
+			['class' => 'item-head clear-fix']
+		).
+		($model->enabled && ($model->count > 0 || $model->isUnlimited) ?
+				Html::a($linkBlock($model),
+					$link,
+					['title' => $model->Name.' - '.\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')]
+				) : $linkBlock($model).Html::tag('div', \Yii::t('shop', 'Нет в наличии'), ['class' => 'out-of-store-message'])
 		).
 		$buyBlock($model, $btnClass),
 		['class' => 'inner-main']
@@ -94,5 +101,5 @@ echo Html::tag('div',
 		$itemDopInfoBlock($model),
 		['class' => 'inner-sub']) : ''
 	),
-	['class' => 'item']
+	['class' => 'item'.($model->enabled && ($model->count > 0 || $model->isUnlimited) ? '' : ' out-of-store')]
 );

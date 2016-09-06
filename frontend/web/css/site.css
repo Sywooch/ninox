@@ -916,6 +916,25 @@ h2{
 	margin-right: 30px;
 }
 
+.item.out-of-store{
+	-webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+	filter: grayscale(100%);
+}
+
+.item.out-of-store .out-of-store-message{
+	position: absolute;
+	top: 30%;
+	text-align: center;
+	width: 100%;
+	height: 50px;
+	font-size: 24px;
+	text-transform: uppercase;
+	color: #fff;
+	background: #000;
+	opacity: 0.6;
+	line-height: 50px;
+}
+
 .item .inner-main{
 	height: 333px;
 	position: relative;
