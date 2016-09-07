@@ -596,137 +596,86 @@ $this->beginPage()?>
 	</div>
 	<?=Html::tag('div', $content, ['class' => 'main-content']).
 	Html::tag('div', Html::tag('span', Yii::t('shop', 'Вверх')), ['class' => 'up'])?>
-	<div class="footer">
-		<div class="blue-line">
-			<div class="footer-content">
-				<span class="phone-numbers"> 044 578 20 16 • 067 507 87 73</span>
-				<?=Html::tag('div',
-					Html::tag('span', \Yii::t('shop', 'Время работы call-центра:')).
-					Html::tag('span', \Yii::t('shop', 'с 8.30 до 17:30, без выходных')),
-					[
-						'class'	=>	'hours'
-					]),
-				Remodal::widget([
-					'cancelButton'		=>	false,
-					'confirmButton'		=>	false,
-					'addRandomToID'		=>	false,
-					'closeButton'		=>  false,
-					'id'           		=>  'callbackModal',
-					'buttonOptions' =>  [
-						'label' =>  'Заказать обратный звонок',
-						'class' =>  'yellow-button-new large-button',
-					],
-					'content'   =>  $this->render('_callback'),
-					'options'			=>  [
-						'class'			=>  'callback-modal'
-					]
-
-				]);
-				?>
+	<!-- Footer -->
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<span class="copyright">citinox.com.ua © 2016</span>
+					<div class="copyright-mid">Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</div>
+					<span class="de">citinox.de</span>
+				</div>
+				<div class="col-md-4">
+					<section class="row">
+						<div class="col-lg-12">
+							<h2 class="page-header">Каталог товаров</h2>
+						</div>
+						<div class="col-md-6 col-sm-6 portfolio-item">
+							<a href="#">
+								<div class="portfolio-caption">
+									<i class="fi fi-fw fi-type-1"></i>
+									К стене
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6 col-sm-6 portfolio-item">
+							<a href="#">
+								<div class="portfolio-caption">
+									<i class="fi fi-fw fi-type-2"></i>
+									Флажковое
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6 col-sm-6 portfolio-item">
+							<a href="#">
+								<div class="portfolio-caption">
+									<i class="fi fi-fw fi-type-3"></i>
+									Стержневое
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6 col-sm-6 portfolio-item">
+							<a href="#">
+								<div class="portfolio-caption">
+									<i class="fi fi-fw fi-type-4"></i>
+									Тросиковое
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6 col-sm-6 portfolio-item">
+							<a href="#">
+								<div class="portfolio-caption">
+									<i class="fi fi-fw fi-type-5"></i>
+									Свободностоящие
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6 col-sm-6 portfolio-item">
+							<a href="#">
+								<div class="portfolio-caption">
+									<i class="fi fi-fw fi-type-6"></i>
+									Детали
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6 col-sm-6 portfolio-item">
+							<a href="#">
+								<div class="portfolio-caption">
+									<i class="fi fi-fw fi-type-7"></i>
+									Alinox
+								</div>
+							</a>
+						</div>
+					</section>
+				</div>
+				<div class="col-md-4 adress">
+					<span>г. Киев</span>
+					<span>ул. Магнитогорская, 1Б, офис 219</span>
+					<span class="tel">тел.: +380 44 466 60 44</span>
+				</div>
 			</div>
 		</div>
-		<?=Html::tag('div',
-			Html::tag('div',
-				Html::tag('span', \Yii::t('shop', 'О компании'), [
-					'class'		=>	'link-hide',
-					'data-href'	=>	'/o-nas'
-				]).
-				Html::tag('span', \Yii::t('shop', 'Контакты'), [
-					'class'		=>	'link-hide',
-					'data-href'	=>	'/kontakty'
-				]).
-				Html::tag('span', \Yii::t('shop', 'Отзывы о магазине'), [
-					'class'		=>	'link-hide',
-					'data-href'	=>	'/otzyvy'
-				]).
-				Html::tag('a', \Yii::t('shop', 'Карта сайта'), [
-					'class'		=>	'link-hide',
-					'href'		=>	'/map'
-				]),
-				[
-					'class'	=>	'goods-item'
-				]).
-			Html::tag('div',
-				Html::tag('span', \Yii::t('shop', 'Оплата и доставка'), [
-					'class'		=>	'link-hide',
-					'data-href'	=>	'/o-nas#about-delivery-payment-header',
-				]).
-				Html::tag('span', \Yii::t('shop', 'Гарантии и возврат'), [
-					'class'		=>	'link-hide',
-					'data-href'	=>	'/o-nas#about-return-header'
-				]),
-				[
-					'class'	=>	'goods-item'
-				]).
-			Html::tag('div',
-				Html::tag('span', \Yii::t('shop', 'Проблемы с заказом?'), [
-					'class'		=>	'link-hide',
-					'data-href'	=>	'/kontakty'//хз
-				]),
-				[
-					'class'	=>	'goods-item feedback-link'
-				]),
-			[
-				'class'	=>	'footer-menu'
-			]).
-		Html::tag('div',
-			Html::tag('div',
-				Html::tag('div',
-					Html::img('/img/site/visa-icon.png').
-					Html::img('/img/site/mastercard-icon.png').
-					Html::img('/img/site/privat24-icon.png'),
-					[
-						'class'	=>	'card'
-					]).
-				Html::tag('div',
-					Html::tag('span', 'Наши партнёры: ').
-					Html::tag('a', 'kolbaska.com.ua',
-						[
-							'href'	=>	'http://kolbaska.com.ua'
-						]),
-					[
-						'class'	=>	'our-partners'
-					]).
-				Html::tag('div', Html::tag('span', 'Мы в соцсетях:',[]).
-					SocialButtonWidget::widget([
-						'items' => [
-							['linkTag' => 'a', 'link' => 'https://www.facebook.com/krasota.style.com.ua', 'type' => 'facebook'],
-							['linkTag' => 'a', 'link' => 'http://vk.com/bizhuteria_optom_ua', 'type' => 'vkontakte'],
-							['linkTag' => 'a', 'link' => 'https://twitter.com/krasota_style', 'type' => 'twitter'],
-							['linkTag' => 'a', 'link' => 'http://www.odnoklassniki.ru/krasotastyle2', 'type' => 'odnoklassniki'],
-							['linkTag' => 'a', 'link' => 'https://plus.google.com/u/0/106125731561025796307?rel=author', 'type' => 'googleplus'],
-							['linkTag' => 'a', 'link' => 'https://www.youtube.com/channel/UCuWGRaxroJabTiecC9jAqow/featured', 'type' => 'youtube'],
-							['linkTag' => 'a', 'link' => 'https://www.instagram.com/krasota_style.ua/', 'type' => 'instagram'],
-						]
-					]),
-					[
-						'class'	=>	'socialNetworks'
-					]),
-				[
-					'class'	=>	'footer-content'
-				]),
-			[
-				'class'	=>	'feedback-block'
-			]).
-		Html::tag('div',
-			Html::tag('span',
-				\Yii::t('shop', '© Интернет-магазин «krasota-style™» 2011–{year}', ['year' => date('Y')]),
-				[
-					'class' => 'left'
-				]
-			).'&nbsp;'.
-			Html::tag('span',
-				\Yii::t('shop', 'Дизайн и разработка сайта “krasota-style.ua”',
-					[
-						'class' => 'right'
-					]
-				)
-			),
-			[
-				'class'	=>	'footer-content'
-			]
-		)?>
-	</div>
+	</footer>
 	<?=$cartModal->renderModal(),
 	$callbackSuccessModal->renderModal(),
 	$loginModal->renderModal(),

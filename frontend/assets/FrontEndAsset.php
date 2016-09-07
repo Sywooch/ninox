@@ -14,11 +14,14 @@ class FrontEndAsset extends AssetBundle
 {
 	public $sourcePath = '@web';
 	public $css = [
+		'//fonts.googleapis.com/css?family=Open+Sans',
+		'css/modern-business.css',
 		'css/normalize.css',
 		'css/counter.css',
 		'css/maskedphone.css',
 		'css/outdatedbrowser.min.css',
 		'css/site.css',
+
 	];
 	public $js = [
 		'js/main.js',
