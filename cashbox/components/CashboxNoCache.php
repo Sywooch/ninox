@@ -298,11 +298,6 @@ class CashboxNoCache extends Component
     public function put($itemID, $count = 1){
         if($this->order->isNewRecord){
             $this->order->save(false);
-
-            \Yii::$app->response->cookies->add(new Cookie([
-                'name'      =>  'cashboxOrderID',
-                'value'     =>  $this->order->id
-            ]));
         }
 
         $item = $this->order->getItem($itemID);
