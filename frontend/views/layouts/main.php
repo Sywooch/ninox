@@ -5,9 +5,9 @@
 
 use bobroid\remodal\Remodal;
 use common\helpers\Formatter;
+use frontend\assets\FrontEndAsset;
 use frontend\assets\PerfectScrollbarAsset;
 use frontend\models\Category;
-use frontend\assets\RuLangAsset;
 use common\components\SocialButtonWidget;
 use frontend\widgets\CartWidget;
 use frontend\widgets\LanguageDropdown;
@@ -391,7 +391,7 @@ CSS;
 $this->registerCss($typeaheadStyles);
 
 PerfectScrollbarAsset::register($this);
-RuLangAsset::register($this);
+FrontEndAsset::register($this);
 
 $logo = Html::tag('div', '', ['class' => 'logo']);
 
