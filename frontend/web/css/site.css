@@ -1561,13 +1561,6 @@ h2{
 
 /*=============* FOOTER STYLE *===============*/
 
-footer{
-	width: 100%;
-	background: #0298c1;
-	bottom: 0;
-	z-index: 4;
-}
-
 .footerCenter .socialNetworks{
 	width: 220px;
 }
@@ -4989,7 +4982,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 /*========*  MAIN  *=========*/
 
 .main-content{
-	padding-bottom: 515px;
+	/*padding-bottom: 515px;*/
 	overflow: auto;
 	position: relative;
 	padding-top: 10px;
