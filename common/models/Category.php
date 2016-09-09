@@ -505,6 +505,7 @@ class Category extends \yii\db\ActiveRecord
                     $tree[$element->Code]['label'] = $element->name;
                     $tree[$element->Code]['url'] = $element->link;
                     $tree[$element->Code]['sequence'] = $element->sequence;
+                    $tree[$element->Code]['metaDescription'] = $element->metaDescription;
 
                     if(!empty($element->imgSrc)){
                         $tree[$element->Code]['imgSrc'] = $element->imgSrc;

@@ -4734,8 +4734,8 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 /*========* HEADER MENU *=========*/
 .header-menu{
 	width: 100%;
-	background: #2ba3e1; /* For browsers that do not support gradients */
-	height: 78px;
+	/*background: #2ba3e1;*/ /* For browsers that do not support gradients */
+	/*height: 78px;*/
 	-webkit-transition: height 1s;
 	-moz-transition: height 1s;
 	transition: height 1s;
@@ -4777,20 +4777,20 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 	margin: auto;
 	display: table;
 	table-layout: fixed;
-	border-left: 1px solid #3F99C9;
-	border-right: 1px solid #8ED2F7;
+	/*border-left: 1px solid #3F99C9;
+	border-right: 1px solid #8ED2F7;*/
 }
 
 .header-menu-item{
-	border-left: 1px solid #8ed2f7;
-	border-right: 1px solid #3f99c9;
-	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
-	display: table-cell; /* эмуляция ячейки таблицы */
-	text-align: center;
-	height: 100%; /* высота пункта */
-	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
-	vertical-align: bottom;
-	cursor: pointer;
+	/*border-left: 1px solid #8ed2f7;
+	border-right: 1px solid #3f99c9;*/
+	/*width: auto;*/ /* чтобы поведение было аналогичным ячейки таблицы */
+	/*display: table-cell;*/ /* эмуляция ячейки таблицы */
+	/*text-align: center;*/
+	/*height: 100%;*/ /* высота пункта */
+	/*padding-left: 2px;*/ /* визуальная граница между пунктами меню, хз нах ты добавил*/
+	/*vertical-align: bottom;*/
+	/*cursor: pointer;*/
 }
 
 .header-menu-item span{
@@ -4798,16 +4798,16 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header-menu-item:hover{
-	border-left: 1px solid #8ed2f7;
+	/*border-left: 1px solid #8ed2f7;
 	border-right: 1px solid #3f99c9;
 	background: #f1f1f1;
-	border-top: 3px solid #e7e7e7;
-	width: auto; /* чтобы поведение было аналогичным ячейки таблицы */
-	display: table-cell; /* эмуляция ячейки таблицы */
-	text-align: center;
-	height: 100%; /* высота пункта */
-	padding-left: 2px; /* визуальная граница между пунктами меню, хз нах ты добавил*/
-	vertical-align: bottom;
+	border-top: 3px solid #e7e7e7;*/
+	/*width: auto;*/ /* чтобы поведение было аналогичным ячейки таблицы */
+	/*display: table-cell;*/ /* эмуляция ячейки таблицы */
+	/*text-align: center;*/
+	/*height: 100%;*/ /* высота пункта */
+	/*padding-left: 2px;*/ /* визуальная граница между пунктами меню, хз нах ты добавил*/
+	/*vertical-align: bottom;*/
 }
 
 .header-menu-items .item-label{

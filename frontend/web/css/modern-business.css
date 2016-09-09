@@ -240,20 +240,20 @@ footer {
 }*/
 
 /* Portfolio*/
-#portfolio a{
+#portfolio a, .header-menu-items a{
 	color: #727272;
 }
-#portfolio a h4{
+#portfolio a h4, .header-menu-items a h4{
 	color: #333333;
 }
-#portfolio a:hover{
+#portfolio a:hover, .header-menu-items a:hover{
 	color: #FFF;
 }
-#portfolio .page-header{
+#portfolio .page-header, .header-menu-items .page-header{
 	font-weight: bold;
 }
 
-#portfolio .portfolio-item {
+#portfolio .portfolio-item, .header-menu-items .portfolio-item{
 	height: 175px;
 	margin: 0 0 15px;
 	right: 0;
@@ -262,21 +262,21 @@ footer {
 	-webkit-transition: all ease .5s;
 	-moz-transition: all ease .5s;
 }
-#portfolio .portfolio-item:hover {
+#portfolio .portfolio-item:hover, .header-menu-items .portfolio-item:hover{
 	background: #ffae00;
 	color: #FFF;
 }
-#portfolio .portfolio-item:hover .portfolio-caption, #portfolio .portfolio-item:hover .portfolio-caption p{
+#portfolio .portfolio-item:hover .portfolio-caption, #portfolio .portfolio-item:hover .portfolio-caption p, .header-menu-items .portfolio-item:hover .portfolio-caption, .header-menu-items .portfolio-item:hover .portfolio-caption p{
 	color: #FFF;
 }
 
 .portfolio-caption i{
 	padding-bottom: 20px;
 }
-#portfolio .fi-fw {
+#portfolio .fi-fw, .header-menu-items .fi-fw{
 	color: #000;
 }
-#portfolio [class*=" fi-type-"]:before{
+#portfolio [class*=" fi-type-"]:before, .header-menu-items [class*=" fi-type"]:before{
 	font-size: 50px;
 	position: relative;
 	top: 16px;

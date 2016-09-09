@@ -27,7 +27,7 @@ class MainMenuWidget extends Widget{
         'firstLevelDivClass'=>  'header-menu-item-content',
         'wtfLevelDivClass'  =>  'header-menu-item-content-text',
         'otherUlClass'      =>  'header-menu-item-content-items',
-        'firstLevelLiClass' =>  'header-menu-item ',
+        'firstLevelLiClass' =>  'header-menu-item col-md-3 col-sm-6 portfolio-item',
         'otherLiClass'      =>  '',
         'menuClass'         =>  'header-menu',
         'sliderClassDiv'    =>  'header-menu-item-content-slider',
@@ -43,7 +43,6 @@ class MainMenuWidget extends Widget{
         foreach($this->items as $item){
             $items[] = $this->renderItem(array_merge($this->defaultItemParams, $item));
         }
-
         MainMenuAsset::register($this->getView());
 
         if($this->options['sticky']){
@@ -65,7 +64,7 @@ class MainMenuWidget extends Widget{
         $menu = $submenu = '';
 
         if(!$subitem){
-            $item['label'] = Html::tag('i', '', ['class' => 'fi fi-fw fi-type']).Html::tag('span', $item['label'], ['class' => 'item-label']);
+            $item['label'] = Html::tag('div', Html::tag('i', '', ['class' => 'fi fi-fw fi-type']).Html::tag('span', $item['label'], ['class' => 'item-label']).Html::tag('p', $item['metaDescription'], ['class' => 'text-muted']), ['class' => 'portfolio-caption']);
         }elseif(!$subitem){
             $item['label'] = Html::tag('span', $item['label'], ['class' => 'item-label']);
         }
