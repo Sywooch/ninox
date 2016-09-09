@@ -27,7 +27,7 @@ class MainMenuWidget extends Widget{
         'firstLevelDivClass'=>  'header-menu-item-content',
         'wtfLevelDivClass'  =>  'header-menu-item-content-text',
         'otherUlClass'      =>  'header-menu-item-content-items',
-        'firstLevelLiClass' =>  'header-menu-item',
+        'firstLevelLiClass' =>  'header-menu-item ',
         'otherLiClass'      =>  '',
         'menuClass'         =>  'header-menu',
         'sliderClassDiv'    =>  'header-menu-item-content-slider',
@@ -64,8 +64,8 @@ class MainMenuWidget extends Widget{
     public function renderItem($item, $subitem = false){
         $menu = $submenu = '';
 
-        if(!$subitem && !empty($item['imgSrc'])){
-            $item['label'] = Html::img($item['imgSrc'], ['class' => 'svg']).Html::tag('span', $item['label'], ['class' => 'item-label']);
+        if(!$subitem){
+            $item['label'] = Html::tag('i', '', ['class' => 'fi fi-fw fi-type']).Html::tag('span', $item['label'], ['class' => 'item-label']);
         }elseif(!$subitem){
             $item['label'] = Html::tag('span', $item['label'], ['class' => 'item-label']);
         }

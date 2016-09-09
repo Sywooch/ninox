@@ -4,19 +4,19 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
 	'timeZone'	=>	'Europe/Kiev',
     'components' => [
-		/*'s3' => [
+		's3' => [
 			'class' => \frostealth\yii2\aws\s3\Storage::className(),
 			'credentials' => [
-				'key' 		=> 'AKIAIALHOP4U7PDKIYTA',
-				'secret' 	=> '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',
+				'key' 		=> 'AKIAIFNOEK55V4XWGEVA',
+				'secret' 	=> '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',
 			],
-			'region' 		=> 'eu-central-1',
-			'bucket' => 'krasota-style',
+			'region' 		=> 'eu-west-1',
+			'bucket' => 'ninox',
 			'defaultAcl' 	=> 'public-read',
 			'options' => [
 				'scheme' => 'http',
 			],
-		],*/
+		],
 		'formatter' =>  [
 			'class' =>  'common\components\Formatter'
 		],
