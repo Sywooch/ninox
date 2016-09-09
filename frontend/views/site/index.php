@@ -120,139 +120,43 @@ $this->registerJs($js);
 	]) : '<div style="height: 370px;"></div>'
 	?>
 </div>
-<div class="arrow-bottom"></div>
+<!--<div class="arrow-bottom"></div>-->
 <div class="main-content-items">
 	<div class="goods-content">
 		<div class="goods-content-main">
-			<div class="main-slider goods-items">
-				<?=$this->render('index/main-slider', [
-					'items' => BannerHelper::renderItems(BannersCategory::findOne(['alias' => '2x2'])->banners)
-				])?>
-			</div>
-			<div class="goods-items">
-				<div class="two-items content-items">
-                    <?php
-                    if(!empty(BannersCategory::findOne(['alias' => '1x1.1'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.1'])->banners[0]);
-                    }else{
-                        echo $this->render('index/banner');
-                    }
-
-                    if(!empty(BannersCategory::findOne(['alias' => '1x1.2'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.2'])->banners[0]);
-                    }else{
-                        echo $this->render('index/banner');
-                    }
-                    ?>
+			<div id="features" class="row">
+				<div class="col-md-6">
+					<img class="img-responsive" src="/img/bakery.png" alt="">
 				</div>
-				<div class="two-items content-items">
-					<?php
-					if(!empty(BannersCategory::findOne(['alias' => '1x1.3'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.3'], true)->banners[0]);
-                    }else{
-						echo $this->render('index/banner2');
-					}
-
-					if(!empty(BannersCategory::findOne(['alias' => '1x1.4'])->banners)){
-                        echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x1.4'], true)->banners[0]);
-                    }else{
-						echo $this->render('index/banner3');
-					}
-					?>
+				<div class="col-md-6">
+					<h2 class="page-header"><i class="fi fi-fw fi-type-1"></i>
+						Крепление к стене</h2>
+					<p>Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</p>
+					<p>Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</p>
+					<p>Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</p>
+					<p>Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</p>
+					<br>
+					<a href="#"><span class="full-text">Читать полностью</span></a>
 				</div>
 			</div>
-			<?php
-            if(!empty(BannersCategory::findOne(['alias' => '1x2'])->banners)){
-                echo BannerHelper::renderItem(BannersCategory::findOne(['alias' => '1x2'])->banners[0]);
-            }else{
-                echo $this->render('index/banner4');
-            }
-			?>
-		</div>
-		<?=Html::tag('div',
-			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon
-			icon-best']).
-				Html::tag('span', \Yii::t('shop', 'Лучшее'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'best']).
-			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon icon-news']).
-				Html::tag('span', \Yii::t('shop', 'Новинки'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'new']).
-			Html::tag('div', Html::tag('div', Html::tag('span', '', ['class' => 'icon-anim']), ['class' => 'main-icon icon-sale']).
-				Html::tag('span', \Yii::t('shop', 'Распродажа'), ['class' => 'icon-down']), ['class' => 'main-icons', 'data-attribute-tab' => 'sale']),
-
-			[
-				'class' => 'goods-content-icons'
-			]);
-
-		\yii\widgets\Pjax::begin([
-			'id'	=>	'goods_tabs'
-		]);
-
-		echo $this->render('index/goods_row', [
-			'dataProvider'	=>	$goodsDataProvider
-		]);
-
-		\yii\widgets\Pjax::end();
-
-		?>
+			<div class="row">
+				<div class="well">
+					<div class="row">
+						<div class="col-md-4 cta-1">
+							<span class="cta-text">Звоните или оставляйте заявки</span>
+						</div>
+						<div class="col-md-4 cta-2">
+							<span class="cta-text">(044) 466-60-40</span>
+						</div>
+						<div class="col-md-4 cta-3">
+							<span class="cta-text"><a class="btn btn-lg btn-default btn-block consult" href="#">Заказать консультацию</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
 	</div>
 </div>
-<div class="news-and-events-content">
-	<div class="news-and-events">
-		<div class="news-events style">
-			<span class="news-events-header">Новости и акции</span>
-			<div class="news">
-				<span class="news-header">
-					Новый дизайн сайта
-				</span>
-				<span>
-					Уважаемые посетители! Мы запустили новую версию нашего сайта. Приносим свои извинения за временные неудобства и технические сбои. Мы работает над устранением всех возникших проблем.
-				</span>
-			</div>
-<!--			<div class="news">
-				<span class="news-header">
-					Распродажа зонтов, расчесок и маникюрных наборов Zinger
-				</span>
-				<span>
-					Каждый покупатель акционных ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
-				</span>
-			</div>
-			<div class="news">
-				<span class="news-header">
-					Распродажа зонтов, расчесок и маникюрных наборов Zinger
-				</span>
-				<span>
-					Каждый покупатель акционных ежедневников и планингов получает в подарок шариковую ручку BIC Atlantis!
-				</span>
-			</div>
-			<span class="all-news-events">Все новости ></span>-->
-		</div>
-		<div class="subscribe style">
-			<div class="style">
-				<?=$this->render('subscribeForm')?>
-			</div>
-			<a href="https://krasota-style.com.ua/bizhuteriya/braslety/pandora/braslety-pandora"><div class="style banner-img"></div></a>
-		</div>
-		<div class="right-block style">
-			<?=$this->render('reviewForm', ['model' => $this])?>
-		</div>
-		<div></div>
-	</div>
-</div>
-<div class="about-main">
-	<span class="about-main-title">Бижутерия и аксессуары в интернет-магазине Krasota-Style</span>
-	<span class="about-main-content">
-		Украшения всегда были любимы женщинами, которые увлекались красивыми аксессуарами сами и увлекали ими мужчин.
-		Бижутерия – один из наиболее модных и ярких способов добавить образу блеска или загадочности.
-		Krasota-style.com.ua - это тот самый интернет-магазин, который вы искали. Ведь здесь собраны многочисленные образцы бижутерии,
-		которую больше не придется искать на разрозненных сайтах. Ведь именно здесь, в функциональном каталоге, собраны украшения,
-		которые порадуют любую девушку и будут отличным подарком. Как часто предложения в интернете отличаются высокими ценами,
-		ограничениями по сумме заказа, большим доплатам по доставке. Наш сайт работает для жителей Украины, чтобы в любом уголке страны покупатель
-		мог легко и быстро сделать выбор, при этом существенно сэкономив на покупке.
-		Наш виртуальный магазин всегда рад своим гостям и предлагает купить бижутерию и многи другие разнообразные товары онлайн в любое время суток.
-		Интернет-магазин специализируется на продаже оптом, но для удобства покупателей опт разделен на мелкий и крупный.
-		Стомость для мелкого опта позволит обычному покупателю приобрести товар в розницу по минимальной цене, а для крупных оптовиков цены будут еще ниже.
-	</span>
-<!--	<span class="about-main-content-open">Читать полностью</span>
---></div>
+
 <?=
 $reviewModal->renderModal().
 $quickViewModal->renderModal();
