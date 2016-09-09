@@ -102,7 +102,7 @@ JS;
 
 $this->registerJs($js);
 ?>
-<div class="main-content-slider">
+<!--<div class="main-content-slider">
 	<?=!empty($sliderBanners) ? Slick::widget([
 			'containerOptions' => [
 				'class' => 'main-slider'
@@ -119,7 +119,7 @@ $this->registerJs($js);
 			]
 	]) : '<div style="height: 370px;"></div>'
 	?>
-</div>
+</div>-->
 <!--<div class="arrow-bottom"></div>-->
 <div class="main-content-items">
 	<div class="goods-content">

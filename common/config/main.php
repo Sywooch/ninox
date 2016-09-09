@@ -7,8 +7,8 @@ return [
 		's3' => [
 			'class' => \frostealth\yii2\aws\s3\Storage::className(),
 			'credentials' => [
-				'key' 		=> 'AKIAIFNOEK55V4XWGEVA',
-				'secret' 	=> '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',
+				'key' 		=> 'AKIAJOFY4BSK5USK5UBA',
+				'secret' 	=> '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',
 			],
 			'region' 		=> 'eu-west-1',
 			'bucket' => 'ninox',
