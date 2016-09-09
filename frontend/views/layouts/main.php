@@ -7,6 +7,7 @@ use bobroid\remodal\Remodal;
 use common\helpers\Formatter;
 use frontend\assets\FrontEndAsset;
 use frontend\assets\PerfectScrollbarAsset;
+use frontend\models\BannersCategory;
 use frontend\models\Category;
 use common\components\SocialButtonWidget;
 use frontend\widgets\CartWidget;
@@ -17,6 +18,7 @@ use yii\web\JsExpression;
 use kartik\popover\PopoverX;
 use yii\web\View;
 use yii\widgets\Pjax;
+use evgeniyrru\yii2slick\Slick;
 
 $this->registerMetaTag(['charset' => Yii::$app->charset]);
 $this->registerMetaTag(['name' => 'MobileOptimized', 'content' => '1240']);
@@ -73,6 +75,7 @@ $registrationModal = new \bobroid\remodal\Remodal([
 	'content'			=>	$this->render('parts/_registration_modal'),
 	'id'				=>	'registrationModal',
 ]);
+$sliderBanners = \frontend\helpers\SliderHelper::renderItems(BannersCategory::findOne(['alias' => 'slider_v3'])->banners);
 
 $js = <<<JS
 	if(hasTouch){
@@ -589,6 +592,53 @@ $this->beginPage()?>
 						])?>
 				</div>
 			</div>
+
+			<header id="myCarousel" class="carousel slide" style="height: 450px;">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+					<li data-target="#myCarousel" data-slide-to="1"></li>
+					<li data-target="#myCarousel" data-slide-to="2"></li>
+				</ol>
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner">
+					<div class="item active">
+						<div class="fill" style="background-image:url('/img/slide1.png');"></div>
+						<div class="carousel-caption">
+							<div class="slide-cont-left">
+								<div class="sd-1-text-1"> Дистанционные держатели</div>
+								<span class="cta-text"><a class="btn btn-lg btn-default btn-block consult" href="#">Перейти к каталогу продукции</a></span>
+							</div>
+							<div class="slide-cont-right">
+								<div class="sd-1-text-2">и подвесные системы</div>
+								<span class="sd-1-text-3">Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</span>
+							</div>
+							<h2></h2>
+						</div>
+					</div>
+					<div class="item">
+						<div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Two');"></div>
+						<div class="carousel-caption">
+							<h2>Caption 2</h2>
+						</div>
+					</div>
+					<div class="item">
+						<div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Three');"></div>
+						<div class="carousel-caption">
+							<h2>Caption 3</h2>
+						</div>
+					</div>
+				</div>
+
+				<!-- Controls -->
+				<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+					<span class="icon-prev"></span>
+				</a>
+				<a class="right carousel-control" href="#myCarousel" data-slide="next">
+					<span class="icon-next"></span>
+				</a>
+			</header>
 			<?=\frontend\widgets\MainMenuWidget::widget([
 				'items'	=>	Category::getMenu()
 			])?>
@@ -680,6 +730,11 @@ $this->beginPage()?>
 	$callbackSuccessModal->renderModal(),
 	$loginModal->renderModal(),
 	$registrationModal->renderModal();?>
+	<script>
+		$('.carousel').carousel({
+			interval: 5000 //changes the speed
+		})
+	</script>
 	<?php $this->endBody() ?>
 	</body>
 </html>
