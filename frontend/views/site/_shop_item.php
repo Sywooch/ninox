@@ -81,11 +81,11 @@ $linkBlock = function($model) use ($link, $photo){
 
 echo Html::tag('div',
 	Html::tag('div',
-		Html::tag('div',
+		/*Html::tag('div',
 			$this->render('_shop_item/_shop_item_wish', ['model' => $model]).
 			Html::tag('span', $model->Code, ['class' => 'item-code']),
 			['class' => 'item-head clear-fix']
-		).
+		).*/
 		($model->enabled && ($model->count > 0 || $model->isUnlimited) ?
 				Html::a($linkBlock($model),
 					$link,
@@ -94,12 +94,12 @@ echo Html::tag('div',
 		).
 		$buyBlock($model, $btnClass),
 		['class' => 'inner-main']
-	).
+	)/*.
 	($innerSub ? Html::tag('div',
 		$this->render('_shop_item/_shop_item_counter', ['model' => $model]).
 		$onePriceBlock($model).
 		$itemDopInfoBlock($model),
 		['class' => 'inner-sub']) : ''
-	),
+	)*/,
 	['class' => 'item'.($model->enabled && ($model->count > 0 || $model->isUnlimited) ? '' : ' out-of-store')]
 );
