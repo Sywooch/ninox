@@ -45,7 +45,7 @@ h2{
 }
 
 .header{
-	/*height: 200px;*/
+	height: 1000px;
 	z-index: 10;
 	position: relative;/*хз????????????*/
 		/*
@@ -4167,6 +4167,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .under-menu{
+	display: none;
 	background: -o-linear-gradient(#ffffff, #f3f3f3); /* For Opera 11.1 to 12.0 */
 	background: -webkit-linear-gradient(#ffffff, #f3f3f3); /* For Safari 5.1 to 6.0 */
 	background: -moz-linear-gradient(#ffffff, #f3f3f3); /* For Firefox 3.6 to 15 */
@@ -5011,10 +5012,10 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .main-content-slider .slick-prev, .slick-next{
 	height: 32px;
 }
-
+/*
 .main-content-items{
 	background: #f3f3f3;
-}
+}*/
 
 .main-content .arrow-bottom{
 	width: 60px;
@@ -5053,7 +5054,7 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 .goods-content{
 	width: 1175px;
 	margin: auto;
-	padding-top: 75px;
+	/*padding-top: 75px;*/
 }
 
 .goods-content .ias-trigger{
@@ -5119,10 +5120,10 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	text-overflow: unset;
 	z-index: 2;
 }
-
+/*
 .goods-content-main{
 	height: 505px;
-}
+}*/
 
 .goods-items{
 	height: 450px;

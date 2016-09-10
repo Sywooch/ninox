@@ -6,7 +6,7 @@
 use bobroid\remodal\Remodal;
 use common\helpers\Formatter;
 use frontend\assets\FrontEndAsset;
-use frontend\assets\PerfectScrollbarAsset;
+// use frontend\assets\PerfectScrollbarAsset;
 use frontend\models\BannersCategory;
 use frontend\models\Category;
 use common\components\SocialButtonWidget;
@@ -214,9 +214,9 @@ $js = <<<JS
 	});
 
 	/*горизонтальная прокрутка менюшки он*/
-	$(window).scroll(function(){
+	/*$(window).scroll(function(){
 		$('.sticky-on-scroll, .left-side').css('left',-$(window).scrollLeft());
-	});
+	});*/
 
 	$('#callback-form').on('submit', function(e){
 		e.preventDefault();
@@ -240,13 +240,13 @@ $js = <<<JS
         return false;
     });
 
-    $('.sticky-on-scroll')
+   /* $('.sticky-on-scroll')
     .on('sticky-start', function(){
         $('.up').addClass('visible');
     })
     .on('sticky-end', function(){
         $('.up').removeClass('visible');
-	});
+	});*/
 
 JS;
 
@@ -393,7 +393,7 @@ CSS;
 
 $this->registerCss($typeaheadStyles);
 
-PerfectScrollbarAsset::register($this);
+//PerfectScrollbarAsset::register($this);
 FrontEndAsset::register($this);
 
 $logo = Html::tag('div', '', ['class' => 'logo']);
@@ -415,7 +415,7 @@ $this->beginPage()?>
 		echo $this->render('_admin_menu');
 	}
 	?>
-	<div class="header">
+	<div class="header clear-fix">
 		<div class="top-menu">
 			<div class="top-menu-content">
 				<div class="items"><?=Html::a(\Yii::t('shop', 'О компании'), Url::to(['/o-nas']))?></div>
@@ -451,7 +451,7 @@ $this->beginPage()?>
 			</div>
 		</div>
 		<div class="sticky-on-scroll">
-			<div class="under-menu">
+			<!--<div class="under-menu">
 				<div class="under-menu-content">
 					<?=Url::to([Url::home()]) != Url::current() ?
 						Html::a($logo, Url::to([Url::home()])) : $logo?>
@@ -591,9 +591,9 @@ $this->beginPage()?>
 							'class'	=>	'right-side'
 						])?>
 				</div>
-			</div>
+			</div>-->
 
-			<header id="myCarousel" class="carousel slide" style="height: 450px;">
+			<header id="myCarousel" class="carousel slide" style="height: 550px;">
 				<!-- Indicators -->
 				<ol class="carousel-indicators">
 					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
