@@ -45,7 +45,7 @@ h2{
 }
 
 .header{
-	height: 200px;
+	/*height: 200px;*/
 	z-index: 10;
 	position: relative;/*хз????????????*/
 		/*
@@ -888,10 +888,10 @@ h2{
 	border: 1px solid #d9e8ef;
 	overflow: hidden;
 }
-
+/*
 .category .items-grid .item{
 	padding: 15px 20px 20px;
-}
+}*/
 
 .goods-content .items-grid .item{
 	padding: 15px 15px 20px;
@@ -999,10 +999,10 @@ h2{
 	margin: 0 auto 10px;
 }
 
-.category .item .item-img{
+/*.category .item .item-img{
 	width: 230px;
 	height: 180px;
-}
+}*/
 
 .goods-content .item .item-img{
 	width: 185px;
