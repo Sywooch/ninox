@@ -45,7 +45,7 @@ h2{
 }
 
 .header{
-	height: 1000px;
+	height: 950px;
 	z-index: 10;
 	position: relative;/*хз????????????*/
 		/*
@@ -1288,6 +1288,7 @@ h2{
 }
 
 .category .filters{
+	display: none;
 	width: 274px;
 	float: left;
 	border-right: 1px dotted #aaafb0;
@@ -1310,7 +1311,8 @@ h2{
 }
 
 .category.cols-3 .content{
-	width: 870px;
+	width: auto;
+	/*width: 870px;*/
 }
 
 .category.cols-4 .content{
@@ -1428,6 +1430,7 @@ h2{
 }
 
 .category .select2{
+	display: none;
 	margin: 25px 0;
 }
 
