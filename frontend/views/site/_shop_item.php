@@ -94,12 +94,12 @@ echo Html::tag('div',
 		).
 		$buyBlock($model, $btnClass),
 		['class' => 'inner-main']
-	)/*.
+	).
 	($innerSub ? Html::tag('div',
 		$this->render('_shop_item/_shop_item_counter', ['model' => $model]).
 		$onePriceBlock($model).
 		$itemDopInfoBlock($model),
 		['class' => 'inner-sub']) : ''
-	)*/,
+	),
 	['class' => 'item'.($model->enabled && ($model->count > 0 || $model->isUnlimited) ? '' : ' out-of-store')]
 );
