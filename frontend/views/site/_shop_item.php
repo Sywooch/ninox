@@ -27,11 +27,11 @@ $buyBlock = function($model, $btnClass){
 					]
 				) : ''),
 			['class' => 'price-list']
-		).
+		)/*.
 		Html::tag('div',
 			frontend\widgets\ItemBuyButtonWidget::widget(['model' => $model, 'btnClass' => $btnClass]),
 			['class' => 'button-block']
-		),
+		)*/,
 		['class' => 'price-block']
 	);
 };
