@@ -18,19 +18,19 @@ $this->params['breadcrumbs'][] = $this->title;
             \frontend\widgets\ListGroupMenu::widget([
                 'items'    => [
                     [
-                        'label' =>  \Yii::t('shop', 'Как мы работаем'),
+                        'label' =>  \Yii::t('shop', 'О нас'),
                         'href'  =>  'o-nas#about-work-header'
                     ],
                     [
-                        'label' =>  \Yii::t('shop', 'Доставка и оплата'),
+                        'label' =>  \Yii::t('shop', 'Сотрудничество'),
                         'href'  =>  'o-nas#about-delivery-payment-header'
                     ],
                     [
-                        'label' =>  \Yii::t('shop', 'Гарантии и возврат'),
-                        'href'  =>  'o-nas#about-return-header'
+                        'label' =>  \Yii::t('shop', 'Наши контакты'),
+                        'href'  =>  'kontakty'
                     ],
                     [
-                        'label' =>  \Yii::t('shop', 'Условия исп. сайта'),
+                        'label' =>  \Yii::t('shop', 'Каталог продукции'),
                         'href'  =>  'o-nas#about-TermOfUse-header'
                     ],
                 ]

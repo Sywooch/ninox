@@ -83,6 +83,8 @@ class SiteController extends Controller
             ]
         ]);
 
+	    $this->layout = "mainBase";
+
         return $this->render('index', [
             'leftBanner'        =>  BannersCategory::findOne(['alias' => 'main_left_banner'])->banners[0],//Banner::getByAlias('main_left_banner', false),
             'rightBanner'       =>  BannersCategory::findOne(['alias' => 'main_right_banner'])->banners[0],//Banner::getByAlias('main_right_banner', false),

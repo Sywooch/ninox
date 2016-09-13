@@ -68,6 +68,10 @@ a,a:visited,a:hover {
 	background-color: transparent;
 	border: none;
 }
+
+.navbar-pages{
+	position: relative;
+}
 nav .tel{
 	width: 239px;
 	display: inline-block;
@@ -85,6 +89,10 @@ nav .tel{
 }
 nav .tel .prefix{
 	color: #ffae00;
+}
+
+.navbar-pages .tel, .navbar-pages .tel .prefix, .navbar-pages .navbar-nav>li>a{
+	color: #000;
 }
 
 #promo .fi-fw {
