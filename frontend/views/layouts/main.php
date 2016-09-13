@@ -6,6 +6,7 @@
 use bobroid\remodal\Remodal;
 use common\helpers\Formatter;
 use frontend\assets\FrontEndAsset;
+use frontend\widgets\Breadcrumbs;
 // use frontend\assets\PerfectScrollbarAsset;
 use frontend\models\BannersCategory;
 use frontend\models\Category;
@@ -76,6 +77,12 @@ $registrationModal = new \bobroid\remodal\Remodal([
 	'id'				=>	'registrationModal',
 ]);
 $sliderBanners = \frontend\helpers\SliderHelper::renderItems(BannersCategory::findOne(['alias' => 'slider_v3'])->banners);
+
+$pjax = \yii\widgets\Pjax::begin([
+	'id'            =>  'pjax-category',
+	'linkSelector'  =>  '.sub-categories li > a, .breadcrumb li > a',
+	'timeout'       =>  '5000'
+]);
 
 $js = <<<JS
 	if(hasTouch){
@@ -416,6 +423,7 @@ $this->beginPage()?>
 	}
 	?>
 	<div class="header clear-fix">
+		<!--<div class="top-menu"> <!-- Использую уже отверстанное меню nav вместо этого-->
 			<!--<div class="top-menu-content">
 				<div class="items"><?=Html::a(\Yii::t('shop', 'О компании'), Url::to(['/o-nas']))?></div>
 				<div class="items"><?=Html::a(\Yii::t('shop', 'Помощь'), Url::to(['/pomoshch']))?></div>
@@ -449,7 +457,7 @@ $this->beginPage()?>
 				</div>
 			</div>
 		</div>-->
-		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<nav class="navbar navbar-inverse navbar-fixed-top navbar-pages" role="navigation">
 			<div class="container">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
@@ -459,7 +467,7 @@ $this->beginPage()?>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="index.html">Start Bootstrap</a>
+					<a class="navbar-brand" href="/"><img src="/img/logo_color.png"></a>
 				</div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -472,7 +480,7 @@ $this->beginPage()?>
 							<a href="services.html">Сотрудничество</a>
 						</li>
 						<li>
-							<a href="contact.html">Наши контакты</a>
+							<a href="kontakty">Наши контакты</a>
 						</li>
 					</ul>
 				</div>
@@ -623,54 +631,8 @@ $this->beginPage()?>
 						])?>
 				</div>
 			</div>-->
-
-			<header id="myCarousel" class="carousel slide" style="height: 550px;">
-				<!-- Indicators -->
-				<ol class="carousel-indicators">
-					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-					<li data-target="#myCarousel" data-slide-to="1"></li>
-					<li data-target="#myCarousel" data-slide-to="2"></li>
-				</ol>
-
-				<!-- Wrapper for slides -->
-				<div class="carousel-inner">
-					<div class="item active">
-						<div class="fill" style="background-image:url('/img/slide1.png');"></div>
-						<div class="carousel-caption">
-							<div class="slide-cont-left">
-								<div class="sd-1-text-1"> Дистанционные держатели</div>
-								<span class="cta-text"><a class="btn btn-lg btn-default btn-block consult" href="#">Перейти к каталогу продукции</a></span>
-							</div>
-							<div class="slide-cont-right">
-								<div class="sd-1-text-2">и подвесные системы</div>
-								<span class="sd-1-text-3">Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</span>
-							</div>
-							<h2></h2>
-						</div>
-					</div>
-					<div class="item">
-						<div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Two');"></div>
-						<div class="carousel-caption">
-							<h2>Caption 2</h2>
-						</div>
-					</div>
-					<div class="item">
-						<div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Three');"></div>
-						<div class="carousel-caption">
-							<h2>Caption 3</h2>
-						</div>
-					</div>
-				</div>
-
-				<!-- Controls -->
-				<a class="left carousel-control" href="#myCarousel" data-slide="prev">
-					<span class="icon-prev"></span>
-				</a>
-				<a class="right carousel-control" href="#myCarousel" data-slide="next">
-					<span class="icon-next"></span>
-				</a>
-			</header>
-			<?=\frontend\widgets\MainMenuWidget::widget([
+			<?=Html::tag('div', Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]), ['class' => 'content breadcrumbsCont']).
+			\frontend\widgets\MainMenuWidget::widget([
 				'items'	=>	Category::getMenu()
 			])?>
 		</div>

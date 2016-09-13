@@ -49,29 +49,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="contacts-inform">
         <div class="inform">
                     <span>
-                        02217, Украина, г. Киев
-                        ул.Электротехническая, 2
+                        Украина, г. Киев
+                        ул.Магнитогорская, 1Б
                     </span>
                     <span>
                         Электронная почта:
-                        info@krasota-style.ua
+                        info@ninox.com.ua
                     </span>
         </div>
         <div class="inform numbers">
             <div>
-                        <span>
-                            0 800 508 208
-                        </span>
-                Бесплатно с мобильных и стационарных телефонов по Украине
                         <span class="home-number">
-                        044 578 20 16
+                        068 217 73 27
                         </span>
             </div>
-            <!--<span>
-                044 232 82 20
-            </span>-->
         </div>
-        <div class="inform">
+        <!--<div class="inform">
             <div>
                         <span class="operator">
                             Vodafone
@@ -96,13 +89,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             063 578 20 16
                         </span>
             </div>
-        </div>
+        </div>-->
     </div>
     <div class="map">
         <span class="content-data-first_1">Как к нам добраться</span>
-        <script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1
+        <!--<script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1
 .0/js/?sid=4hFYumeZNU3DOUuSwFOHsj9YvHKV9fH0&width=880&height=600&scroll=true&lang=ru_UA&sourceType=constructor
-"></script>
+"></script>-->
+	    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.326731581133!2d30.63849315179235!3d50.45364017937499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4daabfa619dbd%3A0x35574247f3ebaeca!2z0LLRg9C70LjRhtGPINCc0LDQs9C90ZbRgtC-0LPQvtGA0YHRjNC60LAsIDHQkSwg0JrQuNGX0LI!5e0!3m2!1sru!2sua!4v1473757340293" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
     </div>
     </div>
 </div>

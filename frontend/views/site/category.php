@@ -136,7 +136,6 @@ echo Html::tag('div',
         ]) : ''
     ) : '').
     Html::tag('div',
-        Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]).
         Html::tag('div',
             Html::tag('h1', $category->metaName).
             Html::tag('span',
