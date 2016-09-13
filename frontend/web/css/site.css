@@ -936,10 +936,15 @@ h2{
 }
 
 .item .inner-main{
-	height: 333px;
+	height: 360px;
 	position: relative;
 }
-
+.item .inner-main .detail{
+	width: 200px;
+	margin: auto;
+	font-weight: bold;
+	text-transform: uppercase;
+}
 .item .inner-sub{
 	width: 100%;
 	height: auto;
@@ -1032,8 +1037,8 @@ h2{
 }
 
 .item .price-block{
-	position: absolute;
-	bottom: 0;
+	/*position: absolute;
+	bottom: 0;*/
 	width: 100%;
 	display: table;
 	text-transform: uppercase;
@@ -1051,16 +1056,43 @@ h2{
 .item .button-block{
 	text-align: right;
 }
-
-.items-grid .wholesale-price{
-	font-size: 18px;
+.item .bottom-line{
+	display: block;
+	margin: 15px auto 10px;
+	width: 225px;
+	height: 1px;
+	background: #d9e8ef;
+}
+.items-grid .wholesale-price, .items-grid .retail-price{
+	font-size: 17px;
 	font-family: OpenSans-Bold;
+	color: #484848;
+	float: left;
+	margin: 0 20px;
 }
 
 .item .old-wholesale-price{
 	position: relative;
 	font-size: 13px;
 	display: inline-block;
+}
+
+.items-grid .wholesale-price:after, .items-grid .retail-price:after{
+	display: block;
+	font-size: 13px;
+	font-family: OpenSans;
+	color: #484848;
+	text-transform: lowercase;
+}
+.items-grid .wholesale-price:after{
+	content: "от 5 шт";
+}
+
+.items-grid .retail-price:after{
+	content: "1 шт";
+}
+.items-grid .item-dop-info{
+	display: none;
 }
 
 .item .old-wholesale-price:after{
@@ -1123,7 +1155,7 @@ h2{
 	vertical-align: middle;
 }
 
-.item .item-count-info, .item .item-price-for-one-text, .item .item-wish, .item .retail-price{
+.item .item-count-info, .item .item-price-for-one-text, .item .item-wish{
 	font-size: 13px;
 }
 

@@ -30,7 +30,7 @@ if($model->canBuy){
 	$class = 'gray';
 }
 
-
+/*
 echo Html::tag('div',
 	Html::tag('div',
 		Html::tag('div', \Yii::t('shop', 'Остаток на складе:'), []).
@@ -39,4 +39,4 @@ echo Html::tag('div',
 	).
 	ItemCounterWidget::widget(['model' => $model]),
 	['class' => 'item-counter-info']
-);
+);*/

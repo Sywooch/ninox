@@ -92,14 +92,18 @@ echo Html::tag('div',
 					['title' => $model->Name.' - '.\Yii::t('shop', 'оптовый интернет-магазин Krasota-Style')]
 				) : $linkBlock($model).Html::tag('div', \Yii::t('shop', 'Нет в наличии'), ['class' => 'out-of-store-message'])
 		).
-		$buyBlock($model, $btnClass),
+		$buyBlock($model, $btnClass).
+		Html::tag('div','',['class' => 'bottom-line']).
+		Html::tag('span',
+			Html::a('Подробнее', $link , ['class' => 'btn btn-lg btn-default btn-block consult detail']), ['class' => 'cta-text']),
 		['class' => 'inner-main']
-	).
+	)
+	/*.
 	($innerSub ? Html::tag('div',
 		$this->render('_shop_item/_shop_item_counter', ['model' => $model]).
 		$onePriceBlock($model).
 		$itemDopInfoBlock($model),
 		['class' => 'inner-sub']) : ''
-	),
+	)*/,
 	['class' => 'item'.($model->enabled && ($model->count > 0 || $model->isUnlimited) ? '' : ' out-of-store')]
 );
