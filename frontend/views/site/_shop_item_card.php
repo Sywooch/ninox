@@ -150,7 +150,6 @@ $imgModal = new \bobroid\remodal\Remodal([
 ]);
 ?>
 <div class="item item-card" itemscope itemtype="http://schema.org/Product">
-    <?=Breadcrumbs::widget(['links' => $this->params['breadcrumbs']])?>
     <div class="item-main clear-fix">
         <div class="item-photos">
             <?=(empty($items) ? Html::img(\Yii::$app->params['cdn-link'].\Yii::$app->params['img-path'].$good->photo,

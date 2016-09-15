@@ -471,7 +471,7 @@ $this->beginPage()?>
 				</div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<div class="tel"><span class="prefix">+38</span> (044) 466-60-44</div>
+					<div class="tel"><span class="prefix">+38</span> (068) 271-73-27</div>
 					<ul class="nav navbar-nav navbar-right">
 						<li>
 							<a href="about.html">О нас</a>
@@ -644,7 +644,7 @@ $this->beginPage()?>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4">
-					<span class="copyright">citinox.com.ua © 2016</span>
+					<span class="copyright">ninox.com.ua © 2016</span>
 					<div class="copyright-mid">Мы предлагаем большой выбор высококачественных креплений для изделий из стекла и табличек производства компании FORWERK (Германия)</div>
 					<span class="de">citinox.de</span>
 				</div>
@@ -654,7 +654,7 @@ $this->beginPage()?>
 							<h2 class="page-header">Каталог товаров</h2>
 						</div>
 						<div class="col-md-6 col-sm-6 portfolio-item">
-							<a href="#">
+							<a href="/kreplenie-k-stene">
 								<div class="portfolio-caption">
 									<i class="fi fi-fw fi-type-1"></i>
 									К стене
@@ -662,7 +662,7 @@ $this->beginPage()?>
 							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 portfolio-item">
-							<a href="#">
+							<a href="/flazhkovoe-kreplenie">
 								<div class="portfolio-caption">
 									<i class="fi fi-fw fi-type-2"></i>
 									Флажковое
@@ -670,7 +670,7 @@ $this->beginPage()?>
 							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 portfolio-item">
-							<a href="#">
+							<a href="/sterzhnevoe-kreplenie">
 								<div class="portfolio-caption">
 									<i class="fi fi-fw fi-type-3"></i>
 									Стержневое
@@ -678,7 +678,7 @@ $this->beginPage()?>
 							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 portfolio-item">
-							<a href="#">
+							<a href="/trosikovoe-kreplenie">
 								<div class="portfolio-caption">
 									<i class="fi fi-fw fi-type-4"></i>
 									Тросиковое
@@ -686,7 +686,7 @@ $this->beginPage()?>
 							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 portfolio-item">
-							<a href="#">
+							<a href="/svobodnostoyashchie">
 								<div class="portfolio-caption">
 									<i class="fi fi-fw fi-type-5"></i>
 									Свободностоящие
@@ -694,7 +694,7 @@ $this->beginPage()?>
 							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 portfolio-item">
-							<a href="#">
+							<a href="/dopolnitelnye-detali">
 								<div class="portfolio-caption">
 									<i class="fi fi-fw fi-type-6"></i>
 									Детали
@@ -702,7 +702,7 @@ $this->beginPage()?>
 							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 portfolio-item">
-							<a href="#">
+							<a href="/alinox">
 								<div class="portfolio-caption">
 									<i class="fi fi-fw fi-type-7"></i>
 									Alinox
@@ -713,8 +713,8 @@ $this->beginPage()?>
 				</div>
 				<div class="col-md-4 adress">
 					<span>г. Киев</span>
-					<span>ул. Магнитогорская, 1Б, офис 219</span>
-					<span class="tel">тел.: +380 44 466 60 44</span>
+					<span>ул. Магнитогорская, 1Б, офис 212А</span>
+					<span class="tel">тел.: +380 68 271 73 27</span>
 				</div>
 			</div>
 		</div>

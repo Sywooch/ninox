@@ -320,7 +320,7 @@ class SiteController extends Controller
                 $category = Category::findOne($object->GroupID);
                 $temp = [
                     [
-                        'url'   =>  Url::to([$category->link]),
+                        'url'   =>  Url::to(['/'.$category->link]),
                         'label' =>  $category->name
                     ],
                     [

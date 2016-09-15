@@ -301,7 +301,7 @@ h2{
 .icon-star:before{content: "\e904";}
 .icon-quick-view:after{content: "\e905";}
 .icon-origin:before{content: "\e906";}
-.icon-home:before{content: "\e907";}
+.icon-home:before{content: "\e907"; color: #ffae00;}
 .icon-circle-right:before{content: "\e90a";}
 .icon-circle-left:before{content: "\e90b";}
 .icon-arrow-right:before{content: "\e908" !important;}
@@ -4849,8 +4849,9 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .header-menu-items .item-label{
 	display: block;
 	vertical-align: middle;
-	font-size: 13px;
-	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	color: #000;
 	line-height: 12px;
 	height: 32px;
 	transition-property: height, delay, opacity;
@@ -4864,7 +4865,7 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .header-menu-item:hover .item-label{
-	color: #337ab7;
+	color: #FFF;
 }
 
 .header-menu-item:hover .header-menu-item-content{
@@ -5880,8 +5881,16 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 }
 .breadcrumb{
 	width: 1170px;
+	padding: 25px 15px;
 	margin: 0 auto;
 	background-color: transparent;
+	color: #FFF;
+}
+.breadcrumb > li + li:before{
+	color: #ffae00;
+}
+.breadcrumb a{
+	color: #FFF;
 }
 .main-content .breadcrumb span a {
 	text-decoration: underline;
