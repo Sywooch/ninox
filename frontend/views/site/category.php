@@ -223,7 +223,7 @@ echo Html::tag('div',
                 Html::tag('div', ($items->pagination->params['page'] < $pageCount ?
                     Html::tag('div',
                         Html::tag('span',
-                            \Yii::t('shop', 'Ещё {n} товаров', ['n' => empty($category->filters) ? 20 : 15])
+                            \Yii::t('shop', 'Ещё {n} товаров', ['n' => empty($category->filters) ? 20 : 16])
                         ),
                         [
                             'class' => 'load-more'

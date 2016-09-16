@@ -284,7 +284,7 @@ class SiteController extends Controller
                 'query'         =>  $category->getItems(),
                 'showPages'     =>  $offset,
                 'pagination'    =>  [
-                    'pageSize'          =>  empty($category->filters) ? 20 : 15,
+                    'pageSize'          =>  empty($category->filters) ? 20 : 16,
                     'forcePageParam'    =>  false,
                     'pageSizeParam'     =>  false,
                     'params'            =>  $pageParams,
