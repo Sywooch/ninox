@@ -869,7 +869,8 @@ h2{
 }
 
 .category .hovered{
-	width: 270px;
+	width: 260px;
+	margin: 15px;
 }
 
 .goods-content .hovered{
@@ -907,14 +908,14 @@ h2{
 .hovered:hover .item .inner-sub{
 	display: block;
 }
-
+/*
 .category.cols-3 .items-grid .hovered:not(:nth-child(3n - 3)){
 	margin-right: 30px;
 }
 
 .category.cols-4 .items-grid .hovered:not(:nth-child(4n - 4)){
 	margin-right: 30px;
-}
+}*/
 
 .item.out-of-store{
 	-webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */

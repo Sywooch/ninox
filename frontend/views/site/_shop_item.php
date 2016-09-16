@@ -61,8 +61,6 @@ $itemDopInfoBlock = function($model) use ($link){
 $linkBlock = function($model) use ($link, $photo){
 	return Html::tag('div', Html::img($photo,[
 		'alt' => $model->Name,
-		'height' => 180,
-		'width' => 230,
 		'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
 	]), [
 		'class' => 'item-img',

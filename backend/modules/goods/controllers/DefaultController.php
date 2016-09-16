@@ -616,10 +616,20 @@ class DefaultController extends Controller
 
         $filename .= "-".\Yii::$app->security->generateRandomString(8);
 
-        $src = imagecreatefromjpeg($file['tmp_name'][0]);
-        list($width, $height) = getimagesize($file['tmp_name'][0]);
-        $tmp = imagecreatetruecolor(250, 187);
-        imagecopyresized($tmp, $src, 0, 0, 0, 0, 250, 187, $width, $height);
+	    list($width, $height, $ext) = getimagesize($file['tmp_name'][0]);
+\Yii::trace('ext = '.$ext);
+	    switch($ext){
+		    case IMAGETYPE_PNG:
+			    $src = imagecreatefrompng($file['tmp_name'][0]);
+			    break;
+		    case IMAGETYPE_JPEG:
+		    default:
+		        $src = imagecreatefromjpeg($file['tmp_name'][0]);
+			    break;
+	    }
+
+        $tmp = imagecreatetruecolor(260, 208);
+        imagecopyresized($tmp, $src, 0, 0, 0, 0, 260, 208, $width, $height);
         imagejpeg($tmp, $file['tmp_name'][0].'-sm');
         $uploader->upload(
             [
