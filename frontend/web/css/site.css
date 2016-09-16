@@ -1085,9 +1085,10 @@ h2{
 	color: #484848;
 	text-transform: lowercase;
 }
+/*
 .items-grid .wholesale-price:after{
 	content: "от 5 шт";
-}
+}*/
 
 .items-grid .retail-price:after{
 	content: "1 шт";

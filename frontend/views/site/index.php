@@ -6,12 +6,12 @@ use frontend\models\BannersCategory;
 use yii\helpers\Html;
 $mainGalleryHtml = [];
 
-$this->title = \Yii::t('shop', 'Бижутерия, заколки, серьги, бисер оптом с доставкой по Киеву и Украине от интернет-магазина "Krasota-Style.ua"');
+$this->title = \Yii::t('shop', 'Дистанционные держатели, подвесные системы -"Ninox.com.ua"');
 $this->registerMetaTag(
 	[
 		'name' => 'description',
 		'content' => \Yii::t('shop',
-			'Купить бижутерию оптом со скалда в Киеве. Более 10000 товаров. Оптовые цены. Минимальный заказ {minOrder} Беспроблемный возврат. Скидки для оптовиков.',
+			'Дистанционные держатели, подвесные системы - "Ninox.com.ua", официальный диллер "Citinox.de"',
 			[
 				'minOrder'  =>  Formatter::getFormattedPrice(\Yii::$app->params['domainInfo']['minimalOrderSum'])
 			])
@@ -21,7 +21,7 @@ $this->registerMetaTag(
 $this->registerMetaTag(
 	[
 		'name' => 'keywords',
-		'content' => \Yii::t('shop', 'Бижутерия, товары для рукоделия, оптом, интернет-магазин, Украина, Krasota-Style')
+		'content' => \Yii::t('shop', 'Дистанционные держатели, подвесные системы - "Ninox.com.ua", официальный диллер "Citinox.de"')
 	],
 	'keywords'
 );

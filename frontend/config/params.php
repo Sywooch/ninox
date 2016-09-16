@@ -5,8 +5,8 @@ return [
 	'domainInfo'            =>  [
 		'id'                    =>  '1',
 		'currencyExchange'      =>  '1',
-		'currencyCode'          =>  'UAH',
-		'currencyShortName'     =>  'грн.',
+		'currencyCode'          =>  'EUR',
+		'currencyShortName'     =>  'EUR',
 		'coins'                 =>  '1',
 		'wholesaleThreshold'	=>	'1000',
 		'minimalOrderSum'		=>	'100'

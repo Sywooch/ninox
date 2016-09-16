@@ -13,6 +13,13 @@ $buyBlock = function($model, $btnClass){
 	return Html::tag('div',
 		Html::tag('div',
 			Html::tag('div',
+				Formatter::getFormattedPrice($model->anotherCurrencyValue),
+				[
+					'class' => ($model->discountType > 0 && $model->priceRuleID == 0 ?
+							'old-wholesale-price' : 'wholesale-price').' gray'
+				]
+			)/*.
+			Html::tag('div',
 				Formatter::getFormattedPrice($model->realWholesalePrice),
 				[
 					'class' => ($model->discountType > 0 && $model->priceRuleID == 0 ?
@@ -25,7 +32,7 @@ $buyBlock = function($model, $btnClass){
 					[
 						'class' => ($model->discountType > 0 && $model->priceRuleID == 0 ? 'wholesale-price red' : 'retail-price gray')
 					]
-				) : ''),
+				) : '')*/,
 			['class' => 'price-list']
 		)/*.
 		Html::tag('div',
