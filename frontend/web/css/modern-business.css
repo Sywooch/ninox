@@ -91,7 +91,10 @@ nav .tel .prefix{
 	color: #ffae00;
 }
 
-.navbar-pages .tel, .navbar-pages .tel .prefix, .navbar-pages .navbar-nav>li>a{
+.navbar-pages .tel, .navbar-pages .tel .prefix, .navbar-pages .navbar-nav>li>a, .navbar-pages .navbar-nav>li>a:focus{
+	color: #000;
+}
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
 	color: #000;
 }
 

@@ -467,10 +467,10 @@ $this->beginPage()?>
 					<div class="tel"><span class="prefix">+38</span> (068) 271-73-27</div>
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<a href="about.html">О нас</a>
+							<a href="o-nas">О нас</a>
 						</li>
 						<li>
-							<a href="services.html">Сотрудничество</a>
+							<a href="pomoshch">Сотрудничество</a>
 						</li>
 						<li>
 							<a href="kontakty">Наши контакты</a>

@@ -294,7 +294,7 @@ class SiteController extends Controller
     }
 
     public function renderStaticPage($pageInfo){
-        return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
+	        return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
     }
 
     /**
