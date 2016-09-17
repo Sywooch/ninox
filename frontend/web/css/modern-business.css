@@ -293,10 +293,10 @@ footer {
 	top: 16px;
 }
 .header-menu-items li:nth-child(1) .fi-type:before{
-	content: '\e90c';
+	content: '\e90d';
 }
 .header-menu-items li:nth-child(2) .fi-type:before{
-	content: '\e90d';
+	content: '\e90c';
 }
 .header-menu-items li:nth-child(3) .fi-type:before{
 	content: '\e910';
@@ -305,13 +305,13 @@ footer {
 	content: '\e90e';
 }
 .header-menu-items li:nth-child(5) .fi-type:before{
-	content: '\e900';
-}
-.header-menu-items li:nth-child(6) .fi-type:before{
 	content: '\e90b';
 }
+.header-menu-items li:nth-child(6) .fi-type:before{
+	content: '\e900';
+}
 .header-menu-items li:nth-child(7) .fi-type:before{
-	content: '\e90d';
+	content: '\e90b';
 }
 
 .fi-type-1:before{
@@ -404,6 +404,9 @@ footer {
 	border-radius: 30px;
 	background-color: #ffae00;
 	color: #FFF;
+}
+.btn-price:before{
+	content: '\eae2';
 }
 .well .row{
 	display: table;

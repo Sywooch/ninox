@@ -1035,6 +1035,10 @@ h2{
 	max-height: 60px;
 	overflow: hidden;
 	text-align: center;
+	font-size: 17px;
+	font-weight: bold;
+	color: hsl(0, 0%, 28%);
+	margin: 15px;
 }
 
 .item .price-block{
@@ -3546,7 +3550,6 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 .about-as-center{
 /*	text-align: center;
 	margin: auto;*/
-	text-align: center;
 	margin: auto;
 	margin-bottom: 25px;
 	font-size: 16px;
@@ -3690,17 +3693,31 @@ input[name="OrderForm[paymentType]"]:checked + label + .question-round-button + 
 }
 
 .about-as-order-infogramma-item-text span{
-    /*
-	font-size: 14px;
-    */
 	font-size: 14px;
 	display: block;
 	font-weight: bold;
 }
 
+.about-as-order-text .list-header{
+	font-size: 17px;
+}
+
 .about-as-order-text{
 	font-size: 14px;
 	color: #282828;
+}
+
+.about-as-order-text p{
+	font-size: 14px;
+}
+
+.about-as-order-text ul{
+	padding-left: 35px;
+	list-style-image: url('/img/list_img.png');
+}
+.about-as-order-text li{
+	font-size: 15px;
+	margin: 20px;
 }
 
 .about-delivery-header{

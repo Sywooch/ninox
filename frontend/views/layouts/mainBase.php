@@ -464,7 +464,7 @@ $this->beginPage()?>
 				</div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<div class="tel"><span class="prefix">+38</span> (068) 271-73-27</div>
+					<div class="tel"><span class="prefix">+38</span> (044) 466-60-40</div>
 					<ul class="nav navbar-nav navbar-right">
 						<li>
 							<a href="o-nas">О нас</a>
@@ -671,6 +671,27 @@ $this->beginPage()?>
 					<span class="icon-next"></span>
 				</a>
 			</header>
+			<!--<div class="container">
+				<!-- Marketing Icons Section -->
+				<!--<div id="promo" class="row"> TO DO: блок иконок
+					<div class="col-md-4">
+						<div class="panel-heading">
+							<span class="promo-blocks"><i class="fi fi-fw fi-cert"></i>Официальный представитель Forwerk (Германия) в Украине </span>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="panel-heading">
+							<span class="promo-blocks"><i class="fi fi-fw fi-hand-shake"></i> Работа напрямую с производителем</span>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="panel-heading">
+							<span class="promo-blocks"><i class="fi fi-fw fi-price-policy"></i>Гибкая ценовая политика </span>
+						</div>
+					</div>
+				</div>
+			</div>-->
+
 			<?=\frontend\widgets\MainMenuWidget::widget([
 				'items'	=>	Category::getMenu()
 			])?>
@@ -753,7 +774,7 @@ $this->beginPage()?>
 				<div class="col-md-4 adress">
 					<span>г. Киев</span>
 					<span>ул. Магнитогорская, 1Б, офис 212А</span>
-					<span class="tel">тел.: +380 68 271 73 27</span>
+					<span class="tel">тел.: +380 44 466 60 40</span>
 				</div>
 			</div>
 		</div>
