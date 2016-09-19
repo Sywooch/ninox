@@ -6657,6 +6657,13 @@ ul.header-menu-item-content-items, ul.header-menu-item-content-items li {
 	color: #414141;
 }
 
+.pricelist-content .button, .pricelist-content .about-price, .pricelist-content .item-rating{
+	display: none;
+}
+.item-offer .item-dop-info{
+	display: none;
+}
+
 .pricelist-warning{
 	padding: 20px 10px 0;
 	font-size: 13px;

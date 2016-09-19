@@ -42,7 +42,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 		                <p>Крепления идеально подойдут для удержания фасадных табличек, вывесок, фоторамок и т.д, причем как внутри, так и снаружи помещения.</p>
 	                <p>К каждому товару идет детальная спецификация с указанием типоразмера. Если у вас все же возникнут вопросы,  на них с радостью ответят наши менеджеры.</p>
-					<a href="https://ninox.com.ua/price.xlsx">Скачать прайс</a>
+	                <div class="col-md-4 cta-3">
+		                <span class="cta-text"><a class="btn btn-lg btn-default btn-block consult btn-price" href="https://ninox.com.ua/price.xlsx">Скачать прайс</a></span>
+	                </div>
                 </div>
             </div>
         </div>
