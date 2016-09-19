@@ -107,7 +107,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                 'data-modal-index'  =>  0,
                 'width' =>  '475px',
                 'height'=>  '355px',
-                'alt'   =>  $good->Name,
+                /*'alt'   =>  $good->Name,*/
                 'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
             ]) :
             Slick::widget([
@@ -158,7 +158,7 @@ $imgModal = new \bobroid\remodal\Remodal([
                     'data-modal-index'  =>  0,
                     'width' =>  '475px',
                     'height'=>  '355px',
-                    'alt'   =>  $good->Name,
+                    /*'alt'   =>  $good->Name,*/
                     'onerror' => "this.src='".\Yii::$app->params['noimage']."';"
                 ]) :
                 Html::a(Slick::widget([

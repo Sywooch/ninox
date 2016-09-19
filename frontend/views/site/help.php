@@ -39,6 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			    <div class="col-md-4 cta-3">
 				    <span class="cta-text"><a class="btn btn-lg btn-default btn-block consult btn-price" href="https://ninox.com.ua/price.xlsx">Скачать прайс</a></span>
 			    </div>
+			    <div class="col-md-4 cta-3">
+				    <span class="cta-text"><a class="btn btn-lg btn-default btn-block consult btn-price" href="https://ninox.com.ua/citinox-katalog.pdf">Скачать каталог</a></span>
+			    </div>
 		    </div>
 	    </div>
     </div>
