@@ -72,7 +72,7 @@ use yii\helpers\Html;
                 ]
             ).
             Html::tag('div',
-                ($good->discountType && !$good->customerRule ?
+                /*($good->discountType && !$good->customerRule ?
                     Html::tag('div',
                         \Yii::t('shop', 'старая цена: {oldPrice}', [
 	                        'oldPrice' => Html::tag('div', Formatter::getFormattedPrice($good->realWholesalePrice),
@@ -81,9 +81,9 @@ use yii\helpers\Html;
                         ]),
                         ['class' => 'old-price']
                     ) : ''
-                ).
-                Html::tag('div', Formatter::getFormattedPrice($good->wholesalePrice), ['class' => 'wholesale-price']).
-                $dopPrice,
+                ).*/
+                Html::tag('div', Formatter::getFormattedPrice($good->anotherCurrencyValue), ['class' => 'wholesale-price'])
+                /*$dopPrice*/,
                 ['class' => 'price-list']
             ).
             $this->render('_shop_item_counter', ['model' => $good]).
