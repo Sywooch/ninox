@@ -148,7 +148,7 @@ $this->registerJs($js);
 							<span class="cta-text">(044) 466-60-40</span>
 						</div>
 						<div class="col-md-4 cta-3">
-							<span class="cta-text"><a class="btn btn-lg btn-default btn-block consult" href="#">Заказать консультацию</a></span>
+							<span class="cta-text"><a class="btn btn-lg btn-default btn-block consult" href="/kreplenie-k-stene">Заказать консультацию</a></span>
 						</div>
 					</div>
 				</div>
