@@ -473,15 +473,9 @@ $this->beginPage()?>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<div class="tel"><span class="prefix">+38</span> (044) 271-73-27</div>
 					<ul class="nav navbar-nav navbar-right">
-						<li>
-							<a href="o-nas">О нас</a>
-						</li>
-						<li>
-							<a href="pomoshch">Сотрудничество</a>
-						</li>
-						<li>
-							<a href="kontakty">Наши контакты</a>
-						</li>
+						<li><?=Html::a(\Yii::t('shop', 'О нас'), Url::to(['/o-nas']))?></li>
+						<li><?=Html::a(\Yii::t('shop', 'Сотрудничество'), Url::to(['/pomoshch']))?></li>
+						<li><?=Html::a(\Yii::t('shop', 'Наши контакты'), Url::to(['/kontakty']))?></li>
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->
