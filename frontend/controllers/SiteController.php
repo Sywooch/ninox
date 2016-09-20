@@ -185,7 +185,7 @@ class SiteController extends Controller
 
         self::getLanguagesLinks($good);
 
-
+	    $this->layout = "mainWithoutMenu";
 
         return $this->render('_shop_item_card', [
             'good'  =>  $good
@@ -294,7 +294,8 @@ class SiteController extends Controller
     }
 
     public function renderStaticPage($pageInfo){
-	        return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
+	    $this->layout = "mainWithoutMenu";
+	    return $this->render($pageInfo->viewFile, empty($pageInfo->viewOptions) ? [] : $pageInfo->viewOptions);
     }
 
     /**
