@@ -293,22 +293,22 @@ footer {
 	top: 16px;
 }
 .header-menu-items li:nth-child(1) .fi-type:before{
-	content: '\e90d';
-}
-.header-menu-items li:nth-child(2) .fi-type:before{
 	content: '\e90c';
 }
-.header-menu-items li:nth-child(3) .fi-type:before{
-	content: '\e910';
+.header-menu-items li:nth-child(2) .fi-type:before{
+	content: '\e90d';
 }
-.header-menu-items li:nth-child(4) .fi-type:before{
+.header-menu-items li:nth-child(3) .fi-type:before{
 	content: '\e90e';
 }
+.header-menu-items li:nth-child(4) .fi-type:before{
+	content: '\e910';
+}
 .header-menu-items li:nth-child(5) .fi-type:before{
-	content: '\e90b';
+	content: '\e900';
 }
 .header-menu-items li:nth-child(6) .fi-type:before{
-	content: '\e900';
+	content: '\e913';
 }
 .header-menu-items li:nth-child(7) .fi-type:before{
 	content: '\e90b';
