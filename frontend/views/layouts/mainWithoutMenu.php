@@ -706,6 +706,7 @@ $this->beginPage()?>
 					<span>г. Киев</span>
 					<span>ул. Магнитогорская, 1Б, офис 212А</span>
 					<span class="tel">тел.: +380 44 466 60 44</span>
+					<span class="tel">тел.: +380 68 271 73 27</span>
 				</div>
 			</div>
 		</div>
