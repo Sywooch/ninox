@@ -464,7 +464,7 @@ $this->beginPage()?>
 				</div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<div class="tel"><span class="prefix">+38</span> (044) 466-60-44</div>
+					<div class="tel"><span class="prefix">+38</span> (044) 465-73-27</div>
 					<ul class="nav navbar-nav navbar-right">
 						<li><?=Html::a(\Yii::t('shop', 'О нас'), Url::to(['/o-nas']))?></li>
 						<li><?=Html::a(\Yii::t('shop', 'Сотрудничество'), Url::to(['/pomoshch']))?></li>
