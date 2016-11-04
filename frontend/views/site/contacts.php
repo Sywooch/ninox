@@ -60,8 +60,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="inform numbers">
             <div>
                         <span class="home-number">
-                        044 466 60 44
+                        044 465 73 27
 	                    068 271 73 27
+						073 271 73 27
                         </span>
             </div>
         </div>
