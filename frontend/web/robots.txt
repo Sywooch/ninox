@@ -1,4 +1,2 @@
 User-agent: *
 Disallow:
-Host: https://krasota-style.com.ua
-Sitemap: https://krasota-style.com.ua/sitemap.xml
